@@ -117,12 +117,15 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .join("path")
       .attr("class", "state")
       .attr("d", path)
-      .attr("fill", "#222")
-      .attr("stroke", "#4a4a4a")
+      /* Slightly brighter default fill for better contrast */
+      .attr("fill", "#2f2f2f")
+      /* Slightly lighter stroke so state boundaries remain visible */
+      .attr("stroke", "#5a5a5a")
       .attr("stroke-width", 0.8)
       .attr("tabindex", 0)
-      .on("mouseover", function() { d3.select(this).attr("fill", "#2b2b2b"); })
-      .on("mouseout",  function() { d3.select(this).attr("fill", "#222"); })
+      /* Use the page accent color on hover for a more vibrant highlight */
+      .on("mouseover", function() { d3.select(this).attr("fill", "#66b3ff"); })
+      .on("mouseout",  function() { d3.select(this).attr("fill", "#2f2f2f"); })
       .on("click", (event, d) => {
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
         // For ME and NE we want the statewide page which is named ME-AL/NE-AL
@@ -176,7 +179,7 @@ PAGE_HTML = r"""<!doctype html>
       %TABLE_HTML%
     </div>
   </div>
-  <footer>Site by eigentaylor. Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
+  <footer>Site by eigentaylor. Please report any innaccuracies to tayloreigenfisher@gmail.com·</footer>
 </div>
 </body>
 </html>
