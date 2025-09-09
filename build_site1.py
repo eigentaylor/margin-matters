@@ -73,13 +73,16 @@ INDEX_HTML = r"""<!doctype html>
       </div>
     </div>
     <div class="card">
-      <h2 style="margin-top:0">Small States · Quick Links</h2>
-      <div class="small-links" id="small-links"></div>
+        <h2 style="margin-top:0">Small States · Quick Links</h2>
+        <div class="small-links" id="small-links">
+          <!-- Add a National quick link (NAT) -->
+          <a class="btn" href="state/NAT.html">NAT</a>
+        </div>
       <hr/>
-      <p class="legend">Tip: Maine and Nebraska’s statewide pages include big links to their district pages.</p>
+      <p class="legend">Tip: Maine and Nebraska’s statewide pages include links to their district pages.</p>
     </div>
   </div>
-  <footer>Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs. Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
+  <footer>Site by eigentaylor. Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs. Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -171,7 +174,7 @@ PAGE_HTML = r"""<!doctype html>
       %TABLE_HTML%
     </div>
   </div>
-  <footer>Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
+  <footer>Site by eigentaylor. Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
 </div>
 </body>
 </html>
@@ -379,6 +382,78 @@ def build_pages(rows):
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(UNIT_DIR / f"{unit}.html", page)
+
+  # --- NATIONAL page -------------------------------------------------------
+  # Build a simple national table by aggregating CSV rows by year. We prefer
+  # sums for vote counts and means for margins/national_margin-like columns.
+  from collections import defaultdict
+  year_groups = defaultdict(list)
+  for r in rows:
+    y = r.get("year")
+    try:
+      yi = int(y)
+    except Exception:
+      continue
+    year_groups[yi].append(r)
+
+  national_rows = []
+  nat_cols = []
+  for y in sorted(year_groups.keys()):
+    grp = year_groups[y]
+    out = {}
+    for h in headers:
+      if h == 'year':
+        out[h] = y
+        continue
+      val = ''
+      # Sum obvious vote columns
+      if h in ("D_votes", "R_votes"):
+        s = 0
+        any_v = False
+        for rr in grp:
+          v = rr.get(h, '')
+          try:
+            s += int(str(v).replace(',', ''))
+            any_v = True
+          except Exception:
+            pass
+        val = s if any_v else ''
+      # For margin-like and national-like columns take the mean
+      elif 'str' in h and ('national' in h.lower() or 'national' in h):
+        nums = []
+        for rr in grp:
+          v = rr.get(h, '')
+          if h not in out:
+              out[h] = v
+              break
+        continue
+      else:
+        # remove columns not handled above
+        # (e.g. abbr, pres_margin, relative_margin, etc.)
+        continue
+      out[h] = val
+    for h in out:
+      if h not in nat_cols:
+        nat_cols.append(h)
+    national_rows.append(out)
+    
+
+  # Write national page under state/ to match other quick links
+  img_src = f"../plots/NATIONAL_trend.png"
+  img_note = "National summary"
+  page = (
+    PAGE_HTML
+    .replace("%TITLE%", f"NAT · National")
+    .replace("%HEADING%", f"National (NAT)")
+    .replace("%LABEL%", "NAT")
+    .replace("%IMG_SRC%", img_src)
+    .replace("%IMG_NOTE%", img_note)
+    .replace("%EXTRA_LINKS%", "")
+    .replace("%TABLE_HEADING%", "National — Data")
+    .replace("%TABLE_HTML%", render_table(national_rows, nat_cols))
+  )
+  page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
+  write_text(STATE_DIR / f"NAT.html", page)
 
   return states
 

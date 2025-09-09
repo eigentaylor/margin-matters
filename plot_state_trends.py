@@ -98,11 +98,12 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
             return fig, (axes[0], axes[1], None)
 
 
-    def style_line_axis(ax, years, pres_margin, national_margin, state):
+    def style_line_axis(ax, years, pres_margin, national_margin, state, include_pres_results=True):
         pres_colors = ['deepskyblue' if m > 0 else 'red' for m in pres_margin]
         nat_colors = ['deepskyblue' if m > 0 else 'red' for m in national_margin]
-        ax.plot(years, pres_margin, label='Presidential Margin', marker='o', linestyle='-', color='gray')
-        ax.scatter(years, pres_margin, c=pres_colors, s=60, zorder=3, label='Pres Results')
+        if include_pres_results:
+            ax.plot(years, pres_margin, label='Presidential Margin', marker='o', linestyle='-', color='gray')
+            ax.scatter(years, pres_margin, c=pres_colors, s=60, zorder=3, label='Pres Results')
         ax.plot(years, national_margin, label='National Margin', marker='o', color='gold')
         ax.scatter(years, national_margin, c=nat_colors, s=40, zorder=2, label='Nat Results')
         ax.set_title(f'{state} Presidential Margins')
@@ -195,7 +196,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
 
             # Left: raw national margins (reuse style_line_axis by passing the same
             # series as both pres_margin and national_margin so labels/styles match)
-            pres_colors_nat = style_line_axis(ax_n_line, nat_years, nat_margins, nat_margins, 'NATIONAL')
+            pres_colors_nat = style_line_axis(ax_n_line, nat_years, nat_margins, nat_margins, 'NATIONAL', include_pres_results=False)
 
             # Right: bar plot of deltas only (styled similarly to delta plotting)
             if len(nat_deltas) == 0:
