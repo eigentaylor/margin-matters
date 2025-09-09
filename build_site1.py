@@ -466,9 +466,12 @@ def main():
     # write favicon
     write_text(OUT_DIR / "favicon.svg", FAVICON_SVG)
 
-    # copy plots folder if present
+    # copy plots folder if present (don't include subfolders)
     if PLOTS_SRC.exists() and PLOTS_SRC.is_dir():
-        shutil.copytree(PLOTS_SRC, PLOTS_DST, dirs_exist_ok=True)
+        PLOTS_DST.mkdir(parents=True, exist_ok=True)
+        for item in PLOTS_SRC.iterdir():
+            if item.is_file():
+                shutil.copy2(item, PLOTS_DST / item.name)
 
     rows = read_csv(CSV_PATH)
     states = build_pages(rows)

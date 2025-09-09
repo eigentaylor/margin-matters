@@ -379,10 +379,12 @@ if __name__ == "__main__":
     parser.add_argument('--no-spline-regularization', dest='spline_regularization', action='store_false', help='Disable spline regularization (use interpolation)')
     args = parser.parse_args()
 
-    main(start_year=args.start_year, end_year=args.end_year, plot_house_margins=plot_house_margins,
+    main(start_year=args.start_year, end_year=args.end_year,                                
+         plot_house_margins=plot_house_margins,
          use_loess=args.use_loess, use_linear=args.use_linear,
          use_spline=args.use_spline, spline_regularization=args.spline_regularization)
 
-    # main(start_year=2000, end_year=args.end_year, plot_house_margins=plot_house_margins,
-    #      use_loess=args.use_loess, use_linear=args.use_linear,
-    #      use_spline=args.use_spline, spline_regularization=args.spline_regularization)
+    main(start_year=None, end_year=2020, 
+         plot_house_margins=plot_house_margins,
+         use_loess=args.use_loess, use_linear=args.use_linear,
+         use_spline=args.use_spline, spline_regularization=args.spline_regularization)
