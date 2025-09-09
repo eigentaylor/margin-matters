@@ -54,6 +54,7 @@ INDEX_HTML = r"""<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>US Presidential Map</title>
 <link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="favicon.svg" />
 </head>
 <body>
 <div class="container">
@@ -149,6 +150,7 @@ PAGE_HTML = r"""<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>%TITLE%</title>
 <link rel="stylesheet" href="../styles.css" />
+<link rel="icon" href="../favicon.svg" />
 </head>
 <body>
 <div class="container">
@@ -262,6 +264,15 @@ def render_table(rows, cols):
   body += "</tbody>"
   return f"<table>{thead}{body}</table>"
 
+
+# a simple ballot-themed SVG favicon (keeps repo dependency-free)
+FAVICON_SVG = r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#0b0b0b"/>
+  <rect x="9" y="22" width="46" height="26" rx="3" fill="#ffffff"/>
+  <rect x="16" y="8" width="32" height="18" rx="2" fill="#ffd166"/>
+  <path d="M20 28 L28 36 L44 20" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>'''
+
 def ensure_dirs():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     STATE_DIR.mkdir(parents=True, exist_ok=True)
@@ -355,6 +366,8 @@ def main():
     ensure_dirs()
     # write CSS
     write_text(OUT_DIR / "styles.css", BASE_CSS)
+    # write favicon
+    write_text(OUT_DIR / "favicon.svg", FAVICON_SVG)
 
     # copy plots folder if present
     if PLOTS_SRC.exists() and PLOTS_SRC.is_dir():
