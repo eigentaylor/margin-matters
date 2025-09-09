@@ -66,7 +66,12 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .on("mouseout",  function() { d3.select(this).attr("fill", "#222"); })
       .on("click", (event, d) => {
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
-        if (abbr) window.location.href = "state/" + abbr + ".html";
+        // For ME and NE we want the statewide page which is named ME-AL/NE-AL
+        if (abbr === "ME" || abbr === "NE") {
+          window.location.href = "state/" + abbr + "-AL.html";
+        } else if (abbr) {
+          window.location.href = "state/" + abbr + ".html";
+        }
       })
       .append("title")
       .text(d => {

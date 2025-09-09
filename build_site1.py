@@ -7,6 +7,7 @@ import os
 import shutil
 from pathlib import Path
 from collections import defaultdict
+import params
 
 CSV_PATH = Path("presidential_margins.csv")  # your provided file
 OUT_DIR = Path("docs")          # output folder (for GitHub Pages)
@@ -114,7 +115,12 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .on("mouseout",  function() { d3.select(this).attr("fill", "#222"); })
       .on("click", (event, d) => {
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
-        if (abbr) window.location.href = "state/" + abbr + ".html";
+        // For ME and NE we want the statewide page which is named ME-AL/NE-AL
+        if (abbr === "ME" || abbr === "NE") {
+          window.location.href = "state/" + abbr + "-AL.html";
+        } else if (abbr) {
+          window.location.href = "state/" + abbr + ".html";
+        }
       })
       .append("title")
       .text(d => {
@@ -179,17 +185,31 @@ def read_csv(path: Path):
     return rows
 
 def columns_for_table(headers):
-    cols = ["year", "D_votes", "R_votes"]
-    for h in headers:
-        if "str" in h.lower() and h not in cols:
-            cols.append(h)
-    # keep only existing & unique
-    seen = set()
+  # If params.TABLE_COLUMNS provided, accept either list of names or list of (name,label)
+  if params.TABLE_COLUMNS is not None:
+    user_cols = params.TABLE_COLUMNS
     out = []
-    for c in cols:
-        if c in headers and c not in seen:
-            out.append(c); seen.add(c)
+    seen = set()
+    for item in user_cols:
+      if isinstance(item, (list, tuple)) and item:
+        name = item[0]
+      else:
+        name = item
+      if name in headers and name not in seen:
+        out.append(name); seen.add(name)
     return out
+
+  cols = ["year", "D_votes", "R_votes"]
+  for h in headers:
+    if "str" in h.lower() and h not in cols:
+      cols.append(h)
+  # keep only existing & unique
+  seen = set()
+  out = []
+  for c in cols:
+    if c in headers and c not in seen:
+      out.append(c); seen.add(c)
+  return out
 
 def group_by_abbr(rows):
     g = defaultdict(list)
@@ -203,16 +223,29 @@ def group_by_abbr(rows):
     return g
 
 def render_table(rows, cols):
-    # basic escape
-    def esc(x): 
-        s = "" if x is None else str(x)
-        return (s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;"))
-    thead = "<thead><tr>" + "".join(f"<th>{esc(c)}</th>" for c in cols) + "</tr></thead>"
-    body = "<tbody>"
-    for r in rows:
-        body += "<tr>" + "".join(f"<td>{esc(r.get(c,''))}</td>" for c in cols) + "</tr>"
-    body += "</tbody>"
-    return f"<table>{thead}{body}</table>"
+  # basic escape
+  def esc(x):
+    s = "" if x is None else str(x)
+    return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+  # Build header label map from params.TABLE_COLUMNS when provided
+  if params.TABLE_COLUMNS is not None:
+    header_labels = []
+    for item in params.TABLE_COLUMNS:
+      if isinstance(item, (list, tuple)) and len(item) >= 2:
+        header_labels.append((item[0], item[1]))
+      else:
+        header_labels.append((item, item))
+    header_map = {k: v for k, v in header_labels}
+  else:
+    header_map = {c: c for c in cols}
+
+  thead = "<thead><tr>" + "".join(f"<th>{esc(header_map.get(c, c))}</th>" for c in cols) + "</tr></thead>"
+  body = "<tbody>"
+  for r in rows:
+    body += "<tr>" + "".join(f"<td>{esc(r.get(c, ''))}</td>" for c in cols) + "</tr>"
+  body += "</tbody>"
+  return f"<table>{thead}{body}</table>"
 
 def ensure_dirs():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -247,11 +280,11 @@ def build_pages(rows):
         if st in ME_NE_STATES and f"{st}-AL" in by_abbr:
             table_rows = by_abbr[f"{st}-AL"]
             img_src = f"../plots/{st}-AL_trend.png"
-            img_note = f"{st} statewide (AL)"
+            img_note = f"{params.ABBR_TO_STATE.get(st, st)} statewide (AL)"
         else:
             table_rows = by_abbr.get(st, [])
             img_src = f"../plots/{st}_trend.png"
-            img_note = f"{st} statewide"
+            img_note = f"{params.ABBR_TO_STATE.get(st, st)} statewide"
         if not table_rows:
             # if no rows, still generate a minimal page
             img_note += " · (no rows found in CSV)"
@@ -265,13 +298,13 @@ def build_pages(rows):
                 )
                 extra_links = f'<div class="card"><h2 style="margin-top:0">{st} Districts</h2><div class="small-links">{items}</div></div>'
         page = (PAGE_HTML
-                .replace("%TITLE%", f"{st} · State")
-                .replace("%HEADING%", f"{st} — Statewide")
+                .replace("%TITLE%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) · State")
+                .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
                 .replace("%LABEL%", label)
                 .replace("%IMG_SRC%", img_src)
                 .replace("%IMG_NOTE%", img_note)
                 .replace("%EXTRA_LINKS%", extra_links)
-                .replace("%TABLE_HEADING%", f"{st} — Data")
+                .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Data")
                 .replace("%TABLE_HTML%", render_table(table_rows, cols)))
         write_text(STATE_DIR / f"{st}.html", page)
 

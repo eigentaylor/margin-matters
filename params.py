@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 SWING_MARGIN = 0.05
@@ -58,4 +58,39 @@ FINAL_MARGIN_THRESHOLDS: Dict[str, float] = {
     "blue":   0.06,   # light blue: D wins by 6%+
     "Blue":   0.12,   # darker blue: D wins by 12%+
     "BLUE":   0.20,   # darkest blue: D wins by 20%+
+}
+
+# Optional: define a custom table column ordering and labels for the HTML tables.
+# If set to None the code will fall back to the built-in heuristic order.
+# Example formats accepted:
+# - list of tuples (col_name, label): [("year","Year"),("D_votes","Dem Votes"),("R_votes","Rep Votes")]
+# - list of strings (col names only): ["year","D_votes","R_votes"]
+# Place this in your local copy of params.py to customize the table output.
+TABLE_COLUMNS: Optional[List] = [
+    ("year", "Year"),
+    ("D_votes", "D"),
+    ("D_pct", "D %"),
+    ("R_votes", "R"),
+    ("R_pct", "R %"),
+    ("pres_margin_str", "Margin"),
+    ("relative_margin_str", "Relative Margin"),
+    ("national_margin_str", "Nat'l Margin"),
+    ("pres_margin_delta_str", "Margin Δ"),
+    ("relative_margin_delta_str", "Relative Margin Δ"),
+    ("national_margin_delta_str", "Nat'l Margin Δ"),
+]
+
+ABBR_TO_STATE = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+    'CO': 'Colorado', 'CT': 'Connecticut', 'DC': 'District of Columbia', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+    'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas',
+    'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'ME-AL': 'Maine', 'ME-01': "Maine's 1st", 'ME-02': "Maine's 2nd", 
+    'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan',
+    'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NE-AL': 'Nebraska', 'NE-01': "Nebraska's 1st",
+    'NE-02': "Nebraska's 2nd", 'NE-03': "Nebraska's 3rd",
+    'NV': 'Nevada',
+    'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota',
+    'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia',
+    'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
 }
