@@ -58,7 +58,7 @@ INDEX_HTML = r"""<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>US Presidential Map</title>
+<title>U.S. State Trends</title>
 <link rel="stylesheet" href="styles.css" />
 <link rel="icon" href="favicon.svg" />
 </head>
