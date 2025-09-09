@@ -245,7 +245,7 @@ def render_table(rows, cols):
 
   # format certain numeric columns (commas for thousands)
   def format_value(col, val):
-    if val is None:
+    if val is None or val == '0':
       return ""
     s = str(val)
     # render vote counts with thousands separators
@@ -265,8 +265,50 @@ def render_table(rows, cols):
 
   thead = "<thead><tr>" + "".join(f"<th>{esc(header_map.get(c, c))}</th>" for c in cols) + "</tr></thead>"
   body = "<tbody>"
+  # helper to parse integers from possibly-formatted strings
+  def parse_int(v):
+    if v is None:
+      return None
+    try:
+      return int(str(v).replace(",", ""))
+    except Exception:
+      return None
+
   for r in rows:
-    body += "<tr>" + "".join(f"<td>{esc(format_value(c, r.get(c, '')))}</td>" for c in cols) + "</tr>"
+    cells = []
+    # parse D and R counts once per row to compute percentages
+    d_raw = r.get("D_votes", "")
+    r_raw = r.get("R_votes", "")
+    d_val = parse_int(d_raw)
+    r_val = parse_int(r_raw)
+    denom = None
+    if d_val is not None and r_val is not None:
+      denom = d_val + r_val
+
+    for c in cols:
+      if c in ("D_votes", "R_votes"):
+        # format votes with thousands separators when possible
+        if c == "D_votes":
+          vote_val = d_val
+        else:
+          vote_val = r_val
+
+        if vote_val is None:
+          # fallback to original formatting function for non-numeric
+          cell = esc(format_value(c, r.get(c, "")))
+        else:
+          votes_str = f"{vote_val:,}"
+          # compute pct only when denominator > 0
+          if denom and denom > 0:
+            pct = (vote_val / denom) * 100
+            pct_str = f"{pct:.1f}%"
+            cell = esc(f"{votes_str}({pct_str})")
+          else:
+            cell = esc(votes_str)
+      else:
+        cell = esc(format_value(c, r.get(c, "")))
+      cells.append(f"<td>{cell}</td>")
+    body += "<tr>" + "".join(cells) + "</tr>"
   body += "</tbody>"
   return f"<table>{thead}{body}</table>"
 
@@ -298,7 +340,7 @@ def describe_column(col):
   if 'pct' in k or 'share' in k:
     return 'Percentage share of the vote.'
   if 'delta' in k:
-    return 'Change (delta) in the value from the previous election year. 0 if no data for previous year.'
+    return 'Change (delta) in the value from the previous election year. Blank if no data for previous year.'
   if 'pres_margin' in k:
     return 'Margin between the two major-party candidates ((D - R)/(D + R)).'
   if 'national_margin' in k:

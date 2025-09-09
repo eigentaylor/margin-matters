@@ -74,10 +74,10 @@ TABLE_COLUMNS: Optional[List] = [
     ("R_pct", "R %"),
     ("pres_margin_str", "Margin"),
     ("relative_margin_str", "Rel. Margin"),
-    ("national_margin_str", "Nat'l Margin"),
+    ("national_margin_str", "Nat. Margin"),
     ("pres_margin_delta_str", "Margin Δ"),
     ("relative_margin_delta_str", "Rel. Margin Δ"),
-    ("national_margin_delta_str", "Nat'l Margin Δ"),
+    ("national_margin_delta_str", "Nat. Margin Δ"),
 ]
 
 ABBR_TO_STATE = {
