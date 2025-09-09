@@ -9,7 +9,8 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>U.S. Presidential Election Explorer</h1>
+  <h1>U.S. Presidential Election Explorer</h1>
+  <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
     <span class="legend">Static alpha · click a state to open its page</span>
   </div>
   <div class="grid">
@@ -28,8 +29,9 @@
   <footer>Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.</footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<!-- use specific UMD bundles so topojson exposes a global `topojson` and d3 is the UMD build -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
 const FIPS_TO_ABBR = {
   "01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC",
@@ -45,25 +47,23 @@ const svg = d3.select("#map");
 const g = svg.append("g");
 const path = d3.geoPath();
 
+// Draw map using us-atlas topojson
 fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
   .then(r => r.json())
   .then(us => {
     const states = topojson.feature(us, us.objects.states).features;
-    svg.append("rect")
-      .attr("width", 975).attr("height", 610)
-      .attr("fill", "black"); // background to match dark theme
+
+    // background rect uses CSS variable via class
+    svg.append("rect").attr("class", "map-bg").attr("width", 975).attr("height", 610);
 
     g.selectAll("path.state")
       .data(states)
       .join("path")
       .attr("class", "state")
-      .attr("d", d3.geoPath())
-      .attr("fill", "#222")
-      .attr("stroke", "#4a4a4a")
-      .attr("stroke-width", 0.8)
+      .attr("d", path)
       .attr("tabindex", 0)
-      .on("mouseover", function() { d3.select(this).attr("fill", "#2b2b2b"); })
-      .on("mouseout",  function() { d3.select(this).attr("fill", "#222"); })
+      .on("mouseover", function() { d3.select(this).classed('hover', true); })
+      .on("mouseout",  function() { d3.select(this).classed('hover', false); })
       .on("click", (event, d) => {
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
         if (abbr) window.location.href = "state/" + abbr + ".html";
@@ -82,7 +82,25 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         .attr("href","state/" + abbr + ".html")
         .text(abbr);
     });
+  })
+  .catch(err => {
+    console.error('Map load failed:', err);
+    d3.select('#map-wrap').append('div').attr('class','legend').text('Map failed to load. Check network or console for details.');
   });
+
+// Theme toggle: default dark, allow toggling to light and persist preference
+(function(){
+  const btn = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+  const current = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  if(current === 'light') document.body.classList.add('light');
+  btn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+  btn.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    btn.textContent = isLight ? '☀️' : '🌙';
+  });
+})();
 </script>
 </body>
 </html>
