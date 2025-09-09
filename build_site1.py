@@ -176,7 +176,8 @@ PAGE_HTML = r"""<!doctype html>
   <div class="card">
     <h2 style="margin-top:0">%TABLE_HEADING%</h2>
     <div class="table-wrap">
-      %TABLE_HTML%
+  %TABLE_HTML%
+  %INFO_BOX%
     </div>
   </div>
   <footer>Site by eigentaylor. Please report any innaccuracies to tayloreigenfisher@gmail.com·</footer>
@@ -258,16 +259,9 @@ def render_table(rows, cols):
     return s
 
   # Build header label map from params.TABLE_COLUMNS when provided
-  if params.TABLE_COLUMNS is not None:
-    header_labels = []
-    for item in params.TABLE_COLUMNS:
-      if isinstance(item, (list, tuple)) and len(item) >= 2:
-        header_labels.append((item[0], item[1]))
-      else:
-        header_labels.append((item, item))
-    header_map = {k: v for k, v in header_labels}
-  else:
-    header_map = {c: c for c in cols}
+  # header map uses the same logic as get_header_map so the table labels
+  # and the info box stay consistent.
+  header_map = get_header_map(cols)
 
   thead = "<thead><tr>" + "".join(f"<th>{esc(header_map.get(c, c))}</th>" for c in cols) + "</tr></thead>"
   body = "<tbody>"
@@ -275,6 +269,70 @@ def render_table(rows, cols):
     body += "<tr>" + "".join(f"<td>{esc(format_value(c, r.get(c, '')))}</td>" for c in cols) + "</tr>"
   body += "</tbody>"
   return f"<table>{thead}{body}</table>"
+
+
+def get_header_map(cols):
+  """Return a mapping of column_name -> display_label using params.TABLE_COLUMNS
+  when present, otherwise identity map for the provided cols list."""
+  if params.TABLE_COLUMNS is not None:
+    header_labels = []
+    for item in params.TABLE_COLUMNS:
+      if isinstance(item, (list, tuple)) and len(item) >= 2:
+        header_labels.append((item[0], item[1]))
+      else:
+        header_labels.append((item, item))
+    # preserve order but map to first matching label
+    return {k: v for k, v in header_labels}
+  return {c: c for c in cols}
+
+
+def describe_column(col):
+  """Return a short human-readable description for common column names."""
+  k = col.lower()
+  if k == 'year':
+    return 'Election year.'
+  if k in ('d_votes', 'd_votes'.lower()):
+    return 'Number of votes for the Democratic candidate (raw count).'
+  if k in ('r_votes',):
+    return 'Number of votes for the Republican candidate (raw count).'
+  if 'pct' in k or 'share' in k:
+    return 'Percentage share of the vote.'
+  if 'delta' in k:
+    return 'Change (delta) in the value from the previous election year. 0 if no data for previous year.'
+  if 'pres_margin' in k:
+    return 'Margin between the two major-party candidates ((D - R)/(D + R)).'
+  if 'national_margin' in k:
+    return 'The national presidential margin for that year ((D_total - R_total)/(D_total + R_total)).'
+  if 'relative_margin' in k:
+    return 'The presidential margin relative to the national presidential margin (Margin - Nat\'l Margin).'
+  if 'abbr' in k:
+    return 'State or unit abbreviation.'
+  if 'turnout' in k:
+    return 'Total voter turnout or ballots cast (when provided).'
+  # fallback
+  return 'Value from the CSV for this column.'
+
+
+def render_info_box(cols):
+  """Return HTML for an explanatory info box describing each column in cols.
+  Uses header display labels when available.
+  """
+  header_map = get_header_map(cols)
+  # Build a definition list for readability
+  items = []
+  done_delta = False
+  for c in cols:
+    label = header_map.get(c, c)
+    if 'delta' in c.lower():
+      if done_delta:
+        continue
+      else:
+        done_delta = True
+        label = "Δ"
+    desc = describe_column(c)
+    items.append(f"<dt>{label}</dt><dd>{desc}</dd>")
+  dl = """<div class=\"card\"><h3 style=\"margin-top:0\">Column explanations</h3><dl style=\"margin:0;\">""" + "".join(items) + "</dl></div>"
+  return dl
 
 
 # a simple ballot-themed SVG favicon (keeps repo dependency-free)
@@ -349,7 +407,8 @@ def build_pages(rows):
       .replace("%IMG_NOTE%", img_note)
       .replace("%EXTRA_LINKS%", extra_links)
       .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Data")
-      .replace("%TABLE_HTML%", render_table(table_rows, cols))
+  .replace("%TABLE_HTML%", render_table(table_rows, cols))
+  .replace("%INFO_BOX%", render_info_box(cols))
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(STATE_DIR / f"{st[:2]}.html", page)
@@ -383,7 +442,8 @@ def build_pages(rows):
       .replace("%IMG_NOTE%", f"{unit} district")
       .replace("%EXTRA_LINKS%", extra_links)
       .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Data")
-      .replace("%TABLE_HTML%", render_table(table_rows, cols))
+  .replace("%TABLE_HTML%", render_table(table_rows, cols))
+  .replace("%INFO_BOX%", render_info_box(cols))
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(UNIT_DIR / f"{unit}.html", page)
@@ -453,9 +513,10 @@ def build_pages(rows):
     .replace("%LABEL%", "NAT")
     .replace("%IMG_SRC%", img_src)
     .replace("%IMG_NOTE%", img_note)
-    .replace("%EXTRA_LINKS%", "")
-    .replace("%TABLE_HEADING%", "National — Data")
-    .replace("%TABLE_HTML%", render_table(national_rows, nat_cols))
+  .replace("%EXTRA_LINKS%", "")
+  .replace("%TABLE_HEADING%", "National — Data")
+  .replace("%TABLE_HTML%", render_table(national_rows, nat_cols))
+  .replace("%INFO_BOX%", render_info_box(nat_cols))
   )
   page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
   write_text(STATE_DIR / f"NAT.html", page)
