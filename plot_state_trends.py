@@ -131,7 +131,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
 
         bars = ax.bar(x_indices, relative_margin, width=0.4, label='Pres Relative Margin', color=pres_colors)
         ax.bar_label(bars, labels=[utils.lean_str(v) for v in relative_margin], padding=3, fontsize=8, color='white')
-        ax.set_title('Relative Margins')
+        ax.set_title(f'{state} Relative Margins')
         ax.set_xlabel('Year')
         ax.set_ylabel('Relative Margin')
         y_vals = ax.get_yticks()
@@ -153,7 +153,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
         # Bars styled like the relative-margin bar plot
         bars = ax.bar(x_indices, deltas, width=0.4, label='Delta Relative Margin', color=colors)
         ax.bar_label(bars, labels=[utils.lean_str(v) for v in deltas], padding=3, fontsize=8, color='white')
-        ax.set_title('Change in Relative Margin')
+        ax.set_title(f'{state} Change in Relative Margin')
         ax.set_xlabel('Year')
         ax.set_ylabel('Delta Relative Margin')
         y_vals = ax.get_yticks()
@@ -339,7 +339,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
                 y_vals_left = ax_delta_left.get_yticks()
                 ax_delta_left.set_yticks(y_vals_left)
                 ax_delta_left.set_yticklabels([utils.lean_str(y_val) if y_val != 0 else '0' for y_val in y_vals_left], color='white')
-                ax_delta_left.set_title('Change in Presidential Margin')
+                ax_delta_left.set_title(f'{state} Change in Presidential Margin')
                 ax_delta_left.set_xticks(x_idx_delta)
                 ax_delta_left.set_xticklabels(years_filtered, rotation=45)
                 ax_delta_left.axhline(0, color='red', linestyle='--', linewidth=1)
@@ -352,7 +352,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
                 y_vals_right = ax_delta_right.get_yticks()
                 ax_delta_right.set_yticks(y_vals_right)
                 ax_delta_right.set_yticklabels([utils.lean_str(y_val) if y_val != 0 else '0' for y_val in y_vals_right], color='white')
-                ax_delta_right.set_title('Change in Relative Margin')
+                ax_delta_right.set_title(f'{state} Change in Relative Margin')
                 ax_delta_right.set_xticks(x_idx_delta)
                 ax_delta_right.set_xticklabels(years_filtered, rotation=45)
                 ax_delta_right.axhline(0, color='red', linestyle='--', linewidth=1)
@@ -382,6 +382,6 @@ if __name__ == "__main__":
          use_loess=args.use_loess, use_linear=args.use_linear,
          use_spline=args.use_spline, spline_regularization=args.spline_regularization)
 
-    main(start_year=2000, end_year=args.end_year, plot_house_margins=plot_house_margins,
-         use_loess=args.use_loess, use_linear=args.use_linear,
-         use_spline=args.use_spline, spline_regularization=args.spline_regularization)
+    # main(start_year=2000, end_year=args.end_year, plot_house_margins=plot_house_margins,
+    #      use_loess=args.use_loess, use_linear=args.use_linear,
+    #      use_spline=args.use_spline, spline_regularization=args.spline_regularization)
