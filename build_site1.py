@@ -7,6 +7,7 @@ import os
 import shutil
 from pathlib import Path
 from collections import defaultdict
+import datetime
 import params
 
 CSV_PATH = Path("presidential_margins.csv")  # your provided file
@@ -18,6 +19,9 @@ PLOTS_DST = OUT_DIR / "plots"     # copied here if present
 
 SMALL_STATES = ["DC", "DE", "RI", "CT", "NJ", "MD", "MA", "VT", "NH"]
 ME_NE_STATES = {"ME-AL", "NE-AL"}
+
+# timestamp used in footers (UTC at build time)
+LAST_UPDATED = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
 # HTML templates (dark theme for comfy eyes)
 BASE_CSS = r"""
@@ -60,7 +64,7 @@ INDEX_HTML = r"""<!doctype html>
 <div class="container">
   <div class="header">
     <h1>U.S. Presidential Election Explorer</h1>
-    <span class="legend">Static alpha · click a state to open its page</span>
+    <span class="legend">Click a state to open its page</span>
   </div>
   <div class="grid">
     <div class="card">
@@ -75,7 +79,7 @@ INDEX_HTML = r"""<!doctype html>
       <p class="legend">Tip: Maine and Nebraska’s statewide pages include big links to their district pages.</p>
     </div>
   </div>
-  <footer>Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.</footer>
+  <footer>Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs. Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -118,7 +122,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
         // For ME and NE we want the statewide page which is named ME-AL/NE-AL
         if (abbr === "ME" || abbr === "NE") {
-          window.location.href = "state/" + abbr + "-AL.html";
+          window.location.href = "state/" + abbr + ".html";
         } else if (abbr) {
           window.location.href = "state/" + abbr + ".html";
         }
@@ -167,7 +171,7 @@ PAGE_HTML = r"""<!doctype html>
       %TABLE_HTML%
     </div>
   </div>
-  <footer>Data from presidential_margins.csv</footer>
+  <footer>Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
 </div>
 </body>
 </html>
@@ -283,84 +287,100 @@ def write_text(path: Path, text: str):
     path.write_text(text, encoding="utf-8")
 
 def make_index(states_sorted):
-    html = INDEX_HTML.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
-    write_text(OUT_DIR / "index.html", html)
+  html = INDEX_HTML.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
+  html = html.replace("%LAST_UPDATED%", LAST_UPDATED)
+  write_text(OUT_DIR / "index.html", html)
 
 def titleize_unit(unit):
     return unit
 
 def build_pages(rows):
-    headers = list(rows[0].keys())
-    cols = columns_for_table(headers)
-    by_abbr = group_by_abbr(rows)
+  headers = list(rows[0].keys())
+  cols = columns_for_table(headers)
+  by_abbr = group_by_abbr(rows)
 
-    # derive states (two-letter codes) present
-    states = sorted({abbr for abbr in by_abbr.keys() if (len(abbr) == 2 or '-AL' in abbr)})
-    # derive district units (ME-01 etc.)
-    district_units = sorted({abbr for abbr in by_abbr.keys() if "-" in abbr})
+  # derive states (two-letter codes) present
+  states = sorted({abbr for abbr in by_abbr.keys() if (len(abbr) == 2 or '-AL' in abbr)})
+  # derive district units (ME-01 etc.)
+  district_units = sorted({abbr for abbr in by_abbr.keys() if "-" in abbr})
 
-    # state pages
-    for st in states:
-        label = st
-        # data source rows for the page
-        table_rows = by_abbr.get(st, [])
-        img_src = f"../plots/{st}_trend.png"
-        if st in ME_NE_STATES:
-            img_note = f"{params.ABBR_TO_STATE.get(st, st)} statewide (AL)"
-        else:
-            img_note = f"{params.ABBR_TO_STATE.get(st, st)} statewide"
-        if not table_rows:
-            # if no rows, still generate a minimal page
-            img_note += " · (no rows found in CSV)"
-        extra_links = ""
-        if st in ME_NE_STATES:
-            # list district pages that actually exist in CSV
-            dlist = sorted([u for u in district_units if u.startswith(st[:2]+"-")])
-            if dlist:
-                items = "".join(
-                    f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != st else 
-                    f'<a class="btn" href="../state/{st}.html">{u}</a>'
-                    for u in dlist
-                )
-                extra_links = f'<div class="card"><h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)}\' Districts</h2><div class="small-links">{items}</div></div>'
-        page = (PAGE_HTML
-                .replace("%TITLE%", f"{st} · State")
-                .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
-                .replace("%LABEL%", label)
-                .replace("%IMG_SRC%", img_src)
-                .replace("%IMG_NOTE%", img_note)
-                .replace("%EXTRA_LINKS%", extra_links)
-                .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Data")
-                .replace("%TABLE_HTML%", render_table(table_rows, cols)))
-        write_text(STATE_DIR / f"{st}.html", page)
+  # state pages
+  for st in states:
+    label = st
+    # data source rows for the page
+    table_rows = by_abbr.get(st, [])
+    img_src = f"../plots/{st}_trend.png"
+    if st in ME_NE_STATES:
+      img_note = f"{params.ABBR_TO_STATE.get(st, st)} ({st}) statewide"
+    else:
+      img_note = f"{params.ABBR_TO_STATE.get(st, st)} ({st}) statewide"
+    if not table_rows:
+      # if no rows, still generate a minimal page
+      img_note += " · (no rows found in CSV)"
+    extra_links = ""
+    if st in ME_NE_STATES:
+      # list district pages that actually exist in CSV
+      dlist = sorted([u for u in district_units if u.startswith(st[:2] + "-")])
+      if dlist:
+        items = "".join(
+          f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != st else
+          f'<a class="btn" href="../state/{st[:2]}.html">{u}</a>'
+          for u in dlist
+        )
+        extra_links = (
+          f'<div class="card"><h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)}\' Districts</h2>'
+          f'<div class="small-links">{items}</div></div>'
+        )
 
-    # district/unit pages
-    for unit in district_units:
-        if unit.endswith("-AL"):
-            continue  # AL already covered on the state page
-        table_rows = by_abbr.get(unit, [])
-        # list district pages that actually exist in CSV
-        dlist = sorted([u for u in district_units if u.startswith(unit[:2]+"-")])
-        if dlist:
-            items = "".join(
-                f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != unit[:2] + "-AL" else
-                f'<a class="btn" href="../state/{unit[:2]}-AL.html">{u}</a>'
-                for u in dlist
-            )
-            abbr_state = params.ABBR_TO_STATE.get(unit[:2], unit) or ""
-            extra_links = f'<div class="card"><h2 style="margin-top:0">{abbr_state}\'s Districts</h2><div class="small-links">{items}</div></div>'
-        page = (PAGE_HTML
-                .replace("%TITLE%", f"{unit} · District")
-                .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
-                .replace("%LABEL%", unit)
-                .replace("%IMG_SRC%", f"../plots/{unit}_trend.png")
-                .replace("%IMG_NOTE%", f"{unit} district")
-                .replace("%EXTRA_LINKS%", extra_links)
-                .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Data")
-                .replace("%TABLE_HTML%", render_table(table_rows, cols)))
-        write_text(UNIT_DIR / f"{unit}.html", page)
+    page = (
+      PAGE_HTML
+      .replace("%TITLE%", f"{st} · State")
+      .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
+      .replace("%LABEL%", label)
+      .replace("%IMG_SRC%", img_src)
+      .replace("%IMG_NOTE%", img_note)
+      .replace("%EXTRA_LINKS%", extra_links)
+      .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Data")
+      .replace("%TABLE_HTML%", render_table(table_rows, cols))
+    )
+    page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
+    write_text(STATE_DIR / f"{st[:2]}.html", page)
 
-    return states
+  # district/unit pages
+  for unit in district_units:
+    if unit.endswith("-AL"):
+      continue  # AL already covered on the state page
+    table_rows = by_abbr.get(unit, [])
+    # list district pages that actually exist in CSV
+    dlist = sorted([u for u in district_units if u.startswith(unit[:2] + "-")])
+    extra_links = ""
+    if dlist:
+      items = "".join(
+        f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != unit[:2] + "-AL" else
+        f'<a class="btn" href="../state/{unit[:2]}.html">{u}</a>'
+        for u in dlist
+      )
+      abbr_state = params.ABBR_TO_STATE.get(unit[:2], unit) or ""
+      extra_links = (
+        f'<div class="card"><h2 style="margin-top:0">{abbr_state}\'s Districts</h2>'
+        f'<div class="small-links">{items}</div></div>'
+      )
+
+    page = (
+      PAGE_HTML
+      .replace("%TITLE%", f"{unit} · District")
+      .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
+      .replace("%LABEL%", unit)
+      .replace("%IMG_SRC%", f"../plots/{unit}_trend.png")
+      .replace("%IMG_NOTE%", f"{unit} district")
+      .replace("%EXTRA_LINKS%", extra_links)
+      .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Data")
+      .replace("%TABLE_HTML%", render_table(table_rows, cols))
+    )
+    page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
+    write_text(UNIT_DIR / f"{unit}.html", page)
+
+  return states
 
 def main():
     ensure_dirs()
