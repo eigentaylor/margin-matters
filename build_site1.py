@@ -324,7 +324,7 @@ def build_pages(rows):
                 )
                 extra_links = f'<div class="card"><h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)}\' Districts</h2><div class="small-links">{items}</div></div>'
         page = (PAGE_HTML
-                .replace("%TITLE%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) · State")
+                .replace("%TITLE%", f"{st} · State")
                 .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
                 .replace("%LABEL%", label)
                 .replace("%IMG_SRC%", img_src)
