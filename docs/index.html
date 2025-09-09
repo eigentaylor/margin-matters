@@ -52,9 +52,6 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
   .then(r => r.json())
   .then(us => {
     const states = topojson.feature(us, us.objects.states).features;
-    svg.append("rect")
-      .attr("width", 975).attr("height", 610)
-      .attr("fill", "black"); // background to match dark theme
 
     g.selectAll("path.state")
       .data(states)
