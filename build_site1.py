@@ -346,7 +346,7 @@ def describe_column(col):
   if 'national_margin' in k:
     return 'The national presidential margin for that year ((D_total - R_total)/(D_total + R_total)).'
   if 'relative_margin' in k:
-    return 'The presidential margin relative to the national presidential margin (Margin - Nat\'l Margin).'
+    return 'The presidential margin relative to the national presidential margin (Margin - Nat. Margin).'
   if 'abbr' in k:
     return 'State or unit abbreviation.'
   if 'turnout' in k:
