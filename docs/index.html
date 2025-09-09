@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>US Presidential Map</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>U.S. Presidential Election Explorer</h1>
+    <span class="legend">Static alpha · click a state to open its page</span>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div id="map-wrap" class="center">
+        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+      </div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Small States · Quick Links</h2>
+      <div class="small-links" id="small-links"></div>
+      <hr/>
+      <p class="legend">Tip: Maine and Nebraska’s statewide pages include big links to their district pages.</p>
+    </div>
+  </div>
+  <footer>Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script>
+const FIPS_TO_ABBR = {
+  "01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC",
+  "12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA",
+  "23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV",
+  "33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA",
+  "44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV",
+  "55":"WI","56":"WY"
+};
+const SMALL_STATES = ['DC', 'DE', 'RI', 'CT', 'NJ', 'MD', 'MA', 'VT', 'NH'];
+
+const svg = d3.select("#map");
+const g = svg.append("g");
+const path = d3.geoPath();
+
+fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
+  .then(r => r.json())
+  .then(us => {
+    const states = topojson.feature(us, us.objects.states).features;
+    svg.append("rect")
+      .attr("width", 975).attr("height", 610)
+      .attr("fill", "black"); // background to match dark theme
+
+    g.selectAll("path.state")
+      .data(states)
+      .join("path")
+      .attr("class", "state")
+      .attr("d", d3.geoPath())
+      .attr("fill", "#222")
+      .attr("stroke", "#4a4a4a")
+      .attr("stroke-width", 0.8)
+      .attr("tabindex", 0)
+      .on("mouseover", function() { d3.select(this).attr("fill", "#2b2b2b"); })
+      .on("mouseout",  function() { d3.select(this).attr("fill", "#222"); })
+      .on("click", (event, d) => {
+        const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+        if (abbr) window.location.href = "state/" + abbr + ".html";
+      })
+      .append("title")
+      .text(d => {
+        const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+        return abbr ? abbr : "Unknown";
+      });
+
+    // Small state buttons
+    const links = d3.select("#small-links");
+    SMALL_STATES.forEach(abbr => {
+      links.append("a")
+        .attr("class","btn")
+        .attr("href","state/" + abbr + ".html")
+        .text(abbr);
+    });
+  });
+</script>
+</body>
+</html>

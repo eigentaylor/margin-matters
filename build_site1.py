@@ -9,7 +9,7 @@ from pathlib import Path
 from collections import defaultdict
 
 CSV_PATH = Path("presidential_margins.csv")  # your provided file
-OUT_DIR = Path("site")
+OUT_DIR = Path("docs")          # output folder (for GitHub Pages)
 STATE_DIR = OUT_DIR / "state"
 UNIT_DIR = OUT_DIR / "unit"
 PLOTS_SRC = Path("plots")         # optional local folder with images
@@ -305,7 +305,7 @@ def main():
     rows = read_csv(CSV_PATH)
     states = build_pages(rows)
     make_index(states)
-    print(f"Done. Open {OUT_DIR/'index.html'} in a browser or deploy /site to GitHub Pages.")
+    print(f"Done. Open {OUT_DIR/'index.html'} in a browser or deploy /docs to GitHub Pages.")
 
 if __name__ == "__main__":
     main()
