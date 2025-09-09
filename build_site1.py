@@ -228,6 +228,21 @@ def render_table(rows, cols):
     s = "" if x is None else str(x)
     return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
+  # format certain numeric columns (commas for thousands)
+  def format_value(col, val):
+    if val is None:
+      return ""
+    s = str(val)
+    # render vote counts with thousands separators
+    if col in ("D_votes", "R_votes"):
+      try:
+        # allow existing commas by removing them first
+        n = int(s.replace(",", ""))
+        return f"{n:,}"
+      except Exception:
+        return s
+    return s
+
   # Build header label map from params.TABLE_COLUMNS when provided
   if params.TABLE_COLUMNS is not None:
     header_labels = []
@@ -243,7 +258,7 @@ def render_table(rows, cols):
   thead = "<thead><tr>" + "".join(f"<th>{esc(header_map.get(c, c))}</th>" for c in cols) + "</tr></thead>"
   body = "<tbody>"
   for r in rows:
-    body += "<tr>" + "".join(f"<td>{esc(r.get(c, ''))}</td>" for c in cols) + "</tr>"
+    body += "<tr>" + "".join(f"<td>{esc(format_value(c, r.get(c, '')))}</td>" for c in cols) + "</tr>"
   body += "</tbody>"
   return f"<table>{thead}{body}</table>"
 
