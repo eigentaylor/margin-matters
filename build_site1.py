@@ -292,7 +292,8 @@ def build_pages(rows):
             dlist = sorted([u for u in district_units if u.startswith(st[:2]+"-")])
             if dlist:
                 items = "".join(
-                    f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != st else f'<a class="btn" href="../state/{st}.html">{u} (AL)</a>'
+                    f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != st else 
+                    f'<a class="btn" href="../state/{st}.html">{u}</a>'
                     for u in dlist
                 )
                 extra_links = f'<div class="card"><h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)}\' Districts</h2><div class="small-links">{items}</div></div>'
@@ -316,7 +317,9 @@ def build_pages(rows):
         dlist = sorted([u for u in district_units if u.startswith(unit[:2]+"-")])
         if dlist:
             items = "".join(
-                f'<a class="btn" href="../unit/{u}.html">{u}</a>' for u in dlist
+                f'<a class="btn" href="../unit/{u}.html">{u}</a>' if u != unit[:2] + "-AL" else
+                f'<a class="btn" href="../state/{unit[:2]}-AL.html">{u}</a>'
+                for u in dlist
             )
             abbr_state = params.ABBR_TO_STATE.get(unit[:2], unit) or ""
             extra_links = f'<div class="card"><h2 style="margin-top:0">{abbr_state}\'s Districts</h2><div class="small-links">{items}</div></div>'
