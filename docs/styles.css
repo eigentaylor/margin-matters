@@ -15,10 +15,12 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
 img.plot{width:100%;max-width:900px;display:block;border:1px solid var(--border);border-radius:10px;background:#000}
 .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse;background:#111}
-th,td{padding:10px 12px;border-bottom:1px solid #1f1f1f;white-space:nowrap}
+table{width:100%;border-collapse:collapse;background:#111;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+th,td{padding:10px 12px;border-bottom:1px solid #1f1f1f;white-space:nowrap;text-align:center;border-right:1px solid var(--border)}
 th{position:sticky;top:0;background:#161616}
 tbody tr:hover{background:#151515}
+/* Remove the right border from the last column for a cleaner edge */
+thead th:last-child, tbody td:last-child {border-right: none}
 .back{margin-bottom:12px;display:inline-block}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}
