@@ -325,12 +325,12 @@ def build_pages(rows):
             extra_links = f'<div class="card"><h2 style="margin-top:0">{abbr_state}\'s Districts</h2><div class="small-links">{items}</div></div>'
         page = (PAGE_HTML
                 .replace("%TITLE%", f"{unit} · District")
-                .replace("%HEADING%", f"{unit}")
+                .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
                 .replace("%LABEL%", unit)
                 .replace("%IMG_SRC%", f"../plots/{unit}_trend.png")
                 .replace("%IMG_NOTE%", f"{unit} district")
                 .replace("%EXTRA_LINKS%", extra_links)
-                .replace("%TABLE_HEADING%", f"{unit} — Data")
+                .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Data")
                 .replace("%TABLE_HTML%", render_table(table_rows, cols)))
         write_text(UNIT_DIR / f"{unit}.html", page)
 
