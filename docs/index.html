@@ -43,7 +43,10 @@ const SMALL_STATES = ['DC', 'DE', 'RI', 'CT', 'NJ', 'MD', 'MA', 'VT', 'NH'];
 
 const svg = d3.select("#map");
 const g = svg.append("g");
-const path = d3.geoPath();
+// Use an Albers USA projection so geographic coordinates from us-atlas
+// are projected into the SVG viewBox correctly.
+const projection = d3.geoAlbersUsa().scale(1300).translate([975/2, 610/2]);
+const path = d3.geoPath().projection(projection);
 
 fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
   .then(r => r.json())
@@ -57,7 +60,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .data(states)
       .join("path")
       .attr("class", "state")
-      .attr("d", d3.geoPath())
+      .attr("d", path)
       .attr("fill", "#222")
       .attr("stroke", "#4a4a4a")
       .attr("stroke-width", 0.8)
