@@ -65,7 +65,7 @@ INDEX_HTML = r"""<!doctype html>
 <body>
 <div class="container">
   <div class="header">
-    <h1>U.S. Presidential Election Explorer</h1>
+    <h1>U.S. Presidential Election State Trends</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
   <div class="grid">
