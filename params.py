@@ -78,9 +78,11 @@ TABLE_COLUMNS: Optional[List] = [
     ("pres_margin_str", "Margin"),
     ("relative_margin_str", "Rel. Margin"),
     ("national_margin_str", "Nat. Margin"),
+    ("two_party_margin_str", "2-Party Margin"),
     ("pres_margin_delta_str", "Margin Δ"),
     ("relative_margin_delta_str", "Rel. Margin Δ"),
     ("national_margin_delta_str", "Nat. Margin Δ"),
+    ("two_party_margin_delta", "2-Party Margin Δ"),
     ("T_votes", "Other votes"),
     ("total_votes", "Total votes"),
 ]

@@ -60,6 +60,7 @@ def main(two_party_margin=False):
                 total = r['D_votes'] + r['R_votes']
             else:
                 total = r['total_votes'] if r['total_votes'] != 0 else 1
+                r['two_party_margin'] = (r['D_votes'] - r['R_votes']) / (r['D_votes'] + r['R_votes']) if (r['D_votes'] + r['R_votes']) > 0 else 0.0
             r['pres_margin'] = (r['D_votes'] - r['R_votes']) / total
         # find national row
         national = next((x for x in lst if x['abbr'] == 'NATIONAL'), None)
@@ -108,6 +109,8 @@ def main(two_party_margin=False):
                 if prev_row is not None:
                     prev_pres = prev_row.get('pres_margin', None)
                     prev_national = national_margin_by_year.get(prev_year, None)
+                    if not params.USE_TWO_PARTY_MARGIN:
+                        prev_two_party = prev_row.get('two_party_margin', None)
                     if prev_pres is not None and prev_national is not None:
                         prev_relative = prev_pres - prev_national
 
@@ -115,6 +118,8 @@ def main(two_party_margin=False):
             national_prev = prev_national if prev_national is not None else None
             national_delta = national - national_prev if national_prev is not None else None
             relative_delta = relative - prev_relative if prev_relative is not None else None
+            if not params.USE_TWO_PARTY_MARGIN and prev_pres is not None and prev_two_party is not None:
+                r['two_party_margin_delta'] = r['two_party_margin'] - prev_two_party
 
             # electoral_votes not present in source; assume 0
             electoral_votes = r.get('electoral_votes', 0)
@@ -140,6 +145,11 @@ def main(two_party_margin=False):
                 'relative_margin_str': utils.lean_str(relative),
                 'relative_margin_delta_str': utils.lean_str(relative_delta),
             }
+            if not two_party_margin:
+                out['two_party_margin'] = r.get('two_party_margin', 0.0)
+                out['two_party_margin_str'] = utils.lean_str(out['two_party_margin'])
+                out['two_party_margin_delta'] = r.get('two_party_margin_delta', 0.0)
+                out['two_party_margin_delta_str'] = utils.lean_str(out['two_party_margin_delta'])
             out_rows.append(out)
 
     # write CSV
@@ -149,6 +159,8 @@ def main(two_party_margin=False):
         'national_margin', 'national_margin_delta', 'national_margin_str', 'national_margin_delta_str',
         'relative_margin', 'relative_margin_delta', 'relative_margin_str', 'relative_margin_delta_str'
     ]
+    if not two_party_margin:
+        fieldnames += ['two_party_margin', 'two_party_margin_str', 'two_party_margin_delta', 'two_party_margin_delta_str']
 
     with open(outfile, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)

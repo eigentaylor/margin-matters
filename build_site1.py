@@ -9,6 +9,7 @@ from pathlib import Path
 from collections import defaultdict
 import datetime
 import params
+import utils
 
 CSV_PATH = Path("presidential_margins.csv")  # your provided file
 OUT_DIR = Path("docs")          # output folder (for GitHub Pages)
@@ -342,19 +343,19 @@ def describe_column(col):
   if k == 'year':
     return 'Election year.'
   if k in ('d_votes', 'd_votes'.lower()):
-    return 'Number of votes for the Democratic candidate (raw count).'
+    return 'Number of votes for the Democratic candidate (raw count(pct%)).'
   if k in ('r_votes',):
-    return 'Number of votes for the Republican candidate (raw count).'
+    return 'Number of votes for the Republican candidate (raw count(pct%)).'
   if k in ('t_votes',):
-    return 'Number of votes for third-party (other) candidates (raw count).'
+    return 'Number of votes for third-party (other) candidates (raw count(pct%)).'
   if 'pct' in k or 'share' in k:
     return 'Percentage share of the vote.'
   if 'delta' in k:
     return 'Change (delta) in the value from the previous election year. Blank if no data for previous year.'
   if 'pres_margin' in k:
-    return 'Margin between the two major-party candidates ((D - R)/(D + R)).'
+    return 'Margin between the two major-party candidates ((D - R)/(D + R)).' if params.USE_TWO_PARTY_MARGIN else 'Margin between the two major-party candidates, including third-party votes ((D - R)/total).'
   if 'national_margin' in k:
-    return 'The national presidential margin for that year ((D_total - R_total)/(D_total + R_total)).'
+    return 'The national presidential margin for that year ((D_total - R_total)/(D_total + R_total)).' if params.USE_TWO_PARTY_MARGIN else 'The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).'
   if 'relative_margin' in k:
     return 'The presidential margin relative to the national presidential margin (Margin - Nat. Margin).'
   if 'abbr' in k:
@@ -363,6 +364,8 @@ def describe_column(col):
     return 'Total voter turnout or ballots cast (when provided).'
   if 'electoral_votes' in k:
     return 'Number of electoral votes allocated to this state or unit.'
+  if 'two_party_margin' in k:
+    return 'Margin between the two major-party candidates, ignoring third-party votes ((D - R)/(D + R)).'
   # fallback
   return 'Value from the CSV for this column.'
 
@@ -555,6 +558,12 @@ def build_pages(rows):
         # (e.g. abbr, pres_margin, relative_margin, etc.)
         continue
       out[h] = val
+    # add two party margin if not params.USE_TWO_PARTY_MARGIN
+    if not params.USE_TWO_PARTY_MARGIN:
+      d = out.get('D_votes')
+      r = out.get('R_votes')
+      if isinstance(d, int) and isinstance(r, int) and (d + r) > 0:
+        out['two_party_margin'] = utils.lean_str((d - r) / (d + r))
     for h in out:
       if h not in nat_cols:
         nat_cols.append(h)
