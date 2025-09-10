@@ -68,6 +68,7 @@ FINAL_MARGIN_THRESHOLDS: Dict[str, float] = {
 # Place this in your local copy of params.py to customize the table output.
 TABLE_COLUMNS: Optional[List] = [
     ("year", "Year"),
+    ("electoral_votes", "EVs"),
     ("D_votes", "D"),
     ("D_pct", "D %"),
     ("R_votes", "R"),
@@ -78,6 +79,8 @@ TABLE_COLUMNS: Optional[List] = [
     ("pres_margin_delta_str", "Margin Δ"),
     ("relative_margin_delta_str", "Rel. Margin Δ"),
     ("national_margin_delta_str", "Nat. Margin Δ"),
+    ("T_votes", "Other votes"),
+    ("total_votes", "Total votes"),
 ]
 
 ABBR_TO_STATE = {

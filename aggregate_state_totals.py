@@ -57,13 +57,35 @@ def main():
         .reset_index()
     )
 
+    # Compute number of districts per state/year (exclude 'AL' combined rows).
+    # Pad district values first so numeric districts are normalized.
+    df["district_padded"] = df["district"].apply(pad_district)
+    # Count unique numeric districts per (year, state) excluding 'AL' and NaNs
+    district_counts = (
+        df[df["district_padded"].notna() & (df["district_padded"] != "AL")]
+        .groupby(["year", "state"])["district_padded"]
+        .nunique()
+        .reset_index()
+        .rename(columns={"district_padded": "num_districts"})
+    )
+
+    # merge district_counts into state_sums to compute electoral votes
+    state_sums = state_sums.merge(district_counts, on=["year", "state"], how="left")
+    # where we don't have per-district rows, assume at least 1 district so EV >= 3
+    state_sums["num_districts"] = state_sums["num_districts"].fillna(1).astype(int)
+    state_sums["electoral_votes"] = state_sums["num_districts"] + 2
+
     # For ME and NE: combined row should be named ME-AL / NE-AL
     state_sums["abbr"] = state_sums.apply(
         lambda r: f"{r['state']}-AL" if r["state"] in ("ME", "NE") else r["state"],
         axis=1,
     )
 
-    combined = state_sums[["year", "abbr"] + vote_cols]
+    # Force combined ME-AL and NE-AL to always have exactly 2 electoral votes
+    # (the statewide "-AL" rows should represent the two at-large electors)
+    state_sums.loc[state_sums["abbr"].isin(["ME-AL", "NE-AL"]), "electoral_votes"] = 2
+
+    combined = state_sums[["year", "abbr"] + vote_cols + ["electoral_votes"]]
 
     # Keep district rows only for ME and NE (but drop the AL row to avoid double-counting the combined one)
     me_ne = df[df["state"].isin(("ME", "NE"))].copy()
@@ -72,13 +94,18 @@ def main():
     me_ne = me_ne[me_ne["district_padded"] != "AL"]
     me_ne["abbr"] = me_ne["state"] + "-" + me_ne["district_padded"].astype(str)
     me_ne = me_ne[["year", "abbr"] + vote_cols]
+    # district rows (ME/NE) each carry 1 electoral vote for the district
+    me_ne["electoral_votes"] = 1
 
     # NATIONAL row per year (sum of state combined rows)
     national = (
         state_sums.groupby("year")[vote_cols].sum().reset_index()
     )
     national["abbr"] = "NATIONAL"
-    national = national[["year", "abbr"] + vote_cols]
+    # national electoral votes = sum of state electoral votes
+    national_ev = state_sums.groupby("year")["electoral_votes"].sum().reset_index()
+    national = national.merge(national_ev, on="year", how="left")
+    national = national[["year", "abbr"] + vote_cols + ["electoral_votes"]]
 
     # Final assembly: combined (all states), plus ME/NE district rows, plus national
     final = pd.concat([combined, me_ne, national], ignore_index=True)

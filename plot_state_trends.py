@@ -98,7 +98,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
             return fig, (axes[0], axes[1], None)
 
 
-    def style_line_axis(ax, years, pres_margin, national_margin, state, include_pres_results=True):
+    def style_line_axis(ax, years, pres_margin, national_margin, state, include_pres_results=True, label_margins=False):
         pres_colors = ['deepskyblue' if m > 0 else 'red' for m in pres_margin]
         nat_colors = ['deepskyblue' if m > 0 else 'red' for m in national_margin]
         if include_pres_results:
@@ -106,6 +106,9 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
             ax.scatter(years, pres_margin, c=pres_colors, s=60, zorder=3, label='Pres Results')
         ax.plot(years, national_margin, label='National Margin', marker='o', color='gold')
         ax.scatter(years, national_margin, c=nat_colors, s=40, zorder=2, label='Nat Results')
+        if label_margins:
+            for (x, y) in zip(years, national_margin):
+                ax.text(x, y + (0.01 if y > 0 else -0.01), f"{utils.lean_str(y)}", fontsize=9, ha='center', va='bottom' if y > 0 else 'top', color='white', zorder=10, bbox=dict(facecolor='black', alpha=0.7, edgecolor='none', boxstyle='round,pad=0.3'))
         ax.set_title(f'{state} Presidential Margins')
         ax.set_xlabel('Year')
         ax.set_ylabel('Margin')
@@ -196,7 +199,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
 
             # Left: raw national margins (reuse style_line_axis by passing the same
             # series as both pres_margin and national_margin so labels/styles match)
-            pres_colors_nat = style_line_axis(ax_n_line, nat_years, nat_margins, nat_margins, 'NATIONAL', include_pres_results=False)
+            pres_colors_nat = style_line_axis(ax_n_line, nat_years, nat_margins, nat_margins, 'NATIONAL', include_pres_results=False, label_margins=True)
 
             # Right: bar plot of deltas only (styled similarly to delta plotting)
             if len(nat_deltas) == 0:
@@ -211,7 +214,7 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
                 ax_n_bar.set_ylabel('Delta')
                 y_vals = ax_n_bar.get_yticks()
                 ax_n_bar.set_yticks(y_vals)
-                ax_n_bar.set_yticklabels([utils.lean_str(y_val) if y_val != 0 else '0' for y_val in y_vals], color='white')
+                ax_n_bar.set_yticklabels([utils.lean_str(y_val) for y_val in y_vals], color='white')
                 ax_n_bar.axhline(0, color='red', linestyle='--', linewidth=1)
                 ax_n_bar.grid(True, alpha=0.3)
                 ax_n_bar.set_xticks(x_idx)
@@ -226,6 +229,8 @@ def main(start_year=None, end_year=None, plot_house_margins=False,
         print(f'Could not create NATIONAL plot: {e}')
 
     for state in states:
+        if state == 'NATIONAL':
+            continue  # Skip national, already handled above
         state_df = df[df['abbr'] == state]
         # Apply start_year / end_year filters if provided
         if start_year is not None:
@@ -384,7 +389,7 @@ if __name__ == "__main__":
          use_loess=args.use_loess, use_linear=args.use_linear,
          use_spline=args.use_spline, spline_regularization=args.spline_regularization)
 
-    main(start_year=None, end_year=2020, 
-         plot_house_margins=plot_house_margins,
-         use_loess=args.use_loess, use_linear=args.use_linear,
-         use_spline=args.use_spline, spline_regularization=args.spline_regularization)
+    # main(start_year=None, end_year=2020, 
+    #      plot_house_margins=plot_house_margins,
+    #      use_loess=args.use_loess, use_linear=args.use_linear,
+    #      use_spline=args.use_spline, spline_regularization=args.spline_regularization)

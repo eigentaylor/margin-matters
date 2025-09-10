@@ -79,11 +79,15 @@ def scrape_2024_wikipedia():
                 # Extract state name from first cell
                 state_cell = cells[0]
                 state_text = state_cell.get_text().strip()
+                if '-' in state_text:
+                    pass  # Could be ME-1, NE-2, etc.
                 
                 # Clean state name - remove links, footnotes, etc.
                 state_name = re.sub(r'\[.*?\]', '', state_text)  # Remove footnotes
                 state_name = re.sub(r'\s+', ' ', state_name).strip()  # Normalize whitespace
-                
+                if state_name.startswith("ME-") or state_name.startswith("NE-"):
+                    state_name = state_name[:4]
+
                 # Skip non-state rows (totals, headers, etc.)
                 if (not state_name or len(state_name) > 20 or 
                     'total' in state_name.lower() or 
@@ -174,6 +178,8 @@ def scrape_2024_wikipedia():
 
 def get_state_code(state_name):
     """Map full state names to 2-letter codes"""
+    if '†' in state_name:
+        state_name = state_name.replace('†', '').strip()
     state_mapping = {
         'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
         'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
@@ -185,7 +191,8 @@ def get_state_code(state_name):
         'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
         'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
         'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY',
-        'district of columbia': 'DC', 'washington, d.c.': 'DC', 'washington d.c.': 'DC'
+        'district of columbia': 'DC', 'washington, d.c.': 'DC', 'washington d.c.': 'DC',
+        'me-1': 'ME-01', 'me-2': 'ME-02', 'ne-1': 'NE-01', 'ne-2': 'NE-02', 'ne-3': 'NE-03',
     }
     
     return state_mapping.get(state_name.lower().strip())
@@ -281,9 +288,9 @@ def main():
         return
     
     # Try to get Maine/Nebraska district data
-    district_data = scrape_maine_nebraska_districts()
+    district_data = None #scrape_maine_nebraska_districts()
     
-    if district_data:
+    if district_data and False:
         print(f"✅ Found {len(district_data)} district-level records")
         
         # Remove ME and NE from state data if we have district data

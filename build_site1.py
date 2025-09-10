@@ -249,11 +249,11 @@ def render_table(rows, cols):
 
   # format certain numeric columns (commas for thousands)
   def format_value(col, val):
-    if val is None or val == '0':
+    if val is None or val == '0' or val == '0.0':
       return ""
     s = str(val)
     # render vote counts with thousands separators
-    if col in ("D_votes", "R_votes"):
+    if col in ("D_votes", "R_votes", "T_votes", "total_votes"):
       try:
         # allow existing commas by removing them first
         n = int(s.replace(",", ""))
@@ -283,19 +283,23 @@ def render_table(rows, cols):
     # parse D and R counts once per row to compute percentages
     d_raw = r.get("D_votes", "")
     r_raw = r.get("R_votes", "")
+    t_raw = r.get("T_votes", "")
     d_val = parse_int(d_raw)
     r_val = parse_int(r_raw)
+    t_val = parse_int(t_raw)
     denom = None
     if d_val is not None and r_val is not None:
-      denom = d_val + r_val
+      denom = d_val + r_val + (t_val if t_val is not None else 0)
 
     for c in cols:
-      if c in ("D_votes", "R_votes"):
+      if c in ("D_votes", "R_votes", "T_votes"):
         # format votes with thousands separators when possible
         if c == "D_votes":
           vote_val = d_val
-        else:
+        elif c == "R_votes":
           vote_val = r_val
+        else:
+          vote_val = t_val
 
         if vote_val is None:
           # fallback to original formatting function for non-numeric
@@ -341,6 +345,8 @@ def describe_column(col):
     return 'Number of votes for the Democratic candidate (raw count).'
   if k in ('r_votes',):
     return 'Number of votes for the Republican candidate (raw count).'
+  if k in ('t_votes',):
+    return 'Number of votes for third-party (other) candidates (raw count).'
   if 'pct' in k or 'share' in k:
     return 'Percentage share of the vote.'
   if 'delta' in k:
@@ -353,8 +359,10 @@ def describe_column(col):
     return 'The presidential margin relative to the national presidential margin (Margin - Nat. Margin).'
   if 'abbr' in k:
     return 'State or unit abbreviation.'
-  if 'turnout' in k:
+  if 'total_votes' in k:
     return 'Total voter turnout or ballots cast (when provided).'
+  if 'electoral_votes' in k:
+    return 'Number of electoral votes allocated to this state or unit.'
   # fallback
   return 'Value from the CSV for this column.'
 
@@ -520,7 +528,7 @@ def build_pages(rows):
         continue
       val = ''
       # Sum obvious vote columns
-      if h in ("D_votes", "R_votes"):
+      if h in ("D_votes", "R_votes", "T_votes", "total_votes"):
         s = 0
         any_v = False
         for rr in grp:

@@ -4,6 +4,8 @@ def lean_str(lean):
     """
     Convert a state lean value to a string representation (ex. D+1.2, R+11.2)
     """
+    if lean is None:
+        return '0'
     if lean > 0:
         return f"D+{abs(lean * 100):.1f}"
     elif lean < 0:
