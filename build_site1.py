@@ -532,6 +532,8 @@ def build_pages(rows):
         s = 0
         any_v = False
         for rr in grp:
+          if rr.get("abbr","") == "NATIONAL":
+            continue
           v = rr.get(h, '')
           try:
             s += int(str(v).replace(',', ''))
