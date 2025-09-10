@@ -60,6 +60,8 @@ FINAL_MARGIN_THRESHOLDS: Dict[str, float] = {
     "BLUE":   0.20,   # darkest blue: D wins by 20%+
 }
 
+USE_TWO_PARTY_MARGIN = False
+
 # Optional: define a custom table column ordering and labels for the HTML tables.
 # If set to None the code will fall back to the built-in heuristic order.
 # Example formats accepted:

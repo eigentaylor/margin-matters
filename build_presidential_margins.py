@@ -2,6 +2,7 @@ import csv
 import os
 from collections import defaultdict
 
+import params
 import utils
 
 
@@ -162,4 +163,6 @@ def main(two_party_margin=False):
 
 
 if __name__ == '__main__':
-    main(two_party_margin=True)
+    two_party_margin = params.USE_TWO_PARTY_MARGIN
+    print(f"Using two-party margin: {two_party_margin}")
+    main(two_party_margin=two_party_margin)
