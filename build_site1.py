@@ -23,6 +23,8 @@ ME_NE_STATES = {"ME-AL", "NE-AL"}
 # timestamp used in footers (UTC at build time)
 LAST_UPDATED = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
+FOOTER_TEXT = f"Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to tayloreigenfisher@gmail.com ·"
+
 # HTML templates (dark theme for comfy eyes)
 BASE_CSS = r"""
 :root{--bg:#0b0b0b;--fg:#f5f5f5;--muted:#a5a5a5;--accent:#66b3ff;--card:#141414;--border:#2a2a2a}
@@ -84,7 +86,9 @@ INDEX_HTML = r"""<!doctype html>
       <p class="legend">Tip: Maine and Nebraska’s statewide pages include links to their district pages.</p>
     </div>
   </div>
-  <footer>Site by eigentaylor. Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs. Please report any innaccuracies to tayloreigenfisher@gmail.com · Last updated: %LAST_UPDATED%</footer>
+  <footer>%FOOTER_TEXT%
+  Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
+  Last updated: %LAST_UPDATED%</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -180,7 +184,7 @@ PAGE_HTML = r"""<!doctype html>
   %INFO_BOX%
     </div>
   </div>
-  <footer>Site by eigentaylor. Please report any innaccuracies to tayloreigenfisher@gmail.com·</footer>
+  <footer>%FOOTER_TEXT%</footer>
 </div>
 </body>
 </html>
@@ -397,6 +401,7 @@ def write_text(path: Path, text: str):
 def make_index(states_sorted):
   html = INDEX_HTML.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
   html = html.replace("%LAST_UPDATED%", LAST_UPDATED)
+  html = html.replace("%FOOTER_TEXT%", FOOTER_TEXT)
   write_text(OUT_DIR / "index.html", html)
 
 def titleize_unit(unit):
@@ -449,8 +454,9 @@ def build_pages(rows):
       .replace("%IMG_NOTE%", img_note)
       .replace("%EXTRA_LINKS%", extra_links)
       .replace("%TABLE_HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Data")
-  .replace("%TABLE_HTML%", render_table(table_rows, cols))
-  .replace("%INFO_BOX%", render_info_box(cols))
+      .replace("%TABLE_HTML%", render_table(table_rows, cols))
+      .replace("%INFO_BOX%", render_info_box(cols))
+      .replace("%FOOTER_TEXT%", FOOTER_TEXT)
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(STATE_DIR / f"{st[:2]}.html", page)
