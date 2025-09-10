@@ -49,37 +49,80 @@ def extract_presidential_data(excel_file_path, output_dir="."):
             columns = df.columns.tolist()
             print(f"  Available columns: {columns[:8]}")  # Show first 8 columns
             
-            # Extract the relevant columns by position (more reliable than names)
+            # Prefer explicit column names 'R', 'D', 'T' (case-insensitive).
+            # Fall back to positional columns when names are not present.
             state_col = data_df.iloc[:, 0]    # Column A: State
             district_col = data_df.iloc[:, 1] # Column B: District
-            r_col = data_df.iloc[:, 2]        # Column C: Republican votes
-            d_col = data_df.iloc[:, 3]        # Column D: Democratic votes
-            
-            # Handle Other votes - might be in column 4 or 5 depending on year structure
-            if len(data_df.columns) >= 5:
-                other_col = data_df.iloc[:, 4]    # Column E: Other votes
+
+            def find_col_by_name(df_src, names):
+                """Return the first matching column series by name (case-insensitive) or None."""
+                for col in df_src.columns:
+                    if str(col).strip().lower() in [n.lower() for n in names]:
+                        return df_src[col]
+                return None
+
+            # R (Republican), D (Democratic), T (Total)
+            r_found = find_col_by_name(data_df, ['R'])
+            if r_found is not None:
+                r_col = r_found
             else:
-                other_col = pd.Series([0] * len(data_df))
-                
-            if len(data_df.columns) >= 6:
-                total_col = data_df.iloc[:, 5]    # Column F: Total votes
+                r_col = data_df.iloc[:, 2] if data_df.shape[1] > 2 else pd.Series([0] * len(data_df))
+
+            d_found = find_col_by_name(data_df, ['D'])
+            if d_found is not None:
+                d_col = d_found
             else:
-                # Calculate total if not provided
-                total_col = r_col.fillna(0) + d_col.fillna(0) + other_col.fillna(0)
+                d_col = data_df.iloc[:, 3] if data_df.shape[1] > 3 else pd.Series([0] * len(data_df))
+
+            # Try to find total column named 'T' or 'Total' (case-insensitive)
+            total_col = find_col_by_name(data_df, ['T', 'Total'])
+
+            # Try to find an 'Other' column if present (names like 'O' or 'Other')
+            other_col_named = find_col_by_name(data_df, ['O', 'Other'])
+
+            # If total not found by name, attempt positional fallback
+            if total_col is None:
+                if data_df.shape[1] >= 6:
+                    total_col = data_df.iloc[:, 5]
+                else:
+                    total_col = None
+
+            # If other isn't directly available, we'll compute it below from total - R - D
+            if other_col_named is not None:
+                other_col = other_col_named
+            else:
+                other_col = None
             
             # Create clean dataframe
+            # Convert numeric columns robustly
+            R_votes = pd.to_numeric(r_col, errors='coerce').fillna(0)
+            D_votes = pd.to_numeric(d_col, errors='coerce').fillna(0)
+
+            if total_col is not None:
+                total_votes = pd.to_numeric(total_col, errors='coerce').fillna(R_votes + D_votes)
+            else:
+                # If total not present, try to use a positional other_col or compute from R+D+other
+                if other_col is not None:
+                    other_tmp = pd.to_numeric(other_col, errors='coerce').fillna(0)
+                    total_votes = R_votes + D_votes + other_tmp
+                else:
+                    total_votes = R_votes + D_votes
+
+            # other_votes computed as total - R - D (per your request)
+            other_votes = (total_votes - R_votes - D_votes).fillna(0)
+
             clean_df = pd.DataFrame({
                 'year': year,
                 'state': state_col,
                 'district': district_col,
-                'R_votes': pd.to_numeric(r_col, errors='coerce'),
-                'D_votes': pd.to_numeric(d_col, errors='coerce'),
-                'other_votes': pd.to_numeric(other_col, errors='coerce').fillna(0),
-                'total_votes': pd.to_numeric(total_col, errors='coerce')
+                'R_votes': R_votes,
+                'D_votes': D_votes,
+                'other_votes': other_votes,
+                'total_votes': total_votes
             })
-            
-            # Calculate T_votes (third party) as total - R - D (alternative calculation)
-            clean_df['T_votes'] = clean_df['total_votes'] - clean_df['R_votes'] - clean_df['D_votes']
+
+            # Keep T_votes for compatibility (same as other_votes)
+            clean_df['T_votes'] = clean_df['other_votes']
             
             # Clean up the data
             # Remove rows where state is NaN or empty
