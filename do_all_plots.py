@@ -308,7 +308,7 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
     else:
         # Top-right: relative two-party bar
         _bar_values(ax_tr, years, df["two_party_relative_margin"].to_numpy()[order],
-                    title=f"{state} Relative Two-Party Margin", y_label="Relative Margin", state=state)
+                    title=f"{state} Relative Two-Party Margin", y_label="Relative Margin", state=state, color_values=df["two_party_margin"].to_numpy()[order])
         # Bottom-left: two-party margin delta
         _bar_deltas(ax_bl, years, df["two_party_margin_delta"].to_numpy()[order],
                     title=f"{state} Change in Two-Party Margin", y_label="Delta")
