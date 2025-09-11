@@ -89,9 +89,9 @@ TABLE_COLUMNS: Optional[List] = [
     ("two_party_relative_margin_delta_str", "2-Party Rel. Margin Δ"),
     ("T_votes", "Other votes"),
     ("T_pct", "Other %"),
-    ("third_party_share_str", "3P Share"),
-    ("third_party_national_share_str", "3P Nat. Share"),
-    ("third_party_relative_share_str", "3P Rel. Share"),
+    ("third_party_share_str", "3rd Party Share"),
+    ("third_party_national_share_str", "3rd Party Nat. Share"),
+    ("third_party_relative_share_str", "3rd Party Rel. Share"),
     ("total_votes", "Total votes"),
 ]
 
