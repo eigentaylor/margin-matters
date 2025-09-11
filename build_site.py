@@ -54,6 +54,10 @@ thead th:last-child, tbody td:last-child {border-right: none}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}
 .center{text-align:center}
+/* Align raw values and inline delta consistently inside table cells */
+.cell-inner{display:inline-grid;grid-auto-flow:column;align-items:center;gap:8px}
+.cell-inner .raw{font-variant-numeric:tabular-nums;text-align:right;display:block}
+.cell-inner .delta{color:var(--muted);white-space:nowrap;font-size:0.95rem}
 """
 
 INDEX_HTML = r"""<!doctype html>
@@ -350,12 +354,16 @@ def render_table(rows, cols):
         # Combine inline delta for *_str columns when available
         raw_val = format_value(c, r.get(c, ""))
         if c.endswith('_str') and not c.endswith('_delta_str'):
+          # Render the raw value and delta in separate spans so CSS can align them
           delta_col = c[:-4] + '_delta_str'
           delta_val = r.get(delta_col, "")
+          raw_esc = esc(raw_val)
           if isinstance(delta_val, str) and delta_val != "0" and delta_val != "0.0" and delta_val.strip() != "":
-            cell = esc(f"{raw_val}\t(Δ {delta_val})")
+            delta_esc = esc(delta_val)
+            # two spans: raw value and muted delta
+            cell = f'<span class="cell-inner"><span class="raw">{raw_esc}</span><span class="delta">(Δ {delta_esc})</span></span>'
           else:
-            cell = esc(raw_val)
+            cell = f'<span class="cell-inner"><span class="raw">{raw_esc}</span><span class="delta"></span></span>'
         else:
           cell = esc(raw_val)
       cells.append(f"<td>{cell}</td>")
