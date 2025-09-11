@@ -65,14 +65,14 @@ INDEX_HTML = r"""<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>U.S. State Trends</title>
+<title>U.S. Presidential Election State Results</title>
 <link rel="stylesheet" href="styles.css" />
 <link rel="icon" href="favicon.svg" />
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <h1>U.S. Presidential Election State Trends</h1>
+    <h1>U.S. Presidential Election State Results</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
   <div class="grid">

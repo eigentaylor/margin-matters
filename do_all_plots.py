@@ -2,6 +2,8 @@ import argparse
 import os
 from typing import List, Tuple
 
+from statsmodels.nonparametric.smoothers_lowess import lowess
+from scipy.interpolate import UnivariateSpline
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -92,6 +94,7 @@ def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: 
     ax.axhline(0, color="red", linestyle="--", linewidth=1)
     ax.set_xticks(x_idx)
     ax.set_xticklabels(years, rotation=45)
+    #ax.legend()
 
 
 def _bar_deltas(ax, years: np.ndarray, deltas: np.ndarray, title: str, y_label: str):
@@ -178,7 +181,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
     plt.close(fig)
 
 
-def _build_plot2(state: str, df: pd.DataFrame, out_dir: str):
+def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool = True, include_SPLINE: bool = True):
     # 3x1: relative_margin bar, relative 3rd-Party margin bar, relative margin deltas bar
     fig, axes = plt.subplots(3, 1, figsize=(14, 12), constrained_layout=True)
     ax1, ax2, ax3 = axes
@@ -186,11 +189,46 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str):
     years = df["year"].to_numpy()
     order = np.argsort(years)
     years = years[order]
+    rel_sorted = df["relative_margin"].to_numpy()[order]
 
     # 1) relative_margin bar (special yellow on 1968 for target states)
     rel = df["relative_margin"].to_numpy()[order]
     _bar_values(ax1, years, rel, title=f"{state} Relative Margins", y_label="Relative Margin", state=state,
                 lean_is_third_party=False, special_year_for_state=1968)
+
+    if include_LOESS or include_SPLINE:
+        # Prepare dense x for plotting
+        x_indices = np.arange(len(years))
+        x_dense = np.linspace(x_indices.min(), x_indices.max(), 500)
+
+        # LOESS
+        if include_LOESS:
+            try:
+                frac = 0.6 if len(x_indices) >= 8 else max(0.25, 3 / max(4, len(x_indices)))
+                loess_res = lowess(rel_sorted, x_indices, frac=frac, return_sorted=True)
+                x_loess = loess_res[:, 0]
+                y_loess = loess_res[:, 1]
+                y_dense_loess = np.interp(x_dense, x_loess, y_loess)
+                ax1.plot(x_dense, y_dense_loess, linestyle='--', color='cyan', label='LOESS')
+            except Exception as e:
+                print(f"Could not compute LOESS for {state}: {e}")
+
+        # Spline with optional regularization (s parameter)
+        if include_SPLINE:
+            try:
+                # s=0 yields interpolation; larger s yields smoother curve. When
+                # regularization is requested, increase s proportional to n.
+                n = len(x_indices)
+                # Regularization is always applied
+                s_val = max(1e-3, 0.5 * n)
+                spline = UnivariateSpline(x_indices, rel_sorted, s=s_val)
+                y_dense_spline = spline(x_dense)
+                ax1.plot(x_dense, y_dense_spline, linestyle='-.', color='magenta', label='Spline')
+            except Exception as e:
+                print(f"Could not compute Spline for {state}: {e}")
+
+        # Refresh legend so newly-added curves appear
+        ax1.legend()
 
     # 2) relative third-party margin bar
     if "third_party_relative_share" in df.columns:
