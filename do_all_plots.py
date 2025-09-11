@@ -72,7 +72,13 @@ def _line_margins(ax, years: np.ndarray, state_values: np.ndarray | None, nat_va
 def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: str, state: str,
                 lean_is_third_party: bool = False, special_year_for_state: int | None = None):
     x_idx = np.arange(len(values))
-    colors = _color_by_sign(values, years, state, special_year=special_year_for_state)
+    if lean_is_third_party:
+        # we color yellow if special year and state in 1968 special states, else magenta
+        special_color = "yellow"
+        other_color = "magenta"
+        colors = [special_color if (year == special_year_for_state and state in SPECIAL_1968_STATES) else other_color for year in years]
+    else:
+        colors = _color_by_sign(values, years, state, special_year=special_year_for_state)
     bars = ax.bar(x_idx, values, width=0.4, color=colors)
     ax.bar_label(bars, labels=[utils.lean_str(v, third_party=lean_is_third_party) for v in values], padding=3,
                  fontsize=8, color="white")
