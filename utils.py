@@ -1,17 +1,19 @@
 import params
 
-def lean_str(lean):
+def lean_str(lean, third_party=False) -> str:
     """
     Convert a state lean value to a string representation (ex. D+1.2, R+11.2)
     """
     if lean is None:
         return '0'
-    if lean > 0:
-        return f"D+{abs(lean * 100):.1f}"
-    elif lean < 0:
-        return f"R+{abs(lean * 100):.1f}"
+    if third_party:
+        prefix = 'T'
     else:
-        return "EVEN"
+        prefix = 'D' if lean > 0 else 'R'
+    if lean > 0.001 or lean < -0.001:
+        return f"{prefix}+{abs(lean * 100):.1f}"
+    else:
+        return "0" if third_party else "EVEN"
 
 def emoji_from_lean(
     lean,
