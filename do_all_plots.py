@@ -144,7 +144,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         state_label="Presidential Margin",
         nat_label="National Margin",
         state=state,
-        label_points=False,
+        label_points=nat_only,  # label points only for NAT
         special_year_for_state=1968,
     )
     _apply_axes_styling(ax1, years, y_label="Margin", title=f"{state} Margins")
@@ -166,6 +166,20 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
                 for v, y in zip(state_margin if state_margin is not None else [], years)
             ]
             ax2.scatter(years, state_3p, c=scatter_colors, s=60, zorder=3)
+        else:
+            # label text only if no state 3rd-party data
+            for (x, y) in zip(years, nat_3p):
+                ax2.text(
+                    x,
+                    y + 0.01,
+                    f"{utils.lean_str(y, third_party=True)}",
+                    fontsize=9,
+                    ha="center",
+                    va="bottom",
+                    color="white",
+                    zorder=10,
+                    bbox=dict(facecolor="black", alpha=0.7, edgecolor="none", boxstyle="round,pad=0.3"),
+                )
         ax2.legend()
         _apply_axes_styling(ax2, years, y_label="Third-Party Share", title=f"{state} 3rd-Party Vote Share",
                             zero_line=False, y_tick_as_lean=True, lean_is_third_party=True)
