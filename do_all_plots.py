@@ -72,7 +72,7 @@ def _line_margins(ax, years: np.ndarray, state_values: np.ndarray | None, nat_va
 
 
 def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: str, state: str,
-                lean_is_third_party: bool = False, special_year_for_state: int | None = None):
+                lean_is_third_party: bool = False, special_year_for_state: int | None = None, color_values=None):
     x_idx = np.arange(len(values))
     if lean_is_third_party:
         # we color yellow if special year and state in 1968 special states, else magenta
@@ -80,7 +80,9 @@ def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: 
         other_color = "cyan"
         colors = [special_color if (year == special_year_for_state and state in SPECIAL_1968_STATES) else other_color for year in years]
     else:
-        colors = _color_by_sign(values, years, state, special_year=special_year_for_state)
+        if color_values is None:
+            color_values = values
+        colors = _color_by_sign(color_values, years, state, special_year=special_year_for_state)
     bars = ax.bar(x_idx, values, width=0.4, color=colors)
     ax.bar_label(bars, labels=[utils.lean_str(v, third_party=lean_is_third_party) for v in values], padding=3,
                  fontsize=8, color="white")
@@ -208,7 +210,8 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
     # 1) relative_margin bar (special yellow on 1968 for target states)
     rel = df["relative_margin"].to_numpy()[order]
     _bar_values(ax1, years, rel, title=f"{state} Relative Margins", y_label="Relative Margin", state=state,
-                lean_is_third_party=False, special_year_for_state=1968)
+                lean_is_third_party=False, special_year_for_state=1968,
+                color_values=df["pres_margin"].to_numpy()[order])
 
     if include_LOESS or include_SPLINE:
         # Prepare dense x for plotting
