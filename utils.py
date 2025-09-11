@@ -8,7 +8,7 @@ def lean_str(lean, third_party=False) -> str:
         return '0'
     if third_party:
         # return lean as percentage
-        return f"{lean:.1%}"
+        return f"{lean:.2%}"
         prefix = 'T+' if lean > 0 else 'T-'
     else:
         prefix = 'D+' if lean > 0 else 'R+'

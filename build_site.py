@@ -42,7 +42,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .btn{display:inline-block;padding:10px 14px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px}
 .btn:focus{outline:2px solid var(--accent);outline-offset:2px}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
-img.plot{width:100%;max-width:900px;display:block;border:1px solid var(--border);border-radius:10px;background:#000}
+img.plot{width:100%;max-width:900px;display:block;margin:0 auto;border:1px solid var(--border);border-radius:10px;background:#000}
 .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;background:#111;border-left:1px solid var(--border);border-right:1px solid var(--border)}
 th,td{padding:10px 12px;border-bottom:1px solid #1f1f1f;white-space:nowrap;text-align:center;border-right:1px solid var(--border)}
@@ -249,10 +249,13 @@ def split_columns_into_three(headers):
     if c == 'year':
       continue
     lname = c.lower()
+    # skip explicit delta columns (we'll render them inline with their base columns)
+    if lname.endswith('_delta_str') or lname.endswith('_delta'):
+      continue
     if 'two_party' in lname:
       if c not in tp:
         tp.append(c)
-    elif 'third' in lname or '3p' in lname or c in ('T_votes', 'T_pct', 'third_party_share', 'third_party_relative_share'):
+    elif 'third' in lname or '3p' in lname or c in ('T_votes', 'T_pct', 'third_party_share', 'third_party_relative_share', 'third_party_national_share'):
       if c not in third:
         third.append(c)
     else:
@@ -344,7 +347,17 @@ def render_table(rows, cols):
           else:
             cell = esc(votes_str)
       else:
-        cell = esc(format_value(c, r.get(c, "")))
+        # Combine inline delta for *_str columns when available
+        raw_val = format_value(c, r.get(c, ""))
+        if c.endswith('_str') and not c.endswith('_delta_str'):
+          delta_col = c[:-4] + '_delta_str'
+          delta_val = r.get(delta_col, "")
+          if isinstance(delta_val, str) and delta_val != "0" and delta_val != "0.0" and delta_val.strip() != "":
+            cell = esc(f"{raw_val}\t(Δ {delta_val})")
+          else:
+            cell = esc(raw_val)
+        else:
+          cell = esc(raw_val)
       cells.append(f"<td>{cell}</td>")
     body += "<tr>" + "".join(cells) + "</tr>"
   body += "</tbody>"
@@ -398,9 +411,9 @@ def describe_column(col):
   if 'third_party_share' in k:
     return 'Share of the vote received by third-party (other) candidates.'
   if 'third_party_relative_share' in k:
-    return 'Third-party share relative to the national third-party share (3P share - Nat. 3P share).'
+    return 'Third-party share relative to the national third-party share (3rd-Party share - Nat. 3rd-Party share).'
   if 'third_party_national_share' in k:
-    return 'The national third-party share for that year (3P votes / total votes).'
+    return 'The national third-party share for that year (3rd-Party votes / total votes).'
   # fallback
   return 'Value from the CSV for this column.'
 
@@ -415,14 +428,13 @@ def render_info_box(cols):
   done_delta = False
   for c in cols:
     label = header_map.get(c, c)
-    if 'delta' in c.lower():
-      if done_delta:
-        continue
-      else:
-        done_delta = True
-        label = "Δ"
+    if 'margin' in c.lower():
+      done_delta = True
     desc = describe_column(c)
     items.append(f"<dt>{label}</dt><dd>{desc}</dd>")
+  # always include delta explanation if any delta columns present
+  if done_delta and "Δ" not in [item[4:-5] for item in items if item.startswith("<dt>")]:
+    items.insert(0, f"<dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd>")
   dl = """<div class=\"card\"><h3 style=\"margin-top:0\">Column explanations</h3><dl style=\"margin:0;\">""" + "".join(items) + "</dl></div>"
   return dl
 
@@ -487,11 +499,11 @@ def build_pages(rows):
     plot_section = (
       f'<div class="card center">\n'
       f'  <img class="plot" alt="Plot1 for {st}" src="../plots/{st}_plot1.png">\n'
-      f'  <div class="legend" style="margin-top:8px">Margins · 3P share · Pres. deltas</div>\n'
+      f'  <div class="legend" style="margin-top:8px">Margins · 3rd-Party share · Pres. deltas</div>\n'
       f'</div>\n'
       f'<div class="card center">\n'
       f'  <img class="plot" alt="Plot2 for {st}" src="../plots/{st}_plot2.png">\n'
-      f'  <div class="legend" style="margin-top:8px">Relative margins · Relative 3P · Rel. deltas</div>\n'
+      f'  <div class="legend" style="margin-top:8px">Relative margins · Relative 3rd-Party · Rel. deltas</div>\n'
       f'</div>'
     )
     table1_section = (
@@ -559,11 +571,11 @@ def build_pages(rows):
     plot_section = (
       f'<div class="card center">\n'
       f'  <img class="plot" alt="Plot1 for {unit}" src="../plots/{unit}_plot1.png">\n'
-      f'  <div class="legend" style="margin-top:8px">Margins · 3P share · Pres. deltas</div>\n'
+      f'  <div class="legend" style="margin-top:8px">Margins · 3rd-Party share · Pres. deltas</div>\n'
       f'</div>\n'
       f'<div class="card center">\n'
       f'  <img class="plot" alt="Plot2 for {unit}" src="../plots/{unit}_plot2.png">\n'
-      f'  <div class="legend" style="margin-top:8px">Relative margins · Relative 3P · Rel. deltas</div>\n'
+      f'  <div class="legend" style="margin-top:8px">Relative margins · Relative 3rd-Party · Rel. deltas</div>\n'
       f'</div>'
     )
     plot3_section = (
@@ -578,6 +590,14 @@ def build_pages(rows):
       f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}{render_info_box(basic_cols)}</div>\n'
       f'</div>'
     )
+    table3_section = ''
+    if third_cols:
+      table3_section = (
+        f'<div class="card">\n'
+        f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Third-Party Data</h2>\n'
+        f'  <div class="table-wrap">{render_table(table_rows, third_cols)}{render_info_box(third_cols)}</div>\n'
+        f'</div>'
+      )
     table2_section = (
       f'<div class="card">\n'
       f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Two-Party Data</h2>\n'
@@ -591,7 +611,8 @@ def build_pages(rows):
       .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
       .replace("%PLOT_SECTION%", plot_section)
       .replace("%EXTRA_LINKS%", extra_links)
-      .replace("%TABLE1_SECTION%", table1_section)
+  .replace("%TABLE1_SECTION%", table1_section)
+  .replace("%TABLE3_SECTION%", table3_section)
       .replace("%PLOT3_SECTION%", plot3_section)
       .replace("%TABLE2_SECTION%", table2_section)
     )

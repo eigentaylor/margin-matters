@@ -13,7 +13,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .btn{display:inline-block;padding:10px 14px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px}
 .btn:focus{outline:2px solid var(--accent);outline-offset:2px}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
-img.plot{width:100%;max-width:900px;display:block;border:1px solid var(--border);border-radius:10px;background:#000}
+img.plot{width:100%;max-width:900px;display:block;margin:0 auto;border:1px solid var(--border);border-radius:10px;background:#000}
 .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;background:#111;border-left:1px solid var(--border);border-right:1px solid var(--border)}
 th,td{padding:10px 12px;border-bottom:1px solid #1f1f1f;white-space:nowrap;text-align:center;border-right:1px solid var(--border)}

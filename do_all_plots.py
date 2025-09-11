@@ -122,7 +122,7 @@ def _bar_deltas(ax, years: np.ndarray, deltas: np.ndarray, title: str, y_label: 
 
 
 def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False):
-    # 3x1: margins line, 3P share line, pres_margin_delta bar
+    # 3x1: margins line, 3rd-Party share line, pres_margin_delta bar
     fig, axes = plt.subplots(3, 1, figsize=(14, 12), constrained_layout=True)
     ax1, ax2, ax3 = axes
 
@@ -167,7 +167,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         _apply_axes_styling(ax2, years, y_label="Third-Party Share", title=f"{state} 3rd-Party Vote Share",
                             zero_line=False, y_tick_as_lean=True, lean_is_third_party=True)
     else:
-        ax2.text(0.5, 0.5, "No 3P share columns", ha="center")
+        ax2.text(0.5, 0.5, "No 3rd-Party share columns", ha="center")
 
     # 3) pres_margin deltas bar
     _bar_deltas(ax3, years, df["pres_margin_delta"].to_numpy()[order],
@@ -179,7 +179,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
 
 
 def _build_plot2(state: str, df: pd.DataFrame, out_dir: str):
-    # 3x1: relative_margin bar, relative 3P margin bar, relative margin deltas bar
+    # 3x1: relative_margin bar, relative 3rd-Party margin bar, relative margin deltas bar
     fig, axes = plt.subplots(3, 1, figsize=(14, 12), constrained_layout=True)
     ax1, ax2, ax3 = axes
 
@@ -195,10 +195,10 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str):
     # 2) relative third-party margin bar
     if "third_party_relative_share" in df.columns:
         rel_3p = df["third_party_relative_share"].to_numpy()[order]
-        _bar_values(ax2, years, rel_3p, title=f"{state} Relative 3rd-Party Share", y_label="Relative 3P Share",
+        _bar_values(ax2, years, rel_3p, title=f"{state} Relative 3rd-Party Share", y_label="Relative 3rd-Party Share",
                     state=state, lean_is_third_party=True, special_year_for_state=1968)
     else:
-        ax2.text(0.5, 0.5, "No 3P relative columns", ha="center")
+        ax2.text(0.5, 0.5, "No 3rd-Party relative columns", ha="center")
 
     # 3) relative margin deltas bar
     _bar_deltas(ax3, years, df["relative_margin_delta"].to_numpy()[order],
@@ -211,7 +211,7 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str):
 
 def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False):
     # 2x2: use ONLY two-party columns
-    fig = plt.figure(figsize=(16, 10))
+    fig = plt.figure(figsize=(16, 14))
     if nat_only: # 2x1
         gs = fig.add_gridspec(2, 1, height_ratios=[1, 1])
     else: # 2x2
