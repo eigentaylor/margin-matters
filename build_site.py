@@ -78,7 +78,7 @@ INDEX_HTML = r"""<!doctype html>
       </div>
     </div>
     <div class="card">
-        <h2 style="margin-top:0">Small States · Quick Links</h2>
+        <h2 style="margin-top:0">State Links</h2>
         <div class="small-links" id="small-links">
           <!-- Add a National quick link (NAT) -->
           <a class="btn" href="state/NAT.html">NAT</a>
