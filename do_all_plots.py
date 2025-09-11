@@ -47,13 +47,13 @@ def _line_margins(ax, years: np.ndarray, state_values: np.ndarray | None, nat_va
     # National
     nat_colors = _color_by_sign(nat_values, years, state="", positive_color="deepskyblue", negative_color="red",
                                 special_year=None)
-    ax.plot(years, nat_values, label=nat_label, marker="o", color="gold")
+    ax.plot(years, nat_values, label=nat_label, marker="o", color="gold", linestyle="--")
     ax.scatter(years, nat_values, c=nat_colors, s=40, zorder=2, label=f"{nat_label} Results")
 
     # State (optional)
     if state_values is not None:
         pres_colors = _color_by_sign(state_values, years, state, special_year=special_year_for_state)
-        ax.plot(years, state_values, label=state_label, marker="o", linestyle="-", color="gray")
+        ax.plot(years, state_values, label=state_label, marker="o", linestyle="-", color="green")
         ax.scatter(years, state_values, c=pres_colors, s=60, zorder=3, label=f"{state_label} Results")
 
     if label_points and nat_values is not None:
@@ -154,11 +154,11 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         state_3p = None if nat_only else df["third_party_share"].to_numpy()[order]
         nat_3p = df["third_party_national_share"].to_numpy()[order]
         # Plot national
-        ax2.plot(years, nat_3p, label="National 3rd-Party Share", marker="o", color="gold")
+        ax2.plot(years, nat_3p, label="National 3rd-Party Share", marker="o", color="gold", linestyle="--")
         ax2.scatter(years, nat_3p, c=["gold"] * len(years), s=40, zorder=2)
         # Plot state
         if state_3p is not None:
-            ax2.plot(years, state_3p, label="State 3rd-Party Share", marker="o", linestyle="-", color="lime")
+            ax2.plot(years, state_3p, label="State 3rd-Party Share", marker="o", linestyle="-", color="green")
             # Highlight 1968 winner states by a yellow marker
             scatter_colors = [
                 ("yellow" if (y == 1968 and state in SPECIAL_1968_STATES) else 
