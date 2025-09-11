@@ -58,6 +58,11 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .cell-inner{display:inline-grid;grid-auto-flow:column;align-items:center;gap:8px}
 .cell-inner .raw{font-variant-numeric:tabular-nums;text-align:right;display:block}
 .cell-inner .delta{color:var(--muted);white-space:nowrap;font-size:0.95rem}
+/* Column explanations (definition list) styling */
+.info-dl{display:grid;grid-template-columns:220px 1fr;gap:6px 16px;align-items:start;margin:0}
+.info-dl dt{font-weight:700;color:var(--fg);margin:0;padding:6px 0}
+.info-dl dd{margin:0;padding:6px 0;color:var(--muted);font-size:0.95rem}
+@media (max-width:800px){.info-dl{grid-template-columns:1fr}}
 """
 
 INDEX_HTML = r"""<!doctype html>
@@ -449,7 +454,8 @@ def render_info_box(cols):
   # always include delta explanation if any delta columns present
   if done_delta and "Δ" not in [item[4:-5] for item in items if item.startswith("<dt>")]:
     items.insert(0, f"<dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd>")
-  dl = """<div class=\"card\"><h3 style=\"margin-top:0\">Column explanations</h3><dl style=\"margin:0;\">""" + "".join(items) + "</dl></div>"
+  dl_inner = "".join(items)
+  dl = f"<div class=\"card\"><h3 style=\"margin-top:0\">Column explanations</h3><dl class=\"info-dl\">{dl_inner}</dl></div>"
   return dl
 
 
