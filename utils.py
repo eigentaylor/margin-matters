@@ -7,11 +7,11 @@ def lean_str(lean, third_party=False) -> str:
     if lean is None:
         return '0'
     if third_party:
-        prefix = 'T'
+        prefix = 'T+' if lean > 0 else 'T-'
     else:
-        prefix = 'D' if lean > 0 else 'R'
-    if lean > 0.001 or lean < -0.001:
-        return f"{prefix}+{abs(lean * 100):.1f}"
+        prefix = 'D+' if lean > 0 else 'R+'
+    if lean > 0.0001 or lean < -0.0001:
+        return f"{prefix}{abs(lean * 100):.1f}"
     else:
         return "0" if third_party else "EVEN"
 
