@@ -47,13 +47,13 @@ def _line_margins(ax, years: np.ndarray, state_values: np.ndarray | None, nat_va
     # National
     nat_colors = _color_by_sign(nat_values, years, state="", positive_color="deepskyblue", negative_color="red",
                                 special_year=None)
-    ax.plot(years, nat_values, label=nat_label, marker="o", color="gold", linestyle="--")
+    ax.plot(years, nat_values, label=nat_label, marker="o", color="magenta", linestyle="--")
     ax.scatter(years, nat_values, c=nat_colors, s=40, zorder=2, label=f"{nat_label} Results")
 
     # State (optional)
     if state_values is not None:
         pres_colors = _color_by_sign(state_values, years, state, special_year=special_year_for_state)
-        ax.plot(years, state_values, label=state_label, marker="o", linestyle="-", color="green")
+        ax.plot(years, state_values, label=state_label, marker="o", linestyle="-", color="lime")
         ax.scatter(years, state_values, c=pres_colors, s=60, zorder=3, label=f"{state_label} Results")
 
     if label_points and nat_values is not None:
@@ -77,7 +77,7 @@ def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: 
     if lean_is_third_party:
         # we color yellow if special year and state in 1968 special states, else magenta
         special_color = "yellow"
-        other_color = "magenta"
+        other_color = "cyan"
         colors = [special_color if (year == special_year_for_state and state in SPECIAL_1968_STATES) else other_color for year in years]
     else:
         colors = _color_by_sign(values, years, state, special_year=special_year_for_state)
@@ -154,11 +154,11 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         state_3p = None if nat_only else df["third_party_share"].to_numpy()[order]
         nat_3p = df["third_party_national_share"].to_numpy()[order]
         # Plot national
-        ax2.plot(years, nat_3p, label="National 3rd-Party Share", marker="o", color="gold", linestyle="--")
-        ax2.scatter(years, nat_3p, c=["gold"] * len(years), s=40, zorder=2)
+        ax2.plot(years, nat_3p, label="National 3rd-Party Share", marker="o", color="magenta", linestyle="--")
+        ax2.scatter(years, nat_3p, c=["magenta"] * len(years), s=40, zorder=2)
         # Plot state
         if state_3p is not None:
-            ax2.plot(years, state_3p, label="State 3rd-Party Share", marker="o", linestyle="-", color="green")
+            ax2.plot(years, state_3p, label="State 3rd-Party Share", marker="o", linestyle="-", color="lime")
             # Highlight 1968 winner states by a yellow marker
             scatter_colors = [
                 ("yellow" if (y == 1968 and state in SPECIAL_1968_STATES) else 
@@ -223,7 +223,8 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
                 x_loess = loess_res[:, 0]
                 y_loess = loess_res[:, 1]
                 y_dense_loess = np.interp(x_dense, x_loess, y_loess)
-                ax1.plot(x_dense, y_dense_loess, linestyle='--', color='cyan', label='LOESS')
+                ax1.plot(x_dense, y_dense_loess, linestyle='--', color='cyan', 
+                         label='LOESS')
             except Exception as e:
                 print(f"Could not compute LOESS for {state}: {e}")
 
@@ -237,7 +238,8 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
                 s_val = max(1e-3, 0.5 * n)
                 spline = UnivariateSpline(x_indices, rel_sorted, s=s_val)
                 y_dense_spline = spline(x_dense)
-                ax1.plot(x_dense, y_dense_spline, linestyle='-.', color='magenta', label='Spline')
+                ax1.plot(x_dense, y_dense_spline, linestyle='-.', color='orange',
+                         label='Spline')
             except Exception as e:
                 print(f"Could not compute Spline for {state}: {e}")
 
