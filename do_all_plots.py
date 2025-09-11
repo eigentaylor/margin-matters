@@ -289,7 +289,7 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
         state_label="Two-Party Margin",
         nat_label="Nat Two-Party Margin",
         state=state,
-        label_points=False,
+        label_points=nat_only,  # label points only for NAT
         special_year_for_state=None,
     )
     _apply_axes_styling(ax_tl, years, y_label="Two-Party Margin", title=f"{state} Two Party Margins")
