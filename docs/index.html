@@ -21,17 +21,23 @@
     </div>
     <div class="card">
         <h2 style="margin-top:0">State Links</h2>
-        <div class="small-links" id="small-links">
-          <!-- Add a National quick link (NAT) -->
-          <a class="btn" href="state/NAT.html">NAT</a>
+        <!-- Top line: National quick link -->
+        <div class="small-links" id="top-links">
+          <a class="btn" href="state/NAT.html">NATIONAL</a>
         </div>
+        <!-- Second line: small states populated by the map script -->
+        <div class="small-links" id="small-links">
+          <!-- small-state buttons inserted here by the map script -->
+        </div>
+        <!-- Third: Expanded state links (categorized into 4 columns) -->
+        <div id="state-links"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"><div class="card" style="padding:8px"><a class="btn" href="state/AK.html">AK</a><a class="btn" href="state/CA.html">CA</a><a class="btn" href="state/DE.html">DE</a><a class="btn" href="state/IA.html">IA</a><a class="btn" href="state/KS.html">KS</a><a class="btn" href="state/MD.html">MD</a><a class="btn" href="state/MO.html">MO</a><a class="btn" href="state/ND.html">ND</a><a class="btn" href="state/NM.html">NM</a><a class="btn" href="state/OK.html">OK</a><a class="btn" href="state/SC.html">SC</a><a class="btn" href="state/UT.html">UT</a><a class="btn" href="state/WI.html">WI</a></div><div class="card" style="padding:8px"><a class="btn" href="state/AL.html">AL</a><a class="btn" href="state/CO.html">CO</a><a class="btn" href="state/FL.html">FL</a><a class="btn" href="state/ID.html">ID</a><a class="btn" href="state/KY.html">KY</a><a class="btn" href="state/ME-AL.html">ME</a><a class="btn" href="state/MS.html">MS</a><a class="btn" href="state/NE-AL.html">NE</a><a class="btn" href="state/NV.html">NV</a><a class="btn" href="state/OR.html">OR</a><a class="btn" href="state/SD.html">SD</a><a class="btn" href="state/VA.html">VA</a><a class="btn" href="state/WV.html">WV</a></div><div class="card" style="padding:8px"><a class="btn" href="state/AR.html">AR</a><a class="btn" href="state/CT.html">CT</a><a class="btn" href="state/GA.html">GA</a><a class="btn" href="state/IL.html">IL</a><a class="btn" href="state/LA.html">LA</a><a class="btn" href="state/MI.html">MI</a><a class="btn" href="state/MT.html">MT</a><a class="btn" href="state/NH.html">NH</a><a class="btn" href="state/NY.html">NY</a><a class="btn" href="state/PA.html">PA</a><a class="btn" href="state/TN.html">TN</a><a class="btn" href="state/VT.html">VT</a><a class="btn" href="state/WY.html">WY</a></div><div class="card" style="padding:8px"><a class="btn" href="state/AZ.html">AZ</a><a class="btn" href="state/DC.html">DC</a><a class="btn" href="state/HI.html">HI</a><a class="btn" href="state/IN.html">IN</a><a class="btn" href="state/MA.html">MA</a><a class="btn" href="state/MN.html">MN</a><a class="btn" href="state/NC.html">NC</a><a class="btn" href="state/NJ.html">NJ</a><a class="btn" href="state/OH.html">OH</a><a class="btn" href="state/RI.html">RI</a><a class="btn" href="state/TX.html">TX</a><a class="btn" href="state/WA.html">WA</a></div></div></div>
       <hr/>
       <p class="legend">Tip: Maine and Nebraska’s statewide pages include links to their district pages.</p>
     </div>
   </div>
   <footer>Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to tayloreigenfisher@gmail.com ·
   Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: 2025-09-11 08:37 UTC</footer>
+  Last updated: 2025-09-11 08:51 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>

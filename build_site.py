@@ -83,10 +83,16 @@ INDEX_HTML = r"""<!doctype html>
     </div>
     <div class="card">
         <h2 style="margin-top:0">State Links</h2>
-        <div class="small-links" id="small-links">
-          <!-- Add a National quick link (NAT) -->
-          <a class="btn" href="state/NAT.html">NAT</a>
+        <!-- Top line: National quick link -->
+        <div class="small-links" id="top-links">
+          <a class="btn" href="state/NAT.html">NATIONAL</a>
         </div>
+        <!-- Second line: small states populated by the map script -->
+        <div class="small-links" id="small-links">
+          <!-- small-state buttons inserted here by the map script -->
+        </div>
+        <!-- Third: Expanded state links (categorized into 4 columns) -->
+        <div id="state-links">%STATE_LINKS%</div>
       <hr/>
       <p class="legend">Tip: Maine and Nebraska’s statewide pages include links to their district pages.</p>
     </div>
@@ -465,7 +471,23 @@ def write_text(path: Path, text: str):
     path.write_text(text, encoding="utf-8")
 
 def make_index(states_sorted):
+  # Build categorized state links in 4 columns for easier navigation
+  # Use params.ABBR_TO_STATE to get full names and sort alphabetically by state name
+  state_items = sorted([(abbr, str(params.ABBR_TO_STATE.get(abbr) or abbr)) for abbr in states_sorted], key=lambda x: x[0])
+  # split into 4 roughly-even columns
+  cols = [[], [], [], []]
+  for i, item in enumerate(state_items):
+    cols[i % 4].append(item)
+
+  col_html = []
+  for col in cols:
+    items = "".join(f'<a class="btn" href="state/{abbr}.html">{abbr[:2]}</a>' for abbr, _ in col)
+    col_html.append(f'<div class="card" style="padding:8px">{items}</div>')
+
+  state_links_html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' + "".join(col_html) + '</div>'
+
   html = INDEX_HTML.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
+  html = html.replace("%STATE_LINKS%", state_links_html)
   html = html.replace("%LAST_UPDATED%", LAST_UPDATED)
   html = html.replace("%FOOTER_TEXT%", FOOTER_TEXT)
   write_text(OUT_DIR / "index.html", html)
