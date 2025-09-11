@@ -307,8 +307,40 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
         #ax_br.axis("off")
     else:
         # Top-right: relative two-party bar
-        _bar_values(ax_tr, years, df["two_party_relative_margin"].to_numpy()[order],
+        rel_tp = df["two_party_relative_margin"].to_numpy()[order]
+        _bar_values(ax_tr, years, rel_tp,
                     title=f"{state} Relative Two-Party Margin", y_label="Relative Margin", state=state, color_values=df["two_party_margin"].to_numpy()[order])
+
+        # Add LOESS and spline smoothing overlays for relative two-party margin
+        try:
+            x_indices = np.arange(len(years))
+            x_dense = np.linspace(x_indices.min(), x_indices.max(), 500)
+
+            # LOESS
+            try:
+                frac = 0.6 if len(x_indices) >= 8 else max(0.25, 3 / max(4, len(x_indices)))
+                loess_res = lowess(rel_tp, x_indices, frac=frac, return_sorted=True)
+                x_loess = loess_res[:, 0]
+                y_loess = loess_res[:, 1]
+                y_dense_loess = np.interp(x_dense, x_loess, y_loess)
+                ax_tr.plot(x_dense, y_dense_loess, linestyle='--', color='cyan', label='LOESS')
+            except Exception as e:
+                print(f"Could not compute LOESS for two-party relative margin {state}: {e}")
+
+            # Spline
+            try:
+                n = len(x_indices)
+                s_val = max(1e-3, 0.5 * n)
+                spline = UnivariateSpline(x_indices, rel_tp, s=s_val)
+                y_dense_spline = spline(x_dense)
+                ax_tr.plot(x_dense, y_dense_spline, linestyle='-.', color='orange', label='Spline')
+            except Exception as e:
+                print(f"Could not compute Spline for two-party relative margin {state}: {e}")
+
+            ax_tr.legend()
+        except Exception:
+            # Fail silently if smoothing cannot be applied
+            pass
         # Bottom-left: two-party margin delta
         _bar_deltas(ax_bl, years, df["two_party_margin_delta"].to_numpy()[order],
                     title=f"{state} Change in Two-Party Margin", y_label="Delta")
