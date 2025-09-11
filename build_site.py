@@ -260,8 +260,14 @@ def split_columns_into_three(headers):
   basic, third, tp = [], [], []
   if 'year' in ordered:
     basic.append('year'); third.append('year'); tp.append('year')
+  if 'electoral_votes' in ordered:
+    basic.append('electoral_votes'); tp.append('electoral_votes')
+  if 'D_votes' in ordered:
+    basic.append('D_votes'); third.append('D_votes'); tp.append('D_votes')
+  if 'R_votes' in ordered:
+    basic.append('R_votes'); third.append('R_votes'); tp.append('R_votes')
   for c in ordered:
-    if c == 'year':
+    if c == 'year' or c == 'D_votes' or c == 'R_votes' or c == 'electoral_votes':
       continue
     lname = c.lower()
     # skip explicit delta columns (we'll render them inline with their base columns)
@@ -289,7 +295,7 @@ def group_by_abbr(rows):
         g[k].sort(key=lambda r: int(r.get("year", 0)))
     return g
 
-def render_table(rows, cols):
+def render_table(rows, cols, two_party=False):
   # basic escape
   def esc(x):
     s = "" if x is None else str(x)
@@ -337,7 +343,10 @@ def render_table(rows, cols):
     t_val = parse_int(t_raw)
     denom = None
     if d_val is not None and r_val is not None:
-      denom = d_val + r_val + (t_val if t_val is not None else 0)
+      if two_party:
+        denom = d_val + r_val
+      else:
+        denom = d_val + r_val + (t_val if t_val is not None else 0)
 
     for c in cols:
       if c in ("D_votes", "R_votes", "T_votes"):
@@ -565,7 +574,7 @@ def build_pages(rows):
     table2_section = (
       f'<div class="card">\n'
       f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Two-Party Data</h2>\n'
-      f'  <div class="table-wrap">{render_table(table_rows, tp_cols)}{render_info_box(tp_cols)}</div>\n'
+      f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}{render_info_box(tp_cols)}</div>\n'
       f'</div>'
     )
 
@@ -637,7 +646,7 @@ def build_pages(rows):
     table2_section = (
       f'<div class="card">\n'
       f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Two-Party Data</h2>\n'
-      f'  <div class="table-wrap">{render_table(table_rows, tp_cols)}{render_info_box(tp_cols)}</div>\n'
+      f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}{render_info_box(tp_cols)}</div>\n'
       f'</div>'
     )
 
@@ -749,7 +758,7 @@ def build_pages(rows):
   table2_section = (
     f'<div class="card">\n'
     f'  <h2 style="margin-top:0">National — Two-Party Data</h2>\n'
-    f'  <div class="table-wrap">{render_table(national_rows, nat_tp_cols)}{render_info_box(nat_tp_cols)}</div>\n'
+    f'  <div class="table-wrap">{render_table(national_rows, nat_tp_cols, two_party=True)}{render_info_box(nat_tp_cols)}</div>\n'
     f'</div>'
   )
   page = (
