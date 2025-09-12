@@ -62,13 +62,24 @@ def _line_margins(ax, years: np.ndarray, state_values: np.ndarray | None, nat_va
                 x,
                 y + (0.01 if y > 0 else -0.01),
                 f"{utils.lean_str(y)}",
-                fontsize=9,
+                fontsize=12,
                 ha="center",
                 va="bottom" if y > 0 else "top",
                 color="white",
                 zorder=10,
                 bbox=dict(facecolor="black", alpha=0.7, edgecolor="none", boxstyle="round,pad=0.3"),
             )
+    # Add a legend for the plotted lines/points and style it for dark background
+    try:
+        leg = ax.legend(loc="best", fontsize=12)
+        if leg is not None:
+            frame = leg.get_frame()
+            frame.set_facecolor("black")
+            frame.set_edgecolor("none")
+            leg.set_zorder(20)
+    except Exception:
+        # If legend cannot be created for some reason, fail silently
+        pass
 
 
 def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: str, state: str,
@@ -84,8 +95,8 @@ def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: 
             color_values = values
         colors = _color_by_sign(color_values, years, state, special_year=special_year_for_state)
     bars = ax.bar(x_idx, values, width=0.4, color=colors)
-    ax.bar_label(bars, labels=[utils.lean_str(v, third_party=lean_is_third_party) for v in values], padding=3,
-                 fontsize=8, color="white")
+    ax.bar_label(bars, labels=[utils.lean_str(v, third_party=lean_is_third_party) for v in values], padding=4,
+                 fontsize=12, color="white")
     ax.set_title(title)
     ax.set_xlabel("Year")
     ax.set_ylabel(y_label)
@@ -113,7 +124,7 @@ def _bar_deltas(ax, years: np.ndarray, deltas: np.ndarray, title: str, y_label: 
     x_idx = np.arange(len(deltas))
     colors = ["deepskyblue" if d > 0 else "red" for d in deltas]
     bars = ax.bar(x_idx, deltas, width=0.4, color=colors)
-    ax.bar_label(bars, labels=[utils.lean_str(v) for v in deltas], padding=3, fontsize=8, color="white")
+    ax.bar_label(bars, labels=[utils.lean_str(v) for v in deltas], padding=4, fontsize=12, color="white")
     ax.set_title(title)
     ax.set_xlabel("Year")
     ax.set_ylabel(y_label)
@@ -175,7 +186,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
                     x,
                     y + 0.01,
                     f"{utils.lean_str(y, third_party=True)}",
-                    fontsize=9,
+                    fontsize=12,
                     ha="center",
                     va="bottom",
                     color="white",
@@ -356,6 +367,16 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
 
 def main(start_year: int | None = None, end_year: int | None = 2024, clear_old_files: bool = False):
     plt.style.use("dark_background")
+    # Make plot text larger and more readable across all generated figures
+    plt.rcParams.update({
+        "font.size": 12,
+        "axes.titlesize": 16,
+        "axes.labelsize": 14,
+        "xtick.labelsize": 12,
+        "ytick.labelsize": 12,
+        "legend.fontsize": 12,
+        "figure.titlesize": 18,
+    })
     df = pd.read_csv("presidential_margins.csv")
 
     # Filter by year range if provided
