@@ -260,8 +260,11 @@ def make_page(payload: dict) -> str:
       list.innerHTML = rows.map((r,i)=> (
         `<div class="flex items-center justify-between rounded-lg shadow-lg border-2 text-white p-3 sm:p-4 m-1 sm:m-2 transform transition-all hover:scale-[1.02] ${rowColorClass(r.val)}" style="animation-delay:${i*30}ms">` +
         `<div class="flex-shrink-0 text-center"><div class="text-sm sm:text-base lg:text-lg font-bold">#${r.rank}</div><div class="text-[10px] sm:text-xs opacity-90">EVs: ${r.rec.electoral_votes ?? '—'}</div></div>` +
-        `<div class="flex-1 min-w-0 px-3"><div class="text-sm sm:text-lg lg:text-xl font-semibold truncate">${r.abbr}</div></div>` +
-        `<div class="text-right font-mono text-xs sm:text-sm lg:text-base opacity-95">${r.label}</div></div>`
+        `<div class="flex-1 min-w-0 px-3 flex flex-col">
+            <div class="text-sm sm:text-lg lg:text-xl font-semibold truncate"><a href="state/${r.abbr}.html" target="_blank" rel="noopener noreferrer" class="hover:underline text-current">${r.abbr}</a></div>
+            <div class="text-xs sm:text-sm text-slate-200 mt-1 truncate">${r.label}</div>
+         </div>` +
+        `</div>`
       )).join('');
       $$('#results > div').forEach((el)=>{ el.classList.add('animate-bounce'); setTimeout(()=> el.classList.remove('animate-bounce'), 900); }); }
 
@@ -299,6 +302,14 @@ def make_page(payload: dict) -> str:
   </head>
   <body class="dark bg-slate-950 text-slate-100">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      <!-- persistent header / site nav -->
+      <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
+        <div class="small-links">
+          <a class="btn" href="index.html">Home</a>
+          <a class="btn" href="ranker.html">Ranker</a>
+        </div>
+        <div class="legend">U.S. Presidential Election State Results</div>
+      </div>
       <div class="flex items-center justify-between mb-4">
         <a class="text-sm text-slate-300 hover:text-white" href="index.html">← Back to Map</a>
         <div class="text-xs text-slate-400">Last updated: <span id="updated"></span></div>
@@ -357,9 +368,12 @@ def make_page(payload: dict) -> str:
 
   return html_template.replace("__SCRIPT__", script)
 
-if __name__ == "__main__":
+def main():
   rows = load_rows(CSV_PATH)
   payload = build_payload(rows)
   page = make_page(payload)
   OUT.write_text(page, encoding="utf-8")
   print(f"Wrote {OUT} ({len(page)} bytes)")
+  
+if __name__ == "__main__":
+  main()

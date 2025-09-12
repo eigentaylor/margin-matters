@@ -54,6 +54,10 @@ thead th:last-child, tbody td:last-child {border-right: none}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}
 .center{text-align:center}
+/* Persistent site header that stays at the top while scrolling */
+.site-header{position:sticky;top:0;z-index:1100;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);margin-bottom:12px;border-radius:10px}
+.card.site-header{padding:8px}
+
 /* Align raw values and inline delta consistently inside table cells */
 .cell-inner{display:inline-grid;grid-auto-flow:column;align-items:center;gap:8px}
 .cell-inner .raw{font-variant-numeric:tabular-nums;text-align:right;display:block}
@@ -76,6 +80,14 @@ INDEX_HTML = r"""<!doctype html>
 </head>
 <body>
 <div class="container">
+  <!-- persistent header / site nav -->
+  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
+    <div class="small-links">
+      <a class="btn" href="index.html">Home</a>
+      <a class="btn" href="ranker.html">Ranker</a>
+    </div>
+    <div class="legend">U.S. Presidential Election State Results</div>
+  </div>
   <div class="header">
     <h1>U.S. Presidential Election State Results</h1>
     <span class="legend">Click a state to open its page</span>
@@ -186,6 +198,14 @@ PAGE_HTML = r"""<!doctype html>
 </head>
 <body>
 <div class="container">
+  <!-- persistent header / site nav for inner pages -->
+  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
+    <div class="small-links">
+      <a class="btn" href="../index.html">Home</a>
+      <a class="btn" href="../ranker.html">Ranker</a>
+    </div>
+    <div class="legend">%HEADING%</div>
+  </div>
   <a class="back" href="../index.html">← Back to Map</a>
   <div class="header"><h1 style="margin:0">%HEADING%</h1></div>
   %PLOT_SECTION%
@@ -798,4 +818,6 @@ def main():
     print(f"Done. Open {OUT_DIR/'index.html'} in a browser or deploy /docs to GitHub Pages.")
 
 if __name__ == "__main__":
+    import tools.build_ranker_page
+    tools.build_ranker_page.main()
     main()

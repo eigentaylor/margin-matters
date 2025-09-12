@@ -25,6 +25,10 @@ thead th:last-child, tbody td:last-child {border-right: none}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}
 .center{text-align:center}
+/* Persistent site header that stays at the top while scrolling */
+.site-header{position:sticky;top:0;z-index:1100;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);margin-bottom:12px;border-radius:10px}
+.card.site-header{padding:8px}
+
 /* Align raw values and inline delta consistently inside table cells */
 .cell-inner{display:inline-grid;grid-auto-flow:column;align-items:center;gap:8px}
 .cell-inner .raw{font-variant-numeric:tabular-nums;text-align:right;display:block}
