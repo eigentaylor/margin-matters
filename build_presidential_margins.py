@@ -41,6 +41,11 @@ def main():
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
             rows.append(r2)
             years.add(r2['year'])
+            if r['year'] == 2000 and r['abbr'] == 'FL':
+                r2['D_votes'] = 2912253
+                r2['R_votes'] = 2912790
+                r2['total_votes'] = 5963110
+                r2['T_votes'] = r2['total_votes'] - r2['D_votes'] - r2['R_votes']
 
     # index by (abbr) -> list of rows sorted by year
     by_state = defaultdict(list)
@@ -205,6 +210,9 @@ def main():
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for r in out_rows:
+            if r['year'] == 2000 and r['abbr'] == 'FL':
+                r['D_votes'] = 2912253
+                r['R_votes'] = 2912790
             # apply 2024 overrides from old margins if present
             if r['year'] == 2024 and r['abbr'] in override_ev_2024:
                 r['electoral_votes'] = override_ev_2024[r['abbr']]

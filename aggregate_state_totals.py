@@ -116,6 +116,13 @@ def main():
 
     # Sort for readability: year asc, abbr (NATIONAL last)
     final = final.sort_values(by=["year", "abbr"], key=lambda col: col.astype(str))
+    
+    # correct results for the 2000 Florida recount
+    FL_2000_data = {'D_votes': 2912253, 'R_votes': 2912790, 'total_votes': 5963110}
+    final.loc[(final['year'] == 2000) & (final['abbr'] == 'FL'), 'D_votes'] = FL_2000_data['D_votes']
+    final.loc[(final['year'] == 2000) & (final['abbr'] == 'FL'), 'R_votes'] = FL_2000_data['R_votes']
+    final.loc[(final['year'] == 2000) & (final['abbr'] == 'FL'), 'total_votes'] = FL_2000_data['total_votes']
+    final.loc[(final['year'] == 2000) & (final['abbr'] == 'FL'), 'T_votes'] = FL_2000_data['total_votes'] - FL_2000_data['D_votes'] - FL_2000_data['R_votes']
 
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
     final.to_csv(OUT_CSV, index=False)
