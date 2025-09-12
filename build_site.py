@@ -39,6 +39,10 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media (min-width: 900px){.grid{grid-template-columns:2fr 1fr}}
 .small-links{display:flex;flex-wrap:wrap;gap:8px}
+/* Make small-links buttons a consistent size and center their content */
+.small-links .btn{display:inline-flex;align-items:center;justify-content:center;min-width:56px;padding:8px 10px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px;text-align:center}
+/* NATIONAL quick link should be wider than state links */
+#top-links .btn{min-width:120px;padding:10px 16px}
 .btn{display:inline-block;padding:10px 14px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px}
 .btn:focus{outline:2px solid var(--accent);outline-offset:2px}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
@@ -79,17 +83,17 @@ INDEX_HTML = r"""<!doctype html>
 <link rel="icon" href="favicon.svg" />
 </head>
 <body>
-<div class="container">
+<div class="container" style="text-align: center;">
   <!-- persistent header / site nav -->
-  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
+  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:4px">
     <div class="small-links">
       <a class="btn" href="index.html">Home</a>
       <a class="btn" href="ranker.html">Ranker</a>
     </div>
-    <div class="legend">U.S. Presidential Election State Results</div>
+    <div class="legend">U.S. Presidential Election State Results 1968-2024</div>
   </div>
   <div class="header">
-    <h1>U.S. Presidential Election State Results</h1>
+    <h1>U.S. Presidential Election State Results 1968-2024</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
   <div class="grid">
@@ -101,17 +105,17 @@ INDEX_HTML = r"""<!doctype html>
     <div class="card">
         <h2 style="margin-top:0">State Links</h2>
         <!-- Top line: National quick link -->
-        <div class="small-links" id="top-links">
+        <div class="small-links" id="top-links" style="padding: 4px; align-items: center; justify-content: center; display: flex;">
           <a class="btn" href="state/NAT.html">NATIONAL</a>
         </div>
         <!-- Second line: small states populated by the map script -->
-        <div class="small-links" id="small-links">
+        <div class="small-links" id="small-links" style="padding: 2px; align-items: center; justify-content: center; display: flex;">
           <!-- small-state buttons inserted here by the map script -->
         </div>
         <!-- Third: Expanded state links (categorized into 4 columns) -->
         <div id="state-links">%STATE_LINKS%</div>
       <hr/>
-      <p class="legend">Tip: Maine and Nebraska’s statewide pages include links to their district pages.</p>
+      <p class="legend">Tip: Maine and Nebraska’s pages include links to pages for their districts.</p>
     </div>
   </div>
   <footer>%FOOTER_TEXT%
@@ -517,9 +521,10 @@ def make_index(states_sorted):
   col_html = []
   for col in cols:
     items = "".join(f'<a class="btn" href="state/{abbr}.html">{abbr[:2]}</a>' for abbr, _ in col)
-    col_html.append(f'<div class="card" style="padding:8px">{items}</div>')
+    # center the buttons within each card
+    col_html.append(f'<div class="card" style="padding:8px"><div class="small-links" style="justify-content:center">{items}</div></div>')
 
-  state_links_html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' + "".join(col_html) + '</div>'
+  state_links_html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0">' + "".join(col_html) + '</div>'
 
   html = INDEX_HTML.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
   html = html.replace("%STATE_LINKS%", state_links_html)

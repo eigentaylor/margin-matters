@@ -10,6 +10,10 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media (min-width: 900px){.grid{grid-template-columns:2fr 1fr}}
 .small-links{display:flex;flex-wrap:wrap;gap:8px}
+/* Make small-links buttons a consistent size and center their content */
+.small-links .btn{display:inline-flex;align-items:center;justify-content:center;min-width:56px;padding:8px 10px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px;text-align:center}
+/* NATIONAL quick link should be wider than state links */
+#top-links .btn{min-width:120px;padding:10px 16px}
 .btn{display:inline-block;padding:10px 14px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px}
 .btn:focus{outline:2px solid var(--accent);outline-offset:2px}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
