@@ -279,7 +279,7 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
 
 def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False):
     # 2x2: use ONLY two-party columns
-    fig = plt.figure(figsize=(16, 14))
+    fig = plt.figure(figsize=(18, 14))
     if nat_only: # 2x1
         gs = fig.add_gridspec(2, 1, height_ratios=[1, 1])
     else: # 2x2

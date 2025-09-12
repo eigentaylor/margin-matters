@@ -685,6 +685,7 @@ def build_pages(rows):
   .replace("%TABLE3_SECTION%", table3_section)
       .replace("%PLOT3_SECTION%", plot3_section)
       .replace("%TABLE2_SECTION%", table2_section)
+  .replace("%FOOTER_TEXT%", FOOTER_TEXT)
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(UNIT_DIR / f"{unit}.html", page)
