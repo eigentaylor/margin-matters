@@ -192,8 +192,23 @@ def make_page(payload: dict) -> str:
     function renderControls(){
       $('#year-val').textContent = selectedYear; const slider = $('#year'); slider.min=yearMin; slider.max=yearMax; slider.step=4; slider.value=selectedYear;
       $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option>'; $('#metric').value = base;
+
+      // restore checkbox states
       $('#two').checked = twoParty; $('#rel').checked = relative; $('#delt').checked = delta; $('#abs').checked = useAbs; $('#reverse').checked = reverse;
-      const disableChecks = base==='third_party_share'; $('#two').disabled = disableChecks; $('#delt').disabled = disableChecks;
+
+      // When third-party share is selected, hide the two-party and delta controls (they don't apply)
+      const hideChecks = base==='third_party_share';
+      const twoEl = $('#two');
+      if(twoEl && twoEl.parentElement){
+        twoEl.parentElement.style.display = hideChecks ? 'none' : '';
+        if(hideChecks){ twoEl.checked = false; twoParty = false; }
+      }
+      const deltEl = $('#delt');
+      if(deltEl && deltEl.parentElement){
+        deltEl.parentElement.style.display = hideChecks ? 'none' : '';
+        if(hideChecks){ deltEl.checked = false; delta = false; }
+      }
+
       const nameEl = $('#metric-name'); if(nameEl) nameEl.textContent = metricDisplayName(); }
 
     function compute(){
@@ -272,15 +287,43 @@ def make_page(payload: dict) -> str:
       )).join('');
       $$('#results > div').forEach((el)=>{ el.classList.add('animate-bounce'); setTimeout(()=> el.classList.remove('animate-bounce'), 900); }); }
 
-    function attachEvents(){ $('#year').addEventListener('input', e=>{ selectedYear = parseInt(e.target.value,10); $('#year-val').textContent = selectedYear; renderList(); });
-      $('#metric').addEventListener('change', e=>{ base = e.target.value; renderControls(); renderList(); });
-      $('#two').addEventListener('change', e=>{ twoParty = e.target.checked; renderControls(); renderList(); });
-      $('#rel').addEventListener('change', e=>{ relative = e.target.checked; renderControls(); renderList(); });
-      $('#delt').addEventListener('change', e=>{ delta = e.target.checked; renderControls(); renderList(); });
-      $('#abs').addEventListener('change', e=>{ useAbs = e.target.checked; renderList(); });
-      $('#reverse').addEventListener('change', e=>{ reverse = e.target.checked; renderList(); }); }
+    // Read state from URL query params (if present)
+    function readUrlState(){
+      const params = new URLSearchParams(location.search);
+      const py = params.get('year'); if(py) { const n = parseInt(py,10); if(!isNaN(n)) selectedYear = n; }
+      const pm = params.get('metric'); if(pm) base = pm;
+      const getBool = (k)=>{ const v = params.get(k); return v==='1' || v==='true' || v==='on' || v==='yes'; };
+      twoParty = getBool('two'); relative = getBool('rel'); delta = getBool('delt'); useAbs = getBool('abs'); reverse = getBool('reverse');
+      // clamp/validate selectedYear to available years
+      if(!data.years.includes(selectedYear)) selectedYear = data.years[data.years.length-1];
+    }
 
-    function init(){ renderControls(); attachEvents(); renderList(); $('#updated').textContent = data.lastUpdated; }
+    // Update the browser URL (replaceState) to reflect current control state so links can be shared
+    function updateUrl(){
+      try{
+        const params = new URLSearchParams();
+        params.set('year', String(selectedYear));
+        params.set('metric', String(base));
+        if(twoParty) params.set('two','1');
+        if(relative) params.set('rel','1');
+        if(delta) params.set('delt','1');
+        if(useAbs) params.set('abs','1');
+        if(reverse) params.set('reverse','1');
+        const newUrl = location.pathname + (params.toString() ? ('?'+params.toString()) : '');
+        history.replaceState(null, '', newUrl);
+      }catch(e){ /* ignore URL update failures */ }
+    }
+
+    function attachEvents(){
+      $('#year').addEventListener('input', e=>{ selectedYear = parseInt(e.target.value,10); $('#year-val').textContent = selectedYear; renderList(); updateUrl(); });
+      $('#metric').addEventListener('change', e=>{ base = e.target.value; renderControls(); renderList(); updateUrl(); });
+      $('#two').addEventListener('change', e=>{ twoParty = e.target.checked; renderControls(); renderList(); updateUrl(); });
+      $('#rel').addEventListener('change', e=>{ relative = e.target.checked; renderControls(); renderList(); updateUrl(); });
+      $('#delt').addEventListener('change', e=>{ delta = e.target.checked; renderControls(); renderList(); updateUrl(); });
+      $('#abs').addEventListener('change', e=>{ useAbs = e.target.checked; renderList(); updateUrl(); });
+      $('#reverse').addEventListener('change', e=>{ reverse = e.target.checked; renderList(); updateUrl(); }); }
+
+    function init(){ readUrlState(); renderControls(); attachEvents(); renderList(); updateUrl(); $('#updated').textContent = data.lastUpdated; }
     document.addEventListener('DOMContentLoaded', init);
   })();
   """
