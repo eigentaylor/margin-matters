@@ -240,7 +240,11 @@ def make_page(payload: dict) -> str:
         }
         } else if (base === 'third_party_share'){
           label = niceStr(abbr, metricKey, rec);
-          if (relative){ const rel = rec['third_party_relative_share']; if (rel != null && !isNaN(rel)) label += ' (Relative: ' + niceStr(abbr, 'third_party_relative_share', rec) + ')'; }
+          if (relative){ 
+            const rel = rec['third_party_relative_share']; if (rel != null && !isNaN(rel)) label += ' (Raw: ' + niceStr(abbr, 'third_party_share', rec) + ')'; 
+            } else {
+            const raw = rec['third_party_share']; if (raw != null && !isNaN(raw)) label += ' (Relative: ' + niceStr(abbr, 'third_party_relative_share', rec) + ')';
+            }
         } else {
           label = niceStr(abbr, metricKey, rec);
         }
