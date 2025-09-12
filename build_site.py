@@ -24,7 +24,7 @@ ME_NE_STATES = {"ME-AL", "NE-AL"}
 # timestamp used in footers (UTC at build time)
 LAST_UPDATED = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC")
 
-FOOTER_TEXT = f"Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to tayloreigenfisher@gmail.com ·"
+FOOTER_TEXT = f"Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to through discord: eigentaylor ·"
 
 # HTML templates (dark theme for comfy eyes)
 BASE_CSS = r"""
