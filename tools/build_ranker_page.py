@@ -196,17 +196,22 @@ def make_page(payload: dict) -> str:
       // restore checkbox states
       $('#two').checked = twoParty; $('#rel').checked = relative; $('#delt').checked = delta; $('#abs').checked = useAbs; $('#reverse').checked = reverse;
 
-      // When third-party share is selected, hide the two-party and delta controls (they don't apply)
+      // When third-party share is selected, hide the two-party control (it doesn't apply)
       const hideChecks = base==='third_party_share';
       const twoEl = $('#two');
       if(twoEl && twoEl.parentElement){
         twoEl.parentElement.style.display = hideChecks ? 'none' : '';
         if(hideChecks){ twoEl.checked = false; twoParty = false; }
       }
+
+      // Disable Delta when either third-party is selected OR the selected year is the earliest (no previous election)
       const deltEl = $('#delt');
       if(deltEl && deltEl.parentElement){
+        const disableDelta = hideChecks || (selectedYear === yearMin);
+        // hide visually when third-party; otherwise keep visible but possibly disabled
         deltEl.parentElement.style.display = hideChecks ? 'none' : '';
-        if(hideChecks){ deltEl.checked = false; delta = false; }
+        deltEl.disabled = disableDelta;
+        if(disableDelta){ deltEl.checked = false; delta = false; deltEl.setAttribute('aria-disabled','true'); } else { deltEl.removeAttribute('aria-disabled'); }
       }
 
       const nameEl = $('#metric-name'); if(nameEl) nameEl.textContent = metricDisplayName(); }
@@ -315,7 +320,13 @@ def make_page(payload: dict) -> str:
     }
 
     function attachEvents(){
-      $('#year').addEventListener('input', e=>{ selectedYear = parseInt(e.target.value,10); $('#year-val').textContent = selectedYear; renderList(); updateUrl(); });
+      $('#year').addEventListener('input', e=>{
+        selectedYear = parseInt(e.target.value,10);
+        $('#year-val').textContent = selectedYear;
+        // update controls (this will disable/uncheck Delta when appropriate)
+        renderControls();
+        renderList(); updateUrl();
+      });
       $('#metric').addEventListener('change', e=>{ base = e.target.value; renderControls(); renderList(); updateUrl(); });
       $('#two').addEventListener('change', e=>{ twoParty = e.target.checked; renderControls(); renderList(); updateUrl(); });
       $('#rel').addEventListener('change', e=>{ relative = e.target.checked; renderControls(); renderList(); updateUrl(); });
