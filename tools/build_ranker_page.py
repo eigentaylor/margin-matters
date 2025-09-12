@@ -223,24 +223,24 @@ def make_page(payload: dict) -> str:
 
           if (relative){
             if (delta){
-                if (rec[relKey] != null && !isNaN(rec[relKey])) label = niceStr(abbr, relKey, rec);
-                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (raw delta: ' + niceStr(abbr, rawKey, rec) + ')';
+                if (rec[relKey] != null && !isNaN(rec[relKey])) label = 'Δ ' + niceStr(abbr, relKey, rec);
+                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw Δ: ' + niceStr(abbr, rawKey, rec) + ')';
             } else {
                 if (rec[relKey] != null && !isNaN(rec[relKey])) label = niceStr(abbr, relKey, rec);
-                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (raw margin: ' + niceStr(abbr, rawKey, rec) + ')';
+                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw: ' + niceStr(abbr, rawKey, rec) + ')';
             }
           } else {
             if (delta){
-                if (rec[relKey] != null && !isNaN(rec[relKey])) label = niceStr(abbr, relKey, rec);
-                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Relative delta to nation: ' + niceStr(abbr, rawKey, rec) + ')';
+                if (rec[relKey] != null && !isNaN(rec[relKey])) label = 'Δ ' + niceStr(abbr, relKey, rec);
+                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Relative Δ: ' + niceStr(abbr, rawKey, rec) + ')';
             } else {
                 if (rec[rawKey] != null && !isNaN(rec[rawKey])) label = niceStr(abbr, rawKey, rec);
-                if (rec[relKey] != null && !isNaN(rec[relKey])) label += ' (Relative to nation: ' + niceStr(abbr, relKey, rec) + ')';
+                if (rec[relKey] != null && !isNaN(rec[relKey])) label += ' (Relative: ' + niceStr(abbr, relKey, rec) + ')';
             }
         }
         } else if (base === 'third_party_share'){
           label = niceStr(abbr, metricKey, rec);
-          if (relative){ const rel = rec['third_party_relative_share']; if (rel != null && !isNaN(rel)) label += ' (Relative to nation: ' + niceStr(abbr, 'third_party_relative_share', rec) + ')'; }
+          if (relative){ const rel = rec['third_party_relative_share']; if (rel != null && !isNaN(rel)) label += ' (Relative: ' + niceStr(abbr, 'third_party_relative_share', rec) + ')'; }
         } else {
           label = niceStr(abbr, metricKey, rec);
         }
@@ -333,6 +333,16 @@ def make_page(payload: dict) -> str:
             <input id="reverse" type="checkbox" class="ml-3 accent-blue-400" /> <span class="text-sm text-slate-300 ml-2">Reverse order</span>
           </label>
         </div>
+      </div>
+
+      <div class="bg-slate-900/40 rounded-lg p-3 text-sm text-slate-300 mb-4">
+        <strong>Notes</strong>
+        <ul class="list-disc list-inside mt-2 space-y-1">
+          <li><strong>Margin</strong>: difference between Democratic and Republican vote share (D − R). Displayed as e.g. <code>D+5.2</code> to mean the Democratic candidate is ahead by 5.2 percentage points.</li>
+          <li><strong>Two-party</strong>: excludes third-party votes and recalculates margins on a D vs R two-party basis.</li>
+          <li><strong>Relative</strong>: the state's margin minus the national margin (how much more D or R the state is compared to the nation).</li>
+          <li><strong>Delta</strong>: change in the chosen metric since the previous presidential election.</li>
+        </ul>
       </div>
 
       <div id="results" class="grid grid-cols-1"></div>
