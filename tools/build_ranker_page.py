@@ -366,7 +366,7 @@ def make_page(payload: dict) -> str:
           <a class="btn" href="index.html">Home</a>
           <a class="btn" href="ranker.html">Ranker</a>
         </div>
-        <div class="legend">U.S. Presidential Election State Results</div>
+        <div class="legend">U.S. Presidential Election State Results Ranker</div>
       </div>
       <div class="flex items-center justify-between mb-4">
         <a class="text-sm text-slate-300 hover:text-white" href="index.html">← Back to Map</a>
