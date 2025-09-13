@@ -57,6 +57,14 @@ def compare_files(path_a, path_b, key_cols, out_path=None):
     comp_columns = [c for c in common_columns if c not in key_cols]
 
     diffs = []
+    # add a row for the filenames being compared
+    diffs.append({
+        'key': 'FILENAMES',
+        'column': 'comparison',
+        'a_value': path_a,
+        'b_value': path_b,
+        'diff': 'N/A',
+    })
     for key in shared_keys:
         row_a = a[key]
         row_b = b[key]
@@ -70,7 +78,8 @@ def compare_files(path_a, path_b, key_cols, out_path=None):
                 try:
                     fa = float(va)
                     fb = float(vb)
-                    if abs(fa - fb) <= 1e-6:
+                    diff = int((fa - fb))
+                    if abs(diff) <= 1e-6:
                         continue
                 except Exception:
                     pass
@@ -79,13 +88,15 @@ def compare_files(path_a, path_b, key_cols, out_path=None):
                 'column': col,
                 'a_value': va,
                 'b_value': vb,
+                'diff': diff if (is_number(va) and is_number(vb)) else 'N/A',
+                
             })
 
     print(f"Compared {len(shared_keys)} shared rows; found {len(diffs)} differing cells across {len(comp_columns)} compared columns.")
 
     if out_path:
         with open(out_path, 'w', newline='', encoding='utf-8') as outf:
-            writer = csv.DictWriter(outf, fieldnames=['key', 'column', 'a_value', 'b_value'])
+            writer = csv.DictWriter(outf, fieldnames=['key', 'column', 'a_value', 'b_value', 'diff'])
             writer.writeheader()
             for d in diffs:
                 writer.writerow(d)
