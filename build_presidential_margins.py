@@ -180,8 +180,8 @@ def main():
             two_party_relative_delta = two_party_relative - prev_two_party_relative if prev_two_party_relative is not None else None
             two_party_national_delta = two_party_national - prev_two_party_national if prev_two_party_national is not None else None
 
-            # electoral_votes not present in source; assume 0
-            electoral_votes = r.get('electoral_votes', 0)
+            # determine electoral votes from Electoral_College.csv (with ME/NE special-casing)
+            electoral_votes = compute_electoral_votes(year, abbr) or r.get('electoral_votes', 0)
 
             # compute vote deltas (difference from previous available year for this abbr)
             if prev_row is not None:
