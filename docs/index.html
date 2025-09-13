@@ -46,7 +46,7 @@
   </div>
   <footer>Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to through discord: eigentaylor ·
   Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: 2025-09-13 10:01 UTC</footer>
+  Last updated: 2025-09-13 10:58 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -69,6 +69,10 @@ const g = svg.append("g");
 // are projected into the SVG viewBox correctly.
 const projection = d3.geoAlbersUsa().scale(1300).translate([975/2, 610/2]);
 const path = d3.geoPath().projection(projection);
+// expose projection/path and top-level group so external scripts can draw overlays
+window.mapProjection = projection;
+window.mapPath = path;
+window.mapG = g;
 
 fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
   .then(r => r.json())
@@ -79,6 +83,10 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .data(states)
       .join("path")
       .attr("class", "state")
+      .attr("id", d => {
+        const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+        return abbr ? `state-${abbr}` : null;
+      })
       .attr("d", path)
       /* Slightly brighter default fill for better contrast */
       .attr("fill", "#2f2f2f")

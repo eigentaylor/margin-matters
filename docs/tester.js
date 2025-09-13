@@ -1,9 +1,9 @@
 
 (function(){
-  const PV_CAP = 0.3;
-  const EPS = 1e-4;
+  const PV_CAP = 0.25;
+  const EPS = 1e-5;
   const STOP_EPS = 0.0005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = new Set(["'AL'", "'GA'", "'LA'", "'AR'", "'MS'"]);
+  const SPECIAL_1968 = ["GA", "LA", "AL", "MS", "AR"];
 
   function leanStr(x){
     if (!isFinite(x)) return '';
@@ -56,6 +56,46 @@
     });
 
     init();
+    // attempt to load ME/NE district geometries for per-district coloring
+    fetch('me_ne_districts.geojson').then(r => r.json()).then(geo => {
+      try {
+        // Create clipPaths for ME and NE using the state paths already on the map
+        const svgEl = d3.select('#map');
+        const defs = svgEl.select('defs').empty() ? svgEl.append('defs') : svgEl.select('defs');
+        const mePath = d3.select('#state-ME');
+        const nePath = d3.select('#state-NE');
+        if (!mePath.empty()) {
+          defs.append('clipPath').attr('id','clip-ME').append('use').attr('href','#state-ME');
+        }
+        if (!nePath.empty()) {
+          defs.append('clipPath').attr('id','clip-NE').append('use').attr('href','#state-NE');
+        }
+        // Render districts above states so they are visible but keep pointer-events off
+        const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
+        window._districtPaths = new Map();
+        geo.features.forEach(f => {
+          // prefer an explicit 'unit' property (e.g. 'ME-01'/'NE-02'), fall back to abbr or GEOID
+          let unit = null;
+          if (f.properties) {
+            unit = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
+          }
+          if (!unit) return;
+          const st = unit.slice(0,2);
+          const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
+          const p = dg.append('path')
+            .attr('class','district')
+            .attr('d', window.mapPath(f))
+            .attr('clip-path', clip)
+            .attr('fill', 'transparent')
+            .attr('stroke', '#444')
+            .attr('stroke-width', 0.6)
+            .attr('pointer-events', 'none');
+          window._districtPaths.set(unit, p);
+        });
+      } catch (e) {
+        console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
+      }
+    }).catch(()=>{/* no district overlay available */});
   });
 
   function getNatMargin(year){
@@ -184,10 +224,11 @@
 
     buildPvStops(year, document.getElementById('pvStops'), document.getElementById('pvStopsList'));
 
-    const arr = byYear.get(year) || [];
-    const abbrColors = new Map();
-    let dEV = 0, rEV = 0;
-    arr.forEach(r => {
+  const arr = byYear.get(year) || [];
+  const abbrColors = new Map();
+  const unitColors = new Map();
+  let dEV = 0, rEV = 0;
+  arr.forEach(r => {
       const unit = r.unit;
       if (!unit || unit === 'NATIONAL') return;
       const m = (+r.rm || 0) + pv;
@@ -205,7 +246,9 @@
       if (year === 1968 && Array.isArray(SPECIAL_1968) && SPECIAL_1968.indexOf(st) !== -1) {
         color = '#FFD700';
       }
-      if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
+  if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
+  // store per-unit color so district polygons can be filled individually
+  unitColors.set(unit, color);
     });
 
     d3.selectAll('path.state').each(function(d){
@@ -216,6 +259,42 @@
       const fill = entry ? entry.color : '#2f2f2f';
       d3.select(this).attr('fill', fill);
     });
+
+    // diagnostic: count how many state paths have each fill color
+    try {
+      const counts = {};
+      d3.selectAll('path.state').each(function(){ const f = d3.select(this).attr('fill') || 'null'; counts[f] = (counts[f]||0)+1; });
+      console.log('tester debug state fill counts:', counts);
+    } catch (e) {}
+
+    // color district polygons (ME/NE) if overlay loaded
+    if (window._districtPaths) {
+      try {
+        // debug: log PV/stop and computed color maps to help trace fill leakage
+        try { console.log('tester debug pv, stopVal', { pv, stopVal }); } catch(e){}
+        try { console.log('tester debug abbrColors', Object.fromEntries(abbrColors.entries())); } catch(e){}
+        try { console.log('tester debug unitColors', Object.fromEntries(unitColors.entries())); } catch(e){}
+
+        // build a plain object of expected colors for districts
+        try {
+          const expected = {};
+          window._districtPaths.forEach((pSel, unit) => { expected[unit] = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : null); });
+          console.log('ME/NE expected district colors:', expected);
+        } catch (e) { /* ignore logging errors */ }
+
+        window._districtPaths.forEach((pSel, unit) => {
+          // unit is expected like 'ME-01' or 'NE-02'
+          const ucolor = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : 'transparent');
+          try { pSel.attr('fill', ucolor); /* keep pointer-events disabled so districts don't intercept map hover/clicks */ } catch(e) {}
+          // log the actual fill attribute after applying it and the path bbox for size debugging
+          try {
+            const real = pSel.node ? pSel.node().getAttribute('fill') : null;
+            const bbox = (pSel.node && pSel.node().getBBox) ? pSel.node().getBBox() : null;
+            console.log('tester debug applied district fill', unit, ucolor, real, bbox && {x:bbox.x,y:bbox.y,w:bbox.width,h:bbox.height});
+          } catch(e) {}
+        });
+      } catch (e) { /* ignore */ }
+    }
 
     const totalEV = 538;
     const dPct = Math.max(0, Math.min(100, dEV/totalEV*100));

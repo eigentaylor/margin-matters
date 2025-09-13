@@ -78,7 +78,7 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 TESTER_JS = r"""
 (function(){
   const PV_CAP = %PV_CAP%;
-  const EPS = 1e-4;
+  const EPS = 1e-5;
   const STOP_EPS = 0.0005; // tolerance when matching slider to exact flip stops
   const SPECIAL_1968 = %SPECIAL_1968%;
 
@@ -136,15 +136,33 @@ TESTER_JS = r"""
     // attempt to load ME/NE district geometries for per-district coloring
     fetch('me_ne_districts.geojson').then(r => r.json()).then(geo => {
       try {
-        const dg = window.mapG.append('g').attr('class','districts');
-        // store a mapping from unit (e.g. 'ME-01') to the rendered path element
+        // Create clipPaths for ME and NE using the state paths already on the map
+        const svgEl = d3.select('#map');
+        const defs = svgEl.select('defs').empty() ? svgEl.append('defs') : svgEl.select('defs');
+        const mePath = d3.select('#state-ME');
+        const nePath = d3.select('#state-NE');
+        if (!mePath.empty()) {
+          defs.append('clipPath').attr('id','clip-ME').append('use').attr('href','#state-ME');
+        }
+        if (!nePath.empty()) {
+          defs.append('clipPath').attr('id','clip-NE').append('use').attr('href','#state-NE');
+        }
+        // Render districts above states so they are visible but keep pointer-events off
+        const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
         window._districtPaths = new Map();
         geo.features.forEach(f => {
-          const unit = f.properties && (f.properties.GEOID || f.properties.abbr || f.properties.unit);
+          // prefer an explicit 'unit' property (e.g. 'ME-01'/'NE-02'), fall back to abbr or GEOID
+          let unit = null;
+          if (f.properties) {
+            unit = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
+          }
           if (!unit) return;
+          const st = unit.slice(0,2);
+          const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
           const p = dg.append('path')
             .attr('class','district')
             .attr('d', window.mapPath(f))
+            .attr('clip-path', clip)
             .attr('fill', 'transparent')
             .attr('stroke', '#444')
             .attr('stroke-width', 0.6)
@@ -152,7 +170,7 @@ TESTER_JS = r"""
           window._districtPaths.set(unit, p);
         });
       } catch (e) {
-        console.warn('Couldn't render ME/NE districts:', e);
+        console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
       }
     }).catch(()=>{/* no district overlay available */});
   });
@@ -283,10 +301,11 @@ TESTER_JS = r"""
 
     buildPvStops(year, document.getElementById('pvStops'), document.getElementById('pvStopsList'));
 
-    const arr = byYear.get(year) || [];
-    const abbrColors = new Map();
-    let dEV = 0, rEV = 0;
-    arr.forEach(r => {
+  const arr = byYear.get(year) || [];
+  const abbrColors = new Map();
+  const unitColors = new Map();
+  let dEV = 0, rEV = 0;
+  arr.forEach(r => {
       const unit = r.unit;
       if (!unit || unit === 'NATIONAL') return;
       const m = (+r.rm || 0) + pv;
@@ -304,7 +323,9 @@ TESTER_JS = r"""
       if (year === 1968 && Array.isArray(SPECIAL_1968) && SPECIAL_1968.indexOf(st) !== -1) {
         color = '#FFD700';
       }
-      if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
+  if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
+  // store per-unit color so district polygons can be filled individually
+  unitColors.set(unit, color);
     });
 
     d3.selectAll('path.state').each(function(d){
@@ -315,6 +336,42 @@ TESTER_JS = r"""
       const fill = entry ? entry.color : '#2f2f2f';
       d3.select(this).attr('fill', fill);
     });
+
+    // diagnostic: count how many state paths have each fill color
+    try {
+      const counts = {};
+      d3.selectAll('path.state').each(function(){ const f = d3.select(this).attr('fill') || 'null'; counts[f] = (counts[f]||0)+1; });
+      console.log('tester debug state fill counts:', counts);
+    } catch (e) {}
+
+    // color district polygons (ME/NE) if overlay loaded
+    if (window._districtPaths) {
+      try {
+        // debug: log PV/stop and computed color maps to help trace fill leakage
+        try { console.log('tester debug pv, stopVal', { pv, stopVal }); } catch(e){}
+        try { console.log('tester debug abbrColors', Object.fromEntries(abbrColors.entries())); } catch(e){}
+        try { console.log('tester debug unitColors', Object.fromEntries(unitColors.entries())); } catch(e){}
+
+        // build a plain object of expected colors for districts
+        try {
+          const expected = {};
+          window._districtPaths.forEach((pSel, unit) => { expected[unit] = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : null); });
+          console.log('ME/NE expected district colors:', expected);
+        } catch (e) { /* ignore logging errors */ }
+
+        window._districtPaths.forEach((pSel, unit) => {
+          // unit is expected like 'ME-01' or 'NE-02'
+          const ucolor = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : 'transparent');
+          try { pSel.attr('fill', ucolor); /* keep pointer-events disabled so districts don't intercept map hover/clicks */ } catch(e) {}
+          // log the actual fill attribute after applying it and the path bbox for size debugging
+          try {
+            const real = pSel.node ? pSel.node().getAttribute('fill') : null;
+            const bbox = (pSel.node && pSel.node().getBBox) ? pSel.node().getBBox() : null;
+            console.log('tester debug applied district fill', unit, ucolor, real, bbox && {x:bbox.x,y:bbox.y,w:bbox.width,h:bbox.height});
+          } catch(e) {}
+        });
+      } catch (e) { /* ignore */ }
+    }
 
     const totalEV = 538;
     const dPct = Math.max(0, Math.min(100, dEV/totalEV*100));
@@ -414,6 +471,10 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .data(states)
       .join("path")
       .attr("class", "state")
+      .attr("id", d => {
+        const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+        return abbr ? `state-${abbr}` : null;
+      })
       .attr("d", path)
       /* Slightly brighter default fill for better contrast */
       .attr("fill", "#2f2f2f")
@@ -1152,7 +1213,8 @@ def main():
   if getattr(params, "INTERACTIVE_TESTER", False):
     # Write tester.js into docs (inject PV cap)
     cap_val = str(float(getattr(params, 'TESTER_PV_CAP', 0.25)))
-    write_text(OUT_DIR / "tester.js", TESTER_JS.replace('%PV_CAP%', cap_val).replace('%SPECIAL_1968%', f'new Set({[repr(s) for s in params.SPECIAL_1968_STATES]})'))
+    special_js = json.dumps(list(getattr(params, 'SPECIAL_1968_STATES', []) or []))
+    write_text(OUT_DIR / "tester.js", TESTER_JS.replace('%PV_CAP%', cap_val).replace('%SPECIAL_1968%', special_js))
     # Copy the primary margins CSV to docs
     try:
       shutil.copy2(CSV_PATH, OUT_DIR / "presidential_margins.csv")
@@ -1167,6 +1229,57 @@ def main():
         print(f"Warning: couldn't copy {ec_src} -> {OUT_DIR}: {e}")
     else:
       print("Note: election_data/electoral_college.csv not found; EV bar will use EVs from margins CSV if present.")
+    # Attempt to provide ME/NE district geometries for per-district coloring
+    geo_src = Path('me_ne_districts.geojson')
+    if geo_src.exists():
+      try:
+        shutil.copy2(geo_src, OUT_DIR / 'me_ne_districts.geojson')
+      except Exception as e:
+        print(f"Warning: couldn't copy {geo_src} -> {OUT_DIR}: {e}")
+    else:
+      # try converting the provided maps shapefile if geopandas is installed
+      shp = Path('maps') / 'cb_2022_us_cd118_20m.shp'
+      if shp.exists():
+        try:
+          try:
+            import geopandas as gpd
+          except Exception:
+            gpd = None
+          if gpd is None:
+            raise RuntimeError('geopandas not available')
+          gdf = gpd.read_file(str(shp))
+          # keep only ME and NE districts
+          if 'STATEFP' in gdf.columns:
+            gdf = gdf[gdf.STATEFP.isin(['23','31'])]
+          else:
+            # try filtering by STATE_NAME or STATE
+            gdf = gdf[gdf['STATE_NAME'].isin(['Maine','Nebraska'])] if 'STATE_NAME' in gdf.columns else gdf
+          # try to coerce a simple 'unit' property like 'ME-01' or 'NE-02'
+          def make_unit(row):
+            try:
+              st = row.get('STATEFP') or row.get('STATE') or row.get('STATE_NAME')
+              cd = row.get('CD118FP') or row.get('CD116FP') or row.get('CDSESSFP') or row.get('CD118') or row.get('GEOID')
+              if isinstance(st, str) and st.isdigit():
+                stabbr = 'ME' if st == '23' else ('NE' if st == '31' else '')
+              else:
+                stabbr = 'ME' if 'Maine' in str(st) else ('NE' if 'Nebraska' in str(st) else '')
+              if stabbr and cd:
+                try:
+                  cdn = int(cd)
+                except Exception:
+                  cdn = int(str(cd).split()[-1]) if str(cd).isdigit() else None
+                if cdn:
+                  return f"{stabbr}-{cdn:02d}"
+            except Exception:
+              return None
+          gdf['unit'] = gdf.apply(make_unit, axis=1)
+          gdf = gdf[gdf['unit'].notnull()]
+          geojson = gdf.to_crs(epsg=4326).to_json()
+          (OUT_DIR / 'me_ne_districts.geojson').write_text(geojson, encoding='utf-8')
+        except Exception as e:
+          print('Note: geopandas conversion unavailable or failed; ME/NE district overlay will not be generated.', e)
+      else:
+        print('Note: me_ne_districts.geojson not found and shapefile not present; ME/NE district overlay will be skipped.')
   print(f"Done. Open {OUT_DIR/'index.html'} in a browser or deploy /docs to GitHub Pages.")
 
 if __name__ == "__main__":
