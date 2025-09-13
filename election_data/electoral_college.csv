@@ -1,0 +1,3061 @@
+year,abbr,state,electoral_votes
+1788,AK,Alaska,
+1792,AK,Alaska,
+1796,AK,Alaska,
+1800,AK,Alaska,
+1804,AK,Alaska,
+1808,AK,Alaska,
+1812,AK,Alaska,
+1816,AK,Alaska,
+1820,AK,Alaska,
+1824,AK,Alaska,
+1828,AK,Alaska,
+1832,AK,Alaska,
+1836,AK,Alaska,
+1840,AK,Alaska,
+1844,AK,Alaska,
+1848,AK,Alaska,
+1852,AK,Alaska,
+1856,AK,Alaska,
+1860,AK,Alaska,
+1864,AK,Alaska,
+1868,AK,Alaska,
+1872,AK,Alaska,
+1876,AK,Alaska,
+1880,AK,Alaska,
+1884,AK,Alaska,
+1888,AK,Alaska,
+1892,AK,Alaska,
+1896,AK,Alaska,
+1900,AK,Alaska,
+1904,AK,Alaska,
+1908,AK,Alaska,
+1912,AK,Alaska,
+1916,AK,Alaska,
+1920,AK,Alaska,
+1924,AK,Alaska,
+1928,AK,Alaska,
+1932,AK,Alaska,
+1936,AK,Alaska,
+1940,AK,Alaska,
+1944,AK,Alaska,
+1948,AK,Alaska,
+1952,AK,Alaska,
+1956,AK,Alaska,
+1960,AK,Alaska,3
+1964,AK,Alaska,3
+1968,AK,Alaska,3
+1972,AK,Alaska,3
+1976,AK,Alaska,3
+1980,AK,Alaska,3
+1984,AK,Alaska,3
+1988,AK,Alaska,3
+1992,AK,Alaska,3
+1996,AK,Alaska,3
+2000,AK,Alaska,3
+2004,AK,Alaska,3
+2008,AK,Alaska,3
+2012,AK,Alaska,3
+2016,AK,Alaska,3
+2020,AK,Alaska,3
+2024,AK,Alaska,3
+1788,AL,Alabama,
+1792,AL,Alabama,
+1796,AL,Alabama,
+1800,AL,Alabama,
+1804,AL,Alabama,
+1808,AL,Alabama,
+1812,AL,Alabama,
+1816,AL,Alabama,
+1820,AL,Alabama,3
+1824,AL,Alabama,5
+1828,AL,Alabama,5
+1832,AL,Alabama,7
+1836,AL,Alabama,7
+1840,AL,Alabama,7
+1844,AL,Alabama,9
+1848,AL,Alabama,9
+1852,AL,Alabama,9
+1856,AL,Alabama,9
+1860,AL,Alabama,9
+1864,AL,Alabama,0
+1868,AL,Alabama,8
+1872,AL,Alabama,10
+1876,AL,Alabama,10
+1880,AL,Alabama,10
+1884,AL,Alabama,10
+1888,AL,Alabama,10
+1892,AL,Alabama,11
+1896,AL,Alabama,11
+1900,AL,Alabama,11
+1904,AL,Alabama,11
+1908,AL,Alabama,11
+1912,AL,Alabama,12
+1916,AL,Alabama,12
+1920,AL,Alabama,12
+1924,AL,Alabama,12
+1928,AL,Alabama,12
+1932,AL,Alabama,11
+1936,AL,Alabama,11
+1940,AL,Alabama,11
+1944,AL,Alabama,11
+1948,AL,Alabama,11
+1952,AL,Alabama,11
+1956,AL,Alabama,11
+1960,AL,Alabama,11
+1964,AL,Alabama,10
+1968,AL,Alabama,10
+1972,AL,Alabama,9
+1976,AL,Alabama,9
+1980,AL,Alabama,9
+1984,AL,Alabama,9
+1988,AL,Alabama,9
+1992,AL,Alabama,9
+1996,AL,Alabama,9
+2000,AL,Alabama,9
+2004,AL,Alabama,9
+2008,AL,Alabama,9
+2012,AL,Alabama,9
+2016,AL,Alabama,9
+2020,AL,Alabama,9
+2024,AL,Alabama,9
+1788,AR,Arkansas,
+1792,AR,Arkansas,
+1796,AR,Arkansas,
+1800,AR,Arkansas,
+1804,AR,Arkansas,
+1808,AR,Arkansas,
+1812,AR,Arkansas,
+1816,AR,Arkansas,
+1820,AR,Arkansas,
+1824,AR,Arkansas,
+1828,AR,Arkansas,
+1832,AR,Arkansas,
+1836,AR,Arkansas,3
+1840,AR,Arkansas,3
+1844,AR,Arkansas,3
+1848,AR,Arkansas,3
+1852,AR,Arkansas,4
+1856,AR,Arkansas,4
+1860,AR,Arkansas,4
+1864,AR,Arkansas,0
+1868,AR,Arkansas,5
+1872,AR,Arkansas,6
+1876,AR,Arkansas,6
+1880,AR,Arkansas,6
+1884,AR,Arkansas,7
+1888,AR,Arkansas,7
+1892,AR,Arkansas,8
+1896,AR,Arkansas,8
+1900,AR,Arkansas,8
+1904,AR,Arkansas,9
+1908,AR,Arkansas,9
+1912,AR,Arkansas,9
+1916,AR,Arkansas,9
+1920,AR,Arkansas,9
+1924,AR,Arkansas,9
+1928,AR,Arkansas,9
+1932,AR,Arkansas,9
+1936,AR,Arkansas,9
+1940,AR,Arkansas,9
+1944,AR,Arkansas,9
+1948,AR,Arkansas,9
+1952,AR,Arkansas,8
+1956,AR,Arkansas,8
+1960,AR,Arkansas,8
+1964,AR,Arkansas,6
+1968,AR,Arkansas,6
+1972,AR,Arkansas,6
+1976,AR,Arkansas,6
+1980,AR,Arkansas,6
+1984,AR,Arkansas,6
+1988,AR,Arkansas,6
+1992,AR,Arkansas,6
+1996,AR,Arkansas,6
+2000,AR,Arkansas,6
+2004,AR,Arkansas,6
+2008,AR,Arkansas,6
+2012,AR,Arkansas,6
+2016,AR,Arkansas,6
+2020,AR,Arkansas,6
+2024,AR,Arkansas,6
+1788,AZ,Arizona,
+1792,AZ,Arizona,
+1796,AZ,Arizona,
+1800,AZ,Arizona,
+1804,AZ,Arizona,
+1808,AZ,Arizona,
+1812,AZ,Arizona,
+1816,AZ,Arizona,
+1820,AZ,Arizona,
+1824,AZ,Arizona,
+1828,AZ,Arizona,
+1832,AZ,Arizona,
+1836,AZ,Arizona,
+1840,AZ,Arizona,
+1844,AZ,Arizona,
+1848,AZ,Arizona,
+1852,AZ,Arizona,
+1856,AZ,Arizona,
+1860,AZ,Arizona,
+1864,AZ,Arizona,
+1868,AZ,Arizona,
+1872,AZ,Arizona,
+1876,AZ,Arizona,
+1880,AZ,Arizona,
+1884,AZ,Arizona,
+1888,AZ,Arizona,
+1892,AZ,Arizona,
+1896,AZ,Arizona,
+1900,AZ,Arizona,
+1904,AZ,Arizona,
+1908,AZ,Arizona,
+1912,AZ,Arizona,3
+1916,AZ,Arizona,3
+1920,AZ,Arizona,3
+1924,AZ,Arizona,3
+1928,AZ,Arizona,3
+1932,AZ,Arizona,3
+1936,AZ,Arizona,3
+1940,AZ,Arizona,3
+1944,AZ,Arizona,4
+1948,AZ,Arizona,4
+1952,AZ,Arizona,4
+1956,AZ,Arizona,4
+1960,AZ,Arizona,4
+1964,AZ,Arizona,5
+1968,AZ,Arizona,5
+1972,AZ,Arizona,6
+1976,AZ,Arizona,6
+1980,AZ,Arizona,6
+1984,AZ,Arizona,7
+1988,AZ,Arizona,7
+1992,AZ,Arizona,8
+1996,AZ,Arizona,8
+2000,AZ,Arizona,8
+2004,AZ,Arizona,10
+2008,AZ,Arizona,10
+2012,AZ,Arizona,11
+2016,AZ,Arizona,11
+2020,AZ,Arizona,11
+2024,AZ,Arizona,11
+1788,CA,California,
+1792,CA,California,
+1796,CA,California,
+1800,CA,California,
+1804,CA,California,
+1808,CA,California,
+1812,CA,California,
+1816,CA,California,
+1820,CA,California,
+1824,CA,California,
+1828,CA,California,
+1832,CA,California,
+1836,CA,California,
+1840,CA,California,
+1844,CA,California,
+1848,CA,California,
+1852,CA,California,4
+1856,CA,California,4
+1860,CA,California,4
+1864,CA,California,5
+1868,CA,California,5
+1872,CA,California,6
+1876,CA,California,6
+1880,CA,California,6
+1884,CA,California,8
+1888,CA,California,8
+1892,CA,California,9
+1896,CA,California,9
+1900,CA,California,9
+1904,CA,California,10
+1908,CA,California,10
+1912,CA,California,13
+1916,CA,California,13
+1920,CA,California,13
+1924,CA,California,13
+1928,CA,California,13
+1932,CA,California,22
+1936,CA,California,22
+1940,CA,California,22
+1944,CA,California,25
+1948,CA,California,25
+1952,CA,California,32
+1956,CA,California,32
+1960,CA,California,32
+1964,CA,California,40
+1968,CA,California,40
+1972,CA,California,45
+1976,CA,California,45
+1980,CA,California,45
+1984,CA,California,47
+1988,CA,California,47
+1992,CA,California,54
+1996,CA,California,54
+2000,CA,California,54
+2004,CA,California,55
+2008,CA,California,55
+2012,CA,California,55
+2016,CA,California,55
+2020,CA,California,55
+2024,CA,California,54
+1788,CO,Colorado,
+1792,CO,Colorado,
+1796,CO,Colorado,
+1800,CO,Colorado,
+1804,CO,Colorado,
+1808,CO,Colorado,
+1812,CO,Colorado,
+1816,CO,Colorado,
+1820,CO,Colorado,
+1824,CO,Colorado,
+1828,CO,Colorado,
+1832,CO,Colorado,
+1836,CO,Colorado,
+1840,CO,Colorado,
+1844,CO,Colorado,
+1848,CO,Colorado,
+1852,CO,Colorado,
+1856,CO,Colorado,
+1860,CO,Colorado,
+1864,CO,Colorado,
+1868,CO,Colorado,
+1872,CO,Colorado,
+1876,CO,Colorado,3
+1880,CO,Colorado,3
+1884,CO,Colorado,3
+1888,CO,Colorado,3
+1892,CO,Colorado,4
+1896,CO,Colorado,4
+1900,CO,Colorado,4
+1904,CO,Colorado,5
+1908,CO,Colorado,5
+1912,CO,Colorado,6
+1916,CO,Colorado,6
+1920,CO,Colorado,6
+1924,CO,Colorado,6
+1928,CO,Colorado,6
+1932,CO,Colorado,6
+1936,CO,Colorado,6
+1940,CO,Colorado,6
+1944,CO,Colorado,6
+1948,CO,Colorado,6
+1952,CO,Colorado,6
+1956,CO,Colorado,6
+1960,CO,Colorado,6
+1964,CO,Colorado,6
+1968,CO,Colorado,6
+1972,CO,Colorado,7
+1976,CO,Colorado,7
+1980,CO,Colorado,7
+1984,CO,Colorado,8
+1988,CO,Colorado,8
+1992,CO,Colorado,8
+1996,CO,Colorado,8
+2000,CO,Colorado,8
+2004,CO,Colorado,9
+2008,CO,Colorado,9
+2012,CO,Colorado,9
+2016,CO,Colorado,9
+2020,CO,Colorado,9
+2024,CO,Colorado,10
+1788,CT,Connecticut,7
+1792,CT,Connecticut,9
+1796,CT,Connecticut,9
+1800,CT,Connecticut,9
+1804,CT,Connecticut,9
+1808,CT,Connecticut,9
+1812,CT,Connecticut,9
+1816,CT,Connecticut,9
+1820,CT,Connecticut,9
+1824,CT,Connecticut,8
+1828,CT,Connecticut,8
+1832,CT,Connecticut,8
+1836,CT,Connecticut,8
+1840,CT,Connecticut,8
+1844,CT,Connecticut,6
+1848,CT,Connecticut,6
+1852,CT,Connecticut,6
+1856,CT,Connecticut,6
+1860,CT,Connecticut,6
+1864,CT,Connecticut,6
+1868,CT,Connecticut,6
+1872,CT,Connecticut,6
+1876,CT,Connecticut,6
+1880,CT,Connecticut,6
+1884,CT,Connecticut,6
+1888,CT,Connecticut,6
+1892,CT,Connecticut,6
+1896,CT,Connecticut,6
+1900,CT,Connecticut,6
+1904,CT,Connecticut,7
+1908,CT,Connecticut,7
+1912,CT,Connecticut,7
+1916,CT,Connecticut,7
+1920,CT,Connecticut,7
+1924,CT,Connecticut,7
+1928,CT,Connecticut,7
+1932,CT,Connecticut,8
+1936,CT,Connecticut,8
+1940,CT,Connecticut,8
+1944,CT,Connecticut,8
+1948,CT,Connecticut,8
+1952,CT,Connecticut,8
+1956,CT,Connecticut,8
+1960,CT,Connecticut,8
+1964,CT,Connecticut,8
+1968,CT,Connecticut,8
+1972,CT,Connecticut,8
+1976,CT,Connecticut,8
+1980,CT,Connecticut,8
+1984,CT,Connecticut,8
+1988,CT,Connecticut,8
+1992,CT,Connecticut,8
+1996,CT,Connecticut,8
+2000,CT,Connecticut,8
+2004,CT,Connecticut,7
+2008,CT,Connecticut,7
+2012,CT,Connecticut,7
+2016,CT,Connecticut,7
+2020,CT,Connecticut,7
+2024,CT,Connecticut,7
+1788,DC,D.C.,
+1792,DC,D.C.,
+1796,DC,D.C.,
+1800,DC,D.C.,
+1804,DC,D.C.,
+1808,DC,D.C.,
+1812,DC,D.C.,
+1816,DC,D.C.,
+1820,DC,D.C.,
+1824,DC,D.C.,
+1828,DC,D.C.,
+1832,DC,D.C.,
+1836,DC,D.C.,
+1840,DC,D.C.,
+1844,DC,D.C.,
+1848,DC,D.C.,
+1852,DC,D.C.,
+1856,DC,D.C.,
+1860,DC,D.C.,
+1864,DC,D.C.,
+1868,DC,D.C.,
+1872,DC,D.C.,
+1876,DC,D.C.,
+1880,DC,D.C.,
+1884,DC,D.C.,
+1888,DC,D.C.,
+1892,DC,D.C.,
+1896,DC,D.C.,
+1900,DC,D.C.,
+1904,DC,D.C.,
+1908,DC,D.C.,
+1912,DC,D.C.,
+1916,DC,D.C.,
+1920,DC,D.C.,
+1924,DC,D.C.,
+1928,DC,D.C.,
+1932,DC,D.C.,
+1936,DC,D.C.,
+1940,DC,D.C.,
+1944,DC,D.C.,
+1948,DC,D.C.,
+1952,DC,D.C.,
+1956,DC,D.C.,
+1960,DC,D.C.,
+1964,DC,D.C.,3
+1968,DC,D.C.,3
+1972,DC,D.C.,3
+1976,DC,D.C.,3
+1980,DC,D.C.,3
+1984,DC,D.C.,3
+1988,DC,D.C.,3
+1992,DC,D.C.,3
+1996,DC,D.C.,3
+2000,DC,D.C.,3
+2004,DC,D.C.,3
+2008,DC,D.C.,3
+2012,DC,D.C.,3
+2016,DC,D.C.,3
+2020,DC,D.C.,3
+2024,DC,District of Columbia,3
+1788,DE,Delaware,3
+1792,DE,Delaware,3
+1796,DE,Delaware,3
+1800,DE,Delaware,3
+1804,DE,Delaware,3
+1808,DE,Delaware,3
+1812,DE,Delaware,4
+1816,DE,Delaware,4
+1820,DE,Delaware,4
+1824,DE,Delaware,3
+1828,DE,Delaware,3
+1832,DE,Delaware,3
+1836,DE,Delaware,3
+1840,DE,Delaware,3
+1844,DE,Delaware,3
+1848,DE,Delaware,3
+1852,DE,Delaware,3
+1856,DE,Delaware,3
+1860,DE,Delaware,3
+1864,DE,Delaware,3
+1868,DE,Delaware,3
+1872,DE,Delaware,3
+1876,DE,Delaware,3
+1880,DE,Delaware,3
+1884,DE,Delaware,3
+1888,DE,Delaware,3
+1892,DE,Delaware,3
+1896,DE,Delaware,3
+1900,DE,Delaware,3
+1904,DE,Delaware,3
+1908,DE,Delaware,3
+1912,DE,Delaware,3
+1916,DE,Delaware,3
+1920,DE,Delaware,3
+1924,DE,Delaware,3
+1928,DE,Delaware,3
+1932,DE,Delaware,3
+1936,DE,Delaware,3
+1940,DE,Delaware,3
+1944,DE,Delaware,3
+1948,DE,Delaware,3
+1952,DE,Delaware,3
+1956,DE,Delaware,3
+1960,DE,Delaware,3
+1964,DE,Delaware,3
+1968,DE,Delaware,3
+1972,DE,Delaware,3
+1976,DE,Delaware,3
+1980,DE,Delaware,3
+1984,DE,Delaware,3
+1988,DE,Delaware,3
+1992,DE,Delaware,3
+1996,DE,Delaware,3
+2000,DE,Delaware,3
+2004,DE,Delaware,3
+2008,DE,Delaware,3
+2012,DE,Delaware,3
+2016,DE,Delaware,3
+2020,DE,Delaware,3
+2024,DE,Delaware,3
+1788,FL,Florida,
+1792,FL,Florida,
+1796,FL,Florida,
+1800,FL,Florida,
+1804,FL,Florida,
+1808,FL,Florida,
+1812,FL,Florida,
+1816,FL,Florida,
+1820,FL,Florida,
+1824,FL,Florida,
+1828,FL,Florida,
+1832,FL,Florida,
+1836,FL,Florida,
+1840,FL,Florida,
+1844,FL,Florida,
+1848,FL,Florida,3
+1852,FL,Florida,3
+1856,FL,Florida,3
+1860,FL,Florida,3
+1864,FL,Florida,0
+1868,FL,Florida,3
+1872,FL,Florida,4
+1876,FL,Florida,4
+1880,FL,Florida,4
+1884,FL,Florida,4
+1888,FL,Florida,4
+1892,FL,Florida,4
+1896,FL,Florida,4
+1900,FL,Florida,4
+1904,FL,Florida,5
+1908,FL,Florida,5
+1912,FL,Florida,6
+1916,FL,Florida,6
+1920,FL,Florida,6
+1924,FL,Florida,6
+1928,FL,Florida,6
+1932,FL,Florida,7
+1936,FL,Florida,7
+1940,FL,Florida,7
+1944,FL,Florida,8
+1948,FL,Florida,8
+1952,FL,Florida,10
+1956,FL,Florida,10
+1960,FL,Florida,10
+1964,FL,Florida,14
+1968,FL,Florida,14
+1972,FL,Florida,17
+1976,FL,Florida,17
+1980,FL,Florida,17
+1984,FL,Florida,21
+1988,FL,Florida,21
+1992,FL,Florida,25
+1996,FL,Florida,25
+2000,FL,Florida,25
+2004,FL,Florida,27
+2008,FL,Florida,27
+2012,FL,Florida,29
+2016,FL,Florida,29
+2020,FL,Florida,29
+2024,FL,Florida,30
+1788,GA,Georgia,5
+1792,GA,Georgia,4
+1796,GA,Georgia,4
+1800,GA,Georgia,4
+1804,GA,Georgia,6
+1808,GA,Georgia,6
+1812,GA,Georgia,8
+1816,GA,Georgia,8
+1820,GA,Georgia,8
+1824,GA,Georgia,9
+1828,GA,Georgia,9
+1832,GA,Georgia,11
+1836,GA,Georgia,11
+1840,GA,Georgia,11
+1844,GA,Georgia,10
+1848,GA,Georgia,10
+1852,GA,Georgia,10
+1856,GA,Georgia,10
+1860,GA,Georgia,10
+1864,GA,Georgia,0
+1868,GA,Georgia,9
+1872,GA,Georgia,11
+1876,GA,Georgia,11
+1880,GA,Georgia,11
+1884,GA,Georgia,12
+1888,GA,Georgia,12
+1892,GA,Georgia,13
+1896,GA,Georgia,13
+1900,GA,Georgia,13
+1904,GA,Georgia,13
+1908,GA,Georgia,13
+1912,GA,Georgia,14
+1916,GA,Georgia,14
+1920,GA,Georgia,14
+1924,GA,Georgia,14
+1928,GA,Georgia,14
+1932,GA,Georgia,12
+1936,GA,Georgia,12
+1940,GA,Georgia,12
+1944,GA,Georgia,12
+1948,GA,Georgia,12
+1952,GA,Georgia,12
+1956,GA,Georgia,12
+1960,GA,Georgia,12
+1964,GA,Georgia,12
+1968,GA,Georgia,12
+1972,GA,Georgia,12
+1976,GA,Georgia,12
+1980,GA,Georgia,12
+1984,GA,Georgia,12
+1988,GA,Georgia,12
+1992,GA,Georgia,13
+1996,GA,Georgia,13
+2000,GA,Georgia,13
+2004,GA,Georgia,15
+2008,GA,Georgia,15
+2012,GA,Georgia,16
+2016,GA,Georgia,16
+2020,GA,Georgia,16
+2024,GA,Georgia,16
+1788,HI,Hawaii,
+1792,HI,Hawaii,
+1796,HI,Hawaii,
+1800,HI,Hawaii,
+1804,HI,Hawaii,
+1808,HI,Hawaii,
+1812,HI,Hawaii,
+1816,HI,Hawaii,
+1820,HI,Hawaii,
+1824,HI,Hawaii,
+1828,HI,Hawaii,
+1832,HI,Hawaii,
+1836,HI,Hawaii,
+1840,HI,Hawaii,
+1844,HI,Hawaii,
+1848,HI,Hawaii,
+1852,HI,Hawaii,
+1856,HI,Hawaii,
+1860,HI,Hawaii,
+1864,HI,Hawaii,
+1868,HI,Hawaii,
+1872,HI,Hawaii,
+1876,HI,Hawaii,
+1880,HI,Hawaii,
+1884,HI,Hawaii,
+1888,HI,Hawaii,
+1892,HI,Hawaii,
+1896,HI,Hawaii,
+1900,HI,Hawaii,
+1904,HI,Hawaii,
+1908,HI,Hawaii,
+1912,HI,Hawaii,
+1916,HI,Hawaii,
+1920,HI,Hawaii,
+1924,HI,Hawaii,
+1928,HI,Hawaii,
+1932,HI,Hawaii,
+1936,HI,Hawaii,
+1940,HI,Hawaii,
+1944,HI,Hawaii,
+1948,HI,Hawaii,
+1952,HI,Hawaii,
+1956,HI,Hawaii,
+1960,HI,Hawaii,3
+1964,HI,Hawaii,4
+1968,HI,Hawaii,4
+1972,HI,Hawaii,4
+1976,HI,Hawaii,4
+1980,HI,Hawaii,4
+1984,HI,Hawaii,4
+1988,HI,Hawaii,4
+1992,HI,Hawaii,4
+1996,HI,Hawaii,4
+2000,HI,Hawaii,4
+2004,HI,Hawaii,4
+2008,HI,Hawaii,4
+2012,HI,Hawaii,4
+2016,HI,Hawaii,4
+2020,HI,Hawaii,4
+2024,HI,Hawaii,4
+1788,IA,Iowa,
+1792,IA,Iowa,
+1796,IA,Iowa,
+1800,IA,Iowa,
+1804,IA,Iowa,
+1808,IA,Iowa,
+1812,IA,Iowa,
+1816,IA,Iowa,
+1820,IA,Iowa,
+1824,IA,Iowa,
+1828,IA,Iowa,
+1832,IA,Iowa,
+1836,IA,Iowa,
+1840,IA,Iowa,
+1844,IA,Iowa,
+1848,IA,Iowa,4
+1852,IA,Iowa,4
+1856,IA,Iowa,4
+1860,IA,Iowa,4
+1864,IA,Iowa,8
+1868,IA,Iowa,8
+1872,IA,Iowa,11
+1876,IA,Iowa,11
+1880,IA,Iowa,11
+1884,IA,Iowa,13
+1888,IA,Iowa,13
+1892,IA,Iowa,13
+1896,IA,Iowa,13
+1900,IA,Iowa,13
+1904,IA,Iowa,13
+1908,IA,Iowa,13
+1912,IA,Iowa,13
+1916,IA,Iowa,13
+1920,IA,Iowa,13
+1924,IA,Iowa,13
+1928,IA,Iowa,13
+1932,IA,Iowa,11
+1936,IA,Iowa,11
+1940,IA,Iowa,11
+1944,IA,Iowa,10
+1948,IA,Iowa,10
+1952,IA,Iowa,10
+1956,IA,Iowa,10
+1960,IA,Iowa,10
+1964,IA,Iowa,9
+1968,IA,Iowa,9
+1972,IA,Iowa,8
+1976,IA,Iowa,8
+1980,IA,Iowa,8
+1984,IA,Iowa,8
+1988,IA,Iowa,8
+1992,IA,Iowa,7
+1996,IA,Iowa,7
+2000,IA,Iowa,7
+2004,IA,Iowa,7
+2008,IA,Iowa,7
+2012,IA,Iowa,6
+2016,IA,Iowa,6
+2020,IA,Iowa,6
+2024,IA,Iowa,6
+1788,ID,Idaho,
+1792,ID,Idaho,
+1796,ID,Idaho,
+1800,ID,Idaho,
+1804,ID,Idaho,
+1808,ID,Idaho,
+1812,ID,Idaho,
+1816,ID,Idaho,
+1820,ID,Idaho,
+1824,ID,Idaho,
+1828,ID,Idaho,
+1832,ID,Idaho,
+1836,ID,Idaho,
+1840,ID,Idaho,
+1844,ID,Idaho,
+1848,ID,Idaho,
+1852,ID,Idaho,
+1856,ID,Idaho,
+1860,ID,Idaho,
+1864,ID,Idaho,
+1868,ID,Idaho,
+1872,ID,Idaho,
+1876,ID,Idaho,
+1880,ID,Idaho,
+1884,ID,Idaho,
+1888,ID,Idaho,
+1892,ID,Idaho,3
+1896,ID,Idaho,3
+1900,ID,Idaho,3
+1904,ID,Idaho,3
+1908,ID,Idaho,3
+1912,ID,Idaho,4
+1916,ID,Idaho,4
+1920,ID,Idaho,4
+1924,ID,Idaho,4
+1928,ID,Idaho,4
+1932,ID,Idaho,4
+1936,ID,Idaho,4
+1940,ID,Idaho,4
+1944,ID,Idaho,4
+1948,ID,Idaho,4
+1952,ID,Idaho,4
+1956,ID,Idaho,4
+1960,ID,Idaho,4
+1964,ID,Idaho,4
+1968,ID,Idaho,4
+1972,ID,Idaho,4
+1976,ID,Idaho,4
+1980,ID,Idaho,4
+1984,ID,Idaho,4
+1988,ID,Idaho,4
+1992,ID,Idaho,4
+1996,ID,Idaho,4
+2000,ID,Idaho,4
+2004,ID,Idaho,4
+2008,ID,Idaho,4
+2012,ID,Idaho,4
+2016,ID,Idaho,4
+2020,ID,Idaho,4
+2024,ID,Idaho,4
+1788,IL,Illinois,
+1792,IL,Illinois,
+1796,IL,Illinois,
+1800,IL,Illinois,
+1804,IL,Illinois,
+1808,IL,Illinois,
+1812,IL,Illinois,
+1816,IL,Illinois,
+1820,IL,Illinois,3
+1824,IL,Illinois,3
+1828,IL,Illinois,3
+1832,IL,Illinois,5
+1836,IL,Illinois,5
+1840,IL,Illinois,5
+1844,IL,Illinois,9
+1848,IL,Illinois,9
+1852,IL,Illinois,11
+1856,IL,Illinois,11
+1860,IL,Illinois,11
+1864,IL,Illinois,16
+1868,IL,Illinois,16
+1872,IL,Illinois,21
+1876,IL,Illinois,21
+1880,IL,Illinois,21
+1884,IL,Illinois,22
+1888,IL,Illinois,22
+1892,IL,Illinois,24
+1896,IL,Illinois,24
+1900,IL,Illinois,24
+1904,IL,Illinois,27
+1908,IL,Illinois,27
+1912,IL,Illinois,29
+1916,IL,Illinois,29
+1920,IL,Illinois,29
+1924,IL,Illinois,29
+1928,IL,Illinois,29
+1932,IL,Illinois,29
+1936,IL,Illinois,29
+1940,IL,Illinois,29
+1944,IL,Illinois,28
+1948,IL,Illinois,28
+1952,IL,Illinois,27
+1956,IL,Illinois,27
+1960,IL,Illinois,27
+1964,IL,Illinois,26
+1968,IL,Illinois,26
+1972,IL,Illinois,26
+1976,IL,Illinois,26
+1980,IL,Illinois,26
+1984,IL,Illinois,24
+1988,IL,Illinois,24
+1992,IL,Illinois,22
+1996,IL,Illinois,22
+2000,IL,Illinois,22
+2004,IL,Illinois,21
+2008,IL,Illinois,21
+2012,IL,Illinois,20
+2016,IL,Illinois,20
+2020,IL,Illinois,20
+2024,IL,Illinois,19
+1788,IN,Indiana,
+1792,IN,Indiana,
+1796,IN,Indiana,
+1800,IN,Indiana,
+1804,IN,Indiana,
+1808,IN,Indiana,
+1812,IN,Indiana,
+1816,IN,Indiana,3
+1820,IN,Indiana,3
+1824,IN,Indiana,5
+1828,IN,Indiana,5
+1832,IN,Indiana,9
+1836,IN,Indiana,9
+1840,IN,Indiana,9
+1844,IN,Indiana,12
+1848,IN,Indiana,12
+1852,IN,Indiana,13
+1856,IN,Indiana,13
+1860,IN,Indiana,13
+1864,IN,Indiana,13
+1868,IN,Indiana,13
+1872,IN,Indiana,15
+1876,IN,Indiana,15
+1880,IN,Indiana,15
+1884,IN,Indiana,15
+1888,IN,Indiana,15
+1892,IN,Indiana,15
+1896,IN,Indiana,15
+1900,IN,Indiana,15
+1904,IN,Indiana,15
+1908,IN,Indiana,15
+1912,IN,Indiana,15
+1916,IN,Indiana,15
+1920,IN,Indiana,15
+1924,IN,Indiana,15
+1928,IN,Indiana,15
+1932,IN,Indiana,14
+1936,IN,Indiana,14
+1940,IN,Indiana,14
+1944,IN,Indiana,13
+1948,IN,Indiana,13
+1952,IN,Indiana,13
+1956,IN,Indiana,13
+1960,IN,Indiana,13
+1964,IN,Indiana,13
+1968,IN,Indiana,13
+1972,IN,Indiana,13
+1976,IN,Indiana,13
+1980,IN,Indiana,13
+1984,IN,Indiana,12
+1988,IN,Indiana,12
+1992,IN,Indiana,12
+1996,IN,Indiana,12
+2000,IN,Indiana,12
+2004,IN,Indiana,11
+2008,IN,Indiana,11
+2012,IN,Indiana,11
+2016,IN,Indiana,11
+2020,IN,Indiana,11
+2024,IN,Indiana,11
+1788,KS,Kansas,
+1792,KS,Kansas,
+1796,KS,Kansas,
+1800,KS,Kansas,
+1804,KS,Kansas,
+1808,KS,Kansas,
+1812,KS,Kansas,
+1816,KS,Kansas,
+1820,KS,Kansas,
+1824,KS,Kansas,
+1828,KS,Kansas,
+1832,KS,Kansas,
+1836,KS,Kansas,
+1840,KS,Kansas,
+1844,KS,Kansas,
+1848,KS,Kansas,
+1852,KS,Kansas,
+1856,KS,Kansas,
+1860,KS,Kansas,
+1864,KS,Kansas,3
+1868,KS,Kansas,3
+1872,KS,Kansas,5
+1876,KS,Kansas,5
+1880,KS,Kansas,5
+1884,KS,Kansas,9
+1888,KS,Kansas,9
+1892,KS,Kansas,10
+1896,KS,Kansas,10
+1900,KS,Kansas,10
+1904,KS,Kansas,10
+1908,KS,Kansas,10
+1912,KS,Kansas,10
+1916,KS,Kansas,10
+1920,KS,Kansas,10
+1924,KS,Kansas,10
+1928,KS,Kansas,10
+1932,KS,Kansas,9
+1936,KS,Kansas,9
+1940,KS,Kansas,9
+1944,KS,Kansas,8
+1948,KS,Kansas,8
+1952,KS,Kansas,8
+1956,KS,Kansas,8
+1960,KS,Kansas,8
+1964,KS,Kansas,7
+1968,KS,Kansas,7
+1972,KS,Kansas,7
+1976,KS,Kansas,7
+1980,KS,Kansas,7
+1984,KS,Kansas,7
+1988,KS,Kansas,7
+1992,KS,Kansas,6
+1996,KS,Kansas,6
+2000,KS,Kansas,6
+2004,KS,Kansas,6
+2008,KS,Kansas,6
+2012,KS,Kansas,6
+2016,KS,Kansas,6
+2020,KS,Kansas,6
+2024,KS,Kansas,6
+1788,KY,Kentucky,
+1792,KY,Kentucky,4
+1796,KY,Kentucky,4
+1800,KY,Kentucky,4
+1804,KY,Kentucky,8
+1808,KY,Kentucky,8
+1812,KY,Kentucky,12
+1816,KY,Kentucky,12
+1820,KY,Kentucky,12
+1824,KY,Kentucky,14
+1828,KY,Kentucky,14
+1832,KY,Kentucky,15
+1836,KY,Kentucky,15
+1840,KY,Kentucky,15
+1844,KY,Kentucky,12
+1848,KY,Kentucky,12
+1852,KY,Kentucky,12
+1856,KY,Kentucky,12
+1860,KY,Kentucky,12
+1864,KY,Kentucky,11
+1868,KY,Kentucky,11
+1872,KY,Kentucky,12
+1876,KY,Kentucky,12
+1880,KY,Kentucky,12
+1884,KY,Kentucky,13
+1888,KY,Kentucky,13
+1892,KY,Kentucky,13
+1896,KY,Kentucky,13
+1900,KY,Kentucky,13
+1904,KY,Kentucky,13
+1908,KY,Kentucky,13
+1912,KY,Kentucky,13
+1916,KY,Kentucky,13
+1920,KY,Kentucky,13
+1924,KY,Kentucky,13
+1928,KY,Kentucky,13
+1932,KY,Kentucky,11
+1936,KY,Kentucky,11
+1940,KY,Kentucky,11
+1944,KY,Kentucky,11
+1948,KY,Kentucky,11
+1952,KY,Kentucky,10
+1956,KY,Kentucky,10
+1960,KY,Kentucky,10
+1964,KY,Kentucky,9
+1968,KY,Kentucky,9
+1972,KY,Kentucky,9
+1976,KY,Kentucky,9
+1980,KY,Kentucky,9
+1984,KY,Kentucky,9
+1988,KY,Kentucky,9
+1992,KY,Kentucky,8
+1996,KY,Kentucky,8
+2000,KY,Kentucky,8
+2004,KY,Kentucky,8
+2008,KY,Kentucky,8
+2012,KY,Kentucky,8
+2016,KY,Kentucky,8
+2020,KY,Kentucky,8
+2024,KY,Kentucky,8
+1788,LA,Louisiana,
+1792,LA,Louisiana,
+1796,LA,Louisiana,
+1800,LA,Louisiana,
+1804,LA,Louisiana,
+1808,LA,Louisiana,
+1812,LA,Louisiana,3
+1816,LA,Louisiana,3
+1820,LA,Louisiana,3
+1824,LA,Louisiana,5
+1828,LA,Louisiana,5
+1832,LA,Louisiana,5
+1836,LA,Louisiana,5
+1840,LA,Louisiana,5
+1844,LA,Louisiana,6
+1848,LA,Louisiana,6
+1852,LA,Louisiana,6
+1856,LA,Louisiana,6
+1860,LA,Louisiana,6
+1864,LA,Louisiana,0
+1868,LA,Louisiana,7
+1872,LA,Louisiana,8
+1876,LA,Louisiana,8
+1880,LA,Louisiana,8
+1884,LA,Louisiana,8
+1888,LA,Louisiana,8
+1892,LA,Louisiana,8
+1896,LA,Louisiana,8
+1900,LA,Louisiana,8
+1904,LA,Louisiana,9
+1908,LA,Louisiana,9
+1912,LA,Louisiana,10
+1916,LA,Louisiana,10
+1920,LA,Louisiana,10
+1924,LA,Louisiana,10
+1928,LA,Louisiana,10
+1932,LA,Louisiana,10
+1936,LA,Louisiana,10
+1940,LA,Louisiana,10
+1944,LA,Louisiana,10
+1948,LA,Louisiana,10
+1952,LA,Louisiana,10
+1956,LA,Louisiana,10
+1960,LA,Louisiana,10
+1964,LA,Louisiana,10
+1968,LA,Louisiana,10
+1972,LA,Louisiana,10
+1976,LA,Louisiana,10
+1980,LA,Louisiana,10
+1984,LA,Louisiana,10
+1988,LA,Louisiana,10
+1992,LA,Louisiana,9
+1996,LA,Louisiana,9
+2000,LA,Louisiana,9
+2004,LA,Louisiana,9
+2008,LA,Louisiana,9
+2012,LA,Louisiana,8
+2016,LA,Louisiana,8
+2020,LA,Louisiana,8
+2024,LA,Louisiana,8
+1788,MA,Massachusetts,10
+1792,MA,Massachusetts,16
+1796,MA,Massachusetts,16
+1800,MA,Massachusetts,16
+1804,MA,Massachusetts,19
+1808,MA,Massachusetts,19
+1812,MA,Massachusetts,22
+1816,MA,Massachusetts,22
+1820,MA,Massachusetts,15
+1824,MA,Massachusetts,15
+1828,MA,Massachusetts,15
+1832,MA,Massachusetts,14
+1836,MA,Massachusetts,14
+1840,MA,Massachusetts,14
+1844,MA,Massachusetts,12
+1848,MA,Massachusetts,12
+1852,MA,Massachusetts,13
+1856,MA,Massachusetts,13
+1860,MA,Massachusetts,13
+1864,MA,Massachusetts,12
+1868,MA,Massachusetts,12
+1872,MA,Massachusetts,13
+1876,MA,Massachusetts,13
+1880,MA,Massachusetts,13
+1884,MA,Massachusetts,14
+1888,MA,Massachusetts,14
+1892,MA,Massachusetts,15
+1896,MA,Massachusetts,15
+1900,MA,Massachusetts,15
+1904,MA,Massachusetts,16
+1908,MA,Massachusetts,16
+1912,MA,Massachusetts,18
+1916,MA,Massachusetts,18
+1920,MA,Massachusetts,18
+1924,MA,Massachusetts,18
+1928,MA,Massachusetts,18
+1932,MA,Massachusetts,17
+1936,MA,Massachusetts,17
+1940,MA,Massachusetts,17
+1944,MA,Massachusetts,16
+1948,MA,Massachusetts,16
+1952,MA,Massachusetts,16
+1956,MA,Massachusetts,16
+1960,MA,Massachusetts,16
+1964,MA,Massachusetts,14
+1968,MA,Massachusetts,14
+1972,MA,Massachusetts,14
+1976,MA,Massachusetts,14
+1980,MA,Massachusetts,14
+1984,MA,Massachusetts,13
+1988,MA,Massachusetts,13
+1992,MA,Massachusetts,12
+1996,MA,Massachusetts,12
+2000,MA,Massachusetts,12
+2004,MA,Massachusetts,12
+2008,MA,Massachusetts,12
+2012,MA,Massachusetts,11
+2016,MA,Massachusetts,11
+2020,MA,Massachusetts,11
+2024,MA,Massachusetts,11
+1788,MD,Maryland,8
+1792,MD,Maryland,10
+1796,MD,Maryland,10
+1800,MD,Maryland,10
+1804,MD,Maryland,11
+1808,MD,Maryland,11
+1812,MD,Maryland,11
+1816,MD,Maryland,11
+1820,MD,Maryland,11
+1824,MD,Maryland,11
+1828,MD,Maryland,11
+1832,MD,Maryland,10
+1836,MD,Maryland,10
+1840,MD,Maryland,10
+1844,MD,Maryland,8
+1848,MD,Maryland,8
+1852,MD,Maryland,8
+1856,MD,Maryland,8
+1860,MD,Maryland,8
+1864,MD,Maryland,7
+1868,MD,Maryland,7
+1872,MD,Maryland,8
+1876,MD,Maryland,8
+1880,MD,Maryland,8
+1884,MD,Maryland,8
+1888,MD,Maryland,8
+1892,MD,Maryland,8
+1896,MD,Maryland,8
+1900,MD,Maryland,8
+1904,MD,Maryland,8
+1908,MD,Maryland,8
+1912,MD,Maryland,8
+1916,MD,Maryland,8
+1920,MD,Maryland,8
+1924,MD,Maryland,8
+1928,MD,Maryland,8
+1932,MD,Maryland,8
+1936,MD,Maryland,8
+1940,MD,Maryland,8
+1944,MD,Maryland,8
+1948,MD,Maryland,8
+1952,MD,Maryland,9
+1956,MD,Maryland,9
+1960,MD,Maryland,9
+1964,MD,Maryland,10
+1968,MD,Maryland,10
+1972,MD,Maryland,10
+1976,MD,Maryland,10
+1980,MD,Maryland,10
+1984,MD,Maryland,10
+1988,MD,Maryland,10
+1992,MD,Maryland,10
+1996,MD,Maryland,10
+2000,MD,Maryland,10
+2004,MD,Maryland,10
+2008,MD,Maryland,10
+2012,MD,Maryland,10
+2016,MD,Maryland,10
+2020,MD,Maryland,10
+2024,MD,Maryland,10
+1788,ME,Maine,
+1792,ME,Maine,
+1796,ME,Maine,
+1800,ME,Maine,
+1804,ME,Maine,
+1808,ME,Maine,
+1812,ME,Maine,
+1816,ME,Maine,
+1820,ME,Maine,9
+1824,ME,Maine,9
+1828,ME,Maine,9
+1832,ME,Maine,10
+1836,ME,Maine,10
+1840,ME,Maine,10
+1844,ME,Maine,9
+1848,ME,Maine,9
+1852,ME,Maine,8
+1856,ME,Maine,8
+1860,ME,Maine,8
+1864,ME,Maine,7
+1868,ME,Maine,7
+1872,ME,Maine,7
+1876,ME,Maine,7
+1880,ME,Maine,7
+1884,ME,Maine,6
+1888,ME,Maine,6
+1892,ME,Maine,6
+1896,ME,Maine,6
+1900,ME,Maine,6
+1904,ME,Maine,6
+1908,ME,Maine,6
+1912,ME,Maine,6
+1916,ME,Maine,6
+1920,ME,Maine,6
+1924,ME,Maine,6
+1928,ME,Maine,6
+1932,ME,Maine,5
+1936,ME,Maine,5
+1940,ME,Maine,5
+1944,ME,Maine,5
+1948,ME,Maine,5
+1952,ME,Maine,5
+1956,ME,Maine,5
+1960,ME,Maine,5
+1964,ME,Maine,4
+1968,ME,Maine,4
+1972,ME,Maine,4
+1976,ME,Maine,4
+1980,ME,Maine,4
+1984,ME,Maine,4
+1988,ME,Maine,4
+1992,ME,Maine,4
+1996,ME,Maine,4
+2000,ME,Maine,4
+2004,ME,Maine,4
+2008,ME,Maine,4
+2012,ME,Maine,4
+2016,ME,Maine,4
+2020,ME,Maine,4
+2024,ME,Maine,4
+1788,MI,Michigan,
+1792,MI,Michigan,
+1796,MI,Michigan,
+1800,MI,Michigan,
+1804,MI,Michigan,
+1808,MI,Michigan,
+1812,MI,Michigan,
+1816,MI,Michigan,
+1820,MI,Michigan,
+1824,MI,Michigan,
+1828,MI,Michigan,
+1832,MI,Michigan,
+1836,MI,Michigan,3
+1840,MI,Michigan,3
+1844,MI,Michigan,5
+1848,MI,Michigan,5
+1852,MI,Michigan,6
+1856,MI,Michigan,6
+1860,MI,Michigan,6
+1864,MI,Michigan,8
+1868,MI,Michigan,8
+1872,MI,Michigan,11
+1876,MI,Michigan,11
+1880,MI,Michigan,11
+1884,MI,Michigan,13
+1888,MI,Michigan,13
+1892,MI,Michigan,14
+1896,MI,Michigan,14
+1900,MI,Michigan,14
+1904,MI,Michigan,14
+1908,MI,Michigan,14
+1912,MI,Michigan,15
+1916,MI,Michigan,15
+1920,MI,Michigan,15
+1924,MI,Michigan,15
+1928,MI,Michigan,15
+1932,MI,Michigan,19
+1936,MI,Michigan,19
+1940,MI,Michigan,19
+1944,MI,Michigan,19
+1948,MI,Michigan,19
+1952,MI,Michigan,20
+1956,MI,Michigan,20
+1960,MI,Michigan,20
+1964,MI,Michigan,21
+1968,MI,Michigan,21
+1972,MI,Michigan,21
+1976,MI,Michigan,21
+1980,MI,Michigan,21
+1984,MI,Michigan,20
+1988,MI,Michigan,20
+1992,MI,Michigan,18
+1996,MI,Michigan,18
+2000,MI,Michigan,18
+2004,MI,Michigan,17
+2008,MI,Michigan,17
+2012,MI,Michigan,16
+2016,MI,Michigan,16
+2020,MI,Michigan,16
+2024,MI,Michigan,15
+1788,MN,Minnesota,
+1792,MN,Minnesota,
+1796,MN,Minnesota,
+1800,MN,Minnesota,
+1804,MN,Minnesota,
+1808,MN,Minnesota,
+1812,MN,Minnesota,
+1816,MN,Minnesota,
+1820,MN,Minnesota,
+1824,MN,Minnesota,
+1828,MN,Minnesota,
+1832,MN,Minnesota,
+1836,MN,Minnesota,
+1840,MN,Minnesota,
+1844,MN,Minnesota,
+1848,MN,Minnesota,
+1852,MN,Minnesota,
+1856,MN,Minnesota,
+1860,MN,Minnesota,4
+1864,MN,Minnesota,4
+1868,MN,Minnesota,4
+1872,MN,Minnesota,5
+1876,MN,Minnesota,5
+1880,MN,Minnesota,5
+1884,MN,Minnesota,7
+1888,MN,Minnesota,7
+1892,MN,Minnesota,9
+1896,MN,Minnesota,9
+1900,MN,Minnesota,9
+1904,MN,Minnesota,11
+1908,MN,Minnesota,11
+1912,MN,Minnesota,12
+1916,MN,Minnesota,12
+1920,MN,Minnesota,12
+1924,MN,Minnesota,12
+1928,MN,Minnesota,12
+1932,MN,Minnesota,11
+1936,MN,Minnesota,11
+1940,MN,Minnesota,11
+1944,MN,Minnesota,11
+1948,MN,Minnesota,11
+1952,MN,Minnesota,11
+1956,MN,Minnesota,11
+1960,MN,Minnesota,11
+1964,MN,Minnesota,10
+1968,MN,Minnesota,10
+1972,MN,Minnesota,10
+1976,MN,Minnesota,10
+1980,MN,Minnesota,10
+1984,MN,Minnesota,10
+1988,MN,Minnesota,10
+1992,MN,Minnesota,10
+1996,MN,Minnesota,10
+2000,MN,Minnesota,10
+2004,MN,Minnesota,10
+2008,MN,Minnesota,10
+2012,MN,Minnesota,10
+2016,MN,Minnesota,10
+2020,MN,Minnesota,10
+2024,MN,Minnesota,10
+1788,MO,Missouri,
+1792,MO,Missouri,
+1796,MO,Missouri,
+1800,MO,Missouri,
+1804,MO,Missouri,
+1808,MO,Missouri,
+1812,MO,Missouri,
+1816,MO,Missouri,
+1820,MO,Missouri,3
+1824,MO,Missouri,3
+1828,MO,Missouri,3
+1832,MO,Missouri,4
+1836,MO,Missouri,4
+1840,MO,Missouri,4
+1844,MO,Missouri,7
+1848,MO,Missouri,7
+1852,MO,Missouri,9
+1856,MO,Missouri,9
+1860,MO,Missouri,9
+1864,MO,Missouri,11
+1868,MO,Missouri,11
+1872,MO,Missouri,15
+1876,MO,Missouri,15
+1880,MO,Missouri,15
+1884,MO,Missouri,16
+1888,MO,Missouri,16
+1892,MO,Missouri,17
+1896,MO,Missouri,17
+1900,MO,Missouri,17
+1904,MO,Missouri,18
+1908,MO,Missouri,18
+1912,MO,Missouri,18
+1916,MO,Missouri,18
+1920,MO,Missouri,18
+1924,MO,Missouri,18
+1928,MO,Missouri,18
+1932,MO,Missouri,15
+1936,MO,Missouri,15
+1940,MO,Missouri,15
+1944,MO,Missouri,15
+1948,MO,Missouri,15
+1952,MO,Missouri,13
+1956,MO,Missouri,13
+1960,MO,Missouri,13
+1964,MO,Missouri,12
+1968,MO,Missouri,12
+1972,MO,Missouri,12
+1976,MO,Missouri,12
+1980,MO,Missouri,12
+1984,MO,Missouri,11
+1988,MO,Missouri,11
+1992,MO,Missouri,11
+1996,MO,Missouri,11
+2000,MO,Missouri,11
+2004,MO,Missouri,11
+2008,MO,Missouri,11
+2012,MO,Missouri,10
+2016,MO,Missouri,10
+2020,MO,Missouri,10
+2024,MO,Missouri,10
+1788,MS,Mississippi,
+1792,MS,Mississippi,
+1796,MS,Mississippi,
+1800,MS,Mississippi,
+1804,MS,Mississippi,
+1808,MS,Mississippi,
+1812,MS,Mississippi,
+1816,MS,Mississippi,
+1820,MS,Mississippi,3
+1824,MS,Mississippi,3
+1828,MS,Mississippi,3
+1832,MS,Mississippi,4
+1836,MS,Mississippi,4
+1840,MS,Mississippi,4
+1844,MS,Mississippi,6
+1848,MS,Mississippi,6
+1852,MS,Mississippi,7
+1856,MS,Mississippi,7
+1860,MS,Mississippi,7
+1864,MS,Mississippi,0
+1868,MS,Mississippi,0
+1872,MS,Mississippi,8
+1876,MS,Mississippi,8
+1880,MS,Mississippi,8
+1884,MS,Mississippi,9
+1888,MS,Mississippi,9
+1892,MS,Mississippi,9
+1896,MS,Mississippi,9
+1900,MS,Mississippi,9
+1904,MS,Mississippi,10
+1908,MS,Mississippi,10
+1912,MS,Mississippi,10
+1916,MS,Mississippi,10
+1920,MS,Mississippi,10
+1924,MS,Mississippi,10
+1928,MS,Mississippi,10
+1932,MS,Mississippi,9
+1936,MS,Mississippi,9
+1940,MS,Mississippi,9
+1944,MS,Mississippi,9
+1948,MS,Mississippi,9
+1952,MS,Mississippi,8
+1956,MS,Mississippi,8
+1960,MS,Mississippi,8
+1964,MS,Mississippi,7
+1968,MS,Mississippi,7
+1972,MS,Mississippi,7
+1976,MS,Mississippi,7
+1980,MS,Mississippi,7
+1984,MS,Mississippi,7
+1988,MS,Mississippi,7
+1992,MS,Mississippi,7
+1996,MS,Mississippi,7
+2000,MS,Mississippi,7
+2004,MS,Mississippi,6
+2008,MS,Mississippi,6
+2012,MS,Mississippi,6
+2016,MS,Mississippi,6
+2020,MS,Mississippi,6
+2024,MS,Mississippi,6
+1788,MT,Montana,
+1792,MT,Montana,
+1796,MT,Montana,
+1800,MT,Montana,
+1804,MT,Montana,
+1808,MT,Montana,
+1812,MT,Montana,
+1816,MT,Montana,
+1820,MT,Montana,
+1824,MT,Montana,
+1828,MT,Montana,
+1832,MT,Montana,
+1836,MT,Montana,
+1840,MT,Montana,
+1844,MT,Montana,
+1848,MT,Montana,
+1852,MT,Montana,
+1856,MT,Montana,
+1860,MT,Montana,
+1864,MT,Montana,
+1868,MT,Montana,
+1872,MT,Montana,
+1876,MT,Montana,
+1880,MT,Montana,
+1884,MT,Montana,
+1888,MT,Montana,
+1892,MT,Montana,3
+1896,MT,Montana,3
+1900,MT,Montana,3
+1904,MT,Montana,3
+1908,MT,Montana,3
+1912,MT,Montana,4
+1916,MT,Montana,4
+1920,MT,Montana,4
+1924,MT,Montana,4
+1928,MT,Montana,4
+1932,MT,Montana,4
+1936,MT,Montana,4
+1940,MT,Montana,4
+1944,MT,Montana,4
+1948,MT,Montana,4
+1952,MT,Montana,4
+1956,MT,Montana,4
+1960,MT,Montana,4
+1964,MT,Montana,4
+1968,MT,Montana,4
+1972,MT,Montana,4
+1976,MT,Montana,4
+1980,MT,Montana,4
+1984,MT,Montana,4
+1988,MT,Montana,4
+1992,MT,Montana,3
+1996,MT,Montana,3
+2000,MT,Montana,3
+2004,MT,Montana,3
+2008,MT,Montana,3
+2012,MT,Montana,3
+2016,MT,Montana,3
+2020,MT,Montana,3
+2024,MT,Montana,4
+1788,NC,North Carolina,
+1792,NC,North Carolina,12
+1796,NC,North Carolina,12
+1800,NC,North Carolina,12
+1804,NC,North Carolina,14
+1808,NC,North Carolina,14
+1812,NC,North Carolina,15
+1816,NC,North Carolina,15
+1820,NC,North Carolina,15
+1824,NC,North Carolina,15
+1828,NC,North Carolina,15
+1832,NC,North Carolina,15
+1836,NC,North Carolina,15
+1840,NC,North Carolina,15
+1844,NC,North Carolina,11
+1848,NC,North Carolina,11
+1852,NC,North Carolina,10
+1856,NC,North Carolina,10
+1860,NC,North Carolina,10
+1864,NC,North Carolina,0
+1868,NC,North Carolina,9
+1872,NC,North Carolina,10
+1876,NC,North Carolina,10
+1880,NC,North Carolina,10
+1884,NC,North Carolina,11
+1888,NC,North Carolina,11
+1892,NC,North Carolina,11
+1896,NC,North Carolina,11
+1900,NC,North Carolina,11
+1904,NC,North Carolina,12
+1908,NC,North Carolina,12
+1912,NC,North Carolina,12
+1916,NC,North Carolina,12
+1920,NC,North Carolina,12
+1924,NC,North Carolina,12
+1928,NC,North Carolina,12
+1932,NC,North Carolina,13
+1936,NC,North Carolina,13
+1940,NC,North Carolina,13
+1944,NC,North Carolina,14
+1948,NC,North Carolina,14
+1952,NC,North Carolina,14
+1956,NC,North Carolina,14
+1960,NC,North Carolina,14
+1964,NC,North Carolina,13
+1968,NC,North Carolina,13
+1972,NC,North Carolina,13
+1976,NC,North Carolina,13
+1980,NC,North Carolina,13
+1984,NC,North Carolina,13
+1988,NC,North Carolina,13
+1992,NC,North Carolina,14
+1996,NC,North Carolina,14
+2000,NC,North Carolina,14
+2004,NC,North Carolina,15
+2008,NC,North Carolina,15
+2012,NC,North Carolina,15
+2016,NC,North Carolina,15
+2020,NC,North Carolina,15
+2024,NC,North Carolina,16
+1788,ND,North Dakota,
+1792,ND,North Dakota,
+1796,ND,North Dakota,
+1800,ND,North Dakota,
+1804,ND,North Dakota,
+1808,ND,North Dakota,
+1812,ND,North Dakota,
+1816,ND,North Dakota,
+1820,ND,North Dakota,
+1824,ND,North Dakota,
+1828,ND,North Dakota,
+1832,ND,North Dakota,
+1836,ND,North Dakota,
+1840,ND,North Dakota,
+1844,ND,North Dakota,
+1848,ND,North Dakota,
+1852,ND,North Dakota,
+1856,ND,North Dakota,
+1860,ND,North Dakota,
+1864,ND,North Dakota,
+1868,ND,North Dakota,
+1872,ND,North Dakota,
+1876,ND,North Dakota,
+1880,ND,North Dakota,
+1884,ND,North Dakota,
+1888,ND,North Dakota,
+1892,ND,North Dakota,3
+1896,ND,North Dakota,3
+1900,ND,North Dakota,3
+1904,ND,North Dakota,4
+1908,ND,North Dakota,4
+1912,ND,North Dakota,5
+1916,ND,North Dakota,5
+1920,ND,North Dakota,5
+1924,ND,North Dakota,5
+1928,ND,North Dakota,5
+1932,ND,North Dakota,4
+1936,ND,North Dakota,4
+1940,ND,North Dakota,4
+1944,ND,North Dakota,4
+1948,ND,North Dakota,4
+1952,ND,North Dakota,4
+1956,ND,North Dakota,4
+1960,ND,North Dakota,4
+1964,ND,North Dakota,4
+1968,ND,North Dakota,4
+1972,ND,North Dakota,3
+1976,ND,North Dakota,3
+1980,ND,North Dakota,3
+1984,ND,North Dakota,3
+1988,ND,North Dakota,3
+1992,ND,North Dakota,3
+1996,ND,North Dakota,3
+2000,ND,North Dakota,3
+2004,ND,North Dakota,3
+2008,ND,North Dakota,3
+2012,ND,North Dakota,3
+2016,ND,North Dakota,3
+2020,ND,North Dakota,3
+2024,ND,North Dakota,3
+1788,NE,Nebraska,
+1792,NE,Nebraska,
+1796,NE,Nebraska,
+1800,NE,Nebraska,
+1804,NE,Nebraska,
+1808,NE,Nebraska,
+1812,NE,Nebraska,
+1816,NE,Nebraska,
+1820,NE,Nebraska,
+1824,NE,Nebraska,
+1828,NE,Nebraska,
+1832,NE,Nebraska,
+1836,NE,Nebraska,
+1840,NE,Nebraska,
+1844,NE,Nebraska,
+1848,NE,Nebraska,
+1852,NE,Nebraska,
+1856,NE,Nebraska,
+1860,NE,Nebraska,
+1864,NE,Nebraska,
+1868,NE,Nebraska,3
+1872,NE,Nebraska,3
+1876,NE,Nebraska,3
+1880,NE,Nebraska,3
+1884,NE,Nebraska,5
+1888,NE,Nebraska,5
+1892,NE,Nebraska,8
+1896,NE,Nebraska,8
+1900,NE,Nebraska,8
+1904,NE,Nebraska,8
+1908,NE,Nebraska,8
+1912,NE,Nebraska,8
+1916,NE,Nebraska,8
+1920,NE,Nebraska,8
+1924,NE,Nebraska,8
+1928,NE,Nebraska,8
+1932,NE,Nebraska,7
+1936,NE,Nebraska,7
+1940,NE,Nebraska,7
+1944,NE,Nebraska,6
+1948,NE,Nebraska,6
+1952,NE,Nebraska,6
+1956,NE,Nebraska,6
+1960,NE,Nebraska,6
+1964,NE,Nebraska,5
+1968,NE,Nebraska,5
+1972,NE,Nebraska,5
+1976,NE,Nebraska,5
+1980,NE,Nebraska,5
+1984,NE,Nebraska,5
+1988,NE,Nebraska,5
+1992,NE,Nebraska,5
+1996,NE,Nebraska,5
+2000,NE,Nebraska,5
+2004,NE,Nebraska,5
+2008,NE,Nebraska,5
+2012,NE,Nebraska,5
+2016,NE,Nebraska,5
+2020,NE,Nebraska,5
+2024,NE,Nebraska,5
+1788,NH,New Hampshire,5
+1792,NH,New Hampshire,6
+1796,NH,New Hampshire,6
+1800,NH,New Hampshire,6
+1804,NH,New Hampshire,7
+1808,NH,New Hampshire,7
+1812,NH,New Hampshire,8
+1816,NH,New Hampshire,8
+1820,NH,New Hampshire,8
+1824,NH,New Hampshire,8
+1828,NH,New Hampshire,8
+1832,NH,New Hampshire,7
+1836,NH,New Hampshire,7
+1840,NH,New Hampshire,7
+1844,NH,New Hampshire,6
+1848,NH,New Hampshire,6
+1852,NH,New Hampshire,5
+1856,NH,New Hampshire,5
+1860,NH,New Hampshire,5
+1864,NH,New Hampshire,5
+1868,NH,New Hampshire,5
+1872,NH,New Hampshire,5
+1876,NH,New Hampshire,5
+1880,NH,New Hampshire,5
+1884,NH,New Hampshire,4
+1888,NH,New Hampshire,4
+1892,NH,New Hampshire,4
+1896,NH,New Hampshire,4
+1900,NH,New Hampshire,4
+1904,NH,New Hampshire,4
+1908,NH,New Hampshire,4
+1912,NH,New Hampshire,4
+1916,NH,New Hampshire,4
+1920,NH,New Hampshire,4
+1924,NH,New Hampshire,4
+1928,NH,New Hampshire,4
+1932,NH,New Hampshire,4
+1936,NH,New Hampshire,4
+1940,NH,New Hampshire,4
+1944,NH,New Hampshire,4
+1948,NH,New Hampshire,4
+1952,NH,New Hampshire,4
+1956,NH,New Hampshire,4
+1960,NH,New Hampshire,4
+1964,NH,New Hampshire,4
+1968,NH,New Hampshire,4
+1972,NH,New Hampshire,4
+1976,NH,New Hampshire,4
+1980,NH,New Hampshire,4
+1984,NH,New Hampshire,4
+1988,NH,New Hampshire,4
+1992,NH,New Hampshire,4
+1996,NH,New Hampshire,4
+2000,NH,New Hampshire,4
+2004,NH,New Hampshire,4
+2008,NH,New Hampshire,4
+2012,NH,New Hampshire,4
+2016,NH,New Hampshire,4
+2020,NH,New Hampshire,4
+2024,NH,New Hampshire,4
+1788,NJ,New Jersey,6
+1792,NJ,New Jersey,7
+1796,NJ,New Jersey,7
+1800,NJ,New Jersey,7
+1804,NJ,New Jersey,8
+1808,NJ,New Jersey,8
+1812,NJ,New Jersey,8
+1816,NJ,New Jersey,8
+1820,NJ,New Jersey,8
+1824,NJ,New Jersey,8
+1828,NJ,New Jersey,8
+1832,NJ,New Jersey,8
+1836,NJ,New Jersey,8
+1840,NJ,New Jersey,8
+1844,NJ,New Jersey,7
+1848,NJ,New Jersey,7
+1852,NJ,New Jersey,7
+1856,NJ,New Jersey,7
+1860,NJ,New Jersey,7
+1864,NJ,New Jersey,7
+1868,NJ,New Jersey,7
+1872,NJ,New Jersey,9
+1876,NJ,New Jersey,9
+1880,NJ,New Jersey,9
+1884,NJ,New Jersey,9
+1888,NJ,New Jersey,9
+1892,NJ,New Jersey,10
+1896,NJ,New Jersey,10
+1900,NJ,New Jersey,10
+1904,NJ,New Jersey,12
+1908,NJ,New Jersey,12
+1912,NJ,New Jersey,14
+1916,NJ,New Jersey,14
+1920,NJ,New Jersey,14
+1924,NJ,New Jersey,14
+1928,NJ,New Jersey,14
+1932,NJ,New Jersey,16
+1936,NJ,New Jersey,16
+1940,NJ,New Jersey,16
+1944,NJ,New Jersey,16
+1948,NJ,New Jersey,16
+1952,NJ,New Jersey,16
+1956,NJ,New Jersey,16
+1960,NJ,New Jersey,16
+1964,NJ,New Jersey,17
+1968,NJ,New Jersey,17
+1972,NJ,New Jersey,17
+1976,NJ,New Jersey,17
+1980,NJ,New Jersey,17
+1984,NJ,New Jersey,16
+1988,NJ,New Jersey,16
+1992,NJ,New Jersey,15
+1996,NJ,New Jersey,15
+2000,NJ,New Jersey,15
+2004,NJ,New Jersey,15
+2008,NJ,New Jersey,15
+2012,NJ,New Jersey,14
+2016,NJ,New Jersey,14
+2020,NJ,New Jersey,14
+2024,NJ,New Jersey,14
+1788,NM,New Mexico,
+1792,NM,New Mexico,
+1796,NM,New Mexico,
+1800,NM,New Mexico,
+1804,NM,New Mexico,
+1808,NM,New Mexico,
+1812,NM,New Mexico,
+1816,NM,New Mexico,
+1820,NM,New Mexico,
+1824,NM,New Mexico,
+1828,NM,New Mexico,
+1832,NM,New Mexico,
+1836,NM,New Mexico,
+1840,NM,New Mexico,
+1844,NM,New Mexico,
+1848,NM,New Mexico,
+1852,NM,New Mexico,
+1856,NM,New Mexico,
+1860,NM,New Mexico,
+1864,NM,New Mexico,
+1868,NM,New Mexico,
+1872,NM,New Mexico,
+1876,NM,New Mexico,
+1880,NM,New Mexico,
+1884,NM,New Mexico,
+1888,NM,New Mexico,
+1892,NM,New Mexico,
+1896,NM,New Mexico,
+1900,NM,New Mexico,
+1904,NM,New Mexico,
+1908,NM,New Mexico,
+1912,NM,New Mexico,3
+1916,NM,New Mexico,3
+1920,NM,New Mexico,3
+1924,NM,New Mexico,3
+1928,NM,New Mexico,3
+1932,NM,New Mexico,3
+1936,NM,New Mexico,3
+1940,NM,New Mexico,3
+1944,NM,New Mexico,4
+1948,NM,New Mexico,4
+1952,NM,New Mexico,4
+1956,NM,New Mexico,4
+1960,NM,New Mexico,4
+1964,NM,New Mexico,4
+1968,NM,New Mexico,4
+1972,NM,New Mexico,4
+1976,NM,New Mexico,4
+1980,NM,New Mexico,4
+1984,NM,New Mexico,5
+1988,NM,New Mexico,5
+1992,NM,New Mexico,5
+1996,NM,New Mexico,5
+2000,NM,New Mexico,5
+2004,NM,New Mexico,5
+2008,NM,New Mexico,5
+2012,NM,New Mexico,5
+2016,NM,New Mexico,5
+2020,NM,New Mexico,5
+2024,NM,New Mexico,5
+1788,NV,Nevada,
+1792,NV,Nevada,
+1796,NV,Nevada,
+1800,NV,Nevada,
+1804,NV,Nevada,
+1808,NV,Nevada,
+1812,NV,Nevada,
+1816,NV,Nevada,
+1820,NV,Nevada,
+1824,NV,Nevada,
+1828,NV,Nevada,
+1832,NV,Nevada,
+1836,NV,Nevada,
+1840,NV,Nevada,
+1844,NV,Nevada,
+1848,NV,Nevada,
+1852,NV,Nevada,
+1856,NV,Nevada,
+1860,NV,Nevada,
+1864,NV,Nevada,3
+1868,NV,Nevada,3
+1872,NV,Nevada,3
+1876,NV,Nevada,3
+1880,NV,Nevada,3
+1884,NV,Nevada,3
+1888,NV,Nevada,3
+1892,NV,Nevada,3
+1896,NV,Nevada,3
+1900,NV,Nevada,3
+1904,NV,Nevada,3
+1908,NV,Nevada,3
+1912,NV,Nevada,3
+1916,NV,Nevada,3
+1920,NV,Nevada,3
+1924,NV,Nevada,3
+1928,NV,Nevada,3
+1932,NV,Nevada,3
+1936,NV,Nevada,3
+1940,NV,Nevada,3
+1944,NV,Nevada,3
+1948,NV,Nevada,3
+1952,NV,Nevada,3
+1956,NV,Nevada,3
+1960,NV,Nevada,3
+1964,NV,Nevada,3
+1968,NV,Nevada,3
+1972,NV,Nevada,3
+1976,NV,Nevada,3
+1980,NV,Nevada,3
+1984,NV,Nevada,4
+1988,NV,Nevada,4
+1992,NV,Nevada,4
+1996,NV,Nevada,4
+2000,NV,Nevada,4
+2004,NV,Nevada,5
+2008,NV,Nevada,5
+2012,NV,Nevada,6
+2016,NV,Nevada,6
+2020,NV,Nevada,6
+2024,NV,Nevada,6
+1788,NY,New York,8
+1792,NY,New York,12
+1796,NY,New York,12
+1800,NY,New York,12
+1804,NY,New York,19
+1808,NY,New York,19
+1812,NY,New York,29
+1816,NY,New York,29
+1820,NY,New York,29
+1824,NY,New York,36
+1828,NY,New York,36
+1832,NY,New York,42
+1836,NY,New York,42
+1840,NY,New York,42
+1844,NY,New York,36
+1848,NY,New York,36
+1852,NY,New York,35
+1856,NY,New York,35
+1860,NY,New York,35
+1864,NY,New York,33
+1868,NY,New York,33
+1872,NY,New York,35
+1876,NY,New York,35
+1880,NY,New York,35
+1884,NY,New York,36
+1888,NY,New York,36
+1892,NY,New York,36
+1896,NY,New York,36
+1900,NY,New York,36
+1904,NY,New York,39
+1908,NY,New York,39
+1912,NY,New York,45
+1916,NY,New York,45
+1920,NY,New York,45
+1924,NY,New York,45
+1928,NY,New York,45
+1932,NY,New York,47
+1936,NY,New York,47
+1940,NY,New York,47
+1944,NY,New York,47
+1948,NY,New York,47
+1952,NY,New York,45
+1956,NY,New York,45
+1960,NY,New York,45
+1964,NY,New York,43
+1968,NY,New York,43
+1972,NY,New York,41
+1976,NY,New York,41
+1980,NY,New York,41
+1984,NY,New York,36
+1988,NY,New York,36
+1992,NY,New York,33
+1996,NY,New York,33
+2000,NY,New York,33
+2004,NY,New York,31
+2008,NY,New York,31
+2012,NY,New York,29
+2016,NY,New York,29
+2020,NY,New York,29
+2024,NY,New York,28
+1788,OH,Ohio,
+1792,OH,Ohio,
+1796,OH,Ohio,
+1800,OH,Ohio,
+1804,OH,Ohio,3
+1808,OH,Ohio,3
+1812,OH,Ohio,8
+1816,OH,Ohio,8
+1820,OH,Ohio,8
+1824,OH,Ohio,16
+1828,OH,Ohio,16
+1832,OH,Ohio,21
+1836,OH,Ohio,21
+1840,OH,Ohio,21
+1844,OH,Ohio,23
+1848,OH,Ohio,23
+1852,OH,Ohio,23
+1856,OH,Ohio,23
+1860,OH,Ohio,23
+1864,OH,Ohio,21
+1868,OH,Ohio,21
+1872,OH,Ohio,22
+1876,OH,Ohio,22
+1880,OH,Ohio,22
+1884,OH,Ohio,23
+1888,OH,Ohio,23
+1892,OH,Ohio,23
+1896,OH,Ohio,23
+1900,OH,Ohio,23
+1904,OH,Ohio,23
+1908,OH,Ohio,23
+1912,OH,Ohio,24
+1916,OH,Ohio,24
+1920,OH,Ohio,24
+1924,OH,Ohio,24
+1928,OH,Ohio,24
+1932,OH,Ohio,26
+1936,OH,Ohio,26
+1940,OH,Ohio,26
+1944,OH,Ohio,25
+1948,OH,Ohio,25
+1952,OH,Ohio,25
+1956,OH,Ohio,25
+1960,OH,Ohio,25
+1964,OH,Ohio,26
+1968,OH,Ohio,26
+1972,OH,Ohio,25
+1976,OH,Ohio,25
+1980,OH,Ohio,25
+1984,OH,Ohio,23
+1988,OH,Ohio,23
+1992,OH,Ohio,21
+1996,OH,Ohio,21
+2000,OH,Ohio,21
+2004,OH,Ohio,20
+2008,OH,Ohio,20
+2012,OH,Ohio,18
+2016,OH,Ohio,18
+2020,OH,Ohio,18
+2024,OH,Ohio,17
+1788,OK,Oklahoma,
+1792,OK,Oklahoma,
+1796,OK,Oklahoma,
+1800,OK,Oklahoma,
+1804,OK,Oklahoma,
+1808,OK,Oklahoma,
+1812,OK,Oklahoma,
+1816,OK,Oklahoma,
+1820,OK,Oklahoma,
+1824,OK,Oklahoma,
+1828,OK,Oklahoma,
+1832,OK,Oklahoma,
+1836,OK,Oklahoma,
+1840,OK,Oklahoma,
+1844,OK,Oklahoma,
+1848,OK,Oklahoma,
+1852,OK,Oklahoma,
+1856,OK,Oklahoma,
+1860,OK,Oklahoma,
+1864,OK,Oklahoma,
+1868,OK,Oklahoma,
+1872,OK,Oklahoma,
+1876,OK,Oklahoma,
+1880,OK,Oklahoma,
+1884,OK,Oklahoma,
+1888,OK,Oklahoma,
+1892,OK,Oklahoma,
+1896,OK,Oklahoma,
+1900,OK,Oklahoma,
+1904,OK,Oklahoma,
+1908,OK,Oklahoma,7
+1912,OK,Oklahoma,10
+1916,OK,Oklahoma,10
+1920,OK,Oklahoma,10
+1924,OK,Oklahoma,10
+1928,OK,Oklahoma,10
+1932,OK,Oklahoma,11
+1936,OK,Oklahoma,11
+1940,OK,Oklahoma,11
+1944,OK,Oklahoma,10
+1948,OK,Oklahoma,10
+1952,OK,Oklahoma,8
+1956,OK,Oklahoma,8
+1960,OK,Oklahoma,8
+1964,OK,Oklahoma,8
+1968,OK,Oklahoma,8
+1972,OK,Oklahoma,8
+1976,OK,Oklahoma,8
+1980,OK,Oklahoma,8
+1984,OK,Oklahoma,8
+1988,OK,Oklahoma,8
+1992,OK,Oklahoma,8
+1996,OK,Oklahoma,8
+2000,OK,Oklahoma,8
+2004,OK,Oklahoma,7
+2008,OK,Oklahoma,7
+2012,OK,Oklahoma,7
+2016,OK,Oklahoma,7
+2020,OK,Oklahoma,7
+2024,OK,Oklahoma,7
+1788,OR,Oregon,
+1792,OR,Oregon,
+1796,OR,Oregon,
+1800,OR,Oregon,
+1804,OR,Oregon,
+1808,OR,Oregon,
+1812,OR,Oregon,
+1816,OR,Oregon,
+1820,OR,Oregon,
+1824,OR,Oregon,
+1828,OR,Oregon,
+1832,OR,Oregon,
+1836,OR,Oregon,
+1840,OR,Oregon,
+1844,OR,Oregon,
+1848,OR,Oregon,
+1852,OR,Oregon,
+1856,OR,Oregon,
+1860,OR,Oregon,3
+1864,OR,Oregon,3
+1868,OR,Oregon,3
+1872,OR,Oregon,3
+1876,OR,Oregon,3
+1880,OR,Oregon,3
+1884,OR,Oregon,3
+1888,OR,Oregon,3
+1892,OR,Oregon,4
+1896,OR,Oregon,4
+1900,OR,Oregon,4
+1904,OR,Oregon,4
+1908,OR,Oregon,4
+1912,OR,Oregon,5
+1916,OR,Oregon,5
+1920,OR,Oregon,5
+1924,OR,Oregon,5
+1928,OR,Oregon,5
+1932,OR,Oregon,5
+1936,OR,Oregon,5
+1940,OR,Oregon,5
+1944,OR,Oregon,6
+1948,OR,Oregon,6
+1952,OR,Oregon,6
+1956,OR,Oregon,6
+1960,OR,Oregon,6
+1964,OR,Oregon,6
+1968,OR,Oregon,6
+1972,OR,Oregon,6
+1976,OR,Oregon,6
+1980,OR,Oregon,6
+1984,OR,Oregon,7
+1988,OR,Oregon,7
+1992,OR,Oregon,7
+1996,OR,Oregon,7
+2000,OR,Oregon,7
+2004,OR,Oregon,7
+2008,OR,Oregon,7
+2012,OR,Oregon,7
+2016,OR,Oregon,7
+2020,OR,Oregon,7
+2024,OR,Oregon,8
+1788,PA,Pennsylvania,10
+1792,PA,Pennsylvania,15
+1796,PA,Pennsylvania,15
+1800,PA,Pennsylvania,15
+1804,PA,Pennsylvania,20
+1808,PA,Pennsylvania,20
+1812,PA,Pennsylvania,25
+1816,PA,Pennsylvania,25
+1820,PA,Pennsylvania,25
+1824,PA,Pennsylvania,28
+1828,PA,Pennsylvania,28
+1832,PA,Pennsylvania,30
+1836,PA,Pennsylvania,30
+1840,PA,Pennsylvania,30
+1844,PA,Pennsylvania,26
+1848,PA,Pennsylvania,26
+1852,PA,Pennsylvania,27
+1856,PA,Pennsylvania,27
+1860,PA,Pennsylvania,27
+1864,PA,Pennsylvania,26
+1868,PA,Pennsylvania,26
+1872,PA,Pennsylvania,29
+1876,PA,Pennsylvania,29
+1880,PA,Pennsylvania,29
+1884,PA,Pennsylvania,30
+1888,PA,Pennsylvania,30
+1892,PA,Pennsylvania,32
+1896,PA,Pennsylvania,32
+1900,PA,Pennsylvania,32
+1904,PA,Pennsylvania,34
+1908,PA,Pennsylvania,34
+1912,PA,Pennsylvania,38
+1916,PA,Pennsylvania,38
+1920,PA,Pennsylvania,38
+1924,PA,Pennsylvania,38
+1928,PA,Pennsylvania,38
+1932,PA,Pennsylvania,36
+1936,PA,Pennsylvania,36
+1940,PA,Pennsylvania,36
+1944,PA,Pennsylvania,35
+1948,PA,Pennsylvania,35
+1952,PA,Pennsylvania,32
+1956,PA,Pennsylvania,32
+1960,PA,Pennsylvania,32
+1964,PA,Pennsylvania,29
+1968,PA,Pennsylvania,29
+1972,PA,Pennsylvania,27
+1976,PA,Pennsylvania,27
+1980,PA,Pennsylvania,27
+1984,PA,Pennsylvania,25
+1988,PA,Pennsylvania,25
+1992,PA,Pennsylvania,23
+1996,PA,Pennsylvania,23
+2000,PA,Pennsylvania,23
+2004,PA,Pennsylvania,21
+2008,PA,Pennsylvania,21
+2012,PA,Pennsylvania,20
+2016,PA,Pennsylvania,20
+2020,PA,Pennsylvania,20
+2024,PA,Pennsylvania,19
+1788,RI,Rhode Island,
+1792,RI,Rhode Island,4
+1796,RI,Rhode Island,4
+1800,RI,Rhode Island,4
+1804,RI,Rhode Island,4
+1808,RI,Rhode Island,4
+1812,RI,Rhode Island,4
+1816,RI,Rhode Island,4
+1820,RI,Rhode Island,4
+1824,RI,Rhode Island,4
+1828,RI,Rhode Island,4
+1832,RI,Rhode Island,4
+1836,RI,Rhode Island,4
+1840,RI,Rhode Island,4
+1844,RI,Rhode Island,4
+1848,RI,Rhode Island,4
+1852,RI,Rhode Island,4
+1856,RI,Rhode Island,4
+1860,RI,Rhode Island,4
+1864,RI,Rhode Island,4
+1868,RI,Rhode Island,4
+1872,RI,Rhode Island,4
+1876,RI,Rhode Island,4
+1880,RI,Rhode Island,4
+1884,RI,Rhode Island,4
+1888,RI,Rhode Island,4
+1892,RI,Rhode Island,4
+1896,RI,Rhode Island,4
+1900,RI,Rhode Island,4
+1904,RI,Rhode Island,4
+1908,RI,Rhode Island,4
+1912,RI,Rhode Island,5
+1916,RI,Rhode Island,5
+1920,RI,Rhode Island,5
+1924,RI,Rhode Island,5
+1928,RI,Rhode Island,5
+1932,RI,Rhode Island,4
+1936,RI,Rhode Island,4
+1940,RI,Rhode Island,4
+1944,RI,Rhode Island,4
+1948,RI,Rhode Island,4
+1952,RI,Rhode Island,4
+1956,RI,Rhode Island,4
+1960,RI,Rhode Island,4
+1964,RI,Rhode Island,4
+1968,RI,Rhode Island,4
+1972,RI,Rhode Island,4
+1976,RI,Rhode Island,4
+1980,RI,Rhode Island,4
+1984,RI,Rhode Island,4
+1988,RI,Rhode Island,4
+1992,RI,Rhode Island,4
+1996,RI,Rhode Island,4
+2000,RI,Rhode Island,4
+2004,RI,Rhode Island,4
+2008,RI,Rhode Island,4
+2012,RI,Rhode Island,4
+2016,RI,Rhode Island,4
+2020,RI,Rhode Island,4
+2024,RI,Rhode Island,4
+1788,SC,South Carolina,7
+1792,SC,South Carolina,8
+1796,SC,South Carolina,8
+1800,SC,South Carolina,8
+1804,SC,South Carolina,10
+1808,SC,South Carolina,10
+1812,SC,South Carolina,11
+1816,SC,South Carolina,11
+1820,SC,South Carolina,11
+1824,SC,South Carolina,11
+1828,SC,South Carolina,11
+1832,SC,South Carolina,11
+1836,SC,South Carolina,11
+1840,SC,South Carolina,11
+1844,SC,South Carolina,9
+1848,SC,South Carolina,9
+1852,SC,South Carolina,8
+1856,SC,South Carolina,8
+1860,SC,South Carolina,8
+1864,SC,South Carolina,0
+1868,SC,South Carolina,6
+1872,SC,South Carolina,7
+1876,SC,South Carolina,7
+1880,SC,South Carolina,7
+1884,SC,South Carolina,9
+1888,SC,South Carolina,9
+1892,SC,South Carolina,9
+1896,SC,South Carolina,9
+1900,SC,South Carolina,9
+1904,SC,South Carolina,9
+1908,SC,South Carolina,9
+1912,SC,South Carolina,9
+1916,SC,South Carolina,9
+1920,SC,South Carolina,9
+1924,SC,South Carolina,9
+1928,SC,South Carolina,9
+1932,SC,South Carolina,8
+1936,SC,South Carolina,8
+1940,SC,South Carolina,8
+1944,SC,South Carolina,8
+1948,SC,South Carolina,8
+1952,SC,South Carolina,8
+1956,SC,South Carolina,8
+1960,SC,South Carolina,8
+1964,SC,South Carolina,8
+1968,SC,South Carolina,8
+1972,SC,South Carolina,8
+1976,SC,South Carolina,8
+1980,SC,South Carolina,8
+1984,SC,South Carolina,8
+1988,SC,South Carolina,8
+1992,SC,South Carolina,8
+1996,SC,South Carolina,8
+2000,SC,South Carolina,8
+2004,SC,South Carolina,8
+2008,SC,South Carolina,8
+2012,SC,South Carolina,9
+2016,SC,South Carolina,9
+2020,SC,South Carolina,9
+2024,SC,South Carolina,9
+1788,SD,South Dakota,
+1792,SD,South Dakota,
+1796,SD,South Dakota,
+1800,SD,South Dakota,
+1804,SD,South Dakota,
+1808,SD,South Dakota,
+1812,SD,South Dakota,
+1816,SD,South Dakota,
+1820,SD,South Dakota,
+1824,SD,South Dakota,
+1828,SD,South Dakota,
+1832,SD,South Dakota,
+1836,SD,South Dakota,
+1840,SD,South Dakota,
+1844,SD,South Dakota,
+1848,SD,South Dakota,
+1852,SD,South Dakota,
+1856,SD,South Dakota,
+1860,SD,South Dakota,
+1864,SD,South Dakota,
+1868,SD,South Dakota,
+1872,SD,South Dakota,
+1876,SD,South Dakota,
+1880,SD,South Dakota,
+1884,SD,South Dakota,
+1888,SD,South Dakota,
+1892,SD,South Dakota,4
+1896,SD,South Dakota,4
+1900,SD,South Dakota,4
+1904,SD,South Dakota,4
+1908,SD,South Dakota,4
+1912,SD,South Dakota,5
+1916,SD,South Dakota,5
+1920,SD,South Dakota,5
+1924,SD,South Dakota,5
+1928,SD,South Dakota,5
+1932,SD,South Dakota,4
+1936,SD,South Dakota,4
+1940,SD,South Dakota,4
+1944,SD,South Dakota,4
+1948,SD,South Dakota,4
+1952,SD,South Dakota,4
+1956,SD,South Dakota,4
+1960,SD,South Dakota,4
+1964,SD,South Dakota,4
+1968,SD,South Dakota,4
+1972,SD,South Dakota,4
+1976,SD,South Dakota,4
+1980,SD,South Dakota,4
+1984,SD,South Dakota,3
+1988,SD,South Dakota,3
+1992,SD,South Dakota,3
+1996,SD,South Dakota,3
+2000,SD,South Dakota,3
+2004,SD,South Dakota,3
+2008,SD,South Dakota,3
+2012,SD,South Dakota,3
+2016,SD,South Dakota,3
+2020,SD,South Dakota,3
+2024,SD,South Dakota,3
+1788,TN,Tennessee,
+1792,TN,Tennessee,
+1796,TN,Tennessee,3
+1800,TN,Tennessee,3
+1804,TN,Tennessee,5
+1808,TN,Tennessee,5
+1812,TN,Tennessee,8
+1816,TN,Tennessee,8
+1820,TN,Tennessee,8
+1824,TN,Tennessee,11
+1828,TN,Tennessee,11
+1832,TN,Tennessee,15
+1836,TN,Tennessee,15
+1840,TN,Tennessee,15
+1844,TN,Tennessee,13
+1848,TN,Tennessee,13
+1852,TN,Tennessee,12
+1856,TN,Tennessee,12
+1860,TN,Tennessee,12
+1864,TN,Tennessee,0
+1868,TN,Tennessee,10
+1872,TN,Tennessee,12
+1876,TN,Tennessee,12
+1880,TN,Tennessee,12
+1884,TN,Tennessee,12
+1888,TN,Tennessee,12
+1892,TN,Tennessee,12
+1896,TN,Tennessee,12
+1900,TN,Tennessee,12
+1904,TN,Tennessee,12
+1908,TN,Tennessee,12
+1912,TN,Tennessee,12
+1916,TN,Tennessee,12
+1920,TN,Tennessee,12
+1924,TN,Tennessee,12
+1928,TN,Tennessee,12
+1932,TN,Tennessee,11
+1936,TN,Tennessee,11
+1940,TN,Tennessee,11
+1944,TN,Tennessee,12
+1948,TN,Tennessee,12
+1952,TN,Tennessee,11
+1956,TN,Tennessee,11
+1960,TN,Tennessee,11
+1964,TN,Tennessee,11
+1968,TN,Tennessee,11
+1972,TN,Tennessee,10
+1976,TN,Tennessee,10
+1980,TN,Tennessee,10
+1984,TN,Tennessee,11
+1988,TN,Tennessee,11
+1992,TN,Tennessee,11
+1996,TN,Tennessee,11
+2000,TN,Tennessee,11
+2004,TN,Tennessee,11
+2008,TN,Tennessee,11
+2012,TN,Tennessee,11
+2016,TN,Tennessee,11
+2020,TN,Tennessee,11
+2024,TN,Tennessee,11
+1788,TX,Texas,
+1792,TX,Texas,
+1796,TX,Texas,
+1800,TX,Texas,
+1804,TX,Texas,
+1808,TX,Texas,
+1812,TX,Texas,
+1816,TX,Texas,
+1820,TX,Texas,
+1824,TX,Texas,
+1828,TX,Texas,
+1832,TX,Texas,
+1836,TX,Texas,
+1840,TX,Texas,
+1844,TX,Texas,
+1848,TX,Texas,4
+1852,TX,Texas,4
+1856,TX,Texas,4
+1860,TX,Texas,4
+1864,TX,Texas,0
+1868,TX,Texas,0
+1872,TX,Texas,8
+1876,TX,Texas,8
+1880,TX,Texas,8
+1884,TX,Texas,13
+1888,TX,Texas,13
+1892,TX,Texas,15
+1896,TX,Texas,15
+1900,TX,Texas,15
+1904,TX,Texas,18
+1908,TX,Texas,18
+1912,TX,Texas,20
+1916,TX,Texas,20
+1920,TX,Texas,20
+1924,TX,Texas,20
+1928,TX,Texas,20
+1932,TX,Texas,23
+1936,TX,Texas,23
+1940,TX,Texas,23
+1944,TX,Texas,23
+1948,TX,Texas,23
+1952,TX,Texas,24
+1956,TX,Texas,24
+1960,TX,Texas,24
+1964,TX,Texas,25
+1968,TX,Texas,25
+1972,TX,Texas,26
+1976,TX,Texas,26
+1980,TX,Texas,26
+1984,TX,Texas,29
+1988,TX,Texas,29
+1992,TX,Texas,32
+1996,TX,Texas,32
+2000,TX,Texas,32
+2004,TX,Texas,34
+2008,TX,Texas,34
+2012,TX,Texas,38
+2016,TX,Texas,38
+2020,TX,Texas,38
+2024,TX,Texas,40
+1788,UT,Utah,
+1792,UT,Utah,
+1796,UT,Utah,
+1800,UT,Utah,
+1804,UT,Utah,
+1808,UT,Utah,
+1812,UT,Utah,
+1816,UT,Utah,
+1820,UT,Utah,
+1824,UT,Utah,
+1828,UT,Utah,
+1832,UT,Utah,
+1836,UT,Utah,
+1840,UT,Utah,
+1844,UT,Utah,
+1848,UT,Utah,
+1852,UT,Utah,
+1856,UT,Utah,
+1860,UT,Utah,
+1864,UT,Utah,
+1868,UT,Utah,
+1872,UT,Utah,
+1876,UT,Utah,
+1880,UT,Utah,
+1884,UT,Utah,
+1888,UT,Utah,
+1892,UT,Utah,
+1896,UT,Utah,3
+1900,UT,Utah,3
+1904,UT,Utah,3
+1908,UT,Utah,3
+1912,UT,Utah,4
+1916,UT,Utah,4
+1920,UT,Utah,4
+1924,UT,Utah,4
+1928,UT,Utah,4
+1932,UT,Utah,4
+1936,UT,Utah,4
+1940,UT,Utah,4
+1944,UT,Utah,4
+1948,UT,Utah,4
+1952,UT,Utah,4
+1956,UT,Utah,4
+1960,UT,Utah,4
+1964,UT,Utah,4
+1968,UT,Utah,4
+1972,UT,Utah,4
+1976,UT,Utah,4
+1980,UT,Utah,4
+1984,UT,Utah,5
+1988,UT,Utah,5
+1992,UT,Utah,5
+1996,UT,Utah,5
+2000,UT,Utah,5
+2004,UT,Utah,5
+2008,UT,Utah,5
+2012,UT,Utah,6
+2016,UT,Utah,6
+2020,UT,Utah,6
+2024,UT,Utah,6
+1788,VA,Virginia,12
+1792,VA,Virginia,21
+1796,VA,Virginia,21
+1800,VA,Virginia,21
+1804,VA,Virginia,24
+1808,VA,Virginia,24
+1812,VA,Virginia,25
+1816,VA,Virginia,25
+1820,VA,Virginia,25
+1824,VA,Virginia,24
+1828,VA,Virginia,24
+1832,VA,Virginia,23
+1836,VA,Virginia,23
+1840,VA,Virginia,23
+1844,VA,Virginia,17
+1848,VA,Virginia,17
+1852,VA,Virginia,15
+1856,VA,Virginia,15
+1860,VA,Virginia,15
+1864,VA,Virginia,0
+1868,VA,Virginia,0
+1872,VA,Virginia,11
+1876,VA,Virginia,11
+1880,VA,Virginia,11
+1884,VA,Virginia,12
+1888,VA,Virginia,12
+1892,VA,Virginia,12
+1896,VA,Virginia,12
+1900,VA,Virginia,12
+1904,VA,Virginia,12
+1908,VA,Virginia,12
+1912,VA,Virginia,12
+1916,VA,Virginia,12
+1920,VA,Virginia,12
+1924,VA,Virginia,12
+1928,VA,Virginia,12
+1932,VA,Virginia,11
+1936,VA,Virginia,11
+1940,VA,Virginia,11
+1944,VA,Virginia,11
+1948,VA,Virginia,11
+1952,VA,Virginia,12
+1956,VA,Virginia,12
+1960,VA,Virginia,12
+1964,VA,Virginia,12
+1968,VA,Virginia,12
+1972,VA,Virginia,12
+1976,VA,Virginia,12
+1980,VA,Virginia,12
+1984,VA,Virginia,12
+1988,VA,Virginia,12
+1992,VA,Virginia,13
+1996,VA,Virginia,13
+2000,VA,Virginia,13
+2004,VA,Virginia,13
+2008,VA,Virginia,13
+2012,VA,Virginia,13
+2016,VA,Virginia,13
+2020,VA,Virginia,13
+2024,VA,Virginia,13
+1788,VT,Vermont,
+1792,VT,Vermont,4
+1796,VT,Vermont,4
+1800,VT,Vermont,4
+1804,VT,Vermont,6
+1808,VT,Vermont,6
+1812,VT,Vermont,8
+1816,VT,Vermont,8
+1820,VT,Vermont,8
+1824,VT,Vermont,7
+1828,VT,Vermont,7
+1832,VT,Vermont,7
+1836,VT,Vermont,7
+1840,VT,Vermont,7
+1844,VT,Vermont,6
+1848,VT,Vermont,6
+1852,VT,Vermont,5
+1856,VT,Vermont,5
+1860,VT,Vermont,5
+1864,VT,Vermont,5
+1868,VT,Vermont,5
+1872,VT,Vermont,5
+1876,VT,Vermont,5
+1880,VT,Vermont,5
+1884,VT,Vermont,4
+1888,VT,Vermont,4
+1892,VT,Vermont,4
+1896,VT,Vermont,4
+1900,VT,Vermont,4
+1904,VT,Vermont,4
+1908,VT,Vermont,4
+1912,VT,Vermont,4
+1916,VT,Vermont,4
+1920,VT,Vermont,4
+1924,VT,Vermont,4
+1928,VT,Vermont,4
+1932,VT,Vermont,3
+1936,VT,Vermont,3
+1940,VT,Vermont,3
+1944,VT,Vermont,3
+1948,VT,Vermont,3
+1952,VT,Vermont,3
+1956,VT,Vermont,3
+1960,VT,Vermont,3
+1964,VT,Vermont,3
+1968,VT,Vermont,3
+1972,VT,Vermont,3
+1976,VT,Vermont,3
+1980,VT,Vermont,3
+1984,VT,Vermont,3
+1988,VT,Vermont,3
+1992,VT,Vermont,3
+1996,VT,Vermont,3
+2000,VT,Vermont,3
+2004,VT,Vermont,3
+2008,VT,Vermont,3
+2012,VT,Vermont,3
+2016,VT,Vermont,3
+2020,VT,Vermont,3
+2024,VT,Vermont,3
+1788,WA,Washington,
+1792,WA,Washington,
+1796,WA,Washington,
+1800,WA,Washington,
+1804,WA,Washington,
+1808,WA,Washington,
+1812,WA,Washington,
+1816,WA,Washington,
+1820,WA,Washington,
+1824,WA,Washington,
+1828,WA,Washington,
+1832,WA,Washington,
+1836,WA,Washington,
+1840,WA,Washington,
+1844,WA,Washington,
+1848,WA,Washington,
+1852,WA,Washington,
+1856,WA,Washington,
+1860,WA,Washington,
+1864,WA,Washington,
+1868,WA,Washington,
+1872,WA,Washington,
+1876,WA,Washington,
+1880,WA,Washington,
+1884,WA,Washington,
+1888,WA,Washington,
+1892,WA,Washington,4
+1896,WA,Washington,4
+1900,WA,Washington,4
+1904,WA,Washington,5
+1908,WA,Washington,5
+1912,WA,Washington,7
+1916,WA,Washington,7
+1920,WA,Washington,7
+1924,WA,Washington,7
+1928,WA,Washington,7
+1932,WA,Washington,8
+1936,WA,Washington,8
+1940,WA,Washington,8
+1944,WA,Washington,8
+1948,WA,Washington,8
+1952,WA,Washington,9
+1956,WA,Washington,9
+1960,WA,Washington,9
+1964,WA,Washington,9
+1968,WA,Washington,9
+1972,WA,Washington,9
+1976,WA,Washington,9
+1980,WA,Washington,9
+1984,WA,Washington,10
+1988,WA,Washington,10
+1992,WA,Washington,11
+1996,WA,Washington,11
+2000,WA,Washington,11
+2004,WA,Washington,11
+2008,WA,Washington,11
+2012,WA,Washington,12
+2016,WA,Washington,12
+2020,WA,Washington,12
+2024,WA,Washington,12
+1788,WI,Wisconsin,
+1792,WI,Wisconsin,
+1796,WI,Wisconsin,
+1800,WI,Wisconsin,
+1804,WI,Wisconsin,
+1808,WI,Wisconsin,
+1812,WI,Wisconsin,
+1816,WI,Wisconsin,
+1820,WI,Wisconsin,
+1824,WI,Wisconsin,
+1828,WI,Wisconsin,
+1832,WI,Wisconsin,
+1836,WI,Wisconsin,
+1840,WI,Wisconsin,
+1844,WI,Wisconsin,
+1848,WI,Wisconsin,4
+1852,WI,Wisconsin,5
+1856,WI,Wisconsin,5
+1860,WI,Wisconsin,5
+1864,WI,Wisconsin,8
+1868,WI,Wisconsin,8
+1872,WI,Wisconsin,10
+1876,WI,Wisconsin,10
+1880,WI,Wisconsin,10
+1884,WI,Wisconsin,11
+1888,WI,Wisconsin,11
+1892,WI,Wisconsin,12
+1896,WI,Wisconsin,12
+1900,WI,Wisconsin,12
+1904,WI,Wisconsin,13
+1908,WI,Wisconsin,13
+1912,WI,Wisconsin,13
+1916,WI,Wisconsin,13
+1920,WI,Wisconsin,13
+1924,WI,Wisconsin,13
+1928,WI,Wisconsin,13
+1932,WI,Wisconsin,12
+1936,WI,Wisconsin,12
+1940,WI,Wisconsin,12
+1944,WI,Wisconsin,12
+1948,WI,Wisconsin,12
+1952,WI,Wisconsin,12
+1956,WI,Wisconsin,12
+1960,WI,Wisconsin,12
+1964,WI,Wisconsin,12
+1968,WI,Wisconsin,12
+1972,WI,Wisconsin,11
+1976,WI,Wisconsin,11
+1980,WI,Wisconsin,11
+1984,WI,Wisconsin,11
+1988,WI,Wisconsin,11
+1992,WI,Wisconsin,11
+1996,WI,Wisconsin,11
+2000,WI,Wisconsin,11
+2004,WI,Wisconsin,10
+2008,WI,Wisconsin,10
+2012,WI,Wisconsin,10
+2016,WI,Wisconsin,10
+2020,WI,Wisconsin,10
+2024,WI,Wisconsin,10
+1788,WV,West Virginia,
+1792,WV,West Virginia,
+1796,WV,West Virginia,
+1800,WV,West Virginia,
+1804,WV,West Virginia,
+1808,WV,West Virginia,
+1812,WV,West Virginia,
+1816,WV,West Virginia,
+1820,WV,West Virginia,
+1824,WV,West Virginia,
+1828,WV,West Virginia,
+1832,WV,West Virginia,
+1836,WV,West Virginia,
+1840,WV,West Virginia,
+1844,WV,West Virginia,
+1848,WV,West Virginia,
+1852,WV,West Virginia,
+1856,WV,West Virginia,
+1860,WV,West Virginia,
+1864,WV,West Virginia,5
+1868,WV,West Virginia,5
+1872,WV,West Virginia,5
+1876,WV,West Virginia,5
+1880,WV,West Virginia,5
+1884,WV,West Virginia,6
+1888,WV,West Virginia,6
+1892,WV,West Virginia,6
+1896,WV,West Virginia,6
+1900,WV,West Virginia,6
+1904,WV,West Virginia,7
+1908,WV,West Virginia,7
+1912,WV,West Virginia,8
+1916,WV,West Virginia,8
+1920,WV,West Virginia,8
+1924,WV,West Virginia,8
+1928,WV,West Virginia,8
+1932,WV,West Virginia,8
+1936,WV,West Virginia,8
+1940,WV,West Virginia,8
+1944,WV,West Virginia,8
+1948,WV,West Virginia,8
+1952,WV,West Virginia,8
+1956,WV,West Virginia,8
+1960,WV,West Virginia,8
+1964,WV,West Virginia,7
+1968,WV,West Virginia,7
+1972,WV,West Virginia,6
+1976,WV,West Virginia,6
+1980,WV,West Virginia,6
+1984,WV,West Virginia,6
+1988,WV,West Virginia,6
+1992,WV,West Virginia,5
+1996,WV,West Virginia,5
+2000,WV,West Virginia,5
+2004,WV,West Virginia,5
+2008,WV,West Virginia,5
+2012,WV,West Virginia,5
+2016,WV,West Virginia,5
+2020,WV,West Virginia,5
+2024,WV,West Virginia,4
+1788,WY,Wyoming,
+1792,WY,Wyoming,
+1796,WY,Wyoming,
+1800,WY,Wyoming,
+1804,WY,Wyoming,
+1808,WY,Wyoming,
+1812,WY,Wyoming,
+1816,WY,Wyoming,
+1820,WY,Wyoming,
+1824,WY,Wyoming,
+1828,WY,Wyoming,
+1832,WY,Wyoming,
+1836,WY,Wyoming,
+1840,WY,Wyoming,
+1844,WY,Wyoming,
+1848,WY,Wyoming,
+1852,WY,Wyoming,
+1856,WY,Wyoming,
+1860,WY,Wyoming,
+1864,WY,Wyoming,
+1868,WY,Wyoming,
+1872,WY,Wyoming,
+1876,WY,Wyoming,
+1880,WY,Wyoming,
+1884,WY,Wyoming,
+1888,WY,Wyoming,
+1892,WY,Wyoming,3
+1896,WY,Wyoming,3
+1900,WY,Wyoming,3
+1904,WY,Wyoming,3
+1908,WY,Wyoming,3
+1912,WY,Wyoming,3
+1916,WY,Wyoming,3
+1920,WY,Wyoming,3
+1924,WY,Wyoming,3
+1928,WY,Wyoming,3
+1932,WY,Wyoming,3
+1936,WY,Wyoming,3
+1940,WY,Wyoming,3
+1944,WY,Wyoming,3
+1948,WY,Wyoming,3
+1952,WY,Wyoming,3
+1956,WY,Wyoming,3
+1960,WY,Wyoming,3
+1964,WY,Wyoming,3
+1968,WY,Wyoming,3
+1972,WY,Wyoming,3
+1976,WY,Wyoming,3
+1980,WY,Wyoming,3
+1984,WY,Wyoming,3
+1988,WY,Wyoming,3
+1992,WY,Wyoming,3
+1996,WY,Wyoming,3
+2000,WY,Wyoming,3
+2004,WY,Wyoming,3
+2008,WY,Wyoming,3
+2012,WY,Wyoming,3
+2016,WY,Wyoming,3
+2020,WY,Wyoming,3
+2024,WY,Wyoming,3

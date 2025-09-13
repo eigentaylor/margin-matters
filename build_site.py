@@ -520,7 +520,7 @@ def make_index(states_sorted):
 
   col_html = []
   for col in cols:
-    items = "".join(f'<a class="btn" href="state/{abbr}.html">{abbr[:2]}</a>' for abbr, _ in col)
+    items = "".join(f'<a class="btn" href="state/{abbr[:2]}.html">{abbr[:2]}</a>' for abbr, _ in col)
     # center the buttons within each card
     col_html.append(f'<div class="card" style="padding:8px"><div class="small-links" style="justify-content:center">{items}</div></div>')
 

@@ -154,7 +154,6 @@ def main():
             prev_two_party = None
             prev_two_party_relative = None
             prev_two_party_national = None
-            prev_row = None
 
             # prev state pres: look up previous year row for same abbr
             prev_years = [y for y in years_sorted if y < year]
@@ -183,21 +182,11 @@ def main():
             # electoral_votes not present in source; assume 0
             electoral_votes = r.get('electoral_votes', 0)
 
-            # compute vote deltas (difference from previous available year for this abbr)
-            if prev_row is not None:
-                D_delta = r['D_votes'] - prev_row.get('D_votes', 0)
-                R_delta = r['R_votes'] - prev_row.get('R_votes', 0)
-            else:
-                D_delta = 0
-                R_delta = 0
-
             out = {
                 'year': year,
                 'abbr': abbr,
                 'D_votes': r['D_votes'],
                 'R_votes': r['R_votes'],
-                'D_delta': D_delta,
-                'R_delta': R_delta,
                 'T_votes': r['T_votes'],
                 'total_votes': r['total_votes'],
                 'electoral_votes': electoral_votes,
@@ -244,7 +233,6 @@ def main():
     # write CSV
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'total_votes', 'electoral_votes',
-    'D_delta', 'R_delta',
         'pres_margin', 'pres_margin_delta', 'pres_margin_str', 'pres_margin_delta_str',
         'national_margin', 'national_margin_delta', 'national_margin_str', 'national_margin_delta_str',
         'relative_margin', 'relative_margin_delta', 'relative_margin_str', 'relative_margin_delta_str',
