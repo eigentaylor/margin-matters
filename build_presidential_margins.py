@@ -244,7 +244,7 @@ def main():
     # write CSV
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'total_votes', 'electoral_votes',
-    'D_delta', 'R_delta',
+        'D_delta', 'R_delta',
         'pres_margin', 'pres_margin_delta', 'pres_margin_str', 'pres_margin_delta_str',
         'national_margin', 'national_margin_delta', 'national_margin_str', 'national_margin_delta_str',
         'relative_margin', 'relative_margin_delta', 'relative_margin_str', 'relative_margin_delta_str',

@@ -70,7 +70,6 @@ USE_TWO_PARTY_MARGIN = False
 # Place this in your local copy of params.py to customize the table output.
 TABLE_COLUMNS: Optional[List] = [
     ("year", "Year"),
-    ("electoral_votes", "EVs"),
     ("D_votes", "D"),
     ("D_pct", "D %"),
     ("R_votes", "R"),
@@ -93,6 +92,7 @@ TABLE_COLUMNS: Optional[List] = [
     ("third_party_national_share_str", "3rd-Party Nat. Share"),
     ("third_party_relative_share_str", "3rd-Party Rel. Share"),
     ("total_votes", "Total votes"),
+    ("electoral_votes", "EVs"),
 ]
 
 ABBR_TO_STATE = {

@@ -284,8 +284,6 @@ def split_columns_into_three(headers):
   basic, third, tp = [], [], []
   if 'year' in ordered:
     basic.append('year'); third.append('year'); tp.append('year')
-  if 'electoral_votes' in ordered:
-    basic.append('electoral_votes'); tp.append('electoral_votes')
   if 'D_votes' in ordered:
     basic.append('D_votes'); third.append('D_votes'); tp.append('D_votes')
   if 'R_votes' in ordered:
@@ -306,6 +304,8 @@ def split_columns_into_three(headers):
     else:
       if c not in basic:
         basic.append(c)
+  if 'electoral_votes' in ordered: # put EVs last
+    basic.append('electoral_votes'); tp.append('electoral_votes')
   return basic, third, tp
 
 def group_by_abbr(rows):
@@ -391,9 +391,22 @@ def render_table(rows, cols, two_party=False):
           if denom and denom > 0:
             pct = (vote_val / denom) * 100
             pct_str = f"{pct:.1f}%"
-            cell = esc(f"{votes_str}({pct_str})")
+            raw_display = f"{votes_str}({pct_str})"
           else:
-            cell = esc(votes_str)
+            raw_display = votes_str
+
+          # look for an associated delta column (e.g. D_votes -> D_delta)
+          delta_col = c.replace('_votes', '_delta')
+          delta_val = parse_int(r.get(delta_col, ""))
+          if isinstance(delta_val, int) and delta_val != 0:
+            # format with thousands separators, keep negative sign when present
+            if delta_val < 0:
+              delta_str = f"-{abs(delta_val):,}"
+            else:
+              delta_str = f"{delta_val:,}"
+            cell = f'<span class="cell-inner"><span class="raw">{esc(raw_display)}</span><span class="delta">(Δ {esc(delta_str)})</span></span>'
+          else:
+            cell = f'<span class="cell-inner"><span class="raw">{esc(raw_display)}</span><span class="delta"></span></span>'
       else:
         # Combine inline delta for *_str columns when available
         raw_val = format_value(c, r.get(c, ""))
