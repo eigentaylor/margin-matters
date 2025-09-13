@@ -9,9 +9,9 @@ import numpy as np
 import pandas as pd
 
 import utils
+from params import SPECIAL_1968_STATES
 
 
-SPECIAL_1968_STATES = {"GA", "AL", "LA", "MS", "AR"}
 
 
 def _color_by_sign(values: np.ndarray, years: np.ndarray, state: str, positive_color="deepskyblue", negative_color="red",

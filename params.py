@@ -60,7 +60,16 @@ FINAL_MARGIN_THRESHOLDS: Dict[str, float] = {
     "BLUE":   0.20,   # darkest blue: D wins by 20%+
 }
 
-USE_TWO_PARTY_MARGIN = False
+SPECIAL_1968_STATES = {"GA", "AL", "LA", "MS", "AR"}
+
+# Interactive election tester (index page)
+# If True, the home page will show an optional interactive tester UI with
+# year + popular-vote sliders, dynamic map coloring, and an EV bar.
+# Leave False while iterating; flip to True to enable on build.
+INTERACTIVE_TESTER: bool = False
+
+# Clamp for PV slider in tester (in fraction units, e.g. 0.25 = +/-25pp)
+TESTER_PV_CAP: float = 0.30
 
 # Optional: define a custom table column ordering and labels for the HTML tables.
 # If set to None the code will fall back to the built-in heuristic order.
