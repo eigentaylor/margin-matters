@@ -25,7 +25,10 @@ ME_NE_STATES = {"ME-AL", "NE-AL"}
 # timestamp used in footers (UTC at build time)
 LAST_UPDATED = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC")
 
-FOOTER_TEXT = f"Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to through discord: eigentaylor ·"
+FOOTER_TEXT = f"""Site by eigentaylor.<br />
+Data (possibly incorrectly scraped) from Wikipedia.<br /> 
+Please report any innaccuracies to through discord: eigentaylor ·"""
+# Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />
 
 # HTML templates (dark theme for comfy eyes)
 BASE_CSS = r"""
@@ -1130,7 +1133,7 @@ def make_index(states_sorted):
           <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
           <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">
             <strong>How this works:</strong> We measure a state's relative margin as the difference between its presidential margin and the national presidential margin. A state with a relative margin of +5% is 5 points more Democratic than the nation as a whole, while a state with -3% is 3 points more Republican than the nation. By shifting the national presidential margin (PV) we can estimate how many electoral votes each party would win if the national popular vote were different. The EV bar above shows the estimated electoral vote split for the selected PV.<br/><br/>
-            We only capped the maximum PV shift to ±{cap_pct}% to allow for particularly unrealistic scenarios (despite the days of a 20-point landslide being long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin. But if you want to see what a D+52.1 margin might look like, be my guest!<br/><br/>
+            We only capped the maximum PV shift to ±{cap_pct}% to allow for particularly unrealistic scenarios (despite the days of a 20-point landslide being long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin. But if you want to see what a D+52.1 margin might look like, be my guest! Democrats are always going to have more than 3 electoral votes due to D.C.<br/><br/>
             <em>Note:</em> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist.<br/><br/>
             <em>Note on 1968:</em> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win.<br/>
             While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points.  
