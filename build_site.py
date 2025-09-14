@@ -110,7 +110,7 @@ TESTER_JS = r"""
   // Per-year stops array
   const stopsByYear = new Map();
   // Remap for known label mismatches between GeoJSON and CSV keys
-  const UNIT_REMAP = { 'ME-01': 'ME-02', 'ME-02': 'ME-01', 'NE-01': 'NE-03', 'NE-03': 'NE-01' };
+  const UNIT_REMAP = {};
 
   Promise.all([
     d3.csv('presidential_margins.csv'),
@@ -162,33 +162,32 @@ TESTER_JS = r"""
   window._districtPaths = new Map();
   const districtDByUnit = new Map();
   const feats = (geo && geo.features) ? geo.features.slice() : [];
-  // Custom order: For Nebraska, enforce 02 -> 01 -> 03 (so 03 ends on top). Others by area (smaller last)
+  // Custom order: For Maine, sort by descending area so smaller ME-02 renders on top of larger ME-01.
+  // For Nebraska, sort by ascending area so NE-02 is smallest and renders on top.
   try {
     feats.sort((a, b) => {
-      const getMapped = (f) => {
-        let u = null;
-        if (f.properties) u = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
-        if (!u) return null;
-        return UNIT_REMAP[u] || u;
+      const getUnit = (f) => {
+        if (!f.properties) return null;
+        return f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
       };
-      const am = getMapped(a);
-      const bm = getMapped(b);
-      const pri = (m) => {
-        if (!m) return 100;
-        if (m.startsWith('NE-')) {
-          if (m === 'NE-02') return 0;
-          if (m === 'NE-01') return 1;
-          if (m === 'NE-03') return 2;
-          return 3;
-        }
-        return 100;
-      };
-      const pa = pri(am), pb = pri(bm);
-      if (pa !== pb) return pa - pb;
+      const au = getUnit(a);
+      const bu = getUnit(b);
+      const aState = au ? au.slice(0,2) : null;
+      const bState = bu ? bu.slice(0,2) : null;
+      
+      // Handle ME districts - sort by descending area (largest first)
+      if (aState === 'ME' && bState === 'ME') {
+        try { return window.mapPath.area(b) - window.mapPath.area(a); } catch(e) { return 0; }
+      }
+      // Handle NE districts - sort by ascending area (smallest first) 
+      if (aState === 'NE' && bState === 'NE') {
+        try { return window.mapPath.area(a) - window.mapPath.area(b); } catch(e) { return 0; }
+      }
+      // Default sort by area descending
       try { return window.mapPath.area(b) - window.mapPath.area(a); } catch(e) { return 0; }
     });
   } catch(e) {}
-  try { console.log('tester debug district draw order', feats.map(f => ({unit: (f.properties && (f.properties.unit||f.properties.abbr||f.properties.GEOID)) || null, area: window.mapPath.area(f)}))); } catch(e) {}
+
     feats.forEach(f => {
           // prefer an explicit 'unit' property (e.g. 'ME-01'/'NE-02'), fall back to abbr or GEOID
           let unit = null;
@@ -196,28 +195,35 @@ TESTER_JS = r"""
             unit = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
           }
           if (!unit) return;
-          // Remap GeoJSON labels to CSV keys when swapped
-          const mapped = UNIT_REMAP[unit] || unit;
-          const st = mapped.slice(0,2);
+          
+          // Use original unit name directly when it matches expected patterns
+          const useUnit = (unit.match(/^(ME|NE)-0[123]$/)) ? unit : (UNIT_REMAP[unit] || unit);
+          const st = useUnit.slice(0,2);
           const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
-          const dStr = window.mapPath(f);
-          if (mapped && dStr) districtDByUnit.set(mapped, dStr);
+          
+          let dStr = window.mapPath(f);
+          // Remove problematic bounding box rectangles that cover the entire canvas
+          if (dStr && dStr.startsWith('M-104,-4.4L1079,-4.4L1079,614.4L-104,614.4Z')) {
+            dStr = dStr.replace(/^M-104,-4\.4L1079,-4\.4L1079,614\.4L-104,614\.4Z/, '');
+          }
+          
+          if (useUnit && dStr) districtDByUnit.set(useUnit, dStr);
           // halo underlay to make small districts more visible (e.g., NE-02)
           dg.append('path')
             .attr('class','district-halo')
-            .attr('id', `halo-${mapped}`)
+            .attr('id', `halo-${useUnit}`)
             .attr('d', dStr)
             .attr('clip-path', clip)
             .attr('fill', 'none')
             .attr('stroke', '#000')
             .attr('stroke-opacity', 0.35)
             .attr('stroke-width', 2.2)
-      .attr('data-unit', mapped)
+      .attr('data-unit', useUnit)
       .attr('data-st', st)
             .attr('pointer-events', 'none');
           const p = dg.append('path')
             .attr('class','district')
-            .attr('id', `district-${mapped}`)
+            .attr('id', `district-${useUnit}`)
             .attr('d', dStr)
             .attr('clip-path', clip)
       .attr('fill', 'transparent')
@@ -225,10 +231,10 @@ TESTER_JS = r"""
       .attr('stroke-width', 1.2)
       .attr('stroke-linejoin', 'round')
       .attr('stroke-linecap', 'round')
-      .attr('data-unit', mapped)
+      .attr('data-unit', useUnit)
       .attr('data-st', st)
             .attr('pointer-events', 'none');
-          window._districtPaths.set(mapped, p);
+          window._districtPaths.set(useUnit, p);
         });
         // Build an SVG mask to stop NE-03 from painting over NE-02/NE-01 if geometries overlap
         try {
@@ -299,8 +305,9 @@ TESTER_JS = r"""
         const prev = stopToUnits.get(val) || [];
         prev.push(r.unit);
         stopToUnits.set(val, prev);
-        // For naive flip stops, nudge to D side so clicking the stop flips the state to D
-        if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
+        // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
+        sgn = Math.sign(val + nat);
+        if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
       }
       // For 1968 only: add third-party tipping thresholds where applicable (t >= 1/3)
       if (year === 1968) {
@@ -449,7 +456,7 @@ TESTER_JS = r"""
       for (const s of stopsForUnit) {
         const eff = stopToEff.get(s);
         if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
-          matches.push(unit.slice(0,2));
+          matches.push(unit.slice(0,5));
           break;
         }
       }
@@ -539,32 +546,9 @@ TESTER_JS = r"""
       d3.select(this).attr('fill', fill);
     });
 
-    // diagnostic: count how many state paths have each fill color
-    try {
-      const counts = {};
-      d3.selectAll('path.state').each(function(){ const f = d3.select(this).attr('fill') || 'null'; counts[f] = (counts[f]||0)+1; });
-      console.log('tester debug state fill counts:', counts);
-    } catch (e) {}
-
   // color district polygons (ME/NE) if overlay loaded
     if (window._districtPaths) {
       try {
-        // debug: log PV/stop and computed color maps to help trace fill leakage
-        try { console.log('tester debug pv, stopVal', { pv, stopVal }); } catch(e){}
-        try { console.log('tester debug abbrColors', Object.fromEntries(abbrColors.entries())); } catch(e){}
-        try { console.log('tester debug unitColors', Object.fromEntries(unitColors.entries())); } catch(e){}
-
-        // build plain objects for expected district colors and labels for debugging
-        try {
-          const expected = {}, labels = {};
-          window._districtPaths.forEach((pSel, unit) => {
-            expected[unit] = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : null);
-            labels[unit] = unitParties.get(unit) || (abbrColors.get(unit.slice(0,2)) ? ((abbrColors.get(unit.slice(0,2)).m > 0) ? 'Blue' : (abbrColors.get(unit.slice(0,2)).m < 0 ? 'Red' : 'Even')) : null);
-          });
-          console.log('ME/NE expected district colors:', expected);
-          console.log('ME/NE expected district parties:', labels);
-        } catch (e) { /* ignore logging errors */ }
-
         // Show/hide districts based on year availability
         const showME = year >= 1972;
         const showNE = year >= 1992;
@@ -581,40 +565,7 @@ TESTER_JS = r"""
             const halo = pSel.node && pSel.node().previousSibling;
             if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
           } catch(e) {}
-          // log the actual fill attribute after applying it and the path bbox for size debugging
-          try {
-            const real = pSel.node ? pSel.node().getAttribute('fill') : null;
-            const bbox = (pSel.node && pSel.node().getBBox) ? pSel.node().getBBox() : null;
-            console.log('tester debug applied district fill', unit, ucolor, real, bbox && {x:bbox.x,y:bbox.y,w:bbox.width,h:bbox.height});
-          } catch(e) {}
         });
-        // After coloring, explicitly order NE districts to avoid overlap issues: 01 below, 02 on top, 03 beneath both
-        try {
-          const sel01 = window._districtPaths.get('NE-01');
-          const sel02 = window._districtPaths.get('NE-02');
-          const sel03 = window._districtPaths.get('NE-03');
-          // Only adjust when NE is shown
-          const showNE = year >= 1992;
-          if (showNE) {
-            // Move 03 to bottom among NE by re-appending 01 and 02 after
-            if (sel01 && sel01.node && sel01.node()) sel01.raise();
-            if (sel02 && sel02.node && sel02.node()) sel02.raise();
-            // Ensure halos accompany their paths: re-append halo then path
-            const reappendWithHalo = (sel, unit) => {
-              if (!sel) return;
-              const node = sel.node && sel.node();
-              const halo = node ? node.previousSibling : null;
-              if (halo && halo.parentNode) {
-                halo.parentNode.appendChild(halo);
-                halo.parentNode.appendChild(node);
-              } else if (sel.raise) {
-                sel.raise();
-              }
-            };
-            reappendWithHalo(sel01, 'NE-01');
-            reappendWithHalo(sel02, 'NE-02');
-          }
-        } catch(e) {}
       } catch (e) { /* ignore */ }
     }
 
@@ -1179,7 +1130,7 @@ def make_index(states_sorted):
           <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
           <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">
             <strong>How this works:</strong> We measure a state's relative margin as the difference between its presidential margin and the national presidential margin. A state with a relative margin of +5% is 5 points more Democratic than the nation as a whole, while a state with -3% is 3 points more Republican than the nation. By shifting the national presidential margin (PV) we can estimate how many electoral votes each party would win if the national popular vote were different. The EV bar above shows the estimated electoral vote split for the selected PV.<br/><br/>
-            We have capped the maximum PV shift to ±{cap_pct}% to avoid unrealistic scenarios (the days of a 20-point landslide are long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin.<br/><br/>
+            We only capped the maximum PV shift to ±{cap_pct}% to allow for particularly unrealistic scenarios (despite the days of a 20-point landslide being long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin. But if you want to see what a D+52.1 margin might look like, be my guest!<br/><br/>
             <em>Note:</em> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist.<br/><br/>
             <em>Note on 1968:</em> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win.<br/>
             While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points.  

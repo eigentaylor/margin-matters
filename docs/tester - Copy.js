@@ -1,9 +1,9 @@
 
 (function(){
-  const PV_CAP = 0.6;
+  const PV_CAP = 0.7;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["AL", "MS", "LA", "GA", "AR"];
+  const SPECIAL_1968 = ["AL", "GA", "LA", "AR", "MS"];
 
   function leanStr(x){
     if (!isFinite(x)) return '';
@@ -32,12 +32,53 @@
   const stopToUnits = new Map();
   // Per-year stops array
   const stopsByYear = new Map();
-  // Remap for known label mismatches between GeoJSON and CSV keys
+  // Normalize unit ids like NE-1 -> NE-01 and ME-2 -> ME-02
+  function normalizeUnit(u){
+    if (!u) return u;
+    const m = /^([A-Z]{2})[-\s]?0?(\d)$/.exec(u);
+    if (m) return `${m[1]}-0${m[2]}`;
+    return u;
+  }
+  // No remaps; we canonicalize by area below
   const UNIT_REMAP = {};
+  const FIPS_TO_STUSPS = { '23': 'ME', '31': 'NE' };
+  function featureToUnit(f) {
+    if (!f || !f.properties) return null;
+    // direct unit if present
+    let u = f.properties.unit || f.properties.abbr || null;
+    if (u) {
+      const raw = normalizeUnit(String(u));
+      const mapped = normalizeUnit(UNIT_REMAP[raw] || raw);
+      return mapped;
+    }
+    const p = f.properties;
+    // derive from STUSPS and common CD fields
+    const st = p.STUSPS || FIPS_TO_STUSPS[String(p.STATEFP)] || null;
+    let cd = p.CD118FP || p.CD116FP || p.CD || p.DISTRICT || null;
+    if (st && cd != null) {
+      const raw = `${st}-${String(cd).padStart(2,'0')}`;
+      const norm = normalizeUnit(raw);
+      return normalizeUnit(UNIT_REMAP[norm] || norm);
+    }
+    // fallback: infer from GEOID if available
+    const geoid = p.GEOID || p.GEOIDFP || null;
+    if (st && geoid) {
+      const d2 = String(geoid).slice(-2);
+      const raw = `${st}-${d2.padStart(2,'0')}`;
+      const norm = normalizeUnit(raw);
+      return normalizeUnit(UNIT_REMAP[norm] || norm);
+    }
+    return null;
+  }
+
+  function getDrawColor(unit, st, abbrColors, unitColors) {
+    return unitColors.get(unit)
+        || unitColors.get(unit.replace(/^([A-Z]{2})-0(\d)$/,'$1-$2'))
+        || (abbrColors.get(st) ? abbrColors.get(st).color : 'transparent');
+  }
 
   Promise.all([
     d3.csv('presidential_margins.csv'),
-    d3.csv('electoral_college.csv').catch(() => [])
   ]).then(([margins, ec]) => {
     (margins || []).forEach(r => {
       const year = +r.year;
@@ -61,7 +102,7 @@
     init();
     // attempt to load ME/NE district geometries for per-district coloring
     fetch('me_ne_districts.geojson').then(r => r.json()).then(geo => {
-      try {
+  try {
         // Create clipPaths for ME and NE using the state paths already on the map
         const svgEl = d3.select('#map');
         const defs = svgEl.select('defs').empty() ? svgEl.append('defs') : svgEl.select('defs');
@@ -83,82 +124,116 @@
   // Render districts above states so they are visible but keep pointer-events off
   const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
   window._districtPaths = new Map();
+  // Clear any existing district elements to prevent duplicates
+  window.mapG.selectAll('.districts').remove();
+  const dgNew = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
   const districtDByUnit = new Map();
   const feats = (geo && geo.features) ? geo.features.slice() : [];
-  // Custom order: For Maine, sort by descending area so smaller ME-02 renders on top of larger ME-01.
-  // For Nebraska, sort by ascending area so NE-02 is smallest and renders on top.
+  // Custom order: For Nebraska, enforce 02 -> 01 -> 03 (so 02 ends on top). Others by area (smaller last)
   try {
     feats.sort((a, b) => {
-      const getUnit = (f) => {
-        if (!f.properties) return null;
-        return f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
+      const getMapped = (f) => featureToUnit(f);
+      const am = getMapped(a);
+      const bm = getMapped(b);
+      const pri = (m) => {
+        if (!m) return 100;
+        if (m.startsWith('NE-')) {
+          if (m === 'NE-02') return 0;
+          if (m === 'NE-01') return 1;
+          if (m === 'NE-03') return 2;
+          return 3;
+        }
+        return 100;
       };
-      const au = getUnit(a);
-      const bu = getUnit(b);
-      const aState = au ? au.slice(0,2) : null;
-      const bState = bu ? bu.slice(0,2) : null;
-      
-      // Handle ME districts - sort by descending area (largest first)
-      if (aState === 'ME' && bState === 'ME') {
-        try { return window.mapPath.area(b) - window.mapPath.area(a); } catch(e) { return 0; }
-      }
-      // Handle NE districts - sort by ascending area (smallest first) 
-      if (aState === 'NE' && bState === 'NE') {
-        try { return window.mapPath.area(a) - window.mapPath.area(b); } catch(e) { return 0; }
-      }
-      // Default sort by area descending
+      const pa = pri(am), pb = pri(bm);
+      if (pa !== pb) return pa - pb;
       try { return window.mapPath.area(b) - window.mapPath.area(a); } catch(e) { return 0; }
     });
   } catch(e) {}
+  // Build canonicalized district objects by area to avoid label mismatches
+  const meObjs = [];
+  const neObjs = [];
+  feats.forEach(f => {
+    const p = f.properties || {};
+    const fu = featureToUnit(f);
+    let st = fu ? fu.slice(0,2) : (p.STUSPS || FIPS_TO_STUSPS[String(p.STATEFP)] || null);
+    if (st !== 'ME' && st !== 'NE') return;
+      const dStr = window.mapPath(f);
+      if (!dStr) return;
+      
+      // FIX: Remove the bounding box rectangle that appears at the start of each district path
+      // The format is: M-104,-4.4L1079,-4.4L1079,614.4L-104,614.4Z[actual district geometry]
+      let cleanedDStr = dStr;
+      const boundingBoxPattern = /^M-104,-4\.4L1079,-4\.4L1079,614\.4L-104,614\.4Z/;
+      if (boundingBoxPattern.test(dStr)) {
+        cleanedDStr = dStr.replace(boundingBoxPattern, '');
+      }
+      
+      // Skip if no actual geometry remains after removing bounding box
+      if (!cleanedDStr || cleanedDStr.length < 10) {
+        console.warn('No valid geometry for district', fu, 'after cleaning');
+        return;
+      }
+      let area = 0;
+      try { area = Math.abs(window.mapPath.area(f)); } catch(e) { area = 0; }
+      // Re-enable ME clip path since we need it to contain the districts
+      const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
+      const obj = { st, dStr: cleanedDStr, area, clip, originalUnit: fu };
+      if (st === 'ME') meObjs.push(obj); else neObjs.push(obj);
+    });
 
-    feats.forEach(f => {
-          // prefer an explicit 'unit' property (e.g. 'ME-01'/'NE-02'), fall back to abbr or GEOID
-          let unit = null;
-          if (f.properties) {
-            unit = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
-          }
-          if (!unit) return;
-          
-          // Use original unit name directly when it matches expected patterns
-          const useUnit = (unit.match(/^(ME|NE)-0[123]$/)) ? unit : (UNIT_REMAP[unit] || unit);
-          const st = useUnit.slice(0,2);
-          const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
-          
-          let dStr = window.mapPath(f);
-          // Remove problematic bounding box rectangles that cover the entire canvas
-          if (dStr && dStr.startsWith('M-104,-4.4L1079,-4.4L1079,614.4L-104,614.4Z')) {
-            dStr = dStr.replace(/^M-104,-4\.4L1079,-4\.4L1079,614\.4L-104,614\.4Z/, '');
-          }
-          
-          if (useUnit && dStr) districtDByUnit.set(useUnit, dStr);
-          // halo underlay to make small districts more visible (e.g., NE-02)
-          dg.append('path')
-            .attr('class','district-halo')
-            .attr('id', `halo-${useUnit}`)
-            .attr('d', dStr)
-            .attr('clip-path', clip)
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('stroke-opacity', 0.35)
-            .attr('stroke-width', 2.2)
-      .attr('data-unit', useUnit)
-      .attr('data-st', st)
-            .attr('pointer-events', 'none');
-          const p = dg.append('path')
-            .attr('class','district')
-            .attr('id', `district-${useUnit}`)
-            .attr('d', dStr)
-            .attr('clip-path', clip)
-      .attr('fill', 'transparent')
-      .attr('stroke', '#BBBBBB')
-      .attr('stroke-width', 1.2)
-      .attr('stroke-linejoin', 'round')
-      .attr('stroke-linecap', 'round')
-      .attr('data-unit', useUnit)
-      .attr('data-st', st)
-            .attr('pointer-events', 'none');
-          window._districtPaths.set(useUnit, p);
-        });
+    // Sort objects by area for consistent ordering, but use original unit names for IDs
+    // For ME, reverse the area sorting so ME-02 (smaller) renders after ME-01 (larger) to appear on top
+    if (meObjs.length === 2) {
+      meObjs.sort((a,b)=>b.area-a.area); // Reverse sort for ME so smaller renders last
+    }
+    if (neObjs.length === 3) neObjs.sort((a,b)=>a.area-b.area);
+    
+    const addDistrict = (unit, o) => {
+      // store for later mask-building and coloring
+      districtDByUnit.set(unit, o.dStr);
+      // halo
+      dgNew.append('path')
+        .attr('class','district-halo')
+        .attr('id', `halo-${unit}`)
+        .attr('d', o.dStr)
+        .attr('clip-path', o.clip)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('stroke-opacity', 0.35)
+        .attr('stroke-width', 2.2)
+        .attr('data-unit', unit)
+        .attr('data-st', unit.slice(0,2))
+        .attr('pointer-events', 'none');
+      // visible path
+      const p = dgNew.append('path')
+        .attr('class','district')
+        .attr('id', `district-${unit}`)
+        .attr('d', o.dStr)
+        .attr('clip-path', o.clip)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#BBBBBB')
+        .attr('stroke-width', 1.2)
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-linecap', 'round')
+        .attr('data-unit', unit)
+        .attr('data-st', unit.slice(0,2))
+        .attr('pointer-events', 'none');
+      window._districtPaths.set(unit, p);
+    };
+    
+    // Add districts using their original unit names
+    meObjs.forEach(o => {
+      if (o.originalUnit && /^ME-0[12]$/.test(o.originalUnit)) {
+        addDistrict(o.originalUnit, o);
+      }
+    });
+    neObjs.forEach(o => {
+      if (o.originalUnit && /^NE-0[123]$/.test(o.originalUnit)) {
+        addDistrict(o.originalUnit, o);
+      }
+    });
+    
         // Build an SVG mask to stop NE-03 from painting over NE-02/NE-01 if geometries overlap
         try {
           const ne03 = districtDByUnit.get('NE-03');
@@ -181,7 +256,9 @@
           }
         } catch(e) { /* masking optional */ }
     // apply initial colors now that district paths exist
-    try { updateAll(); } catch(e) {}
+    try { 
+      updateAll(); 
+    } catch(e) {}
       } catch (e) {
         console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
       }
@@ -228,9 +305,8 @@
         const prev = stopToUnits.get(val) || [];
         prev.push(r.unit);
         stopToUnits.set(val, prev);
-        // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
-        sgn = Math.sign(val + nat);
-        if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
+        // For naive flip stops, nudge to D side so clicking the stop flips the state to D
+        if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
       }
       // For 1968 only: add third-party tipping thresholds where applicable (t >= 1/3)
       if (year === 1968) {
@@ -379,7 +455,7 @@
       for (const s of stopsForUnit) {
         const eff = stopToEff.get(s);
         if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
-          matches.push(unit.slice(0,5));
+          matches.push(unit.slice(0,2));
           break;
         }
       }
@@ -396,7 +472,7 @@
   const unitParties = new Map(); // unit -> 'Blue'|'Red'|'Even'
   let dEV = 0, rEV = 0, oEV = 0;
   arr.forEach(r => {
-      const unit = r.unit;
+      const unit = normalizeUnit(r.unit);
       if (!unit || unit === 'NATIONAL') return;
       const m = (+r.rm || 0) + pv;
       // Prefer explicit checks rather than mixing ?? and || which can parse oddly
@@ -457,6 +533,10 @@
   if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
   // store per-unit color and party label so district polygons can be filled individually
   unitColors.set(unit, color);
+  if (unit.includes('-')) console.log('Stored color for unit:', unit, 'color:', color);
+  // also store alias without zero-padding if any exists to match data inconsistencies
+  const alias = unit.replace(/^([A-Z]{2})-0(\d)$/,'$1-$2');
+  if (alias !== unit) unitColors.set(alias, color);
   unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
     });
 
@@ -475,20 +555,48 @@
         // Show/hide districts based on year availability
         const showME = year >= 1972;
         const showNE = year >= 1992;
-        // Update both fill and visibility
+        // Update both fill and visibility (target halos by id to avoid previousSibling drift)
         window._districtPaths.forEach((pSel, unit) => {
           // unit is expected like 'ME-01' or 'NE-02'
-          const ucolor = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : 'transparent');
           const st = unit.slice(0,2);
           const visible = (st === 'ME' ? showME : (st === 'NE' ? showNE : true));
+          const ucolor = getDrawColor(unit, st, abbrColors, unitColors);
           try {
             pSel.attr('fill', ucolor)
                 .attr('display', visible ? null : 'none');
-            // also toggle the matching halo
-            const halo = pSel.node && pSel.node().previousSibling;
-            if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
+            // also toggle the matching halo by id for robustness
+            const haloSel = d3.select(`#halo-${unit}`);
+            if (!haloSel.empty()) haloSel.attr('display', visible ? null : 'none');
           } catch(e) {}
         });
+        // After coloring, explicitly order NE districts to avoid overlap issues: 01 below, 02 on top, 03 beneath both
+        try {
+          const sel01 = window._districtPaths.get('NE-01');
+          const sel02 = window._districtPaths.get('NE-02');
+          const sel03 = window._districtPaths.get('NE-03');
+          // Only adjust when NE is shown
+          const showNE = year >= 1992;
+          if (showNE) {
+            // Move 03 to bottom among NE by re-appending 01 and 02 after
+            if (sel01 && sel01.node && sel01.node()) sel01.raise();
+            if (sel02 && sel02.node && sel02.node()) sel02.raise();
+            // Ensure halos accompany their paths: re-append halo by id then path
+            const reappendWithHalo = (sel, unit) => {
+              if (!sel) return;
+              const node = sel.node && sel.node();
+              const haloSel = d3.select(`#halo-${unit}`);
+              const halo = !haloSel.empty() ? haloSel.node() : null;
+              if (halo && halo.parentNode) {
+                halo.parentNode.appendChild(halo);
+                if (node && halo.parentNode) halo.parentNode.appendChild(node);
+              } else if (sel.raise) {
+                sel.raise();
+              }
+            };
+            reappendWithHalo(sel01, 'NE-01');
+            reappendWithHalo(sel02, 'NE-02');
+          }
+        } catch(e) {}
       } catch (e) { /* ignore */ }
     }
 

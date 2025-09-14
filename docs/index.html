@@ -27,6 +27,41 @@
         <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
       </div>
       
+      <hr style="margin:12px 0" />
+      <div id="tester" class="center" style="margin-top:8px">
+        <div style="display:grid;gap:10px">
+          <div>
+            <label for="yearSlider">Year:</label>
+            <input id="yearSlider" type="range" min="1968" max="2024" step="4" value="2024" />
+            <span id="yearVal" style="margin-left:8px">2024</span>
+          </div>
+          <div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
+              <!-- discrete slider: index of the current stop; min/max set by script -->
+              <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
+              <span id="pvVal" style="width:120px;text-align:left">EVEN</span>
+            </div>
+            <datalist id="pvStopsList"></datalist>
+          </div>
+          <div id="evBar" style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111">
+            <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+            <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
+            <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
+            <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+            <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--muted);font-weight:600">D 0 | O 0 | R 0</div>
+          </div>
+          <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
+          <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">
+            <strong>How this works:</strong> We measure a state's relative margin as the difference between its presidential margin and the national presidential margin. A state with a relative margin of +5% is 5 points more Democratic than the nation as a whole, while a state with -3% is 3 points more Republican than the nation. By shifting the national presidential margin (PV) we can estimate how many electoral votes each party would win if the national popular vote were different. The EV bar above shows the estimated electoral vote split for the selected PV.<br/><br/>
+            We only capped the maximum PV shift to ±60% to allow for particularly unrealistic scenarios (despite the days of a 20-point landslide being long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin. But if you want to see what a D+52.1 margin might look like, be my guest!<br/><br/>
+            <em>Note:</em> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist.<br/><br/>
+            <em>Note on 1968:</em> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win.<br/>
+            While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points.  
+          </div>
+        </div>
+      </div>
+    
     </div>
     <div class="card">
         <h2 style="margin-top:0">State Links</h2>
@@ -46,12 +81,12 @@
   </div>
   <footer>Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to through discord: eigentaylor ·
   Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: 2025-09-14 05:39 UTC</footer>
+  Last updated: 2025-09-14 06:53 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
-
+<script src="tester.js"></script>
 <script>
 const FIPS_TO_ABBR = {
   "01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC",
