@@ -46,7 +46,7 @@
   </div>
   <footer>Site by eigentaylor.<br />Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />Please report any innaccuracies to through discord: eigentaylor ·
   Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: 2025-09-13 10:58 UTC</footer>
+  Last updated: 2025-09-14 05:39 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -95,7 +95,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .attr("stroke-width", 0.8)
       .attr("tabindex", 0)
       /* On hover: pick a bright blue or red depending on the current fill and restore it on mouseout */
-      .on("mouseover", function() {
+    .on("mouseover", function() {
         const sel = d3.select(this);
         const cur = sel.attr('fill') || '#2f2f2f';
         // stash the original fill so we can restore it on mouseout
@@ -105,8 +105,9 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
           const r = parseInt(hex.slice(0,2),16) || 0;
           const g = parseInt(hex.slice(2,4),16) || 0;
           const b = parseInt(hex.slice(4,6),16) || 0;
-          // if the color is redder than bluer, use a bright red, otherwise bright blue
-          const highlight = (r > b) ? '#ff6666' : '#66b3ff';
+      // if it's already yellow (1968 plurality), keep yellow; else if the color is redder than bluer, use bright red, otherwise bright blue
+      const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
+      const highlight = isYellow ? '#FFD700' : ((r > b) ? '#ff6666' : '#66b3ff');
           sel.attr('fill', highlight);
         } catch (e) {
           sel.attr('fill', '#66b3ff');

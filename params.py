@@ -66,7 +66,7 @@ SPECIAL_1968_STATES = {"GA", "AL", "LA", "MS", "AR"}
 # If True, the home page will show an optional interactive tester UI with
 # year + popular-vote sliders, dynamic map coloring, and an EV bar.
 # Leave False while iterating; flip to True to enable on build.
-INTERACTIVE_TESTER: bool = True
+INTERACTIVE_TESTER: bool = False
 
 # Clamp for PV slider in tester (in fraction units, e.g. 0.25 = +/-25pp)
 TESTER_PV_CAP: float = 0.70

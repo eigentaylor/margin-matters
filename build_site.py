@@ -79,7 +79,7 @@ TESTER_JS = r"""
 (function(){
   const PV_CAP = %PV_CAP%;
   const EPS = 1e-5;
-  const STOP_EPS = 0.0005; // tolerance when matching slider to exact flip stops
+  const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
   const SPECIAL_1968 = %SPECIAL_1968%;
 
   function leanStr(x){
@@ -109,6 +109,8 @@ TESTER_JS = r"""
   const stopToUnits = new Map();
   // Per-year stops array
   const stopsByYear = new Map();
+  // Remap for known label mismatches between GeoJSON and CSV keys
+  const UNIT_REMAP = { 'ME-01': 'ME-02', 'ME-02': 'ME-01', 'NE-01': 'NE-03', 'NE-03': 'NE-01' };
 
   Promise.all([
     d3.csv('presidential_margins.csv'),
@@ -120,7 +122,8 @@ TESTER_JS = r"""
       const rm = +r.relative_margin || 0;
       const nm = +r.national_margin || 0;
       const ev = +r.electoral_votes || 0;
-      const row = { year, unit, rm, nm, ev };
+      const tp = +r.third_party_share || 0;
+      const row = { year, unit, rm, nm, ev, tp };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
       if (ev > 0) evByUnit.set(`${year}:${unit}`, ev);
@@ -141,34 +144,115 @@ TESTER_JS = r"""
         const defs = svgEl.select('defs').empty() ? svgEl.append('defs') : svgEl.select('defs');
         const mePath = d3.select('#state-ME');
         const nePath = d3.select('#state-NE');
+        // Build clip paths by cloning the state path 'd' for maximum compatibility
         if (!mePath.empty()) {
-          defs.append('clipPath').attr('id','clip-ME').append('use').attr('href','#state-ME');
+          const meD = mePath.attr('d');
+          const meClip = defs.select('#clip-ME').empty() ? defs.append('clipPath').attr('id','clip-ME') : defs.select('#clip-ME');
+          meClip.selectAll('*').remove();
+          meClip.append('path').attr('d', meD);
         }
         if (!nePath.empty()) {
-          defs.append('clipPath').attr('id','clip-NE').append('use').attr('href','#state-NE');
+          const neD = nePath.attr('d');
+          const neClip = defs.select('#clip-NE').empty() ? defs.append('clipPath').attr('id','clip-NE') : defs.select('#clip-NE');
+          neClip.selectAll('*').remove();
+          neClip.append('path').attr('d', neD);
         }
-        // Render districts above states so they are visible but keep pointer-events off
-        const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
-        window._districtPaths = new Map();
-        geo.features.forEach(f => {
+  // Render districts above states so they are visible but keep pointer-events off
+  const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
+  window._districtPaths = new Map();
+  const districtDByUnit = new Map();
+  const feats = (geo && geo.features) ? geo.features.slice() : [];
+  // Custom order: For Nebraska, enforce 02 -> 01 -> 03 (so 03 ends on top). Others by area (smaller last)
+  try {
+    feats.sort((a, b) => {
+      const getMapped = (f) => {
+        let u = null;
+        if (f.properties) u = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
+        if (!u) return null;
+        return UNIT_REMAP[u] || u;
+      };
+      const am = getMapped(a);
+      const bm = getMapped(b);
+      const pri = (m) => {
+        if (!m) return 100;
+        if (m.startsWith('NE-')) {
+          if (m === 'NE-02') return 0;
+          if (m === 'NE-01') return 1;
+          if (m === 'NE-03') return 2;
+          return 3;
+        }
+        return 100;
+      };
+      const pa = pri(am), pb = pri(bm);
+      if (pa !== pb) return pa - pb;
+      try { return window.mapPath.area(b) - window.mapPath.area(a); } catch(e) { return 0; }
+    });
+  } catch(e) {}
+  try { console.log('tester debug district draw order', feats.map(f => ({unit: (f.properties && (f.properties.unit||f.properties.abbr||f.properties.GEOID)) || null, area: window.mapPath.area(f)}))); } catch(e) {}
+    feats.forEach(f => {
           // prefer an explicit 'unit' property (e.g. 'ME-01'/'NE-02'), fall back to abbr or GEOID
           let unit = null;
           if (f.properties) {
             unit = f.properties.unit || f.properties.abbr || f.properties.GEOID || null;
           }
           if (!unit) return;
-          const st = unit.slice(0,2);
+          // Remap GeoJSON labels to CSV keys when swapped
+          const mapped = UNIT_REMAP[unit] || unit;
+          const st = mapped.slice(0,2);
           const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
+          const dStr = window.mapPath(f);
+          if (mapped && dStr) districtDByUnit.set(mapped, dStr);
+          // halo underlay to make small districts more visible (e.g., NE-02)
+          dg.append('path')
+            .attr('class','district-halo')
+            .attr('id', `halo-${mapped}`)
+            .attr('d', dStr)
+            .attr('clip-path', clip)
+            .attr('fill', 'none')
+            .attr('stroke', '#000')
+            .attr('stroke-opacity', 0.35)
+            .attr('stroke-width', 2.2)
+      .attr('data-unit', mapped)
+      .attr('data-st', st)
+            .attr('pointer-events', 'none');
           const p = dg.append('path')
             .attr('class','district')
-            .attr('d', window.mapPath(f))
+            .attr('id', `district-${mapped}`)
+            .attr('d', dStr)
             .attr('clip-path', clip)
-            .attr('fill', 'transparent')
-            .attr('stroke', '#444')
-            .attr('stroke-width', 0.6)
+      .attr('fill', 'transparent')
+      .attr('stroke', '#BBBBBB')
+      .attr('stroke-width', 1.2)
+      .attr('stroke-linejoin', 'round')
+      .attr('stroke-linecap', 'round')
+      .attr('data-unit', mapped)
+      .attr('data-st', st)
             .attr('pointer-events', 'none');
-          window._districtPaths.set(unit, p);
+          window._districtPaths.set(mapped, p);
         });
+        // Build an SVG mask to stop NE-03 from painting over NE-02/NE-01 if geometries overlap
+        try {
+          const ne03 = districtDByUnit.get('NE-03');
+          if (ne03) {
+            const m = defs.select('#mask-NE-03').empty() ? defs.append('mask').attr('id','mask-NE-03') : defs.select('#mask-NE-03');
+            m.attr('maskUnits','userSpaceOnUse')
+             .attr('x', 0).attr('y', 0)
+             .attr('width', 975).attr('height', 610);
+            m.selectAll('*').remove();
+            m.append('rect').attr('x',0).attr('y',0).attr('width',975).attr('height',610).attr('fill','#fff');
+            const cut02 = districtDByUnit.get('NE-02');
+            const cut01 = districtDByUnit.get('NE-01');
+            if (cut02) m.append('path').attr('d', cut02).attr('fill', '#000');
+            if (cut01) m.append('path').attr('d', cut01).attr('fill', '#000');
+            // apply mask to NE-03 district and halo
+            const p03 = window._districtPaths.get('NE-03');
+            if (p03) p03.attr('mask', 'url(#mask-NE-03)');
+            const h03 = d3.select(`#halo-NE-03`);
+            if (!h03.empty()) h03.attr('mask', 'url(#mask-NE-03)');
+          }
+        } catch(e) { /* masking optional */ }
+    // apply initial colors now that district paths exist
+    try { updateAll(); } catch(e) {}
       } catch (e) {
         console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
       }
@@ -195,22 +279,66 @@ TESTER_JS = r"""
     // clear any prior mappings
     stopToEff.clear();
     stopToUnits.clear();
+    // Predefine effective values for EVEN and Actual stops
+    stopToEff.set(0, 0 + EPS); // EVEN nudges to D side to break ties deterministically
+    if (isFinite(nat)) stopToEff.set(nat, nat); // Actual = exactly national
     arr.forEach(r => {
       const val = -(+r.rm || 0);
-      if (isFinite(val) && Math.abs(val) <= cap) {
+      // ignore national rows in per-state stop derivation to avoid 'NATIONAL' showing beside EVEN
+      if ((r.unit === 'NATIONAL' || r.unit === 'NAT')) return;
+      // For 1968 third-party states (SPECIAL_1968 + TN), do not add the naive -relative_margin stop
+      let allowNaive = true;
+      if (year === 1968) {
+        const st = (r.unit || '').slice(0,2);
+        if (st && (st === 'TN' || (Array.isArray(SPECIAL_1968) && SPECIAL_1968.indexOf(st) !== -1))) {
+          allowNaive = false;
+        }
+      }
+      if (allowNaive && isFinite(val) && Math.abs(val) <= cap) {
         stopsSet.add(val);
         const prev = stopToUnits.get(val) || [];
         prev.push(r.unit);
         stopToUnits.set(val, prev);
+        // For naive flip stops, nudge to D side so clicking the stop flips the state to D
+        if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
+      }
+      // For 1968 only: add third-party tipping thresholds where applicable (t >= 1/3)
+      if (year === 1968) {
+        const t = +r.tp || 0;
+        const a = 3*t - 1; // width from center to each threshold
+        if (a > 0 && isFinite(a)) {
+          const rVal = +(r.rm || 0);
+          const nD = -rVal + a;
+          const nR = -rVal - a;
+          if (isFinite(nD) && Math.abs(nD) <= cap) {
+            stopsSet.add(nD);
+            const pv = stopToUnits.get(nD) || [];
+            pv.push(r.unit);
+            stopToUnits.set(nD, pv);
+            // Upper boundary: nudge just inside the yellow window
+            sgn = Math.sign(nD + nat);
+            if (!stopToEff.has(nD)) stopToEff.set(nD, nD + 2 * sgn * EPS);
+          }
+          if (isFinite(nR) && Math.abs(nR) <= cap) {
+            stopsSet.add(nR);
+            const pv = stopToUnits.get(nR) || [];
+            pv.push(r.unit);
+            stopToUnits.set(nR, pv);
+            // Lower boundary: nudge just inside the yellow window
+            sgn = Math.sign(nR + nat);
+            if (!stopToEff.has(nR)) stopToEff.set(nR, nR + 2 * sgn * EPS);
+          }
+        }
       }
     });
     const stops = Array.from(stopsSet).sort((a,b)=>a-b);
-    // compute effective test value for each stop as stop + EPS in the stop's direction
+    // Ensure every stop has an effective value (keep any precomputed ones)
     for (let i=0;i<stops.length;i++){
       const s = stops[i];
-      const sgn = (s === 0) ? 1 : Math.sign(s - nat);
-      const eff = s + EPS * sgn;
-      stopToEff.set(s, eff);
+      if (!stopToEff.has(s)) {
+        // default: nudge toward D side
+        stopToEff.set(s, s + EPS);
+      }
     }
     // store stops for the year so the slider can index into them
     stopsByYear.set(year, stops);
@@ -220,9 +348,15 @@ TESTER_JS = r"""
       if (s) s.setAttribute('list', 'pvStopsList');
     }
     if (container){
+      const nat = getNatMargin(year);
       container.innerHTML = 'Stops: ' + stops.map((v,i) => {
-        const units = (stopToUnits.get(v) || []).slice(0,3).map(u=>u.slice(0,5)).join(',');
-        const label = units ? `${leanStr(v)} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : leanStr(v);
+        // label rules: 0 => EVEN (no units), nat => Actual (no units), others => leanStr + small unit list
+        const isEven = Math.abs(v) < 1e-12;
+        const isNat = Math.abs(v - nat) < 1e-12;
+        const unitsRaw = (stopToUnits.get(v) || []).filter(u => u !== 'NATIONAL' && u !== 'NAT');
+        const units = (isEven || isNat) ? '' : unitsRaw.slice(0,3).map(u=>u.slice(0,5)).join(',');
+        const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
+        const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
         return `<span class="btn" style="padding:4px 6px;margin:2px" data-idx="${i}">${label}</span>`;
       }).join('');
       container.querySelectorAll('span.btn').forEach((el) => {
@@ -265,7 +399,9 @@ TESTER_JS = r"""
   if (defaultIdx === -1) defaultIdx = 0;
   pvSlider.value = String(defaultIdx);
   const curStop = stops[defaultIdx] || 0;
-  pvVal.textContent = leanStr(stopToEff.get(curStop) || curStop);
+  const nat = getNatMargin(y);
+  const curEff = stopToEff.get(curStop) || (curStop + EPS * (curStop === 0 ? 1 : Math.sign(curStop - nat)));
+  pvVal.textContent = (Math.abs(curStop - nat) < STOP_EPS ? 'Actual ' : '') + leanStr(curEff);
   // set up datalist and stop chips
   buildPvStops(y, pvStops, pvStopsList);
     updateAll();
@@ -277,6 +413,21 @@ TESTER_JS = r"""
     if (!yearEl || !pvEl) return;
     const year = +yearEl.value;
     document.getElementById('yearVal').textContent = year;
+  // If the year changed since last render, rebuild stops and default PV to national stop
+  try {
+    if (window._prevYear !== year) {
+      const pvStops = document.getElementById('pvStops');
+      const pvStopsList = document.getElementById('pvStopsList');
+      buildPvStops(year, pvStops, pvStopsList);
+      const stopsNow = stopsByYear.get(year) || [0];
+      const natNow = getNatMargin(year);
+      let idx = stopsNow.findIndex(v => Math.abs(v - natNow) <= STOP_EPS);
+      if (idx < 0) idx = stopsNow.findIndex(v => Math.abs(v) <= STOP_EPS);
+      if (idx < 0) idx = 0;
+      pvEl.min = 0; pvEl.max = Math.max(0, stopsNow.length - 1); pvEl.step = 1; pvEl.value = String(idx);
+      window._prevYear = year;
+    }
+  } catch(e) {}
   // pvSlider is now an index into the stops array
   const nat = getNatMargin(year);
   const pvIndex = +pvEl.value;
@@ -287,24 +438,33 @@ TESTER_JS = r"""
     const matches = [];
     (byYear.get(year) || []).forEach(r => {
       const unit = r.unit; if (!unit || unit === 'NATIONAL') return;
-      const stop = -(+r.rm || 0);
-      let eff = stopToEff.get(stop);
-      if (eff == null || !isFinite(eff)) {
-        const nat = getNatMargin(year);
-        const sgn = (stop === 0) ? 1 : Math.sign(stop + nat);
-        eff = stop - EPS * sgn;
+      const stopsForUnit = [];
+      if (year === 1968) {
+        const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
+        if (a > 0) { stopsForUnit.push(-rVal - a, -rVal + a); }
+        else { stopsForUnit.push(-(+r.rm || 0)); }
+      } else {
+        stopsForUnit.push(-(+r.rm || 0));
       }
-      if (isFinite(stop) && Math.abs(pv - eff) <= STOP_EPS) matches.push(unit.slice(0,2));
+      for (const s of stopsForUnit) {
+        const eff = stopToEff.get(s);
+        if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
+          matches.push(unit.slice(0,2));
+          break;
+        }
+      }
     });
-    const matchLabel = matches.length ? ' (' + (matches.slice(0,6).join(',') + (matches.length>6 ? '…' : '')) + ')' : '';
-    document.getElementById('pvVal').textContent = leanStr(pv) + matchLabel;
+  const showNat = Math.abs(stopVal - nat) <= STOP_EPS;
+  const matchLabel = (Math.abs(stopVal) < STOP_EPS) ? '' : (matches.length ? ' (' + (matches.slice(0,6).join(',') + (matches.length>6 ? '…' : '')) + ')' : '');
+  document.getElementById('pvVal').textContent = (showNat ? 'Actual ' : '') + leanStr(pv) + matchLabel;
 
     buildPvStops(year, document.getElementById('pvStops'), document.getElementById('pvStopsList'));
 
   const arr = byYear.get(year) || [];
   const abbrColors = new Map();
   const unitColors = new Map();
-  let dEV = 0, rEV = 0;
+  const unitParties = new Map(); // unit -> 'Blue'|'Red'|'Even'
+  let dEV = 0, rEV = 0, oEV = 0;
   arr.forEach(r => {
       const unit = r.unit;
       if (!unit || unit === 'NATIONAL') return;
@@ -315,17 +475,59 @@ TESTER_JS = r"""
         ev = (+r.ev);
         if (!isFinite(ev)) ev = 0;
       }
-      if (m > EPS) dEV += ev; else if (m < -EPS) rEV += ev;
+  // Count EVs, ensuring the tipping-point state is included (no black sliver)
+  // Third-party EV handling for 1968: classify as Other when PV is strictly within the yellow window
+  let counted = false;
+  if (year === 1968) {
+    const t = +r.tp || 0;
+    const a = 3*t - 1;
+    if (a > 0) {
+      const rVal = +(r.rm || 0);
+      const nD = -rVal + a;
+      const nR = -rVal - a;
+      if (pv > nR + EPS && pv < nD - EPS) {
+        if (!isNaN(ev)) oEV += ev; // Other wins here
+        counted = true;
+      }
+    }
+  }
+  if (!counted) {
+    if (m > 0) {
+      dEV += ev;
+    } else if (m < 0) {
+      rEV += ev;
+    } else {
+      // On an exact stop, classify by the sign of (stopVal - nat): if stop is to D side, include as D, else as R
+      const side = Math.sign((stopVal || 0) - (nat || 0));
+      if (side >= 0) dEV += ev; else rEV += ev;
+    }
+  }
       const st = unit.slice(0,2);
       const prev = abbrColors.get(st);
-      // Special handling for 1968 Wallace states: color them yellow by default
-      let color = marginToColor(m);
-      if (year === 1968 && Array.isArray(SPECIAL_1968) && SPECIAL_1968.indexOf(st) !== -1) {
-        color = '#FFD700';
+      // 1968 special pluralities: dynamic yellow window using third-party share
+      let color;
+      if (year === 1968) {
+        const t = +r.tp || 0;
+        const a = 3*t - 1;
+        if (a > 0) {
+          const rVal = +(r.rm || 0);
+          const nD = -rVal + a - EPS;
+          const nR = -rVal - a + EPS;
+          if (pv > nR + EPS && pv < nD - EPS) {
+            color = '#FFD700'; // yellow within the window
+          } else {
+            color = marginToColor(m);
+          }
+        } else {
+          color = marginToColor(m);
+        }
+      } else {
+        color = marginToColor(m);
       }
   if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
-  // store per-unit color so district polygons can be filled individually
+  // store per-unit color and party label so district polygons can be filled individually
   unitColors.set(unit, color);
+  unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
     });
 
     d3.selectAll('path.state').each(function(d){
@@ -344,7 +546,7 @@ TESTER_JS = r"""
       console.log('tester debug state fill counts:', counts);
     } catch (e) {}
 
-    // color district polygons (ME/NE) if overlay loaded
+  // color district polygons (ME/NE) if overlay loaded
     if (window._districtPaths) {
       try {
         // debug: log PV/stop and computed color maps to help trace fill leakage
@@ -352,17 +554,33 @@ TESTER_JS = r"""
         try { console.log('tester debug abbrColors', Object.fromEntries(abbrColors.entries())); } catch(e){}
         try { console.log('tester debug unitColors', Object.fromEntries(unitColors.entries())); } catch(e){}
 
-        // build a plain object of expected colors for districts
+        // build plain objects for expected district colors and labels for debugging
         try {
-          const expected = {};
-          window._districtPaths.forEach((pSel, unit) => { expected[unit] = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : null); });
+          const expected = {}, labels = {};
+          window._districtPaths.forEach((pSel, unit) => {
+            expected[unit] = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : null);
+            labels[unit] = unitParties.get(unit) || (abbrColors.get(unit.slice(0,2)) ? ((abbrColors.get(unit.slice(0,2)).m > 0) ? 'Blue' : (abbrColors.get(unit.slice(0,2)).m < 0 ? 'Red' : 'Even')) : null);
+          });
           console.log('ME/NE expected district colors:', expected);
+          console.log('ME/NE expected district parties:', labels);
         } catch (e) { /* ignore logging errors */ }
 
+        // Show/hide districts based on year availability
+        const showME = year >= 1972;
+        const showNE = year >= 1992;
+        // Update both fill and visibility
         window._districtPaths.forEach((pSel, unit) => {
           // unit is expected like 'ME-01' or 'NE-02'
           const ucolor = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : 'transparent');
-          try { pSel.attr('fill', ucolor); /* keep pointer-events disabled so districts don't intercept map hover/clicks */ } catch(e) {}
+          const st = unit.slice(0,2);
+          const visible = (st === 'ME' ? showME : (st === 'NE' ? showNE : true));
+          try {
+            pSel.attr('fill', ucolor)
+                .attr('display', visible ? null : 'none');
+            // also toggle the matching halo
+            const halo = pSel.node && pSel.node().previousSibling;
+            if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
+          } catch(e) {}
           // log the actual fill attribute after applying it and the path bbox for size debugging
           try {
             const real = pSel.node ? pSel.node().getAttribute('fill') : null;
@@ -370,18 +588,58 @@ TESTER_JS = r"""
             console.log('tester debug applied district fill', unit, ucolor, real, bbox && {x:bbox.x,y:bbox.y,w:bbox.width,h:bbox.height});
           } catch(e) {}
         });
+        // After coloring, explicitly order NE districts to avoid overlap issues: 01 below, 02 on top, 03 beneath both
+        try {
+          const sel01 = window._districtPaths.get('NE-01');
+          const sel02 = window._districtPaths.get('NE-02');
+          const sel03 = window._districtPaths.get('NE-03');
+          // Only adjust when NE is shown
+          const showNE = year >= 1992;
+          if (showNE) {
+            // Move 03 to bottom among NE by re-appending 01 and 02 after
+            if (sel01 && sel01.node && sel01.node()) sel01.raise();
+            if (sel02 && sel02.node && sel02.node()) sel02.raise();
+            // Ensure halos accompany their paths: re-append halo then path
+            const reappendWithHalo = (sel, unit) => {
+              if (!sel) return;
+              const node = sel.node && sel.node();
+              const halo = node ? node.previousSibling : null;
+              if (halo && halo.parentNode) {
+                halo.parentNode.appendChild(halo);
+                halo.parentNode.appendChild(node);
+              } else if (sel.raise) {
+                sel.raise();
+              }
+            };
+            reappendWithHalo(sel01, 'NE-01');
+            reappendWithHalo(sel02, 'NE-02');
+          }
+        } catch(e) {}
       } catch (e) { /* ignore */ }
     }
 
-    const totalEV = 538;
-    const dPct = Math.max(0, Math.min(100, dEV/totalEV*100));
-    const rPct = Math.max(0, Math.min(100, rEV/totalEV*100));
-    const dEl = document.getElementById('evFillD');
-    const rEl = document.getElementById('evFillR');
-    if (dEl) dEl.style.width = `${dPct}%`;
-    if (rEl) rEl.style.width = `${rPct}%`;
-    const evText = document.getElementById('evText');
-    if (evText) evText.textContent = `${dEV} - ${rEV}`;
+  const totalEV = 538;
+  // clamp and ensure sum displays correctly
+  const dPct = Math.max(0, Math.min(100, dEV/totalEV*100));
+  const oPct = Math.max(0, Math.min(100, oEV/totalEV*100));
+  const rPct = Math.max(0, Math.min(100, rEV/totalEV*100));
+  const dEl = document.getElementById('evFillD');
+  const oEl = document.getElementById('evFillO');
+  const rEl = document.getElementById('evFillR');
+  if (dEl) dEl.style.width = `${dPct}%`;
+  if (oEl) {
+    if (year === 1968) {
+      oEl.style.left = `${dPct}%`;
+      oEl.style.width = `${oPct}%`;
+      oEl.style.display = '';
+    } else {
+      oEl.style.width = '0%';
+      oEl.style.display = 'none';
+    }
+  }
+  if (rEl) rEl.style.width = `${rPct}%`;
+  const evText = document.getElementById('evText');
+  if (evText) evText.textContent = (year === 1968) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
   }
 })();
 """
@@ -483,7 +741,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .attr("stroke-width", 0.8)
       .attr("tabindex", 0)
       /* On hover: pick a bright blue or red depending on the current fill and restore it on mouseout */
-      .on("mouseover", function() {
+    .on("mouseover", function() {
         const sel = d3.select(this);
         const cur = sel.attr('fill') || '#2f2f2f';
         // stash the original fill so we can restore it on mouseout
@@ -493,8 +751,9 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
           const r = parseInt(hex.slice(0,2),16) || 0;
           const g = parseInt(hex.slice(2,4),16) || 0;
           const b = parseInt(hex.slice(4,6),16) || 0;
-          // if the color is redder than bluer, use a bright red, otherwise bright blue
-          const highlight = (r > b) ? '#ff6666' : '#66b3ff';
+      // if it's already yellow (1968 plurality), keep yellow; else if the color is redder than bluer, use bright red, otherwise bright blue
+      const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
+      const highlight = isYellow ? '#FFD700' : ((r > b) ? '#ff6666' : '#66b3ff');
           sel.attr('fill', highlight);
         } catch (e) {
           sel.attr('fill', '#66b3ff');
@@ -902,19 +1161,29 @@ def make_index(states_sorted):
             <span id="yearVal" style="margin-left:8px">2024</span>
           </div>
           <div>
-            <label for="pvSlider">PV (Nat. Margin):</label>
-            <!-- discrete slider: index of the current stop; min/max set by script -->
-            <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" />
-            <span id="pvVal" style="margin-left:8px">EVEN</span>
+            <div style="display:flex;gap:10px;align-items:center">
+              <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
+              <!-- discrete slider: index of the current stop; min/max set by script -->
+              <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
+              <span id="pvVal" style="width:120px;text-align:left">EVEN</span>
+            </div>
             <datalist id="pvStopsList"></datalist>
           </div>
           <div id="evBar" style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111">
             <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+            <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
             <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
             <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
-            <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--muted);font-weight:600">0 - 0</div>
+            <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--muted);font-weight:600">D 0 | O 0 | R 0</div>
           </div>
           <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
+          <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">
+            <strong>How this works:</strong> We measure a state's relative margin as the difference between its presidential margin and the national presidential margin. A state with a relative margin of +5% is 5 points more Democratic than the nation as a whole, while a state with -3% is 3 points more Republican than the nation. By shifting the national presidential margin (PV) we can estimate how many electoral votes each party would win if the national popular vote were different. The EV bar above shows the estimated electoral vote split for the selected PV.<br/><br/>
+            We have capped the maximum PV shift to ±{cap_pct}% to avoid unrealistic scenarios (the days of a 20-point landslide are long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin.<br/><br/>
+            <em>Note:</em> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist.<br/><br/>
+            <em>Note on 1968:</em> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win.<br/>
+            While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points.  
+          </div>
         </div>
       </div>
     '''
