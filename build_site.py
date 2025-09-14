@@ -27,7 +27,7 @@ LAST_UPDATED = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC"
 
 FOOTER_TEXT = f"""Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to through discord: eigentaylor ·"""
+Please report any innaccuracies to me through discord: eigentaylor ·"""
 # Special thanks to Kiernan Park-Egan for providing Kenneth Black's congressional district presidential data.<br />
 
 # HTML templates (dark theme for comfy eyes)
