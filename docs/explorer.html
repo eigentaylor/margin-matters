@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>State Trends • Explorer</title>
+  <link rel="icon" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    :root{--bg:#0b0b0b;--fg:#f5f5f5;--muted:#a5a5a5;--accent:#66b3ff;--card:#141414;--border:#2a2a2a}
+    body{background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial}
+    a{color:var(--accent)}
+    .container{max-width:1200px;margin:0 auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .controls{display:grid;grid-template-columns:repeat(4, minmax(160px,1fr));gap:12px;align-items:end}
+    .controls .field{display:flex;flex-direction:column;gap:6px}
+    .controls label{font-size:.9rem;color:var(--muted)}
+    .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+    .badge{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;color:var(--muted)}
+    #chart{width:100%;height:560px}
+    .tooltip{position:fixed;pointer-events:none;background:#111;border:1px solid var(--border);padding:8px 10px;border-radius:8px;color:var(--fg);font-size:.95rem;opacity:0;transform:translateY(-6px);transition:opacity .12s ease, transform .12s ease}
+    .legend{display:flex;gap:10px;align-items:center;margin-top:8px;color:var(--muted)}
+    .legend .sw{width:14px;height:14px;border-radius:4px;border:1px solid var(--border)}
+    .legend .lab{font-size:.9rem}
+    .spacer{height:6px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" style="margin-bottom:12px">
+      <div class="row" style="justify-content:space-between">
+        <h1 style="margin:0;font-size:1.25rem">Interactive Explorer</h1>
+        <div class="row">
+          <a class="badge" href="./index.html">Back to site</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+      <div class="controls">
+        <div class="field">
+          <label for="stateSel">State</label>
+          <select id="stateSel"></select>
+        </div>
+        <div class="field">
+          <label for="metricSel">Metric</label>
+          <select id="metricSel">
+            <option value="margin" selected>Margin</option>
+            <option value="thirdParty">Third-Party Share</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="chartSel">Chart type</label>
+          <select id="chartSel">
+            <option value="auto" selected>Auto</option>
+            <option value="line">Line</option>
+            <option value="bar">Bar</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Options</label>
+          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="relativeChk" /> Relative</label>
+          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="deltaChk" /> Delta</label>
+          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="twoPartyChk" /> Two-party</label>
+        </div>
+        <div class="field">
+          <label>Display</label>
+          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="natOverlay" /> National overlay</label>
+          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pointsToggle" checked /> Show points</label>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="legend" id="legend">
+        <div class="row" style="gap:14px;align-items:center">
+          <div class="row" style="gap:8px;align-items:center"><div class="sw" style="background:#4ade80"></div><div class="lab">State</div></div>
+          <div class="row" style="gap:8px;align-items:center"><div class="sw" style="background:#f472b6"></div><div class="lab">National</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="chart"></div>
+      <div id="notes" style="margin-top:8px;color:var(--muted);font-size:.92rem"></div>
+    </div>
+
+    <footer style="margin-top:16px;color:var(--muted)">
+      This experimental page doesn’t affect the main site. When it’s ready, we can integrate it into the build.
+    </footer>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="./explorer.js"></script>
+</body>
+</html>

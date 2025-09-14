@@ -99,8 +99,10 @@ TESTER_JS = r"""
     if (m <= -0.20) return '#8B0000';
     if (m <= -0.12) return '#B22222';
     if (m <= -0.06) return '#CD5C5C';
-    if (m < 0) return '#F08080';
-    if (m === 0) return '#C3B1E1';
+    if (m < -0.01) return '#F08080';
+    if (m < 0) return '#FFC0CB';
+    if (m === 0) return '#FFFFFF';
+    if (m < 0.01) return '#acc9dcff';
     if (m < 0.06) return '#87CEFA';
     if (m < 0.12) return '#6495ED';
     if (m < 0.20) return '#4169E1';

@@ -3,7 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["LA", "AL", "AR", "MS", "GA"];
+  const SPECIAL_1968 = ["GA", "MS", "LA", "AR", "AL"];
 
   function leanStr(x){
     if (!isFinite(x)) return '';
@@ -16,8 +16,10 @@
     if (m <= -0.20) return '#8B0000';
     if (m <= -0.12) return '#B22222';
     if (m <= -0.06) return '#CD5C5C';
-    if (m < 0) return '#F08080';
-    if (m === 0) return '#C3B1E1';
+    if (m < -0.01) return '#F08080';
+    if (m < 0) return '#FFC0CB';
+    if (m === 0) return '#FFFFFF';
+    if (m < 0.01) return '#acc9dcff';
     if (m < 0.06) return '#87CEFA';
     if (m < 0.12) return '#6495ED';
     if (m < 0.20) return '#4169E1';
