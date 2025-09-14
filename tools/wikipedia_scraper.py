@@ -175,7 +175,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
     if year == 1968 or year == 1992:
         pass # something weird is happening in these years
     
-    if year == 1984:
+    if year == 2012:
         pass # something weird is happening in this year
     
     # Analyze header to understand column structure
@@ -211,6 +211,8 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             state_name = state_name.split('Tooltip')[0].strip()
             # remove † or * symbol if it exists
             state_name = state_name.replace('†', '').replace('*', '').strip()
+            if 'district of columbia' in state_name.lower():
+                state_name = 'District of Columbia'
 
             # use total row as NATIONAL
             if (state_name.lower() in ['total', 'totals', 'nationwide'] or

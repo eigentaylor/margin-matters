@@ -11,3 +11,4 @@ statsmodels>=0.14
 openpyxl>=3.1
 lxml>=4.9.2
 beautifulsoup4>=4.12
+geopandas>=0.14
