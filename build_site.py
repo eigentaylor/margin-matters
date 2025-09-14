@@ -62,6 +62,9 @@ thead th:last-child, tbody td:last-child {border-right: none}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}
 .center{text-align:center}
+/* EV text: make large, readable on dark backgrounds with stroke and shadow */
+#evText{position:relative;color:var(--fg);font-weight:800;padding:2px 8px;border-radius:6px;background:rgba(0,0,0,0.45);font-variant-numeric:tabular-nums}
+#evText{ -webkit-text-stroke:1px rgba(0,0,0,0.8);}
 /* Persistent site header that stays at the top while scrolling */
 .site-header{position:sticky;top:0;z-index:1100;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);margin-bottom:12px;border-radius:10px}
 .card.site-header{padding:8px}
@@ -615,10 +618,10 @@ INDEX_HTML = r"""<!doctype html>
       <a class="btn" href="index.html">Home</a>
       <a class="btn" href="ranker.html">Ranker</a>
     </div>
-    <div class="legend">U.S. Presidential Election State Results 1968-2024</div>
+    <div class="legend">U.S. Presidential Election State Results %YEAR_RANGE%</div>
   </div>
   <div class="header">
-    <h1>U.S. Presidential Election State Results 1968-2024</h1>
+  <h1>U.S. Presidential Election State Results %YEAR_RANGE%</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
   <div class="grid">
@@ -1081,7 +1084,7 @@ def write_text(path: Path, text: str):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
 
-def make_index(states_sorted):
+def make_index(states_sorted, rows=None):
   # Build categorized state links in 4 columns for easier navigation
   # Use params.ABBR_TO_STATE to get full names and sort alphabetically by state name
   state_items = sorted([(abbr, str(params.ABBR_TO_STATE.get(abbr) or abbr)) for abbr in states_sorted], key=lambda x: x[0])
@@ -1102,6 +1105,25 @@ def make_index(states_sorted):
   html = html.replace("%STATE_LINKS%", state_links_html)
   html = html.replace("%LAST_UPDATED%", LAST_UPDATED)
   html = html.replace("%FOOTER_TEXT%", FOOTER_TEXT)
+  # Determine year range for display and tester slider bounds
+  min_year = None
+  max_year = None
+  if rows:
+    for r in rows:
+      try:
+        y = int(r.get('year', 0))
+      except Exception:
+        continue
+      if min_year is None or y < min_year:
+        min_year = y
+      if max_year is None or y > max_year:
+        max_year = y
+  if min_year is None:
+    min_year = 1968
+  if max_year is None:
+    max_year = 2024
+  year_range = f"{min_year}-{max_year}"
+  html = html.replace("%YEAR_RANGE%", year_range)
   # Inject optional tester UI and scripts
   if getattr(params, "INTERACTIVE_TESTER", False):
     cap_pct = int(round(float(getattr(params, 'TESTER_PV_CAP', 0.25)) * 100))
@@ -1110,9 +1132,9 @@ def make_index(states_sorted):
       <div id="tester" class="center" style="margin-top:8px">
         <div style="display:grid;gap:10px">
           <div>
-            <label for="yearSlider">Year:</label>
-            <input id="yearSlider" type="range" min="1968" max="2024" step="4" value="2024" />
-            <span id="yearVal" style="margin-left:8px">2024</span>
+      <label for="yearSlider">Year:</label>
+      <input id="yearSlider" type="range" min="%MIN_YEAR%" max="%MAX_YEAR%" step="4" value="%MAX_YEAR%" />
+            <span id="yearVal" style="margin-left:8px">%MAX_YEAR%</span>
           </div>
           <div>
             <div style="display:flex;gap:10px;align-items:center">
@@ -1128,7 +1150,7 @@ def make_index(states_sorted):
             <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
             <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
             <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
-            <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--muted);font-weight:600">D 0 | O 0 | R 0</div>
+            <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">D 0 | O 0 | R 0</div>
           </div>
           <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
           <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">
@@ -1142,6 +1164,8 @@ def make_index(states_sorted):
       </div>
     '''
     tester_scripts = '<script src="tester.js"></script>'
+    # substitute numeric bounds into the tester UI
+    tester_ui = tester_ui.replace('%MIN_YEAR%', str(min_year)).replace('%MAX_YEAR%', str(max_year))
   else:
     tester_ui = ''
     tester_scripts = ''
@@ -1431,7 +1455,7 @@ def main():
 
   rows = read_csv(CSV_PATH)
   states = build_pages(rows)
-  make_index(states)
+  make_index(states, rows)
   # When interactive tester enabled, write tester.js and copy CSV data for client-side JS
   if getattr(params, "INTERACTIVE_TESTER", False):
     # Write tester.js into docs (inject PV cap)

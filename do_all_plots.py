@@ -11,9 +11,6 @@ import pandas as pd
 import utils
 from params import SPECIAL_1968_STATES
 
-
-
-
 def _color_by_sign(values: np.ndarray, years: np.ndarray, state: str, positive_color="deepskyblue", negative_color="red",
                    special_year: int | None = None, special_color="yellow") -> List[str]:
     colors: List[str] = []
