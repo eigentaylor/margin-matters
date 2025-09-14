@@ -3,7 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["MS", "AR", "AL", "LA", "GA"];
+  const SPECIAL_1968 = ["GA", "AR", "MS", "AL", "LA"];
 
   function leanStr(x){
     if (!isFinite(x)) return '';
@@ -229,7 +229,7 @@
         prev.push(r.unit);
         stopToUnits.set(val, prev);
         // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
-        sgn = Math.sign(val + nat);
+        sgn = Math.sign(val - nat);
         if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
       }
       // For 1968 only: add third-party tipping thresholds where applicable (t >= 1/3)

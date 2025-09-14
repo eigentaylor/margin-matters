@@ -309,7 +309,7 @@ TESTER_JS = r"""
         prev.push(r.unit);
         stopToUnits.set(val, prev);
         // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
-        sgn = Math.sign(val + nat);
+        sgn = Math.sign(val - nat);
         if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
       }
       // For 1968 only: add third-party tipping thresholds where applicable (t >= 1/3)

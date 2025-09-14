@@ -36,7 +36,7 @@ def get_state_code(state_name):
         'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
         'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
         'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY',
-        'district of columbia': 'DC', 'washington, d.c.': 'DC', 'washington d.c.': 'DC', "d.c.": "DC",
+        'district of columbia': 'DC', 'washington, d.c.': 'DC', 'washington d.c.': 'DC', "d.c.": "DC", "d. c.": "DC",
         "me-1": "ME-01", "me-2": "ME-02", "ne-1": "NE-01", "ne-2": "NE-02", "ne-3": "NE-03",
         "national": "NATIONAL"
     }
@@ -63,7 +63,8 @@ def get_candidate_parties(year):
         1980: (['reagan'], ['carter']),
         1976: (['ford'], ['carter']),
         1972: (['nixon'], ['mcgovern']),
-        1968: (['nixon'], ['humphrey'])
+        1968: (['nixon'], ['humphrey']),
+        1964: (['goldwater'], ['johnson']),
     }
     
     return candidates.get(year, (['republican'], ['democratic']))
@@ -234,7 +235,10 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             
             # Extract vote counts
             r_votes = clean_number(cells[header_info['r_col']].get_text())
-            d_votes = clean_number(cells[header_info['d_col']].get_text())
+            if state_code == 'AL' and 1960 <= year <= 1964:
+                d_votes = clean_number(cells[8].get_text()) # unpledged electors column
+            else:
+                d_votes = clean_number(cells[header_info['d_col']].get_text())
             
             # Try to get total votes
             total_votes = 0
@@ -274,22 +278,6 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             }
             
             election_data.append(record)
-            # Detect national total row (commonly contains '538' for electoral votes)
-            # try:
-            #     row_text = row.get_text()
-            #     if '538' in row_text or re.search(r'\b538\b', row_text):
-            #         # Record national totals separately
-            #         national_row_found = {
-            #             'year': year,
-            #             'abbr': 'NATIONAL',
-            #             #'district': 'AL',
-            #             'D_votes': d_votes,
-            #             'R_votes': r_votes,
-            #             'T_votes': t_votes,
-            #             'total_votes': total_votes,
-            #         }
-            # except Exception:
-            #     pass
             
         except Exception as e:
             print(f"    Warning: error parsing row: {e}")
@@ -501,11 +489,14 @@ def main():
     # Define years to scrape
     # Start with recent years that are most likely to work
     priority_years = [2020, 2016, 2012, 2008, 2004, 2000]
-    all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968]
+    START_YEAR = 1964
+    END_YEAR = 2024
+    all_years = list(range(END_YEAR, START_YEAR - 1, -4))
+    #all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968, 1964]
     
     print("Which years would you like to scrape?")
     print("1. Priority years (2000-2020) - most reliable")
-    print("2. All years (1968-2024) - comprehensive but may have some failures")
+    print(f"2. All years ({START_YEAR}-{END_YEAR}) - comprehensive but may have some failures")
     print("3. Custom range")
     
     choice = input("Enter choice (1/2/3): ").strip()
@@ -528,7 +519,7 @@ def main():
     result_df = scrape_multiple_years(years_to_scrape)
     
     if result_df is not None:
-        print(f"\n🎉 SUCCESS! Wikipedia data is ready for comparison with Kenneth Black dataset.")
+        print(f"\n🎉 SUCCESS!")# Wikipedia data is ready for comparison with Kenneth Black dataset.")
         print(f"💡 You can now cross-validate the datasets to find discrepancies.")
     else:
         print(f"\n❌ Scraping failed. Check your internet connection and try again.")
