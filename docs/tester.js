@@ -3,7 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["AL", "MS", "AR", "LA", "GA"];
+  const SPECIAL_1968 = ["GA", "MS", "LA", "AR", "AL"];
 
   function leanStr(x){
     if (!isFinite(x)) return '';
@@ -460,14 +460,28 @@
   unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
     });
 
-    d3.selectAll('path.state').each(function(d){
-      const id = String(d.id).padStart(2,'0');
-      const map = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
-      const abbr = map[id];
-      const entry = abbrColors.get(abbr);
-      const fill = entry ? entry.color : '#2f2f2f';
-      d3.select(this).attr('fill', fill);
-    });
+    // Use smooth transitions for state fills
+    (function(){
+      const idToAbbr = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+      d3.selectAll('path.state').each(function(d){
+        const id = String(d.id).padStart(2,'0');
+        const abbr = idToAbbr[id];
+        const entry = abbrColors.get(abbr);
+        const fill = entry ? entry.color : '#2f2f2f';
+        // transition to new color
+        try {
+          d3.select(this)
+            .transition()
+            .duration(450)
+            .attrTween('fill', function(){
+              const current = d3.select(this).attr('fill') || '#2f2f2f';
+              return d3.interpolateRgb(current, fill);
+            });
+        } catch(e) {
+          d3.select(this).attr('fill', fill);
+        }
+      });
+    })();
 
   // color district polygons (ME/NE) if overlay loaded
     if (window._districtPaths) {
@@ -478,15 +492,27 @@
         // Update both fill and visibility
         window._districtPaths.forEach((pSel, unit) => {
           // unit is expected like 'ME-01' or 'NE-02'
-          const ucolor = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : 'transparent');
-          const st = unit.slice(0,2);
+          const stateAbbr = unit.slice(0,2);
+          const atLargeEntry = abbrColors.get(stateAbbr);
+          const atLargeColor = atLargeEntry ? atLargeEntry.color : '#2f2f2f';
+          const ucolor = unitColors.get(unit) || atLargeColor || 'transparent';
+          const st = stateAbbr;
           const visible = (st === 'ME' ? showME : (st === 'NE' ? showNE : true));
           try {
-            pSel.attr('fill', ucolor)
-                .attr('display', visible ? null : 'none');
+            // transition fill color for district polygons
+            try {
+              pSel.transition().duration(400).attrTween('fill', function(){
+                const cur = d3.select(this).attr('fill') || 'transparent';
+                return d3.interpolateRgb(cur, ucolor);
+              });
+            } catch(e){
+              pSel.attr('fill', ucolor);
+            }
+            pSel.attr('display', visible ? null : 'none');
             // also toggle the matching halo
             const halo = pSel.node && pSel.node().previousSibling;
             if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
+
           } catch(e) {}
         });
       } catch (e) { /* ignore */ }

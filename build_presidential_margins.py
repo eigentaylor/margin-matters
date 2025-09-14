@@ -187,9 +187,13 @@ def main():
             if prev_row is not None:
                 D_delta = r['D_votes'] - prev_row.get('D_votes', 0)
                 R_delta = r['R_votes'] - prev_row.get('R_votes', 0)
+                #T_delta = r['T_votes'] - prev_row.get('T_votes', 0)
+                total_delta = r['total_votes'] - prev_row.get('total_votes', 0)
             else:
                 D_delta = 0
                 R_delta = 0
+                #T_delta = 0
+                total_delta = 0
 
             out = {
                 'year': year,
@@ -198,6 +202,8 @@ def main():
                 'R_votes': r['R_votes'],
                 'D_delta': D_delta,
                 'R_delta': R_delta,
+                #'T_delta': T_delta,
+                'total_delta': total_delta,
                 'T_votes': r['T_votes'],
                 'total_votes': r['total_votes'],
                 'electoral_votes': electoral_votes,
@@ -244,7 +250,7 @@ def main():
     # write CSV
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'total_votes', 'electoral_votes',
-        'D_delta', 'R_delta',
+    'D_delta', 'R_delta', 'total_delta',
         'pres_margin', 'pres_margin_delta', 'pres_margin_str', 'pres_margin_delta_str',
         'national_margin', 'national_margin_delta', 'national_margin_str', 'national_margin_delta_str',
         'relative_margin', 'relative_margin_delta', 'relative_margin_str', 'relative_margin_delta_str',

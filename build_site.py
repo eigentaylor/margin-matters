@@ -543,14 +543,28 @@ TESTER_JS = r"""
   unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
     });
 
-    d3.selectAll('path.state').each(function(d){
-      const id = String(d.id).padStart(2,'0');
-      const map = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
-      const abbr = map[id];
-      const entry = abbrColors.get(abbr);
-      const fill = entry ? entry.color : '#2f2f2f';
-      d3.select(this).attr('fill', fill);
-    });
+    // Use smooth transitions for state fills
+    (function(){
+      const idToAbbr = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+      d3.selectAll('path.state').each(function(d){
+        const id = String(d.id).padStart(2,'0');
+        const abbr = idToAbbr[id];
+        const entry = abbrColors.get(abbr);
+        const fill = entry ? entry.color : '#2f2f2f';
+        // transition to new color
+        try {
+          d3.select(this)
+            .transition()
+            .duration(450)
+            .attrTween('fill', function(){
+              const current = d3.select(this).attr('fill') || '#2f2f2f';
+              return d3.interpolateRgb(current, fill);
+            });
+        } catch(e) {
+          d3.select(this).attr('fill', fill);
+        }
+      });
+    })();
 
   // color district polygons (ME/NE) if overlay loaded
     if (window._districtPaths) {
@@ -561,15 +575,27 @@ TESTER_JS = r"""
         // Update both fill and visibility
         window._districtPaths.forEach((pSel, unit) => {
           // unit is expected like 'ME-01' or 'NE-02'
-          const ucolor = unitColors.get(unit) || (abbrColors.get(unit.slice(0,2)) ? abbrColors.get(unit.slice(0,2)).color : 'transparent');
-          const st = unit.slice(0,2);
+          const stateAbbr = unit.slice(0,2);
+          const atLargeEntry = abbrColors.get(stateAbbr);
+          const atLargeColor = atLargeEntry ? atLargeEntry.color : '#2f2f2f';
+          const ucolor = unitColors.get(unit) || atLargeColor || 'transparent';
+          const st = stateAbbr;
           const visible = (st === 'ME' ? showME : (st === 'NE' ? showNE : true));
           try {
-            pSel.attr('fill', ucolor)
-                .attr('display', visible ? null : 'none');
+            // transition fill color for district polygons
+            try {
+              pSel.transition().duration(400).attrTween('fill', function(){
+                const cur = d3.select(this).attr('fill') || 'transparent';
+                return d3.interpolateRgb(cur, ucolor);
+              });
+            } catch(e){
+              pSel.attr('fill', ucolor);
+            }
+            pSel.attr('display', visible ? null : 'none');
             // also toggle the matching halo
             const halo = pSel.node && pSel.node().previousSibling;
             if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
+
           } catch(e) {}
         });
       } catch (e) { /* ignore */ }
@@ -935,22 +961,29 @@ def render_table(rows, cols, two_party=False):
         denom = d_val + r_val + (t_val if t_val is not None else 0)
 
     for c in cols:
-      if c in ("D_votes", "R_votes", "T_votes"):
+      if c in ("D_votes", "R_votes", "T_votes", "total_votes"):
         # format votes with thousands separators when possible
         if c == "D_votes":
           vote_val = d_val
         elif c == "R_votes":
           vote_val = r_val
-        else:
+        elif c == "T_votes":
           vote_val = t_val
+        else:
+          # total_votes: prefer explicit total_votes field, fall back to computed denom
+          tv = parse_int(r.get('total_votes', ''))
+          if tv is None:
+            vote_val = denom if denom is not None else None
+          else:
+            vote_val = tv
 
         if vote_val is None:
           # fallback to original formatting function for non-numeric
           cell = esc(format_value(c, r.get(c, "")))
         else:
           votes_str = f"{vote_val:,}"
-          # compute pct only when denominator > 0
-          if denom and denom > 0:
+          # compute pct for D/R/T only when denominator > 0
+          if c in ("D_votes", "R_votes", "T_votes") and denom and denom > 0:
             pct = (vote_val / denom) * 100
             pct_str = f"{pct:.1f}%"
             raw_display = f"{votes_str}({pct_str})"
@@ -1346,20 +1379,32 @@ def build_pages(rows):
 
   national_rows = []
   nat_cols = []
+  # Build national rows: prefer explicit 'NATIONAL' row in the CSV for that year; otherwise
+  # aggregate state/district rows. When aggregating, also compute simple deltas (change from
+  # previous year) for vote-count columns so the NAT table shows the same inline deltas as
+  # other pages.
+  prev_totals = {}
   for y in sorted(year_groups.keys()):
     grp = year_groups[y]
-    out = {}
-    for h in headers:
-      if h == 'year':
-        out[h] = y
-        continue
-      val = ''
-      # Sum obvious vote columns
-      if h in ("D_votes", "R_votes", "T_votes", "total_votes"):
+    # look for an explicit NATIONAL/NAT row and prefer it if present
+    nat_row = None
+    for rr in grp:
+      if str(rr.get('abbr','')).upper() in ('NATIONAL','NAT'):
+        nat_row = rr; break
+
+    if nat_row is not None:
+      # copy the row but remove the abbr field; keep any delta columns already present
+      out = {k: v for k, v in nat_row.items() if ((k not in ['abbr', 'electoral_votes'] and 'relative' not in k.lower() and 'pres' not in k.lower() and 'third_party_share' not in k.lower() and 'two_party_margin' not in k.lower()) or 'national' in k.lower())}
+      out['year'] = y
+    else:
+      # aggregate obvious vote counts across non-NATIONAL rows
+      out = {'year': y}
+      sum_cols = ("D_votes", "R_votes", "T_votes", "total_votes")
+      for h in sum_cols:
         s = 0
         any_v = False
         for rr in grp:
-          if rr.get("abbr","") == "NATIONAL":
+          if str(rr.get('abbr','')).upper() in ('NATIONAL','NAT'):
             continue
           v = rr.get(h, '')
           try:
@@ -1367,25 +1412,26 @@ def build_pages(rows):
             any_v = True
           except Exception:
             pass
-        val = s if any_v else ''
-      # For margin-like and national-like columns take the mean
-      elif 'str' in h and ('national' in h.lower() or 'national' in h):
-        nums = []
-        for rr in grp:
-          v = rr.get(h, '')
-          if h not in out:
-              out[h] = v
-              break
-        continue
-      else:
-        # remove columns not handled above
-        # (e.g. abbr, pres_margin, relative_margin, etc.)
-        continue
-      out[h] = val
+        out[h] = s if any_v else ''
+      # compute deltas vs previous totals when available
+      if prev_totals:
+        for h in sum_cols:
+          prev = prev_totals.get(h)
+          cur = out.get(h)
+          if isinstance(cur, int) and isinstance(prev, int):
+            out[h.replace('_votes', '_delta')] = cur - prev
+          else:
+            # leave delta empty when not computable
+            pass
+    # record nat_cols
     for h in out:
       if h not in nat_cols:
         nat_cols.append(h)
     national_rows.append(out)
+    # update prev_totals for next-year delta calculation
+    for k in ("D_votes", "R_votes", "T_votes", "total_votes"):
+      v = national_rows[-1].get(k)
+      prev_totals[k] = v if isinstance(v, int) else None
     
 
   # Split NAT columns and build two tables
