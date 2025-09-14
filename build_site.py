@@ -641,9 +641,10 @@ INDEX_HTML = r"""<!doctype html>
   <!-- persistent header / site nav -->
   <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:4px">
     <div class="small-links">
-      <a class="btn" href="index.html">Home</a>
-      <a class="btn" href="ranker.html">Ranker</a>
-    </div>
+        <a class="btn" href="index.html">Home</a>
+        <a class="btn" href="ranker.html">Ranker</a>
+        <a class="btn" href="presidential_margins.html">Data</a>
+      </div>
     <div class="legend">U.S. Presidential Election State Results %YEAR_RANGE%</div>
   </div>
   <div class="header">
@@ -793,9 +794,10 @@ PAGE_HTML = r"""<!doctype html>
   <!-- persistent header / site nav for inner pages -->
   <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
     <div class="small-links">
-      <a class="btn" href="../index.html">Home</a>
-      <a class="btn" href="../ranker.html">Ranker</a>
-    </div>
+        <a class="btn" href="../index.html">Home</a>
+        <a class="btn" href="../ranker.html">Ranker</a>
+        <a class="btn" href="../presidential_margins.html">Data</a>
+      </div>
     <div class="legend">%HEADING%</div>
   </div>
   <a class="back" href="../index.html">← Back to Map</a>
@@ -1485,6 +1487,59 @@ def build_pages(rows):
 
   return states
 
+
+def make_data_page(rows):
+    """Write a simple HTML page in OUT_DIR/presidential_margins.html that
+    renders the CSV as a readable table and links to the raw CSV. This is
+    intended for easy consumption by tools (LLMs, browsers) that can fetch
+    and parse HTML pages more easily than arbitrary downloads.
+    """
+    # Build a simple table from rows (assume rows is non-empty list of dicts)
+    if not rows:
+        headers = []
+    else:
+        headers = list(rows[0].keys())
+
+    def esc(s):
+        if s is None:
+            return ""
+        return str(s).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+    thead = "".join(f"<th>{esc(h)}</th>" for h in headers)
+    body_rows = []
+    for r in rows:
+        cells = "".join(f"<td>{esc(r.get(h,''))}</td>" for h in headers)
+        body_rows.append(f"<tr>{cells}</tr>")
+
+    html = f"""<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'/>
+<meta name='viewport' content='width=device-width,initial-scale=1'/>
+<title>Presidential margins CSV</title>
+<link rel='stylesheet' href='styles.css'/>
+</head>
+<body>
+<div class='container'>
+  <div class='card site-header' style='display:flex;justify-content:space-between;align-items:center;padding:8px'>
+    <div class='small-links'>
+      <a class='btn' href='index.html'>Home</a>
+      <a class='btn' href='ranker.html'>Ranker</a>
+      <a class='btn' href='presidential_margins.csv'>Raw CSV</a>
+    </div>
+    <div class='legend'>Presidential margins CSV</div>
+  </div>
+  <h1>presidential_margins.csv</h1>
+  <p class='legend'>This page renders the primary CSV used to build the site. The raw CSV is available from the "Raw CSV" link.</p>
+  <div class='card table-wrap'>
+    <table><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
+  </div>
+  <footer>{FOOTER_TEXT} Built from CSV. Last updated: {LAST_UPDATED}</footer>
+</div>
+</body>
+</html>"""
+    write_text(OUT_DIR / "presidential_margins.html", html)
+
 def main():
   ensure_dirs()
   # write CSS
@@ -1502,6 +1557,17 @@ def main():
   rows = read_csv(CSV_PATH)
   states = build_pages(rows)
   make_index(states, rows)
+  # Always copy the primary CSV into the docs output so it can be accessed
+  try:
+    shutil.copy2(CSV_PATH, OUT_DIR / "presidential_margins.csv")
+  except Exception:
+    pass
+  # Generate a human-readable HTML view of the CSV so clicking "Data" opens a page
+  try:
+    make_data_page(rows)
+  except Exception:
+    # non-fatal
+    pass
   # When interactive tester enabled, write tester.js and copy CSV data for client-side JS
   if getattr(params, "INTERACTIVE_TESTER", False):
     # Write tester.js into docs (inject PV cap)
@@ -1573,7 +1639,16 @@ def main():
           print('Note: geopandas conversion unavailable or failed; ME/NE district overlay will not be generated.', e)
       else:
         print('Note: me_ne_districts.geojson not found and shapefile not present; ME/NE district overlay will be skipped.')
-  print(f"Done. Open {OUT_DIR/'index.html'} in a browser or deploy /docs to GitHub Pages.")
+    # Always make the primary CSV available under the docs output so the header "Data" link
+    # can point to a readable CSV file (useful for LLMs or direct browsing). Do this even when
+    # the interactive tester is disabled.
+    try:
+      shutil.copy2(CSV_PATH, OUT_DIR / "presidential_margins.csv")
+    except Exception:
+      # Non-fatal: continue even if the copy fails (e.g., permission issues)
+      pass
+
+    print(f"Done. Open {OUT_DIR/'index.html'} in a browser or deploy /docs to GitHub Pages.")
 
 if __name__ == "__main__":
     import tools.build_ranker_page
