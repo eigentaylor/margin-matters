@@ -251,8 +251,8 @@ def make_page(payload: dict) -> str:
             }
           } else {
             if (delta){
-                if (rec[relKey] != null && !isNaN(rec[relKey])) label = 'Δ ' + niceStr(abbr, relKey, rec);
-                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Relative Δ: ' + niceStr(abbr, rawKey, rec) + ')';
+                if (rec[rawKey] != null && !isNaN(rec[rawKey])) label = 'Δ ' + niceStr(abbr, rawKey, rec);
+                if (rec[relKey] != null && !isNaN(rec[relKey])) label += ' (Relative Δ: ' + niceStr(abbr, relKey, rec) + ')';
             } else {
                 if (rec[rawKey] != null && !isNaN(rec[rawKey])) label = niceStr(abbr, rawKey, rec);
                 if (rec[relKey] != null && !isNaN(rec[relKey])) label += ' (Relative: ' + niceStr(abbr, relKey, rec) + ')';
