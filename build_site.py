@@ -1520,6 +1520,7 @@ def make_data_page(rows):
 <meta name='viewport' content='width=device-width,initial-scale=1'/>
 <title>Presidential margins CSV</title>
 <link rel='stylesheet' href='styles.css'/>
+<link rel="icon" href="favicon.svg" />
 </head>
 <body>
 <div class='container'>
