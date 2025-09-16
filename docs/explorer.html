@@ -41,6 +41,16 @@
         <div class="field">
           <label for="stateSel">State</label>
           <select id="stateSel"></select>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button id="addStateBtn" class="btn">Add state</button>
+            <div style="display:flex;gap:6px;align-items:center">
+              <label class="badge">Presets:</label>
+              <button id="preset1" class="btn">WI/MI/PA</button>
+              <button id="preset2" class="btn">2024 Swings</button>
+              <button id="resetBtn" class="btn" title="Reset to defaults">Reset</button>
+            </div>
+          </div>
+          <div id="stateChips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
         </div>
         <div class="field">
           <label for="metricSel">Metric</label>
@@ -48,6 +58,14 @@
             <option value="margin" selected>Margin</option>
             <option value="thirdParty">Third-Party Share</option>
           </select>
+        </div>
+        <div class="field">
+          <label>Year range</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="startYear" type="number" style="width:100px" value="1964" step="4" />
+            <span style="color:var(--muted)">to</span>
+            <input id="endYear" type="number" style="width:100px" value="2024" step="4" />
+          </div>
         </div>
         <div class="field">
           <label for="chartSel">Chart type</label>

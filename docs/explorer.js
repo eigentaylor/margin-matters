@@ -19,8 +19,17 @@ Interactive Explorer for state-trends
     points: document.getElementById('pointsToggle'),
     notes: document.getElementById('notes'),
     root: document.getElementById('chart'),
-    tip: document.getElementById('tooltip')
+    tip: document.getElementById('tooltip'),
+    addStateBtn: document.getElementById('addStateBtn'),
+    stateChips: document.getElementById('stateChips'),
+    preset1: document.getElementById('preset1'),
+    preset2: document.getElementById('preset2'),
+    startYear: document.getElementById('startYear'),
+    endYear: document.getElementById('endYear')
   };
+
+  // User-selected states for multi-compare. Starts with the select's value.
+  let selectedStates = [];
 
   // Ranker-like flags model: build column names dynamically from metric+flags
   // available columns base:
@@ -59,6 +68,7 @@ Interactive Explorer for state-trends
     .style('display','block');
 
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+  const legendG = svg.append('g').attr('class','legend-svg').attr('transform', `translate(${margin.left},8)`);
   const xAxisG = g.append('g').attr('class','x-axis');
   const yAxisG = g.append('g').attr('class','y-axis');
   const zeroLineG = g.append('g').attr('class','zero');
@@ -76,11 +86,13 @@ Interactive Explorer for state-trends
 
   const tip = d3.select(el.tip);
 
-  function leanFmt(v){
+  function leanFmt(v, rel){
     if (v == null || isNaN(v)) return '';
     const sign = v > 0 ? 'D' : v < 0 ? 'R' : '';
     const pct = Math.abs(v*100).toFixed(1) + '%';
-    return sign ? `${sign}+${pct}` : `EVEN`;
+    if (sign) return `${sign}+${pct}`;
+    // when relative mode is on, show NAT for exact zero, otherwise EVEN
+    return rel ? 'NAT' : 'EVEN';
   }
   function percentFmt(v){
     if (v == null || isNaN(v)) return '';
@@ -93,7 +105,8 @@ Interactive Explorer for state-trends
 
   function fmtForCurrent(metric, rel, delta, twoP){
     if (metric === METRIC.THIRD) return rel ? percentFmtSigned : percentFmt;
-    return leanFmt;
+    // return a wrapper that calls leanFmt with rel context
+    return v => leanFmt(v, rel);
   }
 
   function buildMeasure(meta){
@@ -162,7 +175,73 @@ Interactive Explorer for state-trends
     [el.state, el.metric, el.chart, el.rel, el.delta, el.twoP, el.nat, el.points].forEach(inp =>
       inp.addEventListener('change', ()=>{ writeToUrl(); render(); }));
 
-    window.addEventListener('resize', resize);
+    // Start/end year defaults derived from data extents (filled later when data loaded)
+    el.addStateBtn.addEventListener('click', ()=>{ addState(el.state.value); });
+    el.preset1.addEventListener('click', ()=>{ setPreset(['WI','MI','PA']); });
+    el.preset2.addEventListener('click', ()=>{ setPreset(['AZ','NV','NC','GA','WI','MI','PA']); });
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) resetBtn.addEventListener('click', resetAll);
+
+    // year change handlers
+    el.startYear.addEventListener('change', ()=>{ writeToUrl(); render(); });
+    el.endYear.addEventListener('change', ()=>{ writeToUrl(); render(); });
+  }
+
+  function resetAll(){
+    // Clear multi-state selections and reset controls to sensible defaults
+    selectedStates = [];
+    renderStateChips();
+    el.state.value = 'AK';
+    el.metric.value = METRIC.MARGIN;
+    el.chart.value = 'auto';
+    el.rel.checked = false;
+    el.delta.checked = false;
+    el.twoP.checked = false;
+    el.nat.checked = true;
+    el.points.checked = true;
+    el.startYear.value = '';
+    el.endYear.value = '';
+    writeToUrl();
+    render();
+  }
+
+  function setPreset(list){
+    selectedStates = Array.from(new Set(list));
+    renderStateChips();
+    // force line plot for multi-state
+    if (selectedStates.length > 1) el.chart.value = 'line';
+    writeToUrl(); render();
+  }
+
+  function addState(s){
+    if (!s) return;
+    if (!selectedStates.includes(s)) selectedStates.push(s);
+    renderStateChips();
+    if (selectedStates.length > 1) el.chart.value = 'line';
+    writeToUrl(); render();
+  }
+
+  function removeState(s){
+    selectedStates = selectedStates.filter(x=>x!==s);
+    renderStateChips();
+    writeToUrl(); render();
+  }
+
+  function renderStateChips(){
+    el.stateChips.innerHTML = '';
+    selectedStates.forEach(s =>{
+      const chip = document.createElement('div');
+      chip.style.display = 'inline-flex';
+      chip.style.padding = '6px 8px';
+      chip.style.background = '#111';
+      chip.style.border = '1px solid #2a2a2a';
+      chip.style.borderRadius = '999px';
+      chip.style.color = 'var(--muted)';
+      chip.style.gap = '8px';
+      chip.innerHTML = `${s} <button data-abbr="${s}" style="margin-left:8px">✕</button>`;
+      chip.querySelector('button').addEventListener('click', ()=> removeState(s));
+      el.stateChips.appendChild(chip);
+    });
   }
 
   function getStateParams(){
@@ -183,12 +262,15 @@ Interactive Explorer for state-trends
     const q = new URLSearchParams();
     q.set('s', p.state);
     q.set('m', p.metric);
+    if (selectedStates.length) q.set('multi', selectedStates.join(','));
     if (p.chart !== 'auto') q.set('c', p.chart);
     if (p.rel) q.set('rel', '1');
     if (p.delta) q.set('d', '1');
     if (p.twoP) q.set('tp', '1');
     if (p.nat) q.set('nat', '1');
     if (p.points) q.set('pts', '1');
+    if (el.startYear.value) q.set('start', el.startYear.value);
+    if (el.endYear.value) q.set('end', el.endYear.value);
     const url = `${location.pathname}?${q.toString()}`;
     history.replaceState(null, '', url);
   }
@@ -203,6 +285,13 @@ Interactive Explorer for state-trends
     el.twoP.checked = q.has('tp');
     el.nat.checked = q.has('nat');
     el.points.checked = q.has('pts') ? true : el.points.checked;
+    if (q.get('multi')){
+      selectedStates = q.get('multi').split(',').filter(Boolean);
+      renderStateChips();
+      if (selectedStates.length > 1) el.chart.value = 'line';
+    }
+    if (q.get('start')) el.startYear.value = q.get('start');
+    if (q.get('end')) el.endYear.value = q.get('end');
   }
 
   function resize(){
@@ -248,7 +337,9 @@ Interactive Explorer for state-trends
     withNotes(desc);
 
     // Prepare rows
-    const rows = all.filter(r => r.abbr === p.state);
+    // If user selected multiple states, plot them in a compare mode
+    const statesToPlot = selectedStates.length ? selectedStates : [p.state];
+    const rows = all.filter(r => r.abbr === statesToPlot[0]);
     const natRows = all.filter(r => r.abbr === 'NATIONAL');
     const parseNum = v => v===''||v==null? null: +v;
     const data = rows.map(r => ({year:+r.year, value: parseNum(r[yCol])})).filter(d=>d.value!=null);
@@ -261,8 +352,23 @@ Interactive Explorer for state-trends
     data.sort((a,b)=>a.year-b.year);
     nat.sort((a,b)=>a.year-b.year);
 
-    // Update scales
-    const years = data.map(d=>d.year);
+    // Year range handling - compute start/end bounds before filtering
+    const minYear = d3.min(all, d=>+d.year);
+    const maxYear = d3.max(all, d=>+d.year);
+    let start = el.startYear.value ? +el.startYear.value : minYear;
+    let end = el.endYear.value ? +el.endYear.value : maxYear;
+    // If delta is enabled, omit the first available year (advance one 4-year cycle)
+    if (p.delta) start = Math.max(start, minYear + 4);
+
+    // Build per-state filtered data for multi-state mode
+    let dataByState = {};
+    statesToPlot.forEach(s => {
+      const rowsS = all.filter(r => r.abbr === s);
+      const dS = rowsS.map(r => ({year:+r.year, value: parseNum(r[yCol])})).filter(d=>d.value!=null && d.year >= start && d.year <= end);
+      dS.sort((a,b)=>a.year-b.year);
+      dataByState[s] = dS;
+    });
+    const years = Array.from(new Set([].concat(...Object.values(dataByState).map(arr => arr.map(d=>d.year))))).sort((a,b)=>a-b);
     const innerW = (el.root.getBoundingClientRect().width||1100) - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
@@ -273,8 +379,22 @@ Interactive Explorer for state-trends
   const tickEnd = years.length ? (x(years[years.length - 1]) + band / 2) : innerW;
   xLine.domain(years).range([tickStart, tickEnd]);
 
-    const yMin = d3.min(data, d=>d.value);
-    const yMax = d3.max(data, d=>d.value);
+  // compute filtered series for single and multi-state rendering
+  const dataFiltered = data.filter(d => d.year >= start && d.year <= end);
+  const natFiltered = nat.filter(d => d.year >= start && d.year <= end);
+
+  // Determine y domain from all visible series: all states being compared and national overlay
+  let visibleValues = [];
+  // include per-state values
+  Object.values(dataByState).forEach(arr => arr.forEach(d => visibleValues.push(d.value)));
+  // include national values if present
+  if (p.nat && yNatCol) natFiltered.forEach(d => visibleValues.push(d.value));
+  // fallback if nothing visible (avoid undefined domain)
+  if (!visibleValues.length) {
+    visibleValues = dataFiltered.length ? dataFiltered.map(d=>d.value) : (natFiltered.length ? natFiltered.map(d=>d.value) : [0]);
+  }
+  const yMin = d3.min(visibleValues);
+  const yMax = d3.max(visibleValues);
     let pad = (yMax - yMin) || 0.1;
     pad *= 0.15;
     y.domain([yMin - pad, yMax + pad]).nice().range([innerH, 0]);
@@ -298,18 +418,84 @@ Interactive Explorer for state-trends
     seriesG.selectAll('*').remove();
     natG.selectAll('*').remove();
 
+    // If multiple states, force line plot and draw each state's line with its own color
+    if (statesToPlot.length > 1) {
+      const palette = d3.schemeTableau10;
+      // render legend for multiple states
+      legendG.selectAll('*').remove();
+      const legendItems = statesToPlot.slice();
+      if (p.nat && yNatCol) legendItems.push('NATIONAL');
+      const itemW = 120;
+      legendG.attr('transform', `translate(${margin.left},8)`);
+      legendG.selectAll('g.leg').data(legendItems).join('g').attr('class','leg').each(function(d,i){
+        const gx = d3.select(this);
+        gx.attr('transform', `translate(${i*itemW},0)`);
+        gx.selectAll('*').remove();
+        gx.append('rect').attr('width',14).attr('height',10).attr('rx',2).attr('fill', d === 'NATIONAL' ? color.nat : d3.schemeTableau10[i % d3.schemeTableau10.length]);
+        gx.append('text').attr('x',18).attr('y',9).attr('fill', color.axis).attr('font-size',11).text(d);
+      });
+      statesToPlot.forEach((s, idx) => {
+        const sd = dataByState[s];
+        // draw line
+        seriesG.append('path')
+          .datum(sd)
+          .attr('fill','none')
+          .attr('stroke', palette[idx % palette.length])
+          .attr('stroke-width', 2)
+          .attr('d', line);
+
+        if (el.points.checked) {
+          seriesG.selectAll(`circle.state-${s}`)
+            .data(sd)
+            .join('circle')
+            .attr('class',`state-${s}`)
+            .attr('r', 3.5)
+            .attr('cx', d=>xLine(d.year))
+            .attr('cy', d=>y(d.value))
+            .attr('fill', palette[idx % palette.length])
+            .on('mouseenter', (evt,d)=>showTip(evt, `${s} ${d.year}: ${fmt(d.value)}`))
+            .on('mouseleave', hideTip);
+        }
+      });
+
+  // draw national if requested (single nat series overlay)
+  if (p.nat && yNatCol && natFiltered.length) {
+        natG.append('path')
+          .datum(natFiltered)
+          .attr('fill','none')
+          .attr('stroke', color.nat)
+          .attr('stroke-dasharray', '5 5')
+          .attr('stroke-width', 2)
+          .attr('d', line);
+      }
+
+      return; // multi-state done
+    }
+
     if (kind === 'line') {
+      // render legend for single-state line mode (state + maybe national)
+      legendG.selectAll('*').remove();
+      const items = [p.state];
+      if (p.nat && yNatCol) items.push('NATIONAL');
+      legendG.selectAll('g.leg').data(items).join('g').attr('class','leg').each(function(d,i){
+        const gx = d3.select(this);
+        gx.attr('transform', `translate(${i*140},0)`);
+        gx.selectAll('*').remove();
+        const fill = d === 'NATIONAL' ? color.nat : color.state;
+        gx.append('rect').attr('width',14).attr('height',10).attr('rx',2).attr('fill', fill);
+        gx.append('text').attr('x',18).attr('y',9).attr('fill', color.axis).attr('font-size',11).text(d);
+      });
       // State line
       seriesG.append('path')
-        .datum(data)
+        .datum(dataFiltered)
         .attr('fill','none')
         .attr('stroke', color.state)
         .attr('stroke-width', 2)
         .attr('d', line);
 
-      if (el.points.checked) {
+        if (el.points.checked) {
         seriesG.selectAll('circle.state')
-          .data(data)
+          .data(dataFiltered)
           .join('circle')
           .attr('class','state')
           .attr('r', 4)
@@ -321,18 +507,18 @@ Interactive Explorer for state-trends
       }
 
       // National overlay
-      if (p.nat && yNatCol && nat.length){
+      if (p.nat && yNatCol && natFiltered.length){
         natG.append('path')
-          .datum(nat)
+          .datum(natFiltered)
           .attr('fill','none')
           .attr('stroke', color.nat)
           .attr('stroke-dasharray', '5 5')
           .attr('stroke-width', 2)
           .attr('d', line);
 
-        if (el.points.checked) {
+          if (el.points.checked) {
           natG.selectAll('circle.nat')
-            .data(nat)
+            .data(natFiltered)
             .join('circle')
             .attr('class','nat')
             .attr('r', 3.5)
@@ -358,7 +544,7 @@ Interactive Explorer for state-trends
   const centerNatX = d => x(d.year) + (bandWidth - natW) / 2;
   // overlap shift moves the nat bar toward the state bar center so they overlap
   // Small fixed overlap to match prior subtle overlap behaviour
-  const overlapShift = -10;
+    const overlapShift = 3; // subtle overlap shift for national bar overlay
   const stateX = d => !(p.nat && yNatCol && nat.length) ? centerStateX(d) : centerStateX(d);
   const natX = d => centerNatX(d) - overlapShift;
 
@@ -374,9 +560,9 @@ Interactive Explorer for state-trends
         .on('mouseenter', (evt,d)=>showTip(evt, `${d.year}: ${fmt(d.value)}`))
         .on('mouseleave', hideTip);
 
-      if (p.nat && yNatCol && nat.length){
+      if (p.nat && yNatCol && natFiltered.length){
         natG.selectAll('rect.nat')
-          .data(nat)
+          .data(natFiltered)
           .join('rect')
           .attr('class','nat')
           .attr('x', d=> natX(d))
