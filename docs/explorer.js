@@ -15,6 +15,8 @@ Interactive Explorer for state-trends
     rel: document.getElementById('relativeChk'),
     delta: document.getElementById('deltaChk'),
     twoP: document.getElementById('twoPartyChk'),
+  preset3: document.getElementById('preset3'),
+  preset4: document.getElementById('preset4'),
     nat: document.getElementById('natOverlay'),
     points: document.getElementById('pointsToggle'),
     notes: document.getElementById('notes'),
@@ -86,12 +88,13 @@ Interactive Explorer for state-trends
 
   const tip = d3.select(el.tip);
 
-  function leanFmt(v, rel){
+  function leanFmt(v, rel, delta){
     if (v == null || isNaN(v)) return '';
     const sign = v > 0 ? 'D' : v < 0 ? 'R' : '';
     const pct = Math.abs(v*100).toFixed(1) + '%';
     if (sign) return `${sign}+${pct}`;
     // when relative mode is on, show NAT for exact zero, otherwise EVEN
+    if (rel && delta) return 'NAT Δ';
     return rel ? 'NAT' : 'EVEN';
   }
   function percentFmt(v){
@@ -106,7 +109,7 @@ Interactive Explorer for state-trends
   function fmtForCurrent(metric, rel, delta, twoP){
     if (metric === METRIC.THIRD) return rel ? percentFmtSigned : percentFmt;
     // return a wrapper that calls leanFmt with rel context
-    return v => leanFmt(v, rel);
+    return v => leanFmt(v, rel, delta);
   }
 
   function buildMeasure(meta){
@@ -141,7 +144,7 @@ Interactive Explorer for state-trends
       if (delta && !rel) {
         yCol = base + '_delta';
         yNatCol = baseNat + '_delta';
-        desc = 'Cycle-over-cycle change (0 for first year).';
+        desc = 'Change in margins (0 for first year).';
       } else if (rel && !delta) {
         yCol = twoP ? 'two_party_relative_margin' : 'relative_margin';
         yNatCol = null;
@@ -149,7 +152,7 @@ Interactive Explorer for state-trends
       } else if (rel && delta) {
         yCol = twoP ? 'two_party_relative_margin_delta' : 'relative_margin_delta';
         yNatCol = null;
-        desc = 'Cycle-over-cycle change in state minus national.';
+        desc = 'Change in state margin minus change in national margin.';
       } else {
         yCol = base;
         yNatCol = baseNat;
@@ -179,6 +182,18 @@ Interactive Explorer for state-trends
     el.addStateBtn.addEventListener('click', ()=>{ addState(el.state.value); });
     el.preset1.addEventListener('click', ()=>{ setPreset(['WI','MI','PA']); });
     el.preset2.addEventListener('click', ()=>{ setPreset(['AZ','NV','NC','GA','WI','MI','PA']); });
+    if (el.preset3) {
+      el.preset3.addEventListener('click', () => {
+        // Maine: aggregate + congressional districts
+        setPreset(['ME-AL', 'ME-01', 'ME-02']);
+      });
+    }
+    if (el.preset4) {
+      el.preset4.addEventListener('click', () => {
+        // Nebraska: aggregate + congressional districts
+        setPreset(['NE-AL', 'NE-01', 'NE-02', 'NE-03']);
+      });
+    }
   const resetBtn = document.getElementById('resetBtn');
   if (resetBtn) resetBtn.addEventListener('click', resetAll);
 
@@ -310,7 +325,7 @@ Interactive Explorer for state-trends
   }
 
   function withNotes(desc){
-    el.notes.textContent = desc + (el.nat.checked ? ' (Nat overlay if available).' : '');
+    el.notes.textContent = desc + (el.nat.checked && !el.rel.checked ? ' (Nat overlay if available).' : '');
   }
 
   function colorForBar(d, stateAbbr, meta, rowLookup){
@@ -436,6 +451,9 @@ Interactive Explorer for state-trends
       });
       statesToPlot.forEach((s, idx) => {
         const sd = dataByState[s];
+        // per-state lookup to determine winners for coloring points
+        const rowsS = all.filter(r => r.abbr === s);
+        const rowLookupS = new Map(rowsS.map(r => [+r.year, r]));
         // draw line
         seriesG.append('path')
           .datum(sd)
@@ -452,7 +470,8 @@ Interactive Explorer for state-trends
             .attr('r', 3.5)
             .attr('cx', d=>xLine(d.year))
             .attr('cy', d=>y(d.value))
-            .attr('fill', palette[idx % palette.length])
+            // color points by winner/special rule rather than the palette
+            .attr('fill', d => colorForBar(d, s, meta, rowLookupS))
             .on('mouseenter', (evt,d)=>showTip(evt, `${s} ${d.year}: ${fmt(d.value)}`))
             .on('mouseleave', hideTip);
         }
