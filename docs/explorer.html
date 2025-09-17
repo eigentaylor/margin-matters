@@ -23,6 +23,8 @@
     .legend .sw{width:14px;height:14px;border-radius:4px;border:1px solid var(--border)}
     .legend .lab{font-size:.9rem}
     .spacer{height:6px}
+  .select-dark{background:var(--card);color:var(--fg);border:1px solid var(--border);padding:6px;border-radius:6px}
+  .btn-dark{background:var(--card);color:var(--fg);border:1px solid var(--border);padding:6px 10px;border-radius:6px}
   </style>
 </head>
 <body>
@@ -40,26 +42,26 @@
       <div class="controls">
         <div class="field">
           <label for="stateSel">State</label>
-          <select id="stateSel"></select>
+          <select id="stateSel" class="select-dark"></select>
           <div style="margin-top:8px;display:flex;gap:8px">
-            <button id="addStateBtn" class="btn">Add state</button>
+            <button id="addStateBtn" class="btn btn-dark">Add state</button>
             <div style="display:flex;gap:6px;align-items:center">
               <label class="badge">Presets:</label>
-              <select id="presetSel" style="background:var(--card);color:var(--fg);border:1px solid var(--border);padding:6px;border-radius:6px">
+              <select id="presetSel" class="select-dark">
                 <option value="">— choose —</option>
                 <option value="preset1">WI/MI/PA</option>
                 <option value="preset2">2024 Swings</option>
                 <option value="preset3">Maine (ME + districts)</option>
                 <option value="preset4">Nebraska (NE + districts)</option>
               </select>
-              <button id="resetBtn" class="btn" title="Reset to defaults">Reset</button>
+              <button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>
             </div>
           </div>
           <div id="stateChips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
         </div>
         <div class="field">
           <label for="metricSel">Metric</label>
-          <select id="metricSel">
+          <select id="metricSel" class="select-dark">
             <option value="margin" selected>Margin</option>
             <option value="thirdParty">Third-Party Share</option>
           </select>
@@ -74,7 +76,7 @@
         </div>
         <div class="field">
           <label for="chartSel">Chart type</label>
-          <select id="chartSel">
+          <select id="chartSel" class="select-dark">
             <option value="auto" selected>Auto</option>
             <option value="line">Line</option>
             <option value="bar">Bar</option>
