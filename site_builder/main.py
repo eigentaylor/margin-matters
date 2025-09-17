@@ -7,6 +7,7 @@ from .config import CSV_PATH, OUT_DIR, STATE_DIR, UNIT_DIR, PLOTS_DST, PLOTS_SRC
 from .io_utils import ensure_dirs, write_text, read_csv
 from .pages import build_pages, make_index, make_data_page
 from .templates import BASE_CSS, FAVICON_SVG, TESTER_JS
+from .ranker import build_ranker_page
 
 
 def build_site():
@@ -33,6 +34,12 @@ def build_site():
         make_data_page(rows)
     except Exception:
         pass
+
+    # Build the ranker page with consistent header/styling
+    try:
+        build_ranker_page(rows)
+    except Exception as e:
+        print(f"Warning: couldn't build ranker page: {e}")
 
     if getattr(params, "INTERACTIVE_TESTER", False):
         cap_val = str(float(getattr(params, 'TESTER_PV_CAP', 0.25)))

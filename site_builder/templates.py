@@ -227,7 +227,7 @@ TESTER_JS = r"""
 
   function leanStr(x){
     if (!isFinite(x)) return '';
-    if (Math.abs(x) < 0.0005) return 'EVEN';
+    if (Math.abs(x) < 0.000005) return 'EVEN';
     const s = (Math.abs(x) * 100).toFixed(1);
     return (x > 0 ? 'D+' : 'R+') + s;
   }
@@ -239,7 +239,7 @@ TESTER_JS = r"""
     if (m < -0.01) return '#F08080';
     if (m < 0) return '#FFC0CB';
     if (m === 0) return '#FFFFFF';
-    if (m < 0.01) return '#acc9dcff';
+    if (m < 0.01) return '#8aa7baff';
     if (m < 0.06) return '#87CEFA';
     if (m < 0.12) return '#6495ED';
     if (m < 0.20) return '#4169E1';
