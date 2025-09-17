@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import List, Dict
 
 import params
-from .config import OUT_DIR, STATE_DIR, UNIT_DIR, SMALL_STATES, ME_NE_STATES, LAST_UPDATED, FOOTER_TEXT
+from .config import OUT_DIR, STATE_DIR, UNIT_DIR, SMALL_STATES, ME_NE_STATES, LAST_UPDATED, FOOTER_TEXT, EXPLANATION_TEXT
 from .io_utils import write_text
 from .tables import split_columns_into_three, group_by_abbr, render_table, render_info_box
 from .templates import INDEX_HTML, PAGE_HTML
@@ -105,12 +105,12 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
                 '      </div>',
                 '    </div>',
                 '    <div id="pvStops" class="legend" style="font-size:0.95rem"></div>',
-                f'    <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">Capped the maximum PV shift to ±{cap_pct}%.</div>',
+                f'    <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">%EXPLANATION%</div>',
                 '  </div>',
                 '</div>',
             ])
         )
-        tester_ui = tester_ui.replace('%MIN_YEAR%', str(min_year)).replace('%MAX_YEAR%', str(max_year))
+        tester_ui = tester_ui.replace('%MIN_YEAR%', str(min_year)).replace('%MAX_YEAR%', str(max_year)).replace('%EXPLANATION%', EXPLANATION_TEXT.replace('{cap_pct}', str(cap_pct)))
         tester_scripts = '<script src="tester.js"></script>'
     else:
         tester_ui = ''
