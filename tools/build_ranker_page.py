@@ -16,6 +16,7 @@ import csv
 import html
 import json
 from pathlib import Path
+from site_builder.header import make_header
 from typing import Any, Dict
 from datetime import datetime, timezone
 
@@ -360,14 +361,7 @@ def make_page(payload: dict) -> str:
   </head>
   <body class="dark bg-slate-950 text-slate-100">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
-      <!-- persistent header / site nav -->
-      <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
-        <div class="small-links">
-          <a class="btn" href="index.html">Home</a>
-          <a class="btn" href="ranker.html">Ranker</a>
-        </div>
-        <div class="legend">U.S. Presidential Election State Results Ranker</div>
-      </div>
+  %HEADER%
       <div class="flex items-center justify-between mb-4">
         <a class="text-sm text-slate-300 hover:text-white" href="index.html">← Back to Map</a>
         <div class="text-xs text-slate-400">Last updated: <span id="updated"></span></div>
@@ -424,7 +418,9 @@ def make_page(payload: dict) -> str:
   </html>
   """
 
-  return html_template.replace("__SCRIPT__", script)
+  # generate header using shared site header
+  header_html = make_header("U.S. Presidential Election State Results Ranker", is_inner=False)
+  return html_template.replace("__SCRIPT__", script).replace("%HEADER%", header_html)
 
 def main():
   rows = load_rows(CSV_PATH)
