@@ -60,7 +60,7 @@ FINAL_MARGIN_THRESHOLDS: Dict[str, float] = {
     "BLUE":   0.20,   # darkest blue: D wins by 20%+
 }
 
-SPECIAL_1968_STATES = {"GA", "AL", "LA", "MS", "AR"}
+SPECIAL_1968_STATES = {"MS", "AR", "LA", "GA", "AL"}
 
 # Interactive election tester (index page)
 # If True, the home page will show an optional interactive tester UI with

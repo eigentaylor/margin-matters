@@ -2,7 +2,7 @@
 from .config import SMALL_STATES, LAST_UPDATED, FOOTER_TEXT
 
 BASE_CSS = r"""
-:root{--bg:#0b0b0b;--fg:#f5f5f5;--muted:#a5a5a5;--accent:#66b3ff;--card:#141414;--border:#2a2a2a}
+:root{--bg:#0b0b0b;--fg:#f5f5f5;--muted:#a5a5a5;--accent:#e1e6ea;--card:#141414;--border:#2a2a2a}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
 a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
@@ -39,6 +39,17 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .site-header{position:sticky;top:0;z-index:1100;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);margin-bottom:12px;border-radius:10px}
 .card.site-header{padding:8px}
 
+/* PV slider value and totals: keep spacing stable and make numbers pop */
+#pvVal{display:inline-block;min-width:140px;text-align:left;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.2px;color:#fff;background:rgba(0,0,0,0.35);padding:3px 8px;border-radius:8px}
+.pv-totals{display:flex;gap:10px;align-items:stretch;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.pv-badge{display:flex;gap:8px;align-items:center;justify-content:center;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#111;box-shadow:0 1px 0 rgba(255,255,255,0.05) inset}
+.pv-badge .label{font-size:.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.pv-badge .num{font-weight:900;font-variant-numeric:tabular-nums;min-width:8ch;text-align:right;color:#fff}
+.pv-badge.pv-d{background:linear-gradient(180deg, rgba(49,88,206,0.15), rgba(21,32,61,0.15));border-color:#2a3d78}
+.pv-badge.pv-r{background:linear-gradient(180deg, rgba(193,55,55,0.15), rgba(66,18,18,0.15));border-color:#6d2424}
+.pv-badge.pv-o{background:linear-gradient(180deg, rgba(201,164,0,0.18), rgba(72,59,0,0.15));border-color:#6b5b00}
+.pv-badge.pv-total{background:linear-gradient(180deg, rgba(120,120,120,0.12), rgba(40,40,40,0.12));border-color:#3a3a3a}
+
 /* Align raw values and inline delta consistently inside table cells */
 .cell-inner{display:inline-grid;grid-auto-flow:column;align-items:center;gap:8px}
 .cell-inner .raw{font-variant-numeric:tabular-nums;text-align:right;display:block}
@@ -48,6 +59,8 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .info-dl dt{font-weight:700;color:var(--fg);margin:0;padding:6px 0}
 .info-dl dd{margin:0;padding:6px 0;color:var(--muted);font-size:0.95rem}
 @media (max-width:800px){.info-dl{grid-template-columns:1fr}}
+/* Map hover tooltip */
+#mapTip{position:absolute;pointer-events:none;z-index:1200;transform:translate(-50%, -120%);background:rgba(20,20,20,0.95);color:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 10px;white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,0.35)}
 """
 
 # Full HTML templates moved as-is from original module (placeholders kept)
@@ -71,6 +84,7 @@ INDEX_HTML = r"""<!doctype html>
     <div class="card">
       <div id="map-wrap" class="center">
         <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+  <div id="mapTip" style="display:none"></div>
       </div>
       %TESTER_UI%
     </div>
@@ -120,7 +134,8 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
   .then(us => {
     const states = topojson.feature(us, us.objects.states).features;
 
-    g.selectAll("path.state")
+  const tip = document.getElementById('mapTip');
+  g.selectAll("path.state")
       .data(states)
       .join("path")
       .attr("class", "state")
@@ -136,7 +151,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .attr("stroke-width", 0.8)
       .attr("tabindex", 0)
       /* On hover: pick a bright blue or red depending on the current fill and restore it on mouseout */
-    .on("mouseover", function() {
+    .on("mouseover", function(event, d) {
         const sel = d3.select(this);
         const cur = sel.attr('fill') || '#2f2f2f';
         // stash the original fill so we can restore it on mouseout
@@ -153,12 +168,40 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         } catch (e) {
           sel.attr('fill', '#66b3ff');
         }
+        // show tooltip
+        try {
+          const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+          if (abbr) {
+            const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
+            const ev = (info && info.ev != null) ? info.ev : '';
+            const marginStr = (info && info.marginStr) ? info.marginStr : '';
+            tip.textContent = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
+            tip.style.display = 'block';
+            // position right away
+            const rect = this.ownerSVGElement.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            tip.style.left = (rect.left + x) + 'px';
+            tip.style.top = (rect.top + y) + 'px';
+          }
+        } catch(e) {}
+      })
+      .on("mousemove", function(event, d){
+        try {
+          if (!tip || tip.style.display === 'none') return;
+          const rect = this.ownerSVGElement.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          tip.style.left = (rect.left + x) + 'px';
+          tip.style.top = (rect.top + y) + 'px';
+        } catch(e) {}
       })
       .on("mouseout",  function() {
         const sel = d3.select(this);
         const orig = sel.attr('data-orig-fill') || '#2f2f2f';
         sel.attr('fill', orig);
         sel.attr('data-orig-fill', null);
+        if (tip) tip.style.display = 'none';
       })
       .on("click", (event, d) => {
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
@@ -248,6 +291,9 @@ TESTER_JS = r"""
 
   const byYear = new Map();
   const evByUnit = new Map();
+  // expose for tooltip/helper access outside closure
+  window._byYearMap = byYear;
+  window._evByUnitMap = evByUnit;
   // Mapping of stop -> effective test value (average of adjacent stops)
   const stopToEff = new Map();
   // Mapping of stop -> array of units that share that stop
@@ -268,7 +314,12 @@ TESTER_JS = r"""
       const nm = +r.national_margin || 0;
       const ev = +r.electoral_votes || 0;
       const tp = +r.third_party_share || 0;
-      const row = { year, unit, rm, nm, ev, tp };
+      // include vote totals for adjusted PV calculations
+      const dVotes = +r.D_votes || 0;
+      const rVotes = +r.R_votes || 0;
+      const tVotes = +r.T_votes || 0;
+      const total = +r.total_votes || (dVotes + rVotes + tVotes) || 0;
+      const row = { year, unit, rm, nm, ev, tp, dVotes, rVotes, tVotes, total };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
       if (ev > 0) evByUnit.set(`${year}:${unit}`, ev);
@@ -279,6 +330,10 @@ TESTER_JS = r"""
       const ev = +e.electoral_votes;
       if (year && unit && ev) evByUnit.set(`${year}:${unit}`, ev);
     });
+
+  // expose simple accessors
+  window.getRowsForYear = function(y){ try { return byYear.get(y) || []; } catch(e){ return []; } };
+  window.getEvFor = function(y, u){ try { return evByUnit.get(`${y}:${u}`); } catch(e){ return null; } };
 
     init();
     // attempt to load ME/NE district geometries for per-district coloring
@@ -582,10 +637,13 @@ TESTER_JS = r"""
   } catch(e) {}
   // pvSlider is now an index into the stops array
   const nat = getNatMargin(year);
+  // expose current for tooltip helper
+  window._curYear = year;
   const pvIndex = +pvEl.value;
   const stops = stopsByYear.get(year) || [0];
   const stopVal = (stops && stops.length > 0 && stops[pvIndex] !== undefined) ? stops[pvIndex] : 0;
   const pv = stopToEff.get(stopVal) || (stopVal + EPS * (stopVal === 0 ? 1 : Math.sign(stopVal - nat)));
+  window._curPv = pv;
     // show only the unit(s) whose exact flip stop equals the current pv (not cumulative flips)
     const matches = [];
     (byYear.get(year) || []).forEach(r => {
@@ -762,8 +820,106 @@ TESTER_JS = r"""
   if (rEl) rEl.style.width = `${rPct}%`;
   const evText = document.getElementById('evText');
   if (evText) evText.textContent = (year === 1968) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
+  
+  // Adjusted national PV totals at current PV stop
+  try {
+    let dSum = 0, rSum = 0, tSum = 0, totSum = 0;
+    const rows = byYear.get(year) || [];
+    for (const r of rows){
+      if (!r || !r.unit || r.unit === 'NATIONAL') continue;
+      const total = +r.total || (+r.dVotes + +r.rVotes + +r.tVotes) || 0;
+      if (!isFinite(total) || total <= 0) continue;
+      const tp = Math.max(0, Math.min(1, +r.tp || 0));
+      const rmAdj = (+r.rm || 0) + pv;
+      let twoD = 0.5 + rmAdj/2;
+      if (!isFinite(twoD)) twoD = 0.5;
+      twoD = Math.max(0, Math.min(1, twoD));
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      dSum += total * dShare;
+      rSum += total * rShare;
+      tSum += total * tShare;
+      totSum += total;
+    }
+    const fmt = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+    const elD = document.getElementById('pvDem');
+    const elR = document.getElementById('pvRep');
+    const elO = document.getElementById('pvOth');
+    const elT = document.getElementById('pvTot');
+    if (elD) elD.textContent = fmt(dSum);
+    if (elR) elR.textContent = fmt(rSum);
+    if (elO) elO.textContent = fmt(tSum);
+    if (elT) elT.textContent = fmt(totSum);
+  } catch(e) { /* non-fatal */ }
+  
+  // Adjusted national PV totals at current PV stop
+  try {
+    let dSum = 0, rSum = 0, tSum = 0, totSum = 0;
+    const rows = byYear.get(year) || [];
+    for (const r of rows){
+      if (!r || !r.unit || r.unit === 'NATIONAL') continue;
+      const total = +r.total || (+r.dVotes + +r.rVotes + +r.tVotes) || 0;
+      if (!isFinite(total) || total <= 0) continue;
+      const tp = Math.max(0, Math.min(1, +r.tp || 0));
+      const rmAdj = (+r.rm || 0) + pv;
+      let twoD = 0.5 + rmAdj/2;
+      if (!isFinite(twoD)) twoD = 0.5;
+      twoD = Math.max(0, Math.min(1, twoD));
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      dSum += total * dShare;
+      rSum += total * rShare;
+      tSum += total * tShare;
+      totSum += total;
+    }
+    const fmt = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+    const elD = document.getElementById('pvDem');
+    const elR = document.getElementById('pvRep');
+    const elO = document.getElementById('pvOth');
+    const elT = document.getElementById('pvTot');
+    if (elD) elD.textContent = fmt(dSum);
+    if (elR) elR.textContent = fmt(rSum);
+    if (elO) elO.textContent = fmt(tSum);
+    if (elT) elT.textContent = fmt(totSum);
+  } catch(e) { /* non-fatal */ }
   }
 })();
+
+// Helper for tooltip: given a unit abbr (state or district), return {ev, margin, marginStr}
+window.getAdjustedInfo = function(unit){
+  try {
+    const year = window._curYear;
+    const pv = window._curPv || 0;
+    if (!year) return null;
+    const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+    const rows = (function(){
+      // byYear lives inside the IIFE; expose via window if available
+      if (typeof window.getRowsForYear === 'function') return window.getRowsForYear(year);
+      return null;
+    })();
+    // Fallback: reconstruct from CSV already parsed via closure if not exposed
+    let r = null;
+    if (rows && rows.length){
+      r = rows.find(x => x.unit === keyUnit);
+    }
+    // If closure isn't exposed, try reading from the DOM colors map via evByUnit
+    // but we did store evByUnit in closure as well; we mirror EV lookup by re-reading electoral_college.csv not feasible here.
+    // Instead, rely on title info for EV not available; return margin only if needed.
+  let ev = null;
+  try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, keyUnit); } catch(e) {}
+  if ((ev == null || isNaN(ev)) && r && isFinite(+r.ev)) ev = +r.ev;
+    if (!r) return { ev, margin: null, marginStr: '' };
+    const m = (+r.rm || 0) + (pv || 0);
+    return { ev, margin: m, marginStr: (function(){
+      if (!isFinite(m)) return '';
+      if (Math.abs(m) < 0.000005) return 'EVEN';
+      const s = (Math.abs(m) * 100).toFixed(1);
+      return (m > 0 ? 'D+' : 'R+') + s;
+    })() };
+  } catch(e) { return null; }
+}
 """
 
 # simple SVG favicon

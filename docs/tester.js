@@ -3,7 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["AR", "MS", "GA", "AL", "LA"];
+  const SPECIAL_1968 = ["AR", "AL", "MS", "LA", "GA"];
 
   function leanStr(x){
     if (!isFinite(x)) return '';
@@ -28,6 +28,9 @@
 
   const byYear = new Map();
   const evByUnit = new Map();
+  // expose for tooltip/helper access outside closure
+  window._byYearMap = byYear;
+  window._evByUnitMap = evByUnit;
   // Mapping of stop -> effective test value (average of adjacent stops)
   const stopToEff = new Map();
   // Mapping of stop -> array of units that share that stop
@@ -48,7 +51,12 @@
       const nm = +r.national_margin || 0;
       const ev = +r.electoral_votes || 0;
       const tp = +r.third_party_share || 0;
-      const row = { year, unit, rm, nm, ev, tp };
+      // include vote totals for adjusted PV calculations
+      const dVotes = +r.D_votes || 0;
+      const rVotes = +r.R_votes || 0;
+      const tVotes = +r.T_votes || 0;
+      const total = +r.total_votes || (dVotes + rVotes + tVotes) || 0;
+      const row = { year, unit, rm, nm, ev, tp, dVotes, rVotes, tVotes, total };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
       if (ev > 0) evByUnit.set(`${year}:${unit}`, ev);
@@ -59,6 +67,10 @@
       const ev = +e.electoral_votes;
       if (year && unit && ev) evByUnit.set(`${year}:${unit}`, ev);
     });
+
+  // expose simple accessors
+  window.getRowsForYear = function(y){ try { return byYear.get(y) || []; } catch(e){ return []; } };
+  window.getEvFor = function(y, u){ try { return evByUnit.get(`${y}:${u}`); } catch(e){ return null; } };
 
     init();
     // attempt to load ME/NE district geometries for per-district coloring
@@ -362,10 +374,13 @@
   } catch(e) {}
   // pvSlider is now an index into the stops array
   const nat = getNatMargin(year);
+  // expose current for tooltip helper
+  window._curYear = year;
   const pvIndex = +pvEl.value;
   const stops = stopsByYear.get(year) || [0];
   const stopVal = (stops && stops.length > 0 && stops[pvIndex] !== undefined) ? stops[pvIndex] : 0;
   const pv = stopToEff.get(stopVal) || (stopVal + EPS * (stopVal === 0 ? 1 : Math.sign(stopVal - nat)));
+  window._curPv = pv;
     // show only the unit(s) whose exact flip stop equals the current pv (not cumulative flips)
     const matches = [];
     (byYear.get(year) || []).forEach(r => {
@@ -542,5 +557,103 @@
   if (rEl) rEl.style.width = `${rPct}%`;
   const evText = document.getElementById('evText');
   if (evText) evText.textContent = (year === 1968) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
+  
+  // Adjusted national PV totals at current PV stop
+  try {
+    let dSum = 0, rSum = 0, tSum = 0, totSum = 0;
+    const rows = byYear.get(year) || [];
+    for (const r of rows){
+      if (!r || !r.unit || r.unit === 'NATIONAL') continue;
+      const total = +r.total || (+r.dVotes + +r.rVotes + +r.tVotes) || 0;
+      if (!isFinite(total) || total <= 0) continue;
+      const tp = Math.max(0, Math.min(1, +r.tp || 0));
+      const rmAdj = (+r.rm || 0) + pv;
+      let twoD = 0.5 + rmAdj/2;
+      if (!isFinite(twoD)) twoD = 0.5;
+      twoD = Math.max(0, Math.min(1, twoD));
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      dSum += total * dShare;
+      rSum += total * rShare;
+      tSum += total * tShare;
+      totSum += total;
+    }
+    const fmt = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+    const elD = document.getElementById('pvDem');
+    const elR = document.getElementById('pvRep');
+    const elO = document.getElementById('pvOth');
+    const elT = document.getElementById('pvTot');
+    if (elD) elD.textContent = fmt(dSum);
+    if (elR) elR.textContent = fmt(rSum);
+    if (elO) elO.textContent = fmt(tSum);
+    if (elT) elT.textContent = fmt(totSum);
+  } catch(e) { /* non-fatal */ }
+  
+  // Adjusted national PV totals at current PV stop
+  try {
+    let dSum = 0, rSum = 0, tSum = 0, totSum = 0;
+    const rows = byYear.get(year) || [];
+    for (const r of rows){
+      if (!r || !r.unit || r.unit === 'NATIONAL') continue;
+      const total = +r.total || (+r.dVotes + +r.rVotes + +r.tVotes) || 0;
+      if (!isFinite(total) || total <= 0) continue;
+      const tp = Math.max(0, Math.min(1, +r.tp || 0));
+      const rmAdj = (+r.rm || 0) + pv;
+      let twoD = 0.5 + rmAdj/2;
+      if (!isFinite(twoD)) twoD = 0.5;
+      twoD = Math.max(0, Math.min(1, twoD));
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      dSum += total * dShare;
+      rSum += total * rShare;
+      tSum += total * tShare;
+      totSum += total;
+    }
+    const fmt = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+    const elD = document.getElementById('pvDem');
+    const elR = document.getElementById('pvRep');
+    const elO = document.getElementById('pvOth');
+    const elT = document.getElementById('pvTot');
+    if (elD) elD.textContent = fmt(dSum);
+    if (elR) elR.textContent = fmt(rSum);
+    if (elO) elO.textContent = fmt(tSum);
+    if (elT) elT.textContent = fmt(totSum);
+  } catch(e) { /* non-fatal */ }
   }
 })();
+
+// Helper for tooltip: given a unit abbr (state or district), return {ev, margin, marginStr}
+window.getAdjustedInfo = function(unit){
+  try {
+    const year = window._curYear;
+    const pv = window._curPv || 0;
+    if (!year) return null;
+    const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+    const rows = (function(){
+      // byYear lives inside the IIFE; expose via window if available
+      if (typeof window.getRowsForYear === 'function') return window.getRowsForYear(year);
+      return null;
+    })();
+    // Fallback: reconstruct from CSV already parsed via closure if not exposed
+    let r = null;
+    if (rows && rows.length){
+      r = rows.find(x => x.unit === keyUnit);
+    }
+    // If closure isn't exposed, try reading from the DOM colors map via evByUnit
+    // but we did store evByUnit in closure as well; we mirror EV lookup by re-reading electoral_college.csv not feasible here.
+    // Instead, rely on title info for EV not available; return margin only if needed.
+  let ev = null;
+  try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, keyUnit); } catch(e) {}
+  if ((ev == null || isNaN(ev)) && r && isFinite(+r.ev)) ev = +r.ev;
+    if (!r) return { ev, margin: null, marginStr: '' };
+    const m = (+r.rm || 0) + (pv || 0);
+    return { ev, margin: m, marginStr: (function(){
+      if (!isFinite(m)) return '';
+      if (Math.abs(m) < 0.000005) return 'EVEN';
+      const s = (Math.abs(m) * 100).toFixed(1);
+      return (m > 0 ? 'D+' : 'R+') + s;
+    })() };
+  } catch(e) { return null; }
+}

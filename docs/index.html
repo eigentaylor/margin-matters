@@ -18,6 +18,7 @@
     <div class="card">
       <div id="map-wrap" class="center">
         <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+  <div id="mapTip" style="display:none"></div>
       </div>
       <hr style="margin:12px 0" />
 <div id="tester" class="center" style="margin-top:8px">
@@ -31,7 +32,7 @@
       <div style="display:flex;gap:10px;align-items:center">
         <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
         <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
-        <span id="pvVal" style="width:120px;text-align:left">EVEN</span>
+        <span id="pvVal">EVEN</span>
       </div>
       <datalist id="pvStopsList"></datalist>
     </div>
@@ -41,6 +42,12 @@
       <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
       <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
       <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">D 0 | O 0 | R 0</div>
+    </div>
+    <div id="pvTotals" class="pv-totals">
+      <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span></div>
+      <div class="pv-badge pv-o"><span class="label">Other</span><span id="pvOth" class="num">0</span></div>
+      <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
+      <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
     </div>
     <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
     <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">We only capped the maximum PV shift to ±60%.</div>
@@ -67,7 +74,7 @@
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
 Please report any innaccuracies to me through discord: eigentaylor ·
   Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: 2025-09-17 03:29 UTC</footer>
+  Last updated: 2025-09-17 04:02 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -95,7 +102,8 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
   .then(us => {
     const states = topojson.feature(us, us.objects.states).features;
 
-    g.selectAll("path.state")
+  const tip = document.getElementById('mapTip');
+  g.selectAll("path.state")
       .data(states)
       .join("path")
       .attr("class", "state")
@@ -111,7 +119,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
       .attr("stroke-width", 0.8)
       .attr("tabindex", 0)
       /* On hover: pick a bright blue or red depending on the current fill and restore it on mouseout */
-    .on("mouseover", function() {
+    .on("mouseover", function(event, d) {
         const sel = d3.select(this);
         const cur = sel.attr('fill') || '#2f2f2f';
         // stash the original fill so we can restore it on mouseout
@@ -128,12 +136,40 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         } catch (e) {
           sel.attr('fill', '#66b3ff');
         }
+        // show tooltip
+        try {
+          const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+          if (abbr) {
+            const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
+            const ev = (info && info.ev != null) ? info.ev : '';
+            const marginStr = (info && info.marginStr) ? info.marginStr : '';
+            tip.textContent = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
+            tip.style.display = 'block';
+            // position right away
+            const rect = this.ownerSVGElement.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            tip.style.left = (rect.left + x) + 'px';
+            tip.style.top = (rect.top + y) + 'px';
+          }
+        } catch(e) {}
+      })
+      .on("mousemove", function(event, d){
+        try {
+          if (!tip || tip.style.display === 'none') return;
+          const rect = this.ownerSVGElement.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          tip.style.left = (rect.left + x) + 'px';
+          tip.style.top = (rect.top + y) + 'px';
+        } catch(e) {}
       })
       .on("mouseout",  function() {
         const sel = d3.select(this);
         const orig = sel.attr('data-orig-fill') || '#2f2f2f';
         sel.attr('fill', orig);
         sel.attr('data-orig-fill', null);
+        if (tip) tip.style.display = 'none';
       })
       .on("click", (event, d) => {
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];

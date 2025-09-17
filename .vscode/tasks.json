@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build flip results CSVs",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"e:\\coding projects\\state-trends\\build_flip_results.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Build site with new PV totals",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"e:\\coding projects\\state-trends\\build_site.py"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$python"
+			],
+			"group": "build"
+		}
+	]
+}
