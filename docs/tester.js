@@ -3,7 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["MS", "LA", "AR", "GA", "AL"];
+  const SPECIAL_1968 = ["LA", "MS", "AR", "AL", "GA"];
 
   // URL parameter management for sharing
   function getUrlParams() {
@@ -402,7 +402,7 @@
           if (isThirdParty) {
             bgColor = '#C9A400'; // Yellow for third-party
           } else {
-            bgColor = marginToColor(v * 100); // keep it dark for readability
+            bgColor = marginToColor(v * 1000); // keep it dark for readability
           }
         }
         

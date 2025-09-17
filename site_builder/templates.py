@@ -677,7 +677,7 @@ TESTER_JS = r"""
           if (isThirdParty) {
             bgColor = '#C9A400'; // Yellow for third-party
           } else {
-            bgColor = marginToColor(v * 100); // keep it dark for readability
+            bgColor = marginToColor(v * 1000); // keep it dark for readability
           }
         }
         
