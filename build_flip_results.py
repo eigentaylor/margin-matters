@@ -83,46 +83,58 @@ def compute_knapsack(units, target_ev):
     """
     if target_ev <= 0:
         return [], 0, 0
-    max_ev = sum(u['ev'] for u in units)
-    if target_ev > max_ev:
+    
+    n = len(units)
+    if n == 0 or target_ev > sum(u['ev'] for u in units):
         return [], math.inf, 0
 
-    # DP over EV count minimizing votes flipped
-    INF = 10**18
-    dp = [INF] * (max_ev + 1)
-    dp[0] = 0
-    choice = [None] * (max_ev + 1)
-
-    # sort by efficiency (votes_to_flip per EV) to aid reconstruction deterministically
+    # Sort by efficiency for deterministic results
     units_sorted = sorted(units, key=lambda u: (u['votes_to_flip'] / max(1, u['ev']), u['abbr']))
-    for idx, u in enumerate(units_sorted):
+    
+    # Use 2D DP: dp[i][v] = min votes to get exactly v EVs using first i items
+    INF = 10**18
+    max_ev = sum(u['ev'] for u in units_sorted)
+    
+    # Initialize DP table
+    dp = [[INF] * (max_ev + 1) for _ in range(n + 1)]
+    dp[0][0] = 0
+    
+    # Fill DP table
+    for i in range(1, n + 1):
+        u = units_sorted[i - 1]
         ev = u['ev']
-        vt = u['votes_to_flip']
-        for v in range(max_ev, ev - 1, -1):
-            cand = dp[v - ev] + vt
-            if cand < dp[v]:
-                dp[v] = cand
-                choice[v] = idx
-
-    # find best v >= target_ev
+        votes = u['votes_to_flip']
+        
+        for v in range(max_ev + 1):
+            # Don't take item i
+            dp[i][v] = dp[i - 1][v]
+            
+            # Take item i (if possible)
+            if v >= ev and dp[i - 1][v - ev] != INF:
+                dp[i][v] = min(dp[i][v], dp[i - 1][v - ev] + votes)
+    
+    # Find best solution with at least target_ev EVs
     best_v, best_cost = 0, INF
     for v in range(target_ev, max_ev + 1):
-        if dp[v] < best_cost:
-            best_cost = dp[v]
+        if dp[n][v] < best_cost:
+            best_cost = dp[n][v]
             best_v = v
-
+    
     if best_cost >= INF:
         return [], math.inf, 0
-
-    # reconstruct
+    
+    # Reconstruct solution
     chosen = []
-    cur = best_v
-    while cur > 0 and choice[cur] is not None:
-        idx = choice[cur]
-        u = units_sorted[idx]
-        chosen.append(u)
-        cur -= u['ev']
-
+    i, v = n, best_v
+    while i > 0 and v > 0:
+        # Check if we took item i
+        if dp[i][v] != dp[i - 1][v]:
+            # We took item i
+            u = units_sorted[i - 1]
+            chosen.append(u)
+            v -= u['ev']
+        i -= 1
+    
     return chosen, best_cost, best_v
 
 

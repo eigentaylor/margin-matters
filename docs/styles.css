@@ -58,3 +58,15 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 @media (max-width:800px){.info-dl{grid-template-columns:1fr}}
 /* Map hover tooltip */
 #mapTip{position:absolute;pointer-events:none;z-index:1200;transform:translate(-50%, -120%);background:rgba(20,20,20,0.95);color:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 10px;white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,0.35)}
+
+/* Flip scenario UI */
+.flip-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.flip-summary{display:flex;gap:10px;align-items:stretch;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.flip-badge{display:flex;gap:8px;align-items:center;justify-content:center;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:#111}
+.flip-badge .label{font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.flip-badge .num{font-weight:900;font-variant-numeric:tabular-nums;min-width:6ch;text-align:right;color:#fff}
+.flip-table{width:100%;border-collapse:collapse;background:#111;margin-top:8px}
+.flip-table th,.flip-table td{padding:8px 10px;border-bottom:1px solid #1f1f1f;text-align:center;white-space:nowrap}
+.flip-table th{background:#161616;position:sticky;top:0}
+/* Ensure flip buttons text is white for readability (consistent with Explorer) */
+.flip-controls .btn{color:#fff}
