@@ -45,10 +45,13 @@
             <button id="addStateBtn" class="btn">Add state</button>
             <div style="display:flex;gap:6px;align-items:center">
               <label class="badge">Presets:</label>
-              <button id="preset1" class="btn">WI/MI/PA</button>
-              <button id="preset2" class="btn">2024 Swings</button>
-              <button id="preset3" class="btn">Maine (ME + districts)</button>
-              <button id="preset4" class="btn">Nebraska (NE + districts)</button>
+              <select id="presetSel" style="background:var(--card);color:var(--fg);border:1px solid var(--border);padding:6px;border-radius:6px">
+                <option value="">— choose —</option>
+                <option value="preset1">WI/MI/PA</option>
+                <option value="preset2">2024 Swings</option>
+                <option value="preset3">Maine (ME + districts)</option>
+                <option value="preset4">Nebraska (NE + districts)</option>
+              </select>
               <button id="resetBtn" class="btn" title="Reset to defaults">Reset</button>
             </div>
           </div>
@@ -64,9 +67,9 @@
         <div class="field">
           <label>Year range</label>
           <div style="display:flex;gap:8px;align-items:center">
-            <input id="startYear" type="number" style="width:100px" value="1964" step="4" />
+            <input id="startYear" type="number" style="width:100px" value="1964" step="4" min="1964" max="2024" />
             <span style="color:var(--muted)">to</span>
-            <input id="endYear" type="number" style="width:100px" value="2024" step="4" />
+            <input id="endYear" type="number" style="width:100px" value="2024" step="4" min="1964" max="2024" />
           </div>
         </div>
         <div class="field">

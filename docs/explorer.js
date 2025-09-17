@@ -15,8 +15,7 @@ Interactive Explorer for state-trends
     rel: document.getElementById('relativeChk'),
     delta: document.getElementById('deltaChk'),
     twoP: document.getElementById('twoPartyChk'),
-  preset3: document.getElementById('preset3'),
-  preset4: document.getElementById('preset4'),
+  presetSel: document.getElementById('presetSel'),
     nat: document.getElementById('natOverlay'),
     points: document.getElementById('pointsToggle'),
     notes: document.getElementById('notes'),
@@ -180,18 +179,16 @@ Interactive Explorer for state-trends
 
     // Start/end year defaults derived from data extents (filled later when data loaded)
     el.addStateBtn.addEventListener('click', ()=>{ addState(el.state.value); });
-    el.preset1.addEventListener('click', ()=>{ setPreset(['WI','MI','PA']); });
-    el.preset2.addEventListener('click', ()=>{ setPreset(['AZ','NV','NC','GA','WI','MI','PA']); });
-    if (el.preset3) {
-      el.preset3.addEventListener('click', () => {
-        // Maine: aggregate + congressional districts
-        setPreset(['ME-AL', 'ME-01', 'ME-02']);
-      });
-    }
-    if (el.preset4) {
-      el.preset4.addEventListener('click', () => {
-        // Nebraska: aggregate + congressional districts
-        setPreset(['NE-AL', 'NE-01', 'NE-02', 'NE-03']);
+    if (el.presetSel) {
+      el.presetSel.addEventListener('change', (e) => {
+        const v = e.target.value;
+        if (!v) return;
+        if (v === 'preset1') setPreset(['WI','MI','PA']);
+        else if (v === 'preset2') setPreset(['AZ','NV','NC','GA','WI','MI','PA']);
+        else if (v === 'preset3') setPreset(['ME-AL','ME-01','ME-02']);
+        else if (v === 'preset4') setPreset(['NE-AL','NE-01','NE-02','NE-03']);
+        // reset the select back to placeholder so user can pick again
+        e.target.value = '';
       });
     }
   const resetBtn = document.getElementById('resetBtn');
