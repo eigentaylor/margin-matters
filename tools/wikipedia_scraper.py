@@ -512,7 +512,7 @@ def main():
     # Define years to scrape
     # Start with recent years that are most likely to work
     priority_years = [2020, 2016, 2012, 2008, 2004, 2000]
-    START_YEAR = 1952
+    START_YEAR = 1948
     END_YEAR = 2024
     all_years = list(range(END_YEAR, START_YEAR - 1, -4))
     #all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968, 1964]

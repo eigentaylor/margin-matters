@@ -1,4 +1,9 @@
 year,mode,abbr,ev,votes_to_flip,pct_of_state_votes
+1948,classic,IL,28,16807,0.422
+1948,classic,CA,25,8933,0.222
+1948,classic,OH,25,3554,0.121
+1948,no_majority,CA,25,8933,0.222
+1948,no_majority,OH,25,3554,0.121
 1952,classic,NH,4,29813,10.923
 1952,classic,UT,4,29414,8.925
 1952,classic,MA,16,104401,4.38
