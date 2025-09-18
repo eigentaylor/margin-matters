@@ -65,6 +65,7 @@ def get_candidate_parties(year):
         1972: (['nixon'], ['mcgovern']),
         1968: (['nixon'], ['humphrey']),
         1964: (['goldwater'], ['johnson']),
+        1960: (['nixon'], ['kennedy']),
     }
     
     return candidates.get(year, (['republican'], ['democratic']))
@@ -173,10 +174,10 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
     if len(rows) < 10:  # Not enough rows for all states
         return None
     
-    if year == 1968 or year == 1992:
+    if year == 1968 or year == 1992 or year == 2012:
         pass # something weird is happening in these years
     
-    if year == 2012:
+    if year == 1960:
         pass # something weird is happening in this year
     
     # Analyze header to understand column structure
@@ -242,16 +243,36 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             
             # Try to get total votes
             total_votes = 0
+            # If we have a total_col, try it; if it yields no numeric value, try the column to the left.
             if header_info.get('total_col') and header_info['total_col'] < len(cells):
-                cell_0_text = cells[0].get_text().strip()
-                if year == 1984 and 'TOTALS' in cell_0_text: # error in the table structure for 1984, there's a missing column
-                    total_votes = clean_number(cells[header_info['total_col'] - 1].get_text())
-                    print(f'    Note: Adjusted total votes column for 1984 for state {state_name} and got {total_votes}')
-                else:
-                    total_votes = clean_number(cells[header_info['total_col']].get_text())
+                tried_cols = []
+                def try_col(idx):
+                    if idx < 0 or idx >= len(cells):
+                        return 0
+                    tried_cols.append(idx)
+                    text = cells[idx].get_text()
+                    return clean_number(text)
+
+                # First try the detected total_col
+                total_votes = try_col(header_info['total_col'])
+
+                # Special-case historical 1984 table error: sometimes the header offset causes TOTALS to appear in first cell
+                cell_0_text = cells[0].get_text().strip() if len(cells) > 0 else ''
+                if total_votes == 0 and year == 1984 and 'TOTALS' in cell_0_text:
+                    # try the column to the left of total_col
+                    total_votes = try_col(header_info['total_col'] - 1)
+                    print(f"    Note: Adjusted total votes column for 1984 for state {state_name} and got {total_votes}")
+
+                # If first attempt failed, try the column to the left generally
                 if total_votes == 0:
-                    pass # something went wrong
-                    total_votes = clean_number(cells[header_info['total_col']].get_text()) # second call for debugging
+                    alt_idx = header_info['total_col'] - 1
+                    # only try if it's a different column we haven't already tried
+                    if alt_idx not in tried_cols:
+                        total_votes = try_col(alt_idx)
+
+                # If still zero, raise so the exception handler for rows can catch and skip the row with a warning
+                if total_votes == 0:
+                    raise ValueError(f"Could not determine numeric total_votes for state '{state_name}' (tried columns {tried_cols})")
             
             # If no total column, estimate from visible vote columns
             if total_votes == 0:
@@ -387,7 +408,7 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords):
         
         # Look for total column
         if not total_col and ('total' in desc):
-            if 'votes' in desc or 'vote' in desc or '#' in desc:
+            if 'votes' in desc or 'vote' in desc or '#' in desc or 'state total' in desc:
                 total_col = i
     
     # Fallback: assume standard layout (state, rep_votes, dem_votes, ...)
@@ -489,7 +510,7 @@ def main():
     # Define years to scrape
     # Start with recent years that are most likely to work
     priority_years = [2020, 2016, 2012, 2008, 2004, 2000]
-    START_YEAR = 1964
+    START_YEAR = 1960
     END_YEAR = 2024
     all_years = list(range(END_YEAR, START_YEAR - 1, -4))
     #all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968, 1964]
