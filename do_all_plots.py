@@ -40,16 +40,31 @@ def _apply_axes_styling(ax, years: np.ndarray, y_label: str, title: str, zero_li
 
 def _line_margins(ax, years: np.ndarray, state_values: np.ndarray | None, nat_values: np.ndarray,
                   state_label: str, nat_label: str, state: str, label_points: bool = False,
-                  special_year_for_state: int | None = 1968):
+                  special_year_for_state: int | None = 1968,
+                  nat_color_values: np.ndarray | None = None, state_color_values: np.ndarray | None = None):
     # National
-    nat_colors = _color_by_sign(nat_values, years, state="", positive_color="deepskyblue", negative_color="red",
-                                special_year=None)
+    # Use provided color values when available, otherwise fall back to sign-based coloring
+    if nat_color_values is not None:
+        try:
+            nat_colors = list(np.asarray(nat_color_values))
+        except Exception:
+            nat_colors = list(nat_color_values)
+    else:
+        nat_colors = _color_by_sign(nat_values, years, state="", positive_color="deepskyblue", negative_color="red",
+                                    special_year=None)
     ax.plot(years, nat_values, label=nat_label, marker="o", color="magenta", linestyle="--")
     ax.scatter(years, nat_values, c=nat_colors, s=40, zorder=2, label=f"{nat_label} Results")
 
     # State (optional)
     if state_values is not None:
-        pres_colors = _color_by_sign(state_values, years, state, special_year=special_year_for_state)
+        # Use provided state color values when available; else fall back to sign-based coloring
+        if state_color_values is not None:
+            try:
+                pres_colors = list(np.asarray(state_color_values))
+            except Exception:
+                pres_colors = list(state_color_values)
+        else:
+            pres_colors = _color_by_sign(state_values, years, state, special_year=special_year_for_state)
         ax.plot(years, state_values, label=state_label, marker="o", linestyle="-", color="lime")
         ax.scatter(years, state_values, c=pres_colors, s=60, zorder=3, label=f"{state_label} Results")
 
@@ -88,9 +103,20 @@ def _bar_values(ax, years: np.ndarray, values: np.ndarray, title: str, y_label: 
         other_color = "cyan"
         colors = [special_color if (year == special_year_for_state and state in SPECIAL_1968_STATES) else other_color for year in years]
     else:
-        if color_values is None:
-            color_values = values
-        colors = _color_by_sign(color_values, years, state, special_year=special_year_for_state)
+        # If color_values provided and looks like a list/array of color strings, use directly.
+        if color_values is not None:
+            # If it's numeric, we still want sign-based colors; else treat as explicit colors
+            try:
+                arr = np.asarray(color_values)
+                if arr.dtype.kind in {"U", "S", "O"}:
+                    colors = list(arr)
+                else:
+                    colors = _color_by_sign(arr, years, state, special_year=special_year_for_state)
+            except Exception:
+                # fallback: assume list-like of strings
+                colors = list(color_values)
+        else:
+            colors = _color_by_sign(values, years, state, special_year=special_year_for_state)
     bars = ax.bar(x_idx, values, width=0.4, color=colors)
     ax.bar_label(bars, labels=[utils.lean_str(v, third_party=lean_is_third_party) for v in values], padding=4,
                  fontsize=12, color="white")
@@ -134,7 +160,7 @@ def _bar_deltas(ax, years: np.ndarray, deltas: np.ndarray, title: str, y_label: 
     ax.set_xticklabels(years_for_delta, rotation=45)
 
 
-def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False):
+def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False, national_colors_by_year: dict = None):
     # 3x1: margins line, 3rd-Party share line, pres_margin_delta bar
     fig, axes = plt.subplots(3, 1, figsize=(14, 12), constrained_layout=True)
     ax1, ax2, ax3 = axes
@@ -146,6 +172,14 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
     # 1) total margin line (state + nation unless nat_only)
     state_margin = None if nat_only else df["pres_margin"].to_numpy()[order]
     nat_margin = df["national_margin"].to_numpy()[order]
+    # Prepare color arrays from dataframe if available
+    # For national colors, use the national_colors_by_year lookup if available
+    if national_colors_by_year:
+        nat_color_vals = [national_colors_by_year.get(year, None) for year in years]
+    else:
+        nat_color_vals = df["color"].to_numpy()[order] if "color" in df.columns else None
+    state_color_vals = None if nat_only or "color" not in df.columns else df["color"].to_numpy()[order]
+
     _line_margins(
         ax1,
         years,
@@ -156,6 +190,8 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         state=state,
         label_points=nat_only,  # label points only for NAT
         special_year_for_state=1968,
+        nat_color_values=nat_color_vals,
+        state_color_values=state_color_vals,
     )
     _apply_axes_styling(ax1, years, y_label="Margin", title=f"{state} Margins")
 
@@ -217,9 +253,11 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
 
     # 1) relative_margin bar (special yellow on 1968 for target states)
     rel = df["relative_margin"].to_numpy()[order]
+    # If a color column exists, use it for marking bars/points; otherwise fall back to pres_margin signs
+    color_vals_for_rel = df["color"].to_numpy()[order] if "color" in df.columns else df["pres_margin"].to_numpy()[order]
     _bar_values(ax1, years, rel, title=f"{state} Relative Margins", y_label="Relative Margin", state=state,
-                lean_is_third_party=False, special_year_for_state=1968,
-                color_values=df["pres_margin"].to_numpy()[order])
+            lean_is_third_party=False, special_year_for_state=1968,
+            color_values=color_vals_for_rel)
 
     if include_LOESS or include_SPLINE:
         # Prepare dense x for plotting
@@ -274,7 +312,7 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
     plt.close(fig)
 
 
-def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False):
+def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False, national_colors_by_year: dict = None):
     # 2x2: use ONLY two-party columns
     fig = plt.figure(figsize=(18, 14))
     if nat_only: # 2x1
@@ -294,6 +332,13 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
     # Top-left: line plot two-party margins
     state_margin = None if nat_only else df["two_party_margin"].to_numpy()[order]
     nat_margin = df["two_party_national_margin"].to_numpy()[order]
+    # For national colors, use the national_colors_by_year lookup if available
+    if national_colors_by_year:
+        nat_color_vals = [national_colors_by_year.get(year, None) for year in years]
+    else:
+        nat_color_vals = df["color"].to_numpy()[order] if "color" in df.columns else None
+    state_color_vals = None if nat_only or "color" not in df.columns else df["color"].to_numpy()[order]
+
     _line_margins(
         ax_tl,
         years,
@@ -304,6 +349,8 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
         state=state,
         label_points=nat_only,  # label points only for NAT
         special_year_for_state=None,
+        nat_color_values=nat_color_vals,
+        state_color_values=state_color_vals,
     )
     _apply_axes_styling(ax_tl, years, y_label="Two-Party Margin", title=f"{state} Two Party Margins")
 
@@ -316,8 +363,9 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
     else:
         # Top-right: relative two-party bar
         rel_tp = df["two_party_relative_margin"].to_numpy()[order]
+        color_vals_for_two = df["color"].to_numpy()[order] if "color" in df.columns else df["two_party_margin"].to_numpy()[order]
         _bar_values(ax_tr, years, rel_tp,
-                    title=f"{state} Relative Two-Party Margin", y_label="Relative Margin", state=state, color_values=df["two_party_margin"].to_numpy()[order])
+                    title=f"{state} Relative Two-Party Margin", y_label="Relative Margin", state=state, color_values=color_vals_for_two)
 
         # Add LOESS and spline smoothing overlays for relative two-party margin
         try:
@@ -375,6 +423,13 @@ def main(start_year: int | None = None, end_year: int | None = 2024, clear_old_f
         "figure.titlesize": 18,
     })
     df = pd.read_csv("presidential_margins.csv")
+    
+    # Extract national colors for use across all state plots
+    national_df = df[df["abbr"] == "NATIONAL"].copy()
+    national_colors_by_year = {}
+    if "color" in national_df.columns:
+        for _, row in national_df.iterrows():
+            national_colors_by_year[row["year"]] = row["color"]
 
     # Filter by year range if provided
     if start_year is not None:
@@ -404,17 +459,17 @@ def main(start_year: int | None = None, end_year: int | None = 2024, clear_old_f
     # NATIONAL first (two plots)
     nat_df = df[df["abbr"] == "NATIONAL"].copy()
     if not nat_df.empty:
-        _build_plot1("NAT", nat_df, output_dir, nat_only=True)
-        _build_plot3_two_party("NAT", nat_df, output_dir, nat_only=True)
+        _build_plot1("NAT", nat_df, output_dir, nat_only=True, national_colors_by_year=national_colors_by_year)
+        _build_plot3_two_party("NAT", nat_df, output_dir, nat_only=True, national_colors_by_year=national_colors_by_year)
 
     # States
     for state in sorted(x for x in df["abbr"].unique() if x != "NATIONAL"):
         state_df = df[df["abbr"] == state].copy()
         if state_df.empty:
             continue
-        _build_plot1(state, state_df, output_dir)
+        _build_plot1(state, state_df, output_dir, national_colors_by_year=national_colors_by_year)
         _build_plot2(state, state_df, output_dir)
-        _build_plot3_two_party(state, state_df, output_dir)
+        _build_plot3_two_party(state, state_df, output_dir, national_colors_by_year=national_colors_by_year)
 
 
 if __name__ == "__main__":
