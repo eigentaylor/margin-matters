@@ -87,8 +87,10 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 if eff > (nR_local + INNER) and eff < (nD_local - INNER):
                     winner = 'T'
             else:
-                approximated_margins = {'D': original_margins['D'] + (eff - nat), 'R': original_margins['R'] - (eff - nat), 'T': original_margins['T']}
+                approximated_margins = {'D': original_margins['D'] + (eff - nat) / 2, 'R': original_margins['R'] - (eff - nat) / 2, 'T': original_margins['T']}
                 new_winner = max(approximated_margins, key=approximated_margins.get)
+                if abbr == 'AL' and year == 1960:
+                    pass
                 if new_winner == original_winner:
                     print(f"Debug: {year} {abbr} winner unchanged at stop {s} eff {eff}: {original_winner}")
                     pass
@@ -137,15 +139,14 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 if abs(nD) <= PV_CAP:
                     stops_set.add(nD)
                     stop_to_units[nD].append(abbr)
-                    # nudge inside the yellow window
-                    sgn = 1.0 if (nD - nat) > 0 else (-1.0 if (nD - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(nD, nD + sgn * EPS)
+                    # nudge nD slightly lower (into the yellow window)
+                    eff = stop_to_eff.setdefault(nD, nD - EPS)
                     classify_and_append(nD, eff, r)
                 if abs(nR) <= PV_CAP:
                     stops_set.add(nR)
                     stop_to_units[nR].append(abbr)
-                    sgn = 1.0 if (nR - nat) > 0 else (-1.0 if (nR - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(nR, nR + sgn * EPS)
+                    # nudge nR slightly higher (into the yellow window)
+                    eff = stop_to_eff.setdefault(nR, nR + EPS)
                     classify_and_append(nR, eff, r)
             else:
                 val = -rm

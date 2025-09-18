@@ -1,8 +1,8 @@
 
 (function(){
   const PV_CAP = 0.6;
-  const EPS = 1e-5;
-  const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
+  const EPS = 1e-8;
+  const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
   const SPECIAL_1968 = ["GA", "LA", "AR", "MS", "AL"];
 
@@ -303,14 +303,16 @@
         // Add third-party tipping thresholds (upper/lower bounds of yellow window)
         const rVal = +(r.rm || 0);
         const nD = -rVal + a;
+        const nD_EPS_SGN = Math.sign(nD - nat);
         const nR = -rVal - a;
+        const nR_EPS_SGN = Math.sign(nR - nat);
         if (isFinite(nD) && Math.abs(nD) <= cap) {
           stopsSet.add(nD);
           const pv = stopToUnits.get(nD) || [];
           pv.push(r.unit);
           stopToUnits.set(nD, pv);
       // Upper boundary: nudge inside the yellow window (toward center -rVal)
-      if (!stopToEff.has(nD)) stopToEff.set(nD, nD - EPS);
+      if (!stopToEff.has(nD)) stopToEff.set(nD, nD + nD_EPS_SGN * EPS);
         }
         if (isFinite(nR) && Math.abs(nR) <= cap) {
           stopsSet.add(nR);
@@ -318,7 +320,7 @@
           pv.push(r.unit);
           stopToUnits.set(nR, pv);
       // Lower boundary: nudge inside the yellow window (toward center -rVal)
-      if (!stopToEff.has(nR)) stopToEff.set(nR, nR + EPS);
+      if (!stopToEff.has(nR)) stopToEff.set(nR, nR + nR_EPS_SGN * EPS);
         }
         // Skip adding naive stop for this unit to avoid duplicate-ish stops
       } else {
@@ -611,8 +613,10 @@
         if (a > 0) {
           const rVal = +(r.rm || 0);
           const nD = -rVal + a - EPS;
+          const nD_EPS_SGN = Math.sign(nD - nat);
           const nR = -rVal - a + EPS;
-          if (pv > nR + EPS && pv < nD - EPS) {
+          const nR_EPS_SGN = Math.sign(nR - nat);
+          if (pv > nR - nR_EPS_SGN * EPS && pv < nD - nD_EPS_SGN * EPS) {
             color = '#FFD700'; // yellow within the window
           } else {
             color = marginToColor(m);

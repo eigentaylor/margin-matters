@@ -15,7 +15,7 @@ A standalone page to explore state trends with dynamic charts. It does not affec
 ## Try it locally (Windows PowerShell)
 
 ```powershell
-cd "E:/coding projects/state-trends/docs"
+cd "./docs"
 python -m http.server 8000
 ```
 
