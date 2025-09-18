@@ -273,53 +273,43 @@
     // Predefine effective values for EVEN and Actual stops
     stopToEff.set(0, 0 + EPS); // EVEN nudges to D side to break ties deterministically
     if (isFinite(nat)) stopToEff.set(nat, nat); // Actual = exactly national
-    arr.forEach(r => {
+  arr.forEach(r => {
       const val = -(+r.rm || 0);
       // ignore national rows in per-state stop derivation to avoid 'NATIONAL' showing beside EVEN
       if ((r.unit === 'NATIONAL' || r.unit === 'NAT')) return;
-      // For 1968 third-party states (SPECIAL_1968 + TN), do not add the naive -relative_margin stop
-      let allowNaive = true;
-      if (year === 1968) {
-        const st = (r.unit || '').slice(0,2);
-        if (st && (st === 'TN' || (Array.isArray(SPECIAL_1968) && SPECIAL_1968.indexOf(st) !== -1))) {
-          allowNaive = false;
+      const t = +r.tp || 0;
+      const a = 3*t - 1; // half-width of third-party window
+      if (a > 0 && isFinite(a)) {
+        // Add third-party tipping thresholds (upper/lower bounds of yellow window)
+        const rVal = +(r.rm || 0);
+        const nD = -rVal + a;
+        const nR = -rVal - a;
+        if (isFinite(nD) && Math.abs(nD) <= cap) {
+          stopsSet.add(nD);
+          const pv = stopToUnits.get(nD) || [];
+          pv.push(r.unit);
+          stopToUnits.set(nD, pv);
+      // Upper boundary: nudge inside the yellow window (toward center -rVal)
+      if (!stopToEff.has(nD)) stopToEff.set(nD, nD - EPS);
         }
-      }
-      if (allowNaive && isFinite(val) && Math.abs(val) <= cap) {
-        stopsSet.add(val);
-        const prev = stopToUnits.get(val) || [];
-        prev.push(r.unit);
-        stopToUnits.set(val, prev);
-        // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
-        sgn = Math.sign(val - nat);
-        if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
-      }
-      // For 1968 only: add third-party tipping thresholds where applicable (t >= 1/3)
-      if (year === 1968) {
-        const t = +r.tp || 0;
-        const a = 3*t - 1; // width from center to each threshold
-        if (a > 0 && isFinite(a)) {
-          const rVal = +(r.rm || 0);
-          const nD = -rVal + a;
-          const nR = -rVal - a;
-          if (isFinite(nD) && Math.abs(nD) <= cap) {
-            stopsSet.add(nD);
-            const pv = stopToUnits.get(nD) || [];
-            pv.push(r.unit);
-            stopToUnits.set(nD, pv);
-            // Upper boundary: nudge just inside the yellow window
-            sgn = Math.sign(nD + nat);
-            if (!stopToEff.has(nD)) stopToEff.set(nD, nD + 2 * sgn * EPS);
-          }
-          if (isFinite(nR) && Math.abs(nR) <= cap) {
-            stopsSet.add(nR);
-            const pv = stopToUnits.get(nR) || [];
-            pv.push(r.unit);
-            stopToUnits.set(nR, pv);
-            // Lower boundary: nudge just inside the yellow window
-            sgn = Math.sign(nR + nat);
-            if (!stopToEff.has(nR)) stopToEff.set(nR, nR + 2 * sgn * EPS);
-          }
+        if (isFinite(nR) && Math.abs(nR) <= cap) {
+          stopsSet.add(nR);
+          const pv = stopToUnits.get(nR) || [];
+          pv.push(r.unit);
+          stopToUnits.set(nR, pv);
+      // Lower boundary: nudge inside the yellow window (toward center -rVal)
+      if (!stopToEff.has(nR)) stopToEff.set(nR, nR + EPS);
+        }
+        // Skip adding naive stop for this unit to avoid duplicate-ish stops
+      } else {
+        if (isFinite(val) && Math.abs(val) <= cap) {
+          stopsSet.add(val);
+          const prev = stopToUnits.get(val) || [];
+          prev.push(r.unit);
+          stopToUnits.set(val, prev);
+          // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
+      const sgn = Math.sign(val - nat);
+          if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
         }
       }
     });
@@ -353,49 +343,20 @@
         // Determine button color based on margin and third-party scenarios
         let bgColor = '#0d0d0dff'; // Default Dark background
         if (!isEven) {
-          // Check for 1968 third-party scenario
+          // Check for third-party scenario at this stop for any year
           let isThirdParty = false;
-          if (year === 1968) {
-            // Special case for TN in 1968: color the lower PV value stop yellow
-            if (unitsRaw.includes('TN')) {
-              // Find TN's data to calculate its yellow window
-              const rows = byYear.get(year) || [];
-              const tnRow = rows.find(r => r.unit === 'TN');
-              if (tnRow) {
-                const t = +tnRow.tp || 0;
-                const a = 3*t - 1;
-                if (a > 0) {
-                  const rVal = +(tnRow.rm || 0);
-                  const nD = -rVal + a;
-                  const nR = -rVal - a;
-                  // TN creates two stops: the lower one (nR) should be yellow
-                  if (Math.abs(v - nR) < 1e-6) {
-                    isThirdParty = true;
-                  }
-                }
-              }
-            } else {
-              // Check if any other unit at this stop would be in third-party territory
-              const rows = byYear.get(year) || [];
-              for (const row of rows) {
-                const t = +row.tp || 0;
-                const a = 3*t - 1;
-                if (a > 0) {
-                  const rVal = +(row.rm || 0);
-                  const pv = v;
-                  const nD = -rVal + a;
-                  const nR = -rVal - a;
-                  const EPS = 1e-9;
-                  
-                  // Check if this PV would place this unit in the yellow window (third-party win)
-                  if (pv > nR + EPS && pv < nD - EPS) {
-                    if (unitsRaw.includes(row.unit)) {
-                      isThirdParty = true;
-                      break;
-                    }
-                  }
-                }
-              }
+          const rows = byYear.get(year) || [];
+          // Use effective PV for this stop to reflect nudges inside windows
+          const testPv = (stopToEff.get(v) != null) ? stopToEff.get(v) : v;
+          for (const row of rows) {
+            if (!unitsRaw.includes(row.unit)) continue;
+            const t = +row.tp || 0;
+            const a = 3*t - 1;
+            if (a > 0) {
+              const rVal = +(row.rm || 0);
+              const nD = -rVal + a;
+              const nR = -rVal - a;
+              if (testPv > nR + EPS && testPv < nD - EPS) { isThirdParty = true; break; }
             }
           }
           
@@ -558,13 +519,9 @@
     (byYear.get(year) || []).forEach(r => {
       const unit = r.unit; if (!unit || unit === 'NATIONAL') return;
       const stopsForUnit = [];
-      if (year === 1968) {
-        const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
-        if (a > 0) { stopsForUnit.push(-rVal - a, -rVal + a); }
-        else { stopsForUnit.push(-(+r.rm || 0)); }
-      } else {
-        stopsForUnit.push(-(+r.rm || 0));
-      }
+      const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
+      if (a > 0) { stopsForUnit.push(-rVal - a, -rVal + a); }
+      else { stopsForUnit.push(-(+r.rm || 0)); }
       for (const s of stopsForUnit) {
         const eff = stopToEff.get(s);
         if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
@@ -601,9 +558,9 @@
         if (!isFinite(ev)) ev = 0;
       }
   // Count EVs, ensuring the tipping-point state is included (no black sliver)
-  // Third-party EV handling for 1968: classify as Other when PV is strictly within the yellow window
+  // Third-party EV handling: classify as Other when PV is strictly within the yellow window
   let counted = false;
-  if (year === 1968) {
+  {
     const t = +r.tp || 0;
     const a = 3*t - 1;
     if (a > 0) {
@@ -629,9 +586,9 @@
   }
       const st = unit.slice(0,2);
       const prev = abbrColors.get(st);
-      // 1968 special pluralities: dynamic yellow window using third-party share
+      // Special pluralities: dynamic yellow window using third-party share (any year)
       let color;
-      if (year === 1968) {
+      {
         const t = +r.tp || 0;
         const a = 3*t - 1;
         if (a > 0) {
@@ -646,8 +603,6 @@
         } else {
           color = marginToColor(m);
         }
-      } else {
-        color = marginToColor(m);
       }
   if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
   // store per-unit color and party label so district polygons can be filled individually
@@ -723,21 +678,16 @@
   const rEl = document.getElementById('evFillR');
   if (dEl) dEl.style.width = `${dPct}%`;
   if (oEl) {
-    if (year === 1968) {
-      oEl.style.left = `${dPct}%`;
-      oEl.style.width = `${oPct}%`;
-      oEl.style.display = '';
-    } else {
-      oEl.style.width = '0%';
-      oEl.style.display = 'none';
-    }
+    oEl.style.left = `${dPct}%`;
+    oEl.style.width = `${oPct}%`;
+    oEl.style.display = (oPct > 0 ? '' : 'none');
   }
   if (rEl) rEl.style.width = `${rPct}%`;
   const evText = document.getElementById('evText');
-  if (evText) evText.textContent = (year === 1968) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
+  if (evText) evText.textContent = (oEV > 0) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
   // Also reflect the EV split in the flip summary badge
   const flipEC = document.getElementById('flipEC');
-  if (flipEC) flipEC.textContent = (year === 1968) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
+  if (flipEC) flipEC.textContent = (oEV > 0) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
   
   // Adjusted national PV totals at current PV stop
   try {
@@ -873,28 +823,22 @@ window.getAdjustedInfo = function(unit){
       if (!isFinite(m)) return '';
       if (Math.abs(m) < 0.000005) return 'EVEN';
       
-      // Check for 1968 third-party scenario (yellow window)
-      if (year === 1968) {
+      // Check for third-party scenario (yellow window) for any year
+      {
         const t = +r.tp || 0;
         const a = 3*t - 1;
         if (a > 0) {
           const rVal = +(r.rm || 0);
           const pv = window._curPv || 0;
-          const currentMargin = rVal + pv;
           const nD = -rVal + a;
           const nR = -rVal - a;
           const EPS = 1e-9;
-          
-          // Check if current PV would place this unit in the yellow window (third-party win)
+          // If current PV places this unit in the yellow window, show T+ margin
           if (pv > nR + EPS && pv < nD - EPS) {
-            // Calculate third-party margin: how much third party leads by
-            // In yellow window, third party has plurality. Need to calculate margin over second place.
-            // The effective margin is how far into the yellow window we are
             const windowCenter = -rVal; // Center of yellow window
             const windowHalfWidth = a; // Half-width of yellow window
             const distanceFromCenter = Math.abs(pv - windowCenter);
             const relativePosition = distanceFromCenter / windowHalfWidth; // 0 to 1
-            // Third party margin is strongest at center, weakest at edges
             const thirdPartyStrength = (1 - relativePosition) * windowHalfWidth;
             const s = (thirdPartyStrength * 100).toFixed(1);
             return 'T+' + s; // Third-party win

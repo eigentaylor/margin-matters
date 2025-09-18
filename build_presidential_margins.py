@@ -1,19 +1,13 @@
 import csv
 import os
 from collections import defaultdict
-
+from params import COLORS
 import utils
 
 
 THIRD_PARTY_WINS = {
     1960: ['MS'],
     1968: ['AL', 'AR', 'GA', 'LA', 'MS'],
-}
-
-COLORS = {
-    'D': 'deepskyblue',
-    'R': 'red',
-    'T': 'yellow'
 }
 
 def safe_int(x):

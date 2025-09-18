@@ -4,6 +4,12 @@ from typing import List, Dict, Optional
 SWING_MARGIN = 0.05
 SUPER_SWING_MARGIN = 0.02
 
+COLORS = {
+    'D': 'deepskyblue',
+    'R': 'red',
+    'T': 'yellow'
+}
+
 EC_LOCKED = 0.2
 EC_SAFE = 0.1
 EC_LEAN = 0.08

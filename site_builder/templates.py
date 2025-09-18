@@ -81,7 +81,7 @@ INDEX_HTML = r"""<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>U.S. Presidential Election State Results</title>
+<title>Margin Matters: Presidential Election Results</title>
 <link rel="stylesheet" href="styles.css" />
 <link rel="icon" href="favicon.svg" />
 </head>
