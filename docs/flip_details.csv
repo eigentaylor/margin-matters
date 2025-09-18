@@ -1,9 +1,11 @@
 year,mode,abbr,ev,votes_to_flip,pct_of_state_votes
-1960,classic,MS,8,3944,1.323
-1960,classic,AL,11,2874,0.326
+1960,classic,NV,3,1247,1.163
+1960,classic,MO,13,4991,0.258
+1960,classic,NM,4,1148,0.369
 1960,classic,IL,27,4430,0.093
 1960,classic,HI,3,58,0.031
-1960,no_majority,AL,11,2874,0.326
+1960,no_majority,NV,3,1247,1.163
+1960,no_majority,NM,4,1148,0.369
 1960,no_majority,IL,27,4430,0.093
 1960,no_majority,HI,3,58,0.031
 1964,classic,OR,6,109120,13.878
