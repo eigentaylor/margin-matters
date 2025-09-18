@@ -3,6 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
+  const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
   const SPECIAL_1968 = ["GA", "LA", "AR", "MS", "AL"];
 
   // URL parameter management for sharing
@@ -67,8 +68,9 @@
     d3.csv('presidential_margins.csv'),
     d3.csv('electoral_college.csv').catch(() => []),
     d3.csv('flip_results.csv').catch(() => []),
-    d3.csv('flip_details.csv').catch(() => [])
-  ]).then(([margins, ec, flipResults, flipDetails]) => {
+    d3.csv('flip_details.csv').catch(() => []),
+    d3.csv('stop_colors.csv').catch(() => [])
+  ]).then(([margins, ec, flipResults, flipDetails, stopColors]) => {
     (margins || []).forEach(r => {
       const year = +r.year;
       const unit = r.abbr;
@@ -93,7 +95,7 @@
       if (year && unit && ev) evByUnit.set(`${year}:${unit}`, ev);
     });
 
-    // Build flip scenarios
+  // Build flip scenarios
     window._flipByYear = new Map(); // year -> { classic: [rows], no_majority: [rows] }
     const groupFD = new Map();
     (flipDetails || []).forEach(r => {
@@ -115,6 +117,24 @@
       modes.forEach(m => o[m] = groupFD.get(`${y}:${m}`) || []);
       window._flipByYear.set(y, o);
     });
+
+    // Index stop colors CSV: year -> stop_key -> unit -> { winner, color_css, result_color_name }
+    window._stopColorsByYear = new Map();
+    try {
+      (stopColors || []).forEach(r => {
+        const y = +r.year; if (!y) return;
+        const key = String(r.stop_key != null ? r.stop_key : (r.stop != null ? r.stop : ''));
+        if (!key) return;
+        const unit = r.unit;
+        const winner = r.winner;
+        const color_css = r.color_css || '';
+        const color_name = r.result_color_name || '';
+        if (!window._stopColorsByYear.has(y)) window._stopColorsByYear.set(y, new Map());
+        const byStop = window._stopColorsByYear.get(y);
+        if (!byStop.has(key)) byStop.set(key, new Map());
+        byStop.get(key).set(unit, { winner, color_css, color_name });
+      });
+    } catch(e) { /* optional */ }
 
   // expose simple accessors
   window.getRowsForYear = function(y){ try { return byYear.get(y) || []; } catch(e){ return []; } };
@@ -340,37 +360,34 @@
         const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
         const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
         
-        // Determine button color based on margin and third-party scenarios
-        let bgColor = '#0d0d0dff'; // Default Dark background
+        // Determine button color using precomputed stop_colors.csv
+        let bgColor = '#0d0d0dff'; // Default dark
         if (!isEven) {
-          // Check for third-party scenario at this stop for any year
-          let isThirdParty = false;
-          const rows = byYear.get(year) || [];
-          // Use effective PV for this stop to reflect nudges inside windows
-          const testPv = (stopToEff.get(v) != null) ? stopToEff.get(v) : v;
-          for (const row of rows) {
-            if (!unitsRaw.includes(row.unit)) continue;
-            const t = +row.tp || 0;
-            const a = 3*t - 1;
-            if (a > 0) {
-              const rVal = +(row.rm || 0);
-              const nD = -rVal + a;
-              const nR = -rVal - a;
-              if (testPv > nR + EPS && testPv < nD - EPS) { isThirdParty = true; break; }
-            }
-          }
-          
-          if (isThirdParty) {
-            bgColor = '#C9A400'; // Yellow for third-party
-          } else {
-            bgColor = marginToColor(v * 1000); // keep it dark for readability
+          const key = Number(v).toFixed(STOP_KEY_PREC);
+          const byYearStops = window._stopColorsByYear && window._stopColorsByYear.get(year);
+          const byStop = byYearStops && byYearStops.get(key);
+          if (byStop) {
+            // Examine only the units shown on this chip (if any specific list)
+            const winners = [];
+            const colors = [];
+            const unitsList = unitsRaw && unitsRaw.length ? unitsRaw : Array.from(byStop.keys());
+            unitsList.forEach(u => {
+              const info = byStop.get(u);
+              if (info) { winners.push(info.winner); colors.push(info.color_css || ''); }
+            });
+            // Priority: any T => yellow; else any D => blue; else any R => red; fallback first color
+            if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
+            else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
+            else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
+            else if (colors.length) bgColor = colors[0];
           }
         }
         
         // Determine text color based on background for readability
-        const textColor = (bgColor === '#FFFFFF' || bgColor === '#C9A400') ? '#000' : '#fff';
+  const isYellowish = (bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
+  const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
         // Determine small (muted) unit text color so it remains readable on yellow
-        const smallColor = (bgColor === '#C9A400') ? '#000' : 'var(--muted)';
+  const smallColor = isYellowish ? '#000' : 'var(--muted)';
         
         return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`; 
       }).join('');
@@ -971,7 +988,8 @@ function renderFlipDetails(){
         d1 = d0 + vt;
         r1 = Math.max(0, r0 - vt);
       }
-      html += `<tr><td>${unit}</td><td>${ev}</td><td>${d0.toLocaleString('en-US')}</td><td>${r0.toLocaleString('en-US')}</td><td>${d1.toLocaleString('en-US')}</td><td>${r1.toLocaleString('en-US')}</td><td>${(+u.votes_to_flip||0).toLocaleString('en-US')}</td></tr>`;
+      html += `<tr><td>${unit}</td><td>${ev}</td><td>${d0.toLocaleString('en-US')}<br/>→ ${d1.toLocaleString('en-US')}</td>
+      <td>${r0.toLocaleString('en-US')}<br/>→ ${r1.toLocaleString('en-US')}</td><td>${(+u.votes_to_flip||0).toLocaleString('en-US')}</td></tr>`;
     });
     t.innerHTML = html;
     const votes = document.getElementById('flipVotes'); if (votes) votes.textContent = (f.votesSum||0).toLocaleString('en-US');

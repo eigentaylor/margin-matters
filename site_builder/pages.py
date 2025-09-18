@@ -99,7 +99,7 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
                 '      <div class="legend" style="text-align:left">Applied flips (winner by minimal votes to switch):</div>',
                 '      <div class="table-wrap">',
                 '        <table class="flip-table">',
-                '          <thead><tr><th>State</th><th>EV</th><th>D old</th><th>R old</th><th>D new</th><th>R new</th><th>Δ votes</th></tr></thead>',
+                '          <thead><tr><th>State</th><th>EV</th><th>D</th><th>R</th><th>Δ votes</th></tr></thead>',
                 '          <tbody id="flipDetails"></tbody>',
                 '        </table>',
                 '      </div>',

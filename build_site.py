@@ -10,4 +10,10 @@ if __name__ == "__main__":
         tools.build_ranker_page.main()
     except Exception:
         pass
+    # Build stop colors CSV before generating site
+    try:
+        import build_stop_colors
+        build_stop_colors.main()
+    except Exception as e:
+        print(f"Warning: stop colors CSV not generated: {e}")
     build_site()
