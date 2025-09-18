@@ -118,6 +118,16 @@
       window._flipByYear.set(y, o);
     });
 
+    // Capture per-year total EV from flip_results.csv for accurate EV bar scaling
+    window._totalEvByYear = new Map();
+    try {
+      (flipResults || []).forEach(r => {
+        const y = +r.year;
+        const tot = +r.total_ev || 0;
+        if (y && isFinite(tot) && tot > 0) window._totalEvByYear.set(y, tot);
+      });
+    } catch(e) { /* optional */ }
+
     // Index stop colors CSV: year -> stop_key -> unit -> { winner, color_css, result_color_name }
     window._stopColorsByYear = new Map();
     try {
@@ -697,11 +707,17 @@
       } catch (e) { /* ignore */ }
     }
 
-  const totalEV = 538;
+  // Use actual total EV for the selected year (fallback to 538)
+  let totalEV = 538;
+  try {
+    const t = window._totalEvByYear && window._totalEvByYear.get(year);
+    if (isFinite(t) && t > 0) totalEV = t;
+  } catch(e) {}
   // clamp and ensure sum displays correctly
-  const dPct = Math.max(0, Math.min(100, dEV/totalEV*100));
-  const oPct = Math.max(0, Math.min(100, oEV/totalEV*100));
-  const rPct = Math.max(0, Math.min(100, rEV/totalEV*100));
+  const dPct = totalEV ? Math.max(0, Math.min(100, (dEV/totalEV)*100)) : 0;
+  const oPct = totalEV ? Math.max(0, Math.min(100, (oEV/totalEV)*100)) : 0;
+  // Fill remainder to avoid black gaps from rounding
+  const rPct = Math.max(0, Math.min(100, 100 - dPct - oPct));
   const dEl = document.getElementById('evFillD');
   const oEl = document.getElementById('evFillO');
   const rEl = document.getElementById('evFillR');
