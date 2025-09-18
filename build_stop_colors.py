@@ -139,14 +139,15 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 if abs(nD) <= PV_CAP:
                     stops_set.add(nD)
                     stop_to_units[nD].append(abbr)
-                    # nudge nD slightly lower (into the yellow window)
-                    eff = stop_to_eff.setdefault(nD, nD - EPS)
+                    # nudge inside the yellow window
+                    sgn = 1.0 if (nD - nat) > 0 else (-1.0 if (nD - nat) < 0 else 1.0)
+                    eff = stop_to_eff.setdefault(nD, nD + sgn * EPS)
                     classify_and_append(nD, eff, r)
                 if abs(nR) <= PV_CAP:
                     stops_set.add(nR)
                     stop_to_units[nR].append(abbr)
-                    # nudge nR slightly higher (into the yellow window)
-                    eff = stop_to_eff.setdefault(nR, nR + EPS)
+                    sgn = 1.0 if (nR - nat) > 0 else (-1.0 if (nR - nat) < 0 else 1.0)
+                    eff = stop_to_eff.setdefault(nR, nR + sgn * EPS)
                     classify_and_append(nR, eff, r)
             else:
                 val = -rm

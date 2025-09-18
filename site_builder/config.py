@@ -30,8 +30,10 @@ EXPLANATION_TEXT = (
     "<b>Note:</b> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist."
     "<br /><br />"
     "<i>Note on 1968:</i> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win."
-    "<br /><br />"
+    "<br />"
     "While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points."
+    "<br /><br />"
+    "<i>Note on 1960:</i> Alabama is a complete mess. It's impossible to count it as a simple D/R contest because of unpledged electors. We have opted to use the way Wikipedia counts them <a href='https://en.wikipedia.org/wiki/1960_United_States_presidential_election#Results_by_state' target='_blank' rel='noopener noreferrer'>here</a>. For testing different scenarios, we choose to allot electoral votes as 5D/6O unless Nixon wins, in which case all 11 go to R."
     "<br /><br />"
     "<b>Flip scenarios</b> are computed by solving a knapsack problem to find the minimum number of popular votes needed to flip enough states to change the electoral college outcome (either to produce a new winner or to simply break the majority the original winner had). We choose the solution based on the minimum number of votes needed to flip (rather than the minimum number of states flipped). For example: in 2004, if Kerry had won Ohio, he would have won the presidency. But that would have actually required slightly more votes than flipping NM, IA, NV, and NE-02 combined, so the latter is the solution shown here."
 )
