@@ -576,10 +576,18 @@
         ev = (+r.ev);
         if (!isFinite(ev)) ev = 0;
       }
+  // Special case for Alabama 1960: if AL is not colored red (R wins), give 5 D EVs and 6 O EVs
+  let counted = false;
+  if (year === 1960 && unit === 'AL' && m >= 0) {
+    // Alabama in 1960: if not Republican (m >= 0), split EVs as 5 D and 6 O
+    dEV += 5;
+    oEV += 6;
+    counted = true;
+  }
+  
   // Count EVs, ensuring the tipping-point state is included (no black sliver)
   // Third-party EV handling: classify as Other when PV is strictly within the yellow window
-  let counted = false;
-  {
+  if (!counted) {
     const t = +r.tp || 0;
     const a = 3*t - 1;
     if (a > 0) {

@@ -142,10 +142,19 @@ def analyze_year(rows_for_year):
     # Determine aggregate party EVs using winner labels per unit
     ev_by_party = defaultdict(int)
     total_ev = 0
+    year = rows_for_year[0]['year'] if rows_for_year else 0
+    
     for r in rows_for_year:
         ev = int(r['electoral_votes'] or 0)
         total_ev += ev
-        ev_by_party[r['party_win']] += ev
+        
+        # Special case for Alabama 1960: if AL won by D or T, allocate 5 D + 6 O instead of 11 to winner
+        if year == 1960 and r['abbr'] == 'AL' and r['party_win'] in ('D', 'T'):
+            ev_by_party['D'] += 5
+            ev_by_party['T'] += 6  # Use 'T' for Others/third-party
+        else:
+            ev_by_party[r['party_win']] += ev
+    
     need = total_ev // 2 + 1
 
     # Determine top two parties by EVs (treat non-D/R as 'T')
