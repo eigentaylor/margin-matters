@@ -5,6 +5,17 @@ from collections import defaultdict
 import utils
 
 
+THIRD_PARTY_WINS = {
+    1960: ['MS'],
+    1968: ['AL', 'AR', 'GA', 'LA', 'MS'],
+}
+
+COLORS = {
+    'D': 'deepskyblue',
+    'R': 'red',
+    'T': 'yellow'
+}
+
 def safe_int(x):
     try:
         return int(x)
@@ -210,6 +221,8 @@ def main():
                 
                 'pres_margin': f"{pres:.12f}",
                 'pres_margin_delta': f"{pres_delta:.12f}" if pres_delta is not None else '0',
+                # Default pres margin string is D+/R+ based on pres value. It may be overridden
+                # for historic third-party wins below.
                 'pres_margin_str': utils.lean_str(pres),
                 'pres_margin_delta_str': utils.lean_str(pres_delta),
                 
@@ -244,7 +257,49 @@ def main():
                 'third_party_national_share_str': utils.lean_str(third_party_national, third_party=True) if third_party_national is not None else '0.0',
                 'third_party_relative_share': third_party_relative if third_party_relative is not None else 0.0,
                 'third_party_relative_share_str': utils.lean_str(third_party_relative, third_party=True) if third_party_relative is not None else '0.0',
+                # color will be assigned below based on the winner
+                'color': None,
             }
+            # Determine winner and color
+            try:
+                dv = int(r['D_votes'])
+                rv = int(r['R_votes'])
+                tv = int(r['T_votes'])
+            except Exception:
+                dv = r.get('D_votes', 0)
+                rv = r.get('R_votes', 0)
+                tv = r.get('T_votes', 0)
+
+            # winner letter: 'D', 'R', or 'T' (largest raw votes)
+            if tv > dv and tv > rv:
+                winner = 'T'
+            elif dv > rv:
+                winner = 'D'
+            elif rv > dv:
+                winner = 'R'
+            else:
+                # tie or no votes: fallback to 'T' if third party equals, otherwise D for non-negative pres
+                if tv == dv == rv:
+                    winner = 'T'
+                else:
+                    # prefer D when pres >= 0 else R
+                    winner = 'D' if pres >= 0 else 'R'
+
+            out['color'] = COLORS.get(winner, 'transparent')
+
+            # If this is a historic third-party win entry, override pres_margin_str to show T margin
+            # defined as T_votes minus the larger of D/R, expressed as percentage like 'T+X.X'
+            try:
+                if year in THIRD_PARTY_WINS and abbr in THIRD_PARTY_WINS.get(year, []):
+                    tot = r['total_votes'] if r['total_votes'] else 1
+                    lead_major = max(dv, rv)
+                    t_margin = (tv - lead_major) / tot if tot > 0 else 0.0
+                    # Format as T+/- with one decimal percentage (consistent with other margin strings)
+                    sign = '+' if t_margin >= 0 else '-'
+                    out['pres_margin_str'] = f"T{sign}{abs(t_margin * 100):.1f}"
+            except Exception:
+                # If anything goes wrong, leave the default pres_margin_str
+                pass
             out_rows.append(out)
 
     # write CSV
@@ -258,6 +313,7 @@ def main():
         'two_party_margin', 'two_party_margin_str', 'two_party_margin_delta', 'two_party_margin_delta_str',
         'two_party_national_margin', 'two_party_national_margin_str', 'two_party_national_margin_delta', 'two_party_national_margin_delta_str',
         'two_party_relative_margin', 'two_party_relative_margin_str', 'two_party_relative_margin_delta', 'two_party_relative_margin_delta_str',
+        'color',
     ]
 
     with open(outfile, 'w', newline='', encoding='utf-8') as f:

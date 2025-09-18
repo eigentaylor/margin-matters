@@ -3,7 +3,7 @@
   const PV_CAP = 0.6;
   const EPS = 1e-5;
   const STOP_EPS = 0.00005; // tolerance when matching slider to exact flip stops
-  const SPECIAL_1968 = ["MS", "AL", "GA", "AR", "LA"];
+  const SPECIAL_1968 = ["GA", "LA", "AR", "MS", "AL"];
 
   // URL parameter management for sharing
   function getUrlParams() {

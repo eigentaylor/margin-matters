@@ -468,7 +468,12 @@ Interactive Explorer for state-trends
             .attr('cx', d=>xLine(d.year))
             .attr('cy', d=>y(d.value))
             // color points by winner/special rule rather than the palette
-            .attr('fill', d => colorForBar(d, s, meta, rowLookupS))
+            .attr('fill', d => {
+              // Prefer explicit color from CSV row if present
+              const row = rowLookupS.get(+d.year);
+              if (row && row.color) return row.color;
+              return colorForBar(d, s, meta, rowLookupS);
+            })
             .on('mouseenter', (evt,d)=>showTip(evt, `${s} ${d.year}: ${fmt(d.value)}`))
             .on('mouseleave', hideTip);
         }
@@ -517,7 +522,12 @@ Interactive Explorer for state-trends
           .attr('r', 4)
           .attr('cx', d=>xLine(d.year))
           .attr('cy', d=>y(d.value))
-          .attr('fill', d => (d.year===1968 && SPECIAL_1968.has(p.state)) ? color.stateSpecial : (d.value >= 0 ? color.stateFillPos : color.stateFillNeg))
+          .attr('fill', d => {
+            // Use CSV color if available (single-state line mode)
+            const row = rowLookup.get(+d.year);
+            if (row && row.color) return row.color;
+            return (d.year===1968 && SPECIAL_1968.has(p.state)) ? color.stateSpecial : (d.value >= 0 ? color.stateFillPos : color.stateFillNeg);
+          })
           .on('mouseenter', (evt,d)=>showTip(evt, `${d.year}: ${fmt(d.value)}`))
           .on('mouseleave', hideTip);
       }
@@ -572,7 +582,12 @@ Interactive Explorer for state-trends
         .attr('width', stateW)
         .attr('y', d=>Math.min(y(0), y(d.value)))
         .attr('height', d=>Math.abs(y(d.value) - y(0)))
-        .attr('fill', d=> colorForBar(d, p.state, meta, rowLookup))
+        .attr('fill', d=> {
+          // For bar charts, use CSV color if present for that year/row
+          const row = rowLookup.get(+d.year);
+          if (row && row.color) return row.color;
+          return colorForBar(d, p.state, meta, rowLookup);
+        })
         .on('mouseenter', (evt,d)=>showTip(evt, `${d.year}: ${fmt(d.value)}`))
         .on('mouseleave', hideTip);
 
