@@ -75,7 +75,7 @@ SPECIAL_1968_STATES = {"MS", "AR", "LA", "GA", "AL"}
 INTERACTIVE_TESTER: bool = True
 
 # Clamp for PV slider in tester (in fraction units, e.g. 0.25 = +/-25pp)
-TESTER_PV_CAP: float = 0.9
+TESTER_PV_CAP: float = 0.5
 
 # Optional: define a custom table column ordering and labels for the HTML tables.
 # If set to None the code will fall back to the built-in heuristic order.

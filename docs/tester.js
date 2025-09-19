@@ -1,6 +1,6 @@
 
 (function(){
-  const PV_CAP = 0.99;
+  const PV_CAP = 0.5;
   const EPS = 1e-8;
   const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV

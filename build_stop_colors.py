@@ -3,11 +3,11 @@ import os
 from collections import defaultdict
 from typing import Dict, List, Tuple
 
-from params import COLORS
+import params
 
 
 EPS = 1e-4
-PV_CAP = 0.99
+PV_CAP = params.TESTER_PV_CAP  # max abs PV shift to consider
 STOP_KEY_PREC = 6  # decimals for stop key matching in JS
 
 
@@ -74,7 +74,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 'R': parse_float(r['R_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
                 'T': parse_float(r['T_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
             }
-            original_winner = max(original_margins, key=original_margins.get)
+            original_winner = max(original_margins, key=lambda k: original_margins.get(k, 0))
             a_local = 3 * tp - 1
             winner = None
             # Use a tighter interior epsilon than the nudge so boundary nudges remain inside the window
@@ -88,7 +88,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     winner = 'T'
             else:
                 approximated_margins = {'D': original_margins['D'] + (eff - nat) / 2, 'R': original_margins['R'] - (eff - nat) / 2, 'T': original_margins['T']}
-                new_winner = max(approximated_margins, key=approximated_margins.get)
+                new_winner = max(approximated_margins.items(), key=lambda item: item[1])[0]
                 if abbr == 'AL' and year == 1948:
                     pass
                 if new_winner == original_winner:
@@ -96,7 +96,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     pass
                 if a_local > 0:
                     pass
-                winner = max(approximated_margins, key=approximated_margins.get)
+                winner = max(approximated_margins, key=lambda k: approximated_margins[k])
             if winner is None:
                 m = rm + eff
                 if m > 0:
@@ -108,7 +108,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     winner = 'D' if side >= 0 else 'R'
 
             color_name = 'BLUE' if winner == 'D' else ('RED' if winner == 'R' else 'YELLOW')
-            color_css = COLORS.get(winner, 'transparent')
+            color_css = params.COLORS.get(winner, 'transparent')
             if color_css == 'deepskyblue':
                 color_css = 'blue' # darker blue for visibility
             if color_name == 'YELLOW':

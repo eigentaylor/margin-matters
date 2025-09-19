@@ -160,7 +160,7 @@ def _bar_deltas(ax, years: np.ndarray, deltas: np.ndarray, title: str, y_label: 
     ax.set_xticklabels(years_for_delta, rotation=45)
 
 
-def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False, national_colors_by_year: dict = None):
+def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False, national_colors_by_year: dict = {}):
     # 3x1: margins line, 3rd-Party share line, pres_margin_delta bar
     fig, axes = plt.subplots(3, 1, figsize=(14, 12), constrained_layout=True)
     ax1, ax2, ax3 = axes
@@ -190,7 +190,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         state=state,
         label_points=nat_only,  # label points only for NAT
         special_year_for_state=1968,
-        nat_color_values=nat_color_vals,
+        nat_color_values=np.array(nat_color_vals) if nat_color_vals is not None else None,
         state_color_values=state_color_vals,
     )
     _apply_axes_styling(ax1, years, y_label="Margin", title=f"{state} Margins")
@@ -312,7 +312,7 @@ def _build_plot2(state: str, df: pd.DataFrame, out_dir: str, include_LOESS: bool
     plt.close(fig)
 
 
-def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False, national_colors_by_year: dict = None):
+def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = False, national_colors_by_year: dict = {}):
     # 2x2: use ONLY two-party columns
     fig = plt.figure(figsize=(18, 14))
     if nat_only: # 2x1
@@ -349,7 +349,7 @@ def _build_plot3_two_party(state: str, df: pd.DataFrame, out_dir: str, nat_only:
         state=state,
         label_points=nat_only,  # label points only for NAT
         special_year_for_state=None,
-        nat_color_values=nat_color_vals,
+        nat_color_values=np.array(nat_color_vals) if nat_color_vals is not None else None,
         state_color_values=state_color_vals,
     )
     _apply_axes_styling(ax_tl, years, y_label="Two-Party Margin", title=f"{state} Two Party Margins")
