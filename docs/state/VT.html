@@ -41,5 +41,60 @@
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
 Please report any innaccuracies to me through discord: eigentaylor ·</footer>
 </div>
+<script>
+
+// Delta toggle functionality
+(function() {
+  // Create and add the delta toggle footer
+  function createDeltaToggle() {
+    // Check if there are any tables with delta data
+    const tablesWithDeltas = document.querySelectorAll('table .delta');
+    if (tablesWithDeltas.length === 0) {
+      return; // No deltas to toggle
+    }
+    
+    // Create the footer element
+    const footer = document.createElement('div');
+    footer.className = 'delta-toggle-footer';
+    footer.innerHTML = `
+      <div class="toggle-group">
+        <input type="checkbox" id="deltaToggle" checked>
+        <label for="deltaToggle">Show deltas (Δ changes from previous election)</label>
+      </div>
+    `;
+    
+    // Add footer to body
+    document.body.appendChild(footer);
+    document.body.classList.add('has-delta-toggle');
+    
+    // Add event listener for toggle
+    const toggle = document.getElementById('deltaToggle');
+    toggle.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.remove('hide-deltas');
+        localStorage.setItem('showDeltas', 'true');
+      } else {
+        document.body.classList.add('hide-deltas');
+        localStorage.setItem('showDeltas', 'false');
+      }
+    });
+    
+    // Restore saved state
+    const savedState = localStorage.getItem('showDeltas');
+    if (savedState === 'false') {
+      toggle.checked = false;
+      document.body.classList.add('hide-deltas');
+    }
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', createDeltaToggle);
+  } else {
+    createDeltaToggle();
+  }
+})();
+
+</script>
 </body>
 </html>

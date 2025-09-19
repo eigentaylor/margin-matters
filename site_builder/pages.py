@@ -5,7 +5,7 @@ import params
 from .config import OUT_DIR, STATE_DIR, UNIT_DIR, SMALL_STATES, ME_NE_STATES, LAST_UPDATED, FOOTER_TEXT, EXPLANATION_TEXT
 from .io_utils import write_text
 from .tables import split_columns_into_three, group_by_abbr, render_table, render_info_box
-from .templates import INDEX_HTML, PAGE_HTML
+from .templates import INDEX_HTML, PAGE_HTML, DELTA_TOGGLE_JS
 from .header import make_header
 
 
@@ -195,6 +195,7 @@ def build_pages(rows: List[Dict]):
             .replace("%PLOT3_SECTION%", plot3_section)
             .replace("%TABLE2_SECTION%", table2_section)
             .replace("%FOOTER_TEXT%", FOOTER_TEXT)
+            .replace("%DELTA_TOGGLE_JS%", DELTA_TOGGLE_JS)
         )
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(STATE_DIR / f"{st[:2]}.html", page)
@@ -267,6 +268,7 @@ def build_pages(rows: List[Dict]):
             .replace("%PLOT3_SECTION%", plot3_section)
             .replace("%TABLE2_SECTION%", table2_section)
             .replace("%FOOTER_TEXT%", FOOTER_TEXT)
+            .replace("%DELTA_TOGGLE_JS%", DELTA_TOGGLE_JS)
         )
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(UNIT_DIR / f"{unit}.html", page)
@@ -368,6 +370,7 @@ def build_pages(rows: List[Dict]):
         .replace("%PLOT3_SECTION%", plot3_section)
         .replace("%TABLE2_SECTION%", table2_section)
         .replace("%FOOTER_TEXT%", FOOTER_TEXT)
+        .replace("%DELTA_TOGGLE_JS%", DELTA_TOGGLE_JS)
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(STATE_DIR / f"NAT.html", page)
@@ -411,10 +414,13 @@ def make_data_page(rows: List[Dict]):
                 <h1>presidential_margins.csv</h1>
                 <p class='legend'>This page renders the primary CSV used to build the site. The raw CSV is available from the "Raw CSV" link.</p>
                 <div class='card table-wrap'>
-                    <table><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
+                    <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
                 </div>
                 <footer>{FOOTER_TEXT} Built from CSV. Last updated: {LAST_UPDATED}</footer>
                 </div>
+                <script>
+                {DELTA_TOGGLE_JS}
+                </script>
                 </body>
                 </html>"""
     write_text(OUT_DIR / "presidential_margins.html", html)

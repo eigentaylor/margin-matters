@@ -21,13 +21,24 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .btn:focus{outline:2px solid var(--accent);outline-offset:2px}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
 img.plot{width:100%;max-width:900px;display:block;margin:0 auto;border:1px solid var(--border);border-radius:10px;background:#000}
-.table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--border)}
+.table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--border);position:relative;max-height:80vh}
 table{width:100%;border-collapse:collapse;background:#111;border-left:1px solid var(--border);border-right:1px solid var(--border)}
 th,td{padding:10px 12px;border-bottom:1px solid #1f1f1f;white-space:nowrap;text-align:center;border-right:1px solid var(--border)}
-th{position:sticky;top:0;background:#161616}
+th{position:sticky;top:0;background:#161616;z-index:10}
 tbody tr:hover{background:#151515}
 /* Remove the right border from the last column for a cleaner edge */
 thead th:last-child, tbody td:last-child {border-right: none}
+/* Sticky first column (year) */
+table th:first-child, table td:first-child{position:sticky;left:0;z-index:5;background:#161616}
+table td:first-child{background:#111}
+table tbody tr:hover td:first-child{background:#151515}
+/* Higher z-index for first header cell to appear above sticky column */
+table th:first-child{z-index:11}
+/* Sticky second column (abbr) for presidential_margins table */
+.presidential-margins-table th:nth-child(2), .presidential-margins-table td:nth-child(2){position:sticky;left:80px;z-index:5;background:#161616}
+.presidential-margins-table td:nth-child(2){background:#111}
+.presidential-margins-table tbody tr:hover td:nth-child(2){background:#151515}
+.presidential-margins-table th:nth-child(2){z-index:11}
 .back{margin-bottom:12px;display:inline-block}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}
@@ -73,6 +84,16 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .flip-table th{background:#161616;position:sticky;top:0}
 /* Ensure flip buttons text is white for readability (consistent with Explorer) */
 .flip-controls .btn{color:#fff}
+
+/* Delta toggle UI - sticky footer */
+.delta-toggle-footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px}
+.delta-toggle-footer .toggle-group{display:flex;align-items:center;gap:8px}
+.delta-toggle-footer label{font-size:0.9rem;color:var(--fg);cursor:pointer}
+.delta-toggle-footer input[type="checkbox"]{width:18px;height:18px;cursor:pointer}
+/* Hide deltas when toggle is off */
+.hide-deltas .delta{display:none !important}
+/* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
+body.has-delta-toggle{padding-bottom:60px}
 """
 
 # Full HTML templates moved as-is from original module (placeholders kept)
@@ -268,6 +289,9 @@ PAGE_HTML = r"""<!doctype html>
   %TABLE2_SECTION%
   <footer>%FOOTER_TEXT%</footer>
 </div>
+<script>
+%DELTA_TOGGLE_JS%
+</script>
 </body>
 </html>
 """
@@ -1334,3 +1358,58 @@ FAVICON_SVG = r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect x="16" y="8" width="32" height="18" rx="2" fill="#ffd166"/>
   <path d="M20 28 L28 36 L44 20" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>'''
+
+# JavaScript for delta toggle functionality
+DELTA_TOGGLE_JS = r"""
+// Delta toggle functionality
+(function() {
+  // Create and add the delta toggle footer
+  function createDeltaToggle() {
+    // Check if there are any tables with delta data
+    const tablesWithDeltas = document.querySelectorAll('table .delta');
+    if (tablesWithDeltas.length === 0) {
+      return; // No deltas to toggle
+    }
+    
+    // Create the footer element
+    const footer = document.createElement('div');
+    footer.className = 'delta-toggle-footer';
+    footer.innerHTML = `
+      <div class="toggle-group">
+        <input type="checkbox" id="deltaToggle" checked>
+        <label for="deltaToggle">Show deltas (Δ changes from previous election)</label>
+      </div>
+    `;
+    
+    // Add footer to body
+    document.body.appendChild(footer);
+    document.body.classList.add('has-delta-toggle');
+    
+    // Add event listener for toggle
+    const toggle = document.getElementById('deltaToggle');
+    toggle.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.remove('hide-deltas');
+        localStorage.setItem('showDeltas', 'true');
+      } else {
+        document.body.classList.add('hide-deltas');
+        localStorage.setItem('showDeltas', 'false');
+      }
+    });
+    
+    // Restore saved state
+    const savedState = localStorage.getItem('showDeltas');
+    if (savedState === 'false') {
+      toggle.checked = false;
+      document.body.classList.add('hide-deltas');
+    }
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', createDeltaToggle);
+  } else {
+    createDeltaToggle();
+  }
+})();
+"""
