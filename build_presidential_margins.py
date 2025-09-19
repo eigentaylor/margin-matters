@@ -296,6 +296,11 @@ def main():
                     # Format as T+/- with one decimal percentage (consistent with other margin strings)
                     sign = '+' if t_margin >= 0 else '-'
                     out['pres_margin_str'] = f"T{sign}{abs(t_margin * 100):.1f}"
+                elif year == 1948 and abbr == 'AL':
+                    # Strom Thurmond (Dixiecrat) won AL; show his margin vs Dewey (D - R) / total but displayed as T+X.X
+                    tot = r['total_votes'] if r['total_votes'] else 1
+                    d_margin = (dv - rv) / tot if tot > 0 else 0.0
+                    out['pres_margin_str'] = f"T{sign}{abs(d_margin * 100):.1f}"
             except Exception:
                 # If anything goes wrong, leave the default pres_margin_str
                 pass
