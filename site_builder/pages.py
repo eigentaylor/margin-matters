@@ -491,7 +491,7 @@ def make_methods_page():
                     <h2>Metrics</h2>
                     <dl class='info-dl'>
                         <dt>Margin</dt>
-                        <dd>D% − R% in a given unit (state or district).</dd>
+                        <dd>D% − R% in a given unit (state or district). Specifically, (D-R)/total votes in unit.</dd>
                         <dt>National margin</dt>
                         <dd>Same formula but computed for the national vote.</dd>
                         <dt>Relative margin</dt>
@@ -499,9 +499,9 @@ def make_methods_page():
                         <dt>Delta</dt>
                         <dd>Difference vs previous cycle for the selected metric (e.g., margin(year) − margin(prev)).</dd>
                         <dt>Two-party</dt>
-                        <dd>Calculations restricted to Democratic and Republican vote shares (excludes third-party share).</dd>
+                        <dd>Calculations restricted to Democratic and Republican vote shares (excludes third-party share). So (D-R)/(D+R).</dd>
                         <dt>Third-party share</dt>
-                        <dd>Share of votes for non-major-party candidates. In 1968, some states have third-party pluralities.</dd>
+                        <dd>Share of votes for non-major-party candidates. In 1968 and some other years, some states have third-party pluralities.</dd>
                     </dl>
                       <h2>PV Stops and Uniform Swing</h2>
                       <p>On the Home page, we shift the national popular vote (PV) uniformly across states to estimate the Electoral College outcome. 
