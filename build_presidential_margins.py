@@ -6,6 +6,7 @@ import utils
 
 
 THIRD_PARTY_WINS = {
+    1912: ['CA', 'MN', 'SD', 'MI', 'WA', 'PA'],
     1924: ['WI'],
     1948: ['LA', 'MS', 'SC'], # AL too, technically, but we handle that specially
     1960: ['MS'],
