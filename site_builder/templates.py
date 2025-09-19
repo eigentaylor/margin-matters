@@ -34,11 +34,18 @@ table td:first-child{background:#111}
 table tbody tr:hover td:first-child{background:#151515}
 /* Higher z-index for first header cell to appear above sticky column */
 table th:first-child{z-index:11}
-/* Sticky second column (abbr) for presidential_margins table */
-.presidential-margins-table th:nth-child(2), .presidential-margins-table td:nth-child(2){position:sticky;left:80px;z-index:5;background:#161616}
-.presidential-margins-table td:nth-child(2){background:#111}
+/* Sticky second column (abbr) for presidential_margins table - seamless with first column */
+.presidential-margins-table th:nth-child(2), .presidential-margins-table td:nth-child(2){position:sticky;left:76px;z-index:5;background:#161616;border-left:none;margin-left:-1px}
+.presidential-margins-table td:nth-child(2){background:#111;border-left:none;margin-left:-1px}
 .presidential-margins-table tbody tr:hover td:nth-child(2){background:#151515}
 .presidential-margins-table th:nth-child(2){z-index:11}
+/* Remove borders between the two sticky columns to create seamless appearance */
+.presidential-margins-table th:first-child, .presidential-margins-table td:first-child{border-right:none !important}
+.presidential-margins-table tbody tr:hover td:first-child{border-right:none !important}
+/* Make the columns appear as one unit by overlapping slightly */
+.presidential-margins-table th:nth-child(2), .presidential-margins-table td:nth-child(2){box-shadow:-1px 0 0 #161616}
+.presidential-margins-table td:nth-child(2){box-shadow:-1px 0 0 #111}
+.presidential-margins-table tbody tr:hover td:nth-child(2){box-shadow:-1px 0 0 #151515}
 .back{margin-bottom:12px;display:inline-block}
 hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .legend{color:var(--muted);font-size:.95rem}

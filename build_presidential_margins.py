@@ -309,15 +309,22 @@ def main():
     # write CSV
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'total_votes', 'electoral_votes',
-    'D_delta', 'R_delta', 'total_delta',
-        'pres_margin', 'pres_margin_delta', 'pres_margin_str', 'pres_margin_delta_str',
-        'national_margin', 'national_margin_delta', 'national_margin_str', 'national_margin_delta_str',
-        'relative_margin', 'relative_margin_delta', 'relative_margin_str', 'relative_margin_delta_str',
-        'third_party_share', 'third_party_share_str', 'third_party_national_share', 'third_party_national_share_str', 'third_party_relative_share', 'third_party_relative_share_str',
-        'two_party_margin', 'two_party_margin_str', 'two_party_margin_delta', 'two_party_margin_delta_str',
-        'two_party_national_margin', 'two_party_national_margin_str', 'two_party_national_margin_delta', 'two_party_national_margin_delta_str',
-        'two_party_relative_margin', 'two_party_relative_margin_str', 'two_party_relative_margin_delta', 'two_party_relative_margin_delta_str',
+        'D_delta', 'R_delta', 'total_delta',
+        'pres_margin', 'pres_margin_delta',
+        'national_margin', 'national_margin_delta',
+        'relative_margin', 'relative_margin_delta',
+        'third_party_share', 'third_party_national_share', 'third_party_relative_share',
+        'two_party_margin', 'two_party_margin_delta',
+        'two_party_national_margin', 'two_party_national_margin_delta',
+        'two_party_relative_margin', 'two_party_relative_margin_delta',
         'color',
+        'pres_margin_str', 'pres_margin_delta_str',
+        'national_margin_str', 'national_margin_delta_str',
+        'relative_margin_str', 'relative_margin_delta_str',
+        'third_party_share_str', 'third_party_national_share_str', 'third_party_relative_share_str',
+        'two_party_margin_str', 'two_party_margin_delta_str',
+        'two_party_national_margin_str', 'two_party_national_margin_delta_str',
+        'two_party_relative_margin_str', 'two_party_relative_margin_delta_str',
     ]
 
     with open(outfile, 'w', newline='', encoding='utf-8') as f:
