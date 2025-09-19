@@ -35,13 +35,13 @@
   function marginToColor(m, isThirdParty = false){
     if (isThirdParty) return '#C9A400'; // Yellow for third-party
     if (m <= -0.20) return '#8B0000';
-    if (m <= -0.12) return '#B22222';
-    if (m <= -0.06) return '#CD5C5C';
+    if (m <= -0.10) return '#B22222';
+    if (m <= -0.05) return '#CD5C5C';
     if (m < -0.01) return '#F08080';
-    if (m < 0) return '#FFC0CB';
+    if (m < 0) return '#b67d86ff';
     if (m < 0.01) return '#8aa7baff';
-    if (m < 0.06) return '#87CEFA';
-    if (m < 0.12) return '#6495ED';
+    if (m < 0.05) return '#87CEFA';
+    if (m < 0.10) return '#6495ED';
     if (m < 0.20) return '#4169E1';
     return '#00008B';
   }

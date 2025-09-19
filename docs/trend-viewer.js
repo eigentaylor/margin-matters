@@ -167,7 +167,7 @@ Interactive Explorer for state-trends
     el.state.innerHTML = stateOpts.map(s=>`<option value="${s}">${s}</option>`).join('');
 
     // Defaults
-    el.state.value = 'AK';
+    el.state.value = 'AL';
     el.metric.value = METRIC.MARGIN;
     el.nat.checked = true;
 
@@ -211,8 +211,23 @@ Interactive Explorer for state-trends
     el.twoP.checked = false;
     el.nat.checked = true;
     el.points.checked = true;
-    el.startYear.value = '';
-    el.endYear.value = '';
+    // Reset to default full range instead of clearing
+    try {
+      // Derive from loaded data if available; fallback to known 1916–2024
+      const all = window.__data || [];
+      let minYear = 1916, maxYear = 2024;
+      if (all.length) {
+        minYear = all.reduce((m,r)=> Math.min(m, +r.year||m), Infinity);
+        maxYear = all.reduce((m,r)=> Math.max(m, +r.year||m), -Infinity);
+        if (!isFinite(minYear) || minYear>2100) minYear = 1916;
+        if (!isFinite(maxYear) || maxYear<1800) maxYear = 2024;
+      }
+      el.startYear.value = String(minYear);
+      el.endYear.value = String(maxYear);
+    } catch(e) {
+      el.startYear.value = '1916';
+      el.endYear.value = '2024';
+    }
     writeToUrl();
     render();
   }
@@ -272,6 +287,7 @@ Interactive Explorer for state-trends
   function writeToUrl(){
     const p = getStateParams();
     const q = new URLSearchParams();
+    // legacy short params
     q.set('s', p.state);
     q.set('m', p.metric);
     if (selectedStates.length) q.set('multi', selectedStates.join(','));
@@ -283,27 +299,71 @@ Interactive Explorer for state-trends
     if (p.points) q.set('pts', '1');
     if (el.startYear.value) q.set('start', el.startYear.value);
     if (el.endYear.value) q.set('end', el.endYear.value);
+    // canonical params mirrored
+    if (el.startYear.value) q.set('yearStart', el.startYear.value);
+    if (el.endYear.value) q.set('yearEnd', el.endYear.value);
+    // Map our controls to canonical metric name
+    let canonicalMetric = p.metric;
+    if (p.metric === 'margin') {
+      if (p.delta) canonicalMetric = 'delta';
+      else if (p.rel) canonicalMetric = 'relative';
+      else canonicalMetric = 'margin';
+    } else if (p.metric === 'thirdParty') {
+      canonicalMetric = 'thirdparty';
+    }
+    q.set('metric', canonicalMetric);
+    q.set('chart', p.chart);
+    q.set('denom', p.twoP ? 'twoParty' : 'all');
+    q.set('overlay', p.nat ? 'nat' : 'none');
+    if (selectedStates.length) q.set('states', selectedStates.join(','));
     const url = `${location.pathname}?${q.toString()}`;
     history.replaceState(null, '', url);
   }
 
   function readFromUrl(){
     const q = new URLSearchParams(location.search);
-    if (q.get('s')) el.state.value = q.get('s');
-    if (q.get('m')) el.metric.value = q.get('m');
-    if (q.get('c')) el.chart.value = q.get('c');
-    el.rel.checked = q.has('rel');
-    el.delta.checked = q.has('d');
-    el.twoP.checked = q.has('tp');
-    el.nat.checked = q.has('nat');
-    el.points.checked = q.has('pts') ? true : el.points.checked;
-    if (q.get('multi')){
-      selectedStates = q.get('multi').split(',').filter(Boolean);
+    // prefer legacy keys if present, else fall back to canonical
+    const getBool = (keyShort, keyLong, truthyVal) => {
+      if (q.has(keyShort)) return true;
+      const v = q.get(keyLong);
+      if (v == null) return false;
+      if (truthyVal) return v === truthyVal;
+      return v === '1' || v === 'true' || v === 'yes';
+    };
+    const getStr = (keyShort, keyLong) => q.get(keyShort) || q.get(keyLong);
+    const getList = (keyShort, keyLong) => (getStr(keyShort, keyLong)||'').split(',').filter(Boolean);
+
+  const metric = (getStr('m','metric') || 'margin').toLowerCase();
+    const chart = getStr('c','chart') || 'auto';
+    const denom = getStr('tp','denom');
+    const overlay = getStr('nat','overlay');
+    const points = getBool('pts','points');
+
+    if (getStr('s','state')) el.state.value = getStr('s','state');
+    // map canonical metric to UI controls
+    if (metric === 'thirdparty' || metric === 'third_party' || metric === 'third') {
+      el.metric.value = 'thirdParty';
+    } else {
+      el.metric.value = 'margin';
+      if (metric === 'relative') el.rel.checked = true;
+      if (metric === 'delta') el.delta.checked = true;
+    }
+    el.chart.value = chart;
+    // legacy/explicit flags override canonical inference
+    if (getBool('rel','relative')) el.rel.checked = true;
+    if (getBool('d','delta')) el.delta.checked = true;
+    el.twoP.checked = denom ? (denom === 'twoParty' || denom === 'tp' || denom === '1' || denom === 'true') : q.has('tp');
+    el.nat.checked = overlay ? (overlay === 'nat') : q.has('nat');
+    el.points.checked = points ? true : el.points.checked;
+
+    const multi = getList('multi','states');
+    if (multi.length){
+      selectedStates = multi;
       renderStateChips();
       if (selectedStates.length > 1) el.chart.value = 'line';
     }
-    if (q.get('start')) el.startYear.value = q.get('start');
-    if (q.get('end')) el.endYear.value = q.get('end');
+    el.startYear.value = getStr('start','yearStart') || '';
+    el.endYear.value = getStr('end','yearEnd') || '';
   }
 
   function resize(){
@@ -627,6 +687,14 @@ Interactive Explorer for state-trends
     window.__data = rows;
     const states = Array.from(new Set(rows.map(r=>r.abbr)));
     initControls(states);
+    // Initialize year inputs to full available range
+    try {
+      const years = rows.map(r=>+r.year).filter(Boolean);
+      const minYear = Math.min(...years);
+      const maxYear = Math.max(...years);
+      if (!el.startYear.value) el.startYear.value = String(minYear);
+      if (!el.endYear.value) el.endYear.value = String(maxYear);
+    } catch(e) {}
     resize();
     render();
   }).catch(err => {

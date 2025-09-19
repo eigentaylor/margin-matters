@@ -10,16 +10,7 @@ from .header import make_header
 
 
 def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
-    # Build state link grid
-    state_items = sorted([(abbr, str(params.ABBR_TO_STATE.get(abbr) or abbr)) for abbr in states_sorted], key=lambda x: x[0])
-    cols = [[], [], [], []]
-    for i, item in enumerate(state_items):
-        cols[i % 4].append(item)
-    col_html = []
-    for col in cols:
-        items = "".join(f'<a class="btn" href="state/{abbr[:2]}.html">{abbr[:2]}</a>' for abbr, _ in col)
-        col_html.append(f'<div class="card" style="padding:8px"><div class="small-links" style="justify-content:center">{items}</div></div>')
-    state_links_html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0">' + "".join(col_html) + '</div>'
+    # Index no longer shows state link grid; that lives on state-pages.html
 
     # Compute year range for header
     min_year = None
@@ -44,14 +35,12 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
     header_html = make_header(f"U.S. Presidential Election State Results {year_range}")
     html = INDEX_HTML.replace("%HEADER%", header_html)
     html = html.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
-    html = html.replace("%STATE_LINKS%", state_links_html)
     html = html.replace("%LAST_UPDATED%", LAST_UPDATED)
     html = html.replace("%FOOTER_TEXT%", FOOTER_TEXT)
     html = html.replace("%YEAR_RANGE%", year_range)
 
     # Optional interactive tester
     if getattr(params, "INTERACTIVE_TESTER", False):
-        cap_pct = int(round(float(getattr(params, 'TESTER_PV_CAP', 0.25)) * 100))
         tester_ui = (
             "\n".join([
                 '<hr style="margin:12px 0" />',
@@ -105,12 +94,12 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
                 '      </div>',
                 '    </div>',
                 '    <div id="pvStops" class="legend" style="font-size:0.95rem"></div>',
-                f'    <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)">%EXPLANATION%</div>',
+                '    <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><a href="methods.html">See Methods</a> for metric definitions, PV stops, uniform swing, and 1968 notes.</div>',
                 '  </div>',
                 '</div>',
             ])
         )
-        tester_ui = tester_ui.replace('%MIN_YEAR%', str(min_year)).replace('%MAX_YEAR%', str(max_year)).replace('%EXPLANATION%', EXPLANATION_TEXT.replace('{cap_pct}', str(cap_pct)))
+        tester_ui = tester_ui.replace('%MIN_YEAR%', str(min_year)).replace('%MAX_YEAR%', str(max_year))
         tester_scripts = '<script src="tester.js"></script>'
     else:
         tester_ui = ''
@@ -119,6 +108,57 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
     html = html.replace('%TESTER_UI%', tester_ui)
     html = html.replace('%TESTER_SCRIPTS%', tester_scripts)
     write_text(OUT_DIR / "index.html", html)
+
+
+def make_state_pages(states_sorted: List[str]):
+    """Generate a dedicated State Pages index with links to every state and unit page.
+
+    This replaces the state links grid that used to live on index.html.
+    """
+    # Build a clean A–Z list: Full State Name  ·  [ABBR]
+    state_items = sorted(
+        [(abbr[:2], str(params.ABBR_TO_STATE.get(abbr) or abbr)) for abbr in states_sorted],
+        key=lambda x: x[1]
+    )
+    items_html = "\n".join(
+        f"<li class='state-item' style='display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#111'>"
+        f"<span class='state-name' style='text-align:left'>{name}</span>"
+        f"<a class='btn' href='state/{abbr}.html' aria-label='Open {name} page'>{abbr}</a>"
+        f"</li>"
+        for abbr, name in state_items
+    )
+    state_links_html = (
+        "<ul class='state-list' style='list-style:none;margin:8px 0 0 0;padding:0;display:grid;gap:8px;grid-template-columns:repeat(2,1fr)'>" +
+        items_html +
+        "</ul>"
+    )
+
+    header_html = make_header("State Pages")
+    html = f"""<!doctype html>
+        <html lang='en'>
+        <head>
+            <meta charset='utf-8'/>
+            <meta name='viewport' content='width=device-width,initial-scale=1'/>
+            <title>State Pages • Margin Matters</title>
+            <link rel='stylesheet' href='styles.css'/>
+            <link rel="icon" href="favicon.svg" />
+        </head>
+        <body>
+            <div class='container'>
+                {header_html}
+                <div class='card'>
+                    <h1 style='margin-top:0'>State Pages</h1>
+                    <p class='legend'>All statewide pages. District pages are linked from Maine and Nebraska.</p>
+                    <div class="small-links" id="top-links" style="padding: 4px; align-items: center; justify-content: center; display: flex;">
+                        <a class="btn" href="state/NAT.html">NATIONAL</a>
+                    </div>
+                    {state_links_html}
+                </div>
+                <footer>{FOOTER_TEXT} Built as static HTML from CSV. Last updated: {LAST_UPDATED}</footer>
+            </div>
+        </body>
+        </html>"""
+    write_text(OUT_DIR / "state-pages.html", html)
 
 
 def build_pages(rows: List[Dict]):
@@ -159,7 +199,7 @@ def build_pages(rows: List[Dict]):
         table1_section = (
             f'<div class="card">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Total Data</h2>\n'
-            f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}{render_info_box(basic_cols)}</div>\n'
+            f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}</div>\n'
             f'</div>'
         )
         table3_section = ''
@@ -167,7 +207,7 @@ def build_pages(rows: List[Dict]):
             table3_section = (
                 f'<div class="card">\n'
                 f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Third-Party Data</h2>\n'
-                f'  <div class="table-wrap">{render_table(table_rows, third_cols)}{render_info_box(third_cols)}</div>\n'
+                f'  <div class="table-wrap">{render_table(table_rows, third_cols)}</div>\n'
                 f'</div>'
             )
         plot3_section = (
@@ -179,7 +219,7 @@ def build_pages(rows: List[Dict]):
         table2_section = (
             f'<div class="card">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Two-Party Data</h2>\n'
-            f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}{render_info_box(tp_cols)}</div>\n'
+            f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}</div>\n'
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide", is_inner=True)
@@ -238,7 +278,7 @@ def build_pages(rows: List[Dict]):
         table1_section = (
             f'<div class="card">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Total Data</h2>\n'
-            f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}{render_info_box(basic_cols)}</div>\n'
+            f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}</div>\n'
             f'</div>'
         )
         table3_section = ''
@@ -246,13 +286,13 @@ def build_pages(rows: List[Dict]):
             table3_section = (
                 f'<div class="card">\n'
                 f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Third-Party Data</h2>\n'
-                f'  <div class="table-wrap">{render_table(table_rows, third_cols)}{render_info_box(third_cols)}</div>\n'
+                f'  <div class="table-wrap">{render_table(table_rows, third_cols)}</div>\n'
                 f'</div>'
             )
         table2_section = (
             f'<div class="card">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Two-Party Data</h2>\n'
-            f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}{render_info_box(tp_cols)}</div>\n'
+            f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}</div>\n'
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})", is_inner=True)
@@ -392,37 +432,92 @@ def make_data_page(rows: List[Dict]):
         cells = "".join(f"<td>{esc(r.get(h,''))}</td>" for h in headers)
         body_rows.append(f"<tr>{cells}</tr>")
 
-    html = f"""<!doctype html>
-                <html lang='en'>
-                <head>
-                <meta charset='utf-8'/>
-                <meta name='viewport' content='width=device-width,initial-scale=1'/>
-                <title>Presidential margins CSV</title>
-                <link rel='stylesheet' href='styles.css'/>
-                <link rel="icon" href="favicon.svg" />
-                </head>
-                <body>
-                <div class='container'>
-                <div class='card site-header' style='display:flex;justify-content:space-between;align-items:center;padding:8px'>
-                    <div class='small-links'>
-                    <a class='btn' href='index.html'>Home</a>
-                    <a class='btn' href='ranker.html'>Ranker</a>
-                    <a class='btn' href='presidential_margins.csv'>Raw CSV</a>
-                    </div>
-                    <div class='legend'>Presidential margins CSV</div>
-                </div>
-                <h1>presidential_margins.csv</h1>
-                <p class='legend'>This page renders the primary CSV used to build the site. The raw CSV is available from the "Raw CSV" link.</p>
+        header_html = make_header("Presidential margins CSV")
+        html = f"""<!doctype html>
+        <html lang='en'>
+        <head>
+            <meta charset='utf-8'/>
+            <meta name='viewport' content='width=device-width,initial-scale=1'/>
+            <title>Presidential margins CSV</title>
+            <link rel='stylesheet' href='styles.css'/>
+            <link rel="icon" href="favicon.svg" />
+        </head>
+        <body>
+            <div class='container'>
+                {header_html}
+                <h1 style='margin-top:0'>presidential_margins.csv</h1>
+                <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
                 <div class='card table-wrap'>
                     <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
                 </div>
                 <footer>{FOOTER_TEXT} Built from CSV. Last updated: {LAST_UPDATED}</footer>
-                </div>
-                <script>
+            </div>
+            <script>
                 {DELTA_TOGGLE_JS}
-                </script>
-                </body>
-                </html>"""
+            </script>
+        </body>
+        </html>"""
     write_text(OUT_DIR / "presidential_margins.html", html)
+
+
+def make_methods_page():
+        """Generate a simple Methods page with definitions and links.
+
+        This is a starter content block that we can expand later.
+        """
+        header_html = make_header("Methods and Definitions")
+        cap_pct = int(round(float(getattr(params, 'TESTER_PV_CAP', 0.25)) * 100))
+        # Use the long-form explainer content configured in config.py
+        try:
+            explainer_html = EXPLANATION_TEXT.replace('{cap_pct}', str(cap_pct))
+        except Exception:
+            explainer_html = ""
+        html = f"""<!doctype html>
+        <html lang='en'>
+        <head>
+        <meta charset='utf-8'/>
+        <meta name='viewport' content='width=device-width,initial-scale=1'/>
+        <title>Methods • Margin Matters</title>
+        <link rel='stylesheet' href='styles.css'/>
+        <link rel="icon" href="favicon.svg" />
+        </head>
+        <body>
+            <div class='container'>
+                {header_html}
+                <div class='card'>
+                    <h1 style='margin-top:0'>Methods</h1>
+                    <p class='legend'>Definitions, formulas, and caveats for all metrics used on this site.</p>
+                    <hr/>
+                    <h2>Metrics</h2>
+                    <dl class='info-dl'>
+                        <dt>Margin</dt>
+                        <dd>D% − R% in a given unit (state or district).</dd>
+                        <dt>National margin</dt>
+                        <dd>Same formula but computed for the national vote.</dd>
+                        <dt>Relative margin</dt>
+                        <dd>State margin − National margin. Positive means the state is more Democratic than the country that year.</dd>
+                        <dt>Delta</dt>
+                        <dd>Difference vs previous cycle for the selected metric (e.g., margin(year) − margin(prev)).</dd>
+                        <dt>Two-party</dt>
+                        <dd>Calculations restricted to Democratic and Republican vote shares (excludes third-party share).</dd>
+                        <dt>Third-party share</dt>
+                        <dd>Share of votes for non-major-party candidates. In 1968, some states have third-party pluralities.</dd>
+                    </dl>
+                      <h2>PV Stops and Uniform Swing</h2>
+                      <p>On the Home page, we shift the national popular vote (PV) uniformly across states to estimate the Electoral College outcome. 
+                      Stops represent notable points such as EVEN, Actual national margin, and state-specific tipping thresholds. 
+                      For 1968, special third-party windows are highlighted.</p>
+                      <div class='legend' style='margin-top:8px'>%EXPLAINER_HTML%</div>
+                    <h2>ME/NE Districts</h2>
+                    <p>Maine and Nebraska allocate some electoral votes by congressional district. Their statewide pages link to district views.</p>
+                    <h2>Data</h2>
+                    <p>See the Data page for the canonical CSV, or download directly as <a href='presidential_margins.csv'>Raw CSV</a>.</p>
+                </div>
+                <footer>{FOOTER_TEXT} Built from CSV. Last updated: {LAST_UPDATED}</footer>
+            </div>
+        </body>
+        </html>"""
+        html = html.replace('%EXPLAINER_HTML%', explainer_html)
+        write_text(OUT_DIR / "methods.html", html)
 
 

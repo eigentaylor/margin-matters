@@ -1,4 +1,4 @@
-# Manual smoke checklist for explorer.html
+# Manual smoke checklist for trend-viewer.html
 
 - Page loads without console errors
 - State dropdown populates (includes NATIONAL and states)

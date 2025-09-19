@@ -9,18 +9,20 @@
 </head>
 <body>
 <div class="container" style="text-align: center;">
-  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./presidential_margins.html">Data</a></div><div class="legend">U.S. Presidential Election State Results 1916-2024</div></div>
+  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div><div class="legend">U.S. Presidential Election State Results 1916-2024</div></div>
+  <div class="card">
+    <div class="legend" style="text-align:left">Browse all state pages on the <a href="./state-pages.html">State Pages</a> directory. Maine and Nebraska link to district pages from their statewide pages.</div>
+  </div>
   <div class="header">
   <h1>U.S. Presidential Election State Results 1916-2024</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
-  <div class="grid">
-    <div class="card">
-      <div id="map-wrap" class="center">
-        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
-  <div id="mapTip" style="display:none"></div>
-      </div>
-      <hr style="margin:12px 0" />
+  <div class="card">
+    <div id="map-wrap" class="center">
+      <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+      <div id="mapTip" style="display:none"></div>
+    </div>
+    <hr style="margin:12px 0" />
 <div id="tester" class="center" style="margin-top:8px">
   <div style="display:grid;gap:10px">
     <div style="display:flex;align-items:center;gap:8px">
@@ -71,31 +73,13 @@
       </div>
     </div>
     <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
-    <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><b>How this works:</b> We measure a state's relative margin as the difference between its presidential margin and the national presidential margin. A state with a relative margin of +5% is 5 points more Democratic than the nation as a whole, while a state with -3% is 3 points more Republican than the nation. By shifting the national presidential margin (PV) we can estimate how many electoral votes each party would win if the national popular vote were different. The EV bar above shows the estimated electoral vote split for the selected PV.<br /><br />We only capped the maximum PV shift to ±50% to allow for particularly unrealistic scenarios (despite the days of a 20-point landslide being long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin. But if you want to see what a D+44.3 margin might look like, be my guest!<br /><br /><b>Note:</b> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist.<br /><br /><i>Note on 1968:</i> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win.<br />While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points.<br /><br /><i>Note on Alabama:</i> Alabama is a complete mess. It's impossible to count it as a simple D/R contest in 1960 because of unpledged electors. We have opted to use the way Wikipedia counts them <a href='https://en.wikipedia.org/wiki/1960_United_States_presidential_election#Results_by_state' target='_blank' rel='noopener noreferrer'>here</a>. For testing different scenarios, we choose to allot electoral votes as 5D/6O unless Nixon wins, in which case all 11 go to R. In 1948, Truman was not even on the ballot, so we count Strom Thurmond as the de facto Democrat (but still color the state yellow unless it flips).<br /><br /><b>Flip scenarios</b> are computed by solving a knapsack problem to find the minimum number of popular votes needed to flip enough states to change the electoral college outcome (either to produce a new winner or to simply break the majority the original winner had). We choose the solution based on the minimum number of votes needed to flip (rather than the minimum number of states flipped). For example: in 2004, if Kerry had won Ohio, he would have won the presidency. But that would have actually required slightly more votes than flipping NM, IA, NV, and NE-02 combined, so the latter is the solution shown here.</div>
+    <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><a href="methods.html">See Methods</a> for metric definitions, PV stops, uniform swing, and 1968 notes.</div>
   </div>
 </div>
-    </div>
-    <div class="card">
-        <h2 style="margin-top:0">State Links</h2>
-        <!-- Top line: National quick link -->
-        <div class="small-links" id="top-links" style="padding: 4px; align-items: center; justify-content: center; display: flex;">
-          <a class="btn" href="state/NAT.html">NATIONAL</a>
-        </div>
-        <!-- Second line: small states populated by the map script -->
-        <div class="small-links" id="small-links" style="padding: 2px; align-items: center; justify-content: center; display: flex;">
-          <!-- small-state buttons inserted here by the map script -->
-        </div>
-        <!-- Third: Expanded state links (categorized into 4 columns) -->
-        <div id="state-links"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0"><div class="card" style="padding:8px"><div class="small-links" style="justify-content:center"><a class="btn" href="state/AK.html">AK</a><a class="btn" href="state/CA.html">CA</a><a class="btn" href="state/DE.html">DE</a><a class="btn" href="state/IA.html">IA</a><a class="btn" href="state/KS.html">KS</a><a class="btn" href="state/MD.html">MD</a><a class="btn" href="state/MO.html">MO</a><a class="btn" href="state/ND.html">ND</a><a class="btn" href="state/NM.html">NM</a><a class="btn" href="state/OK.html">OK</a><a class="btn" href="state/SC.html">SC</a><a class="btn" href="state/UT.html">UT</a><a class="btn" href="state/WI.html">WI</a></div></div><div class="card" style="padding:8px"><div class="small-links" style="justify-content:center"><a class="btn" href="state/AL.html">AL</a><a class="btn" href="state/CO.html">CO</a><a class="btn" href="state/FL.html">FL</a><a class="btn" href="state/ID.html">ID</a><a class="btn" href="state/KY.html">KY</a><a class="btn" href="state/ME.html">ME</a><a class="btn" href="state/MS.html">MS</a><a class="btn" href="state/NE.html">NE</a><a class="btn" href="state/NV.html">NV</a><a class="btn" href="state/OR.html">OR</a><a class="btn" href="state/SD.html">SD</a><a class="btn" href="state/VA.html">VA</a><a class="btn" href="state/WV.html">WV</a></div></div><div class="card" style="padding:8px"><div class="small-links" style="justify-content:center"><a class="btn" href="state/AR.html">AR</a><a class="btn" href="state/CT.html">CT</a><a class="btn" href="state/GA.html">GA</a><a class="btn" href="state/IL.html">IL</a><a class="btn" href="state/LA.html">LA</a><a class="btn" href="state/MI.html">MI</a><a class="btn" href="state/MT.html">MT</a><a class="btn" href="state/NH.html">NH</a><a class="btn" href="state/NY.html">NY</a><a class="btn" href="state/PA.html">PA</a><a class="btn" href="state/TN.html">TN</a><a class="btn" href="state/VT.html">VT</a><a class="btn" href="state/WY.html">WY</a></div></div><div class="card" style="padding:8px"><div class="small-links" style="justify-content:center"><a class="btn" href="state/AZ.html">AZ</a><a class="btn" href="state/DC.html">DC</a><a class="btn" href="state/HI.html">HI</a><a class="btn" href="state/IN.html">IN</a><a class="btn" href="state/MA.html">MA</a><a class="btn" href="state/MN.html">MN</a><a class="btn" href="state/NC.html">NC</a><a class="btn" href="state/NJ.html">NJ</a><a class="btn" href="state/OH.html">OH</a><a class="btn" href="state/RI.html">RI</a><a class="btn" href="state/TX.html">TX</a><a class="btn" href="state/WA.html">WA</a></div></div></div></div>
-      <hr/>
-      <p class="legend">Tip: Maine and Nebraska’s pages include links to pages for their districts.</p>
-    </div>
   </div>
   <footer>Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to me through discord: eigentaylor ·
-  Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: 2025-09-19 21:01 UTC</footer>
+Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-19 23:19 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -207,14 +191,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         return abbr ? abbr : "Unknown";
       });
 
-    // Small state buttons
-    const links = d3.select("#small-links");
-    SMALL_STATES.forEach(abbr => {
-      links.append("a")
-        .attr("class","btn")
-        .attr("href","state/" + abbr + ".html")
-        .text(abbr);
-    });
+    // Small state buttons were moved to the State Pages directory; no buttons on index
   // Notify listeners that the map has rendered
   window.dispatchEvent(new Event("mapReady"));
   });

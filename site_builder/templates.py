@@ -116,37 +116,21 @@ INDEX_HTML = r"""<!doctype html>
 <body>
 <div class="container" style="text-align: center;">
   %HEADER%
+  <div class="card">
+    <div class="legend" style="text-align:left">Browse all state pages on the <a href="./state-pages.html">State Pages</a> directory. Maine and Nebraska link to district pages from their statewide pages.</div>
+  </div>
   <div class="header">
   <h1>U.S. Presidential Election State Results %YEAR_RANGE%</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
-  <div class="grid">
-    <div class="card">
-      <div id="map-wrap" class="center">
-        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
-  <div id="mapTip" style="display:none"></div>
-      </div>
-      %TESTER_UI%
+  <div class="card">
+    <div id="map-wrap" class="center">
+      <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+      <div id="mapTip" style="display:none"></div>
     </div>
-    <div class="card">
-        <h2 style="margin-top:0">State Links</h2>
-        <!-- Top line: National quick link -->
-        <div class="small-links" id="top-links" style="padding: 4px; align-items: center; justify-content: center; display: flex;">
-          <a class="btn" href="state/NAT.html">NATIONAL</a>
-        </div>
-        <!-- Second line: small states populated by the map script -->
-        <div class="small-links" id="small-links" style="padding: 2px; align-items: center; justify-content: center; display: flex;">
-          <!-- small-state buttons inserted here by the map script -->
-        </div>
-        <!-- Third: Expanded state links (categorized into 4 columns) -->
-        <div id="state-links">%STATE_LINKS%</div>
-      <hr/>
-      <p class="legend">Tip: Maine and Nebraska’s pages include links to pages for their districts.</p>
-    </div>
+    %TESTER_UI%
   </div>
-  <footer>%FOOTER_TEXT%
-  Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br />
-  Last updated: %LAST_UPDATED%</footer>
+  <footer>%FOOTER_TEXT% Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: %LAST_UPDATED%</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -258,14 +242,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         return abbr ? abbr : "Unknown";
       });
 
-    // Small state buttons
-    const links = d3.select("#small-links");
-    SMALL_STATES.forEach(abbr => {
-      links.append("a")
-        .attr("class","btn")
-        .attr("href","state/" + abbr + ".html")
-        .text(abbr);
-    });
+    // Small state buttons were moved to the State Pages directory; no buttons on index
   // Notify listeners that the map has rendered
   window.dispatchEvent(new Event("mapReady"));
   });

@@ -14,12 +14,12 @@
 
   function marginToColor(m){
     if (m <= -0.20) return '#8B0000';
-    if (m <= -0.12) return '#B22222';
-    if (m <= -0.06) return '#CD5C5C';
+    if (m <= -0.10) return '#B22222';
+    if (m <= -0.05) return '#CD5C5C';
     if (m < 0) return '#F08080';
     if (m === 0) return '#C3B1E1';
-    if (m < 0.06) return '#87CEFA';
-    if (m < 0.12) return '#6495ED';
+    if (m < 0.05) return '#87CEFA';
+    if (m < 0.10) return '#6495ED';
     if (m < 0.20) return '#4169E1';
     return '#00008B';
   }

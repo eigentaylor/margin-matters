@@ -3,35 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=./trend-viewer.html">
-  <title>Redirecting…</title>
-  <script>
-    // Preserve query string and hash when redirecting legacy explorer.html to trend-viewer.html
-    (function(){
-      var qs = window.location.search || '';
-      var hash = window.location.hash || '';
-      var url = './trend-viewer.html' + qs + hash;
-      // Use replace() to avoid polluting history
-      window.location.replace(url);
-    })();
-  </script>
-  <link rel="icon" href="./favicon.svg" />
-  <link rel="stylesheet" href="./styles.css" />
-</head>
-<body>
-  <div style="padding:16px;font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Helvetica, Arial;color:#f5f5f5;background:#0b0b0b">
-    <p>Redirecting to Trend Viewer… If you are not redirected, <a href="./trend-viewer.html">click here</a>.</p>
-  </div>
-  <noscript>
-    <meta http-equiv="refresh" content="0; url=./trend-viewer.html" />
-  </noscript>
-  </body>
-</html>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>State Trends • Trend Viewer</title>
   <link rel="icon" href="./favicon.svg" />
   <link rel="stylesheet" href="./styles.css" />
@@ -41,7 +12,9 @@
     a{color:var(--accent)}
     .container{max-width:1200px;margin:0 auto;padding:16px}
     .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-    .controls{display:grid;grid-template-columns:repeat(4, minmax(160px,1fr));gap:12px;align-items:end}
+  .controls{display:grid;grid-template-columns:1fr;gap:12px;align-items:end}
+  @media (min-width: 700px){ .controls{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (min-width: 1050px){ .controls{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
     .controls .field{display:flex;flex-direction:column;gap:6px}
     .controls label{font-size:.9rem;color:var(--muted)}
     .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
@@ -54,18 +27,17 @@
     .spacer{height:6px}
   .select-dark{background:var(--card);color:var(--fg);border:1px solid var(--border);padding:6px;border-radius:6px}
   .btn-dark{background:var(--card);color:var(--fg);border:1px solid var(--border);padding:6px 10px;border-radius:6px}
+  .presets-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .state-chips{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+  @media (max-width: 520px){
+    #chart{height:400px}
+  }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px;margin-bottom:12px">
-      <div class="small-links">
-        <a class="btn" href="./index.html">Home</a>
-        <a class="btn" href="./ranker.html">Ranker</a>
-  <a class="btn" href="./trend-viewer.html">Trend Viewer</a>
-        <a class="btn" href="./methods.html">Methods</a>
-        <a class="btn" href="./presidential_margins.html">Data (CSV)</a>
-      </div>
+      <div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div>
   <div class="legend">Trend Viewer</div>
     </div>
 
@@ -74,9 +46,9 @@
         <div class="field">
           <label for="stateSel">State</label>
           <select id="stateSel" class="select-dark"></select>
-          <div style="margin-top:8px;display:flex;gap:8px">
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
             <button id="addStateBtn" class="btn btn-dark">Add state</button>
-            <div style="display:flex;gap:6px;align-items:center">
+            <div class="presets-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
               <label class="badge">Presets:</label>
               <select id="presetSel" class="select-dark">
                 <option value="">— choose —</option>
@@ -85,10 +57,10 @@
                 <option value="preset3">Maine (ME + districts)</option>
                 <option value="preset4">Nebraska (NE + districts)</option>
               </select>
-              <button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>
+              <!--<button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>-->
             </div>
           </div>
-          <div id="stateChips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
+          <div id="stateChips" class="state-chips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
         </div>
         <div class="field">
           <label for="metricSel">Metric</label>
@@ -135,9 +107,9 @@
     </div>
 
     <div class="card">
-      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px">
-        <div class="legend">Use presets or chips to compare multiple states.</div>
-        <button id="shareBtn" class="btn btn-dark" title="Copy link to this view">Share</button>
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+        <div class="legend" style="flex:1 1 auto;min-width:240px">Use presets or chips to compare multiple states.</div>
+        <button id="shareBtn" class="btn btn-dark" title="Copy link to this view" style="flex:0 0 auto">Share</button>
       </div>
       <div id="chart"></div>
       <div id="notes" style="margin-top:8px;color:var(--muted);font-size:.92rem"></div>
@@ -145,7 +117,7 @@
 
     <footer style="margin-top:16px;color:var(--muted)">
       This experimental page doesn’t affect the main site. When it’s ready, we can integrate it into the build.
-    </footer>
+     <span class="legend">Last updated: 2025-09-19 23:15 UTC</span></footer>
   </div>
 
   <div class="tooltip" id="tooltip"></div>

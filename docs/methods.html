@@ -1,0 +1,47 @@
+<!doctype html>
+        <html lang='en'>
+        <head>
+        <meta charset='utf-8'/>
+        <meta name='viewport' content='width=device-width,initial-scale=1'/>
+        <title>Methods • Margin Matters</title>
+        <link rel='stylesheet' href='styles.css'/>
+        <link rel="icon" href="favicon.svg" />
+        </head>
+        <body>
+            <div class='container'>
+                <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div><div class="legend">Methods and Definitions</div></div>
+                <div class='card'>
+                    <h1 style='margin-top:0'>Methods</h1>
+                    <p class='legend'>Definitions, formulas, and caveats for all metrics used on this site.</p>
+                    <hr/>
+                    <h2>Metrics</h2>
+                    <dl class='info-dl'>
+                        <dt>Margin</dt>
+                        <dd>D% − R% in a given unit (state or district).</dd>
+                        <dt>National margin</dt>
+                        <dd>Same formula but computed for the national vote.</dd>
+                        <dt>Relative margin</dt>
+                        <dd>State margin − National margin. Positive means the state is more Democratic than the country that year.</dd>
+                        <dt>Delta</dt>
+                        <dd>Difference vs previous cycle for the selected metric (e.g., margin(year) − margin(prev)).</dd>
+                        <dt>Two-party</dt>
+                        <dd>Calculations restricted to Democratic and Republican vote shares (excludes third-party share).</dd>
+                        <dt>Third-party share</dt>
+                        <dd>Share of votes for non-major-party candidates. In 1968, some states have third-party pluralities.</dd>
+                    </dl>
+                      <h2>PV Stops and Uniform Swing</h2>
+                      <p>On the Home page, we shift the national popular vote (PV) uniformly across states to estimate the Electoral College outcome. 
+                      Stops represent notable points such as EVEN, Actual national margin, and state-specific tipping thresholds. 
+                      For 1968, special third-party windows are highlighted.</p>
+                      <div class='legend' style='margin-top:8px'><b>How this works:</b> We measure a state's relative margin as the difference between its presidential margin and the national presidential margin. A state with a relative margin of +5% is 5 points more Democratic than the nation as a whole, while a state with -3% is 3 points more Republican than the nation. By shifting the national presidential margin (PV) we can estimate how many electoral votes each party would win if the national popular vote were different. The EV bar above shows the estimated electoral vote split for the selected PV.<br /><br />We only capped the maximum PV shift to ±50% to allow for particularly unrealistic scenarios (despite the days of a 20-point landslide being long gone). Since 1968, the largest PV margin was 23.1% in 1972, even Reagan never cracked 20% in his historic 1984 landslide. Since 1984, no candidate has surpassed a 10% margin. But if you want to see what a D+44.3 margin might look like, be my guest!<br /><br /><b>Note:</b> This is a simplified model that assumes uniform swing across all states and does not account for factors like turnout changes, demographic shifts, or unique state-level dynamics. It is intended for illustrative purposes only. The assumption of a uniform swing is a significant simplification, but is slightly more reasonable for modern elections where we have a relatively common national zeitgeist.<br /><br /><i>Note on 1968:</i> A few states had a strong showing by third-party candidate George Wallace, which complicates the uniform swing assumption. We assume the national swing applies purely to the D and R votes, and that Wallace's vote share remains constant. Thus, some of these states actually have two tipping points: usually pushing a Wallace win into a D/R win, but in the case of TN, pushing an R win into a Wallace win and then into a D win.<br />While a few states like Alabama and Mississippi are solidly Wallace territory (no national swing could change his plurality there), and other states like GA and LA require massive 30-50+ swings, other states like AR and TN have more reasonable tipping points.<br /><br /><i>Note on Alabama:</i> Alabama is a complete mess. It's impossible to count it as a simple D/R contest in 1960 because of unpledged electors. We have opted to use the way Wikipedia counts them <a href='https://en.wikipedia.org/wiki/1960_United_States_presidential_election#Results_by_state' target='_blank' rel='noopener noreferrer'>here</a>. For testing different scenarios, we choose to allot electoral votes as 5D/6O unless Nixon wins, in which case all 11 go to R. In 1948, Truman was not even on the ballot, so we count Strom Thurmond as the de facto Democrat (but still color the state yellow unless it flips).<br /><br /><b>Flip scenarios</b> are computed by solving a knapsack problem to find the minimum number of popular votes needed to flip enough states to change the electoral college outcome (either to produce a new winner or to simply break the majority the original winner had). We choose the solution based on the minimum number of votes needed to flip (rather than the minimum number of states flipped). For example: in 2004, if Kerry had won Ohio, he would have won the presidency. But that would have actually required slightly more votes than flipping NM, IA, NV, and NE-02 combined, so the latter is the solution shown here.</div>
+                    <h2>ME/NE Districts</h2>
+                    <p>Maine and Nebraska allocate some electoral votes by congressional district. Their statewide pages link to district views.</p>
+                    <h2>Data</h2>
+                    <p>See the Data page for the canonical CSV, or download directly as <a href='presidential_margins.csv'>Raw CSV</a>.</p>
+                </div>
+                <footer>Site by eigentaylor.<br />
+Data (possibly incorrectly scraped) from Wikipedia.<br /> 
+Please report any innaccuracies to me through discord: eigentaylor · Built from CSV. Last updated: 2025-09-19 23:19 UTC</footer>
+            </div>
+        </body>
+        </html>
