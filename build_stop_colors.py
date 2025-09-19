@@ -6,8 +6,8 @@ from typing import Dict, List, Tuple
 from params import COLORS
 
 
-EPS = 1e-5
-PV_CAP = 0.6
+EPS = 1e-4
+PV_CAP = 0.99
 STOP_KEY_PREC = 6  # decimals for stop key matching in JS
 
 
@@ -89,7 +89,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             else:
                 approximated_margins = {'D': original_margins['D'] + (eff - nat) / 2, 'R': original_margins['R'] - (eff - nat) / 2, 'T': original_margins['T']}
                 new_winner = max(approximated_margins, key=approximated_margins.get)
-                if abbr == 'AL' and year == 1960:
+                if abbr == 'AL' and year == 1948:
                     pass
                 if new_winner == original_winner:
                     print(f"Debug: {year} {abbr} winner unchanged at stop {s} eff {eff}: {original_winner}")
@@ -131,9 +131,9 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             rm = parse_float(r.get('relative_margin'))
             t = parse_float(r.get('third_party_share'))
             a = 3 * t - 1
-            if abbr == 'TN' and year == 1968:
-                pass
-            if a > 0:
+            if abbr == 'AL' and year == 1948:
+                a = 0.0
+            if a > 0:# and not (year == 1948 and abbr == 'AL'):
                 nD = -rm + a
                 nR = -rm - a
                 if abs(nD) <= PV_CAP:

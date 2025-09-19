@@ -152,6 +152,8 @@ def analyze_year(rows_for_year):
         if year == 1960 and r['abbr'] == 'AL' and r['party_win'] in ('D', 'T'):
             ev_by_party['D'] += 5
             ev_by_party['T'] += 6  # Use 'T' for Others/third-party
+        elif year == 1948 and r['abbr'] == 'AL' and r['party_win'] in ('D', 'T'):
+            ev_by_party['T'] += 11  # All 11 to Dixiecrats (Strom Thurmond)
         else:
             ev_by_party[r['party_win']] += ev
     

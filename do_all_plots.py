@@ -206,7 +206,7 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
         if state_3p is not None:
             ax2.plot(years, state_3p, label="State 3rd-Party Share", marker="o", linestyle="-", color="lime")
             # Highlight 1968 winner states by a yellow marker
-            scatter_colors = [
+            scatter_colors = df["color"].to_numpy()[order] if "color" in df.columns else [
                 ("yellow" if (y == 1968 and state in SPECIAL_1968_STATES) else 
                  ("deepskyblue" if v > 0 else "red")) 
                 for v, y in zip(state_margin if state_margin is not None else [], years)

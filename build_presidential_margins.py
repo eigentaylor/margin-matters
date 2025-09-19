@@ -145,6 +145,9 @@ def main():
             relative_pres = pres - national_margin['margin'] if national_margin else pres
             
             third_party = r.get('third_party_share', 0.0)
+            if year == 1948 and abbr == 'AL':
+                # In 1948, AL was won by Strom Thurmond (Dixiecrat) while Truman wasn't even on the ballot. Thus, we count Thurmond's votes for D, but simultaneously as third party share.
+                third_party = (r.get('D_votes', 0) + r.get('T_votes', 0)) / r.get('total_votes', 1) if r.get('total_votes', 1) > 0 else 0.0
             third_party_national = national_margins_by_year.get(year, {}).get('third_party_share', 0.0)
             third_party_relative = third_party - third_party_national
 
@@ -265,7 +268,7 @@ def main():
                 tv = r.get('T_votes', 0)
 
             # winner letter: 'D', 'R', or 'T' (largest raw votes)
-            if tv > dv and tv > rv:
+            if (tv > dv and tv > rv) or (year == 1948 and abbr == 'AL'):
                 winner = 'T'
             elif dv > rv:
                 winner = 'D'

@@ -1,6 +1,6 @@
 
 (function(){
-  const PV_CAP = 0.6;
+  const PV_CAP = 0.99;
   const EPS = 1e-8;
   const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
@@ -308,7 +308,10 @@
       // ignore national rows in per-state stop derivation to avoid 'NATIONAL' showing beside EVEN
       if ((r.unit === 'NATIONAL' || r.unit === 'NAT')) return;
       const t = +r.tp || 0;
-      const a = 3*t - 1; // half-width of third-party window
+      a = 3*t - 1; // half-width of third-party window
+      if (year === 1948 && r.unit === 'AL') {
+        a = 0.0;
+      }
       if (a > 0 && isFinite(a)) {
         // Add third-party tipping thresholds (upper/lower bounds of yellow window)
         const rVal = +(r.rm || 0);
@@ -387,16 +390,17 @@
               const info = byStop.get(u);
               if (info) { winners.push(info.winner); colors.push(info.color_css || ''); }
             });
-            // Priority: any T => yellow; else any D => blue; else any R => red; fallback first color
-            if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
+                // Priority: any T => yellow; else any D => blue; else any R => red; fallback first color
+                // Use the same tolerance logic as EV classification: pv inside (nR + EPS, nD - EPS) indicates T
+                if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
             else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
             else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
             else if (colors.length) bgColor = colors[0];
           }
         }
         
-        // Determine text color based on background for readability
-  const isYellowish = (bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
+    // Determine text color based on background for readability
+  const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
   const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
         // Determine small (muted) unit text color so it remains readable on yellow
   const smallColor = isYellowish ? '#000' : 'var(--muted)';
@@ -625,23 +629,26 @@
       const prev = abbrColors.get(st);
       // Special pluralities: dynamic yellow window using third-party share (any year)
       let color;
+      const rVal = +(r.rm || 0);
       {
         const t = +r.tp || 0;
-        const a = 3*t - 1;
-        if (a > 0) {
-          const rVal = +(r.rm || 0);
-          const nD = -rVal + a - EPS;
-          const nD_EPS_SGN = Math.sign(nD - nat);
-          const nR = -rVal - a + EPS;
-          const nR_EPS_SGN = Math.sign(nR - nat);
-          if (pv > nR - nR_EPS_SGN * EPS && pv < nD - nD_EPS_SGN * EPS) {
-            color = '#FFD700'; // yellow within the window
+          a = 3*t - 1;
+          if (year === 1948 && r.unit === 'AL') {
+            a = 0.0;
+            color = (pv < -rVal) ? marginToColor(m) : '#FFD700'; // Thurmond vs Dewey (no Truman here)
+          }
+          else if (a > 0) {
+            // Use same boundaries as EV counting: strict inside (nR + EPS, nD - EPS)
+            const nD = -rVal + a;
+            const nR = -rVal - a;
+            if (pv > nR + EPS && pv < nD - EPS) {
+              color = '#FFD700'; // yellow within the window
+            } else {
+              color = marginToColor(m);
+            }
           } else {
             color = marginToColor(m);
           }
-        } else {
-          color = marginToColor(m);
-        }
       }
   if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
   // store per-unit color and party label so district polygons can be filled individually

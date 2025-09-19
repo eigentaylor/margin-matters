@@ -238,7 +238,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             
             # Extract vote counts
             r_votes = clean_number(cells[header_info['r_col']].get_text())
-            if state_code == 'AL' and 1960 <= year <= 1964:
+            if state_code == 'AL' and (1960 <= year <= 1964 or year == 1948):
                 d_votes = clean_number(cells[8].get_text()) # unpledged electors column
             else:
                 d_votes = clean_number(cells[header_info['d_col']].get_text())
