@@ -22,7 +22,7 @@ import math
 import os
 from collections import defaultdict
 
-DOCS_CSV = os.path.join('docs', 'presidential_margins.csv')
+DOCS_CSV = os.path.join('presidential_margins.csv')
 OUT_SUMMARY = os.path.join('docs', 'flip_results.csv')
 OUT_DETAILS = os.path.join('docs', 'flip_details.csv')
 
