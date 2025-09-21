@@ -1,0 +1,4 @@
+Metric: relative_margin
+Components (k): 3
+Explained variance (unrotated): [0.511698, 0.143433, 0.08592]
+Cumulative (unrotated): [0.511698, 0.655132, 0.741052]

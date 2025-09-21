@@ -1,0 +1,4 @@
+Metric: pres_margin
+Components (k): 2
+Explained variance (unrotated): [0.491212, 0.300104]
+Cumulative (unrotated): [0.491212, 0.791317]
