@@ -182,6 +182,15 @@
         });
         rec[Y] = wavg(vals, wts);
       });
+      // Ensure rel_2024 and rel_2048_target fields are present on the AL record to match other records
+      if (isFinite(rec[2024])) rec.rel_2024 = rec[2024];
+      if (isFinite(rec[2048])) rec.rel_2048_target = rec[2048];
+      // Debug: log district composition and computed at-large values for 2024
+      try {
+        const dbgVals = dists.map((d, i) => ({ dist: d, ev: (totals2024.get(d)||0), rel2024: (outMap.get(d)||{}).rel_2024 }));
+        console.log(`[future] applyAtLarge ${prefix}: districts=`, dbgVals);
+        console.log(`[future] applyAtLarge ${prefix}: computed AL rel_2024=`, rec[2024]);
+      } catch(e) {}
       outMap.set(`${prefix}-AL`, rec);
     }
     setAL('ME'); setAL('NE');
@@ -256,6 +265,17 @@
       const rows = BY.get(Y) || [];
       rows.forEach(r => { if (r.unit && r.ev!=null) window._evByUnitMap && window._evByUnitMap.set(`${Y}:${r.unit}`, r.ev); });
     });
+
+    // Ensure ME-AL and NE-AL stops are present in the by-year rows (they should have been created by applyAtLarge)
+    // If applyAtLarge produced ME-AL/NE-AL in paths, they will be included already by buildFutureDataset; however
+    // when evMap originates from electoral_college.csv, make sure the window EV map includes these AL keys for 2024.
+    ['ME-AL','NE-AL'].forEach(al => {
+      const ev = evByUnit.get(`2024:${al}`);
+      if (ev != null) {
+        // ensure mapping exists for every year
+        years.forEach(Y => { window._evByUnitMap && window._evByUnitMap.set(`${Y}:${al}`, ev); });
+      }
+    });
     // total EV per year
     if (!window._totalEvByYear) window._totalEvByYear = new Map();
     years.forEach(Y => {
@@ -274,6 +294,45 @@
       console.log('[future] 2024 NATIONAL row:', rows2024.find(r=>r.unit==='NATIONAL'));
       console.log('[future] 2024 sample states:', sample);
     } catch(e) { console.warn('[future] debug 2024 inspection failed', e); }
+
+    // Debug: show ME/NE EV composition for 2024 and total EVs for verification
+    try {
+      const rows2024 = BY.get(2024) || [];
+      const units = new Map(rows2024.map(r => [r.unit, r]));
+      const me01 = units.get('ME-01'); const me02 = units.get('ME-02'); const meAL = units.get('ME-AL');
+      const ne01 = units.get('NE-01'); const ne02 = units.get('NE-02'); const ne03 = units.get('NE-03'); const neAL = units.get('NE-AL');
+      console.log('[future] ME 2024 EVs: ME-01 ev=', me01 && me01.ev, 'ME-02 ev=', me02 && me02.ev, 'ME-AL ev=', meAL && meAL.ev);
+      console.log('[future] NE 2024 EVs: NE-01 ev=', ne01 && ne01.ev, 'NE-02 ev=', ne02 && ne02.ev, 'NE-03 ev=', ne03 && ne03.ev, 'NE-AL ev=', neAL && neAL.ev);
+      const totalEV = rows2024.reduce((s,r)=> s + (+r.ev||0), 0);
+      console.log('[future] 2024 total EV sum from BY:', totalEV);
+    } catch(e) { console.warn('[future] debug ME/NE EV inspection failed', e); }
+
+    // Allocation debug: for each year, list each unit, its rm, ev and which party wins those EVs; aggregate per-year totals
+    try {
+      years.forEach(Y => {
+        const rows = BY.get(Y) || [];
+        let demEV = 0, repEV = 0, tieEV = 0;
+        const allocations = rows.map(r => {
+          const unit = r.unit || r.abbr || '?';
+          const rm = (r && isFinite(r.rm)) ? r.rm : (r && isFinite(r.rel_2024) ? r.rel_2024 : 0);
+          const ev = +r.ev || 0;
+          let winner = 'TIE';
+          if (rm > 0) { winner = 'D'; demEV += ev; }
+          else if (rm < 0) { winner = 'R'; repEV += ev; }
+          else { tieEV += ev; }
+          return { unit, year: Y, rm, ev, winner };
+        });
+        console.log(`[future] allocation ${Y}: totals D=${demEV} R=${repEV} TIE=${tieEV}`);
+        // Also print ME/NE AL winners explicitly if present
+        const meal = allocations.find(a => a.unit === 'ME-AL'); const neal = allocations.find(a => a.unit === 'NE-AL');
+        if (meal) console.log(`[future] ${Y} ME-AL: rm=${meal.rm} ev=${meal.ev} winner=${meal.winner}`);
+        if (neal) console.log(`[future] ${Y} NE-AL: rm=${neal.rm} ev=${neal.ev} winner=${neal.winner}`);
+        // For verbosity, only log allocations for small list of battleground units
+        const sampleUnits = ['ME-AL','NE-AL','ME-02','NE-02','PA','WI','MI','AZ','GA','NV'];
+        const sampleAlloc = allocations.filter(a => sampleUnits.includes(a.unit));
+        if (sampleAlloc.length) console.log(`[future] ${Y} sample allocations:`, sampleAlloc);
+      });
+    } catch(e) { console.warn('[future] allocation debug failed', e); }
   }
 
   // UI wiring
