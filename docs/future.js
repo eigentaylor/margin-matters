@@ -406,7 +406,15 @@
       const y = parseInt(yearSlider.value); const pvEl=document.getElementById('pvSlider'); const pv = pvEl? parseInt(pvEl.value):0; const seed = parseInt(seedInput.value)||0; updateUrl({seed, year:y, pv}); if (typeof window.updateAll==='function') window.updateAll();
     });
     if (pvSlider) pvSlider.addEventListener('input', () => {
-      const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pv = parseInt(pvSlider.value); const seed = parseInt(seedInput.value)||0; updateUrl({seed, year:y, pv}); if (typeof window.updateAll==='function') window.updateAll();
+      // Moving the slider should cancel any custom PV override or active preset
+      try { window._pvOverride = null; } catch(e) {}
+      try { const pvPreset = document.getElementById('pvPreset'); if (pvPreset) pvPreset.value = ''; } catch(e) {}
+      const yEl = document.getElementById('yearSlider');
+      const y = yEl? parseInt(yEl.value):null;
+      const pv = parseInt(pvSlider.value);
+      const seed = parseInt(seedInput.value)||0;
+      updateUrl({seed, year:y, pv});
+      if (typeof window.updateAll==='function') window.updateAll();
     });
 
     // PV override handlers

@@ -101,6 +101,12 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .hide-deltas .delta{display:none !important}
 /* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
 body.has-delta-toggle{padding-bottom:60px}
+/* PV tools specific styling to match future.html dark look */
+.pv-tools .btn{background:var(--card);color:var(--fg);border:1px solid var(--border)}
+.pv-tools input[type="text"], .pv-tools select, .pv-tools input[type="number"]{background:#111;border:1px solid var(--border);color:var(--fg);padding:8px;border-radius:8px}
+.pv-tools input[type="range"]{accent-color:var(--accent)}
+.pv-tools label{color:var(--muted)}
+.pv-tools .legend{color:var(--muted)}
 """
 
 # Full HTML templates moved as-is from original module (placeholders kept)
@@ -728,6 +734,9 @@ TESTER_JS = r"""
     updateUrl(year, pvIndex, null);
   });
     pvSlider.addEventListener('input', () => { 
+      // Moving the slider should cancel any custom PV override or active preset
+      try { window._pvOverride = null; } catch(e) {}
+      try { const pvPreset = document.getElementById('pvPreset'); if (pvPreset) pvPreset.value = ''; } catch(e) {}
       // Don't clear flips if we're in the middle of applying one
       if (!window._applyingFlip) clearFlips(); 
       updateAll(); 
