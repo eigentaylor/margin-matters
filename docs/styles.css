@@ -89,6 +89,13 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 /* Ensure flip buttons text is white for readability (consistent with Explorer) */
 .flip-controls .btn{color:#fff}
 
+/* PV tools specific styling to match future.html dark look */
+.pv-tools .btn{background:var(--card);color:var(--fg);border:1px solid var(--border)}
+.pv-tools input[type="text"], .pv-tools select, .pv-tools input[type="number"]{background:#111;border:1px solid var(--border);color:var(--fg);padding:8px;border-radius:8px}
+.pv-tools input[type="range"]{accent-color:var(--accent)}
+.pv-tools label{color:var(--muted)}
+.pv-tools .legend{color:var(--muted)}
+
 /* Delta toggle UI - sticky footer */
 .delta-toggle-footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px}
 .delta-toggle-footer .toggle-group{display:flex;align-items:center;gap:8px}

@@ -74,6 +74,38 @@
     </div>
     <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
     <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><a href="methods.html">See Methods</a> for metric definitions, PV stops, uniform swing, and 1968 notes.</div>
+
+    <!-- PV tools (from future.html) -->
+  <div class="card pv-tools" style="background:transparent;border-color:var(--border);margin-top:8px;padding:8px">
+      <div class="legend" style="margin-bottom:6px">PV tools</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label class="legend" for="pvText">Custom PV</label>
+          <input id="pvText" type="text" placeholder="e.g. D+4.5, R+1.6, 0.045, EVEN" style="width:200px" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label class="legend" for="pvPreset">Presets</label>
+          <select id="pvPreset" class="btn" style="min-width:220px">
+            <option value="">Select preset…</option>
+            <option value="-0.016">Trump: R+1.6</option>
+            <option value="0.045">Biden: D+4.5</option>
+            <option value="0.075">Obama: D+7.5</option>
+            <option value="0.085">Clinton: D+8.5</option>
+            <option value="-0.182">Reagan: R+18.2</option>
+            <option value="0.226">Johnson: D+22.6</option>
+            <option value="-0.231">Nixon: R+23.1</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="pvApply" class="btn">Apply PV</button>
+          <button id="pvFlip" class="btn">Flip PV</button>
+          <button id="pvClear" class="btn">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Close and Swing states display -->
+    <div id="closeStates" class="legend" style="margin-top:8px"></div>
   </div>
 </div>
   </div>
@@ -85,6 +117,65 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script src="tester.js"></script>
+<script>
+// Lightweight PV tools wiring (reuses tester.js globals where possible)
+(function(){
+  function parsePvText(txt){
+    if (!txt) return null;
+    txt = String(txt).trim().toUpperCase();
+    if (txt === 'EVEN' || txt === '0' || txt === 'D+0' || txt === 'R+0') return 0;
+    let m = txt.match(/^([DR])\s*\+\s*([0-9]*\.?[0-9]+)$/);
+    if (m) { const sign = (m[1] === 'D') ? 1 : -1; return sign * (parseFloat(m[2])/100); }
+    if (!isNaN(parseFloat(txt))) return parseFloat(txt);
+    return null;
+  }
+  function clampPv(x){ if (!isFinite(x)) return 0; const CAP = 0.5; return Math.max(-CAP, Math.min(CAP, x)); }
+  function applyPvOverride(val){
+    const yearEl = document.getElementById('yearSlider');
+    const y = yearEl ? parseInt(yearEl.value) : 2024;
+    window._pvOverride = clampPv(val);
+    if (typeof window.updateAll === 'function') window.updateAll();
+    try {
+      const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
+      let best=0, bestD=1e9; stops.forEach((s,idx)=>{ const d=Math.abs(s - window._pvOverride); if (d<bestD){bestD=d; best=idx;} });
+      const sEl = document.getElementById('pvSlider'); if (sEl) sEl.value = String(best);
+    } catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const pvText = document.getElementById('pvText');
+    const pvApply = document.getElementById('pvApply');
+    const pvPreset = document.getElementById('pvPreset');
+    const pvFlip = document.getElementById('pvFlip');
+    const pvClear = document.getElementById('pvClear');
+    if (pvApply) pvApply.addEventListener('click', ()=>{ const v = parsePvText(pvText && pvText.value); if (v==null) return; applyPvOverride(v); if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); });
+    if (pvPreset) pvPreset.addEventListener('change', ()=>{ const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); } });
+    if (pvFlip) pvFlip.addEventListener('click', ()=>{
+      let cur = 0;
+      if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
+      else {
+        const yearEl = document.getElementById('yearSlider'); const y = yearEl? parseInt(yearEl.value):2024;
+        const pvEl = document.getElementById('pvSlider');
+        const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
+        const idx = pvEl? parseInt(pvEl.value):0; const stopVal = stops[idx] || 0;
+        cur = stopVal;
+      }
+      applyPvOverride(-cur);
+      if (pvText) pvText.value = (cur<=0?`D+${(Math.abs(cur)*100).toFixed(1)}`:`R+${(Math.abs(cur)*100).toFixed(1)}`);
+    });
+    if (pvClear) pvClear.addEventListener('click', ()=>{ window._pvOverride = null; if (pvText) pvText.value = ''; if (typeof window.updateAll === 'function') window.updateAll(); });
+    // Ensure moving the PV slider cancels any override/preset so slider takes immediate effect
+    const pvSlider = document.getElementById('pvSlider');
+    if (pvSlider) pvSlider.addEventListener('input', ()=>{
+      // clear any custom PV override set by presets or Apply
+      window._pvOverride = null;
+      // clear preset selection (so UI reflects that slider is active)
+      try { if (pvPreset) pvPreset.value = ''; } catch(e) {}
+      if (typeof window.updateAll === 'function') window.updateAll();
+    });
+  });
+})();
+</script>
 <script>
 const FIPS_TO_ABBR = {
   "01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"
