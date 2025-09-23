@@ -355,8 +355,46 @@
     }
   }
 
-  function getUrlParams(){ const p=new URLSearchParams(location.search); return { seed: p.get('seed') ? parseInt(p.get('seed')) : null, year: p.get('year') ? parseInt(p.get('year')) : null, pv: p.get('pv') ? parseInt(p.get('pv')) : null }; }
-  function updateUrl(params){ const url=new URL(location); Object.entries(params).forEach(([k,v])=>{ if (v===null||v===undefined) url.searchParams.delete(k); else url.searchParams.set(k, v); }); history.replaceState({},'',url); }
+  function getUrlParams(){
+    const p = new URLSearchParams(location.search);
+    const out = { seed: p.get('seed') ? parseInt(p.get('seed')) : null, year: p.get('year') ? parseInt(p.get('year')) : null, pv: null, pvValue: null, pvPreset: null };
+    const pvRaw = p.get('pv');
+    if (pvRaw != null) {
+      // integer index
+      if (/^-?\d+$/.test(pvRaw)) {
+        out.pv = parseInt(pvRaw);
+      } else if (!isNaN(parseFloat(pvRaw))) {
+        out.pvValue = parseFloat(pvRaw);
+      } else {
+        out.pvPreset = pvRaw;
+      }
+    }
+    // No flipped flag; numeric pvValue encodes sign when present
+    return out;
+  }
+
+  function updateUrl(params){
+    const url = new URL(location);
+    // seed/year handled if present in params
+    if (params && Object.prototype.hasOwnProperty.call(params, 'seed')) {
+      if (params.seed === null || params.seed === undefined) url.searchParams.delete('seed'); else url.searchParams.set('seed', String(params.seed));
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'year')) {
+      if (params.year === null || params.year === undefined) url.searchParams.delete('year'); else url.searchParams.set('year', String(params.year));
+    }
+    // PV: prefer an explicit numeric override if present on window._pvOverride
+    if (typeof window !== 'undefined' && Number.isFinite(window._pvOverride)) {
+      url.searchParams.set('pv', String(window._pvOverride));
+    } else if (params && Object.prototype.hasOwnProperty.call(params, 'pv')) {
+      if (params.pv === null || params.pv === undefined) url.searchParams.delete('pv'); else url.searchParams.set('pv', String(params.pv));
+    }
+    // Preserve pvPreset if explicitly passed (rare for future.js)
+    if (params && Object.prototype.hasOwnProperty.call(params, 'pvPreset')) {
+      if (params.pvPreset === null || params.pvPreset === undefined) url.searchParams.delete('pvPreset'); else url.searchParams.set('pvPreset', String(params.pvPreset));
+    }
+  // No separate flipped flag; numeric pv overrides encode sign directly
+    history.replaceState({}, '', url);
+  }
 
   // Initialize controls
   window.addEventListener('DOMContentLoaded', async () => {
@@ -406,15 +444,15 @@
       const y = parseInt(yearSlider.value); const pvEl=document.getElementById('pvSlider'); const pv = pvEl? parseInt(pvEl.value):0; const seed = parseInt(seedInput.value)||0; updateUrl({seed, year:y, pv}); if (typeof window.updateAll==='function') window.updateAll();
     });
     if (pvSlider) pvSlider.addEventListener('input', () => {
-      // Moving the slider should cancel any custom PV override or active preset
-      try { window._pvOverride = null; } catch(e) {}
-      try { const pvPreset = document.getElementById('pvPreset'); if (pvPreset) pvPreset.value = ''; } catch(e) {}
+  // Moving the slider should cancel any custom PV override or active preset
+  try { window._pvOverride = null; } catch(e) {}
+  try { const pvPreset = document.getElementById('pvPreset'); if (pvPreset) pvPreset.value = ''; } catch(e) {}
       const yEl = document.getElementById('yearSlider');
       const y = yEl? parseInt(yEl.value):null;
       const pv = parseInt(pvSlider.value);
       const seed = parseInt(seedInput.value)||0;
       updateUrl({seed, year:y, pv});
-      if (typeof window.updateAll==='function') window.updateAll();
+      if (typeof window.updateAll === 'function') window.updateAll();
     });
 
     // PV override handlers
@@ -449,11 +487,20 @@
     if (pvApply) pvApply.addEventListener('click', () => {
       const v = parsePvText(pvText && pvText.value);
       if (v == null) return;
-      applyPvOverride(v);
+  applyPvOverride(v);
+      const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0;
+      updateUrl({seed, year:y});
     });
     if (pvPreset) pvPreset.addEventListener('change', () => {
       const v = parseFloat(pvPreset.value);
       if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); }
+      // store preset name in URL if element includes name attribute or data-name
+      try {
+        const el = document.getElementById('pvPreset');
+        const presetName = el && (el.dataset && el.dataset.name) ? el.dataset.name : null;
+        const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0;
+        if (presetName) updateUrl({seed, year:y, pvPreset: presetName}); else updateUrl({seed, year:y});
+      } catch(e) { const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0; updateUrl({seed, year:y}); }
     });
     if (pvFlip) pvFlip.addEventListener('click', () => {
       let cur = 0;
@@ -465,12 +512,17 @@
         const idx = pvEl? parseInt(pvEl.value):0; const stopVal = stops[idx] || 0;
         cur = stopVal;
       }
-      applyPvOverride(-cur);
+  // Flip by applying numeric negation
+  applyPvOverride(-cur);
       if (pvText) pvText.value = (cur<=0?`D+${(Math.abs(cur)*100).toFixed(1)}`:`R+${(Math.abs(cur)*100).toFixed(1)}`);
+      const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0;
+      updateUrl({seed, year:y});
     });
     if (pvClear) pvClear.addEventListener('click', () => {
-      window._pvOverride = null;
+  window._pvOverride = null;
       if (pvText) pvText.value = '';
+      const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0;
+      updateUrl({seed, year:y});
       if (typeof window.updateAll === 'function') window.updateAll();
     });
   });

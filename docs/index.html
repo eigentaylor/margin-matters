@@ -109,7 +109,7 @@
   </div>
   <footer>Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-23 17:42 UTC</footer>
+Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-23 18:45 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -146,8 +146,8 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
         const pvPreset = document.getElementById('pvPreset');
         const pvFlip = document.getElementById('pvFlip');
         const pvClear = document.getElementById('pvClear');
-        if (pvApply) pvApply.addEventListener('click', ()=>{ const v = parsePvText(pvText && pvText.value); if (v==null) return; applyPvOverride(v); if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); });
-        if (pvPreset) pvPreset.addEventListener('change', ()=>{ const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); } });
+  if (pvApply) pvApply.addEventListener('click', ()=>{ const v = parsePvText(pvText && pvText.value); if (v==null) return; applyPvOverride(v); if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){} });
+  if (pvPreset) pvPreset.addEventListener('change', ()=>{ const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){} } });
         if (pvFlip) pvFlip.addEventListener('click', ()=>{
             let cur = 0;
             if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
@@ -158,19 +158,25 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
                 const idx = pvEl? parseInt(pvEl.value):0; const stopVal = stops[idx] || 0;
                 cur = stopVal;
             }
+            // toggle flipped state
+            // Apply numeric negation of current PV override/slider value
             applyPvOverride(-cur);
             if (pvText) pvText.value = (cur<=0?`D+${(Math.abs(cur)*100).toFixed(1)}`:`R+${(Math.abs(cur)*100).toFixed(1)}`);
+            try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){}
         });
         if (pvClear) pvClear.addEventListener('click', ()=>{ window._pvOverride = null; if (pvText) pvText.value = ''; if (typeof window.updateAll === 'function') window.updateAll(); });
         // Ensure moving the PV slider cancels any override/preset so slider takes immediate effect
         const pvSlider = document.getElementById('pvSlider');
-        if (pvSlider) pvSlider.addEventListener('input', ()=>{
-            // clear any custom PV override set by presets or Apply
-            try { window._pvOverride = null; } catch(e) {}
-            // clear preset selection (so UI reflects that slider is active)
-            try { if (pvPreset) pvPreset.value = ''; } catch(e) {}
-            if (typeof window.updateAll === 'function') window.updateAll();
-        });
+    if (pvSlider) pvSlider.addEventListener('input', ()=>{
+      // clear any custom PV override set by presets or Apply
+      try { window._pvOverride = null; } catch(e) {}
+      // clear preset selection (so UI reflects that slider is active)
+      try { if (pvPreset) pvPreset.value = ''; } catch(e) {}
+      // moving slider should clear any numeric override so slider selection takes effect
+      try { window._pvOverride = null; } catch(e) {}
+      if (typeof window.updateAll === 'function') window.updateAll();
+      try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){}
+    });
     });
 })();
 </script>

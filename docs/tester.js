@@ -7,21 +7,52 @@
   const SPECIAL_1968 = ["GA", "LA", "AR", "MS", "AL"];
 
   // URL parameter management for sharing
+  // Support: pv can be an integer index (slider index), a numeric PV (e.g. 0.045),
+  // or a preset name (e.g. Gore). We also support `flipped` which negates a PV preset/value.
   function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
-    return {
+    const out = {
       year: params.get('year') ? parseInt(params.get('year')) : null,
-      pv: params.get('pv') ? parseFloat(params.get('pv')) : null,
-      flip: params.get('flip') || null
+      // legacy: pv as slider index
+      pv: null,
+      // explicit numeric PV override (fractional, e.g. 0.045)
+      pvValue: null,
+      // named preset from pv select (e.g., 'Gore')
+      pvPreset: null,
+      // flip scenario (classic/no_majority)
+      flip: params.get('flip') || null,
+  // (no flipped flag anymore)
     };
+    const pvRaw = params.get('pv');
+    if (pvRaw != null) {
+      // integer index (slider index)
+      if (/^\d+$/.test(pvRaw)) out.pv = parseInt(pvRaw);
+      else if (!isNaN(parseFloat(pvRaw))) out.pvValue = parseFloat(pvRaw);
+      else out.pvPreset = pvRaw;
+    }
+    // no flipped flag parsing; numeric pvValue encodes sign when present
+    return out;
   }
 
   function updateUrl(year, pvIndex, flipMode) {
     const url = new URL(window.location);
     if (year) url.searchParams.set('year', year);
-    if (pvIndex !== null && pvIndex !== undefined) url.searchParams.set('pv', pvIndex);
+    else url.searchParams.delete('year');
+
+    // Prefer to write an explicit pvValue when a numeric override is active (window._pvOverride)
+    if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) {
+      url.searchParams.set('pv', String(window._pvOverride));
+    } else if (pvIndex !== null && pvIndex !== undefined) {
+      url.searchParams.set('pv', pvIndex);
+    } else {
+      url.searchParams.delete('pv');
+    }
+
     if (flipMode) url.searchParams.set('flip', flipMode);
     else url.searchParams.delete('flip');
+
+  // No flipped URL param: we store PV overrides directly as numeric values (possibly negative)
+
     window.history.replaceState({}, '', url);
   }
 
@@ -357,6 +388,42 @@
       }
     });
     const stops = Array.from(stopsSet).sort((a,b)=>a-b);
+    // Append PV presets (if any) as extra discrete stops at the end so each preset
+    // becomes an integer slider index. We keep original numeric stops sorted, then
+    // add presets in the order they appear in the preset select.
+    const presetStops = [];
+    try {
+      const presetEl = document.getElementById && document.getElementById('pvPreset');
+      if (presetEl && presetEl.options && presetEl.options.length) {
+        const existing = stops.slice();
+        const almostEqual = (a,b,eps=1e-9) => Math.abs(a-b) <= eps;
+        for (const opt of Array.from(presetEl.options)) {
+          try {
+            const val = parseFloat(opt.value);
+            if (isFinite(val)) {
+              // skip blank/default options
+              if (!opt.value || String(opt.value).trim() === '') continue;
+              // skip duplicates already in stops
+              let found = false;
+              for (const s of existing) { if (almostEqual(s, val)) { found = true; break; } }
+              for (const s of presetStops) { if (almostEqual(s, val)) { found = true; break; } }
+              if (!found && Math.abs(val) <= cap) {
+                presetStops.push(val);
+                // annotate stopToUnits so UI can show preset label
+                const name = (opt.text || opt.label || '').split(':')[0].trim();
+                const pvUnits = stopToUnits.get(val) || [];
+                pvUnits.push(`PRESET:${name || String(val)}`);
+                stopToUnits.set(val, pvUnits);
+                // set effective mapping
+                if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
+              }
+            }
+          } catch(e){}
+        }
+      }
+    } catch(e) {}
+    // Combine sorted stops with preset stops appended at the end (preserve ordinal indices)
+  const allStops = stops.concat(presetStops);
     try {
       if (year === 2024) {
         const arrDbg = byYear.get(year) || [];
@@ -371,90 +438,75 @@
       }
     } catch(e) {}
     // Ensure every stop has an effective value (keep any precomputed ones)
-    for (let i=0;i<stops.length;i++){
-      const s = stops[i];
+    for (let i=0;i<allStops.length;i++){
+      const s = allStops[i];
       if (!stopToEff.has(s)) {
         // default: nudge toward D side
         stopToEff.set(s, s + EPS);
       }
     }
-    // store stops for the year so the slider can index into them
-    stopsByYear.set(year, stops);
+    // store combined stops (original sorted stops + appended presets) for the year so the slider can index into them
+    stopsByYear.set(year, allStops);
     if (datalist){
-      datalist.innerHTML = stops.map(v => `<option value="${(v*100).toFixed(1)}"></option>`).join('');
+      // Show combined list including presets; for numeric readability keep percent formatting
+      datalist.innerHTML = allStops.map(v => `<option value="${(v*100).toFixed(1)}"></option>`).join('');
       const s = document.getElementById('pvSlider');
       if (s) s.setAttribute('list', 'pvStopsList');
     }
     if (container){
       const nat = (window._futureMode && year > 2024) ? 0 : getNatMargin(year);
-      container.innerHTML = 'Stops: ' + stops.map((v,i) => {
-        // label rules: 0 => EVEN (no units), nat => Actual (no units), others => leanStr + small unit list
+      // Render main stops and presets on a separate line. Main stops first (sorted),
+      // then presets on a new line so they visually stand apart. Preset chips colored
+      // blue for positive (D) and red for negative (R).
+      const mainHtml = stops.map((v,i) => {
         const isEven = Math.abs(v) < 1e-12;
         const isNat = ((!(window._futureMode && year > 2024)) && Math.abs(v - nat) < 1e-12);
         const unitsRaw = (stopToUnits.get(v) || []).filter(u => u !== 'NATIONAL' && u !== 'NAT');
+        for (let j=0;j<unitsRaw.length;j++){ if (unitsRaw[j] && unitsRaw[j].startsWith('PRESET:')) unitsRaw[j] = unitsRaw[j].replace(/^PRESET:/,''); }
         const units = (isEven || isNat) ? '' : unitsRaw.slice(0,3).map(u=>u.slice(0,5)).join(',');
         const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
         const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
-        
-        // Determine button color using precomputed stop_colors.csv
-        let bgColor = '#0d0d0dff'; // Default dark
+        // Determine color same as before
+        let bgColor = '#0d0d0dff';
         if (!isEven) {
           const key = Number(v).toFixed(STOP_KEY_PREC);
           const byYearStops = window._stopColorsByYear && window._stopColorsByYear.get(year);
           const byStop = byYearStops && byYearStops.get(key);
           if (byStop) {
-            // Examine only the units shown on this chip (if any specific list)
             const winners = [];
             const colors = [];
             const unitsList = unitsRaw && unitsRaw.length ? unitsRaw : Array.from(byStop.keys());
-            unitsList.forEach(u => {
-              const info = byStop.get(u);
-              if (info) { winners.push(info.winner); colors.push(info.color_css || ''); }
-            });
-                // Priority: any T => yellow; else any D => blue; else any R => red; fallback first color
-                // Use the same tolerance logic as EV classification: pv inside (nR + EPS, nD - EPS) indicates T
-                if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
+            unitsList.forEach(u => { const info = byStop.get(u); if (info) { winners.push(info.winner); colors.push(info.color_css || ''); } });
+            if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
             else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
             else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
             else if (colors.length) bgColor = colors[0];
           } else {
-            // Fallback: dynamically infer winners for this stop using current year rows
             const eff = stopToEff.get(v);
             const unitsList = (unitsRaw && unitsRaw.length) ? unitsRaw : (arr.filter(r => r && r.unit && r.unit !== 'NATIONAL').map(r => r.unit));
             const winners = [];
-            unitsList.forEach(u => {
-              const r = rowByUnit.get(u);
-              if (!r) return;
-              const t = +r.tp || 0;
-              const a = 3*t - 1;
-              const rVal = +(r.rm || 0);
-              if (a > 0) {
-                const nD = -rVal + a;
-                const nR = -rVal - a;
-                if (eff > nR + EPS && eff < nD - EPS) {
-                  winners.push('T');
-                  return;
-                }
-              }
-              const m = rVal + eff;
-              if (m > 0) winners.push('D');
-              else if (m < 0) winners.push('R');
-            });
+            unitsList.forEach(u => { const r = rowByUnit.get(u); if (!r) return; const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0); if (a > 0) { const nD = -rVal + a; const nR = -rVal - a; if (eff > nR + EPS && eff < nD - EPS) { winners.push('T'); return; } } const m = rVal + eff; if (m > 0) winners.push('D'); else if (m < 0) winners.push('R'); });
             if (winners.includes('T')) bgColor = '#C9A400';
             else if (winners.includes('D')) bgColor = '#4169E1';
             else if (winners.includes('R')) bgColor = '#B22222';
           }
         }
-        
-    // Determine text color based on background for readability
-  const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
-  const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
-        // Determine small (muted) unit text color so it remains readable on yellow
-  const smallColor = isYellowish ? '#000' : 'var(--muted)';
-        
-        return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`; 
+        const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
+        const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
+        const smallColor = isYellowish ? '#000' : 'var(--muted)';
+        return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`;
       }).join('');
-      container.querySelectorAll('span.btn').forEach((el) => {
+      // Preset chips: render on their own line
+      const presetHtml = presetStops.map((v, pi) => {
+        const idx = stops.length + pi; // index into allStops
+        const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
+        const label = (sign === 'EVEN') ? 'EVEN' : ((v>0?'D+':'R+') + (Math.abs(v)*100).toFixed(1));
+        const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
+        const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
+        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-idx="${idx}">${label}</span>`;
+      }).join('');
+      container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
+      container.querySelectorAll('span.btn, span.preset-chip').forEach((el) => {
         el.addEventListener('click', () => {
           const i = Number(el.getAttribute('data-idx'));
           const s = document.getElementById('pvSlider');
@@ -490,6 +542,9 @@
     pvSlider.addEventListener('input', () => { 
       // Don't clear flips if we're in the middle of applying one
       if (!window._applyingFlip) clearFlips(); 
+      // moving the slider cancels any PV override and flipped flag
+      try { window._pvOverride = null; } catch(e) {}
+  // no flipped flag; numeric overrides encode sign directly
       updateAll(); 
       // Update URL with new PV index
       const yearEl = document.getElementById('yearSlider');
@@ -523,8 +578,33 @@
   if (defaultIdx === -1) defaultIdx = 0;
   
   // Override with URL parameter if available
-  if (urlParams.pv !== null && urlParams.pv >= 0 && urlParams.pv < stops.length) {
+  // Support three flavors: pv (slider index), pvValue (explicit numeric PV), pvPreset (named preset)
+  if (urlParams.pv !== null && Number.isInteger(urlParams.pv) && urlParams.pv >= 0 && urlParams.pv < stops.length) {
     defaultIdx = Math.floor(urlParams.pv);
+  } else if (urlParams.pvValue != null && isFinite(urlParams.pvValue)) {
+    // Apply numeric PV override
+    try { window._pvOverride = parseFloat(urlParams.pvValue); } catch(e) { window._pvOverride = null; }
+    // If flipped flag present, negate the override and mark flipped state
+  if (urlParams.pvValue) { try { window._pvOverride = parseFloat(urlParams.pvValue); } catch(e) {} }
+  } else if (urlParams.pvPreset != null) {
+    // Look up preset by scanning pvPreset select options (match label/value)
+    const pvPresetEl = document.getElementById('pvPreset');
+    if (pvPresetEl) {
+      const want = String(urlParams.pvPreset).toLowerCase();
+      let foundVal = null;
+      for (const opt of Array.from(pvPresetEl.options)) {
+        const label = (opt.text || '').split(':')[0].trim().toLowerCase();
+        if (label === want || (opt.text || '').toLowerCase().includes(want) || (opt.value || '').toLowerCase() === want) {
+          foundVal = parseFloat(opt.value);
+          pvPresetEl.value = opt.value;
+          break;
+        }
+      }
+      if (foundVal != null && !isNaN(foundVal)) {
+        try { window._pvOverride = foundVal; } catch(e) { window._pvOverride = null; }
+  if (urlParams.pvValue) { try { window._pvOverride = foundVal; } catch(e) {} }
+      }
+    }
   }
   
   pvSlider.value = String(defaultIdx);
@@ -546,6 +626,32 @@
   updateFlipButtons();
   updateAll();
   
+  // Wire the PV Flip button to also toggle a flipped flag and update the URL so shares can preserve a flipped PV
+  const pvFlipBtn = document.getElementById('pvFlip');
+  if (pvFlipBtn) {
+    pvFlipBtn.addEventListener('click', () => {
+      // Determine current PV (override takes precedence)
+      let cur = 0;
+      try {
+        if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
+        else {
+          const yearEl = document.getElementById('yearSlider'); const y = yearEl? parseInt(yearEl.value):2024;
+          const pvEl = document.getElementById('pvSlider');
+          const stops = (stopsByYear && stopsByYear.get(y)) || [0];
+          const idx = pvEl? parseInt(pvEl.value):0; const stopVal = stops[idx] || 0; cur = stopVal;
+        }
+      } catch(e) {}
+  // Apply numeric negation of current PV (flip)
+  applyPvOverride(-cur);
+      // push the new state to URL
+      const yearEl = document.getElementById('yearSlider');
+      const year = yearEl ? parseInt(yearEl.value) : null;
+      const pvIndex = document.getElementById('pvSlider') ? parseInt(document.getElementById('pvSlider').value) : null;
+      const flipMode = window._activeFlip ? window._activeFlip.mode : null;
+      updateUrl(year, pvIndex, flipMode);
+    });
+  }
+
   // Apply flip scenario from URL if specified
   if (urlParams.flip && window._flipByYear && window._flipByYear.get(y)) {
     setTimeout(() => {

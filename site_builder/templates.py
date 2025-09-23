@@ -310,21 +310,54 @@ TESTER_JS = r"""
   const SPECIAL_1968 = %SPECIAL_1968%;
 
   // URL parameter management for sharing
+  // Support: pv can be an integer index (slider index), a numeric PV (e.g. 0.045),
+  // or a preset name (e.g. Gore). We also support `flipped` which negates a PV preset/value.
   function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
-    return {
+    const out = {
       year: params.get('year') ? parseInt(params.get('year')) : null,
-      pv: params.get('pv') ? parseFloat(params.get('pv')) : null,
-      flip: params.get('flip') || null
+      // legacy: pv as slider index
+      pv: null,
+      // explicit numeric PV override (fractional, e.g. 0.045)
+      pvValue: null,
+      // named preset from pv select (e.g., 'Gore')
+      pvPreset: null,
+      // flip scenario (classic/no_majority)
+      flip: params.get('flip') || null,
+      // pv flipped flag (negate provided pvValue or pvPreset)
+      flipped: null
     };
+    const pvRaw = params.get('pv');
+    if (pvRaw != null) {
+      // integer index (slider index)
+      if (/^\d+$/.test(pvRaw)) out.pv = parseInt(pvRaw);
+      else if (!isNaN(parseFloat(pvRaw))) out.pvValue = parseFloat(pvRaw);
+      else out.pvPreset = pvRaw;
+    }
+    // No separate flipped flag; numeric pv values are signed to indicate flip
+    
+    return out;
   }
 
   function updateUrl(year, pvIndex, flipMode) {
     const url = new URL(window.location);
     if (year) url.searchParams.set('year', year);
-    if (pvIndex !== null && pvIndex !== undefined) url.searchParams.set('pv', pvIndex);
+    else url.searchParams.delete('year');
+
+    // Prefer to write an explicit pvValue when a numeric override is active (window._pvOverride)
+    if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) {
+      url.searchParams.set('pv', String(window._pvOverride));
+    } else if (pvIndex !== null && pvIndex !== undefined) {
+      url.searchParams.set('pv', pvIndex);
+    } else {
+      url.searchParams.delete('pv');
+    }
+
     if (flipMode) url.searchParams.set('flip', flipMode);
     else url.searchParams.delete('flip');
+
+  // No separate flipped flag; PV overrides encode sign directly
+
     window.history.replaceState({}, '', url);
   }
 
@@ -628,16 +661,47 @@ TESTER_JS = r"""
       }
     });
     const stops = Array.from(stopsSet).sort((a,b)=>a-b);
+    // Append PV presets (if any) as extra discrete stops at the end so each preset
+    // becomes an integer slider index. We keep original numeric stops sorted, then
+    // add presets in the order they appear in the preset select.
+    const presetStops = [];
+    try {
+      const presetEl = document.getElementById && document.getElementById('pvPreset');
+      if (presetEl && presetEl.options && presetEl.options.length) {
+        const existing = stops.slice();
+        const almostEqual = (a,b,eps=1e-9) => Math.abs(a-b) <= eps;
+        for (const opt of Array.from(presetEl.options)) {
+          try {
+            const val = parseFloat(opt.value);
+            if (isFinite(val)) {
+              if (!opt.value || String(opt.value).trim() === '') continue;
+              let found = false;
+              for (const s of existing) { if (almostEqual(s, val)) { found = true; break; } }
+              for (const s of presetStops) { if (almostEqual(s, val)) { found = true; break; } }
+              if (!found && Math.abs(val) <= cap) {
+                presetStops.push(val);
+                const name = (opt.text || opt.label || '').split(':')[0].trim();
+                const pvUnits = stopToUnits.get(val) || [];
+                pvUnits.push(`PRESET:${name || String(val)}`);
+                stopToUnits.set(val, pvUnits);
+                if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
+              }
+            }
+          } catch(e){}
+        }
+      }
+    } catch(e) {}
+    const allStops = stops.concat(presetStops);
     // Ensure every stop has an effective value (keep any precomputed ones)
-    for (let i=0;i<stops.length;i++){
-      const s = stops[i];
+    for (let i=0;i<allStops.length;i++){
+      const s = allStops[i];
       if (!stopToEff.has(s)) {
         // default: nudge toward D side
         stopToEff.set(s, s + EPS);
       }
     }
-    // store stops for the year so the slider can index into them
-    stopsByYear.set(year, stops);
+    // store combined stops (original sorted stops + appended presets) for the year so the slider can index into them
+    stopsByYear.set(year, allStops);
     if (datalist){
       datalist.innerHTML = stops.map(v => `<option value="${(v*100).toFixed(1)}"></option>`).join('');
       const s = document.getElementById('pvSlider');
