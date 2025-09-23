@@ -826,10 +826,49 @@
       if (list.length === 0) {
         closeWrap.innerHTML = '<div class="legend">No close states within 1.0 pp.</div>';
       } else {
-        closeWrap.innerHTML = '<div class="legend" style="margin-bottom:6px">Close states (|margin| < 1.0 pp)</div>' +
-          '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
-          list.map(r => `<span class="btn" style="padding:4px 6px">${r.unit} · ${fmt(r.m)} · ${r.ev} EV</span>`).join('') +
-          '</div>';
+        // Also compute 'Swing' states: within 6.0 percentage points of the national margin
+        const SWING_THRESH = 0.06; // 6 percentage points
+        const swingList = [];
+        rows.forEach(r => {
+          if (!r || r.unit === 'NATIONAL') return;
+          if (!isALorState(r.unit)) return;
+          const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
+          // Exclude third-party winners from Swing classification
+          if (a > 0) {
+            const nD = -rVal + a; const nR = -rVal - a;
+            if (pv > nR + EPS && pv < nD - EPS) return; // Other wins here
+          }
+          // margin relative is just rm
+          const relToNat = (+r.rm || 0);
+          if (Math.abs(relToNat) < SWING_THRESH) swingList.push({ unit: r.unit, ev: (+r.ev || 0), relToNat });
+        });
+        swingList.sort((a,b) => Math.abs(a.relToNat) - Math.abs(b.relToNat));
+
+        // helpers to pick readable text colors for chip backgrounds
+        function _textColorFor(bg){ try { if(!bg || bg[0] !== '#') return '#fff'; const c = bg.slice(1); const val = parseInt(c,16); const rr = (val>>16)&255; const gg = (val>>8)&255; const bb = val&255; const lum = 0.299*rr + 0.587*gg + 0.114*bb; return lum > 186 ? '#000' : '#fff'; } catch(e){ return '#fff'; } }
+        function _smallColorFor(textCol){ return textCol === '#fff' ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.7)'; }
+
+        const closeChips = list.map(r => {
+          const mval = r.m; const bg = marginToColor(mval); const txt = _textColorFor(bg); const small = _smallColorFor(txt);
+          return `<span class="btn" style="padding:4px 6px;background-color:${bg};color:${txt}">${r.unit} · <small style=\"color:${small}\">${fmt(r.m)}</small> · ${r.ev} EV</span>`;
+        }).join('');
+
+        const swingChips = (swingList.length === 0) ? '<span class="muted">No swing states within 6.0 pp.</span>' : swingList.map(r => {
+          // Use display margin (rm + pv) for coloring so blue/red intensity reflects raw tilt
+          const rowsMap = new Map(rows.map(rr => [rr.unit, rr]));
+          const row = rowsMap.get(r.unit) || {};
+          const displayM = (row && isFinite(+row.rm)) ? (+row.rm || 0) + pv : r.relToNat + nat; // fallback
+          const bg = marginToColor(displayM);
+          const txt = _textColorFor(bg);
+          const small = _smallColorFor(txt);
+          const relTxt = ((r.relToNat>0)?'D+':'R+') + (Math.abs(r.relToNat)*100).toFixed(1);
+          return `<span class="btn" style="padding:4px 6px;background-color:${bg};color:${txt}">${r.unit} · <small style=\"color:${small}\">${relTxt}</small> · ${r.ev} EV</span>`;
+        }).join('');
+
+        closeWrap.innerHTML = '<div class="legend" style="margin-bottom:6px">Close states (|raw margin| < 1.0 pp)</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:8px">' + closeChips + '</div>' +
+          '<div class="legend" style="margin:12px 0 6px">Swing states (within 6.0 pp of national margin — i.e. close to the national popular vote)</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:8px">' + swingChips + '</div>';
       }
     }
   } catch(e) { /* optional */ }
