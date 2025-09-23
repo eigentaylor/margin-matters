@@ -55,14 +55,14 @@ CATEGORY_THRESHOLDS = {
 # Order runs from strongest R to strongest D.
 FINAL_MARGIN_THRESHOLDS: Dict[str, float] = {
     # Republicans (most to least strong)
-    "RED":   -0.12,   # darkest red: R wins by 20% or more
-    "Red":   -0.05,   # darker red: R wins by 12%+
-    "red":   -0.01,   # light red: R wins by 6%+
+    "RED":   -0.10,   # darkest red: R wins by 10% or more
+    "Red":   -0.05,   # darker red: R wins by 5%+
+    "red":   -0.01,   # light red: R wins by <1%
     "lred":  0.0,   # extremely narrow red: R wins by up to 1%
     # Democrats (narrow to strong)
     "lblue":  0.01,   # extremely narrow blue: D wins by up to 1%
-    "blue":   0.05,   # light blue: D wins by 6%+
-    "Blue":   0.12,   # darker blue: D wins by 12%+
+    "blue":   0.05,   # light blue: D wins by 5%+
+    "Blue":   0.10,   # darker blue: D wins by 10%+
     "BLUE":   0.20,   # darkest blue: D wins by 20%+
 }
 
