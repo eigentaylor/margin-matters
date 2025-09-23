@@ -839,7 +839,7 @@
             if (pv > nR + EPS && pv < nD - EPS) return; // Other wins here
           }
           // margin relative is just rm
-          const relToNat = (+r.rm || 0);
+          const relToNat = (+r.rm || 0) + pv - nat;
           if (Math.abs(relToNat) < SWING_THRESH) swingList.push({ unit: r.unit, ev: (+r.ev || 0), relToNat });
         });
         swingList.sort((a,b) => Math.abs(a.relToNat) - Math.abs(b.relToNat));
@@ -867,7 +867,7 @@
 
         closeWrap.innerHTML = '<div class="legend" style="margin-bottom:6px">Close states (|raw margin| < 1.0 pp)</div>' +
           '<div style="display:flex;flex-wrap:wrap;gap:8px">' + closeChips + '</div>' +
-          '<div class="legend" style="margin:12px 0 6px">Swing states (within 6.0 pp of national margin — i.e. close to the national popular vote)</div>' +
+          '<div class="legend" style="margin:12px 0 6px">Bellwether states (within 6.0 pp of national margin — i.e. close to the national popular vote, not necessarily close to flipping)</div>' +
           '<div style="display:flex;flex-wrap:wrap;gap:8px">' + swingChips + '</div>';
       }
     }

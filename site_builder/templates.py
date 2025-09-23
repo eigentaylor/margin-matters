@@ -101,12 +101,18 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .hide-deltas .delta{display:none !important}
 /* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
 body.has-delta-toggle{padding-bottom:60px}
-/* PV tools specific styling to match future.html dark look */
-.pv-tools .btn{background:var(--card);color:var(--fg);border:1px solid var(--border)}
-.pv-tools input[type="text"], .pv-tools select, .pv-tools input[type="number"]{background:#111;border:1px solid var(--border);color:var(--fg);padding:8px;border-radius:8px}
+/* PV tools specific styling to match future.html dark look
+  Ensure high contrast white text on dark backgrounds so controls
+  remain readable when pages are rebuilt from templates. */
+.pv-tools{color:#fff}
+.pv-tools .btn{background:var(--card);color:#fff;border:1px solid var(--border)}
+.pv-tools .btn:hover{color:#fff}
+.pv-tools input[type="text"], .pv-tools select, .pv-tools input[type="number"], .pv-tools textarea{background:#111;border:1px solid var(--border);color:#fff;padding:8px;border-radius:8px}
+.pv-tools input::placeholder, .pv-tools textarea::placeholder{color:rgba(255,255,255,0.6)}
 .pv-tools input[type="range"]{accent-color:var(--accent)}
 .pv-tools label{color:var(--muted)}
 .pv-tools .legend{color:var(--muted)}
+.pv-tools datalist{color:#fff}
 """
 
 # Full HTML templates moved as-is from original module (placeholders kept)
