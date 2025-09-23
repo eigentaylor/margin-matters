@@ -100,7 +100,67 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
             ])
         )
         tester_ui = tester_ui.replace('%MIN_YEAR%', str(min_year)).replace('%MAX_YEAR%', str(max_year))
-        tester_scripts = '<script src="tester.js"></script>'
+        # Include tester.js and the lightweight PV tools wiring so generated index.html preserves PV controls
+        tester_scripts = r"""<script src="tester.js"></script>
+<script>
+// Lightweight PV tools wiring (reuses tester.js globals where possible)
+(function(){
+    function parsePvText(txt){
+        if (!txt) return null;
+        txt = String(txt).trim().toUpperCase();
+        if (txt === 'EVEN' || txt === '0' || txt === 'D+0' || txt === 'R+0') return 0;
+        let m = txt.match(/^([DR])\s*\+\s*([0-9]*\.?[0-9]+)$/);
+        if (m) { const sign = (m[1] === 'D') ? 1 : -1; return sign * (parseFloat(m[2])/100); }
+        if (!isNaN(parseFloat(txt))) return parseFloat(txt);
+        return null;
+    }
+    function clampPv(x){ if (!isFinite(x)) return 0; const CAP = 0.5; return Math.max(-CAP, Math.min(CAP, x)); }
+    function applyPvOverride(val){
+        const yearEl = document.getElementById('yearSlider');
+        const y = yearEl ? parseInt(yearEl.value) : 2024;
+        window._pvOverride = clampPv(val);
+        if (typeof window.updateAll === 'function') window.updateAll();
+        try {
+            const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
+            let best=0, bestD=1e9; stops.forEach((s,idx)=>{ const d=Math.abs(s - window._pvOverride); if (d<bestD){bestD=d; best=idx;} });
+            const sEl = document.getElementById('pvSlider'); if (sEl) sEl.value = String(best);
+        } catch(e){}
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+        const pvText = document.getElementById('pvText');
+        const pvApply = document.getElementById('pvApply');
+        const pvPreset = document.getElementById('pvPreset');
+        const pvFlip = document.getElementById('pvFlip');
+        const pvClear = document.getElementById('pvClear');
+        if (pvApply) pvApply.addEventListener('click', ()=>{ const v = parsePvText(pvText && pvText.value); if (v==null) return; applyPvOverride(v); if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); });
+        if (pvPreset) pvPreset.addEventListener('change', ()=>{ const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); } });
+        if (pvFlip) pvFlip.addEventListener('click', ()=>{
+            let cur = 0;
+            if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
+            else {
+                const yearEl = document.getElementById('yearSlider'); const y = yearEl? parseInt(yearEl.value):2024;
+                const pvEl = document.getElementById('pvSlider');
+                const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
+                const idx = pvEl? parseInt(pvEl.value):0; const stopVal = stops[idx] || 0;
+                cur = stopVal;
+            }
+            applyPvOverride(-cur);
+            if (pvText) pvText.value = (cur<=0?`D+${(Math.abs(cur)*100).toFixed(1)}`:`R+${(Math.abs(cur)*100).toFixed(1)}`);
+        });
+        if (pvClear) pvClear.addEventListener('click', ()=>{ window._pvOverride = null; if (pvText) pvText.value = ''; if (typeof window.updateAll === 'function') window.updateAll(); });
+        // Ensure moving the PV slider cancels any override/preset so slider takes immediate effect
+        const pvSlider = document.getElementById('pvSlider');
+        if (pvSlider) pvSlider.addEventListener('input', ()=>{
+            // clear any custom PV override set by presets or Apply
+            try { window._pvOverride = null; } catch(e) {}
+            // clear preset selection (so UI reflects that slider is active)
+            try { if (pvPreset) pvPreset.value = ''; } catch(e) {}
+            if (typeof window.updateAll === 'function') window.updateAll();
+        });
+    });
+})();
+</script>"""
     else:
         tester_ui = ''
         tester_scripts = ''
