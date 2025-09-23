@@ -87,6 +87,7 @@ def build_site():
         _update_static(root / 'trend-viewer.html', 'Trend Viewer')
         _update_static(root / 'trends.html', 'Trends')
         _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
+        _update_static(root / 'future.html', '"Future" Elections (2028–2048)')
     except Exception as e:
         print(f"Warning: couldn't sync static page headers: {e}")
 

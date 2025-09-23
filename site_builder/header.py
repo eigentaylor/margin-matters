@@ -17,6 +17,7 @@ def make_header(title: str, is_inner: bool = False) -> str:
         #f'<a class="btn" href="{prefix}/trends.html">Trends</a>'
         f'<a class="btn" href="{prefix}/ranker.html">Ranker</a>'
         f'<a class="btn" href="{prefix}/trend-viewer.html">Trend Viewer</a>'
+    f'<a class="btn" href="{prefix}/future.html">"""Future"""</a>'
         f'<a class="btn" href="{prefix}/methods.html">Methods</a>'
         f'<a class="btn" href="{prefix}/presidential_margins.html">Data (CSV)</a>'
         f'</div>'

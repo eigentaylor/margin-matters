@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>State Trends • "Future" Elections</title>
+  <link rel="icon" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    :root{--bg:#0b0b0b;--fg:#f5f5f5;--muted:#a5a5a5;--accent:#66b3ff;--card:#141414;--border:#2a2a2a}
+    body{background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial}
+    a{color:var(--accent)}
+    .container{max-width:1200px;margin:0 auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .legend{color:var(--muted)}
+    #map{width:100%;height:auto}
+    #mapTip{position:fixed;pointer-events:none;background:#111;border:1px solid var(--border);padding:6px 8px;border-radius:8px;color:var(--fg);font-size:.92rem}
+  </style>
+  <!-- numeric.js for SVD (PCA loadings) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+  <style>
+    /* Dark buttons specific to this page */
+    .btn { background: var(--card); color: var(--fg); border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px;margin-bottom:12px">
+      <div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div>
+      <div class="legend">"Future" Elections (2028–2048)</div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="margin-bottom:8px">Interactive map</div>
+      <div id="map-wrap" class="center">
+        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+        <div id="mapTip" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div style="display:grid;gap:12px">
+        <div class="legend" style="text-align:left">Enter a seed to generate a "plausible" path of relative state margins for 2028–2048 using a Brownian-bridge around a "plausible" 2048 target. Then adjust the PV to see different results based on the national margin!<br />THIS IS A WORK IN PROGRESS! BUGS ARE GUARANTEED!</div>
+
+        <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="yearSlider" class="legend">Year</label>
+            <div style="display:flex;align-items:center;gap:8px;min-width:320px">
+              <input id="yearSlider" type="range" min="2024" max="2048" step="4" value="2024" style="flex:1;min-width:160px;" />
+              <span id="yearVal">2024</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:320px">
+            <label for="pvSlider" class="legend">PV (Nat. Margin)</label>
+            <div style="display:flex;gap:10px;align-items:center">
+              <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
+              <span id="pvVal">EVEN</span>
+            </div>
+            <datalist id="pvStopsList"></datalist>
+          </div>
+        </div>
+
+        <div id="evBar" style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111">
+          <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+          <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
+          <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
+          <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+          <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">D 0 | O 0 | R 0</div>
+        </div>
+        <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
+
+        <div class="card" style="background:transparent;border-color:var(--border)">
+          <div class="legend" style="margin-bottom:6px">PV tools</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="pvText">Custom PV</label>
+              <input id="pvText" type="text" placeholder="e.g. D+4.5, R+1.6, 0.045, EVEN" style="width:200px" />
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="pvPreset">Presets</label>
+              <select id="pvPreset" class="btn" style="min-width:220px">
+                <option value="">Select preset…</option>
+                <option value="-0.016">Trump: R+1.6</option>
+                <option value="0.045">Biden: D+4.5</option>
+                <option value="0.075">Obama: D+7.5</option>
+                <option value="0.085">Clinton: D+8.5</option>
+                <option value="-0.182">Reagan: R+18.2</option>
+                <option value="0.226">Johnson: D+22.6</option>
+                <option value="-0.231">Nixon: R+23.1</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button id="pvApply" class="btn">Apply PV</button>
+              <button id="pvFlip" class="btn">Flip PV</button>
+              <button id="pvClear" class="btn">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="closeStates" class="legend"></div>
+
+        <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="seedInput" class="legend">Seed</label>
+            <input id="seedInput" type="number" value="20250101" style="width:180px" />
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label class="legend">Actions</label>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button id="genBtn" class="btn">Generate</button>
+              <button id="randBtn" class="btn">Random seed</button>
+              <button id="shareBtn" class="btn">Share</button>
+            </div>
+          </div>
+          
+        <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><b>Formal Explanation:</b> We project each state’s 2048 margin from its 2000–2024 trend (lightly shrunk), then draw a Brownian bridge (a random but endpoint-anchored wander) around the straight line from 2024 to 2048. The bridge’s volatility is higher early than late, and each step mixes shared national shocks (from PCA factors) with state-specific noise. We soft-bound extremes and keep Maine/Nebraska at-large equal to their vote-weighted district averages. The parameters are tuned so the simulated paths match historical features like typical step sizes, zig-zags, overshoots, and the timing of peak detours, without overfitting.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer style="margin-top:16px;color:var(--muted)">
+      This page generates future margins client-side from historical data. It’s experimental and NOT a forecast. No offense, just for fun!<br />
+      Site by eigentaylor.<br />
+     <span class="legend">Last updated: 2025-09-23 05:16 UTC</span></footer>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <!-- Flag future mode before loading tester.js to adjust stops/labels and default PV behavior -->
+  <script>window._futureMode = true;</script>
+  <!-- Reuse the same map logic and PV stops/EV bar from tester.js -->
+  <script src="./tester.js"></script>
+  <!-- Page driver that generates future margins and plugs into tester.js state -->
+  <script src="./future.js"></script>
+
+  <script>
+    // Map rendering (same as index.html, trimmed)
+    (function(){
+      const FIPS_TO_ABBR = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+      const svg = d3.select("#map");
+      const g = svg.append("g");
+      const projection = d3.geoAlbersUsa().scale(1300).translate([975/2, 610/2]);
+      const path = d3.geoPath().projection(projection);
+      window.mapProjection = projection; window.mapPath = path; window.mapG = g;
+      fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
+        .then(r => r.json())
+        .then(us => {
+          const states = topojson.feature(us, us.objects.states).features;
+          const tip = document.getElementById('mapTip');
+          g.selectAll("path.state")
+            .data(states)
+            .join("path")
+            .attr("class", "state")
+            .attr("id", d => { const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")]; return abbr ? `state-${abbr}` : null; })
+            .attr("d", path)
+            .attr("fill", "#2f2f2f")
+            .attr("stroke", "#5a5a5a")
+            .attr("stroke-width", 0.8)
+            .on("mouseover", function(event, d) {
+              const sel = d3.select(this);
+              const cur = sel.attr('fill') || '#2f2f2f';
+              sel.attr('data-orig-fill', cur);
+              sel.attr('fill', '#66b3ff');
+              try {
+                const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
+                if (abbr) {
+                  const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
+                  const ev = (info && info.ev != null) ? info.ev : '';
+                  const marginStr = (info && info.marginStr) ? info.marginStr : '';
+                  tip.textContent = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
+                  tip.style.display = 'block';
+                  const rect = this.ownerSVGElement.getBoundingClientRect();
+                  const x = event.clientX - rect.left; const y = event.clientY - rect.top;
+                  tip.style.left = (rect.left + x) + 'px'; tip.style.top = (rect.top + y) + 'px';
+                }
+              } catch(e) {}
+            })
+            .on("mousemove", function(event){
+              const tip = document.getElementById('mapTip'); if (!tip || tip.style.display==='none') return;
+              const rect = this.ownerSVGElement.getBoundingClientRect();
+              const x = event.clientX - rect.left; const y = event.clientY - rect.top;
+              tip.style.left = (rect.left + x) + 'px'; tip.style.top = (rect.top + y) + 'px';
+            })
+            .on("mouseout", function(){ const sel = d3.select(this); const orig = sel.attr('data-orig-fill') || '#2f2f2f'; sel.attr('fill', orig); sel.attr('data-orig-fill', null); const tip=document.getElementById('mapTip'); if (tip) tip.style.display='none'; });
+          // Signal ready for tester.js internals
+          window.dispatchEvent(new Event("mapReady"));
+        });
+    })();
+  </script>
+</body>
+<html>

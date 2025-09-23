@@ -293,16 +293,24 @@
   function buildPvStops(year, container, datalist){
     const cap = PV_CAP;
     const arr = byYear.get(year) || [];
+    // quick lookup by unit for dynamic chip coloring and other helpers
+    const rowByUnit = new Map();
+    arr.forEach(r => { if (r && r.unit) rowByUnit.set(r.unit, r); });
     const stopsSet = new Set([0]);
     // include the national margin as a stop
-    const nat = getNatMargin(year);
+  let nat = getNatMargin(year);
+  // In future mode, force nat=0 and omit an 'Actual' stop for years after 2024; keep Actual for 2024.
+  if (window._futureMode && year > 2024) {
+    nat = 0;
+  } else {
     if (isFinite(nat) && Math.abs(nat) <= cap) stopsSet.add(nat);
+  }
     // clear any prior mappings
     stopToEff.clear();
     stopToUnits.clear();
-    // Predefine effective values for EVEN and Actual stops
+  // Predefine effective values for EVEN and Actual stops
     stopToEff.set(0, 0 + EPS); // EVEN nudges to D side to break ties deterministically
-    if (isFinite(nat)) stopToEff.set(nat, nat); // Actual = exactly national
+  if (!(window._futureMode && year > 2024) && isFinite(nat)) stopToEff.set(nat, nat); // Actual = exactly national (historical or 2024 on Future)
   arr.forEach(r => {
       const val = -(+r.rm || 0);
       // ignore national rows in per-state stop derivation to avoid 'NATIONAL' showing beside EVEN
@@ -349,6 +357,19 @@
       }
     });
     const stops = Array.from(stopsSet).sort((a,b)=>a-b);
+    try {
+      if (year === 2024) {
+        const arrDbg = byYear.get(year) || [];
+        const nonNatDbg = arrDbg.filter(r=>r && r.unit !== 'NATIONAL');
+        const rmStats = {
+          count: nonNatDbg.length,
+          undefinedRm: nonNatDbg.filter(r=> !isFinite(r.rm)).length,
+          zeroRm: nonNatDbg.filter(r=> isFinite(r.rm) && Math.abs(r.rm) < 1e-12).length
+        };
+        console.log('[tester] year=2024 stops:', stops.length, stops);
+        console.log('[tester] year=2024 rm stats:', rmStats);
+      }
+    } catch(e) {}
     // Ensure every stop has an effective value (keep any precomputed ones)
     for (let i=0;i<stops.length;i++){
       const s = stops[i];
@@ -365,11 +386,11 @@
       if (s) s.setAttribute('list', 'pvStopsList');
     }
     if (container){
-      const nat = getNatMargin(year);
+      const nat = (window._futureMode && year > 2024) ? 0 : getNatMargin(year);
       container.innerHTML = 'Stops: ' + stops.map((v,i) => {
         // label rules: 0 => EVEN (no units), nat => Actual (no units), others => leanStr + small unit list
         const isEven = Math.abs(v) < 1e-12;
-        const isNat = Math.abs(v - nat) < 1e-12;
+        const isNat = ((!(window._futureMode && year > 2024)) && Math.abs(v - nat) < 1e-12);
         const unitsRaw = (stopToUnits.get(v) || []).filter(u => u !== 'NATIONAL' && u !== 'NAT');
         const units = (isEven || isNat) ? '' : unitsRaw.slice(0,3).map(u=>u.slice(0,5)).join(',');
         const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
@@ -396,6 +417,32 @@
             else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
             else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
             else if (colors.length) bgColor = colors[0];
+          } else {
+            // Fallback: dynamically infer winners for this stop using current year rows
+            const eff = stopToEff.get(v);
+            const unitsList = (unitsRaw && unitsRaw.length) ? unitsRaw : (arr.filter(r => r && r.unit && r.unit !== 'NATIONAL').map(r => r.unit));
+            const winners = [];
+            unitsList.forEach(u => {
+              const r = rowByUnit.get(u);
+              if (!r) return;
+              const t = +r.tp || 0;
+              const a = 3*t - 1;
+              const rVal = +(r.rm || 0);
+              if (a > 0) {
+                const nD = -rVal + a;
+                const nR = -rVal - a;
+                if (eff > nR + EPS && eff < nD - EPS) {
+                  winners.push('T');
+                  return;
+                }
+              }
+              const m = rVal + eff;
+              if (m > 0) winners.push('D');
+              else if (m < 0) winners.push('R');
+            });
+            if (winners.includes('T')) bgColor = '#C9A400';
+            else if (winners.includes('D')) bgColor = '#4169E1';
+            else if (winners.includes('R')) bgColor = '#B22222';
           }
         }
         
@@ -413,6 +460,8 @@
           const s = document.getElementById('pvSlider');
           // Changing PV stop should reset any active flips
           try { clearFlips(); } catch(e) {}
+          // Clear any custom PV override so slider selection takes effect
+          try { window._pvOverride = null; } catch(e) {}
           if (s){ s.value = String(i); updateAll(); }
         });
       });
@@ -482,7 +531,8 @@
   const curStop = stops[defaultIdx] || 0;
   const nat = getNatMargin(y);
   const curEff = stopToEff.get(curStop) || (curStop + EPS * (curStop === 0 ? 1 : Math.sign(curStop - nat)));
-  pvVal.textContent = (Math.abs(curStop - nat) < STOP_EPS ? 'Actual ' : '') + leanStr(curEff);
+  const showNatInit = ((!(window._futureMode && y > 2024)) && Math.abs(curStop - nat) < STOP_EPS);
+  pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
   // set up datalist and stop chips
   buildPvStops(y, pvStops, pvStopsList);
   // buttons
@@ -535,7 +585,9 @@
   const pvIndex = +pvEl.value;
   const stops = stopsByYear.get(year) || [0];
   const stopVal = (stops && stops.length > 0 && stops[pvIndex] !== undefined) ? stops[pvIndex] : 0;
-  const pv = stopToEff.get(stopVal) || (stopVal + EPS * (stopVal === 0 ? 1 : Math.sign(stopVal - nat)));
+  // Allow a custom PV override (e.g., user-entered PV) to take precedence over stops
+  const override = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
+  const pv = (override != null) ? override : (stopToEff.get(stopVal) || (stopVal + EPS * (stopVal === 0 ? 1 : Math.sign(stopVal - nat))));
   window._curPv = pv;
   try { console.log('updateAll', {year, pvIndex, stopVal, pv, flips: (window._activeFlip && window._activeFlip.year===year) ? window._activeFlip.units.length : 0}); } catch(e){}
   // Add debug for active flip state
@@ -563,7 +615,7 @@
         }
       }
     });
-  const showNat = Math.abs(stopVal - nat) <= STOP_EPS;
+  const showNat = ((!(window._futureMode && year > 2024)) && override == null && Math.abs(stopVal - nat) <= STOP_EPS);
   const matchLabel = (Math.abs(stopVal) < STOP_EPS) ? '' : (matches.length ? ' (' + (matches.slice(0,6).join(',') + (matches.length>6 ? '…' : '')) + ')' : '');
   document.getElementById('pvVal').textContent = (showNat ? 'Actual ' : '') + leanStr(pv) + matchLabel;
 
@@ -741,6 +793,47 @@
   const flipEC = document.getElementById('flipEC');
   if (flipEC) flipEC.textContent = (oEV > 0) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
   
+  // Dynamic "Close states" panel (if present): list units with |margin| < 1.0 pp
+  try {
+    const closeWrap = document.getElementById('closeStates');
+    if (closeWrap) {
+      const THRESH = 0.01; // 1 percentage point
+      // consider only at-large or standard states (avoid district rows to prevent double counting)
+      const isALorState = (u) => (u && (u.length === 2 || u === 'DC' || u.endsWith('-AL')));
+      const rows = byYear.get(year) || [];
+      const list = [];
+      rows.forEach(r => {
+        if (!r || r.unit === 'NATIONAL') return;
+        if (!isALorState(r.unit)) return;
+        let m = (+r.rm || 0) + pv;
+        const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
+        // If inside third-party (yellow) window, exclude from close list of D/R
+        if (a > 0) {
+          const nD = -rVal + a; const nR = -rVal - a;
+          if (pv > nR + EPS && pv < nD - EPS) return; // Other wins here, not a close D/R
+        }
+        if (Math.abs(m) < THRESH) {
+          list.push({ unit: r.unit, ev: (+r.ev || 0), m });
+        }
+      });
+      list.sort((a,b) => Math.abs(a.m) - Math.abs(b.m));
+      const fmt = (x) => {
+        if (!isFinite(x)) return '';
+        if (Math.abs(x) < 0.000005) return 'EVEN';
+        const s = (Math.abs(x) * 100).toFixed(1);
+        return (x > 0 ? 'D+' : 'R+') + s;
+      };
+      if (list.length === 0) {
+        closeWrap.innerHTML = '<div class="legend">No close states within 1.0 pp.</div>';
+      } else {
+        closeWrap.innerHTML = '<div class="legend" style="margin-bottom:6px">Close states (|margin| < 1.0 pp)</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
+          list.map(r => `<span class="btn" style="padding:4px 6px">${r.unit} · ${fmt(r.m)} · ${r.ev} EV</span>`).join('') +
+          '</div>';
+      }
+    }
+  } catch(e) { /* optional */ }
+
   // Adjusted national PV totals at current PV stop
   try {
     let dSum = 0, rSum = 0, tSum = 0, totSum = 0;
