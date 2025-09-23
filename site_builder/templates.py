@@ -57,6 +57,15 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .site-header{position:sticky;top:0;z-index:1100;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);margin-bottom:12px;border-radius:10px}
 .card.site-header{padding:8px}
 
+/* Site branding: prepend a consistent site name in the header for clear branding */
+.card.site-header .legend::before{
+  content: "Margin Matters";
+  display:inline-block;
+  font-weight:700;
+  margin-right:12px;
+  color:var(--accent);
+}
+
 /* PV slider value and totals: keep spacing stable and make numbers pop */
 #pvVal{display:inline-block;min-width:140px;text-align:left;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.2px;color:#fff;background:rgba(0,0,0,0.35);padding:3px 8px;border-radius:8px}
 .pv-totals{display:flex;gap:10px;align-items:stretch;justify-content:center;margin-top:10px;flex-wrap:wrap}
