@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "margin-matters"        # what you `pip install`
+version = "0.1.0"              # bump this when you change things
+description = "Tool to load taylor's US presidential margins CSV"
+authors = [
+  { name = "eigentaylor", email = "tayloreigenfisher@gmail.com" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+
+# dependencies your package needs
+dependencies = [
+  "pandas>=2.0"
+]
+
+# optional keywords & classifiers help with PyPI
+keywords = ["elections", "presidential", "data"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License"
+]

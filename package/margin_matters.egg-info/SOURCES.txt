@@ -1,0 +1,8 @@
+pyproject.toml
+margin_matters/__init__.py
+margin_matters/loader.py
+margin_matters.egg-info/PKG-INFO
+margin_matters.egg-info/SOURCES.txt
+margin_matters.egg-info/dependency_links.txt
+margin_matters.egg-info/requires.txt
+margin_matters.egg-info/top_level.txt

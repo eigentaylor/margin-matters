@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: margin-matters
+Version: 0.1.0
+Summary: Tool to load taylor's US presidential margins CSV
+Author-email: eigentaylor <tayloreigenfisher@gmail.com>
+License: MIT
+Keywords: elections,presidential,data
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0
