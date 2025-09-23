@@ -823,9 +823,6 @@
         const s = (Math.abs(x) * 100).toFixed(1);
         return (x > 0 ? 'D+' : 'R+') + s;
       };
-      if (list.length === 0) {
-        closeWrap.innerHTML = '<div class="legend">No close states within 1.0 pp.</div>';
-      } else {
         // Also compute 'Swing' states: within 6.0 percentage points of the national margin
         const SWING_THRESH = 0.06; // 6 percentage points
         const swingList = [];
@@ -839,10 +836,10 @@
             if (pv > nR + EPS && pv < nD - EPS) return; // Other wins here
           }
           // margin relative is just rm
-          const relToNat = (+r.rm || 0) + pv - nat;
-          if (Math.abs(relToNat) < SWING_THRESH) swingList.push({ unit: r.unit, ev: (+r.ev || 0), relToNat });
+          const relToNat = (+r.rm || 0);
+          if (Math.abs(r.rm) < SWING_THRESH) swingList.push({ unit: r.unit, ev: (+r.ev || 0), relToNat });
         });
-        swingList.sort((a,b) => Math.abs(a.relToNat) - Math.abs(b.relToNat));
+        swingList.sort((a, b) => Math.abs(rows.find(r => r.unit === a.unit)?.rm || 0) - Math.abs(rows.find(r => r.unit === b.unit)?.rm || 0));
 
         // helpers to pick readable text colors for chip backgrounds
         function _textColorFor(bg){ try { if(!bg || bg[0] !== '#') return '#fff'; const c = bg.slice(1); const val = parseInt(c,16); const rr = (val>>16)&255; const gg = (val>>8)&255; const bb = val&255; const lum = 0.299*rr + 0.587*gg + 0.114*bb; return lum > 186 ? '#000' : '#fff'; } catch(e){ return '#fff'; } }
@@ -865,11 +862,19 @@
           return `<span class="btn" style="padding:4px 6px;background-color:${bg};color:${txt}">${r.unit} · <small style=\"color:${small}\">${relTxt}</small> · ${r.ev} EV</span>`;
         }).join('');
 
-        closeWrap.innerHTML = '<div class="legend" style="margin-bottom:6px">Close states (|raw margin| < 1.0 pp)</div>' +
-          '<div style="display:flex;flex-wrap:wrap;gap:8px">' + closeChips + '</div>' +
-          '<div class="legend" style="margin:12px 0 6px">Bellwether states (within 6.0 pp of national margin — i.e. close to the national popular vote, not necessarily close to flipping)</div>' +
+        // Render bellwethers (swing) first, then close states. Show helpful messages when either list is empty.
+        let swingSection = '<div class="legend" style="margin-bottom:6px">Bellwether states (within 6.0 pp of national margin — i.e. close to the national popular vote, not necessarily close to flipping)</div>' +
           '<div style="display:flex;flex-wrap:wrap;gap:8px">' + swingChips + '</div>';
-      }
+
+        let closeSection = '';
+        if (closeChips.length === 0) {
+          closeSection = '<div class="legend" style="margin-top:12px">Close states (|raw margin| < 1.0 pp)</div><div class="legend">No close states within 1.0 pp.</div>';
+        } else {
+          closeSection = '<div class="legend" style="margin-top:12px">Close states (|raw margin| < 1.0 pp)</div>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:8px">' + closeChips + '</div>';
+        }
+
+        closeWrap.innerHTML = swingSection + closeSection;
     }
   } catch(e) { /* optional */ }
 
