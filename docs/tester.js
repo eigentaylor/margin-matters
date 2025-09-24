@@ -4,6 +4,230 @@
   const EPS = 1e-8;
   const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
+  // FIPS -> USPS state abbreviation map (contiguous plus AK, HI, DC)
+  const ID_TO_ABBR = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
+  // Very small states to skip labeling on the map
+  const SMALL_STATES = new Set(["MA","RI","CT","NJ","DE","MD","DC","NH","VT"]);
+
+  // Lazily created layer for state labels
+  let stateLabelsLayer = null; // d3 selection of g.state-labels
+  const _labelCache = new Map(); // abbr -> d3 selection for text
+
+  function raiseStateLabelsLayer(){
+    try {
+      if (stateLabelsLayer && !stateLabelsLayer.empty()) stateLabelsLayer.raise();
+      else {
+        const sel = d3.select('svg#map').select('g.state-labels');
+        if (!sel.empty()) sel.raise();
+      }
+    } catch(e) {}
+  }
+
+  function ensureStateLabelsLayer(){
+    try {
+      try {
+        const svgSel = d3.select('svg#map');
+        console.log('[labels] ensureStateLabelsLayer enter', { svgExists: !svgSel.empty(), mapGExists: !!window.mapG });
+      } catch(e) {}
+      if (stateLabelsLayer && !stateLabelsLayer.empty()) return stateLabelsLayer;
+      // Prefer to attach to main map group if exposed; otherwise, to the svg root
+      const svg = d3.select('svg#map');
+      if (svg.empty()) { try { console.warn('[labels] svg#map not found'); } catch(e) {}; return null; }
+      // Normalize mapG to a proper D3 selection if available
+      let parent = null;
+      try {
+        if (window.mapG) {
+          if (typeof window.mapG.node === 'function') {
+            parent = window.mapG; // already a selection
+          } else if (window.mapG instanceof Element || (window.mapG.nodeType === 1)) {
+            parent = d3.select(window.mapG);
+          }
+        }
+      } catch(e) { parent = null; }
+      if (!parent || parent.empty()) parent = svg;
+      try {
+        console.log('[labels] parent resolved', { tag: parent.node() && parent.node().tagName, id: parent.attr('id') || '', class: parent.attr('class') || '' });
+      } catch(e) {}
+      let layer = parent.select('g.state-labels');
+      if (layer.empty()) {
+        layer = parent.append('g').attr('class','state-labels').attr('pointer-events','none');
+        try { console.log('[labels] created state-labels layer under', parent.node() === svg.node() ? 'svg#map' : 'mapG'); } catch(e) {}
+      }
+      // keep labels above states/districts
+      try { layer.raise(); } catch(e) {}
+      stateLabelsLayer = layer;
+      try {
+        const countNow = svg.selectAll('g.state-labels').nodes().length;
+        console.log('[labels] ensureStateLabelsLayer exit', { layersInSvg: countNow });
+      } catch(e) {}
+      return layer;
+    } catch(e) { return null; }
+  }
+
+  // Compute total EV for a state abbreviation, summing district/at-large rows as needed
+  function getTotalEvForState(year, abbr){
+    try {
+      if (typeof window.getRowsForYear !== 'function') return null;
+      const rows = window.getRowsForYear(year) || [];
+      let sum = 0; let found = false;
+      for (const r of rows){
+        if (!r || !r.unit || r.unit === 'NATIONAL') continue;
+        const u = String(r.unit);
+        if (u === abbr || u.startsWith(abbr + '-')) {
+          const ev = +r.ev || 0;
+          if (isFinite(ev)) { sum += ev; found = true; }
+        }
+      }
+      if (found) return sum;
+      // fallback to single lookup if present in ev map
+      try {
+        const ev = window._evByUnitMap && window._evByUnitMap.get(`${year}:${abbr}`);
+        if (isFinite(ev)) return ev;
+      } catch(e) {}
+      return null;
+    } catch(e) { return null; }
+  }
+
+  // Create/update text labels for states for the current year
+  function updateStateLabels(year){
+    const layer = ensureStateLabelsLayer();
+    if (!layer) return;
+    // Build or update labels for each state path
+    const states = d3.selectAll('path.state');
+    try { console.log('[labels] updateStateLabels start', { year, stateCount: states.size ? states.size() : states.nodes().length }); } catch(e) {}
+    if (states.empty()) {
+      // Map may not be ready yet; try again shortly
+      try { setTimeout(() => { try { updateStateLabels(year); } catch(e){} }, 100); } catch(e) {}
+      return;
+    }
+    // Extra guard: if the label layer somehow isn't attached, create under svg directly
+    try {
+      if (!stateLabelsLayer || stateLabelsLayer.empty()) {
+        const svg = d3.select('svg#map');
+        stateLabelsLayer = svg.append('g').attr('class','state-labels').attr('pointer-events','none');
+        console.log('[labels] fallback created state-labels under svg');
+      }
+    } catch(e) {}
+    states.each(function(d){
+      try {
+        const node = this;
+        // derive abbr from FIPS id
+        const id = (d && d.id != null) ? String(d.id).padStart(2,'0') : (node && node.__data__ && node.__data__.id != null ? String(node.__data__.id).padStart(2,'0') : null);
+        if (!id || !(id in ID_TO_ABBR)) return;
+        const abbr = ID_TO_ABBR[id];
+        if (SMALL_STATES.has(abbr)) return; // skip tiny states
+
+        // Compute center using geographic centroid if possible; fallback to SVG bbox center
+        let cx = null, cy = null;
+        try {
+          if (window.mapPath && typeof window.mapPath.centroid === 'function' && d) {
+            const c = window.mapPath.centroid(d);
+            if (Array.isArray(c) && c.length === 2 && isFinite(c[0]) && isFinite(c[1])) { cx = c[0]; cy = c[1]; }
+          }
+        } catch(e) {}
+        if (cx == null || cy == null) {
+          let bbox;
+          try { bbox = node.getBBox(); } catch(e) { bbox = null; }
+          if (!bbox) return;
+          cx = bbox.x + bbox.width/2;
+          cy = bbox.y + bbox.height/2;
+        }
+
+        // Resolve EV
+        let ev = null;
+        try {
+          ev = (typeof window.getEvFor === 'function') ? window.getEvFor(year, abbr) : null;
+        } catch(e) {}
+        if (ev == null || !isFinite(ev)) {
+          ev = getTotalEvForState(year, abbr);
+        }
+        if (ev == null || !isFinite(ev)) ev = '';
+
+        // Create or update the label
+        let t = _labelCache.get(abbr);
+        const isNew = (!t || t.empty());
+        if (isNew) {
+          t = layer.append('text')
+            .attr('class','state-label')
+            .attr('text-anchor','middle')
+            .attr('dominant-baseline','middle')
+            .attr('dy','0')
+            .attr('font-size','12px')
+            .attr('font-family','system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif')
+            .attr('fill','#fff')
+            .attr('stroke','#000')
+            .attr('stroke-width',3)
+            .attr('paint-order','stroke fill')
+            .attr('pointer-events','none');
+          _labelCache.set(abbr, t);
+        }
+        // Two-line label: abbreviation on top, EV on second line
+        const lines = (ev === '' || ev == null) ? [abbr] : [abbr, String(ev)];
+        // Ensure numeric coordinates
+        const fx = (isFinite(cx) ? cx : 0);
+        const fy = (isFinite(cy) ? cy : 0);
+        t.attr('x', fx).attr('y', fy);
+        try {
+          // Clear existing tspans and recreate for predictable layout
+          t.selectAll('tspan').remove();
+          if (lines.length === 1) {
+            t.append('tspan').attr('x', fx).attr('dy', '0').attr('font-size', '12px').text(lines[0]);
+          } else {
+            // Slight negative dy on first tspan so the pair is visually centered at (x,y)
+            t.append('tspan').attr('x', fx).attr('dy', '-0.4em').attr('font-size', '12px').attr('font-weight', '700').text(lines[0]);
+            t.append('tspan').attr('x', fx).attr('dy', '1.25em').attr('font-size', '11px').text(lines[1]);
+          }
+        } catch (e) {
+          // Fallback: single-line fallback if tspans fail
+          t.text(lines.join(' '));
+        }
+        // TX-only debug logs to verify label creation/update
+        if (abbr === 'TX') {
+          try {
+            console.log('[labels] TX', { created: isNew, cx: Math.round(cx), cy: Math.round(cy), ev: ev });
+          } catch(e) {}
+          // Optional debug dot at centroid when window._labelDebug is truthy
+          try {
+            if (window._labelDebug) {
+              const dotSel = stateLabelsLayer.selectAll('circle.tx-debug-dot').data([0]);
+              dotSel.join(
+                enter => enter.append('circle').attr('class','tx-debug-dot').attr('r',4).attr('fill','#ff0').attr('stroke','#000').attr('stroke-width',1).attr('cx', fx).attr('cy', fy),
+                update => update.attr('cx', fx).attr('cy', fy),
+                exit => exit.remove()
+              );
+            }
+          } catch(e) {}
+        }
+      } catch(e) {}
+    });
+    // keep labels above boundaries and districts
+    try { stateLabelsLayer.raise(); } catch(e) {}
+    // Post-update: quick presence check without spamming
+    try {
+      const tx = _labelCache.get('TX');
+      console.log('[labels] updateStateLabels done', { labelsCount: stateLabelsLayer.selectAll('text.state-label').nodes().length, hasTXLabel: !!tx && !tx.empty() });
+    } catch(e) {}
+  }
+
+  // Ensure we react immediately when the map signals it's ready, even if data loads later/earlier
+  try {
+    window.addEventListener('mapReady', function(){
+      try {
+        const yearEl = document.getElementById('yearSlider');
+        const y = yearEl ? parseInt(yearEl.value) : (window._curYear || 2024);
+        // TX-only debug: confirm TX path is present when map is ready
+        try {
+          const hasTx = !!document.getElementById('state-TX');
+          console.log('[labels] mapReady TX path present?', hasTx);
+        } catch(e) {}
+        try { console.log('[labels] mapReady calling updateStateLabels', { y }); } catch(e) {}
+        updateStateLabels(y);
+      } catch(e) {}
+    });
+  } catch(e) {}
+
+  // Expose for manual testing: you can call window.updateStateLabels(2024) in console
+  try { window.updateStateLabels = updateStateLabels; } catch(e) {}
 
   // URL parameter management for sharing
   // Support: pv can be an integer index (slider index), a numeric PV (e.g. 0.045),
@@ -696,7 +920,7 @@
   const override = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
   const pv = (override != null) ? override : (stopToEff.get(stopVal) || (stopVal + EPS * (stopVal === 0 ? 1 : Math.sign(stopVal - nat))));
   window._curPv = pv;
-  try { console.log('updateAll', {year, pvIndex, stopVal, pv, flips: (window._activeFlip && window._activeFlip.year===year) ? window._activeFlip.units.length : 0}); } catch(e){}
+  //try { console.log('updateAll', {year, pvIndex, stopVal, pv, flips: (window._activeFlip && window._activeFlip.year===year) ? window._activeFlip.units.length : 0}); } catch(e){}
   // Add debug for active flip state
   if (window._activeFlip && window._activeFlip.year === year) {
     console.log('Active flip debug:', {
@@ -836,6 +1060,8 @@
           d3.select(this).attr('fill', fill);
         }
       });
+      // after coloring states, keep labels on top
+      try { raiseStateLabelsLayer(); } catch(e) {}
     })();
 
   // color district polygons (ME/NE) if overlay loaded
@@ -870,6 +1096,8 @@
 
           } catch(e) {}
         });
+        // after districts update, keep labels above them
+        try { raiseStateLabelsLayer(); } catch(e) {}
       } catch (e) { /* ignore */ }
     }
 
@@ -1071,6 +1299,9 @@
   } catch(e) { /* non-fatal */ }
 
   dbg('updateAll: ending successfully');
+  // Update on-map labels last so they sit on top and have current EV totals
+  try { updateStateLabels(year); } catch(e) {}
+  try { raiseStateLabelsLayer(); } catch(e) {}
   }
   
   // Expose updateAll to global scope for applyFlip
