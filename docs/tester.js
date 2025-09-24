@@ -317,6 +317,10 @@
           .attr('fill', txtColor)
           .attr('font-weight', 800)
           .attr('font-size', 11)
+          .attr('paint-order', 'stroke')
+          .attr('stroke', 'rgba(0,0,0,0.65)')
+          .attr('stroke-width', 2)
+          .attr('stroke-linejoin', 'round')
           .text(d.label);
         if (d.ev != null && isFinite(d.ev)){
           const evTxt = `${d.ev} EV`;
@@ -328,6 +332,10 @@
             .attr('fill', smallColor)
             .attr('font-weight', 700)
             .attr('font-size', 10)
+            .attr('paint-order', 'stroke')
+            .attr('stroke', 'rgba(0,0,0,0.6)')
+            .attr('stroke-width', 1.6)
+            .attr('stroke-linejoin', 'round')
             .text(evTxt);
         }
 

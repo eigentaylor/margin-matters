@@ -120,10 +120,12 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .small-state-box .label{
   font-weight:800;
   letter-spacing:0.3px;
+  -webkit-text-stroke:1.5px rgba(0,0,0,0.8); /* Add stroke for better readability */
 }
 .small-state-box .ev{
   font-weight:700;
   font-variant-numeric: tabular-nums;
+  -webkit-text-stroke:0.5px rgba(0,0,0,0.8); /* Add stroke for better readability */
 }
 @media (max-width: 900px){
   #map-wrap{display:block}
