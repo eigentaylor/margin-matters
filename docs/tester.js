@@ -1,4 +1,3 @@
-
 (function(){
   const PV_CAP = 0.5;
   const EPS = 1e-8;
@@ -9,9 +8,193 @@
   // Very small states to skip labeling on the map
   const SMALL_STATES = new Set(["MA","RI","CT","NJ","DE","MD","DC","NH","VT"]);
 
+  // Tunable config for small-state overlay placement and sizing (exposed via window.smallBoxesConfig)
+  const _defaultSmallBoxesConfig = {
+    // If x is a number, use absolute x. Otherwise, compute from right margin.
+    x: null,
+    right: 8,      // px from right edge of SVG
+    y: 240,        // starting y (moved down to avoid covering ME/upper NE)
+    boxW: 75,      // minimal width to fit widest label + EV
+    boxH: 25,      // compact height
+    gapY: 4        // vertical gap between boxes
+  };
+  let _smallBoxesConfig = { ..._defaultSmallBoxesConfig };
+  try { window.smallBoxesConfig = _smallBoxesConfig; } catch(e) {}
+  // Helper to update config at runtime and re-render quickly
+  function setSmallBoxesConfig(patch){
+    try {
+      if (patch && typeof patch === 'object') Object.assign(_smallBoxesConfig, patch);
+      // Keep the exported reference updated too
+      try { window.smallBoxesConfig = _smallBoxesConfig; } catch(e) {}
+      // Re-render using last known colors if available
+      const year = window._curYear || (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : 2024);
+      const ac = window._lastAbbrColors || null;
+      const uc = window._lastUnitColors || null;
+      if (typeof renderSmallStateBoxes === 'function' && ac && uc) renderSmallStateBoxes(year, ac, uc);
+      else if (typeof window.updateAll === 'function') window.updateAll();
+    } catch(e) { console.warn('[smallBoxes] setSmallBoxesConfig error', e); }
+  }
+  function nudgeSmallBoxes(dx, dy){
+    const curX = (typeof _smallBoxesConfig.x === 'number') ? _smallBoxesConfig.x : null;
+    if (curX == null) {
+      // Convert from right-anchored to absolute x based on current SVG width
+      try {
+        const svg = d3.select('svg#map');
+        const vb = svg.empty() ? [0,0,975,610] : (svg.attr('viewBox') ? svg.attr('viewBox').split(/\s+/).map(Number) : [0,0,975,610]);
+        const width = vb[2] || 975;
+        _smallBoxesConfig.x = width - (_smallBoxesConfig.right || 8) - (_smallBoxesConfig.boxW || 86);
+      } catch(e) { _smallBoxesConfig.x = 860; }
+    }
+    _smallBoxesConfig.x += (+dx || 0);
+    _smallBoxesConfig.y = (_smallBoxesConfig.y || 0) + (+dy || 0);
+    setSmallBoxesConfig({});
+  }
+  try { window.setSmallBoxesConfig = setSmallBoxesConfig; window.nudgeSmallBoxes = nudgeSmallBoxes; } catch(e) {}
+
   // Lazily created layer for state labels
   let stateLabelsLayer = null; // d3 selection of g.state-labels
   const _labelCache = new Map(); // abbr -> d3 selection for text
+
+  // Ensure an overlay group inside the map for small-state boxes
+  function ensureSmallBoxesLayer(){
+    try {
+      const svg = d3.select('svg#map');
+      if (svg.empty()) return null;
+      let layer = svg.select('g.small-state-overlay');
+      if (layer.empty()) {
+        // Insert the overlay above the state paths but below labels
+        layer = svg.append('g').attr('class','small-state-overlay');
+        // Give it a pointer cursor for clicks
+        layer.attr('pointer-events','auto');
+      }
+      return layer;
+    } catch(e) { return null; }
+  }
+
+  // Render equal-width boxes along the east coast within the map SVG
+  function renderSmallStateBoxes(year, abbrColors, unitColors){
+    try {
+      const svg = d3.select('svg#map');
+      const layer = ensureSmallBoxesLayer();
+      if (!layer || svg.empty()) return;
+      console.log('[smallBoxes] render start (svg overlay)', { year, config: _smallBoxesConfig });
+
+      // Requested order
+      const tiny = [
+        { unit: 'ME-AL', label: 'ME-AL' },
+        { unit: 'NE-AL', label: 'NE-AL' },
+        { unit: 'NH', label: 'NH' },
+        { unit: 'VT', label: 'VT' },
+        { unit: 'MA', label: 'MA' },
+        { unit: 'RI', label: 'RI' },
+        { unit: 'CT', label: 'CT' },
+        { unit: 'NJ', label: 'NJ' },
+        { unit: 'DE', label: 'DE' },
+        { unit: 'MD', label: 'MD' },
+        { unit: 'DC', label: 'DC' }
+      ];
+
+      // Resolve color and EV for each box
+      const data = tiny.map(({unit, label}) => {
+        let color = unitColors.get(unit);
+        if (!color) {
+          const st = unit.slice(0,2);
+          const entry = abbrColors.get(st);
+          color = entry ? entry.color : '#2f2f2f';
+        }
+        let ev = null;
+        try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, unit); } catch(e) {}
+        if ((ev == null || isNaN(ev)) && typeof window.getRowsForYear === 'function') {
+          const rows = window.getRowsForYear(year) || [];
+          const row = rows.find(r => r.unit === unit || r.unit === label);
+          if (row && isFinite(+row.ev)) ev = +row.ev;
+        }
+        const info = (typeof window.getAdjustedInfo === 'function') ? window.getAdjustedInfo(unit) : null;
+        const marginStr = info && info.marginStr ? info.marginStr : '';
+        return { unit, label, color, ev, marginStr };
+      });
+
+      // Layout: a single column aligned just off the Atlantic coast, between NY/NJ/MD and the right margin.
+      // We place the boxes at a fixed x near the east coast and step y downward. Keep sizes minimal and equal.
+      const vb = svg.attr('viewBox') ? svg.attr('viewBox').split(/\s+/).map(Number) : [0,0,975,610];
+      const width = vb[2] || 975;
+      const height = vb[3] || 610;
+      const boxW = Math.max(40, +(_smallBoxesConfig.boxW || 86));
+      const boxH = Math.max(12, +(_smallBoxesConfig.boxH || 20));
+      const gapY = Math.max(0, +(_smallBoxesConfig.gapY || 4));
+      // Absolute x wins. Otherwise, derive from right margin.
+      const right = +(_smallBoxesConfig.right || 8);
+      const x = (typeof _smallBoxesConfig.x === 'number' && isFinite(_smallBoxesConfig.x))
+        ? _smallBoxesConfig.x
+        : (width - right - boxW);
+      // Start y (tunable)
+      const startY = +(_smallBoxesConfig.y || 120);
+
+      // Clear and re-render
+      layer.selectAll('g.small-box').remove();
+      const groups = layer.selectAll('g.small-box')
+        .data(data, d => d.unit)
+        .join('g')
+        .attr('class','small-box');
+
+      groups.each(function(d, i){
+        const g = d3.select(this);
+        const gx = x;
+        const gy = startY + i*(boxH + gapY);
+        g.attr('transform', `translate(${gx},${gy})`);
+
+        // draw rounded rect with the computed color
+        const isYellowish = d.color && (String(d.color).toLowerCase() === '#c9a400' || String(d.color).toLowerCase() === '#ffd700' || String(d.color).toLowerCase() === 'yellow');
+        const txtColor = isYellowish ? '#000' : '#fff';
+        const smallColor = isYellowish ? '#000' : 'rgba(255,255,255,0.85)';
+
+        g.append('rect')
+          .attr('rx', 5).attr('ry', 5)
+          .attr('width', boxW).attr('height', boxH)
+          .attr('fill', d.color || '#2f2f2f')
+          .attr('stroke', 'rgba(0,0,0,0.4)')
+          .attr('stroke-width', 1);
+
+        // Label and EV inside box
+        const padX = 6, midY = Math.floor(boxH/2) + 1;
+        g.append('text')
+          .attr('x', padX).attr('y', midY)
+          .attr('dominant-baseline', 'middle')
+          .attr('fill', txtColor)
+          .attr('font-weight', 800)
+          .attr('font-size', 11)
+          .text(d.label);
+        if (d.ev != null && isFinite(d.ev)){
+          const evTxt = `${d.ev} EV`;
+          g.append('text')
+            .attr('x', boxW - padX)
+            .attr('y', midY)
+            .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'middle')
+            .attr('fill', smallColor)
+            .attr('font-weight', 700)
+            .attr('font-size', 10)
+            .text(evTxt);
+        }
+
+        // Tooltip via title
+        const title = (d.marginStr ? `${d.label} · ${d.marginStr}` : d.label) + (d.ev!=null?` · ${d.ev} EV`:``);
+        g.append('title').text(title);
+
+        // Click-through
+        g.style('cursor','pointer')
+         .on('click', ()=>{
+            let abbr = d.unit;
+            if (abbr.endsWith('-AL')) abbr = abbr.slice(0,2);
+            window.open(`state/${abbr}.html`, '_blank');
+         });
+      });
+
+      // Keep label layer on top of overlay if exists
+      try { raiseStateLabelsLayer(); } catch(e) {}
+      console.log('[smallBoxes] render done (svg overlay). count:', data.length);
+    } catch(e) { console.warn('[smallBoxes] svg overlay render error', e); }
+  }
 
   function raiseStateLabelsLayer(){
     try {
@@ -27,7 +210,7 @@
     try {
       try {
         const svgSel = d3.select('svg#map');
-        console.log('[labels] ensureStateLabelsLayer enter', { svgExists: !svgSel.empty(), mapGExists: !!window.mapG });
+        //console.log('[labels] ensureStateLabelsLayer enter', { svgExists: !svgSel.empty(), mapGExists: !!window.mapG });
       } catch(e) {}
       if (stateLabelsLayer && !stateLabelsLayer.empty()) return stateLabelsLayer;
       // Prefer to attach to main map group if exposed; otherwise, to the svg root
@@ -46,19 +229,19 @@
       } catch(e) { parent = null; }
       if (!parent || parent.empty()) parent = svg;
       try {
-        console.log('[labels] parent resolved', { tag: parent.node() && parent.node().tagName, id: parent.attr('id') || '', class: parent.attr('class') || '' });
+        //console.log('[labels] parent resolved', { tag: parent.node() && parent.node().tagName, id: parent.attr('id') || '', class: parent.attr('class') || '' });
       } catch(e) {}
       let layer = parent.select('g.state-labels');
       if (layer.empty()) {
         layer = parent.append('g').attr('class','state-labels').attr('pointer-events','none');
-        try { console.log('[labels] created state-labels layer under', parent.node() === svg.node() ? 'svg#map' : 'mapG'); } catch(e) {}
+        //try { console.log('[labels] created state-labels layer under', parent.node() === svg.node() ? 'svg#map' : 'mapG'); } catch(e) {}
       }
       // keep labels above states/districts
       try { layer.raise(); } catch(e) {}
       stateLabelsLayer = layer;
       try {
         const countNow = svg.selectAll('g.state-labels').nodes().length;
-        console.log('[labels] ensureStateLabelsLayer exit', { layersInSvg: countNow });
+        //console.log('[labels] ensureStateLabelsLayer exit', { layersInSvg: countNow });
       } catch(e) {}
       return layer;
     } catch(e) { return null; }
@@ -94,7 +277,7 @@
     if (!layer) return;
     // Build or update labels for each state path
     const states = d3.selectAll('path.state');
-    try { console.log('[labels] updateStateLabels start', { year, stateCount: states.size ? states.size() : states.nodes().length }); } catch(e) {}
+    //try { console.log('[labels] updateStateLabels start', { year, stateCount: states.size ? states.size() : states.nodes().length }); } catch(e) {}
     if (states.empty()) {
       // Map may not be ready yet; try again shortly
       try { setTimeout(() => { try { updateStateLabels(year); } catch(e){} }, 100); } catch(e) {}
@@ -176,9 +359,9 @@
         }
         // TX-only debug logs to verify label creation/update
         if (abbr === 'TX') {
-          try {
-            console.log('[labels] TX', { created: isNew, cx: Math.round(cx), cy: Math.round(cy), ev: ev });
-          } catch(e) {}
+          // try {
+          //   console.log('[labels] TX', { created: isNew, cx: Math.round(cx), cy: Math.round(cy), ev: ev });
+          // } catch(e) {}
           // Optional debug dot at centroid when window._labelDebug is truthy
           try {
             if (window._labelDebug) {
@@ -196,10 +379,10 @@
     // keep labels above boundaries and districts
     try { stateLabelsLayer.raise(); } catch(e) {}
     // Post-update: quick presence check without spamming
-    try {
-      const tx = _labelCache.get('TX');
-      console.log('[labels] updateStateLabels done', { labelsCount: stateLabelsLayer.selectAll('text.state-label').nodes().length, hasTXLabel: !!tx && !tx.empty() });
-    } catch(e) {}
+    // try {
+    //   const tx = _labelCache.get('TX');
+    //   console.log('[labels] updateStateLabels done', { labelsCount: stateLabelsLayer.selectAll('text.state-label').nodes().length, hasTXLabel: !!tx && !tx.empty() });
+    // } catch(e) {}
   }
 
   // Ensure we react immediately when the map signals it's ready, even if data loads later/earlier
@@ -209,13 +392,13 @@
         const yearEl = document.getElementById('yearSlider');
         const y = yearEl ? parseInt(yearEl.value) : (window._curYear || 2024);
         // TX-only debug: confirm TX path is present when map is ready
-        try {
-          const hasTx = !!document.getElementById('state-TX');
-          console.log('[labels] mapReady TX path present?', hasTx);
-        } catch(e) {}
-        try { console.log('[labels] mapReady calling updateStateLabels', { y }); } catch(e) {}
-        updateStateLabels(y);
-      } catch(e) {}
+      //   try {
+      //     const hasTx = !!document.getElementById('state-TX');
+      //     console.log('[labels] mapReady TX path present?', hasTx);
+      //   } catch(e) {}
+      //   try { console.log('[labels] mapReady calling updateStateLabels', { y }); } catch(e) {}
+      //   updateStateLabels(y);
+       } catch(e) {}
     });
   } catch(e) {}
 
@@ -651,8 +834,8 @@
           undefinedRm: nonNatDbg.filter(r=> !isFinite(r.rm)).length,
           zeroRm: nonNatDbg.filter(r=> isFinite(r.rm) && Math.abs(r.rm) < 1e-12).length
         };
-        console.log('[tester] year=2024 stops:', stops.length, stops);
-        console.log('[tester] year=2024 rm stats:', rmStats);
+        // console.log('[tester] year=2024 stops:', stops.length, stops);
+        // console.log('[tester] year=2024 rm stats:', rmStats);
       }
     } catch(e) {}
     // Ensure every stop has an effective value (keep any precomputed ones)
@@ -1291,6 +1474,25 @@
     }
   } catch(e) { /* non-fatal */ }
 
+  // Render small-state side boxes (DC, ME-AL, NE-AL, and other tiny states)
+  try {
+    // Expose the latest color maps for console inspection
+    window._lastAbbrColors = abbrColors;
+    window._lastUnitColors = unitColors;
+    console.log('[smallBoxes] invoking renderSmallStateBoxes', {
+      year,
+      abbrColors: abbrColors ? abbrColors.size : 0,
+      unitColors: unitColors ? unitColors.size : 0
+    });
+    if (typeof renderSmallStateBoxes === 'function') {
+      renderSmallStateBoxes(year, abbrColors, unitColors);
+    } else if (typeof window.renderSmallStateBoxes === 'function') {
+      window.renderSmallStateBoxes(year, abbrColors, unitColors);
+    } else {
+      console.warn('[smallBoxes] renderSmallStateBoxes not found in scope');
+    }
+  } catch(e) { console.warn('[smallBoxes] error rendering side boxes', e); }
+
   dbg('updateAll: ending successfully');
   // Update on-map labels last so they sit on top and have current EV totals
   try { updateStateLabels(year); } catch(e) {}
@@ -1299,6 +1501,8 @@
   
   // Expose updateAll to global scope for applyFlip
   window.updateAll = updateAll;
+  // Expose small-state boxes renderer for manual testing
+  try { window.renderSmallStateBoxes = renderSmallStateBoxes; } catch(e) {}
   
   // Expose scope variables needed by external functions
   window._stopsByYear = stopsByYear;

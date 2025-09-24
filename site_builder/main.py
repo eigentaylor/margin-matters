@@ -14,7 +14,7 @@ from .header import make_header
 
 def build_site():
     ensure_dirs()
-    write_text(OUT_DIR / "styles.css", BASE_CSS)
+    #write_text(OUT_DIR / "styles.css", BASE_CSS) # we now edit styles.css directly
     write_text(OUT_DIR / "favicon.svg", FAVICON_SVG)
 
     if PLOTS_SRC.exists() and PLOTS_SRC.is_dir():
@@ -69,7 +69,7 @@ def build_site():
                 if max_year is None or y > max_year:
                     max_year = y
             if min_year is None:
-                min_year = 1968
+                min_year = 1916
             if max_year is None:
                 max_year = 2024
             year_range = f"{min_year}-{max_year}"
