@@ -53,6 +53,20 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 /* EV text: make large, readable on dark backgrounds with stroke and shadow */
 #evText{position:relative;color:var(--fg);font-weight:800;padding:2px 8px;border-radius:6px;background:rgba(0,0,0,0.45);font-variant-numeric:tabular-nums}
 #evText{ -webkit-text-stroke:1px rgba(0,0,0,0.8);}
+/* State label styling: keep map label stroke and sizing across site builds */
+.state-label {
+  fill: #fff; /* white fill for readability */
+  stroke: #000; /* black outline */
+  stroke-width: 2px;
+  paint-order: stroke fill; /* draw stroke behind fill */
+  stroke-linejoin: round;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  pointer-events: none;
+}
+.state-label tspan:first-child { font-weight: 800; font-size: 14px; }
+.state-label tspan:last-child { font-weight: 600; font-size: 12px; }
+/* When there's only one tspan (abbr only), apply the larger bold style */
+.state-label tspan:only-child { font-weight: 800; font-size: 14px; }
 /* Persistent site header that stays at the top while scrolling */
 .site-header{position:sticky;top:0;z-index:1100;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);margin-bottom:12px;border-radius:10px}
 .card.site-header{padding:8px}

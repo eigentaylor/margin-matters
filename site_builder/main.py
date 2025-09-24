@@ -47,12 +47,59 @@ def build_site():
     except Exception as e:
         print(f"Warning: couldn't build methods page: {e}")
 
-    # Build index (Home) with auto-updated header/footer and optional tester block
+    # Update existing docs/index.html header/footer instead of rebuilding full file
     try:
-        # Build index using rows to derive year range and tester UI
-        make_index(states, rows)
+        idx_path = OUT_DIR / 'index.html'
+        if idx_path.exists():
+            try:
+                txt = idx_path.read_text(encoding='utf-8')
+            except Exception:
+                txt = ''
+            # Build fresh header HTML to extract the small-links nav and legend title
+            # Determine year range for legend from CSV rows
+            min_year = None
+            max_year = None
+            for r in rows:
+                try:
+                    y = int(r.get('year', 0))
+                except Exception:
+                    continue
+                if min_year is None or y < min_year:
+                    min_year = y
+                if max_year is None or y > max_year:
+                    max_year = y
+            if min_year is None:
+                min_year = 1968
+            if max_year is None:
+                max_year = 2024
+            year_range = f"{min_year}-{max_year}"
+
+            hdr_full = make_header(f"U.S. Presidential Election State Results {year_range}", is_inner=False)
+            # Extract small-links inner HTML
+            nav_inner = ''
+            m = re.search(r'<div class="small-links">([\s\S]*?)</div>', hdr_full)
+            if m:
+                nav_inner = m.group(1)
+            if nav_inner:
+                txt = re.sub(r'(<div class="small-links">)([\s\S]*?)(</div>)', r'\1' + nav_inner + r'\3', txt, count=1)
+            # Replace the header legend text content (keep surrounding markup)
+            txt = re.sub(r'(<div class="legend">)U\.S\. Presidential Election State Results[\s\S]*?(</div>)', rf'\1U.S. Presidential Election State Results {year_range}\2', txt, count=1)
+            # Replace the main H1 to match year range
+            txt = re.sub(r'(<h1>)U\.S\. Presidential Election State Results[\s\S]*?(</h1>)', rf'\1U.S. Presidential Election State Results {year_range}\2', txt, count=1)
+            # Ensure footer includes updated Last updated timestamp
+            txt = re.sub(r'(Last updated:\s*)([0-9\-:\sA-Z]+)', rf'\g<1>{LAST_UPDATED}', txt, count=1)
+            try:
+                idx_path.write_text(txt, encoding='utf-8')
+            except Exception:
+                pass
+        else:
+            # If index.html is missing, fall back to building it from template
+            try:
+                make_index(states, rows)
+            except Exception as e:
+                print(f"Warning: couldn't build index.html (fallback): {e}")
     except Exception as e:
-        print(f"Warning: couldn't build index.html: {e}")
+        print(f"Warning: couldn't update index.html header/footer: {e}")
 
     # Post-process static pages that aren't generated to keep header/footer in sync
     try:

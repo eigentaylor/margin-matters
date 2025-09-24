@@ -151,14 +151,7 @@
             .attr('class','state-label')
             .attr('text-anchor','middle')
             .attr('dominant-baseline','middle')
-            .attr('dy','0')
-            .attr('font-size','12px')
-            .attr('font-family','system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif')
-            .attr('fill','#fff')
-            .attr('stroke','#000')
-            .attr('stroke-width',3)
-            .attr('paint-order','stroke fill')
-            .attr('pointer-events','none');
+            .attr('dy','0');
           _labelCache.set(abbr, t);
         }
         // Two-line label: abbreviation on top, EV on second line
@@ -171,11 +164,11 @@
           // Clear existing tspans and recreate for predictable layout
           t.selectAll('tspan').remove();
           if (lines.length === 1) {
-            t.append('tspan').attr('x', fx).attr('dy', '0').attr('font-size', '12px').text(lines[0]);
+            t.append('tspan').attr('x', fx).attr('dy', '0').text(lines[0]);
           } else {
             // Slight negative dy on first tspan so the pair is visually centered at (x,y)
-            t.append('tspan').attr('x', fx).attr('dy', '-0.4em').attr('font-size', '12px').attr('font-weight', '700').text(lines[0]);
-            t.append('tspan').attr('x', fx).attr('dy', '1.25em').attr('font-size', '11px').text(lines[1]);
+            t.append('tspan').attr('x', fx).attr('dy', '-0.45em').text(lines[0]);
+            t.append('tspan').attr('x', fx).attr('dy', '1.3em').text(lines[1]);
           }
         } catch (e) {
           // Fallback: single-line fallback if tspans fail
