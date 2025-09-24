@@ -4,7 +4,6 @@
   const EPS = 1e-8;
   const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
-  const SPECIAL_1968 = ["GA", "LA", "AR", "MS", "AL"];
 
   // URL parameter management for sharing
   // Support: pv can be an integer index (slider index), a numeric PV (e.g. 0.045),
@@ -303,6 +302,8 @@
             if (!h03.empty()) h03.attr('mask', 'url(#mask-NE-03)');
           }
         } catch(e) { /* masking optional */ }
+    // Bring state boundary mesh to front so white seams remain visible above district fills
+    try { d3.select('svg#map').select('g').select('.state-boundaries').raise(); } catch(e) {}
     // apply initial colors now that district paths exist
     try { updateAll(); } catch(e) {}
       } catch (e) {

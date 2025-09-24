@@ -160,8 +160,10 @@
             .attr("id", d => { const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")]; return abbr ? `state-${abbr}` : null; })
             .attr("d", path)
             .attr("fill", "#2f2f2f")
-            .attr("stroke", "#5a5a5a")
-            .attr("stroke-width", 0.8)
+            .attr("stroke", "#FFFFFF")
+            .attr("stroke-width", 0.6)
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round")
             .on("mouseover", function(event, d) {
               const sel = d3.select(this);
               const cur = sel.attr('fill') || '#2f2f2f';
@@ -188,6 +190,21 @@
               tip.style.left = (rect.left + x) + 'px'; tip.style.top = (rect.top + y) + 'px';
             })
             .on("mouseout", function(){ const sel = d3.select(this); const orig = sel.attr('data-orig-fill') || '#2f2f2f'; sel.attr('fill', orig); sel.attr('data-orig-fill', null); const tip=document.getElementById('mapTip'); if (tip) tip.style.display='none'; });
+          // Overlay internal white boundaries between states
+          try {
+            const internal = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+            g.append("path")
+              .datum(internal)
+              .attr("class", "state-boundaries")
+              .attr("fill", "none")
+              .attr("stroke", "#FFFFFF")
+              .attr("stroke-width", 1.4)
+              .attr("stroke-linejoin", "round")
+              .attr("stroke-linecap", "round")
+              .attr("pointer-events", "none")
+              .attr("d", path);
+          } catch (e) { /* optional overlay */ }
+
           // Signal ready for tester.js internals
           window.dispatchEvent(new Event("mapReady"));
         });
