@@ -1803,13 +1803,42 @@
     const listEl = document.getElementById('relDeltasList');
     const titleEl = document.getElementById('relDeltasTitle');
     if (wrap && listEl) {
-      // Determine baseline selection from UI (if present)
+      // Adjust baseline select options before computing the baseline year.
+      // If the previous election doesn't exist (e.g. first year like 1916),
+      // disable the 'Previous election' option and auto-select 2024 so the
+      // panel can still be shown by comparing to 2024. Conversely, when the
+      // selected year is 2024, disable the explicit 2024 option and force
+      // selection to 'prev' to avoid meaningless 2024 vs 2024 comparison.
       const baselineEl = document.getElementById('relBaseline');
+      if (baselineEl) {
+        const optPrev = Array.from(baselineEl.options).find(o => String(o.value) === 'prev');
+        const opt2024 = Array.from(baselineEl.options).find(o => String(o.value) === '2024');
+        const prevYear = year - 4;
+        const hasPrev = (prevYear >= 1916) && byYear.has(prevYear);
+        // Disable or enable previous-election option
+        if (optPrev) optPrev.disabled = !hasPrev;
+        // If no previous election data, prefer comparing to 2024 (if available)
+        if (!hasPrev) {
+          if (opt2024) { opt2024.disabled = false; baselineEl.value = '2024'; }
+        }
+        // Special-case: when inspecting year 2024, comparing to 2024 is meaningless
+        if (opt2024) {
+          if (year === 2024) {
+            opt2024.disabled = true;
+            if (baselineEl.value === '2024') baselineEl.value = 'prev';
+          } else {
+            // ensure enabled for other years (unless explicitly forced above)
+            if (!(!hasPrev && opt2024)) opt2024.disabled = false;
+          }
+        }
+      }
+
+      // Now determine baseline selection and year
       const baselineMode = baselineEl ? baselineEl.value : 'prev';
       const baselineYear = (baselineMode === '2024') ? 2024 : (year - 4);
       // Show panel only if baseline year is within historical bounds (1916+) and present in data
-      const showPanel = (baselineYear >= 1916);
-      if (!showPanel || !byYear.has(baselineYear)) {
+      const showPanel = (baselineYear >= 1916) && byYear.has(baselineYear);
+      if (!showPanel) {
         wrap.style.display = 'none';
       } else {
         wrap.style.display = '';
