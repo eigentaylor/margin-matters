@@ -1797,6 +1797,107 @@
     }
   } catch(e) { console.warn('[smallBoxes] error rendering side boxes', e); }
 
+  // Render relative margin deltas panel when container exists
+  try {
+    const wrap = document.getElementById('relDeltas');
+    const listEl = document.getElementById('relDeltasList');
+    const titleEl = document.getElementById('relDeltasTitle');
+    if (wrap && listEl) {
+      // Determine baseline selection from UI (if present)
+      const baselineEl = document.getElementById('relBaseline');
+      const baselineMode = baselineEl ? baselineEl.value : 'prev';
+      const baselineYear = (baselineMode === '2024') ? 2024 : (year - 4);
+      // Show panel only if baseline year is within historical bounds (1916+) and present in data
+      const showPanel = (baselineYear >= 1916);
+      if (!showPanel || !byYear.has(baselineYear)) {
+        wrap.style.display = 'none';
+      } else {
+        wrap.style.display = '';
+        if (titleEl) titleEl.textContent = `Relative margin change in ${year} vs ${baselineYear}`;
+        const curRows = byYear.get(year) || [];
+        const baseRows = byYear.get(baselineYear) || [];
+        const baseMap = new Map();
+        baseRows.forEach(r => {
+          if (!r || !r.unit || r.unit === 'NATIONAL') return;
+          const val = +r.rm || 0;
+          baseMap.set(r.unit, val);
+          // Add ME/NE synonyms so 'ME' <-> 'ME-AL' and 'NE' <-> 'NE-AL' both resolve
+          if (r.unit === 'ME') baseMap.set('ME-AL', val);
+          if (r.unit === 'ME-AL') baseMap.set('ME', val);
+          if (r.unit === 'NE') baseMap.set('NE-AL', val);
+          if (r.unit === 'NE-AL') baseMap.set('NE', val);
+        });
+        const items = [];
+        curRows.forEach(r => {
+          if (!r || r.unit === 'NATIONAL') return;
+          let b = baseMap.get(r.unit);
+          if (!isFinite(b)) return;
+          const curRel = +r.rm || 0; // relative margin by definition
+          const prevRel = b;
+          delta = curRel - b;
+          if (year < 2024 && baselineYear === 2024) {
+            delta = -delta; // invert delta when comparing historical year to future 2024
+          }
+          items.push({ unit: r.unit, delta, prevRel, curRel });
+        });
+        // Sort ascending by delta (more R shift first, more D shift last)
+        items.sort((a,b) => a.delta - b.delta);
+        function fmtLean(x){
+          if (!isFinite(x)) return '';
+          if (Math.abs(x) < 0.000005) return 'EVEN';
+          const s = (Math.abs(x) * 100).toFixed(1);
+          return (x > 0 ? 'D+' : 'R+') + s;
+        }
+        function textColor(bg){ try { if(!bg || bg[0] !== '#') return '#fff'; const c = bg.slice(1); const val = parseInt(c,16); const rr=(val>>16)&255, gg=(val>>8)&255, bb=val&255; const lum=0.299*rr+0.587*gg+0.114*bb; return lum>186?'#000':'#fff'; } catch(e){ return '#fff'; } }
+        const html = items.map(it => {
+          const bg = marginToColor(it.curRel);
+          const txt = textColor(bg);
+          const small = (txt === '#fff') ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.7)';
+            const prevStr = (year < 2024 && baselineYear === 2024) ? fmtLean(it.curRel) : fmtLean(it.prevRel);
+            const curStr = (year < 2024 && baselineYear === 2024) ? fmtLean(it.prevRel) : fmtLean(it.curRel);
+          return `<div class="btn" style="padding:6px 8px;background:${bg};color:${txt};display:flex;flex-direction:column;align-items:flex-start;min-width:110px">
+            <div style="font-weight:600">${it.unit}</div>
+            <div style="font-size:0.86rem;color:${small}">Δ ${fmtLean(it.delta)}</div>
+            <div style="font-size:0.86rem;color:${small}">${prevStr} → ${curStr}</div>
+          </div>`;
+        }).join('');
+        listEl.innerHTML = html || '<span class="legend">No data.</span>';
+      }
+    }
+  } catch(e) { /* optional */ }
+
+  // If the baseline select is present, ensure changing it reruns updateAll
+  try {
+    const sel = document.getElementById('relBaseline');
+    if (sel) {
+      sel.addEventListener('change', () => { try { if (typeof window.updateAll === 'function') window.updateAll(); } catch(e){} });
+    }
+  } catch(e) {}
+
+  // Ensure 2024 baseline option is disabled when viewing year 2024 and
+  // if user had 2024 selected while year == 2024, switch it to 'prev'.
+  try {
+    const baselineSel = document.getElementById('relBaseline');
+    const yearEl = document.getElementById('yearSlider');
+    if (baselineSel && yearEl) {
+      const y = +yearEl.value;
+      const opt2024 = Array.from(baselineSel.options).find(o => String(o.value) === '2024');
+      if (opt2024) {
+        if (y === 2024) {
+          // disable the explicit 2024 comparison when the selected year is 2024
+          opt2024.disabled = true;
+          // if currently selected, move to previous election to keep panel meaningful
+          if (baselineSel.value === '2024') {
+            baselineSel.value = 'prev';
+          }
+        } else {
+          // re-enable when year is not 2024
+          opt2024.disabled = false;
+        }
+      }
+    }
+  } catch(e) {}
+
   dbg('updateAll: ending successfully');
   // Update on-map labels last so they sit on top and have current EV totals
   try { updateStateLabels(year); } catch(e) {}

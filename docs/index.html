@@ -106,12 +106,26 @@
     </div>
     <div id="closeStates" class="legend"></div>
     <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><a href="methods.html">See Methods</a> for metric definitions, PV stops, uniform swing, and 1968 notes.</div>
+    <!-- Relative margin delta panel -->
+    <div id="relDeltas" class="card" style="margin-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div id="relDeltasTitle" class="legend" style="text-align:left;margin-bottom:6px">Relative margin change</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label class="legend" for="relBaseline">Compare to</label>
+          <select id="relBaseline" class="btn" style="color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+            <option value="prev">Previous election</option>
+            <option value="2024">2024</option>
+          </select>
+        </div>
+      </div>
+      <div id="relDeltasList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
   </div>
 </div>
   </div>
   <footer>Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-24 05:07 UTC</footer>
+Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-24 22:57 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>

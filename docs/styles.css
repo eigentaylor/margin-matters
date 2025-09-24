@@ -164,3 +164,12 @@ body.has-delta-toggle{padding-bottom:60px}
 .pv-tools label{color:var(--muted)}
 .pv-tools .legend{color:var(--muted)}
 .pv-tools datalist{color:#fff}
+
+/* Ensure the "Compare to" select in the Relative margin change card is readable on dark pages */
+#relBaseline, #relDeltas select, #relDeltas .btn {
+  color: #fff;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+#relBaseline { padding:6px 8px; border-radius:8px }

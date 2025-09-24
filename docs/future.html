@@ -122,6 +122,21 @@
       </div>
     </div>
 
+    <!-- Relative margin delta panel (future) -->
+    <div class="card" id="relDeltas" style="margin-top:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div id="relDeltasTitle" class="legend" style="text-align:left;margin-bottom:6px">Relative margin change</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label class="legend" for="relBaseline">Compare to</label>
+          <select id="relBaseline" class="btn">
+            <option value="prev">Previous election</option>
+            <option value="2024">2024</option>
+          </select>
+        </div>
+      </div>
+      <div id="relDeltasList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+
     <footer style="margin-top:16px;color:var(--muted)">
       This page generates future margins client-side from historical data. It’s experimental and NOT a forecast. No offense, just for fun!<br />
       Site by eigentaylor.<br />
