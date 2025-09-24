@@ -74,6 +74,43 @@
   }
   try { window.setVisualCenterStates = setVisualCenterStates; } catch(e) {}
 
+  // Centralized tooltip helpers (consistent positioning; fixes offset glitches)
+  function _getMapWrap(){
+    return document.getElementById('map-wrap') || document.body;
+  }
+  function _ensureTip(){
+    return document.getElementById('mapTip') || null;
+  }
+  function _placeTipAt(evt){
+    const tip = _ensureTip(); if (!tip) return;
+    const wrap = _getMapWrap();
+    const wr = wrap.getBoundingClientRect();
+    const offsetX = 12, offsetY = 12;
+    let x = evt.clientX - wr.left + offsetX;
+    let y = evt.clientY - wr.top + offsetY;
+    // Clamp within container
+    const prev = tip.style.display;
+    if (prev === 'none') tip.style.display = 'block';
+    const tr = tip.getBoundingClientRect();
+    if (prev === 'none') tip.style.display = 'none';
+    const pad = 6;
+    x = Math.max(pad, Math.min(wr.width - pad, x));
+    y = Math.max(pad, Math.min(wr.height - pad, y));
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  function showMapTip(evt, text){
+    try {
+      const tip = _ensureTip(); if (!tip) return;
+      tip.textContent = text != null ? String(text) : '';
+      tip.style.display = 'block';
+      _placeTipAt(evt);
+    } catch(e) {}
+  }
+  function moveMapTip(evt){ try { _placeTipAt(evt); } catch(e) {} }
+  function hideMapTip(){ try { const tip = _ensureTip(); if (tip) tip.style.display = 'none'; } catch(e) {} }
+  try { window.showMapTip = showMapTip; window.moveMapTip = moveMapTip; window.hideMapTip = hideMapTip; } catch(e) {}
+
   // Compute a "visual center" for a GeoJSON Polygon/MultiPolygon feature using
   // projected screen coordinates and a lightweight polylabel-like search.
   // Returns {x, y} in SVG coordinate space.
@@ -339,9 +376,20 @@
             .text(evTxt);
         }
 
-        // Tooltip via title
-        const title = (d.marginStr ? `${d.label} · ${d.marginStr}` : d.label) + (d.ev!=null?` · ${d.ev} EV`:``);
-        g.append('title').text(title);
+        // Tooltip via centralized map tip (works even if boxes move later)
+        const hoverHandler = function(evt){
+          try {
+            const unit = d.unit;
+            const info = (window.getAdjustedInfo ? window.getAdjustedInfo(unit) : null) || {};
+            const ev = (info && info.ev != null) ? info.ev : d.ev;
+            const marginStr = (info && info.marginStr) ? info.marginStr : (d.marginStr || '');
+            const text = d.label + (ev!=null?` · ${ev} EV`:``) + (marginStr?` · ${marginStr}`:``);
+            if (typeof window.showMapTip === 'function') window.showMapTip(evt, text);
+          } catch(e) {}
+        };
+        g.on('mouseenter', hoverHandler)
+         .on('mousemove', function(evt){ try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch(e){} })
+         .on('mouseleave', function(){ try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch(e){} });
 
         // Click-through
         g.style('cursor','pointer')
@@ -588,6 +636,46 @@
       //   try { console.log('[labels] mapReady calling updateStateLabels', { y }); } catch(e) {}
       //   updateStateLabels(y);
        } catch(e) {}
+      try {
+        // Rebind hover to use centralized tooltip logic
+        const idToAbbr = ID_TO_ABBR;
+        d3.selectAll('path.state')
+          .on('mouseover', function(evt, d){
+            const sel = d3.select(this);
+            const cur = sel.attr('fill') || '#2f2f2f';
+            sel.attr('data-orig-fill', cur);
+            try {
+              const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
+              let highlight = '#66b3ff';
+              if (!isYellow && /^#/i.test(cur)){
+                const hex = cur.slice(1);
+                const r = parseInt(hex.slice(0,2),16) || 0;
+                const b = parseInt(hex.slice(4,6),16) || 0;
+                highlight = (r > b) ? '#ff6666' : '#66b3ff';
+              } else if (isYellow){ highlight = '#FFD700'; }
+              sel.attr('fill', highlight);
+            } catch(e){ sel.attr('fill', '#66b3ff'); }
+            try {
+              const id = d && d.id != null ? String(d.id).padStart(2,'0') : null;
+              const abbr = id ? idToAbbr[id] : null;
+              if (abbr){
+                const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
+                const ev = (info && info.ev != null) ? info.ev : '';
+                const marginStr = (info && info.marginStr) ? info.marginStr : '';
+                const label = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
+                if (typeof window.showMapTip === 'function') window.showMapTip(evt, label);
+              }
+            } catch(e){}
+          })
+          .on('mousemove', function(evt){ try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch(e){} })
+          .on('mouseout', function(){
+            const sel = d3.select(this);
+            const orig = sel.attr('data-orig-fill') || '#2f2f2f';
+            sel.attr('fill', orig);
+            sel.attr('data-orig-fill', null);
+            try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch(e){}
+          });
+      } catch(e) {}
     });
   } catch(e) {}
 
@@ -791,8 +879,8 @@
           neClip.selectAll('*').remove();
           neClip.append('path').attr('d', neD);
         }
-  // Render districts above states so they are visible but keep pointer-events off
-  const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','none');
+  // Render districts above states so they are visible; enable pointer events for hover/tooltips
+  const dg = window.mapG.append('g').attr('class','districts').attr('pointer-events','auto');
   window._districtPaths = new Map();
   const districtDByUnit = new Map();
   const feats = (geo && geo.features) ? geo.features.slice() : [];
@@ -867,7 +955,44 @@
       .attr('stroke-linecap', 'round')
       .attr('data-unit', useUnit)
       .attr('data-st', st)
-            .attr('pointer-events', 'none');
+            .attr('pointer-events', 'auto')
+            // District hover interactions
+            .on('mouseover', function(evt){
+              try {
+                const sel = d3.select(this);
+                const cur = sel.attr('fill') || 'transparent';
+                sel.attr('data-orig-fill', cur);
+                let highlight = '#66b3ff';
+                if (cur && /^#/i.test(cur) && cur.toLowerCase() !== '#ffd700'){
+                  const hex = cur.slice(1);
+                  const r = parseInt(hex.slice(0,2),16) || 0;
+                  const b = parseInt(hex.slice(4,6),16) || 0;
+                  highlight = (r > b) ? '#ff6666' : '#66b3ff';
+                } else if (cur && cur.toLowerCase && cur.toLowerCase() === '#ffd700') {
+                  highlight = '#FFD700';
+                }
+                sel.attr('fill', highlight);
+                const unit = sel.attr('data-unit');
+                const info = (window.getAdjustedInfo ? window.getAdjustedInfo(unit) : null) || {};
+                const ev = (info && info.ev != null) ? info.ev : '';
+                const marginStr = (info && info.marginStr) ? info.marginStr : '';
+                const text = unit + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
+                if (typeof window.showMapTip === 'function') window.showMapTip(evt, text);
+              } catch(e) {}
+            })
+            .on('mousemove', function(evt){ try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch(e){} })
+            .on('mouseout', function(){
+              try {
+                const sel = d3.select(this);
+                const orig = sel.attr('data-orig-fill') || 'transparent';
+                sel.attr('fill', orig);
+                sel.attr('data-orig-fill', null);
+                if (typeof window.hideMapTip === 'function') window.hideMapTip();
+              } catch(e) {}
+            })
+            .on('click', function(){
+              try { const unit = this.getAttribute('data-unit'); if (unit) window.open(`unit/${unit}.html`, '_blank'); } catch(e) {}
+            });
           window._districtPaths.set(useUnit, p);
         });
         // Build an SVG mask to stop NE-03 from painting over NE-02/NE-01 if geometries overlap
@@ -1523,23 +1648,23 @@
         const s = (Math.abs(x) * 100).toFixed(1);
         return (x > 0 ? 'D+' : 'R+') + s;
       };
-        // Also compute 'Swing' states: within 6.0 percentage points of the national margin
-        const SWING_THRESH = 0.06; // 6 percentage points
-        const swingList = [];
+        // Also compute 'Bellwether' states: within 5.0 percentage points of the national margin
+        const BELLWETHER_THRESHOLD = 0.05; // 5 percentage points
+        const bellwetherList = [];
         rows.forEach(r => {
           if (!r || r.unit === 'NATIONAL') return;
           if (!isALorState(r.unit)) return;
           const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
-          // Exclude third-party winners from Swing classification
+          // Exclude third-party winners from Bellwether classification
           if (a > 0) {
             const nD = -rVal + a; const nR = -rVal - a;
             if (pv > nR + EPS && pv < nD - EPS) return; // Other wins here
           }
           // margin relative is just rm
           const relToNat = (+r.rm || 0);
-          if (Math.abs(r.rm) < SWING_THRESH) swingList.push({ unit: r.unit, ev: (+r.ev || 0), relToNat });
+          if (Math.abs(r.rm) < BELLWETHER_THRESHOLD) bellwetherList.push({ unit: r.unit, ev: (+r.ev || 0), relToNat });
         });
-        swingList.sort((a, b) => Math.abs(rows.find(r => r.unit === a.unit)?.rm || 0) - Math.abs(rows.find(r => r.unit === b.unit)?.rm || 0));
+        bellwetherList.sort((a, b) => Math.abs(rows.find(r => r.unit === a.unit)?.rm || 0) - Math.abs(rows.find(r => r.unit === b.unit)?.rm || 0));
 
         // helpers to pick readable text colors for chip backgrounds
         function _textColorFor(bg){ try { if(!bg || bg[0] !== '#') return '#fff'; const c = bg.slice(1); const val = parseInt(c,16); const rr = (val>>16)&255; const gg = (val>>8)&255; const bb = val&255; const lum = 0.299*rr + 0.587*gg + 0.114*bb; return lum > 186 ? '#000' : '#fff'; } catch(e){ return '#fff'; } }
@@ -1550,7 +1675,7 @@
           return `<span class="btn" style="padding:4px 6px;background-color:${bg};color:${txt}">${r.unit} · <small style=\"color:${small}\">${fmt(r.m)}</small> · ${r.ev} EV</span>`;
         }).join('');
 
-        const swingChips = (swingList.length === 0) ? '<span class="muted">No swing states within 6.0 pp.</span>' : swingList.map(r => {
+        const bellwetherChips = (bellwetherList.length === 0) ? '<span class="muted">No bellwether states within 5.0 pp.</span>' : bellwetherList.map(r => {
           // Use display margin (rm + pv) for coloring so blue/red intensity reflects raw tilt
           const rowsMap = new Map(rows.map(rr => [rr.unit, rr]));
           const row = rowsMap.get(r.unit) || {};
@@ -1563,8 +1688,8 @@
         }).join('');
 
         // Render bellwethers (swing) first, then close states. Show helpful messages when either list is empty.
-        let swingSection = '<div class="legend" style="margin-bottom:6px">Bellwether states (within 6.0 pp of national margin — i.e. close to the national popular vote, not necessarily close to flipping)</div>' +
-          '<div style="display:flex;flex-wrap:wrap;gap:8px">' + swingChips + '</div>';
+        let bellwetherStateLegend = '<div class="legend" style="margin-bottom:6px">Bellwether states (within 5.0 pp of national margin — i.e. close to the national popular vote, not necessarily close to flipping)</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:8px">' + bellwetherChips + '</div>';
 
         let closeSection = '';
         if (closeChips.length === 0) {
@@ -1574,7 +1699,7 @@
             '<div style="display:flex;flex-wrap:wrap;gap:8px">' + closeChips + '</div>';
         }
 
-        closeWrap.innerHTML = swingSection + closeSection;
+        closeWrap.innerHTML = bellwetherStateLegend + closeSection;
     }
   } catch(e) { /* optional */ }
 
