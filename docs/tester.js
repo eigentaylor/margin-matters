@@ -646,15 +646,10 @@
             sel.attr('data-orig-fill', cur);
             try {
               const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
-              let highlight = '#66b3ff';
-              if (!isYellow && /^#/i.test(cur)){
-                const hex = cur.slice(1);
-                const r = parseInt(hex.slice(0,2),16) || 0;
-                const b = parseInt(hex.slice(4,6),16) || 0;
-                highlight = (r > b) ? '#ff6666' : '#66b3ff';
-              } else if (isYellow){ highlight = '#FFD700'; }
+              // Use a neutral highlight color to avoid party-color confusion
+              let highlight = '#A0A0A0';
               sel.attr('fill', highlight);
-            } catch(e){ sel.attr('fill', '#66b3ff'); }
+            } catch(e){ sel.attr('fill', '#A0A0A0'); }
             try {
               const id = d && d.id != null ? String(d.id).padStart(2,'0') : null;
               const abbr = id ? idToAbbr[id] : null;
@@ -962,15 +957,10 @@
                 const sel = d3.select(this);
                 const cur = sel.attr('fill') || 'transparent';
                 sel.attr('data-orig-fill', cur);
-                let highlight = '#66b3ff';
-                if (cur && /^#/i.test(cur) && cur.toLowerCase() !== '#ffd700'){
-                  const hex = cur.slice(1);
-                  const r = parseInt(hex.slice(0,2),16) || 0;
-                  const b = parseInt(hex.slice(4,6),16) || 0;
-                  highlight = (r > b) ? '#ff6666' : '#66b3ff';
-                } else if (cur && cur.toLowerCase && cur.toLowerCase() === '#ffd700') {
-                  highlight = '#FFD700';
-                }
+                // Use a neutral highlight color to avoid party-color confusion
+                let highlight = '#A0A0A0';
+                // Preserve bright yellow for third-party highlight when the fill is already yellow
+                try { if (cur && cur.toLowerCase && cur.toLowerCase() === '#ffd700') highlight = '#FFD700'; } catch(e) {}
                 sel.attr('fill', highlight);
                 const unit = sel.attr('data-unit');
                 const info = (window.getAdjustedInfo ? window.getAdjustedInfo(unit) : null) || {};
