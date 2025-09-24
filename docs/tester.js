@@ -54,6 +54,160 @@
   // Lazily created layer for state labels
   let stateLabelsLayer = null; // d3 selection of g.state-labels
   const _labelCache = new Map(); // abbr -> d3 selection for text
+  // Cache for computed visual centers (screen coords) per state abbr
+  const _visualCenterCache = new Map(); // abbr -> {x,y}
+  // Configurable whitelist for which states should use visual-center placement.
+  // Default to a focused set; if emptied, we treat as ALL states using visual center.
+  let _visualCenterStates = new Set(['MI','FL','LA']);
+  try { window.visualCenterStates = _visualCenterStates; } catch(e) {}
+  function setVisualCenterStates(list){
+    try {
+      if (Array.isArray(list)) _visualCenterStates = new Set(list.map(s=>String(s||'').toUpperCase()));
+      else if (list instanceof Set) _visualCenterStates = new Set(Array.from(list).map(s=>String(s||'').toUpperCase()));
+      // publish reference for quick tweaking in console
+      try { window.visualCenterStates = _visualCenterStates; } catch(e) {}
+      // centers depend on geometry, so clear cache
+      try { _visualCenterCache.clear(); } catch(e) {}
+      // re-render labels
+      try { updateStateLabels(window._curYear || 2024); } catch(e) {}
+    } catch(e) { /* ignore */ }
+  }
+  try { window.setVisualCenterStates = setVisualCenterStates; } catch(e) {}
+
+  // Compute a "visual center" for a GeoJSON Polygon/MultiPolygon feature using
+  // projected screen coordinates and a lightweight polylabel-like search.
+  // Returns {x, y} in SVG coordinate space.
+  function _computeVisualCenter(feature, abbr){
+    try {
+      if (!feature || !feature.type) return null;
+      if (!window.mapPath || typeof window.mapPath.projection !== 'function') return null;
+      const proj = window.mapPath.projection && window.mapPath.projection();
+      if (typeof proj !== 'function') return null;
+
+      // Project lon/lat ring coordinates to screen coords
+      const projectRings = (rings) => {
+        const out = [];
+        for (const ring of rings) {
+          const pr = [];
+          for (let i=0;i<ring.length;i++){
+            const c = ring[i];
+            const p = proj(c);
+            if (p && isFinite(p[0]) && isFinite(p[1])) pr.push([p[0], p[1]]);
+          }
+          if (pr.length >= 3) out.push(pr);
+        }
+        return out;
+      };
+
+      // Flatten to array of polygons, each as [outer, hole1, hole2, ...]
+      const polygons = [];
+      if (feature.type === 'Polygon') {
+        const rings = projectRings(feature.coordinates || []);
+        if (rings.length) polygons.push(rings);
+      } else if (feature.type === 'MultiPolygon') {
+        const polys = feature.coordinates || [];
+        for (const poly of polys){
+          const rings = projectRings(poly || []);
+          if (rings.length) polygons.push(rings);
+        }
+      } else if (feature.geometry && (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')) {
+        return _computeVisualCenter(feature.geometry, abbr);
+      } else {
+        return null;
+      }
+      if (!polygons.length) return null;
+
+      // Helpers: point-in-ring and point-in-polygon (holes subtract)
+      const pointInRing = (pt, ring) => {
+        let x = pt[0], y = pt[1], inside = false;
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          const xi = ring[i][0], yi = ring[i][1];
+          const xj = ring[j][0], yj = ring[j][1];
+          const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / ((yj - yi) || 1e-12) + xi);
+          if (intersect) inside = !inside;
+        }
+        return inside;
+      };
+      const pointInPoly = (pt, rings) => {
+        if (!rings || !rings.length) return false;
+        if (!pointInRing(pt, rings[0])) return false; // outside outer
+        for (let i=1;i<rings.length;i++){
+          if (pointInRing(pt, rings[i])) return false; // in a hole
+        }
+        return true;
+      };
+      // Distance from point to poly edges (min over outer and holes)
+      const distToSegment = (px, py, ax, ay, bx, by) => {
+        const dx = bx - ax, dy = by - ay;
+        if (dx === 0 && dy === 0) return Math.hypot(px - ax, py - ay);
+        let t = ((px - ax) * dx + (py - ay) * dy) / (dx*dx + dy*dy);
+        t = Math.max(0, Math.min(1, t));
+        const cx = ax + t * dx, cy = ay + t * dy;
+        return Math.hypot(px - cx, py - cy);
+      };
+      const distToRing = (pt, ring) => {
+        let min = Infinity;
+        for (let i=0;i<ring.length;i++){
+          const a = ring[i];
+          const b = ring[(i+1)%ring.length];
+          const d = distToSegment(pt[0], pt[1], a[0], a[1], b[0], b[1]);
+          if (d < min) min = d;
+        }
+        return min;
+      };
+      const distToPoly = (pt, rings) => {
+        let d = distToRing(pt, rings[0]);
+        for (let i=1;i<rings.length;i++){
+          const dd = distToRing(pt, rings[i]);
+          if (dd < d) d = dd;
+        }
+        return d;
+      };
+
+      // Lightweight grid-refinement search per polygon
+      const searchPoly = (rings) => {
+        // bbox of outer ring
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (const p of rings[0]){ if (p[0]<minX) minX=p[0]; if (p[0]>maxX) maxX=p[0]; if (p[1]<minY) minY=p[1]; if (p[1]>maxY) maxY=p[1]; }
+        // start with coarse step; 5 rounds
+        let step = Math.max(2, Math.max(maxX - minX, maxY - minY) / 8);
+        let best = null, bestD = -1;
+        let left = minX, right = maxX, top = minY, bottom = maxY;
+        for (let round=0; round<5; round++){
+          for (let x = left; x <= right; x += step){
+            for (let y = top; y <= bottom; y += step){
+              const cx = x + step/2, cy = y + step/2;
+              const pt = [cx, cy];
+              if (!pointInPoly(pt, rings)) continue;
+              const d = distToPoly(pt, rings);
+              if (d > bestD) { bestD = d; best = pt; }
+            }
+          }
+          if (!best) break;
+          // refine around best
+          left = best[0] - step * 1.5;
+          right = best[0] + step * 1.5;
+          top = best[1] - step * 1.5;
+          bottom = best[1] + step * 1.5;
+          step = step / 3;
+          if (step < 1.0) break; // pixel precision is good enough
+        }
+        return { point: best, score: bestD };
+      };
+
+      let bestGlobal = null, bestScore = -1;
+      for (const rings of polygons){
+        const res = searchPoly(rings);
+        if (res && res.point && res.score > bestScore){ bestScore = res.score; bestGlobal = res.point; }
+      }
+      if (bestGlobal && isFinite(bestGlobal[0]) && isFinite(bestGlobal[1])) {
+        const pt = { x: bestGlobal[0], y: bestGlobal[1] };
+        if (abbr) _visualCenterCache.set(abbr, pt);
+        return pt;
+      }
+      return null;
+    } catch(e) { return null; }
+  }
 
   // Ensure an overlay group inside the map for small-state boxes
   function ensureSmallBoxesLayer(){
@@ -77,7 +231,7 @@
       const svg = d3.select('svg#map');
       const layer = ensureSmallBoxesLayer();
       if (!layer || svg.empty()) return;
-      console.log('[smallBoxes] render start (svg overlay)', { year, config: _smallBoxesConfig });
+      //console.log('[smallBoxes] render start (svg overlay)', { year, config: _smallBoxesConfig });
 
       // Requested order
       const tiny = [
@@ -192,7 +346,7 @@
 
       // Keep label layer on top of overlay if exists
       try { raiseStateLabelsLayer(); } catch(e) {}
-      console.log('[smallBoxes] render done (svg overlay). count:', data.length);
+      //console.log('[smallBoxes] render done (svg overlay). count:', data.length);
     } catch(e) { console.warn('[smallBoxes] svg overlay render error', e); }
   }
 
@@ -205,6 +359,17 @@
       }
     } catch(e) {}
   }
+
+  // Recompute visual centers if layout/projection likely changed
+  try {
+    window.addEventListener('resize', function(){
+      try { _visualCenterCache.clear(); } catch(e) {}
+      try { updateStateLabels(window._curYear || 2024); } catch(e) {}
+    });
+    window.addEventListener('mapReady', function(){
+      try { _visualCenterCache.clear(); } catch(e) {}
+    });
+  } catch(e) {}
 
   function ensureStateLabelsLayer(){
     try {
@@ -300,14 +465,30 @@
         const abbr = ID_TO_ABBR[id];
         if (SMALL_STATES.has(abbr)) return; // skip tiny states
 
-        // Compute center using geographic centroid if possible; fallback to SVG bbox center
+        // Compute visual center (polylabel-like) conditionally.
+        // If whitelist is empty -> treat as ALL states using visual center.
         let cx = null, cy = null;
-        try {
-          if (window.mapPath && typeof window.mapPath.centroid === 'function' && d) {
-            const c = window.mapPath.centroid(d);
-            if (Array.isArray(c) && c.length === 2 && isFinite(c[0]) && isFinite(c[1])) { cx = c[0]; cy = c[1]; }
-          }
-        } catch(e) {}
+        const useVC = (!_visualCenterStates || _visualCenterStates.size === 0 || _visualCenterStates.has(abbr));
+        if (useVC) {
+          try {
+            const cached = _visualCenterCache.get(abbr);
+            if (cached) { cx = cached.x; cy = cached.y; }
+            else if (d && (d.type || (d.geometry && d.geometry.type))) {
+              const geom = (d.type && d.coordinates) ? d : (d.geometry || null);
+              const vc = _computeVisualCenter(geom, abbr);
+              if (vc) { cx = vc.x; cy = vc.y; }
+            }
+          } catch(e) {}
+        }
+        // Fallbacks: centroid, then bbox center
+        if (cx == null || cy == null) {
+          try {
+            if (window.mapPath && typeof window.mapPath.centroid === 'function' && d) {
+              const c = window.mapPath.centroid(d);
+              if (Array.isArray(c) && c.length === 2 && isFinite(c[0]) && isFinite(c[1])) { cx = c[0]; cy = c[1]; }
+            }
+          } catch(e) {}
+        }
         if (cx == null || cy == null) {
           let bbox;
           try { bbox = node.getBBox(); } catch(e) { bbox = null; }
@@ -1479,11 +1660,11 @@
     // Expose the latest color maps for console inspection
     window._lastAbbrColors = abbrColors;
     window._lastUnitColors = unitColors;
-    console.log('[smallBoxes] invoking renderSmallStateBoxes', {
-      year,
-      abbrColors: abbrColors ? abbrColors.size : 0,
-      unitColors: unitColors ? unitColors.size : 0
-    });
+    //console.log('[smallBoxes] invoking renderSmallStateBoxes', {
+    //  year,
+    //  abbrColors: abbrColors ? abbrColors.size : 0,
+    //  unitColors: unitColors ? unitColors.size : 0
+    //});
     if (typeof renderSmallStateBoxes === 'function') {
       renderSmallStateBoxes(year, abbrColors, unitColors);
     } else if (typeof window.renderSmallStateBoxes === 'function') {
