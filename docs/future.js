@@ -483,21 +483,7 @@
   // UI wiring
   async function runWithSeed(seed){
     await generate(seed);
-    // default year 2028, build stops via tester.js and render
-    const yEl = document.getElementById('yearSlider'); if (yEl) yEl.value = '2028';
-    const y = 2028;
-    if (typeof window.updateAll === 'function'){
-      // ensure stops built for this year
-      try {
-        const pvStops = document.getElementById('pvStops');
-        const pvStopsList = document.getElementById('pvStopsList');
-        if (typeof window._stopsByYear !== 'undefined' && typeof window._getNatMargin === 'function'){
-          // tester.js will recompute inside updateAll, but build explicitly once for labels
-          const fn = window.buildPvStops || null; // not exported; rely on updateAll
-        }
-      } catch(e) {}
-      window.updateAll();
-    }
+    // Don't call updateAll here - let the caller control when to update
   }
 
   function getUrlParams(){
@@ -619,7 +605,7 @@
   bwIn.title = 'LOESS bandwidth (fraction of points used in local fit).';
   bwTop.appendChild(bwLabel); bwTop.appendChild(bwIn); bwWrap.appendChild(bwTop); bwWrap.appendChild(bwHelp);
 
-  const tauWrap = document.createElement('div'); tauWrap.style.display='flex'; tauWrap.style.flexDirection='column'; tauWrap.style.minWidth='120px'; const tauTop = document.createElement('div'); tauTop.style.display='flex'; tauTop.style.alignItems='center'; const tauLabel = makeLabel('Tau (yrs):'); const tauIn = document.createElement('input'); tauIn.type='number'; tauIn.step='1'; tauIn.min='1'; tauIn.id='slopeTau'; if (params && Number.isFinite(params.slopeTau)) tauIn.value = String(params.slopeTau); const tauHelp = document.createElement('div'); tauHelp.style.fontSize='11px'; tauHelp.style.color='#666'; tauHelp.style.marginTop='2px'; tauHelp.textContent = 'Exponential decay timescale in years for recency weighting (smaller -> more weight on recent).' ; tauIn.title = 'Exponential decay timescale (years) for WLS recency weights.'; tauTop.appendChild(tauLabel); tauTop.appendChild(tauIn); tauWrap.appendChild(tauTop); tauWrap.appendChild(tauHelp);
+  const tauWrap = document.createElement('div'); tauWrap.style.display='flex'; tauWrap.style.flexDirection='column'; tauWrap.style.minWidth='120px'; const tauTop = document.createElement('div'); tauTop.style.display='flex'; tauTop.style.alignItems='center'; const tauLabel = makeLabel('Tau (yrs):'); const tauIn = document.createElement('input'); tauIn.type='number'; tauIn.step='1'; tauIn.min='1'; tauIn.value=2; tauIn.id='slopeTau'; if (params && Number.isFinite(params.slopeTau)) tauIn.value = String(params.slopeTau); const tauHelp = document.createElement('div'); tauHelp.style.fontSize='11px'; tauHelp.style.color='#666'; tauHelp.style.marginTop='2px'; tauHelp.textContent = 'Exponential decay timescale in years for recency weighting (smaller -> more weight on recent).' ; tauIn.title = 'Exponential decay timescale (years) for WLS recency weights.'; tauTop.appendChild(tauLabel); tauTop.appendChild(tauIn); tauWrap.appendChild(tauTop); tauWrap.appendChild(tauHelp);
 
   const powerWrap = document.createElement('div'); powerWrap.style.display='flex'; powerWrap.style.flexDirection='column'; powerWrap.style.minWidth='120px'; const powerTop = document.createElement('div'); powerTop.style.display='flex'; powerTop.style.alignItems='center'; const powerLabel = makeLabel('Linear power:'); const powerIn = document.createElement('input'); powerIn.type='number'; powerIn.step='0.1'; powerIn.id='slopePower'; powerIn.value='1'; if (params && Number.isFinite(params.slopePower)) powerIn.value = String(params.slopePower); const powerHelp = document.createElement('div'); powerHelp.style.fontSize='11px'; powerHelp.style.color='#666'; powerHelp.style.marginTop='2px'; powerHelp.textContent = 'Power exponent for linear recency weighting (1 is linear).'; powerIn.title = 'Power exponent for linear WLS weighting.'; powerTop.appendChild(powerLabel); powerTop.appendChild(powerIn); powerWrap.appendChild(powerTop); powerWrap.appendChild(powerHelp);
 
@@ -660,29 +646,98 @@
 
       applyBtn.addEventListener('click', async () => {
         const sparams = getSlopeParamsFromForm(); const seedVal = parseInt(seedInput && seedInput.value) || todaySeed; updateUrl(sparams); await runWithSeed(seedVal);
+        // Call updateAll after runWithSeed to refresh the display
+        if (typeof window.updateAll === 'function') window.updateAll();
       });
       resetBtn.addEventListener('click', async () => {
         // remove slope-related URL params and reload defaults
         updateUrl({ method: null, slopeBW: null, slopeTau: null, slopePower: null, slopeType: null, refYear: null }); const seedVal = parseInt(seedInput && seedInput.value) || todaySeed; // reset form values
         methodSel.value='ols'; wlsType.value='exp'; bwIn.value=''; tauIn.value=''; powerIn.value=''; refIn.value='2024'; updateVisibility(); await runWithSeed(seedVal);
+        // Call updateAll after runWithSeed to refresh the display
+        if (typeof window.updateAll === 'function') window.updateAll();
       });
     })();
 
     // apply URL year/pv BEFORE running seed generation
-    if (params.year && yearSlider){ yearSlider.value = String(params.year); }
+    if (params.year && yearSlider){ 
+      yearSlider.value = String(params.year); 
+      console.log('[future] Set year slider to URL year:', params.year);
+    } else if (yearSlider) {
+      // Default to 2028 only if no URL year is specified
+      yearSlider.value = '2028';
+      console.log('[future] Set year slider to default: 2028');
+    }
     // PV handling: allow index (pv), numeric pvValue override, or pvPreset name
-    if (params.pv!=null && pvSlider){ pvSlider.value = String(params.pv); }
+    if (params.pv!=null && pvSlider){ 
+      pvSlider.value = String(params.pv); 
+      console.log('[future] Set PV slider to URL pv:', params.pv);
+    }
     if (Number.isFinite(params.pvValue)){
       // numeric override -> set global override used by updateUrl
       window._pvOverride = clampPv(params.pvValue);
       // reflect in text input if present
       if (pvText) pvText.value = (params.pvValue>=0?`D+${(params.pvValue*100).toFixed(1)}`:`R+${(Math.abs(params.pvValue)*100).toFixed(1)}`);
+      console.log('[future] Set PV override to URL pvValue:', params.pvValue);
     }
     if (params.pvPreset && pvPreset){ pvPreset.value = params.pvPreset; }
 
     await runWithSeed(seed);
 
-    if (typeof window.updateAll === 'function') window.updateAll();
+    console.log('[future] After runWithSeed - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+    console.log('[future] After runWithSeed - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+    console.log('[future] Before updateAll - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+    console.log('[future] Before updateAll - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+    
+    if (typeof window.updateAll === 'function') {
+      window.updateAll();
+      console.log('[future] After updateAll - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+      console.log('[future] After updateAll - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+      
+      // updateAll() resets sliders, so reapply URL params after it runs
+      let needsSecondUpdate = false;
+      if (params.year && yearSlider){ 
+        yearSlider.value = String(params.year); 
+        console.log('[future] Re-set year slider to URL year after updateAll:', params.year);
+        needsSecondUpdate = true;
+      }
+      if (params.pv != null && pvSlider){
+        pvSlider.value = String(params.pv);
+        console.log('[future] Re-set PV slider to URL pv after updateAll:', params.pv);
+        needsSecondUpdate = true;
+      } else if (params.pvValue != null){
+        window._pvOverride = clampPv(params.pvValue);
+        console.log('[future] Re-set PV override to URL pvValue after updateAll:', params.pvValue);
+        needsSecondUpdate = true;
+      }
+      
+      // Call updateAll() again to reflect the corrected slider values
+      if (needsSecondUpdate) {
+        console.log('[future] Calling updateAll() again to reflect corrected slider values');
+        // Let updateAll rebuild stops for the new year, then reset PV slider afterward
+        window.updateAll();
+        
+        // After updateAll rebuilds stops, reset PV slider to URL value again
+        if (params.pv != null && pvSlider){
+          pvSlider.value = String(params.pv);
+          console.log('[future] Re-set PV slider AGAIN after stops rebuild:', params.pv);
+          // Call updateAll one more time to use the correct PV index with new stops
+          window.updateAll();
+        }
+        
+        console.log('[future] Final year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+        console.log('[future] Final pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+        
+        // Debug: check what PV value is actually being used
+        try {
+          const year = parseInt(yearSlider.value);
+          const pvIndex = parseInt(pvSlider.value);
+          console.log('[future] Debug - year:', year, 'pvIndex:', pvIndex);
+          console.log('[future] Debug - window._curYear:', window._curYear);
+          console.log('[future] Debug - window._curPv:', window._curPv);
+          console.log('[future] Debug - window._pvOverride:', window._pvOverride);
+        } catch(e) { console.warn('[future] Debug failed:', e); }
+      }
+    }
 
     if (genBtn) genBtn.addEventListener('click', async () => {
       const s = parseInt(seedInput.value) || 0; updateUrl({seed:s}); await runWithSeed(s);
