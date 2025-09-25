@@ -668,10 +668,7 @@
       });
     })();
 
-
-    await runWithSeed(seed);
-
-    // apply URL year/pv if present
+    // apply URL year/pv BEFORE running seed generation
     if (params.year && yearSlider){ yearSlider.value = String(params.year); }
     // PV handling: allow index (pv), numeric pvValue override, or pvPreset name
     if (params.pv!=null && pvSlider){ pvSlider.value = String(params.pv); }
@@ -682,6 +679,9 @@
       if (pvText) pvText.value = (params.pvValue>=0?`D+${(params.pvValue*100).toFixed(1)}`:`R+${(Math.abs(params.pvValue)*100).toFixed(1)}`);
     }
     if (params.pvPreset && pvPreset){ pvPreset.value = params.pvPreset; }
+
+    await runWithSeed(seed);
+
     if (typeof window.updateAll === 'function') window.updateAll();
 
     if (genBtn) genBtn.addEventListener('click', async () => {
