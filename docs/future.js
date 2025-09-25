@@ -29,8 +29,111 @@
     return Z / Math.sqrt(V/4);
   }
 
-  function computeSlopes(hist){
-    // Ordinary least squares slope for year -> relative_margin per abbr
+  function computeSlopes(hist, opts){
+    // Compute a per-abbr slope for year -> relative_margin.
+    // Methods: 'ols' (default), 'wls' (recently-weighted), 'loess' (local around 2024), 'poly2'/'poly3'.
+    // opts = { method, wls: { type: 'exp'|'linear', tau: 12, power: 2 }, loess: { bandwidth: 0.6 }, poly: { deg: 2|3 }, refYear: 2024 }
+    const method = (opts && opts.method) || 'ols';
+    const refYear = (opts && opts.refYear) || 2024;
+
+    function wlsSlopeIntercept(x, y, w){
+      // Weighted linear regression y ~ a + b x
+      let sw=0, sx=0, sy=0, sxx=0, sxy=0;
+      for (let i=0;i<x.length;i++){
+        const wi = +w[i] || 0; const xi = +x[i]; const yi = +y[i];
+        sw += wi; sx += wi*xi; sy += wi*yi; sxx += wi*xi*xi; sxy += wi*xi*yi;
+      }
+      if (sw === 0){ return { intercept: y[y.length-1]||0, slope: 0 }; }
+      const den = (sw*sxx - sx*sx);
+      if (Math.abs(den) < 1e-12){ return { intercept: y[y.length-1]||0, slope: 0 }; }
+      const slope = (sw*sxy - sx*sy) / den;
+      const intercept = (sy - slope*sx) / sw;
+      return { intercept, slope };
+    }
+
+    function olsSlopeIntercept(x, y){
+      const xbar = mean(x); const ybar = mean(y);
+      let num=0, den=0; for (let i=0;i<x.length;i++){ const dx=x[i]-xbar; num += dx*(y[i]-ybar); den += dx*dx; }
+      const slope = den ? num/den : 0; const intercept = ybar - slope*xbar; return { intercept, slope };
+    }
+
+    function loessSlopeAt(x, y, x0, bandwidth){
+      // Local linear regression around x0 with tricube weights; slope at x0 is the fitted linear coefficient
+      const n = x.length; if (n < 2) return { intercept: y[y.length-1]||0, slope: 0 };
+      const f = (isFinite(bandwidth) && bandwidth>0 && bandwidth<=1) ? bandwidth : 0.6; // fraction of points
+      const dists = x.map(xi => Math.abs(xi - x0));
+      const k = Math.max(2, Math.ceil(f * n));
+      const sorted = [...dists].sort((a,b)=>a-b);
+      let h = sorted[k-1];
+      if (!isFinite(h) || h<=0){
+        // Fallback to small window using unique distances
+        h = sorted.find(v=>v>0) || 1;
+      }
+      const w = dists.map(d => {
+        const u = Math.min(1, Math.max(0, d / h));
+        const tc = (1 - Math.pow(u,3));
+        return Math.pow(Math.max(0, tc), 3);
+      });
+      // Fit centered model y ~ a + b*(x - x0)
+      const xc = x.map(v => v - x0);
+      let sw=0, sy=0, sxx=0, sxy=0;
+      for (let i=0;i<n;i++){
+        const wi = +w[i]||0; sw+=wi; sy+=wi*y[i]; const xi=xc[i]; sxx += wi*xi*xi; sxy += wi*xi*y[i];
+      }
+      const den = sxx; // since sum wi*xi = 0 by centering at x0
+      if (Math.abs(den) < 1e-12 || sw===0){ return { intercept: y[y.length-1]||0, slope: 0 }; }
+      const slope = sxy / den; const intercept = (sy - 0 /* b*sum wi*xi */) / sw;
+      return { intercept, slope };
+    }
+
+    function polySlopeAt(x, y, deg, x0){
+      // Fit polynomial of degree deg via normal equations; return derivative at x0
+      deg = Math.max(1, Math.min(3, Math.floor(deg||2)));
+      const m = deg + 1; // number of coefficients
+      // Build normal equations A * beta = b, where A_ij = sum x^(i+j), b_i = sum y*x^i, i,j=0..deg
+      const A = Array.from({length:m}, ()=> Array(m).fill(0));
+      const b = Array(m).fill(0);
+      const sums = {}; // sums[k] = sum x^k up to 2*deg
+      for (let k=0;k<=2*deg;k++){ sums[k]=0; }
+      for (let i=0;i<x.length;i++){
+        const xi = +x[i]; const yi = +y[i];
+        let p = 1; // xi^0
+        const pow = [1];
+        for (let k=1;k<=2*deg;k++){ p *= xi; pow[k] = p; }
+        for (let k=0;k<=2*deg;k++){ sums[k] += pow[k]; }
+        for (let r=0;r<=deg;r++){ b[r] += yi * pow[r]; }
+      }
+      for (let i=0;i<=deg;i++){
+        for (let j=0;j<=deg;j++){
+          A[i][j] = sums[i+j];
+        }
+      }
+      // Solve A beta = b using small Gaussian elimination
+      function solve(Ain, bin){
+        const n = bin.length; const M = Ain.map(row => row.slice()); const bb = bin.slice();
+        for (let i=0;i<n;i++){
+          // pivot
+          let piv=i; for (let r=i+1;r<n;r++){ if (Math.abs(M[r][i])>Math.abs(M[piv][i])) piv=r; }
+          if (Math.abs(M[piv][i])<1e-12) return null;
+          if (piv!==i){ const tmp=M[i]; M[i]=M[piv]; M[piv]=tmp; const t=bb[i]; bb[i]=bb[piv]; bb[piv]=t; }
+          const diag = M[i][i];
+          for (let j=i;j<n;j++) M[i][j] /= diag; bb[i] /= diag;
+          for (let r=0;r<n;r++) if (r!==i){ const f = M[r][i]; if (f!==0){ for (let j=i;j<n;j++) M[r][j] -= f*M[i][j]; bb[r] -= f*bb[i]; } }
+        }
+        return bb;
+      }
+      const beta = solve(A, b);
+      if (!beta) return { intercept: y[y.length-1]||0, slope: 0 };
+      // derivative of poly at x0: p'(x0) = beta1 + 2*beta2*x0 + 3*beta3*x0^2
+      let slope = 0;
+      if (deg>=1) slope += beta[1];
+      if (deg>=2) slope += 2*beta[2]*x0;
+      if (deg>=3) slope += 3*beta[3]*x0*x0;
+      const intercept = beta[0] + (deg>=1?beta[1]*x0:0) + (deg>=2?beta[2]*x0*x0:0) + (deg>=3?beta[3]*x0*x0*x0:0) - slope*x0;
+      return { intercept, slope };
+    }
+
+    // Group rows by abbr and apply selected method
     const byAbbr = new Map();
     hist.forEach(r => {
       const a = r.abbr; if (!byAbbr.has(a)) byAbbr.set(a, []); byAbbr.get(a).push(r);
@@ -41,18 +144,42 @@
       const x = rows.map(r=>+r.year);
       const y = rows.map(r=>+r.relative_margin);
       if (new Set(x).size < 2){ out.set(rows[0].abbr, {intercept: y[y.length-1]||0, slope: 0}); return; }
-      // simple polyfit via covariance
-      const xbar = mean(x); const ybar = mean(y);
-      let num=0, den=0; for (let i=0;i<x.length;i++){ const dx=x[i]-xbar; num += dx*(y[i]-ybar); den += dx*dx; }
-      const slope = den ? num/den : 0; const intercept = ybar - slope*xbar;
-      out.set(rows[0].abbr, {intercept, slope});
+
+      let res;
+      if (method === 'ols'){
+        res = olsSlopeIntercept(x, y);
+      } else if (method === 'wls'){
+        const wType = (opts && opts.wls && opts.wls.type) || 'exp';
+        const tau = (opts && opts.wls && opts.wls.tau) || 12; // years scale for exponential
+        const power = (opts && opts.wls && opts.wls.power) || 2; // for linear weighting
+        const xmin = x[0]; const xmax = x[x.length-1]; const span = Math.max(1, xmax - xmin);
+        const w = x.map(xi => {
+          if (wType === 'linear'){
+            const t = (xi - xmin) / span; return Math.pow(Math.max(0, Math.min(1, t)), power);
+          } else {
+            // exponential recency weight: w = exp((xi - xmax)/tau)
+            return Math.exp((xi - xmax) / Math.max(1, tau));
+          }
+        });
+        res = wlsSlopeIntercept(x, y, w);
+      } else if (method === 'loess'){
+        const bw = (opts && opts.loess && opts.loess.bandwidth);
+        res = loessSlopeAt(x, y, refYear, bw);
+      } else if (method === 'poly2' || method === 'poly3'){
+        const deg = (method === 'poly3') ? 3 : 2;
+        res = polySlopeAt(x, y, deg, refYear);
+      } else {
+        // fallback
+        res = olsSlopeIntercept(x, y);
+      }
+      out.set(rows[0].abbr, res);
     });
     return out; // Map abbr -> {intercept, slope}
   }
 
-  function buildTargets(dfAll, rng, yearsAhead=24, shrink=0.8, soft_delta_L=0.33){
+  function buildTargets(dfAll, rng, yearsAhead=24, shrink=0.8, soft_delta_L=0.33, slopeOpts){
     const hist = dfAll.filter(r => r.year>=2000 && r.year<=2024);
-    const slopes = computeSlopes(hist);
+    const slopes = computeSlopes(hist, slopeOpts||{ method: 'ols', refYear: 2024 });
     const base2024 = dfAll.filter(r => r.year===2024);
     const merged = base2024.map(r => ({ abbr: r.abbr, rel2024: +r.relative_margin, total_votes: +r.total_votes||0, slope: (slopes.get(r.abbr)||{slope:0}).slope||0 }));
     const drift = merged.map(()=> rand_t_df4(rng)*0.02);
@@ -102,9 +229,9 @@
   function humpEarly(u){ return Math.exp(-Math.pow((u-0.35)/0.20, 2)); }
 
   function simulatePaths(dfAll, rng, opts){
-    const { soft_delta_L=0.33, soft_value_L=0.95, years_ahead=24, shrink=0.8, n_steps=240, beta=0.8, alpha=0.45, kappa=0.25, global_scale=1.05, k_factors=3 } = (opts||{});
+    const { soft_delta_L=0.33, soft_value_L=0.95, years_ahead=24, shrink=0.8, n_steps=240, beta=0.8, alpha=0.45, kappa=0.25, global_scale=1.05, k_factors=3, slopeOptions=null } = (opts||{});
     const hist = dfAll.filter(r => r.year>=2000 && r.year<=2024);
-    const merged = buildTargets(dfAll, rng, years_ahead, shrink, soft_delta_L);
+    const merged = buildTargets(dfAll, rng, years_ahead, shrink, soft_delta_L, slopeOptions||{ method: 'ols', refYear: 2024 });
     const base = new Map(merged.map(r => [r.abbr, r.rel_2024]));
     const { loadMap, k } = pcaLoadings(hist, k_factors);
     const sig = stateSigma(hist);
@@ -254,7 +381,25 @@
   async function generate(seed){
     const { filtered, margins, evByUnit } = await loadHistorical();
     const rng = seedToRng(seed);
-    const paths = simulatePaths(filtered, rng, {}); // Map abbr -> record with future years
+    // Build slope options from URL (if any)
+    const params = getUrlParams();
+    let slopeOptions = { method: 'ols', refYear: 2024 };
+    if (params && params.method){
+      const m = String(params.method).toLowerCase();
+      if (['ols','wls','loess','poly2','poly3'].includes(m)){
+        slopeOptions.method = m;
+        if (Number.isFinite(params.refYear)) slopeOptions.refYear = params.refYear;
+        if (m === 'loess' && Number.isFinite(params.slopeBW)) slopeOptions.loess = { bandwidth: params.slopeBW };
+        if (m === 'wls'){
+          slopeOptions.wls = {
+            type: (params.slopeType === 'linear') ? 'linear' : 'exp',
+            tau: Number.isFinite(params.slopeTau) ? params.slopeTau : 12,
+            power: Number.isFinite(params.slopePower) ? params.slopePower : 2
+          };
+        }
+      }
+    }
+    const paths = simulatePaths(filtered, rng, { slopeOptions }); // Map abbr -> record with future years
     // plug into tester.js global maps
     const BY = buildFutureDataset(filtered, paths, margins, evByUnit);
     // Clear any previous future years then set
@@ -358,6 +503,14 @@
   function getUrlParams(){
     const p = new URLSearchParams(location.search);
     const out = { seed: p.get('seed') ? parseInt(p.get('seed')) : null, year: p.get('year') ? parseInt(p.get('year')) : null, pv: null, pvValue: null, pvPreset: null };
+    // Optional slope options: method=ols|wls|loess|poly2|poly3; slopeBW, slopeTau, slopePower
+  const method = p.get('method');
+    if (method) out.method = method;
+    const slopeBW = p.get('slopeBW'); if (slopeBW!=null) out.slopeBW = parseFloat(slopeBW);
+    const slopeTau = p.get('slopeTau'); if (slopeTau!=null) out.slopeTau = parseFloat(slopeTau);
+    const slopePower = p.get('slopePower'); if (slopePower!=null) out.slopePower = parseFloat(slopePower);
+  const slopeType = p.get('slopeType'); if (slopeType) out.slopeType = slopeType;
+  const refYear = p.get('refYear'); if (refYear!=null) out.refYear = parseInt(refYear);
     const pvRaw = p.get('pv');
     if (pvRaw != null) {
       // integer index
@@ -392,6 +545,25 @@
     if (params && Object.prototype.hasOwnProperty.call(params, 'pvPreset')) {
       if (params.pvPreset === null || params.pvPreset === undefined) url.searchParams.delete('pvPreset'); else url.searchParams.set('pvPreset', String(params.pvPreset));
     }
+    // Slope params (only touch if explicitly provided to avoid cluttering URL)
+    if (params && Object.prototype.hasOwnProperty.call(params, 'method')){
+      if (!params.method) url.searchParams.delete('method'); else url.searchParams.set('method', String(params.method));
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'slopeBW')){
+      if (params.slopeBW==null) url.searchParams.delete('slopeBW'); else url.searchParams.set('slopeBW', String(params.slopeBW));
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'slopeTau')){
+      if (params.slopeTau==null) url.searchParams.delete('slopeTau'); else url.searchParams.set('slopeTau', String(params.slopeTau));
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'slopePower')){
+      if (params.slopePower==null) url.searchParams.delete('slopePower'); else url.searchParams.set('slopePower', String(params.slopePower));
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'slopeType')){
+      if (!params.slopeType) url.searchParams.delete('slopeType'); else url.searchParams.set('slopeType', String(params.slopeType));
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'refYear')){
+      if (params.refYear==null) url.searchParams.delete('refYear'); else url.searchParams.set('refYear', String(params.refYear));
+    }
   // No separate flipped flag; numeric pv overrides encode sign directly
     history.replaceState({}, '', url);
   }
@@ -414,6 +586,52 @@
   const todaySeed = (function(){ try { const d = new Date(); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const da=String(d.getDate()).padStart(2,'0'); return parseInt(`${y}${m}${da}`); } catch(e){ return 20250101; } })();
   const seed = (params.seed && !isNaN(params.seed)) ? params.seed : todaySeed;
     if (seedInput) seedInput.value = String(seed);
+
+    // --- Slope method UI controls ---
+    (function setupSlopeControls(){
+      // container placement: try to append near genBtn if possible
+      let container = document.getElementById('slopeControls');
+      if (!container){ container = document.createElement('div'); container.id = 'slopeControls'; container.style.marginTop = '8px'; container.style.display = 'flex'; container.style.gap = '8px'; container.style.flexWrap = 'wrap'; if (genBtn && genBtn.parentNode) genBtn.parentNode.appendChild(container); else document.body.appendChild(container); }
+
+      function makeLabel(text){ const l = document.createElement('label'); l.style.fontSize='12px'; l.style.marginRight='4px'; l.textContent = text; return l; }
+
+      // method select
+      const methodWrap = document.createElement('div'); methodWrap.style.display='flex'; methodWrap.style.alignItems='center';
+      const methodLabel = makeLabel('Slope:'); const methodSel = document.createElement('select'); methodSel.id='slopeMethod'; ['ols','wls','loess','poly2','poly3'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent = v.toUpperCase(); methodSel.appendChild(o); });
+      if (params && params.method) methodSel.value = params.method; methodWrap.appendChild(methodLabel); methodWrap.appendChild(methodSel);
+
+      // wls type
+      const wlsWrap = document.createElement('div'); wlsWrap.style.display='flex'; wlsWrap.style.alignItems='center';
+      const wlsLabel = makeLabel('WLS:'); const wlsType = document.createElement('select'); wlsType.id='slopeWlsType'; ['exp','linear'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; wlsType.appendChild(o); });
+      if (params && params.slopeType) wlsType.value = params.slopeType; wlsWrap.appendChild(wlsLabel); wlsWrap.appendChild(wlsType);
+
+      // bandwidth / tau / power / refYear inputs
+      const bwWrap = document.createElement('div'); bwWrap.style.display='flex'; bwWrap.style.alignItems='center'; const bwLabel = makeLabel('BW:'); const bwIn = document.createElement('input'); bwIn.type='number'; bwIn.step='0.05'; bwIn.min='0'; bwIn.max='1'; bwIn.id='slopeBW'; if (params && Number.isFinite(params.slopeBW)) bwIn.value = String(params.slopeBW);
+      bwWrap.appendChild(bwLabel); bwWrap.appendChild(bwIn);
+
+      const tauWrap = document.createElement('div'); tauWrap.style.display='flex'; tauWrap.style.alignItems='center'; const tauLabel = makeLabel('Tau:'); const tauIn = document.createElement('input'); tauIn.type='number'; tauIn.step='1'; tauIn.min='1'; tauIn.id='slopeTau'; if (params && Number.isFinite(params.slopeTau)) tauIn.value = String(params.slopeTau); tauWrap.appendChild(tauLabel); tauWrap.appendChild(tauIn);
+
+      const powerWrap = document.createElement('div'); powerWrap.style.display='flex'; powerWrap.style.alignItems='center'; const powerLabel = makeLabel('Power:'); const powerIn = document.createElement('input'); powerIn.type='number'; powerIn.step='0.1'; powerIn.id='slopePower'; if (params && Number.isFinite(params.slopePower)) powerIn.value = String(params.slopePower); powerWrap.appendChild(powerLabel); powerWrap.appendChild(powerIn);
+
+      const refWrap = document.createElement('div'); refWrap.style.display='flex'; refWrap.style.alignItems='center'; const refLabel = makeLabel('RefYr:'); const refIn = document.createElement('input'); refIn.type='number'; refIn.step='1'; refIn.id='slopeRefYear'; refIn.value = (params && params.refYear) ? String(params.refYear) : '2024'; refWrap.appendChild(refLabel); refWrap.appendChild(refIn);
+
+      const applyBtn = document.createElement('button'); applyBtn.id='slopeApply'; applyBtn.textContent = 'Apply Slope'; applyBtn.style.marginLeft='6px';
+      const resetBtn = document.createElement('button'); resetBtn.id='slopeReset'; resetBtn.textContent = 'Reset Slope'; resetBtn.style.marginLeft='6px';
+
+      container.appendChild(methodWrap); container.appendChild(wlsWrap); container.appendChild(bwWrap); container.appendChild(tauWrap); container.appendChild(powerWrap); container.appendChild(refWrap); container.appendChild(applyBtn); container.appendChild(resetBtn);
+
+      function getSlopeParamsFromForm(){ const m = methodSel.value || 'ols'; const out = { method: m }; const bw = parseFloat(bwIn.value); if (isFinite(bw)) out.slopeBW = bw; const tau = parseFloat(tauIn.value); if (isFinite(tau)) out.slopeTau = tau; const power = parseFloat(powerIn.value); if (isFinite(power)) out.slopePower = power; const st = wlsType.value; if (st) out.slopeType = st; const ry = parseInt(refIn.value); if (!isNaN(ry)) out.refYear = ry; return out; }
+
+      applyBtn.addEventListener('click', async () => {
+        const sparams = getSlopeParamsFromForm(); const seedVal = parseInt(seedInput && seedInput.value) || todaySeed; updateUrl(sparams); await runWithSeed(seedVal);
+      });
+      resetBtn.addEventListener('click', async () => {
+        // remove slope-related URL params and reload defaults
+        updateUrl({ method: null, slopeBW: null, slopeTau: null, slopePower: null, slopeType: null, refYear: null }); const seedVal = parseInt(seedInput && seedInput.value) || todaySeed; // reset form values
+        methodSel.value='ols'; wlsType.value='exp'; bwIn.value=''; tauIn.value=''; powerIn.value=''; refIn.value='2024'; await runWithSeed(seedVal);
+      });
+    })();
+
 
     await runWithSeed(seed);
 
