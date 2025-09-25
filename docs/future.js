@@ -593,32 +593,62 @@
       let container = document.getElementById('slopeControls');
       if (!container){ container = document.createElement('div'); container.id = 'slopeControls'; container.style.marginTop = '8px'; container.style.display = 'flex'; container.style.gap = '8px'; container.style.flexWrap = 'wrap'; if (genBtn && genBtn.parentNode) genBtn.parentNode.appendChild(container); else document.body.appendChild(container); }
 
-      function makeLabel(text){ const l = document.createElement('label'); l.style.fontSize='12px'; l.style.marginRight='4px'; l.textContent = text; return l; }
+  function makeLabel(text){ const l = document.createElement('label'); l.style.fontSize='12px'; l.style.marginRight='4px'; l.textContent = text; return l; }
 
       // method select
-      const methodWrap = document.createElement('div'); methodWrap.style.display='flex'; methodWrap.style.alignItems='center';
-      const methodLabel = makeLabel('Slope:'); const methodSel = document.createElement('select'); methodSel.id='slopeMethod'; ['ols','wls','loess','poly2','poly3'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent = v.toUpperCase(); methodSel.appendChild(o); });
-      if (params && params.method) methodSel.value = params.method; methodWrap.appendChild(methodLabel); methodWrap.appendChild(methodSel);
+  const methodWrap = document.createElement('div'); methodWrap.style.display='flex'; methodWrap.style.flexDirection='column'; methodWrap.style.minWidth='160px';
+  const methodTop = document.createElement('div'); methodTop.style.display='flex'; methodTop.style.alignItems='center';
+  const methodLabel = makeLabel('Slope method:'); const methodSel = document.createElement('select'); methodSel.id='slopeMethod'; ['ols','wls','loess','poly2','poly3'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent = v.toUpperCase(); methodSel.appendChild(o); });
+  if (params && params.method) methodSel.value = params.method; methodTop.appendChild(methodLabel); methodTop.appendChild(methodSel);
+  const methodHelp = document.createElement('div'); methodHelp.style.fontSize='11px'; methodHelp.style.color='#666'; methodHelp.style.marginTop='2px'; methodHelp.textContent = 'OLS: linear trend. WLS: recent years weighted. LOESS: local slope near RefYr. POLY2/3: global polynomial.';
+  methodSel.title = 'Choose slope estimation method. OLS is the default.';
+  methodWrap.appendChild(methodTop); methodWrap.appendChild(methodHelp);
 
       // wls type
-      const wlsWrap = document.createElement('div'); wlsWrap.style.display='flex'; wlsWrap.style.alignItems='center';
-      const wlsLabel = makeLabel('WLS:'); const wlsType = document.createElement('select'); wlsType.id='slopeWlsType'; ['exp','linear'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; wlsType.appendChild(o); });
-      if (params && params.slopeType) wlsType.value = params.slopeType; wlsWrap.appendChild(wlsLabel); wlsWrap.appendChild(wlsType);
+  const wlsWrap = document.createElement('div'); wlsWrap.style.display='flex'; wlsWrap.style.flexDirection='column'; wlsWrap.style.minWidth='140px';
+  const wlsTop = document.createElement('div'); wlsTop.style.display='flex'; wlsTop.style.alignItems='center';
+  const wlsLabel = makeLabel('WLS type:'); const wlsType = document.createElement('select'); wlsType.id='slopeWlsType'; ['exp','linear'].forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; wlsType.appendChild(o); });
+  if (params && params.slopeType) wlsType.value = params.slopeType; wlsTop.appendChild(wlsLabel); wlsTop.appendChild(wlsType);
+  const wlsHelp = document.createElement('div'); wlsHelp.style.fontSize='11px'; wlsHelp.style.color='#666'; wlsHelp.style.marginTop='2px'; wlsHelp.textContent = 'EXP: exponential recency weight (Tau years). LINEAR: linear recency scaling (Power).';
+  wlsType.title = 'Select exponential or linear recency weighting for WLS.';
+  wlsWrap.appendChild(wlsTop); wlsWrap.appendChild(wlsHelp);
 
       // bandwidth / tau / power / refYear inputs
-      const bwWrap = document.createElement('div'); bwWrap.style.display='flex'; bwWrap.style.alignItems='center'; const bwLabel = makeLabel('BW:'); const bwIn = document.createElement('input'); bwIn.type='number'; bwIn.step='0.05'; bwIn.min='0'; bwIn.max='1'; bwIn.id='slopeBW'; if (params && Number.isFinite(params.slopeBW)) bwIn.value = String(params.slopeBW);
-      bwWrap.appendChild(bwLabel); bwWrap.appendChild(bwIn);
+  const bwWrap = document.createElement('div'); bwWrap.style.display='flex'; bwWrap.style.flexDirection='column'; bwWrap.style.minWidth='120px'; const bwTop = document.createElement('div'); bwTop.style.display='flex'; bwTop.style.alignItems='center'; const bwLabel = makeLabel('LOESS BW:'); const bwIn = document.createElement('input'); bwIn.type='number'; bwIn.step='0.05'; bwIn.min='0'; bwIn.max='1'; bwIn.id='slopeBW'; bwIn.value='0.5'; if (params && Number.isFinite(params.slopeBW)) bwIn.value = String(params.slopeBW);
+  const bwHelp = document.createElement('div'); bwHelp.style.fontSize='11px'; bwHelp.style.color='#666'; bwHelp.style.marginTop='2px'; bwHelp.textContent = 'Bandwidth is fraction of points used for local fit (0.4-0.8 typical). Larger = smoother.';
+  bwIn.title = 'LOESS bandwidth (fraction of points used in local fit).';
+  bwTop.appendChild(bwLabel); bwTop.appendChild(bwIn); bwWrap.appendChild(bwTop); bwWrap.appendChild(bwHelp);
 
-      const tauWrap = document.createElement('div'); tauWrap.style.display='flex'; tauWrap.style.alignItems='center'; const tauLabel = makeLabel('Tau:'); const tauIn = document.createElement('input'); tauIn.type='number'; tauIn.step='1'; tauIn.min='1'; tauIn.id='slopeTau'; if (params && Number.isFinite(params.slopeTau)) tauIn.value = String(params.slopeTau); tauWrap.appendChild(tauLabel); tauWrap.appendChild(tauIn);
+  const tauWrap = document.createElement('div'); tauWrap.style.display='flex'; tauWrap.style.flexDirection='column'; tauWrap.style.minWidth='120px'; const tauTop = document.createElement('div'); tauTop.style.display='flex'; tauTop.style.alignItems='center'; const tauLabel = makeLabel('Tau (yrs):'); const tauIn = document.createElement('input'); tauIn.type='number'; tauIn.step='1'; tauIn.min='1'; tauIn.id='slopeTau'; if (params && Number.isFinite(params.slopeTau)) tauIn.value = String(params.slopeTau); const tauHelp = document.createElement('div'); tauHelp.style.fontSize='11px'; tauHelp.style.color='#666'; tauHelp.style.marginTop='2px'; tauHelp.textContent = 'Exponential decay timescale in years for recency weighting (smaller -> more weight on recent).' ; tauIn.title = 'Exponential decay timescale (years) for WLS recency weights.'; tauTop.appendChild(tauLabel); tauTop.appendChild(tauIn); tauWrap.appendChild(tauTop); tauWrap.appendChild(tauHelp);
 
-      const powerWrap = document.createElement('div'); powerWrap.style.display='flex'; powerWrap.style.alignItems='center'; const powerLabel = makeLabel('Power:'); const powerIn = document.createElement('input'); powerIn.type='number'; powerIn.step='0.1'; powerIn.id='slopePower'; if (params && Number.isFinite(params.slopePower)) powerIn.value = String(params.slopePower); powerWrap.appendChild(powerLabel); powerWrap.appendChild(powerIn);
+  const powerWrap = document.createElement('div'); powerWrap.style.display='flex'; powerWrap.style.flexDirection='column'; powerWrap.style.minWidth='120px'; const powerTop = document.createElement('div'); powerTop.style.display='flex'; powerTop.style.alignItems='center'; const powerLabel = makeLabel('Linear power:'); const powerIn = document.createElement('input'); powerIn.type='number'; powerIn.step='0.1'; powerIn.id='slopePower'; powerIn.value='1'; if (params && Number.isFinite(params.slopePower)) powerIn.value = String(params.slopePower); const powerHelp = document.createElement('div'); powerHelp.style.fontSize='11px'; powerHelp.style.color='#666'; powerHelp.style.marginTop='2px'; powerHelp.textContent = 'Power exponent for linear recency weighting (1 is linear).'; powerIn.title = 'Power exponent for linear WLS weighting.'; powerTop.appendChild(powerLabel); powerTop.appendChild(powerIn); powerWrap.appendChild(powerTop); powerWrap.appendChild(powerHelp);
 
-      const refWrap = document.createElement('div'); refWrap.style.display='flex'; refWrap.style.alignItems='center'; const refLabel = makeLabel('RefYr:'); const refIn = document.createElement('input'); refIn.type='number'; refIn.step='1'; refIn.id='slopeRefYear'; refIn.value = (params && params.refYear) ? String(params.refYear) : '2024'; refWrap.appendChild(refLabel); refWrap.appendChild(refIn);
+  const refWrap = document.createElement('div'); refWrap.style.display='flex'; refWrap.style.flexDirection='column'; refWrap.style.minWidth='110px'; const refTop = document.createElement('div'); refTop.style.display='flex'; refTop.style.alignItems='center'; const refLabel = makeLabel('Ref year:'); const refIn = document.createElement('input'); refIn.type='number'; refIn.step='1'; refIn.id='slopeRefYear'; refIn.value = (params && params.refYear) ? String(params.refYear) : '2024'; const refHelp = document.createElement('div'); refHelp.style.fontSize='11px'; refHelp.style.color='#666'; refHelp.style.marginTop='2px'; refHelp.textContent = 'Reference year where LOESS or polynomial slope is evaluated (defaults to 2024).'; refIn.title = 'Reference year for local or polynomial slope evaluation.'; refTop.appendChild(refLabel); refTop.appendChild(refIn); refWrap.appendChild(refTop); refWrap.appendChild(refHelp);
 
-      const applyBtn = document.createElement('button'); applyBtn.id='slopeApply'; applyBtn.textContent = 'Apply Slope'; applyBtn.style.marginLeft='6px';
-      const resetBtn = document.createElement('button'); resetBtn.id='slopeReset'; resetBtn.textContent = 'Reset Slope'; resetBtn.style.marginLeft='6px';
+  const applyBtn = document.createElement('button'); applyBtn.id='slopeApply'; applyBtn.textContent = 'Apply Slope'; applyBtn.style.marginLeft='6px'; applyBtn.title = 'Apply slope settings and regenerate futures.';
+  const resetBtn = document.createElement('button'); resetBtn.id='slopeReset'; resetBtn.textContent = 'Reset Slope'; resetBtn.style.marginLeft='6px'; resetBtn.title = 'Reset slope settings to defaults and regenerate.';
 
       container.appendChild(methodWrap); container.appendChild(wlsWrap); container.appendChild(bwWrap); container.appendChild(tauWrap); container.appendChild(powerWrap); container.appendChild(refWrap); container.appendChild(applyBtn); container.appendChild(resetBtn);
+
+      // remember defaults so we can toggle visibility cleanly
+      wlsWrap.dataset.defaultDisplay = wlsWrap.style.display || 'flex'; bwWrap.dataset.defaultDisplay = bwWrap.style.display || 'flex'; tauWrap.dataset.defaultDisplay = tauWrap.style.display || 'flex'; powerWrap.dataset.defaultDisplay = powerWrap.style.display || 'flex'; refWrap.dataset.defaultDisplay = refWrap.style.display || 'flex';
+
+      function updateVisibility(){
+        const m = methodSel.value;
+        // show only relevant controls
+        wlsWrap.style.display = (m === 'wls') ? wlsWrap.dataset.defaultDisplay : 'none';
+        // LOESS uses bandwidth and ref year
+        bwWrap.style.display = (m === 'loess') ? bwWrap.dataset.defaultDisplay : 'none';
+        // WLS uses tau and power
+        tauWrap.style.display = (m === 'wls') ? tauWrap.dataset.defaultDisplay : 'none';
+        powerWrap.style.display = (m === 'wls') ? powerWrap.dataset.defaultDisplay : 'none';
+        // refYear shown for loess and polys
+        refWrap.style.display = (m === 'loess' || m === 'poly2' || m === 'poly3') ? refWrap.dataset.defaultDisplay : 'none';
+      }
+
+      // initial visibility
+      updateVisibility();
+      methodSel.addEventListener('change', updateVisibility);
 
       function getSlopeParamsFromForm(){ const m = methodSel.value || 'ols'; const out = { method: m }; const bw = parseFloat(bwIn.value); if (isFinite(bw)) out.slopeBW = bw; const tau = parseFloat(tauIn.value); if (isFinite(tau)) out.slopeTau = tau; const power = parseFloat(powerIn.value); if (isFinite(power)) out.slopePower = power; const st = wlsType.value; if (st) out.slopeType = st; const ry = parseInt(refIn.value); if (!isNaN(ry)) out.refYear = ry; return out; }
 
@@ -628,7 +658,7 @@
       resetBtn.addEventListener('click', async () => {
         // remove slope-related URL params and reload defaults
         updateUrl({ method: null, slopeBW: null, slopeTau: null, slopePower: null, slopeType: null, refYear: null }); const seedVal = parseInt(seedInput && seedInput.value) || todaySeed; // reset form values
-        methodSel.value='ols'; wlsType.value='exp'; bwIn.value=''; tauIn.value=''; powerIn.value=''; refIn.value='2024'; await runWithSeed(seedVal);
+        methodSel.value='ols'; wlsType.value='exp'; bwIn.value=''; tauIn.value=''; powerIn.value=''; refIn.value='2024'; updateVisibility(); await runWithSeed(seedVal);
       });
     })();
 
