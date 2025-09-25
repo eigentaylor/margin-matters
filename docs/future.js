@@ -639,16 +639,22 @@
         wlsWrap.style.display = (m === 'wls') ? wlsWrap.dataset.defaultDisplay : 'none';
         // LOESS uses bandwidth and ref year
         bwWrap.style.display = (m === 'loess') ? bwWrap.dataset.defaultDisplay : 'none';
-        // WLS uses tau and power
-        tauWrap.style.display = (m === 'wls') ? tauWrap.dataset.defaultDisplay : 'none';
-        powerWrap.style.display = (m === 'wls') ? powerWrap.dataset.defaultDisplay : 'none';
+        // WLS uses either tau (exp) or power (linear)
+        if (m === 'wls'){
+          const wt = (wlsType && wlsType.value) || 'exp';
+          tauWrap.style.display = (wt === 'exp') ? tauWrap.dataset.defaultDisplay : 'none';
+          powerWrap.style.display = (wt === 'linear') ? powerWrap.dataset.defaultDisplay : 'none';
+        } else {
+          tauWrap.style.display = 'none'; powerWrap.style.display = 'none';
+        }
         // refYear shown for loess and polys
         refWrap.style.display = (m === 'loess' || m === 'poly2' || m === 'poly3') ? refWrap.dataset.defaultDisplay : 'none';
       }
 
-      // initial visibility
-      updateVisibility();
-      methodSel.addEventListener('change', updateVisibility);
+  // initial visibility and wiring
+  updateVisibility();
+  methodSel.addEventListener('change', updateVisibility);
+  if (wlsType) wlsType.addEventListener('change', updateVisibility);
 
       function getSlopeParamsFromForm(){ const m = methodSel.value || 'ols'; const out = { method: m }; const bw = parseFloat(bwIn.value); if (isFinite(bw)) out.slopeBW = bw; const tau = parseFloat(tauIn.value); if (isFinite(tau)) out.slopeTau = tau; const power = parseFloat(powerIn.value); if (isFinite(power)) out.slopePower = power; const st = wlsType.value; if (st) out.slopeType = st; const ry = parseInt(refIn.value); if (!isNaN(ry)) out.refYear = ry; return out; }
 
@@ -667,7 +673,15 @@
 
     // apply URL year/pv if present
     if (params.year && yearSlider){ yearSlider.value = String(params.year); }
+    // PV handling: allow index (pv), numeric pvValue override, or pvPreset name
     if (params.pv!=null && pvSlider){ pvSlider.value = String(params.pv); }
+    if (Number.isFinite(params.pvValue)){
+      // numeric override -> set global override used by updateUrl
+      window._pvOverride = clampPv(params.pvValue);
+      // reflect in text input if present
+      if (pvText) pvText.value = (params.pvValue>=0?`D+${(params.pvValue*100).toFixed(1)}`:`R+${(Math.abs(params.pvValue)*100).toFixed(1)}`);
+    }
+    if (params.pvPreset && pvPreset){ pvPreset.value = params.pvPreset; }
     if (typeof window.updateAll === 'function') window.updateAll();
 
     if (genBtn) genBtn.addEventListener('click', async () => {
