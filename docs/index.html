@@ -53,7 +53,16 @@
       <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
       <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
     </div>
-    <div class="legend" style="font-size:0.95rem;margin-bottom:6px">Flip scenarios (min votes)</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
+      <div class="legend" style="font-size:0.95rem">Flip scenarios</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <label for="flipMetric" class="legend" style="font-size:0.9rem">Optimize by</label>
+        <select id="flipMetric" class="btn" style="min-width:160px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+          <option value="votes" selected>Min votes (default)</option>
+          <option value="margin">Min margin (% of state)</option>
+        </select>
+      </div>
+    </div>
     <div class="flip-controls">
       <button id="flipClassic" class="btn">Flip winner</button>
       <button id="flipNoMaj" class="btn">Break majority</button>
@@ -67,7 +76,7 @@
       <div class="flip-badge"><span class="label">EC</span><span id="flipEC" class="num">0 - 0</span></div>
     </div>
     <div id="flipDetailsWrap" class="card" style="margin-top:8px;display:none">
-      <div class="legend" style="text-align:left">Applied flips (winner by minimal votes to switch):</div>
+      <div class="legend" id="flipDetailsTitle" style="text-align:left">Applied flips (optimize: min votes):</div>
       <div class="table-wrap">
         <table class="flip-table">
           <thead><tr><th>State</th><th>EV</th><th>D</th><th>R</th><th>Δ votes</th></tr></thead>
@@ -126,7 +135,7 @@
   </div>
   <footer>Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-25 07:18 UTC</footer>
+Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-25 08:04 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>

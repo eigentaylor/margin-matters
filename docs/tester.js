@@ -692,6 +692,8 @@
       pvPreset: null,
       // flip scenario (classic/no_majority)
       flip: params.get('flip') || null,
+      // metric selection (votes|margin)
+      metric: (params.get('metric') || '').toLowerCase() || null,
   // (no flipped flag anymore)
     };
     const pvRaw = params.get('pv');
@@ -721,6 +723,14 @@
 
     if (flipMode) url.searchParams.set('flip', flipMode);
     else url.searchParams.delete('flip');
+
+    // Persist metric selection
+    try {
+      const sel = document.getElementById('flipMetric');
+      const m = sel ? String(sel.value || '').toLowerCase() : '';
+      if (m) url.searchParams.set('metric', m);
+      else url.searchParams.delete('metric');
+    } catch(e) {}
 
   // No flipped URL param: we store PV overrides directly as numeric values (possibly negative)
 
@@ -797,27 +807,35 @@
       if (year && unit && ev) evByUnit.set(`${year}:${unit}`, ev);
     });
 
-  // Build flip scenarios
-    window._flipByYear = new Map(); // year -> { classic: [rows], no_majority: [rows] }
+  // Build flip scenarios (metric-aware)
+    window._flipByYear = new Map(); // year -> metric -> { classic/no_majority/tie: [rows] }
     const groupFD = new Map();
     (flipDetails || []).forEach(r => {
       const y = +r.year; const mode = String(r.mode || '').toLowerCase();
+      const metric = (r.metric && String(r.metric).toLowerCase()) || 'votes';
       if (!y || !mode) return;
-      const arr = groupFD.get(`${y}:${mode}`) || [];
-      // support units like ME-AL/NE-02
+      const key = `${y}:${metric}:${mode}`;
+      const arr = groupFD.get(key) || [];
       arr.push({ unit: r.abbr, ev: +r.ev||0, votes_to_flip: +r.votes_to_flip||0, pct_of_state_votes: +r.pct_of_state_votes||0 });
-      groupFD.set(`${y}:${mode}`, arr);
+      groupFD.set(key, arr);
     });
     // sort states by votes_to_flip ascending for determinism
     groupFD.forEach(arr => arr.sort((a,b) => (a.votes_to_flip||0) - (b.votes_to_flip||0)));
-  // store
-  const modes = ['classic','no_majority','tie'];
-  // derive years from flipDetails to ensure availability even if results file is absent
-  const years = new Set((flipDetails||[]).map(r=>+r.year));
+    // store per year/metric
+    const modes = ['classic','no_majority','tie'];
+    const years = new Set((flipDetails||[]).map(r=>+r.year));
     years.forEach(y => {
-      const o = {};
-      modes.forEach(m => o[m] = groupFD.get(`${y}:${m}`) || []);
-      window._flipByYear.set(y, o);
+      if (!window._flipByYear.has(y)) window._flipByYear.set(y, new Map());
+      const byMetric = window._flipByYear.get(y);
+      // discover metrics present for this year from groupFD keys
+      const metricsForYear = new Set();
+      groupFD.forEach((_, key) => { const [ky, metric] = key.split(':'); if (+ky === +y) metricsForYear.add(metric); });
+      if (metricsForYear.size === 0) metricsForYear.add('votes');
+      metricsForYear.forEach(metric => {
+        const o = {};
+        modes.forEach(m => o[m] = groupFD.get(`${y}:${metric}:${m}`) || []);
+        byMetric.set(metric, o);
+      });
     });
 
     // Capture per-year total EV from flip_results.csv for accurate EV bar scaling
@@ -829,6 +847,17 @@
         if (y && isFinite(tot) && tot > 0) window._totalEvByYear.set(y, tot);
       });
     } catch(e) { /* optional */ }
+
+    // Track available metrics per year from flip_results.csv
+    window._metricsByYear = new Map(); // year -> Set(metrics)
+    try {
+      (flipResults || []).forEach(r => {
+        const y = +r.year; const metric = (r.metric && String(r.metric).toLowerCase()) || 'votes';
+        if (!y) return;
+        if (!window._metricsByYear.has(y)) window._metricsByYear.set(y, new Set());
+        window._metricsByYear.get(y).add(metric);
+      });
+    } catch(e) {}
 
     // Index stop colors CSV: year -> stop_key -> unit -> { winner, color_css, result_color_name }
     window._stopColorsByYear = new Map();
@@ -852,7 +881,7 @@
   window.getRowsForYear = function(y){ try { return byYear.get(y) || []; } catch(e){ return []; } };
   window.getEvFor = function(y, u){ try { return evByUnit.get(`${y}:${u}`); } catch(e){ return null; } };
 
-    init();
+  init();
     // attempt to load ME/NE district geometries for per-district coloring
     fetch('me_ne_districts.geojson').then(r => r.json()).then(geo => {
       try {
@@ -1228,6 +1257,7 @@
   function init(){
     const yearSlider = document.getElementById('yearSlider');
     const pvSlider = document.getElementById('pvSlider');
+    const flipMetricSel = document.getElementById('flipMetric');
     const yearVal = document.getElementById('yearVal');
     const pvVal = document.getElementById('pvVal');
     const pvStops = document.getElementById('pvStops');
@@ -1238,12 +1268,38 @@
   yearSlider.addEventListener('input', () => { 
     clearFlips(); 
     updateAll(); 
+    updateFlipMetricOptionsForYear();
     // Update URL with new year
     const pvEl = document.getElementById('pvSlider');
     const year = parseInt(yearSlider.value);
     const pvIndex = pvEl ? parseInt(pvEl.value) : 0;
     updateUrl(year, pvIndex, null);
   });
+    // Metric change resets flips and re-renders
+    if (flipMetricSel) {
+      flipMetricSel.addEventListener('change', () => {
+        const yEl = document.getElementById('yearSlider');
+        const pvEl = document.getElementById('pvSlider');
+        const yNow = yEl ? parseInt(yEl.value) : null;
+        const pvIdx = pvEl ? parseInt(pvEl.value) : null;
+        const hadActive = !!(window._activeFlip && window._activeFlip.year === yNow);
+        const prevMode = hadActive ? window._activeFlip.mode : null;
+        // Do not clear the details if open; instead, re-apply same flip mode with new metric
+        if (!hadActive) { try { clearFlips(); } catch(e) {} }
+        updateFlipMetricOptionsForYear();
+        // If a flip is active, re-apply same mode using the new metric
+        if (hadActive && prevMode) {
+          try { applyFlip(prevMode); } catch(e) { updateAll(); }
+        } else {
+          updateAll();
+        }
+        // Update URL to include metric
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(yNow, pvIdx, flipMode);
+        } catch(e) {}
+      });
+    }
     pvSlider.addEventListener('input', () => { 
       // Don't clear flips if we're in the middle of applying one
       if (!window._applyingFlip) clearFlips(); 
@@ -1267,6 +1323,13 @@
     if (urlParams.year && byYear.has(urlParams.year)) {
       y = urlParams.year;
     }
+    // Preselect metric from URL if present
+    try {
+      const sel = document.getElementById('flipMetric');
+      if (sel && urlParams.metric && (urlParams.metric === 'votes' || urlParams.metric === 'margin')) {
+        sel.value = urlParams.metric;
+      }
+    } catch(e) {}
     
     yearSlider.value = String(y);
     yearVal.textContent = y;
@@ -1320,6 +1383,9 @@
   pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
   // set up datalist and stop chips
   buildPvStops(y, pvStops, pvStopsList);
+  // Initialize metric select with available metrics for current year
+  updateFlipMetricOptionsForYear();
+
   // buttons
   const btnClassic = document.getElementById('flipClassic');
   const btnNoMaj = document.getElementById('flipNoMaj');
@@ -1947,6 +2013,43 @@
   window.updateUrl = updateUrl;
 })();
 
+// Current metric helper and options filter
+function getCurrentMetric(){
+  const sel = document.getElementById('flipMetric');
+  const val = sel ? String(sel.value || 'votes').toLowerCase() : 'votes';
+  return (val === 'margin') ? 'margin' : 'votes';
+}
+function updateFlipMetricOptionsForYear(){
+  try {
+    const yearEl = document.getElementById('yearSlider');
+    const sel = document.getElementById('flipMetric');
+    if (!yearEl || !sel) return;
+    const y = +yearEl.value;
+    const avail = (window._metricsByYear && window._metricsByYear.get(y)) || new Set(['votes']);
+    // Show/hide options based on availability
+    Array.from(sel.options).forEach(opt => {
+      const m = String(opt.value || '').toLowerCase();
+      opt.disabled = !avail.has(m);
+      // If currently selected is disabled, switch to a valid one
+    });
+    const cur = String(sel.value || '').toLowerCase();
+    if (!avail.has(cur)) {
+      sel.value = avail.has('votes') ? 'votes' : Array.from(avail)[0] || 'votes';
+    }
+  } catch(e) {}
+}
+
+// Access flip scenarios for current year/metric
+function getFlipScenariosForYearMetric(y){
+  const byYear = window._flipByYear || new Map();
+  const byMetric = byYear.get(y);
+  const metric = getCurrentMetric();
+  if (!byMetric) return null;
+  // Backward compatibility: if map doesn't store Map metrics, treat object directly
+  if (typeof byMetric.get !== 'function') return byMetric;
+  return byMetric.get(metric) || byMetric.get('votes') || null;
+}
+
 // Helper for tooltip: given a unit abbr (state or district), return {ev, margin, marginStr}
 window.getAdjustedInfo = function(unit){
   try {
@@ -2021,7 +2124,7 @@ function updateFlipButtons(){
     const btnNoMaj = document.getElementById('flipNoMaj');
     const btnTie = document.getElementById('flipTie');
     if (!btnNoMaj) return;
-    const yearSc = (window._flipByYear && y) ? window._flipByYear.get(y) : null;
+    const yearSc = (y != null) ? getFlipScenariosForYearMetric(y) : null;
     // No-majority button: hide if identical to classic or data missing
     if (!yearSc || !yearSc.classic || !yearSc.no_majority) {
       btnNoMaj.style.display = '';
@@ -2093,11 +2196,12 @@ function applyFlip(mode){
     window._applyingFlip = true; // Flag to prevent clearing during PV slider change
     const yearEl = document.getElementById('yearSlider');
     const year = +yearEl.value;
-    const by = window._flipByYear && window._flipByYear.get(year);
+    const by = getFlipScenariosForYearMetric(year);
     if (!by) { try { console.log('applyFlip: no scenarios for year', year); } catch(e){}; return; }
     const rows = by[mode] || [];
     // Toggle: if same mode is already active for this year, clear flips
-    if (window._activeFlip && window._activeFlip.year === year && window._activeFlip.mode === mode) {
+    const curMetric = getCurrentMetric();
+    if (window._activeFlip && window._activeFlip.year === year && window._activeFlip.mode === mode && window._activeFlip.metric === curMetric) {
       clearFlips();
       try { updateAll(); updateFlipButtons(); } catch(e) {}
       return;
@@ -2121,7 +2225,7 @@ function applyFlip(mode){
     }
     const set = new Set(rows.map(r=>r.unit));
     const votesSum = rows.reduce((s,r)=>s + (r.votes_to_flip||0), 0);
-    window._activeFlip = { year, mode, units: rows, votesSum, _set: set };
+  window._activeFlip = { year, mode, metric: curMetric, units: rows, votesSum, _set: set };
     try { console.log('applyFlip set state', {units: rows.map(r=>r.unit).slice(0,8), votesSum}); } catch(e){}
     console.log('applyFlip: rendering flip details');
     renderFlipDetails();
@@ -2146,6 +2250,11 @@ function renderFlipDetails(){
   try {
     const f = window._activeFlip; if (!f) return;
     const wrap = document.getElementById('flipDetailsWrap'); if (wrap) wrap.style.display = '';
+    const title = document.getElementById('flipDetailsTitle');
+    if (title) {
+      const m = (f.metric === 'margin') ? 'min margin' : 'min votes';
+      title.textContent = `Applied flips (optimize: ${m})`;
+    }
     const t = document.getElementById('flipDetails'); if (!t) return;
     const year = f.year;
     const rows = (typeof window.getRowsForYear==='function') ? window.getRowsForYear(year) : [];
