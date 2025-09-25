@@ -173,3 +173,31 @@ body.has-delta-toggle{padding-bottom:60px}
 }
 
 #relBaseline { padding:6px 8px; border-radius:8px }
+
+/* Possibilities page layout */
+.possibilities-controls .control-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+.possibilities-controls .control-row:last-of-type{margin-bottom:0}
+.possibilities-controls label{min-width:160px;font-weight:600;color:var(--fg)}
+#thresholdSlider{width:220px;accent-color:var(--accent)}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.summary-card{background:#111;border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.summary-card .label{text-transform:uppercase;font-size:0.8rem;color:var(--muted);letter-spacing:0.6px}
+.summary-card .value{font-weight:900;font-size:1.2rem;font-variant-numeric:tabular-nums;color:#fff}
+.summary-card .note{color:var(--muted);font-size:0.9rem;font-variant-numeric:tabular-nums}
+.summary-card .names{color:var(--muted);font-size:0.9rem}
+.paths-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+.paths-card{background:#111;border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.paths-card .label{text-transform:uppercase;font-size:0.85rem;color:var(--muted);letter-spacing:0.6px}
+.paths-card .value{font-weight:900;font-size:1.4rem;font-variant-numeric:tabular-nums;color:#fff}
+.paths-card .pct{color:var(--muted);font-size:0.95rem;font-variant-numeric:tabular-nums}
+.tossup-list{margin-top:10px;color:var(--muted);font-size:0.95rem}
+.tossup-list strong{color:var(--fg)}
+.state{cursor:pointer;transition:fill 0.25s ease, filter 0.2s ease}
+.state:hover{filter:brightness(1.08)}
+.manual-note{color:var(--accent);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}

@@ -138,6 +138,53 @@ def compute_knapsack(units, target_ev):
     return chosen, best_cost, best_v
 
 
+def compute_knapsack_exact(units, target_ev):
+    """
+    Like compute_knapsack but requires exactly target_ev (not at least).
+    Returns (chosen_units, min_votes, achieved_ev) where achieved_ev == target_ev on success,
+    or ([], inf, 0) if exact target cannot be reached.
+    """
+    if target_ev <= 0:
+        return [], 0, 0
+
+    n = len(units)
+    if n == 0 or target_ev > sum(u['ev'] for u in units):
+        return [], math.inf, 0
+
+    INF = 10**18
+    max_ev = sum(u['ev'] for u in units)
+
+    # Sort for deterministic behaviour
+    units_sorted = sorted(units, key=lambda u: (u['votes_to_flip'] / max(1, u['ev']), u['abbr']))
+
+    dp = [[INF] * (max_ev + 1) for _ in range(n + 1)]
+    dp[0][0] = 0
+
+    for i in range(1, n + 1):
+        u = units_sorted[i - 1]
+        ev = u['ev']
+        votes = u['votes_to_flip']
+        for v in range(max_ev + 1):
+            dp[i][v] = dp[i - 1][v]
+            if v >= ev and dp[i - 1][v - ev] != INF:
+                dp[i][v] = min(dp[i][v], dp[i - 1][v - ev] + votes)
+
+    if dp[n][target_ev] >= INF:
+        return [], math.inf, 0
+
+    # Reconstruct
+    chosen = []
+    i, v = n, target_ev
+    while i > 0 and v > 0:
+        if dp[i][v] != dp[i - 1][v]:
+            u = units_sorted[i - 1]
+            chosen.append(u)
+            v -= u['ev']
+        i -= 1
+
+    return chosen, dp[n][target_ev], target_ev
+
+
 def analyze_year(rows_for_year):
     # Determine aggregate party EVs using winner labels per unit
     ev_by_party = defaultdict(int)
@@ -201,6 +248,17 @@ def analyze_year(rows_for_year):
     units_from_winner = [u for u in units if u['from_party'] == winner_party]
     chosen_n, cost_n, ev_n = compute_knapsack(units_from_winner, target_away)
 
+    # Mode tie: look for an exact set of EVs to give runner exactly total_ev/2 (tie).
+    # Only possible if total_ev is even and target_ev_tie > 0.
+    tie_result = ([], math.inf, 0)
+    if total_ev % 2 == 0:
+        target_ev_tie = total_ev // 2 - runner_ev
+        if target_ev_tie > 0:
+            # units available to flip to runner are those not currently won by runner
+            units_for_tie = [u for u in units]
+            tie_result = compute_knapsack_exact(units_for_tie, target_ev_tie)
+    chosen_t, cost_t, ev_t = tie_result
+
     return {
         'winner_party': winner_party,
         'winner_ev': winner_ev,
@@ -209,6 +267,7 @@ def analyze_year(rows_for_year):
         'need': need,
         'classic': {'cost': int(cost_c if math.isfinite(cost_c) else -1), 'ev': ev_c, 'units': chosen_c},
         'no_majority': {'cost': int(cost_n if math.isfinite(cost_n) else -1), 'ev': ev_n, 'units': chosen_n},
+        'tie': {'cost': int(cost_t if math.isfinite(cost_t) else -1), 'ev': ev_t, 'units': chosen_t},
         'total_ev': total_ev,
     }
 
@@ -222,6 +281,8 @@ def main():
     detail_rows = []
 
     for year in sorted(by.keys()):
+        if year == 2024:
+            pass
         year_rows = by[year]
         res = analyze_year(year_rows)
 
@@ -238,11 +299,14 @@ def main():
             'no_majority_min_votes': res['no_majority']['cost'],
             'no_majority_ev': res['no_majority']['ev'],
             'no_majority_states': len(res['no_majority']['units']),
+            'tie_min_votes': res['tie']['cost'],
+            'tie_ev': res['tie']['ev'],
+            'tie_states': len(res['tie']['units']),
             'total_ev': res['total_ev'],
         })
 
-        # per-unit details for each mode
-        for mode in ('classic', 'no_majority'):
+        # per-unit details for each mode (include tie)
+        for mode in ('classic', 'no_majority', 'tie'):
             for u in res[mode]['units']:
                 detail_rows.append({
                     'year': year,
@@ -259,7 +323,8 @@ def main():
         w = csv.DictWriter(f, fieldnames=[
             'year','winner_party','winner_ev','runner_party','runner_ev','need',
             'classic_min_votes','classic_ev','classic_states',
-            'no_majority_min_votes','no_majority_ev','no_majority_states','total_ev'
+            'no_majority_min_votes','no_majority_ev','no_majority_states',
+            'tie_min_votes','tie_ev','tie_states','total_ev'
         ])
         w.writeheader()
         w.writerows(summary_rows)

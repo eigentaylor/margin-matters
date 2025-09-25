@@ -811,7 +811,7 @@
     // sort states by votes_to_flip ascending for determinism
     groupFD.forEach(arr => arr.sort((a,b) => (a.votes_to_flip||0) - (b.votes_to_flip||0)));
   // store
-  const modes = ['classic','no_majority'];
+  const modes = ['classic','no_majority','tie'];
   // derive years from flipDetails to ensure availability even if results file is absent
   const years = new Set((flipDetails||[]).map(r=>+r.year));
     years.forEach(y => {
@@ -1323,9 +1323,11 @@
   // buttons
   const btnClassic = document.getElementById('flipClassic');
   const btnNoMaj = document.getElementById('flipNoMaj');
+  const btnTie = document.getElementById('flipTie');
   const btnReset = document.getElementById('flipReset');
   if (btnClassic) btnClassic.addEventListener('click', () => applyFlip('classic'));
   if (btnNoMaj) btnNoMaj.addEventListener('click', () => applyFlip('no_majority'));
+  if (btnTie) btnTie.addEventListener('click', () => applyFlip('tie'));
   if (btnReset) btnReset.addEventListener('click', () => { clearFlips(); updateAll(); });
   // Initial button visibility update
   updateFlipButtons();
@@ -1360,7 +1362,7 @@
   // Apply flip scenario from URL if specified
   if (urlParams.flip && window._flipByYear && window._flipByYear.get(y)) {
     setTimeout(() => {
-      if (urlParams.flip === 'classic' || urlParams.flip === 'no_majority') {
+      if (urlParams.flip === 'classic' || urlParams.flip === 'no_majority' || urlParams.flip === 'tie') {
         applyFlip(urlParams.flip);
       }
     }, 100);
@@ -2015,13 +2017,46 @@ function updateFlipButtons(){
   try {
     const yearEl = document.getElementById('yearSlider');
     const y = yearEl ? +yearEl.value : null;
+    const btnClassic = document.getElementById('flipClassic');
     const btnNoMaj = document.getElementById('flipNoMaj');
+    const btnTie = document.getElementById('flipTie');
     if (!btnNoMaj) return;
     const yearSc = (window._flipByYear && y) ? window._flipByYear.get(y) : null;
-    if (!yearSc || !yearSc.classic || !yearSc.no_majority) { btnNoMaj.style.display = ''; return; }
-    const a = (yearSc.classic||[]).map(r=>r.unit).join('|');
-    const b = (yearSc.no_majority||[]).map(r=>r.unit).join('|');
-    btnNoMaj.style.display = (a === b) ? 'none' : '';
+    // No-majority button: hide if identical to classic or data missing
+    if (!yearSc || !yearSc.classic || !yearSc.no_majority) {
+      btnNoMaj.style.display = '';
+    } else {
+      const a = (yearSc.classic||[]).map(r=>r.unit).join('|');
+      const b = (yearSc.no_majority||[]).map(r=>r.unit).join('|');
+      btnNoMaj.style.display = (a === b) ? 'none' : '';
+    }
+    // Tie button: show only when tie scenario exists and is distinct from other scenarios
+    try {
+      if (!btnTie) {
+        // nothing
+      } else if (!yearSc || !yearSc.tie || !Array.isArray(yearSc.tie) || yearSc.tie.length === 0) {
+        btnTie.style.display = 'none';
+      } else {
+    // Normalize unit lists by sorting so equality is order-insensitive
+    const sortUnits = (arr) => (arr||[]).map(r=>String(r.unit||r).trim()).filter(x=>x).sort().join('|');
+    const tieUnits = sortUnits(yearSc.tie);
+    const noMajUnits = sortUnits(yearSc.no_majority);
+    // Show Tie only when a tie solution exists and is distinct from the break-majority solution
+    btnTie.style.display = (tieUnits === '' || tieUnits === noMajUnits) ? 'none' : '';
+      }
+    } catch(e) { /* non-fatal */ }
+
+    // Update active button styling to reflect current applied flip for this year
+    const active = (window._activeFlip && window._activeFlip.year === y) ? window._activeFlip.mode : null;
+    try {
+      const btns = [btnClassic, btnNoMaj, btnTie];
+      btns.forEach(b => {
+        if (!b) return;
+        const id = b.id || '';
+        const should = (id === 'flipClassic' && active === 'classic') || (id === 'flipNoMaj' && active === 'no_majority') || (id === 'flipTie' && active === 'tie');
+        if (should) b.classList.add('active'); else b.classList.remove('active');
+      });
+    } catch(e) {}
   } catch(e) {}
 }
 
@@ -2061,6 +2096,12 @@ function applyFlip(mode){
     const by = window._flipByYear && window._flipByYear.get(year);
     if (!by) { try { console.log('applyFlip: no scenarios for year', year); } catch(e){}; return; }
     const rows = by[mode] || [];
+    // Toggle: if same mode is already active for this year, clear flips
+    if (window._activeFlip && window._activeFlip.year === year && window._activeFlip.mode === mode) {
+      clearFlips();
+      try { updateAll(); updateFlipButtons(); } catch(e) {}
+      return;
+    }
     try { console.log('applyFlip click', {mode, year, rows: rows.length, sample: rows.slice(0,3)}); } catch(e){}
     // Snap PV slider to the 'Actual' stop before applying flips
     try {
@@ -2094,6 +2135,7 @@ function applyFlip(mode){
     if (pvEl) {
       updateUrl(year, parseInt(pvEl.value), mode);
     }
+    try { updateFlipButtons(); } catch(e) {}
   } catch(e) { 
     console.error('applyFlip error:', e);
   } finally {
