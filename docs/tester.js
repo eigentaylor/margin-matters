@@ -805,7 +805,7 @@
       if (!y || !mode) return;
       const arr = groupFD.get(`${y}:${mode}`) || [];
       // support units like ME-AL/NE-02
-      arr.push({ unit: r.abbr, ev: +r.ev||0, votes_to_flip: +r.votes_to_flip||0 });
+      arr.push({ unit: r.abbr, ev: +r.ev||0, votes_to_flip: +r.votes_to_flip||0, pct_of_state_votes: +r.pct_of_state_votes||0 });
       groupFD.set(`${y}:${mode}`, arr);
     });
     // sort states by votes_to_flip ascending for determinism
@@ -2172,7 +2172,7 @@ function renderFlipDetails(){
         r1 = Math.max(0, r0 - vt);
       }
       html += `<tr><td>${unit}</td><td>${ev}</td><td>${d0.toLocaleString('en-US')}<br/>→ ${d1.toLocaleString('en-US')}</td>
-      <td>${r0.toLocaleString('en-US')}<br/>→ ${r1.toLocaleString('en-US')}</td><td>${(+u.votes_to_flip||0).toLocaleString('en-US')}</td></tr>`;
+      <td>${r0.toLocaleString('en-US')}<br/>→ ${r1.toLocaleString('en-US')}</td><td>${(+u.votes_to_flip||0).toLocaleString('en-US')} (${+u.pct_of_state_votes||0}%)</td></tr>`;
     });
     t.innerHTML = html;
     const votes = document.getElementById('flipVotes'); if (votes) votes.textContent = (f.votesSum||0).toLocaleString('en-US');
