@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2028 Possibilities • Margin Matters</title>
+  <link rel="icon" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    :root{--bg:#0b0b0b;--fg:#f5f5f5;--muted:#a5a5a5;--accent:#66b3ff;--card:#141414;--border:#2a2a2a;--blue:#4169e1;--red:#b22222;--neutral:#3b3b3b}
+    body{background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Helvetica,Arial;margin:0}
+    a{color:var(--accent)}
+    .container{max-width:1280px;margin:0 auto;padding:16px 18px 48px;display:flex;flex-direction:column;gap:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+    .site-header{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+    .site-header .small-links{display:flex;flex-wrap:wrap;gap:8px}
+    .legend{color:var(--muted)}
+    .layout{display:grid;gap:16px;grid-template-columns:minmax(0,1fr);}
+    @media (min-width:1100px){.layout{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}}
+    #map{width:100%;height:auto}
+    #mapCard{position:relative;padding:12px}
+    #mapTip{position:absolute;pointer-events:none;background:#111;border:1px solid var(--border);padding:6px 8px;border-radius:8px;color:var(--fg);font-size:0.9rem;display:none;box-shadow:0 4px 18px rgba(0,0,0,0.35);max-width:220px}
+    .controls-grid{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+    .controls-grid>div{min-width:180px}
+    label{font-weight:600;font-size:0.9rem;color:var(--muted)}
+    input[type=range]{width:220px}
+    input[type=number]{background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font:inherit}
+    .btn{background:var(--neutral);border:1px solid var(--border);border-radius:10px;padding:6px 10px;color:var(--fg);font-weight:600;cursor:pointer;transition:background 0.2s,color 0.2s;border:1px solid rgba(255,255,255,0.05)}
+    .btn:hover{background:#2a2a2a}
+    .btn.blue{background:var(--blue);border-color:rgba(255,255,255,0.2)}
+    .btn.red{background:var(--red);border-color:rgba(255,255,255,0.2)}
+    .btn.neutral{background:var(--neutral)}
+    .state-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+    .state-chip{display:flex;flex-direction:column;gap:4px;padding:10px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:transform 0.15s ease,box-shadow 0.15s ease;background:#1c1c1c}
+    .state-chip:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(0,0,0,0.25)}
+    .state-chip.lock-blue{background:rgba(65,105,225,0.22);border-color:rgba(102,153,255,0.35)}
+    .state-chip.lock-red{background:rgba(178,34,34,0.22);border-color:rgba(255,120,120,0.35)}
+    .state-chip .abbr{font-size:1.1rem;font-weight:700}
+    .state-chip .meta{color:var(--muted);font-size:0.85rem}
+    .ev-bar{height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;overflow:hidden}
+    .ev-bar .fill{position:absolute;top:0;bottom:0}
+    .ev-bar .mid{position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)}
+    table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden}
+    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+    /* Set predictable column widths so the States column wraps nicely */
+    table thead th:nth-child(1), table tbody td:nth-child(1){width:120px}
+    table thead th:nth-child(3), table tbody td:nth-child(3){width:80px;text-align:right}
+    tbody tr:last-child td{border-bottom:none}
+    /* Wrapping chips for bucket states */
+    .bucket-states{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+    .bucket-states .bucket-chip{background:#1c1c1c;border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-weight:600;font-size:0.9rem;color:var(--fg)}
+    .paths-list{display:flex;flex-direction:column;gap:8px}
+    .path-card{background:#1a1a1a;border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+    .path-card .states{color:var(--muted);font-size:0.92rem;margin-top:4px}
+    code{background:#1b1b1b;padding:2px 4px;border-radius:6px;color:#d0d0d0}
+    /* Paths section layout below the map */
+    .paths-grid{display:grid;gap:12px;grid-template-columns:1fr}
+    @media (min-width:900px){.paths-grid{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card site-header">
+      <div class="small-links">
+        <a class="btn" href="./index.html">Home</a>
+        <a class="btn" href="./state-pages.html">State Pages</a>
+        <a class="btn" href="./ranker.html">Ranker</a>
+        <a class="btn" href="./trend-viewer.html">Trend Viewer</a>
+        <a class="btn" href="./future.html">"""Future"""</a>
+      </div>
+      <div class="legend">2028 Possibilities (prototype)</div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="margin-bottom:12px">Tweak the toss-up band, click states to lock outcomes, and peek at loose 2028 win paths. Everything here is a sandbox—salt heavily.</div>
+      <div class="controls-grid">
+        <div>
+          <label for="thresholdInput">Toss-up threshold (|relative margin| &lt;=)</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="range" id="thresholdInput" min="0.04" max="0.18" step="0.01" value="0.10" />
+            <span id="thresholdValue">10%</span>
+          </div>
+        </div>
+        <div>
+          <label for="lockMarginInput">Lock comfort margin</label>
+          <input type="number" id="lockMarginInput" min="0" max="0.15" step="0.01" value="0.03" />
+        </div>
+        <div>
+          <label for="sigmaFloorInput">Sigma floor</label>
+          <input type="number" id="sigmaFloorInput" min="0.01" max="0.20" step="0.01" value="0.05" />
+        </div>
+        <div>
+          <button id="resetLocks" class="btn">Reset locks</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="card" id="mapCard">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h2 style="margin:0;font-size:1.3rem">Interactive map</h2>
+            <div class="legend">Click toss-up states to cycle Neutral → Blue → Red → Neutral</div>
+          </div>
+          <div class="legend" id="evSummary">EVs loading…</div>
+        </div>
+        <div id="map-wrap" style="position:relative">
+          <svg id="map" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
+          <div id="mapTip"></div>
+        </div>
+      </div>
+      <div class="card" id="sidePanel">
+        <h2 style="margin:0 0 10px;font-size:1.3rem">State outlook</h2>
+        <div class="legend" style="margin-bottom:12px">Probabilities are quick Gaussian approximations using 2000–2024 trends and volatility. They shift when you lock states by nudging a national swing.</div>
+        <div class="ev-bar" style="margin-bottom:14px">
+          <div class="fill" id="evFillBlue" style="left:0;background:var(--blue);width:0%"></div>
+          <div class="fill" id="evFillToss" style="background:#c9a400;left:0;width:0%"></div>
+          <div class="fill" id="evFillRed" style="right:0;background:var(--red);width:0%"></div>
+          <div class="mid"></div>
+          <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:600">—</div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Bucket</th><th>States</th><th>EV</th></tr>
+          </thead>
+          <tbody id="bucketTable">
+            <tr><td>Safe D</td><td>—</td><td>0</td></tr>
+            <tr><td>Lean D</td><td>—</td><td>0</td></tr>
+            <tr><td>Toss-up</td><td>—</td><td>0</td></tr>
+            <tr><td>Lean R</td><td>—</td><td>0</td></tr>
+            <tr><td>Safe R</td><td>—</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Victory paths moved below the map for better layout -->
+    <div class="card" id="pathsCard">
+      <h2 style="margin:0 0 10px;font-size:1.3rem">Victory paths</h2>
+      <div class="legend" style="margin-bottom:12px">Illustrative combinations of toss-up outcomes that reach 270 EV under current assumptions.</div>
+      <div class="paths-grid">
+        <div>
+          <h3 style="margin:0 0 8px">Top Democratic victory paths</h3>
+          <div class="paths-list" id="pathsDem"><div class="legend">Computing…</div></div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 8px">Top Republican victory paths</h3>
+          <div class="paths-list" id="pathsGOP"><div class="legend">Computing…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">Toss-up state controls</h2>
+      <div class="legend" style="margin-bottom:10px">States outside the threshold stay locked to their 2024 winners. Click any chip to cycle its status; hover for quick stats.</div>
+      <div class="state-grid" id="stateGrid"></div>
+    </div>
+
+    <footer class="legend" style="margin-top:8px">Prototype generated on the fly from <code>presidential_margins.csv</code>. Treat everything as illustrative, not predictive.</footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <script src="./utils/siteState.js"></script>
+  <script src="./possibilities.js"></script>
+</body>
+</html>
