@@ -24,6 +24,16 @@
 				"$python"
 			],
 			"group": "build"
+		},
+		{
+			"label": "Build site with new PV totals",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"e:\\coding projects\\state-trends\\build_site.py"
+			],
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }

@@ -1505,6 +1505,12 @@
   const unitColors = new Map();
   const unitParties = new Map(); // unit -> 'Blue'|'Red'|'Even'
   let dEV = 0, rEV = 0, oEV = 0;
+  // Build a quick lookup of votes_to_flip for active scenario
+  const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
+  const vtByUnit = new Map();
+  if (activeFlip && Array.isArray(activeFlip.units)) {
+    activeFlip.units.forEach(u => vtByUnit.set(u.unit, Math.max(0, +u.votes_to_flip || 0)));
+  }
   arr.forEach(r => {
       const unit = r.unit;
       if (!unit || unit === 'NATIONAL') return;
@@ -1586,6 +1592,49 @@
   unitColors.set(unit, color);
   unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
     });
+
+    // After per-unit colors are computed, adjust ME-AL/NE-AL statewide color to account for district flips
+    (function adjustAtLargeFromDistricts(){
+      const states = ['ME','NE'];
+      for (const st of states) {
+        // determine if this year has district data for this state
+        const districtUnits = (st === 'ME') ? ['ME-01','ME-02'] : ['NE-01','NE-02','NE-03'];
+        const haveAll = districtUnits.every(u => arr.some(r => r && r.unit === u));
+        if (!haveAll) continue; // nothing to recompute
+        // Sum D/R votes across districts, applying flips where applicable
+        let dSum = 0, rSum = 0;
+        for (const du of districtUnits) {
+          const row = arr.find(x => x && x.unit === du);
+          if (!row) continue;
+          let d0 = +row.dVotes || 0;
+          let r0 = +row.rVotes || 0;
+          const vt = vtByUnit.get(du) || 0;
+          const baseRm = (+row.rm || 0) + (window._curPv || 0);
+          const flipped = isUnitFlipped(year, du);
+          if (flipped) {
+            // move vt votes from the original winner to the loser
+            if (d0 >= r0) { d0 = Math.max(0, d0 - vt); r0 = r0 + vt; }
+            else { d0 = d0 + vt; r0 = Math.max(0, r0 - vt); }
+          }
+          dSum += d0; rSum += r0;
+        }
+        const twoTot = dSum + rSum;
+        if (twoTot <= 0) continue;
+        let m = (dSum - rSum) / twoTot; // two-party margin D-R
+        // If at-large itself is flipped, force sign to opposite side
+        const alUnit = st + '-AL';
+        if (isUnitFlipped(year, alUnit)) {
+          m = (m > 0 ? -1e-6 : 1e-6);
+        }
+        const color = marginToColor(m);
+        unitColors.set(alUnit, color);
+        // If the state fill uses at-large color as representative, update abbrColors when |m| is stronger
+        const prev = abbrColors.get(st);
+        if (!prev || Math.abs(m) >= Math.abs(prev.m)) {
+          abbrColors.set(st, { m, color });
+        }
+      }
+    })();
 
     // Use smooth transitions for state fills
     (function(){
@@ -2074,7 +2123,54 @@ window.getAdjustedInfo = function(unit){
   try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, keyUnit); } catch(e) {}
   if ((ev == null || isNaN(ev)) && r && isFinite(+r.ev)) ev = +r.ev;
     if (!r) return { ev, margin: null, marginStr: '' };
+    // Default margin from row
     let m = (+r.rm || 0) + (pv || 0);
+    // Special case: For ME/NE statewide tooltips, recompute at-large margin from districts when available
+    try {
+      const isAL = (keyUnit === 'ME-AL' || keyUnit === 'NE-AL');
+      if (isAL && Array.isArray(rows) && rows.length) {
+        const st = keyUnit.slice(0,2);
+        const districtUnits = (st === 'ME') ? ['ME-01','ME-02'] : ['NE-01','NE-02','NE-03'];
+        const haveAll = districtUnits.every(u => rows.some(rr => rr && rr.unit === u));
+        if (haveAll) {
+          // Build a map of votes_to_flip for active scenario
+          const f = window._activeFlip;
+          const vtByUnit = new Map();
+          if (f && f.year === year && Array.isArray(f.units)) {
+            f.units.forEach(u => vtByUnit.set(u.unit, Math.max(0, +u.votes_to_flip || 0)));
+          }
+          let dSum = 0, rSum = 0;
+          for (const du of districtUnits) {
+            const row = rows.find(x => x && x.unit === du);
+            if (!row) continue;
+            let d0 = +row.dVotes || 0;
+            let r0 = +row.rVotes || 0;
+            const vt = vtByUnit.get(du) || 0;
+            const flipped = (!!vt) || (f && f._set && f._set.has(du));
+            if (flipped) {
+              if (d0 >= r0) { d0 = Math.max(0, d0 - vt); r0 = r0 + vt; }
+              else { d0 = d0 + vt; r0 = Math.max(0, r0 - vt); }
+            }
+            dSum += d0; rSum += r0;
+          }
+          const twoTot = dSum + rSum;
+          if (twoTot > 0) {
+            m = (dSum - rSum) / twoTot; // recomputed two-party margin
+            // If at-large itself is flipped, force sign to opposite side
+            const alFlipped = (f && f.year === year && f._set && f._set.has(keyUnit));
+            if (alFlipped) m = (m > 0 ? -1e-6 : 1e-6);
+          }
+          // For ME/NE state hover, prefer showing total state EV instead of AL-only EV
+          if (unit === st) {
+            try {
+              const parts = rows.filter(x => x && (x.unit === `${st}-AL` || x.unit.startsWith(`${st}-`)));
+              const sumEv = parts.reduce((s, x) => s + (+x.ev || 0), 0);
+              if (isFinite(sumEv) && sumEv > 0) ev = sumEv;
+            } catch(e) {}
+          }
+        }
+      }
+    } catch(e) { /* non-fatal recompute for AL */ }
     // Check if this unit is flipped in the current scenario
     const flipped = isUnitFlipped(year, keyUnit);
     if (flipped) {
