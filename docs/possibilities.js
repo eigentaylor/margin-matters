@@ -325,6 +325,19 @@
 	function cycleState(state){
 		if (!state) return;
 		if (state.baseStrength === 'safe' && !state.manual) return; // lock untouched safe
+		// If the state's base classification is a true tossup, use the longer 5-step cycle
+		if (state.baseStatus === 'tossup' || state.baseStrength === 'tossup'){
+			// tossup -> DL -> DS -> RS -> RL -> tossup
+			if (state.status === 'tossup') { state.status = 'dem'; state.strength = 'lean'; }
+			else if (state.status === 'dem' && state.strength === 'lean') { state.strength = 'safe'; }
+			else if (state.status === 'dem' && state.strength === 'safe') { state.status = 'rep'; state.strength = 'safe'; }
+			else if (state.status === 'rep' && state.strength === 'safe') { state.strength = 'lean'; }
+			else if (state.status === 'rep' && state.strength === 'lean') { state.status = 'tossup'; state.strength = 'tossup'; }
+			else { state.status = 'tossup'; state.strength = 'tossup'; }
+			state.manual = (state.status !== state.baseStatus) || (state.strength !== state.baseStrength);
+			return;
+		}
+
 		// Two different 3-step cycles depending on the state's base orientation:
 		// If the state's base is REP: RL -> RS -> DS -> RL
 		// If the state's base is DEM: DL -> DS -> RS -> DL
