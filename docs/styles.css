@@ -107,7 +107,7 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
   position:relative;
   display:block; /* no side column so map can use full width */
 }
-#smallStateBoxes{ display:none !important; }
+#smallStateBoxes{ /* allow small state boxes to render on probabilities & paths pages */ display:flex; flex-wrap:wrap; gap:6px; }
 .small-state-box{
   display:flex;
   align-items:center;
@@ -119,6 +119,16 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
   box-shadow: 0 2px 6px rgba(0,0,0,0.25) inset;
   background:#222;
 }
+
+.prob-table{margin-top:12px;font-size:0.95rem;background:#111;border-radius:10px;overflow:hidden}
+.prob-table th,
+.prob-table td{padding:8px 12px;text-align:center;font-variant-numeric:tabular-nums}
+.prob-table th{text-transform:uppercase;font-size:0.8rem;letter-spacing:0.6px;color:var(--muted);background:#161616}
+.prob-table td:first-child,
+.prob-table th:first-child{text-align:left;font-variant-numeric:normal}
+.prob-table td:last-child,
+.prob-table th:last-child{text-align:center}
+.prob-table tbody tr:hover{background:#161616}
 .small-state-box .label{
   font-weight:800;
   letter-spacing:0.3px;
@@ -202,6 +212,7 @@ body.has-delta-toggle{padding-bottom:60px}
 .tossup-list strong{color:var(--fg)}
 .state{cursor:pointer;transition:fill 0.25s ease, filter 0.2s ease}
 .state:hover{filter:brightness(1.08)}
+.state.locked{cursor:not-allowed !important; filter:brightness(0.85) saturate(0.85);}
 .manual-note{color:var(--accent);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}
 
 /* Category abbreviation list styling */
