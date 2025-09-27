@@ -1,0 +1,80 @@
+{
+  "year": 2024,
+  "r_col": 1,
+  "d_col": 4,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 7,
+      "name": "Stein/Ware"
+    },
+    {
+      "index": 10,
+      "name": "Kennedy/Shanahan"
+    },
+    {
+      "index": 13,
+      "name": "Oliver/Maat"
+    },
+    {
+      "index": 16,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State ordistrict Alabama[486] Alaska[487]",
+    "Trump/VanceRepublican Votes 1,462,616 184,458",
+    "Trump/VanceRepublican % 64.57% 54.54%",
+    "Trump/VanceRepublican EV 9 3",
+    "Harris/WalzDemocratic Votes 772,412 140,026",
+    "Harris/WalzDemocratic % 34.10% 41.41%",
+    "Harris/WalzDemocratic EV – –",
+    "Stein/WareGreen Votes 4,319 2,342",
+    "Stein/WareGreen % 0.19% 0.69%",
+    "Stein/WareGreen EV – –",
+    "Kennedy/ShanahanIndependent Votes 12,075 5,670",
+    "Kennedy/ShanahanIndependent % 0.53% 1.68%",
+    "Kennedy/ShanahanIndependent EV – –",
+    "Oliver/MaatLibertarian Votes 4,930 3,040",
+    "Oliver/MaatLibertarian % 0.22% 0.90%",
+    "Oliver/MaatLibertarian EV – –",
+    "Others Votes 8,738 2,641",
+    "Others % 0.39% 0.78%",
+    "Others EV – –",
+    "Margin Votes 690,204 44,432",
+    "Margin % 30.47% 13.13%",
+    "Marginswing[d] % 5.01% 3.07%",
+    "Totalvotes 338,177"
+  ],
+  "col_desc_lower": [
+    "state ordistrict alabama[486] alaska[487]",
+    "trump/vancerepublican votes 1,462,616 184,458",
+    "trump/vancerepublican % 64.57% 54.54%",
+    "trump/vancerepublican ev 9 3",
+    "harris/walzdemocratic votes 772,412 140,026",
+    "harris/walzdemocratic % 34.10% 41.41%",
+    "harris/walzdemocratic ev – –",
+    "stein/waregreen votes 4,319 2,342",
+    "stein/waregreen % 0.19% 0.69%",
+    "stein/waregreen ev – –",
+    "kennedy/shanahanindependent votes 12,075 5,670",
+    "kennedy/shanahanindependent % 0.53% 1.68%",
+    "kennedy/shanahanindependent ev – –",
+    "oliver/maatlibertarian votes 4,930 3,040",
+    "oliver/maatlibertarian % 0.22% 0.90%",
+    "oliver/maatlibertarian ev – –",
+    "others votes 8,738 2,641",
+    "others % 0.39% 0.78%",
+    "others ev – –",
+    "margin votes 690,204 44,432",
+    "margin % 30.47% 13.13%",
+    "marginswing[d] % 5.01% 3.07%",
+    "totalvotes 338,177"
+  ],
+  "rep_keywords": [
+    "trump"
+  ],
+  "dem_keywords": [
+    "harris"
+  ]
+}

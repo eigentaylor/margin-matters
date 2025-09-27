@@ -18,6 +18,10 @@ def columns_for_table(headers: List[str]) -> List[str]:
                 seen.add(name)
         return out
     cols = ["year", "D_votes", "R_votes"]
+    # Ensure key third-party related raw columns are available by default
+    for extra in ("third_party_votes", "top_third_party", "T_votes"):
+        if extra in headers and extra not in cols:
+            cols.append(extra)
     for h in headers:
         if "str" in h.lower() and h not in cols:
             cols.append(h)
@@ -58,7 +62,10 @@ def split_columns_into_three(headers: List[str]) -> Tuple[List[str], List[str], 
         if 'two_party' in lname:
             if c not in tp:
                 tp.append(c)
-        elif 'third' in lname or '3p' in lname or c in ('T_votes', 'T_pct', 'third_party_share', 'third_party_relative_share', 'third_party_national_share'):
+        elif 'third' in lname or '3p' in lname or c in (
+            'T_votes', 'T_pct', 'third_party_share', 'third_party_relative_share',
+            'third_party_national_share', 'third_party_votes', 'top_third_party'
+        ):
             if c not in third:
                 third.append(c)
         else:
@@ -102,6 +109,10 @@ def describe_column(col: str) -> str:
         return 'Number of votes for the Republican candidate (raw count(pct%)).'
     if k in ('t_votes',):
         return 'Number of votes for third-party (other) candidates (raw count(pct%)).'
+    if k == 'third_party_votes':
+        return 'Total votes for all third-party / other candidates combined (may exceed top candidate).'
+    if k == 'top_third_party':
+        return 'Name of the highest-vote third-party / other candidate in that state and year.'
     if 'pct' in k:
         return 'Percentage share of the vote.'
     if 'delta' in k:
@@ -154,7 +165,7 @@ def render_table(rows: List[Dict], cols: List[str], two_party: bool = False) -> 
         if val is None or val == '0' or val == '0.0':
             return ""
         s = str(val)
-        if col in ("D_votes", "R_votes", "T_votes", "total_votes"):
+        if col in ("D_votes", "R_votes", "T_votes", "total_votes", "third_party_votes"):
             try:
                 n = int(s.replace(",", ""))
                 return f"{n:,}"
@@ -186,10 +197,15 @@ def render_table(rows: List[Dict], cols: List[str], two_party: bool = False) -> 
                 denom = d_val + r_val + (t_val if t_val is not None else 0)
 
         for c in cols:
-            if c in ("D_votes", "R_votes", "T_votes", "total_votes"):
+            if c in ("D_votes", "R_votes", "T_votes", "total_votes", "third_party_votes"):
                 if c == "D_votes": vote_val = d_val
                 elif c == "R_votes": vote_val = r_val
                 elif c == "T_votes": vote_val = t_val
+                elif c == "third_party_votes":
+                    try:
+                        vote_val = int(str(r.get('third_party_votes', '')).replace(',', ''))
+                    except Exception:
+                        vote_val = None
                 else:
                     tv = parse_int(r.get('total_votes', ''))
                     vote_val = denom if tv is None else tv

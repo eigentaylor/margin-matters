@@ -1,5 +1,5 @@
 year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1964,AL,210732,479085,0,0,{},689817
+1964,AL,210732,479085,210732,0,"{""Unpledged Electors"": 210732}",689817
 1964,AK,44329,22930,0,0,{},67259
 1964,AZ,237753,242535,0,482,"{""Other"": 482}",480770
 1964,AR,314197,243264,0,2965,"{""Other"": 2965}",560426
@@ -50,4 +50,4 @@ year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_vo
 1964,WV,538087,253953,0,0,{},792040
 1964,WI,1050424,638495,0,2896,"{""Other"": 2896}",1691815
 1964,WY,80718,61998,0,0,{},142716
-1964,NATIONAL,43129040,27175754,0,336957,"{""Other"": 336957}",70641751
+1964,NATIONAL,43129040,27175754,210732,336957,"{""Other"": 336957, ""Unpledged Electors"": 210732}",70641751

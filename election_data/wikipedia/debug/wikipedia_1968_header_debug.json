@@ -1,0 +1,54 @@
+{
+  "year": 1968,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 14,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "George Wallace"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 10 3",
+    "Richard NixonRepublican # 146,923 37,600",
+    "Richard NixonRepublican % 13.99 45.28",
+    "Richard NixonRepublican electoralvotes - 3",
+    "Hubert H. HumphreyDemocratic # 196,579 35,411",
+    "Hubert H. HumphreyDemocratic % 18.72 42.65",
+    "Hubert H. HumphreyDemocratic electoralvotes - -",
+    "George WallaceAmerican Independent # 691,425 10,024",
+    "George WallaceAmerican Independent % 65.86 12.07",
+    "George WallaceAmerican Independent electoralvotes 10 -",
+    "Margin # -494,846 2,189",
+    "Margin % -47.13 2.64",
+    "Marginswing[h] % -83.8% 34.5%",
+    "State Total # 1,049,917 83,035",
+    "State Total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 10 3",
+    "richard nixonrepublican # 146,923 37,600",
+    "richard nixonrepublican % 13.99 45.28",
+    "richard nixonrepublican electoralvotes - 3",
+    "hubert h. humphreydemocratic # 196,579 35,411",
+    "hubert h. humphreydemocratic % 18.72 42.65",
+    "hubert h. humphreydemocratic electoralvotes - -",
+    "george wallaceamerican independent # 691,425 10,024",
+    "george wallaceamerican independent % 65.86 12.07",
+    "george wallaceamerican independent electoralvotes 10 -",
+    "margin # -494,846 2,189",
+    "margin % -47.13 2.64",
+    "marginswing[h] % -83.8% 34.5%",
+    "state total # 1,049,917 83,035",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "nixon"
+  ],
+  "dem_keywords": [
+    "humphrey"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "year": 1964,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 16,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Unpledged Electors"
+    },
+    {
+      "index": 11,
+      "name": "Other"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 10 3",
+    "Lyndon B. JohnsonDemocratic # - 44,329",
+    "Lyndon B. JohnsonDemocratic % - 65.91",
+    "Lyndon B. JohnsonDemocratic electoralvotes - 3",
+    "Barry GoldwaterRepublican # 479,085 22,930",
+    "Barry GoldwaterRepublican % 69.45 34.09",
+    "Barry GoldwaterRepublican electoralvotes 10 -",
+    "Unpledged electorsUnpledged Democratic # 210,732 -",
+    "Unpledged electorsUnpledged Democratic % 30.55 -",
+    "Unpledged electorsUnpledged Democratic electoralvotes - -",
+    "Other # - -",
+    "Other % - -",
+    "Other electoralvotes - -",
+    "Margin # −268,353 21,399",
+    "Margin % −38.90 31.82",
+    "State total # 689,817 67,259",
+    "State total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 10 3",
+    "lyndon b. johnsondemocratic # - 44,329",
+    "lyndon b. johnsondemocratic % - 65.91",
+    "lyndon b. johnsondemocratic electoralvotes - 3",
+    "barry goldwaterrepublican # 479,085 22,930",
+    "barry goldwaterrepublican % 69.45 34.09",
+    "barry goldwaterrepublican electoralvotes 10 -",
+    "unpledged electorsunpledged democratic # 210,732 -",
+    "unpledged electorsunpledged democratic % 30.55 -",
+    "unpledged electorsunpledged democratic electoralvotes - -",
+    "other # - -",
+    "other % - -",
+    "other electoralvotes - -",
+    "margin # −268,353 21,399",
+    "margin % −38.90 31.82",
+    "state total # 689,817 67,259",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "goldwater"
+  ],
+  "dem_keywords": [
+    "johnson"
+  ]
+}

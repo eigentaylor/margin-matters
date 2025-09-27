@@ -1,0 +1,84 @@
+{
+  "year": 1996,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 23,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Ross Perot"
+    },
+    {
+      "index": 11,
+      "name": "Ralph Nader"
+    },
+    {
+      "index": 14,
+      "name": "Harry Browne"
+    },
+    {
+      "index": 17,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "elec­toralvotes 9 3",
+    "Bill ClintonDemocratic # 662,165 80,380",
+    "Bill ClintonDemocratic % 43.16% 33.27%",
+    "Bill ClintonDemocratic elec­toralvotes – –",
+    "Bob DoleRepublican # 769,044 122,746",
+    "Bob DoleRepublican % 50.12% 50.80%",
+    "Bob DoleRepublican elec­toralvotes 9 3",
+    "Ross PerotReform # 92,149 26,333",
+    "Ross PerotReform % 6.01% 10.90%",
+    "Ross PerotReform elec­toralvotes – –",
+    "Ralph NaderGreen # – 7,597",
+    "Ralph NaderGreen % – 3.14%",
+    "Ralph NaderGreen elec­toralvotes – –",
+    "Harry BrowneLibertarian # 5,290 2,276",
+    "Harry BrowneLibertarian % 0.34% 0.94%",
+    "Harry BrowneLibertarian elec­toralvotes – –",
+    "Others # 5,701 2,288",
+    "Others % 0.37% 0.95%",
+    "Others elec­toralvotes – –",
+    "Margin # −106,879 −42,366",
+    "Margin % −6.96% −17.53%",
+    "MarginSwing[h] % −0.19% −8.36%",
+    "State Total # 1,534,349 241,620",
+    "State Total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "elec­toralvotes 9 3",
+    "bill clintondemocratic # 662,165 80,380",
+    "bill clintondemocratic % 43.16% 33.27%",
+    "bill clintondemocratic elec­toralvotes – –",
+    "bob dolerepublican # 769,044 122,746",
+    "bob dolerepublican % 50.12% 50.80%",
+    "bob dolerepublican elec­toralvotes 9 3",
+    "ross perotreform # 92,149 26,333",
+    "ross perotreform % 6.01% 10.90%",
+    "ross perotreform elec­toralvotes – –",
+    "ralph nadergreen # – 7,597",
+    "ralph nadergreen % – 3.14%",
+    "ralph nadergreen elec­toralvotes – –",
+    "harry brownelibertarian # 5,290 2,276",
+    "harry brownelibertarian % 0.34% 0.94%",
+    "harry brownelibertarian elec­toralvotes – –",
+    "others # 5,701 2,288",
+    "others % 0.37% 0.95%",
+    "others elec­toralvotes – –",
+    "margin # −106,879 −42,366",
+    "margin % −6.96% −17.53%",
+    "marginswing[h] % −0.19% −8.36%",
+    "state total # 1,534,349 241,620",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "dole"
+  ],
+  "dem_keywords": [
+    "clinton"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "year": 2012,
+  "r_col": 4,
+  "d_col": 1,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 7,
+      "name": "Johnson/Gray"
+    },
+    {
+      "index": 10,
+      "name": "Stein/Honkala"
+    },
+    {
+      "index": 13,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State ordistrict Alabama Alaska",
+    "Obama/BidenDemocratic # 795,696 122,640",
+    "Obama/BidenDemocratic % 38.36% 40.81%",
+    "Obama/BidenDemocratic EV – –",
+    "Romney/RyanRepublican # 1,255,925 164,676",
+    "Romney/RyanRepublican % 60.55% 54.80%",
+    "Romney/RyanRepublican EV 9 3",
+    "Johnson/GrayLibertarian # 12,328 7,392",
+    "Johnson/GrayLibertarian % 0.59% 2.46%",
+    "Johnson/GrayLibertarian EV – –",
+    "Stein/HonkalaGreen # 3,397 2,917",
+    "Stein/HonkalaGreen % 0.16% 0.97%",
+    "Stein/HonkalaGreen EV – –",
+    "Others # 6,992 2,870",
+    "Others % 0.33% 0.96%",
+    "Others EV – –",
+    "Margin # −460,229 −42,036",
+    "Margin % −22.19% −13.99%",
+    "MarginSwing[a] % −0.61% 7.55%",
+    "Totalvotes 300,495",
+    "AK"
+  ],
+  "col_desc_lower": [
+    "state ordistrict alabama alaska",
+    "obama/bidendemocratic # 795,696 122,640",
+    "obama/bidendemocratic % 38.36% 40.81%",
+    "obama/bidendemocratic ev – –",
+    "romney/ryanrepublican # 1,255,925 164,676",
+    "romney/ryanrepublican % 60.55% 54.80%",
+    "romney/ryanrepublican ev 9 3",
+    "johnson/graylibertarian # 12,328 7,392",
+    "johnson/graylibertarian % 0.59% 2.46%",
+    "johnson/graylibertarian ev – –",
+    "stein/honkalagreen # 3,397 2,917",
+    "stein/honkalagreen % 0.16% 0.97%",
+    "stein/honkalagreen ev – –",
+    "others # 6,992 2,870",
+    "others % 0.33% 0.96%",
+    "others ev – –",
+    "margin # −460,229 −42,036",
+    "margin % −22.19% −13.99%",
+    "marginswing[a] % −0.61% 7.55%",
+    "totalvotes 300,495",
+    "ak"
+  ],
+  "rep_keywords": [
+    "romney"
+  ],
+  "dem_keywords": [
+    "obama"
+  ]
+}

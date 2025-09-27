@@ -1,0 +1,70 @@
+{
+  "year": 2020,
+  "r_col": 4,
+  "d_col": 1,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 7,
+      "name": "Jorgensen/Cohen"
+    },
+    {
+      "index": 10,
+      "name": "Hawkins/Walker"
+    },
+    {
+      "index": 13,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State ordistrict Alabama Alaska",
+    "Biden/HarrisDemocratic Votes 849,624 153,778",
+    "Biden/HarrisDemocratic % 36.57% 42.77%",
+    "Biden/HarrisDemocratic EV – –",
+    "Trump/PenceRepublican Votes 1,441,170 189,951",
+    "Trump/PenceRepublican % 62.03% 52.83%",
+    "Trump/PenceRepublican EV 9 3",
+    "Jorgensen/CohenLibertarian Votes 25,176 8,897",
+    "Jorgensen/CohenLibertarian % 1.08% 2.47%",
+    "Jorgensen/CohenLibertarian EV – –",
+    "Hawkins/WalkerGreen Votes –[p] –[q]",
+    "Hawkins/WalkerGreen % –[p] –[q]",
+    "Hawkins/WalkerGreen EV – –",
+    "Others Votes 7,312 6,904",
+    "Others % 0.31% 1.92%",
+    "Others EV – –",
+    "Margin Votes −591,546 −36,173",
+    "Margin % −25.46% −10.06%",
+    "Marginswing[o] % 2.27% 4.67%",
+    "Totalvotes 359,530"
+  ],
+  "col_desc_lower": [
+    "state ordistrict alabama alaska",
+    "biden/harrisdemocratic votes 849,624 153,778",
+    "biden/harrisdemocratic % 36.57% 42.77%",
+    "biden/harrisdemocratic ev – –",
+    "trump/pencerepublican votes 1,441,170 189,951",
+    "trump/pencerepublican % 62.03% 52.83%",
+    "trump/pencerepublican ev 9 3",
+    "jorgensen/cohenlibertarian votes 25,176 8,897",
+    "jorgensen/cohenlibertarian % 1.08% 2.47%",
+    "jorgensen/cohenlibertarian ev – –",
+    "hawkins/walkergreen votes –[p] –[q]",
+    "hawkins/walkergreen % –[p] –[q]",
+    "hawkins/walkergreen ev – –",
+    "others votes 7,312 6,904",
+    "others % 0.31% 1.92%",
+    "others ev – –",
+    "margin votes −591,546 −36,173",
+    "margin % −25.46% −10.06%",
+    "marginswing[o] % 2.27% 4.67%",
+    "totalvotes 359,530"
+  ],
+  "rep_keywords": [
+    "trump"
+  ],
+  "dem_keywords": [
+    "biden"
+  ]
+}

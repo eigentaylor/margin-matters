@@ -1,0 +1,64 @@
+{
+  "year": 1976,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 17,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Eugene"
+    },
+    {
+      "index": 11,
+      "name": "Roger MacBride"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 9 3",
+    "Jimmy CarterDemocratic # 659,170 44,058",
+    "Jimmy CarterDemocratic % 55.73 35.65",
+    "Jimmy CarterDemocratic electoralvotes 9 —",
+    "Gerald FordRepublican # 504,070 71,555",
+    "Gerald FordRepublican % 42.61 57.90",
+    "Gerald FordRepublican electoralvotes — 3",
+    "Eugene McCarthyIndependent # — —",
+    "Eugene McCarthyIndependent % — —",
+    "Eugene McCarthyIndependent electoralvotes — —",
+    "Roger MacBrideLibertarian # 1,481 6,785",
+    "Roger MacBrideLibertarian % 0.13 5.49",
+    "Roger MacBrideLibertarian electoralvotes — —",
+    "Margin # 155,100 −27,497",
+    "Margin % 13.11 −22.25",
+    "MarginSwing[f] % 60.00 1.26",
+    "State Total # 1,182,850 123,574",
+    "State Total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 9 3",
+    "jimmy carterdemocratic # 659,170 44,058",
+    "jimmy carterdemocratic % 55.73 35.65",
+    "jimmy carterdemocratic electoralvotes 9 —",
+    "gerald fordrepublican # 504,070 71,555",
+    "gerald fordrepublican % 42.61 57.90",
+    "gerald fordrepublican electoralvotes — 3",
+    "eugene mccarthyindependent # — —",
+    "eugene mccarthyindependent % — —",
+    "eugene mccarthyindependent electoralvotes — —",
+    "roger macbridelibertarian # 1,481 6,785",
+    "roger macbridelibertarian % 0.13 5.49",
+    "roger macbridelibertarian electoralvotes — —",
+    "margin # 155,100 −27,497",
+    "margin % 13.11 −22.25",
+    "marginswing[f] % 60.00 1.26",
+    "state total # 1,182,850 123,574",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "ford"
+  ],
+  "dem_keywords": [
+    "carter"
+  ]
+}

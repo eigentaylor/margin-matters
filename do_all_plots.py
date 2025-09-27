@@ -168,6 +168,8 @@ def _build_plot1(state: str, df: pd.DataFrame, out_dir: str, nat_only: bool = Fa
     years = df["year"].to_numpy()
     order = np.argsort(years)
     years = years[order]
+    if state == 'MS':
+        print(f"Debug: MS years={years}, order={order}")
 
     # 1) total margin line (state + nation unless nat_only)
     state_margin = None if nat_only else df["pres_margin"].to_numpy()[order]

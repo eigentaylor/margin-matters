@@ -1,0 +1,68 @@
+{
+  "year": 1944,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 11,
+      "name": "Norman Thomas"
+    },
+    {
+      "index": 14,
+      "name": "Other"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 11 4",
+    "Franklin D. RooseveltDemocratic # 198,918 80,926",
+    "Franklin D. RooseveltDemocratic % 81.28 58.80",
+    "Franklin D. RooseveltDemocratic electoralvotes 11 4",
+    "Thomas E. DeweyRepublican # 44,540 56,287",
+    "Thomas E. DeweyRepublican % 18.20 40.90",
+    "Thomas E. DeweyRepublican electoralvotes - -",
+    "No CandidateSouthern Democrat/Texas Regulars # - -",
+    "No CandidateSouthern Democrat/Texas Regulars % - -",
+    "No CandidateSouthern Democrat/Texas Regulars electoralvotes - -",
+    "Norman ThomasSocialist # 190 -",
+    "Norman ThomasSocialist % 0.08 -",
+    "Norman ThomasSocialist electoralvotes - -",
+    "Other # 1,095 421",
+    "Other % 0.45 0.31",
+    "Other electoralvotes - -",
+    "Margin # 154,378 24,639",
+    "Margin % 63.08 17.90",
+    "State total # 244,743 137,634",
+    "State total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 11 4",
+    "franklin d. rooseveltdemocratic # 198,918 80,926",
+    "franklin d. rooseveltdemocratic % 81.28 58.80",
+    "franklin d. rooseveltdemocratic electoralvotes 11 4",
+    "thomas e. deweyrepublican # 44,540 56,287",
+    "thomas e. deweyrepublican % 18.20 40.90",
+    "thomas e. deweyrepublican electoralvotes - -",
+    "no candidatesouthern democrat/texas regulars # - -",
+    "no candidatesouthern democrat/texas regulars % - -",
+    "no candidatesouthern democrat/texas regulars electoralvotes - -",
+    "norman thomassocialist # 190 -",
+    "norman thomassocialist % 0.08 -",
+    "norman thomassocialist electoralvotes - -",
+    "other # 1,095 421",
+    "other % 0.45 0.31",
+    "other electoralvotes - -",
+    "margin # 154,378 24,639",
+    "margin % 63.08 17.90",
+    "state total # 244,743 137,634",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "dewey"
+  ],
+  "dem_keywords": [
+    "roosevelt"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "year": 1960,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 17,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Unpledged Electors"
+    },
+    {
+      "index": 11,
+      "name": "Eric Hass"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 11 3",
+    "John F. KennedyDemocratic # 318,303 29,809",
+    "John F. KennedyDemocratic % 55.82 49.06",
+    "John F. KennedyDemocratic electoralvotes 5 –",
+    "Richard NixonRepublican # 237,981 30,953",
+    "Richard NixonRepublican % 41.73 50.94",
+    "Richard NixonRepublican electoralvotes – 3",
+    "Unpledged ElectorsUnpledged Democratic # 324,050 –",
+    "Unpledged ElectorsUnpledged Democratic % 56.83 –",
+    "Unpledged ElectorsUnpledged Democratic electoralvotes 6 –",
+    "Eric Hass Socialist Labor # – –",
+    "Eric Hass Socialist Labor % – –",
+    "Eric Hass Socialist Labor electoralvotes – –",
+    "Margin # 80,322 −1,144",
+    "Margin % 14.23 −1.88",
+    "Margin Swing # -2.90 N/A",
+    "State Total  880,334 60,762",
+    "State Total AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 11 3",
+    "john f. kennedydemocratic # 318,303 29,809",
+    "john f. kennedydemocratic % 55.82 49.06",
+    "john f. kennedydemocratic electoralvotes 5 –",
+    "richard nixonrepublican # 237,981 30,953",
+    "richard nixonrepublican % 41.73 50.94",
+    "richard nixonrepublican electoralvotes – 3",
+    "unpledged electorsunpledged democratic # 324,050 –",
+    "unpledged electorsunpledged democratic % 56.83 –",
+    "unpledged electorsunpledged democratic electoralvotes 6 –",
+    "eric hass socialist labor # – –",
+    "eric hass socialist labor % – –",
+    "eric hass socialist labor electoralvotes – –",
+    "margin # 80,322 −1,144",
+    "margin % 14.23 −1.88",
+    "margin swing # -2.90 n/a",
+    "state total  880,334 60,762",
+    "state total al ak"
+  ],
+  "rep_keywords": [
+    "nixon"
+  ],
+  "dem_keywords": [
+    "kennedy"
+  ]
+}

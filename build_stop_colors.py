@@ -67,13 +67,14 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
         def classify_and_append(s: float, eff: float, r: Dict):
             abbr = r.get('abbr')
             rm = parse_float(r.get('relative_margin'))
-            tp = parse_float(r.get('third_party_share'))
+            #tp = parse_float(r.get('third_party_share'))
             nat = parse_float(r.get('national_margin'))
             original_margins = {
                 'D': parse_float(r['D_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
                 'R': parse_float(r['R_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
                 'T': parse_float(r['T_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
             }
+            tp = original_margins['T']
             original_winner = max(original_margins, key=lambda k: original_margins.get(k, 0))
             a_local = 3 * tp - 1
             winner = None
@@ -93,6 +94,11 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     pass
                 if new_winner == original_winner:
                     print(f"Debug: {year} {abbr} winner unchanged at stop {s} eff {eff}: {original_winner}")
+                    if abbr == 'LA' and year == 1948:
+                        # find what the stop should be to flip T->D
+                        # want original_margins['D'] + (eff - nat) / 2 > original_margins['T']
+                        target_eff = nat + 2 * (original_margins['T'] - original_margins['D'])
+                        print(f"Debug: {year} {abbr} T->D flip eff {target_eff}, actual eff {eff}")
                     pass
                 if a_local > 0:
                     pass
@@ -129,13 +135,18 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             if not abbr or abbr in ('NATIONAL', 'NAT'):
                 continue
             rm = parse_float(r.get('relative_margin'))
-            t = parse_float(r.get('third_party_share'))
+            t = parse_float(r.get('T_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
+            d = parse_float(r.get('D_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
+            r_ = parse_float(r.get('R_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
             a = 3 * t - 1
+            nat = parse_float(r.get('national_margin'))
             if abbr == 'AL' and year == 1948:
                 a = 0.0
             if a > 0:# and not (year == 1948 and abbr == 'AL'):
-                nD = -rm + a
-                nR = -rm - a
+                #nD = -rm + a
+                nD = nat + 2 * (t - d)
+                #nR = -rm - a
+                nR = nat + 2 * (r_ - t)
                 if abs(nD) <= PV_CAP:
                     stops_set.add(nD)
                     stop_to_units[nD].append(abbr)

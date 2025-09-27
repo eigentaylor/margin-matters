@@ -1,0 +1,94 @@
+{
+  "year": 2008,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 26,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Ralph Nader"
+    },
+    {
+      "index": 11,
+      "name": "Bob Barr"
+    },
+    {
+      "index": 14,
+      "name": "Chuck Baldwin"
+    },
+    {
+      "index": 17,
+      "name": "Cynthia"
+    },
+    {
+      "index": 20,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State/district Alabama Alaska",
+    "EV 9 3",
+    "Barack ObamaDemocratic # 813,479 123,594",
+    "Barack ObamaDemocratic % 38.74% 37.89%",
+    "Barack ObamaDemocratic EV - -",
+    "John McCainRepublican # 1,266,546 193,841",
+    "John McCainRepublican % 60.32% 59.42%",
+    "John McCainRepublican EV 9 3",
+    "Ralph NaderIndependent # 6,788 3,783",
+    "Ralph NaderIndependent % 0.32% 1.16%",
+    "Ralph NaderIndependent EV - -",
+    "Bob BarrLibertarian # 4,991 1,589",
+    "Bob BarrLibertarian % 0.24% 0.49%",
+    "Bob BarrLibertarian EV - -",
+    "Chuck BaldwinConstitution # 4,310 1,660",
+    "Chuck BaldwinConstitution % 0.21% 0.51%",
+    "Chuck BaldwinConstitution EV - -",
+    "Cynthia McKinneyGreen # 0 0",
+    "Cynthia McKinneyGreen % 0.00% 0.00%",
+    "Cynthia McKinneyGreen EV - -",
+    "Others # 3,705 1,730",
+    "Others % 0.18% 0.53%",
+    "Others EV - -",
+    "Margin # -453,067 -70,247",
+    "Margin % -21.58% -21.53%",
+    "MarginSwing[b] % 4.04% 4.01%",
+    "Total votes # 2,099,819 326,197",
+    "Total votes  AL AK"
+  ],
+  "col_desc_lower": [
+    "state/district alabama alaska",
+    "ev 9 3",
+    "barack obamademocratic # 813,479 123,594",
+    "barack obamademocratic % 38.74% 37.89%",
+    "barack obamademocratic ev - -",
+    "john mccainrepublican # 1,266,546 193,841",
+    "john mccainrepublican % 60.32% 59.42%",
+    "john mccainrepublican ev 9 3",
+    "ralph naderindependent # 6,788 3,783",
+    "ralph naderindependent % 0.32% 1.16%",
+    "ralph naderindependent ev - -",
+    "bob barrlibertarian # 4,991 1,589",
+    "bob barrlibertarian % 0.24% 0.49%",
+    "bob barrlibertarian ev - -",
+    "chuck baldwinconstitution # 4,310 1,660",
+    "chuck baldwinconstitution % 0.21% 0.51%",
+    "chuck baldwinconstitution ev - -",
+    "cynthia mckinneygreen # 0 0",
+    "cynthia mckinneygreen % 0.00% 0.00%",
+    "cynthia mckinneygreen ev - -",
+    "others # 3,705 1,730",
+    "others % 0.18% 0.53%",
+    "others ev - -",
+    "margin # -453,067 -70,247",
+    "margin % -21.58% -21.53%",
+    "marginswing[b] % 4.04% 4.01%",
+    "total votes # 2,099,819 326,197",
+    "total votes  al ak"
+  ],
+  "rep_keywords": [
+    "mccain"
+  ],
+  "dem_keywords": [
+    "obama"
+  ]
+}

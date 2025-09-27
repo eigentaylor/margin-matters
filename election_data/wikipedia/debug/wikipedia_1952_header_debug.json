@@ -1,0 +1,72 @@
+{
+  "year": 1952,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Vincent Hallinan"
+    },
+    {
+      "index": 11,
+      "name": "Stuart Hamblen"
+    },
+    {
+      "index": 14,
+      "name": "Eric Hass"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 11 4",
+    "Dwight D. EisenhowerRepublican # 149,231 152,042",
+    "Dwight D. EisenhowerRepublican % 35.02 58.35",
+    "Dwight D. EisenhowerRepublican electoralvotes – 4",
+    "Adlai StevensonDemocratic # 275,075 108,528",
+    "Adlai StevensonDemocratic % 64.55 41.65",
+    "Adlai StevensonDemocratic electoralvotes 11 –",
+    "Vincent HallinanProgressive # – –",
+    "Vincent HallinanProgressive % – –",
+    "Vincent HallinanProgressive electoralvotes – –",
+    "Stuart HamblenProhibition # 1,814 –",
+    "Stuart HamblenProhibition % 0.43 –",
+    "Stuart HamblenProhibition electoralvotes – –",
+    "Eric HassSocialist Labor # – –",
+    "Eric HassSocialist Labor % – –",
+    "Eric HassSocialist Labor electoralvotes – –",
+    "Margin # -125,844 43,514",
+    "Margin % -29.53 16.70",
+    "State Total # 426,120 260,570",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 11 4",
+    "dwight d. eisenhowerrepublican # 149,231 152,042",
+    "dwight d. eisenhowerrepublican % 35.02 58.35",
+    "dwight d. eisenhowerrepublican electoralvotes – 4",
+    "adlai stevensondemocratic # 275,075 108,528",
+    "adlai stevensondemocratic % 64.55 41.65",
+    "adlai stevensondemocratic electoralvotes 11 –",
+    "vincent hallinanprogressive # – –",
+    "vincent hallinanprogressive % – –",
+    "vincent hallinanprogressive electoralvotes – –",
+    "stuart hamblenprohibition # 1,814 –",
+    "stuart hamblenprohibition % 0.43 –",
+    "stuart hamblenprohibition electoralvotes – –",
+    "eric hasssocialist labor # – –",
+    "eric hasssocialist labor % – –",
+    "eric hasssocialist labor electoralvotes – –",
+    "margin # -125,844 43,514",
+    "margin % -29.53 16.70",
+    "state total # 426,120 260,570",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "eisenhower"
+  ],
+  "dem_keywords": [
+    "stevenson"
+  ]
+}

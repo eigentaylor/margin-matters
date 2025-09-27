@@ -391,13 +391,17 @@
          .on('mousemove', function(evt){ try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch(e){} })
          .on('mouseleave', function(){ try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch(e){} });
 
-        // Click-through
-        g.style('cursor','pointer')
-         .on('click', ()=>{
-            let abbr = d.unit;
-            if (abbr.endsWith('-AL')) abbr = abbr.slice(0,2);
-            window.open(`state/${abbr}.html`, '_blank');
-         });
+      // Click-through disabled in future mode; only enable for historical/tester pages
+      if (!window._futureMode) {
+       g.style('cursor','pointer')
+        .on('click', ()=>{
+          let abbr = d.unit;
+          if (abbr.endsWith('-AL')) abbr = abbr.slice(0,2);
+          window.open(`state/${abbr}.html`, '_blank');
+        });
+      } else {
+       g.style('cursor','default');
+      }
       });
 
       // Keep label layer on top of overlay if exists
@@ -789,11 +793,11 @@
       const rm = +r.relative_margin || 0;
       const nm = +r.national_margin || 0;
       const ev = +r.electoral_votes || 0;
-      const tp = +r.third_party_share || 0;
+      const tp = +r.T_votes / +r.total_votes || 0;
       // include vote totals for adjusted PV calculations
       const dVotes = +r.D_votes || 0;
       const rVotes = +r.R_votes || 0;
-      const tVotes = +r.T_votes || 0;
+      const tVotes = +r.third_party_votes || 0;
       const total = +r.total_votes || (dVotes + rVotes + tVotes) || 0;
       const row = { year, unit, rm, nm, ev, tp, dVotes, rVotes, tVotes, total };
       if (!byYear.has(year)) byYear.set(year, []);
@@ -860,7 +864,9 @@
     } catch(e) {}
 
     // Index stop colors CSV: year -> stop_key -> unit -> { winner, color_css, result_color_name }
+    // Also capture effective PV per stop so the slider uses the precomputed nudge/average.
     window._stopColorsByYear = new Map();
+    window._stopEffByYear = new Map(); // year -> stop_key -> effective_pv (number)
     try {
       (stopColors || []).forEach(r => {
         const y = +r.year; if (!y) return;
@@ -870,10 +876,15 @@
         const winner = r.winner;
         const color_css = r.color_css || '';
         const color_name = r.result_color_name || '';
+        const eff = (r.effective_pv != null && r.effective_pv !== '') ? +r.effective_pv : null;
         if (!window._stopColorsByYear.has(y)) window._stopColorsByYear.set(y, new Map());
+        if (!window._stopEffByYear.has(y)) window._stopEffByYear.set(y, new Map());
         const byStop = window._stopColorsByYear.get(y);
+        const effByStop = window._stopEffByYear.get(y);
         if (!byStop.has(key)) byStop.set(key, new Map());
         byStop.get(key).set(unit, { winner, color_css, color_name });
+        // Record effective once per stop key
+        if (!effByStop.has(key) && eff != null && isFinite(eff)) effByStop.set(key, eff);
       });
     } catch(e) { /* optional */ }
 
@@ -1010,7 +1021,11 @@
               } catch(e) {}
             })
             .on('click', function(){
-              try { const unit = this.getAttribute('data-unit'); if (unit) window.open(`unit/${unit}.html`, '_blank'); } catch(e) {}
+              if (window._futureMode) return; // disable navigation in future mode
+              try {
+                const unit = this.getAttribute('data-unit');
+                if (unit) window.open(`unit/${unit}.html`, '_blank');
+              } catch(e) {}
             });
           window._districtPaths.set(useUnit, p);
         });
@@ -1057,70 +1072,56 @@
 
   function buildPvStops(year, container, datalist){
     const cap = PV_CAP;
-    const arr = byYear.get(year) || [];
-    // quick lookup by unit for dynamic chip coloring and other helpers
-    const rowByUnit = new Map();
-    arr.forEach(r => { if (r && r.unit) rowByUnit.set(r.unit, r); });
-    const stopsSet = new Set([0]);
-    // include the national margin as a stop
-  let nat = getNatMargin(year);
-  // In future mode, force nat=0 and omit an 'Actual' stop for years after 2024; keep Actual for 2024.
-  if (window._futureMode && year > 2024) {
-    nat = 0;
-  } else {
-    if (isFinite(nat) && Math.abs(nat) <= cap) stopsSet.add(nat);
-  }
     // clear any prior mappings
     stopToEff.clear();
     stopToUnits.clear();
-  // Predefine effective values for EVEN and Actual stops
-    stopToEff.set(0, 0 + EPS); // EVEN nudges to D side to break ties deterministically
-  if (!(window._futureMode && year > 2024) && isFinite(nat)) stopToEff.set(nat, nat); // Actual = exactly national (historical or 2024 on Future)
-  arr.forEach(r => {
-      const val = -(+r.rm || 0);
-      // ignore national rows in per-state stop derivation to avoid 'NATIONAL' showing beside EVEN
-      if ((r.unit === 'NATIONAL' || r.unit === 'NAT')) return;
-      const t = +r.tp || 0;
-      a = 3*t - 1; // half-width of third-party window
-      if (year === 1948 && r.unit === 'AL') {
-        a = 0.0;
+
+    // Build from stop_colors.csv when available
+    const byYearStops = (window._stopColorsByYear && window._stopColorsByYear.get(year)) || null;
+    const effByYearStops = (window._stopEffByYear && window._stopEffByYear.get(year)) || null;
+    const nat = (window._futureMode && year > 2024) ? 0 : getNatMargin(year);
+
+    try {
+      console.log('[stops] buildPvStops start', { year, hasStopColors: !!byYearStops, stopColorKeys: byYearStops ? byYearStops.size : 0, hasEff: !!effByYearStops });
+      if (byYearStops) {
+        const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
+        console.log('[stops] raw stop keys (sample)', sampleKeys);
       }
-      if (a > 0 && isFinite(a)) {
-        // Add third-party tipping thresholds (upper/lower bounds of yellow window)
-        const rVal = +(r.rm || 0);
-        const nD = -rVal + a;
-        const nD_EPS_SGN = Math.sign(nD - nat);
-        const nR = -rVal - a;
-        const nR_EPS_SGN = Math.sign(nR - nat);
-        if (isFinite(nD) && Math.abs(nD) <= cap) {
-          stopsSet.add(nD);
-          const pv = stopToUnits.get(nD) || [];
-          pv.push(r.unit);
-          stopToUnits.set(nD, pv);
-      // Upper boundary: nudge inside the yellow window (toward center -rVal)
-      if (!stopToEff.has(nD)) stopToEff.set(nD, nD + nD_EPS_SGN * EPS);
-        }
-        if (isFinite(nR) && Math.abs(nR) <= cap) {
-          stopsSet.add(nR);
-          const pv = stopToUnits.get(nR) || [];
-          pv.push(r.unit);
-          stopToUnits.set(nR, pv);
-      // Lower boundary: nudge inside the yellow window (toward center -rVal)
-      if (!stopToEff.has(nR)) stopToEff.set(nR, nR + nR_EPS_SGN * EPS);
-        }
-        // Skip adding naive stop for this unit to avoid duplicate-ish stops
-      } else {
-        if (isFinite(val) && Math.abs(val) <= cap) {
-          stopsSet.add(val);
-          const prev = stopToUnits.get(val) || [];
-          prev.push(r.unit);
-          stopToUnits.set(val, prev);
-          // For naive flip stops, nudge to side opposite national margin so clicking the stop flips the state
-      const sgn = Math.sign(val - nat);
-          if (!stopToEff.has(val)) stopToEff.set(val, val + sgn * EPS);
+    } catch(e) {}
+
+    // Always include EVEN and (unless forced to 0 by future) Actual
+    const stopsSet = new Set([0]);
+    stopToEff.set(0, 0 + EPS);
+    if (!(window._futureMode && year > 2024) && isFinite(nat) && Math.abs(nat) <= cap) {
+      stopsSet.add(nat);
+      stopToEff.set(nat, nat);
+    }
+
+    // If CSV has entries, collect all distinct stop keys and map to numeric and effective
+    if (byYearStops && effByYearStops && byYearStops.size > 0) {
+      // stop_key strings -> parse to number for ordering
+    try { console.log('[stops] preliminary sorted stops', stops); } catch(e) {}
+      const keys = Array.from(byYearStops.keys());
+      for (const k of keys) {
+        const v = parseFloat(k);
+        if (!isFinite(v) || Math.abs(v) > cap) continue;
+        stopsSet.add(v);
+        // Map effective from CSV when present; otherwise default to D-nudge
+        const eff = effByYearStops.has(k) ? effByYearStops.get(k) : (v + EPS);
+        stopToEff.set(v, eff);
+        // Also record which units share this stop (for chips label coloring); fall back to all units mapped for the key
+        const unitsMap = byYearStops.get(k);
+        if (unitsMap && typeof unitsMap.forEach === 'function') {
+          const list = [];
+          unitsMap.forEach((_, unit) => list.push(unit));
+          if (list.length) stopToUnits.set(v, list);
         }
       }
-    });
+    } else {
+      // Fallback: if CSV missing for this year, keep a minimal set of stops only (EVEN + Actual)
+      // This avoids recomputing complex thresholds in JS, per user's request.
+    }
+
     const stops = Array.from(stopsSet).sort((a,b)=>a-b);
     // Append PV presets (if any) as extra discrete stops at the end so each preset
     // becomes an integer slider index. We keep original numeric stops sorted, then
@@ -1157,7 +1158,11 @@
       }
     } catch(e) {}
     // Combine sorted stops with preset stops appended at the end (preserve ordinal indices)
-  const allStops = stops.concat(presetStops);
+    const allStops = stops.concat(presetStops);
+    try {
+      const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s)||[]).length }));
+      console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
+    } catch(e) {}
     try {
       if (year === 2024) {
         const arrDbg = byYear.get(year) || [];
@@ -1171,13 +1176,10 @@
         // console.log('[tester] year=2024 rm stats:', rmStats);
       }
     } catch(e) {}
-    // Ensure every stop has an effective value (keep any precomputed ones)
+    // Ensure every stop has an effective value (keep any precomputed ones). For preset stops, use a tiny D-nudge.
     for (let i=0;i<allStops.length;i++){
       const s = allStops[i];
-      if (!stopToEff.has(s)) {
-        // default: nudge toward D side
-        stopToEff.set(s, s + EPS);
-      }
+      if (!stopToEff.has(s)) stopToEff.set(s, s + EPS);
     }
     // store combined stops (original sorted stops + appended presets) for the year so the slider can index into them
     stopsByYear.set(year, allStops);
@@ -1204,25 +1206,18 @@
         let bgColor = '#0d0d0dff';
         if (!isEven) {
           const key = Number(v).toFixed(STOP_KEY_PREC);
-          const byYearStops = window._stopColorsByYear && window._stopColorsByYear.get(year);
-          const byStop = byYearStops && byYearStops.get(key);
-          if (byStop) {
+          const byStopCsv = byYearStops && byYearStops.get(key);
+          if (byStopCsv) {
             const winners = [];
             const colors = [];
-            const unitsList = unitsRaw && unitsRaw.length ? unitsRaw : Array.from(byStop.keys());
-            unitsList.forEach(u => { const info = byStop.get(u); if (info) { winners.push(info.winner); colors.push(info.color_css || ''); } });
+            const unitsList = unitsRaw && unitsRaw.length ? unitsRaw : Array.from(byStopCsv.keys());
+            unitsList.forEach(u => { const info = byStopCsv.get(u); if (info) { winners.push(info.winner); colors.push(info.color_css || ''); } });
             if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
             else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
             else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
             else if (colors.length) bgColor = colors[0];
           } else {
-            const eff = stopToEff.get(v);
-            const unitsList = (unitsRaw && unitsRaw.length) ? unitsRaw : (arr.filter(r => r && r.unit && r.unit !== 'NATIONAL').map(r => r.unit));
-            const winners = [];
-            unitsList.forEach(u => { const r = rowByUnit.get(u); if (!r) return; const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0); if (a > 0) { const nD = -rVal + a; const nR = -rVal - a; if (eff > nR + EPS && eff < nD - EPS) { winners.push('T'); return; } } const m = rVal + eff; if (m > 0) winners.push('D'); else if (m < 0) winners.push('R'); });
-            if (winners.includes('T')) bgColor = '#C9A400';
-            else if (winners.includes('D')) bgColor = '#4169E1';
-            else if (winners.includes('R')) bgColor = '#B22222';
+            // No CSV color info for this stop; keep neutral color
           }
         }
         const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
@@ -1249,6 +1244,10 @@
           // Clear any custom PV override so slider selection takes effect
           try { window._pvOverride = null; } catch(e) {}
           if (s){ s.value = String(i); updateAll(); }
+          try {
+            const stopsNow = stopsByYear.get(year) || [];
+            console.log('[stops] chip click -> set slider index', { year, index: i, stopVal: stopsNow[i], eff: stopToEff.get(stopsNow[i]) });
+          } catch(e) {}
         });
       });
     }
@@ -1316,7 +1315,14 @@
     });
 
     let y = 0; for (const k of byYear.keys()) y = Math.max(y, k);
-    if (y === 0) y = 2024;
+    // Default selection: prefer 2028 when in future mode (if we have data for it),
+    // otherwise fall back to historical default 2024 when no data found.
+    if (window._futureMode) {
+      if (byYear.has(2028)) y = 2028;
+      else if (y === 0) y = 2024;
+    } else {
+      if (y === 0) y = 2024;
+    }
     
     // Load from URL parameters if available
     const urlParams = getUrlParams();
@@ -1463,6 +1469,7 @@
   window._curYear = year;
   const pvIndex = +pvEl.value;
   const stops = stopsByYear.get(year) || [0];
+  try { console.log('[stops] updateAll current stops set', { year, count: stops.length, sample: stops.slice(0,25) }); } catch(e) {}
   const stopVal = (stops && stops.length > 0 && stops[pvIndex] !== undefined) ? stops[pvIndex] : 0;
   // Allow a custom PV override (e.g., user-entered PV) to take precedence over stops
   const override = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
@@ -1480,23 +1487,28 @@
   updateFlipButtons();
     // show only the unit(s) whose exact flip stop equals the current pv (not cumulative flips)
     const matches = [];
-    (byYear.get(year) || []).forEach(r => {
-      const unit = r.unit; if (!unit || unit === 'NATIONAL') return;
-      const stopsForUnit = [];
-      const t = +r.tp || 0; const a = 3*t - 1; const rVal = +(r.rm || 0);
-      if (a > 0) { stopsForUnit.push(-rVal - a, -rVal + a); }
-      else { stopsForUnit.push(-(+r.rm || 0)); }
-      for (const s of stopsForUnit) {
-        const eff = stopToEff.get(s);
-        if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
-          matches.push(unit.slice(0,5));
-          break;
-        }
+    if (override == null) {
+      const eff = stopToEff.get(stopVal);
+      if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
+        const list = stopToUnits.get(stopVal) || [];
+        list.forEach(u => { if (u && u !== 'NATIONAL' && u !== 'NAT') matches.push(String(u).slice(0,5)); });
       }
-    });
+    }
   const showNat = ((!(window._futureMode && year > 2024)) && override == null && Math.abs(stopVal - nat) <= STOP_EPS);
   const matchLabel = (Math.abs(stopVal) < STOP_EPS) ? '' : (matches.length ? ' (' + (matches.slice(0,6).join(',') + (matches.length>6 ? '…' : '')) + ')' : '');
-  document.getElementById('pvVal').textContent = (showNat ? 'Actual ' : '') + leanStr(pv) + matchLabel;
+  (function(){
+    const el = document.getElementById('pvVal'); if (!el) return;
+    const base = (showNat ? 'Actual ' : '') + leanStr(pv) + matchLabel;
+    // If a preset override is active (window._pvOverride set AND we have a name), append name in parentheses
+    let out = base;
+    try {
+      if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride) && window._pvPresetName) {
+        // Avoid duplicating if already present
+        if (!base.includes('(' + window._pvPresetName + ')')) out = base + ' (' + window._pvPresetName + ')';
+      }
+    } catch(e) {}
+    el.textContent = out;
+  })();
 
     buildPvStops(year, document.getElementById('pvStops'), document.getElementById('pvStopsList'));
 

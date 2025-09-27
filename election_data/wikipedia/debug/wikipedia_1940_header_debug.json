@@ -1,0 +1,64 @@
+{
+  "year": 1940,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 17,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Norman Thomas"
+    },
+    {
+      "index": 11,
+      "name": "Other"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 11 3",
+    "Franklin D. RooseveltDemocratic # 250,726 95,267",
+    "Franklin D. RooseveltDemocratic % 85.22 63.49",
+    "Franklin D. RooseveltDemocratic electoralvotes 11 3",
+    "Wendell WillkieRepublican # 42,184 54,030",
+    "Wendell WillkieRepublican % 14.34 36.01",
+    "Wendell WillkieRepublican electoralvotes - -",
+    "Norman ThomasSocialist # 100 -",
+    "Norman ThomasSocialist % 0.03 -",
+    "Norman ThomasSocialist electoralvotes - -",
+    "Other # 1,209 742",
+    "Other % 0.41 0.49",
+    "Other electoralvotes - -",
+    "Margin # 208,542 41,237",
+    "Margin % 70.88 27.48",
+    "MarginSwing[a] % -2.68 -15.44",
+    "State Total # 294,219 150,039",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 11 3",
+    "franklin d. rooseveltdemocratic # 250,726 95,267",
+    "franklin d. rooseveltdemocratic % 85.22 63.49",
+    "franklin d. rooseveltdemocratic electoralvotes 11 3",
+    "wendell willkierepublican # 42,184 54,030",
+    "wendell willkierepublican % 14.34 36.01",
+    "wendell willkierepublican electoralvotes - -",
+    "norman thomassocialist # 100 -",
+    "norman thomassocialist % 0.03 -",
+    "norman thomassocialist electoralvotes - -",
+    "other # 1,209 742",
+    "other % 0.41 0.49",
+    "other electoralvotes - -",
+    "margin # 208,542 41,237",
+    "margin % 70.88 27.48",
+    "marginswing[a] % -2.68 -15.44",
+    "state total # 294,219 150,039",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "willkie"
+  ],
+  "dem_keywords": [
+    "roosevelt"
+  ]
+}

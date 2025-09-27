@@ -1,0 +1,104 @@
+{
+  "year": 2000,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 29,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Ralph Nader"
+    },
+    {
+      "index": 11,
+      "name": "Pat Buchanan"
+    },
+    {
+      "index": 14,
+      "name": "Harry Browne"
+    },
+    {
+      "index": 17,
+      "name": "Howard Phillips"
+    },
+    {
+      "index": 20,
+      "name": "John Hagelin"
+    },
+    {
+      "index": 23,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "EV 9 3",
+    "George W. BushRepublican # 941,173 167,398",
+    "George W. BushRepublican % 56.48% 58.62%",
+    "George W. BushRepublican EV 9 3",
+    "Al GoreDemocratic # 692,611 79,004",
+    "Al GoreDemocratic % 41.57% 27.67%",
+    "Al GoreDemocratic EV – –",
+    "Ralph NaderGreen # 18,323 28,747",
+    "Ralph NaderGreen % 1.10% 10.07%",
+    "Ralph NaderGreen EV – –",
+    "Pat BuchananReform # 6,351 5,192",
+    "Pat BuchananReform % 0.38% 1.82%",
+    "Pat BuchananReform EV – –",
+    "Harry BrowneLibertarian # 5,893 2,636",
+    "Harry BrowneLibertarian % 0.35% 0.92%",
+    "Harry BrowneLibertarian EV – –",
+    "Howard PhillipsConstitution # 775 596",
+    "Howard PhillipsConstitution % 0.05% 0.21%",
+    "Howard PhillipsConstitution EV – –",
+    "John HagelinNatural Law # 447 919",
+    "John HagelinNatural Law % 0.03% 0.32%",
+    "John HagelinNatural Law EV – –",
+    "Others # 699 1,068",
+    "Others % 0.04% 0.37%",
+    "Others EV – –",
+    "Margin # 248,562 88,394",
+    "Margin % 14.92% 30.95%",
+    "Marginswing[c] % 7.96% 13.42%",
+    "State total # 1,666,272 285,560",
+    "State total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "ev 9 3",
+    "george w. bushrepublican # 941,173 167,398",
+    "george w. bushrepublican % 56.48% 58.62%",
+    "george w. bushrepublican ev 9 3",
+    "al goredemocratic # 692,611 79,004",
+    "al goredemocratic % 41.57% 27.67%",
+    "al goredemocratic ev – –",
+    "ralph nadergreen # 18,323 28,747",
+    "ralph nadergreen % 1.10% 10.07%",
+    "ralph nadergreen ev – –",
+    "pat buchananreform # 6,351 5,192",
+    "pat buchananreform % 0.38% 1.82%",
+    "pat buchananreform ev – –",
+    "harry brownelibertarian # 5,893 2,636",
+    "harry brownelibertarian % 0.35% 0.92%",
+    "harry brownelibertarian ev – –",
+    "howard phillipsconstitution # 775 596",
+    "howard phillipsconstitution % 0.05% 0.21%",
+    "howard phillipsconstitution ev – –",
+    "john hagelinnatural law # 447 919",
+    "john hagelinnatural law % 0.03% 0.32%",
+    "john hagelinnatural law ev – –",
+    "others # 699 1,068",
+    "others % 0.04% 0.37%",
+    "others ev – –",
+    "margin # 248,562 88,394",
+    "margin % 14.92% 30.95%",
+    "marginswing[c] % 7.96% 13.42%",
+    "state total # 1,666,272 285,560",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "bush"
+  ],
+  "dem_keywords": [
+    "gore"
+  ]
+}

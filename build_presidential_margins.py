@@ -3,6 +3,8 @@ import os
 from collections import defaultdict
 from params import COLORS
 import utils
+import json
+import ast
 
 
 THIRD_PARTY_WINS = {
@@ -45,6 +47,9 @@ def main():
             r2['R_votes'] = safe_int(r.get('R_votes', 0))
             r2['T_votes'] = safe_int(r.get('T_votes', 0))
             r2['total_votes'] = safe_int(r.get('total_votes', 0))
+            # New: total third-party votes and per-candidate breakdown
+            r2['third_party_votes'] = safe_int(r.get('third_party_votes', 0))
+            r2['third_party_results'] = r.get('third_party_results', '')
             # capture electoral_votes if present
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
             rows.append(r2)
@@ -68,7 +73,11 @@ def main():
             total = r['total_votes'] if r['total_votes'] != 0 else 1
             r['two_party_margin'] = (r['D_votes'] - r['R_votes']) / two_party_total if two_party_total > 0 else 0.0
             r['pres_margin'] = (r['D_votes'] - r['R_votes']) / total
-            r['third_party_share'] = (r['T_votes'] / total) if total > 0 else 0.0
+            # Use total third-party votes (not max single candidate) for share
+            tp_total_votes = r.get('third_party_votes', None)
+            if tp_total_votes is None:
+                tp_total_votes = r.get('T_votes', 0)  # fallback for older files
+            r['third_party_share'] = (tp_total_votes / total) if total > 0 else 0.0
         # find national row
         national_margin = next((x for x in lst if x['abbr'] == 'NATIONAL'), None)
         if national_margin:
@@ -149,8 +158,10 @@ def main():
             
             third_party = r.get('third_party_share', 0.0)
             if year == 1948 and abbr == 'AL':
-                # In 1948, AL was won by Strom Thurmond (Dixiecrat) while Truman wasn't even on the ballot. Thus, we count Thurmond's votes for D, but simultaneously as third party share.
-                third_party = (r.get('D_votes', 0) + r.get('T_votes', 0)) / r.get('total_votes', 1) if r.get('total_votes', 1) > 0 else 0.0
+                # In 1948 AL, the Democratic column represents a Dixiecrat slate; we want third-party share to include those votes
+                # Use total third-party votes plus D to capture that intent
+                total = r.get('total_votes', 1) or 1
+                third_party = (r.get('third_party_votes', 0) + r.get('D_votes', 0)) / total
             third_party_national = national_margins_by_year.get(year, {}).get('third_party_share', 0.0)
             third_party_relative = third_party - third_party_national
 
@@ -211,6 +222,7 @@ def main():
                 'abbr': abbr,
                 'D_votes': r['D_votes'],
                 'R_votes': r['R_votes'],
+                'third_party_votes': r.get('third_party_votes', 0),
                 'D_delta': D_delta,
                 'R_delta': R_delta,
                 #'T_delta': T_delta,
@@ -218,6 +230,9 @@ def main():
                 'T_votes': r['T_votes'],
                 'total_votes': r['total_votes'],
                 'electoral_votes': electoral_votes,
+                'third_party_results': r.get('third_party_results', ''),
+                # top_third_party will be filled in below after parsing third_party_results
+                'top_third_party': '',
                 
                 'pres_margin': f"{pres:.12f}",
                 'pres_margin_delta': f"{pres_delta:.12f}" if pres_delta is not None else '0',
@@ -305,11 +320,48 @@ def main():
             except Exception:
                 # If anything goes wrong, leave the default pres_margin_str
                 pass
+            # parse third_party_results to determine the top third-party candidate name
+            try:
+                tpr = r.get('third_party_results', '') or ''
+                top_name = ''
+                top_votes = 0
+                if tpr:
+                    # the field in the CSV looks like a Python dict (double-quoted keys) or JSON-like
+                    # try json.loads first, fall back to ast.literal_eval
+                    parsed = None
+                    try:
+                        parsed = json.loads(tpr)
+                    except Exception:
+                        try:
+                            parsed = ast.literal_eval(tpr)
+                        except Exception:
+                            parsed = None
+                    if isinstance(parsed, dict):
+                        for name, val in parsed.items():
+                            if 'Other' in name:
+                                continue
+                            try:
+                                v = int(val)
+                            except Exception:
+                                try:
+                                    v = int(str(val))
+                                except Exception:
+                                    v = 0
+                            if v > top_votes:
+                                top_votes = v
+                                top_name = name
+                # Special-case 1948 AL where the D column holds Thurmond's votes; ensure label present
+                if year == 1948 and abbr == 'AL' and not top_name:
+                    top_name = 'Strom Thurmond'
+                out['top_third_party'] = top_name if top_name else 'None'
+            except Exception:
+                print(f"Warning: failed to parse third_party_results for {year} {abbr}: {r.get('third_party_results', '')}")
+                out['top_third_party'] = 'None'
             out_rows.append(out)
 
     # write CSV
     fieldnames = [
-        'year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'total_votes', 'electoral_votes',
+        'year', 'abbr', 'D_votes', 'R_votes', 'electoral_votes', 'T_votes', 'top_third_party', 'third_party_votes', 'total_votes', 'third_party_results',
         'D_delta', 'R_delta', 'total_delta',
         'pres_margin', 'pres_margin_delta',
         'national_margin', 'national_margin_delta',

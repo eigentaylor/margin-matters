@@ -1,0 +1,90 @@
+{
+  "year": 1920,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 26,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Eugene Debs"
+    },
+    {
+      "index": 11,
+      "name": "Parley Christensen"
+    },
+    {
+      "index": 14,
+      "name": "Aaron Watkins"
+    },
+    {
+      "index": 17,
+      "name": "James Ferguson"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 12 3",
+    "Warren G. HardingRepublican # 74,556 37,016",
+    "Warren G. HardingRepublican % 31.37 55.61",
+    "Warren G. HardingRepublican electoralvotes - 3",
+    "James CoxDemocratic # 159,965 29,546",
+    "James CoxDemocratic % 67.31 44.39",
+    "James CoxDemocratic electoralvotes 12 -",
+    "Eugene DebsSocialist # 2,369 222",
+    "Eugene DebsSocialist % 1.00 0.33",
+    "Eugene DebsSocialist electoralvotes - -",
+    "Parley ChristensenFarmer-Labor # - 15",
+    "Parley ChristensenFarmer-Labor % - 0.02",
+    "Parley ChristensenFarmer-Labor electoralvotes - -",
+    "Aaron WatkinsProhibition # 748 4",
+    "Aaron WatkinsProhibition % 0.31 0.01",
+    "Aaron WatkinsProhibition electoralvotes - -",
+    "James FergusonAmerican # - -",
+    "James FergusonAmerican % - -",
+    "James FergusonAmerican electoralvotes - -",
+    "William CoxSocialist Labor # - -",
+    "William CoxSocialist Labor % - -",
+    "William CoxSocialist Labor electoralvotes - -",
+    "Margin # -85,409 7,470",
+    "Margin % -35.94 11.22",
+    "MarginSwing[a] % 29.54 33.02",
+    "State Total # 237,638 66,562",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 12 3",
+    "warren g. hardingrepublican # 74,556 37,016",
+    "warren g. hardingrepublican % 31.37 55.61",
+    "warren g. hardingrepublican electoralvotes - 3",
+    "james coxdemocratic # 159,965 29,546",
+    "james coxdemocratic % 67.31 44.39",
+    "james coxdemocratic electoralvotes 12 -",
+    "eugene debssocialist # 2,369 222",
+    "eugene debssocialist % 1.00 0.33",
+    "eugene debssocialist electoralvotes - -",
+    "parley christensenfarmer-labor # - 15",
+    "parley christensenfarmer-labor % - 0.02",
+    "parley christensenfarmer-labor electoralvotes - -",
+    "aaron watkinsprohibition # 748 4",
+    "aaron watkinsprohibition % 0.31 0.01",
+    "aaron watkinsprohibition electoralvotes - -",
+    "james fergusonamerican # - -",
+    "james fergusonamerican % - -",
+    "james fergusonamerican electoralvotes - -",
+    "william coxsocialist labor # - -",
+    "william coxsocialist labor % - -",
+    "william coxsocialist labor electoralvotes - -",
+    "margin # -85,409 7,470",
+    "margin % -35.94 11.22",
+    "marginswing[a] % 29.54 33.02",
+    "state total # 237,638 66,562",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "harding"
+  ],
+  "dem_keywords": [
+    "cox"
+  ]
+}

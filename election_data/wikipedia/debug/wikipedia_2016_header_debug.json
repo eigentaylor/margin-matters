@@ -1,0 +1,83 @@
+{
+  "year": 2016,
+  "r_col": 4,
+  "d_col": 1,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 7,
+      "name": "Johnson/Weld"
+    },
+    {
+      "index": 10,
+      "name": "Stein/Baraka"
+    },
+    {
+      "index": 13,
+      "name": "McMullin/Finn"
+    },
+    {
+      "index": 16,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State ordistrict Alabama Alaska",
+    "Clinton/KaineDemocratic Votes 729,547 116,454",
+    "Clinton/KaineDemocratic % 34.36% 36.55%",
+    "Clinton/KaineDemocratic EV – –",
+    "Trump/PenceRepublican Votes 1,318,255 163,387",
+    "Trump/PenceRepublican % 62.08% 51.28%",
+    "Trump/PenceRepublican EV 9 3",
+    "Johnson/WeldLibertarian Votes 44,467 18,725",
+    "Johnson/WeldLibertarian % 2.09% 5.88%",
+    "Johnson/WeldLibertarian EV – –",
+    "Stein/BarakaGreen Votes 9,391 5,735",
+    "Stein/BarakaGreen % 0.44% 1.80%",
+    "Stein/BarakaGreen EV – –",
+    "McMullin/FinnIndependent Votes – –",
+    "McMullin/FinnIndependent % – –",
+    "McMullin/FinnIndependent EV – –",
+    "Others Votes 21,712 14,307",
+    "Others % 1.02% 4.49%",
+    "Others EV – –",
+    "Margin Votes 588,708 46,933",
+    "Margin % 27.72% 14.73%",
+    "Marginswing[a] % 5.54% 0.74%",
+    "Totalvotes 318,608",
+    "Sources [366]"
+  ],
+  "col_desc_lower": [
+    "state ordistrict alabama alaska",
+    "clinton/kainedemocratic votes 729,547 116,454",
+    "clinton/kainedemocratic % 34.36% 36.55%",
+    "clinton/kainedemocratic ev – –",
+    "trump/pencerepublican votes 1,318,255 163,387",
+    "trump/pencerepublican % 62.08% 51.28%",
+    "trump/pencerepublican ev 9 3",
+    "johnson/weldlibertarian votes 44,467 18,725",
+    "johnson/weldlibertarian % 2.09% 5.88%",
+    "johnson/weldlibertarian ev – –",
+    "stein/barakagreen votes 9,391 5,735",
+    "stein/barakagreen % 0.44% 1.80%",
+    "stein/barakagreen ev – –",
+    "mcmullin/finnindependent votes – –",
+    "mcmullin/finnindependent % – –",
+    "mcmullin/finnindependent ev – –",
+    "others votes 21,712 14,307",
+    "others % 1.02% 4.49%",
+    "others ev – –",
+    "margin votes 588,708 46,933",
+    "margin % 27.72% 14.73%",
+    "marginswing[a] % 5.54% 0.74%",
+    "totalvotes 318,608",
+    "sources [366]"
+  ],
+  "rep_keywords": [
+    "trump"
+  ],
+  "dem_keywords": [
+    "clinton",
+    "hillary"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "year": 1972,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 16,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "John Schmitz"
+    },
+    {
+      "index": 11,
+      "name": "John Hospers"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 9 3",
+    "Richard NixonRepublican # 728,701 55,349",
+    "Richard NixonRepublican % 72.43 58.13",
+    "Richard NixonRepublican electoralvotes 9 3",
+    "George McGovernDemocratic # 256,923 32,967",
+    "George McGovernDemocratic % 25.54 34.62",
+    "George McGovernDemocratic electoralvotes",
+    "John SchmitzAmerican Independent # 11,918 6,903",
+    "John SchmitzAmerican Independent % 1.18 7.25",
+    "John SchmitzAmerican Independent electoralvotes",
+    "John HospersLibertarian #",
+    "John HospersLibertarian %",
+    "John HospersLibertarian electoralvotes",
+    "Margin # 471,778 22,382",
+    "Margin % 46.89 23.51",
+    "State Total # 1,006,093 95,219",
+    "State Total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 9 3",
+    "richard nixonrepublican # 728,701 55,349",
+    "richard nixonrepublican % 72.43 58.13",
+    "richard nixonrepublican electoralvotes 9 3",
+    "george mcgoverndemocratic # 256,923 32,967",
+    "george mcgoverndemocratic % 25.54 34.62",
+    "george mcgoverndemocratic electoralvotes",
+    "john schmitzamerican independent # 11,918 6,903",
+    "john schmitzamerican independent % 1.18 7.25",
+    "john schmitzamerican independent electoralvotes",
+    "john hosperslibertarian #",
+    "john hosperslibertarian %",
+    "john hosperslibertarian electoralvotes",
+    "margin # 471,778 22,382",
+    "margin % 46.89 23.51",
+    "state total # 1,006,093 95,219",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "nixon"
+  ],
+  "dem_keywords": [
+    "mcgovern"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "year": 1928,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Norman Thomas"
+    },
+    {
+      "index": 11,
+      "name": "William Foster"
+    },
+    {
+      "index": 14,
+      "name": "Verne Reynolds"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 12 3",
+    "Herbert HooverRepublican # 120,725 52,533",
+    "Herbert HooverRepublican % 48.49 57.57",
+    "Herbert HooverRepublican electoralvotes - 3",
+    "Al SmithDemocratic # 127,797 38,537",
+    "Al SmithDemocratic % 51.33 42.23",
+    "Al SmithDemocratic electoralvotes 12 -",
+    "Norman ThomasSocialist # 460 -",
+    "Norman ThomasSocialist % 0.18 -",
+    "Norman ThomasSocialist electoralvotes - -",
+    "William FosterCommunist # - 184",
+    "William FosterCommunist % - 0.20",
+    "William FosterCommunist electoralvotes - -",
+    "Verne ReynoldsSocialist Labor # - -",
+    "Verne ReynoldsSocialist Labor % - -",
+    "Verne ReynoldsSocialist Labor electoralvotes - -",
+    "Margin # -7,072 13,996",
+    "Margin % -2.84 15.34",
+    "State Total # 248,982 91,254",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 12 3",
+    "herbert hooverrepublican # 120,725 52,533",
+    "herbert hooverrepublican % 48.49 57.57",
+    "herbert hooverrepublican electoralvotes - 3",
+    "al smithdemocratic # 127,797 38,537",
+    "al smithdemocratic % 51.33 42.23",
+    "al smithdemocratic electoralvotes 12 -",
+    "norman thomassocialist # 460 -",
+    "norman thomassocialist % 0.18 -",
+    "norman thomassocialist electoralvotes - -",
+    "william fostercommunist # - 184",
+    "william fostercommunist % - 0.20",
+    "william fostercommunist electoralvotes - -",
+    "verne reynoldssocialist labor # - -",
+    "verne reynoldssocialist labor % - -",
+    "verne reynoldssocialist labor electoralvotes - -",
+    "margin # -7,072 13,996",
+    "margin % -2.84 15.34",
+    "state total # 248,982 91,254",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "hoover"
+  ],
+  "dem_keywords": [
+    "smith"
+  ]
+}

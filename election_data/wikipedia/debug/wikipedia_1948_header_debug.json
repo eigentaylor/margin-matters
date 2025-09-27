@@ -1,0 +1,82 @@
+{
+  "year": 1948,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Strom Thurmond"
+    },
+    {
+      "index": 11,
+      "name": "Henry Wallace"
+    },
+    {
+      "index": 14,
+      "name": "Norman Thomas"
+    },
+    {
+      "index": 17,
+      "name": "Other"
+    }
+  ],
+  "col_desc_raw": [
+    "[108] State Alabama Arizona",
+    "[108] electoralvotes 11 4",
+    "Harry S. TrumanDemocratic # - 95,251",
+    "Harry S. TrumanDemocratic % - 53.79",
+    "Harry S. TrumanDemocratic electoralvotes - 4",
+    "Thomas E. DeweyRepublican # 40,930 77,597",
+    "Thomas E. DeweyRepublican % 19.04 43.82",
+    "Thomas E. DeweyRepublican electoralvotes - -",
+    "J. Strom ThurmondDixiecrat # 171,443 -",
+    "J. Strom ThurmondDixiecrat % 79.75 -",
+    "J. Strom ThurmondDixiecrat electoralvotes 11 -",
+    "Henry WallaceProgressive # 1,522 3,310",
+    "Henry WallaceProgressive % 0.71 1.87",
+    "Henry WallaceProgressive electoralvotes - -",
+    "Norman ThomasSocialist # - -",
+    "Norman ThomasSocialist % - -",
+    "Norman ThomasSocialist electoralvotes - -",
+    "Other # 1,085 907",
+    "Other % 0.50 0.51",
+    "Other electoralvotes - -",
+    "Margin # -130,513 17,654",
+    "Margin % -60.71 9.97",
+    "State Total # 214,980 177,065",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "[108] state alabama arizona",
+    "[108] electoralvotes 11 4",
+    "harry s. trumandemocratic # - 95,251",
+    "harry s. trumandemocratic % - 53.79",
+    "harry s. trumandemocratic electoralvotes - 4",
+    "thomas e. deweyrepublican # 40,930 77,597",
+    "thomas e. deweyrepublican % 19.04 43.82",
+    "thomas e. deweyrepublican electoralvotes - -",
+    "j. strom thurmonddixiecrat # 171,443 -",
+    "j. strom thurmonddixiecrat % 79.75 -",
+    "j. strom thurmonddixiecrat electoralvotes 11 -",
+    "henry wallaceprogressive # 1,522 3,310",
+    "henry wallaceprogressive % 0.71 1.87",
+    "henry wallaceprogressive electoralvotes - -",
+    "norman thomassocialist # - -",
+    "norman thomassocialist % - -",
+    "norman thomassocialist electoralvotes - -",
+    "other # 1,085 907",
+    "other % 0.50 0.51",
+    "other electoralvotes - -",
+    "margin # -130,513 17,654",
+    "margin % -60.71 9.97",
+    "state total # 214,980 177,065",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "dewey"
+  ],
+  "dem_keywords": [
+    "truman"
+  ]
+}

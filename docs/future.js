@@ -1,4 +1,5 @@
 (function(){
+  console.log('***FUTURE.JS LOADED WITH SYNTHETIC STOPS DEBUG v2***');
   // This script generates future relative margins (2028–2048) client-side using
   // a Brownian-bridge around a 2048 target, derived from 2000–2024 trends.
   // It plugs into tester.js by writing to the same globals (byYear, evByUnit, etc.).
@@ -379,8 +380,10 @@
   }
 
   async function generate(seed){
+    console.log('[future] generate() function called with seed:', seed);
     const { filtered, margins, evByUnit } = await loadHistorical();
     const rng = seedToRng(seed);
+    console.log('[future] loadHistorical completed, filtered rows:', filtered.length);
     // Build slope options from URL (if any)
     const params = getUrlParams();
     let slopeOptions = { method: 'ols', refYear: 2024 };
@@ -400,8 +403,10 @@
       }
     }
     const paths = simulatePaths(filtered, rng, { slopeOptions }); // Map abbr -> record with future years
+    console.log('[future] simulatePaths completed, paths size:', paths.size);
     // plug into tester.js global maps
     const BY = buildFutureDataset(filtered, paths, margins, evByUnit);
+    console.log('[future] buildFutureDataset completed');
     // Clear any previous future years then set
   const years = [2024,2028,2032,2036,2040,2044,2048];
   years.forEach(Y => { window._byYearMap && window._byYearMap.set(Y, BY.get(Y)); });
@@ -478,11 +483,112 @@
         if (sampleAlloc.length) console.log(`[future] ${Y} sample allocations:`, sampleAlloc);
       });
     } catch(e) { console.warn('[future] allocation debug failed', e); }
+
+    console.log('[future] About to start synthetic stop generation');
+
+    // --- Generate synthetic stops for future years (no stop_colors.csv rows exist) ---
+    try {
+      const STOP_KEY_PREC = 6;
+      if (!window._stopColorsByYear) window._stopColorsByYear = new Map();
+      if (!window._stopEffByYear) window._stopEffByYear = new Map();
+      // IMPORTANT: when regenerating (e.g. slope method change), wipe prior future-year
+      // synthetic stops so we don't accumulate an ever-growing list of stale stops.
+      years.filter(y => y>2024).forEach(year => {
+        if (window._stopColorsByYear.has(year)) window._stopColorsByYear.delete(year);
+        if (window._stopEffByYear.has(year)) window._stopEffByYear.delete(year);
+      });
+      
+      console.log('[future] Starting synthetic stop generation for future years');
+      console.log('[future] Future years to process:', years.filter(y => y>2024));
+      
+      // Helper to record a stop/unit
+      function recordStop(year, s, eff, unit, winner, color){
+        if (!isFinite(s) || Math.abs(s) > PV_CAP) return;
+        const key = s.toFixed(STOP_KEY_PREC);
+        if (!window._stopColorsByYear.has(year)) window._stopColorsByYear.set(year, new Map());
+        if (!window._stopEffByYear.has(year)) window._stopEffByYear.set(year, new Map());
+        const byStop = window._stopColorsByYear.get(year);
+        const effMap = window._stopEffByYear.get(year);
+        if (!byStop.has(key)) byStop.set(key, new Map());
+        // Preserve first effective mapping; subsequent units share
+        if (!effMap.has(key) && isFinite(eff)) effMap.set(key, eff);
+        byStop.get(key).set(unit, { winner, color_css: color, color_name: (winner==='D'?'BLUE': winner==='R'?'RED': 'YELLOW') });
+        console.log('[future] recorded stop', { year, key, eff, unit, winner });
+      }
+      function sign(x){ return x>0?1:(x<0?-1:0); }
+      // Basic color chooser (aligned roughly with tester.js palette extremes)
+      function colorForWinner(w){ return (w==='D')? '#4169E1' : (w==='R'? '#B22222' : '#C9A400'); }
+      // For each future year > 2024, create a stop at -rm per unit (flip point) and any third-party window boundaries
+      years.filter(y => y>2024).forEach(year => {
+        console.log('[future] Processing year', year);
+        const rows = BY.get(year) || [];
+        console.log('[future] Year', year, 'has', rows.length, 'rows');
+        const nat = 0; // future national margin locked to 0
+        let stopCount = 0;
+        // EVEN / Actual (0) handled by tester.js automatically; we add unit stops
+        rows.forEach(r => {
+          if (!r || !r.unit || r.unit === 'NATIONAL') return;
+          const rm = +r.rm || 0;
+          const tp = +r.tp || 0; // third-party share propagated from 2024
+          const a = 3*tp - 1; // third-party window indicator
+          // Always add naive flip stop s = -rm
+          const s = -rm;
+          if (isFinite(s)) {
+            const eff = s + (sign(s - nat) === 0 ? EPS : sign(s - nat) * EPS);
+            // After applying eff, margin becomes ~ sign(s)*EPS so winner is sign(s)
+            const postWinner = (sign(s) > 0) ? 'D' : (sign(s) < 0 ? 'R' : 'D');
+            recordStop(year, s, eff, r.unit, postWinner, colorForWinner(postWinner));
+            stopCount++;
+          }
+          // If third-party window exists, add both boundaries nD / nR similar to Python build_stop_colors logic
+          if (a > 0) {
+            // Approximate D and R shares using two-party split derived from rm
+            const twoD = 0.5 + rm/2; // two-party D share
+            const twoR = 0.5 - rm/2; // two-party R share
+            const D_share = (1 - tp) * twoD;
+            const R_share = (1 - tp) * twoR;
+            const T_share = tp;
+            const nD = nat + 2 * (T_share - D_share);
+            const nR = nat + 2 * (R_share - T_share);
+            if (isFinite(nD)) {
+              const effD = nD + (sign(nD - nat) === 0 ? EPS : sign(nD - nat) * EPS);
+              // Winner inside window treated as T (other)
+              recordStop(year, nD, effD, r.unit, 'T', colorForWinner('T'));
+              stopCount++;
+            }
+            if (isFinite(nR)) {
+              const effR = nR + (sign(nR - nat) === 0 ? EPS : sign(nR - nat) * EPS);
+              recordStop(year, nR, effR, r.unit, 'T', colorForWinner('T'));
+              stopCount++;
+            }
+          }
+        });
+        console.log('[future] Year', year, 'generated', stopCount, 'stops');
+        const finalStopCount = window._stopColorsByYear.get(year) ? window._stopColorsByYear.get(year).size : 0;
+        console.log('[future] Year', year, 'final stop count in map:', finalStopCount);
+      });
+      console.log('[future] synthetic stops generated for future years');
+      
+      // Debug: check final state of maps
+      years.filter(y => y>2024).forEach(year => {
+        const byYear = window._stopColorsByYear.get(year);
+        const effByYear = window._stopEffByYear.get(year);
+        console.log('[future] Final state for year', year, ':', {
+          hasStops: !!byYear,
+          stopCount: byYear ? byYear.size : 0,
+          hasEff: !!effByYear,
+          effCount: effByYear ? effByYear.size : 0,
+          sampleKeys: byYear ? Array.from(byYear.keys()).slice(0, 5) : []
+        });
+      });
+    } catch(e) { console.warn('[future] failed to generate synthetic future stops', e); }
   }
 
   // UI wiring
   async function runWithSeed(seed){
+    console.log('***RUNWITHSEED CALLED WITH SEED:', seed, '***');
     await generate(seed);
+    console.log('***GENERATE COMPLETED***');
     // Don't call updateAll here - let the caller control when to update
   }
 
@@ -810,7 +916,15 @@
     });
     if (pvPreset) pvPreset.addEventListener('change', () => {
       const v = parseFloat(pvPreset.value);
-      if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); }
+      if (!isNaN(v)) { 
+        // Derive preset name from selected option's label
+        let name = '';
+        try { const opt = pvPreset.options[pvPreset.selectedIndex]; if (opt) name = (opt.text||'').split(':')[0].trim(); } catch(e) {}
+        window._pvPresetName = name || '';
+        const baseStr = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`);
+        if (pvText) pvText.value = name ? `${baseStr} (${name})` : baseStr;
+        applyPvOverride(v);
+      }
       // store preset name in URL if element includes name attribute or data-name
       try {
         const el = document.getElementById('pvPreset');
@@ -818,6 +932,7 @@
         const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0;
         if (presetName) updateUrl({seed, year:y, pvPreset: presetName}); else updateUrl({seed, year:y});
       } catch(e) { const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0; updateUrl({seed, year:y}); }
+      if (typeof window.updateAll === 'function') window.updateAll();
     });
     if (pvFlip) pvFlip.addEventListener('click', () => {
       let cur = 0;
@@ -837,6 +952,7 @@
     });
     if (pvClear) pvClear.addEventListener('click', () => {
   window._pvOverride = null;
+      try { window._pvPresetName = null; } catch(e) {}
       if (pvText) pvText.value = '';
       const yEl = document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const seed = parseInt(seedInput.value)||0;
       updateUrl({seed, year:y});

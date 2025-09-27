@@ -1,0 +1,68 @@
+{
+  "year": 1992,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 17,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Ross Perot"
+    },
+    {
+      "index": 10,
+      "name": "Andre Marrou"
+    },
+    {
+      "index": 12,
+      "name": "Others"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama",
+    "E 9",
+    "Candidates with electoral votes (E) Bill ClintonDemocratic Vote 690,080",
+    "Candidates with electoral votes (E) Bill ClintonDemocratic % 40.88",
+    "Candidates with electoral votes (E) Bill ClintonDemocratic E –",
+    "Candidates with electoral votes (E) George H.W. BushRepublican Vote 804,283",
+    "Candidates with electoral votes (E) George H.W. BushRepublican % 47.65",
+    "Candidates with electoral votes (E) George H.W. BushRepublican E 9",
+    "Candidates with no electoral votes Ross PerotIndependent Vote 183,109",
+    "Candidates with no electoral votes Ross PerotIndependent % 10.85",
+    "Candidates with no electoral votes Andre MarrouLibertarian Vote 5,737",
+    "Candidates with no electoral votes Andre MarrouLibertarian % 0.34",
+    "Candidates with no electoral votes Others Vote 4,851",
+    "Candidates with no electoral votes Others % 0.29",
+    "Overall popular vote Top-2 margin(+/− if won by D/R) Vote −114,203",
+    "Overall popular vote Top-2 margin(+/− if won by D/R) % −6.77",
+    "Overall popular vote MarginSwing[b] % 12.53",
+    "Overall popular vote State Total Vote 1,688,060",
+    "Overall popular vote State Total  AL"
+  ],
+  "col_desc_lower": [
+    "state alabama",
+    "e 9",
+    "candidates with electoral votes (e) bill clintondemocratic vote 690,080",
+    "candidates with electoral votes (e) bill clintondemocratic % 40.88",
+    "candidates with electoral votes (e) bill clintondemocratic e –",
+    "candidates with electoral votes (e) george h.w. bushrepublican vote 804,283",
+    "candidates with electoral votes (e) george h.w. bushrepublican % 47.65",
+    "candidates with electoral votes (e) george h.w. bushrepublican e 9",
+    "candidates with no electoral votes ross perotindependent vote 183,109",
+    "candidates with no electoral votes ross perotindependent % 10.85",
+    "candidates with no electoral votes andre marroulibertarian vote 5,737",
+    "candidates with no electoral votes andre marroulibertarian % 0.34",
+    "candidates with no electoral votes others vote 4,851",
+    "candidates with no electoral votes others % 0.29",
+    "overall popular vote top-2 margin(+/− if won by d/r) vote −114,203",
+    "overall popular vote top-2 margin(+/− if won by d/r) % −6.77",
+    "overall popular vote marginswing[b] % 12.53",
+    "overall popular vote state total vote 1,688,060",
+    "overall popular vote state total  al"
+  ],
+  "rep_keywords": [
+    "bush"
+  ],
+  "dem_keywords": [
+    "clinton"
+  ]
+}

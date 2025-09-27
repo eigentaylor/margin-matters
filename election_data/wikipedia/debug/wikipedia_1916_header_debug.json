@@ -1,0 +1,82 @@
+{
+  "year": 1916,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Allan Benson"
+    },
+    {
+      "index": 11,
+      "name": "James Hanly"
+    },
+    {
+      "index": 14,
+      "name": "No Candidate (Bull Moose)"
+    },
+    {
+      "index": 17,
+      "name": "Arthur Reimer"
+    }
+  ],
+  "col_desc_raw": [
+    "[45] State Alabama Arizona",
+    "[45] electoralvotes 12 3",
+    "Woodrow WilsonDemocratic # 99,409 33,170",
+    "Woodrow WilsonDemocratic % 76.04 57.17",
+    "Woodrow WilsonDemocratic electoralvotes 12 3",
+    "Charles Evans HughesRepublican # 28,662 20,524",
+    "Charles Evans HughesRepublican % 21.92 35.37",
+    "Charles Evans HughesRepublican electoralvotes - -",
+    "Allan BensonSocialist # 1,916 3,174",
+    "Allan BensonSocialist % 1.47 5.47",
+    "Allan BensonSocialist electoralvotes - -",
+    "James HanlyProhibition # 741 1,153",
+    "James HanlyProhibition % 0.57 1.99",
+    "James HanlyProhibition electoralvotes - -",
+    "No CandidateProgressive \"Bull Moose\" # - -",
+    "No CandidateProgressive \"Bull Moose\" % - -",
+    "No CandidateProgressive \"Bull Moose\" electoralvotes - -",
+    "Arthur ReimerSocialist Labor # - -",
+    "Arthur ReimerSocialist Labor % - -",
+    "Arthur ReimerSocialist Labor electoralvotes - -",
+    "Margin # 70,747 12,646",
+    "Margin % 54.12 21.80",
+    "State Total # 130,728 58,021",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "[45] state alabama arizona",
+    "[45] electoralvotes 12 3",
+    "woodrow wilsondemocratic # 99,409 33,170",
+    "woodrow wilsondemocratic % 76.04 57.17",
+    "woodrow wilsondemocratic electoralvotes 12 3",
+    "charles evans hughesrepublican # 28,662 20,524",
+    "charles evans hughesrepublican % 21.92 35.37",
+    "charles evans hughesrepublican electoralvotes - -",
+    "allan bensonsocialist # 1,916 3,174",
+    "allan bensonsocialist % 1.47 5.47",
+    "allan bensonsocialist electoralvotes - -",
+    "james hanlyprohibition # 741 1,153",
+    "james hanlyprohibition % 0.57 1.99",
+    "james hanlyprohibition electoralvotes - -",
+    "no candidateprogressive \"bull moose\" # - -",
+    "no candidateprogressive \"bull moose\" % - -",
+    "no candidateprogressive \"bull moose\" electoralvotes - -",
+    "arthur reimersocialist labor # - -",
+    "arthur reimersocialist labor % - -",
+    "arthur reimersocialist labor electoralvotes - -",
+    "margin # 70,747 12,646",
+    "margin % 54.12 21.80",
+    "state total # 130,728 58,021",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "hughes"
+  ],
+  "dem_keywords": [
+    "wilson"
+  ]
+}

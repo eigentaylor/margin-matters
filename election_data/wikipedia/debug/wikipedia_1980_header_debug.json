@@ -1,0 +1,64 @@
+{
+  "year": 1980,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 17,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "John Anderson"
+    },
+    {
+      "index": 11,
+      "name": "Ed Clark"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 9 3",
+    "Ronald ReaganRepublican # 654,192 86,112",
+    "Ronald ReaganRepublican % 48.75 54.35",
+    "Ronald ReaganRepublican electoralvotes 9 3",
+    "Jimmy CarterDemocratic # 636,730 41,842",
+    "Jimmy CarterDemocratic % 47.45 26.41",
+    "Jimmy CarterDemocratic electoralvotes - -",
+    "John AndersonIndependent # 16,481 11,155",
+    "John AndersonIndependent % 1.23 7.04",
+    "John AndersonIndependent electoralvotes - -",
+    "Ed ClarkLibertarian # 13,318 18,479",
+    "Ed ClarkLibertarian % 0.99 11.66",
+    "Ed ClarkLibertarian electoralvotes - -",
+    "Margin # 17,462 44,270",
+    "Margin % 1.30 27.94",
+    "MarginSwing[f] % 14.41 5.69",
+    "State Total # 1,341,929 158,445",
+    "State Total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 9 3",
+    "ronald reaganrepublican # 654,192 86,112",
+    "ronald reaganrepublican % 48.75 54.35",
+    "ronald reaganrepublican electoralvotes 9 3",
+    "jimmy carterdemocratic # 636,730 41,842",
+    "jimmy carterdemocratic % 47.45 26.41",
+    "jimmy carterdemocratic electoralvotes - -",
+    "john andersonindependent # 16,481 11,155",
+    "john andersonindependent % 1.23 7.04",
+    "john andersonindependent electoralvotes - -",
+    "ed clarklibertarian # 13,318 18,479",
+    "ed clarklibertarian % 0.99 11.66",
+    "ed clarklibertarian electoralvotes - -",
+    "margin # 17,462 44,270",
+    "margin % 1.30 27.94",
+    "marginswing[f] % 14.41 5.69",
+    "state total # 1,341,929 158,445",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "reagan"
+  ],
+  "dem_keywords": [
+    "carter"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "year": 1984,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 14,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "David Bergland"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Alaska",
+    "electoralvotes 9 3",
+    "Ronald ReaganRepublican # 872,849 138,377",
+    "Ronald ReaganRepublican % 60.54 66.65",
+    "Ronald ReaganRepublican electoralvotes 9 3",
+    "Walter MondaleDemocratic # 551,899 62,007",
+    "Walter MondaleDemocratic % 38.28 29.87",
+    "Walter MondaleDemocratic electoralvotes – –",
+    "David BerglandLibertarian # 9,504 6,378",
+    "David BerglandLibertarian % 0.66 3.07",
+    "David BerglandLibertarian electoralvotes – –",
+    "Margin # 320,950 76,370",
+    "Margin % 22.26 36.79",
+    "Margin Swing % 20.96 8.85",
+    "State total # 1,441,713 207,605",
+    "State total  AL AK"
+  ],
+  "col_desc_lower": [
+    "state alabama alaska",
+    "electoralvotes 9 3",
+    "ronald reaganrepublican # 872,849 138,377",
+    "ronald reaganrepublican % 60.54 66.65",
+    "ronald reaganrepublican electoralvotes 9 3",
+    "walter mondaledemocratic # 551,899 62,007",
+    "walter mondaledemocratic % 38.28 29.87",
+    "walter mondaledemocratic electoralvotes – –",
+    "david berglandlibertarian # 9,504 6,378",
+    "david berglandlibertarian % 0.66 3.07",
+    "david berglandlibertarian electoralvotes – –",
+    "margin # 320,950 76,370",
+    "margin % 22.26 36.79",
+    "margin swing % 20.96 8.85",
+    "state total # 1,441,713 207,605",
+    "state total  al ak"
+  ],
+  "rep_keywords": [
+    "reagan"
+  ],
+  "dem_keywords": [
+    "mondale"
+  ]
+}

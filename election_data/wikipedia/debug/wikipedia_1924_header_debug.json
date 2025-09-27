@@ -1,0 +1,82 @@
+{
+  "year": 1924,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Robert La Follette"
+    },
+    {
+      "index": 11,
+      "name": "Herman Faris"
+    },
+    {
+      "index": 14,
+      "name": "William Foster"
+    },
+    {
+      "index": 17,
+      "name": "Frank Johns"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 12 3",
+    "Calvin CoolidgeRepublican # 45,005 30,516",
+    "Calvin CoolidgeRepublican % 27.01 41.26",
+    "Calvin CoolidgeRepublican electoralvotes - 3",
+    "John W. DavisDemocratic # 112,966 26,235",
+    "John W. DavisDemocratic % 67.81 35.47",
+    "John W. DavisDemocratic electoralvotes 12 -",
+    "Robert La FolletteProgressive # 8,084 17,210",
+    "Robert La FolletteProgressive % 4.85 23.27",
+    "Robert La FolletteProgressive electoralvotes - -",
+    "Herman FarisProhibition # 538 -",
+    "Herman FarisProhibition % 0.32 -",
+    "Herman FarisProhibition electoralvotes - -",
+    "William FosterCommunist # - -",
+    "William FosterCommunist % - -",
+    "William FosterCommunist electoralvotes - -",
+    "Frank JohnsSocialist Labor # - -",
+    "Frank JohnsSocialist Labor % - -",
+    "Frank JohnsSocialist Labor electoralvotes - -",
+    "Margin # -67,961 4,281",
+    "Margin % -40.79 5.79",
+    "State Total # 166,593 73,961",
+    "State Total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 12 3",
+    "calvin coolidgerepublican # 45,005 30,516",
+    "calvin coolidgerepublican % 27.01 41.26",
+    "calvin coolidgerepublican electoralvotes - 3",
+    "john w. davisdemocratic # 112,966 26,235",
+    "john w. davisdemocratic % 67.81 35.47",
+    "john w. davisdemocratic electoralvotes 12 -",
+    "robert la folletteprogressive # 8,084 17,210",
+    "robert la folletteprogressive % 4.85 23.27",
+    "robert la folletteprogressive electoralvotes - -",
+    "herman farisprohibition # 538 -",
+    "herman farisprohibition % 0.32 -",
+    "herman farisprohibition electoralvotes - -",
+    "william fostercommunist # - -",
+    "william fostercommunist % - -",
+    "william fostercommunist electoralvotes - -",
+    "frank johnssocialist labor # - -",
+    "frank johnssocialist labor % - -",
+    "frank johnssocialist labor electoralvotes - -",
+    "margin # -67,961 4,281",
+    "margin % -40.79 5.79",
+    "state total # 166,593 73,961",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "coolidge"
+  ],
+  "dem_keywords": [
+    "davis"
+  ]
+}

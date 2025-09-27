@@ -1,0 +1,74 @@
+{
+  "year": 1936,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 20,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "William Lemke"
+    },
+    {
+      "index": 11,
+      "name": "Norman Thomas"
+    },
+    {
+      "index": 14,
+      "name": "Other"
+    }
+  ],
+  "col_desc_raw": [
+    "State Alabama Arizona",
+    "electoralvotes 11 3",
+    "Franklin D. RooseveltDemocratic # 238,136 86,722",
+    "Franklin D. RooseveltDemocratic % 86.38 69.85",
+    "Franklin D. RooseveltDemocratic electoralvotes 11 3",
+    "Alfred LandonRepublican # 35,358 33,433",
+    "Alfred LandonRepublican % 12.82 26.93",
+    "Alfred LandonRepublican electoralvotes - -",
+    "William LemkeUnion # 551 3,307",
+    "William LemkeUnion % 0.20 2.66",
+    "William LemkeUnion electoralvotes - -",
+    "Norman ThomasSocialist # 242 317",
+    "Norman ThomasSocialist % 0.09 0.26",
+    "Norman ThomasSocialist electoralvotes - -",
+    "Other # 1,397 384",
+    "Other % 0.51 0.31",
+    "Other electoralvotes - -",
+    "Margin # 202,838 53,289",
+    "Margin % 73.56 42.92",
+    "MarginSwing[b] % 2.95 6.42",
+    "State total # 275,244 124,163",
+    "State total  AL AZ"
+  ],
+  "col_desc_lower": [
+    "state alabama arizona",
+    "electoralvotes 11 3",
+    "franklin d. rooseveltdemocratic # 238,136 86,722",
+    "franklin d. rooseveltdemocratic % 86.38 69.85",
+    "franklin d. rooseveltdemocratic electoralvotes 11 3",
+    "alfred landonrepublican # 35,358 33,433",
+    "alfred landonrepublican % 12.82 26.93",
+    "alfred landonrepublican electoralvotes - -",
+    "william lemkeunion # 551 3,307",
+    "william lemkeunion % 0.20 2.66",
+    "william lemkeunion electoralvotes - -",
+    "norman thomassocialist # 242 317",
+    "norman thomassocialist % 0.09 0.26",
+    "norman thomassocialist electoralvotes - -",
+    "other # 1,397 384",
+    "other % 0.51 0.31",
+    "other electoralvotes - -",
+    "margin # 202,838 53,289",
+    "margin % 73.56 42.92",
+    "marginswing[b] % 2.95 6.42",
+    "state total # 275,244 124,163",
+    "state total  al az"
+  ],
+  "rep_keywords": [
+    "landon"
+  ],
+  "dem_keywords": [
+    "roosevelt"
+  ]
+}
