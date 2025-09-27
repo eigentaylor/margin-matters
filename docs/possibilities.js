@@ -26,7 +26,8 @@
 	const stateStore = new Map(); // abbr -> { state, ev, margin, units, status, strength, baseStatus, baseStrength, manual }
 	const unitStore = new Map();  // unit -> { unit, state, ev, margin, status, strength, baseStatus, baseStrength, manual }
 	const statePaths = new Map(); // abbr -> d3 selection (proxied from ElectionMap)
-	let currentThreshold = 0.05;
+	const DEFAULT_THRESHOLD = 0.05;
+	let currentThreshold = DEFAULT_THRESHOLD;
 	let tossupBand = Math.min(currentThreshold / 2, 0.025);
 
 	// Enumeration guardrails
@@ -380,16 +381,16 @@
 		const u = unitStore.get(unit);
 		if (!u) return;
 		const stObj = stateStore.get(u.state);
-		if (stObj && stObj.baseStrength==='safe' && !stObj.manual) return; // lock districts of safe state
+		// Lock districts only if the unit itself is base-safe and untouched. This allows NE/ME districts
+		// to be toggled even when the parent state base is safe.
+		if (u.baseStrength === 'safe' && !u.manual) return;
 		if (event && event.shiftKey){
 			u.status = 'tossup';
 			u.strength = 'tossup';
 			u.manual = u.baseStatus !== 'tossup' || u.baseStrength !== 'tossup';
 		} else {
-			const idx = STATUS_SEQUENCE.indexOf(u.status);
-			u.status = STATUS_SEQUENCE[(idx + 1) % STATUS_SEQUENCE.length];
-			u.strength = (u.status === 'tossup') ? 'tossup' : (u.baseStatus === u.status ? u.baseStrength : 'lean');
-			u.manual = (u.status !== u.baseStatus) || (u.strength !== u.baseStrength);
+			// Use the same cycle logic as states so districts behave identically
+			cycleState(u);
 		}
 		updateUnitColor(unit);
 		// Reflect a heuristic aggregated state status: if any unit tossup -> state tossup; else majority status by EV with base strengths
@@ -580,13 +581,14 @@
 	}
 
 	function resetToBase(){
-		stateStore.forEach(state => {
-			state.status = state.baseStatus;
-			state.strength = state.baseStrength;
-			state.manual = false;
-		});
-		updateAllStateColors();
-		updateSummary();
+		// Always reset to the canonical default threshold regardless of prior reclassifies
+		currentThreshold = DEFAULT_THRESHOLD;
+		applyClassification(DEFAULT_THRESHOLD, { resetManual: true });
+		// update slider UI if present
+		const slider = document.getElementById('thresholdSlider');
+		const valueEl = document.getElementById('thresholdValue');
+		if (slider) slider.value = Math.round(DEFAULT_THRESHOLD * 100).toString();
+		if (valueEl) valueEl.textContent = `${Math.round(DEFAULT_THRESHOLD * 100)}%`;
 	}
 
 	function applyClassification(threshold, opts){
