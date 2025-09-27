@@ -61,8 +61,9 @@
 			sp.set('th', th.toString());
 			sp.set('m', b64);
 			const newUrl = `${location.pathname}?${sp.toString()}`;
-			history.replaceState(null,'',newUrl);
+			return newUrl;
 		} catch(e) { /* ignore */ }
+			return location.href;
 	}
 
 	function statusSymbol(obj){
@@ -111,7 +112,13 @@
 		} catch(e){ /* ignore */ }
 	}
 
-	function refreshURL(){ encodeScenario(); }
+	function buildShareURL(){
+		try { return encodeScenario(); }
+		catch(e){ return location.href; }
+	}
+
+	// No-op during normal interactions; sharing happens only when user explicitly copies the share URL
+	function refreshURL(){ /* intentionally empty: do not auto-write scenario to browser URL */ }
 
 	const mapWrap = () => document.getElementById('map-wrap');
 	const mapTip = () => document.getElementById('mapTip');
@@ -548,7 +555,10 @@
 	}
 
 	function copyShareURL(){
-		try { navigator.clipboard.writeText(location.href); } catch(e) { /* ignore */ }
+		try {
+			const url = buildShareURL();
+			navigator.clipboard.writeText(url);
+		} catch(e) { /* ignore */ }
 	}
 
 	function positionTip(evt){
@@ -603,6 +613,8 @@
 		const valueEl = document.getElementById('thresholdValue');
 		if (slider) slider.value = Math.round(DEFAULT_THRESHOLD * 100).toString();
 		if (valueEl) valueEl.textContent = `${Math.round(DEFAULT_THRESHOLD * 100)}%`;
+		// Clear any encoded scenario from the URL (leave only the pathname)
+		try { history.replaceState(null, '', location.pathname); } catch(e) { /* ignore */ }
 	}
 
 	function applyClassification(threshold, opts){
