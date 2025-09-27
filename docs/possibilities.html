@@ -1,6 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting — 2028 Paths</title>
+  <!-- Immediate meta refresh redirect to the new page -->
+  <meta http-equiv="refresh" content="0;url=./paths2028.html" />
+  <script>
+    // Failsafe JS redirect for browsers that ignore meta refresh
+    (function(){
+      try { location.replace('./paths2028.html'); } catch(e) { /* ignore */ }
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting to <a href="./paths2028.html">2028 Paths</a>…</p>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
 	<title>2028 Paths · Margin Matters</title>
@@ -10,7 +29,7 @@
 <body>
 	<div class="container">
 		<div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
-			<div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./possibilities.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div>
+			<div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div>
 			<div class="legend">2028 Paths to Victory</div>
 		</div>
 
@@ -157,6 +176,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 	<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 	<script src="utils/electionMap.js"></script>
-	<script src="possibilities.js"></script>
+	<script src="paths2028.js"></script>
 </body>
 </html>

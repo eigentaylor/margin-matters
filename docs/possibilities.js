@@ -1,3 +1,14 @@
+// Redirect shim: load the new script filename so old pages referencing
+// possibilities.js still get the proper code.
+(function(){
+  var s = document.createElement('script');
+  s.src = 'paths2028.js';
+  s.async = false;
+  s.onload = function(){ /* loaded */ };
+  s.onerror = function(){ console.warn('paths2028.js failed to load from shim'); };
+  var ref = document.currentScript || document.getElementsByTagName('script')[0];
+  ref.parentNode.insertBefore(s, ref.nextSibling);
+})();
 (function(){
 	const STATUS_SEQUENCE = ['dem','tossup','rep'];
 	const COLORS = {
