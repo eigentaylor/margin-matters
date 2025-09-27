@@ -15,6 +15,8 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 /* NATIONAL quick link should be wider than state links */
 #top-links .btn{min-width:120px;padding:10px 16px}
 .btn{display:inline-block;padding:10px 14px;background:#1e1e1e;border:1px solid var(--border);border-radius:10px}
+.btn, .btn:visited, .btn:active{color:#fff}
+.btn:hover{color:#fff;filter:brightness(1.15)}
 .btn:focus{outline:2px solid var(--accent);outline-offset:2px}
 footer{margin-top:24px;color:var(--muted);font-size:.9rem}
 img.plot{width:100%;max-width:900px;display:block;margin:0 auto;border:1px solid var(--border);border-radius:10px;background:#000}
@@ -201,3 +203,27 @@ body.has-delta-toggle{padding-bottom:60px}
 .state{cursor:pointer;transition:fill 0.25s ease, filter 0.2s ease}
 .state:hover{filter:brightness(1.08)}
 .manual-note{color:var(--accent);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Category abbreviation list styling */
+.category-abbrs{margin-top:6px;font-size:0.75rem;line-height:1.3;color:var(--muted);word-wrap:break-word}
+.category-abbrs strong{color:var(--fg);font-weight:600}
+
+/* Enumerated path lists */
+.possibilities-enumeration h3{font-size:0.9rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted)}
+.enum-list{list-style:decimal-leading-zero inside}
+.enum-list li{margin:0 0 4px 0;padding:4px 6px;background:#111;border:1px solid #1f1f1f;border-radius:6px;font-variant-numeric:tabular-nums}
+.enum-list li:nth-child(odd){background:#101010}
+.enum-list li:hover{background:#181818}
+.enum-list code{background:#181818;padding:2px 4px;border-radius:4px;color:#fff}
+
+/* Mini cards for per-path formatting */
+.path-mini-card{display:grid;grid-template-columns:auto auto auto;gap:4px 12px;align-items:center;font-size:0.7rem;font-weight:600}
+.path-mini-card .pv{font-weight:800;color:#fff}
+
+/* New: card styling for enumerated paths */
+.path-card{background:#0f0f0f;border:1px solid #222;padding:8px;border-radius:8px;display:block}
+.path-card .row{display:flex;gap:8px;align-items:center}
+.path-card .dlist{color:#7fb3ff;font-weight:700}
+.path-card .rlist{color:#ff9b9b;font-weight:700}
+.path-card .evs{margin-left:auto;color:#fff;font-weight:800}
+.enum-list li{padding:6px}
