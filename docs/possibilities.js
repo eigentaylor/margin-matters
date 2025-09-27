@@ -280,8 +280,16 @@
 		const demNeed = Math.max(0, 270 - demEV);
 		const repNeed = Math.max(0, 270 - repEV);
 
-		setText('demEV', formatNumber(demEV));
-		setText('repEV', formatNumber(repEV));
+		// Show safe EV and a parenthetical including lean EVs (safe + lean) for decided blocks
+		const safeDEv = (buckets.safeD || []).reduce((acc, s) => acc + (s.ev || 0), 0);
+		const leanDEv = (buckets.leanD || []).reduce((acc, s) => acc + (s.ev || 0), 0);
+		if (leanDEv > 0) setText('demEV', `${formatNumber(safeDEv)} EV (${formatNumber(safeDEv + leanDEv)} EV lean)`);
+		else setText('demEV', `${formatNumber(safeDEv)} EV`);
+
+		const safeREv = (buckets.safeR || []).reduce((acc, s) => acc + (s.ev || 0), 0);
+		const leanREv = (buckets.leanR || []).reduce((acc, s) => acc + (s.ev || 0), 0);
+		if (leanREv > 0) setText('repEV', `${formatNumber(safeREv)} EV (${formatNumber(safeREv + leanREv)} EV lean)`);
+		else setText('repEV', `${formatNumber(safeREv)} EV`);
 	setText('contestableEV', formatNumber(contestableEV)); // renamed UI slot
 		setText('demNeed', formatNumber(demNeed));
 		setText('repNeed', formatNumber(repNeed));
@@ -456,8 +464,46 @@
 		const tieList = document.getElementById('tiePathsList');
 		if (!noteEl || !demList || !repList || !tieList) return;
 		const n = tossupUnits.length;
-		const key = `${demBaseEV}|${repBaseEV}|`+tossupUnits.map(t=>`${t.unit}:${t.ev}`).join(',');
-		if (lastEnumerated.key === key) return; // already enumerated this lineup & bases
+		// Include status/strength/manual in cache key so that changing a lean selection forces re-enumeration & resort.
+		const key = `${demBaseEV}|${repBaseEV}|`+tossupUnits.map(t=>`${t.unit}:${t.ev}:${t.status}:${t.strength}:${t.manual?1:0}`).join(',');
+		if (lastEnumerated.key === key) {
+			// Even if combination set unchanged, we still need to re-sort if lean / manual flags changed.
+			// Fall through to re-render using lastEnumerated.data if exists.
+			if (lastEnumerated.data){
+				const { dem, rep, ties } = lastEnumerated.data;
+				demList.innerHTML=''; repList.innerHTML=''; tieList.innerHTML='';
+				const render = (listEl, arr) => {
+					const anyManualLean = arr.some(p=>p.manualLeanMismatch!==undefined); // heuristic
+					arr.slice(0,512).sort((a,b)=> {
+						if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) return a.manualLeanMismatch - b.manualLeanMismatch;
+						const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0);
+						if (evMatchDiff !== 0) return evMatchDiff;
+						if (a.dem !== b.dem) return a.dem - b.dem;
+						return a.rep - b.rep;
+					}).forEach(obj => {
+						const li = document.createElement('li');
+						const card = document.createElement('div'); card.className='path-card';
+						const row = document.createElement('div'); row.className='row';
+						const assigns = obj.path.split(/\s+/).filter(Boolean);
+						const dStates = assigns.filter(p=>p.endsWith('=D')).map(p=>p.split('=')[0]);
+						const rStates = assigns.filter(p=>p.endsWith('=R')).map(p=>p.split('=')[0]);
+						const dDiv = document.createElement('div'); dDiv.className='dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ')||'—');
+						const rDiv = document.createElement('div'); rDiv.className='rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ')||'—');
+						const evDiv = document.createElement('div'); evDiv.className='evs'; evDiv.textContent = `${obj.dem}D – ${obj.rep}R`;
+						if (anyManualLean && obj.manualLeanMismatch>0){
+							const warn = document.createElement('div'); warn.className='mismatch-note'; warn.textContent = `⚠ ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch>1?'es':''}`;
+							row.appendChild(warn);
+						}
+						row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv);
+						card.appendChild(row); li.appendChild(card); listEl.appendChild(li);
+					});
+				};
+				render(demList, dem);
+				render(repList, rep);
+				render(tieList, ties);
+				return;
+			}
+		}
 		lastEnumerated.key = key;
 		// clear existing
 		demList.innerHTML = '';
@@ -472,6 +518,12 @@
 		// Build arrays for fast iteration
 		const evs = tossupUnits.map(t=>t.ev||0);
 		const names = tossupUnits.map(t=>t.unit);
+		// Precompute lean targets & manual lean targets so we can prioritize scenarios that respect user explicit lean picks.
+		// leanTargets[i] = 'D' | 'R' for any unit currently classified as (status, strength)=='(party, lean)'; else null.
+		// manualLeanTargets[i] similar but only when user manually overrode (manual && lean).
+		const leanTargets = tossupUnits.map(u => (u.strength==='lean' ? (u.status==='dem' ? 'D':'R') : null));
+		const manualLeanTargets = tossupUnits.map(u => (u.manual && u.strength==='lean' ? (u.status==='dem' ? 'D':'R') : null));
+		const anyManualLean = manualLeanTargets.some(v => v !== null);
 		const tossupTotal = evs.reduce((a,b)=>a+b,0);
 		const sampleLimit = 256;
 		for (let mask=0; mask<fullCount; mask++){
@@ -482,6 +534,7 @@
 			const repTotal = repBaseEV + (tossupTotal - demAdd);
 			const assignList = [];
 			let leanMatchEv = 0; // EV-weighted score for matching current lean direction
+			let manualLeanMismatch = 0; // count of manual lean units whose assignment differs from user selection
 			for (let i=0;i<n;i++){
 				const assignedToDem = !!(mask & (1<<i));
 				assignList.push(`${names[i]}=${ assignedToDem ? 'D' : 'R' }`);
@@ -494,24 +547,34 @@
 						leanMatchEv += (evs[i] || 0);
 					}
 				}
+				// manual lean mismatch tracking (stronger priority than aggregate lean EV)
+				if (manualLeanTargets[i] !== null){
+					const desired = manualLeanTargets[i] === 'D';
+					if (desired !== assignedToDem) manualLeanMismatch++;
+				}
 			}
 			const pathStr = assignList.join(' ');
-			if (demTotal>=270 && repTotal<270) demPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
-			else if (repTotal>=270 && demTotal<270) repPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
-			else if (demTotal===269 && repTotal===269) tiePaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
+			const payload = { path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv, manualLeanMismatch };
+			if (demTotal>=270 && repTotal<270) demPaths.push(payload);
+			else if (repTotal>=270 && demTotal<270) repPaths.push(payload);
+			else if (demTotal===269 && repTotal===269) tiePaths.push(payload);
 			else {
-				if (demTotal>repTotal) demPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
-				else if (repTotal>demTotal) repPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
-				else tiePaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
+				if (demTotal>repTotal) demPaths.push(payload);
+				else if (repTotal>demTotal) repPaths.push(payload);
+				else tiePaths.push(payload);
 			}
 		}
 		// Helper to render
 		const render = (listEl, arr) => {
 			arr.slice(0,512).sort((a,b)=> {
-				// Prefer scenarios that match current lean directions (higher leanMatchEv first)
-				const la = (b.leanMatchEv || 0) - (a.leanMatchEv || 0);
-				if (la !== 0) return la;
-				// fallback to dem total then rep total ordering
+				// 1. Prioritize honoring manual lean picks: fewer mismatches first
+				if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) {
+					return a.manualLeanMismatch - b.manualLeanMismatch; // 0 mismatches before 1, etc.
+				}
+				// 2. Prefer scenarios that match (any) lean directions by cumulative EV
+				const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0);
+				if (evMatchDiff !== 0) return evMatchDiff;
+				// 3. Fallback: closer overall EV margin ordering (lower winning EV first for variety)
 				if (a.dem !== b.dem) return a.dem - b.dem;
 				return a.rep - b.rep;
 			}).forEach(obj => {
@@ -525,6 +588,13 @@
 				const dDiv = document.createElement('div'); dDiv.className='dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ')||'—');
 				const rDiv = document.createElement('div'); rDiv.className='rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ')||'—');
 				const evDiv = document.createElement('div'); evDiv.className='evs'; evDiv.textContent = `${obj.dem}D – ${obj.rep}R`;
+				if (anyManualLean && obj.manualLeanMismatch>0){
+					// subtle indicator that scenario violates some manual lean picks
+					const warn = document.createElement('div');
+					warn.className = 'mismatch-note';
+					warn.textContent = `⚠ ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch>1?'es':''}`;
+					row.appendChild(warn);
+				}
 				row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv);
 				card.appendChild(row);
 				li.appendChild(card);
