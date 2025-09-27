@@ -325,37 +325,38 @@
 	function cycleState(state){
 		if (!state) return;
 		if (state.baseStrength === 'safe' && !state.manual) return; // lock untouched safe
-		// If the state's base classification is a true tossup, use the longer 5-step cycle
-		if (state.baseStatus === 'tossup' || state.baseStrength === 'tossup'){
-			// tossup -> DL -> DS -> RS -> RL -> tossup
-			if (state.status === 'tossup') { state.status = 'dem'; state.strength = 'lean'; }
-			else if (state.status === 'dem' && state.strength === 'lean') { state.strength = 'safe'; }
-			else if (state.status === 'dem' && state.strength === 'safe') { state.status = 'rep'; state.strength = 'safe'; }
-			else if (state.status === 'rep' && state.strength === 'safe') { state.strength = 'lean'; }
-			else if (state.status === 'rep' && state.strength === 'lean') { state.status = 'tossup'; state.strength = 'tossup'; }
-			else { state.status = 'tossup'; state.strength = 'tossup'; }
-			state.manual = (state.status !== state.baseStatus) || (state.strength !== state.baseStrength);
-			return;
+		// Direction-aware ring. Determine direction on first interaction from a lean state.
+		// Forward (default / from leanD): leanD -> safeD -> safeR -> leanR -> tossup -> leanD
+		// Reverse (from leanR):         leanR -> safeR -> safeD -> leanD -> tossup -> leanR
+		// We store state.cycleReverse boolean.
+		if (state.cycleReverse === undefined){
+			if (state.status === 'rep' && state.strength === 'lean') state.cycleReverse = true; // start reversed
+			else state.cycleReverse = false; // default forward (leanD or anything else)
 		}
-
-		// Two different 3-step cycles depending on the state's base orientation:
-		// If the state's base is REP: RL -> RS -> DS -> RL
-		// If the state's base is DEM: DL -> DS -> RS -> DL
-		const base = state.baseStatus || 'rep';
-		if (base === 'rep'){
-			if (state.status === 'rep' && state.strength === 'lean') { state.strength = 'safe'; /* RL -> RS */ }
-			else if (state.status === 'rep' && state.strength === 'safe') { state.status = 'dem'; state.strength = 'safe'; /* RS -> DS */ }
-			else if (state.status === 'dem' && state.strength === 'safe') { state.status = 'rep'; state.strength = 'lean'; /* DS -> RL */ }
-			else if (state.status === 'tossup') { state.status = 'rep'; state.strength = 'lean'; }
-			else { state.status = 'tossup'; state.strength = 'tossup'; }
-		} else {
-			// base === 'dem'
-			if (state.status === 'dem' && state.strength === 'lean') { state.strength = 'safe'; /* DL -> DS */ }
-			else if (state.status === 'dem' && state.strength === 'safe') { state.status = 'rep'; state.strength = 'safe'; /* DS -> RS */ }
-			else if (state.status === 'rep' && state.strength === 'safe') { state.status = 'dem'; state.strength = 'lean'; /* RS -> DL */ }
-			else if (state.status === 'tossup') { state.status = 'dem'; state.strength = 'lean'; }
-			else { state.status = 'tossup'; state.strength = 'tossup'; }
+		const forward = [
+			{status:'dem', strength:'lean'},
+			{status:'dem', strength:'safe'},
+			{status:'rep', strength:'safe'},
+			{status:'rep', strength:'lean'},
+			{status:'tossup', strength:'tossup'}
+		];
+		const reverse = [
+			{status:'rep', strength:'lean'},
+			{status:'rep', strength:'safe'},
+			{status:'dem', strength:'safe'},
+			{status:'dem', strength:'lean'},
+			{status:'tossup', strength:'tossup'}
+		];
+		const ring = state.cycleReverse ? reverse : forward;
+		// Find current index
+		let idx = ring.findIndex(r => r.status === state.status && r.strength === state.strength);
+		if (idx === -1){
+			// If current combo not on ring (e.g., unexpected), normalize to tossup
+			idx = ring.findIndex(r => r.status === 'tossup');
 		}
+		const next = ring[(idx + 1) % ring.length];
+		state.status = next.status;
+		state.strength = next.strength;
 		state.manual = (state.status !== state.baseStatus) || (state.strength !== state.baseStrength);
 	}
 
