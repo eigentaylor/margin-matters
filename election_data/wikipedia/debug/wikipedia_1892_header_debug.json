@@ -1,0 +1,72 @@
+{
+  "year": 1892,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "James Weaver"
+    },
+    {
+      "index": 11,
+      "name": "John Bidwell"
+    },
+    {
+      "index": 14,
+      "name": "Simon Wing"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 11 8",
+    "2": "Grover ClevelandDemocratic # 138,135 87,834",
+    "3": "Grover ClevelandDemocratic % 59.40 59.30",
+    "4": "Grover ClevelandDemocratic electoralvotes 11 8",
+    "5": "Benjamin HarrisonRepublican # 9,184 47,072",
+    "6": "Benjamin HarrisonRepublican % 3.95 31.78",
+    "7": "Benjamin HarrisonRepublican electoralvotes – –",
+    "8": "James WeaverPopulist # 84,984 11,831",
+    "9": "James WeaverPopulist % 36.55 7.99",
+    "10": "James WeaverPopulist electoralvotes – –",
+    "11": "John BidwellProhibition # 240 113",
+    "12": "John BidwellProhibition % 0.10 0.08",
+    "13": "John BidwellProhibition electoralvotes – –",
+    "14": "Simon WingSocialist Labor # – –",
+    "15": "Simon WingSocialist Labor % – –",
+    "16": "Simon WingSocialist Labor electoralvotes – –",
+    "17": "Margin # 53,151 40,762",
+    "18": "Margin % 22.86 27.52",
+    "19": "State Total # 232,543 148,117",
+    "20": "State Total state/dist. AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 11 8",
+    "2": "grover clevelanddemocratic # 138,135 87,834",
+    "3": "grover clevelanddemocratic % 59.40 59.30",
+    "4": "grover clevelanddemocratic electoralvotes 11 8",
+    "5": "benjamin harrisonrepublican # 9,184 47,072",
+    "6": "benjamin harrisonrepublican % 3.95 31.78",
+    "7": "benjamin harrisonrepublican electoralvotes – –",
+    "8": "james weaverpopulist # 84,984 11,831",
+    "9": "james weaverpopulist % 36.55 7.99",
+    "10": "james weaverpopulist electoralvotes – –",
+    "11": "john bidwellprohibition # 240 113",
+    "12": "john bidwellprohibition % 0.10 0.08",
+    "13": "john bidwellprohibition electoralvotes – –",
+    "14": "simon wingsocialist labor # – –",
+    "15": "simon wingsocialist labor % – –",
+    "16": "simon wingsocialist labor electoralvotes – –",
+    "17": "margin # 53,151 40,762",
+    "18": "margin % 22.86 27.52",
+    "19": "state total # 232,543 148,117",
+    "20": "state total state/dist. al ar"
+  },
+  "rep_keywords": [
+    "harrison"
+  ],
+  "dem_keywords": [
+    "cleveland"
+  ]
+}

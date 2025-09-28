@@ -1,0 +1,62 @@
+{
+  "year": 1888,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 16,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Clinton Fisk"
+    },
+    {
+      "index": 11,
+      "name": "Alson"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 10 7",
+    "2": "Grover ClevelandDemocratic # 117,314 86,062",
+    "3": "Grover ClevelandDemocratic % 67.00 54.80",
+    "4": "Grover ClevelandDemocratic electoralvotes 10 7",
+    "5": "Benjamin HarrisonRepublican # 57,177 59,752",
+    "6": "Benjamin HarrisonRepublican % 32.66 38.04",
+    "7": "Benjamin HarrisonRepublican electoralvotes - -",
+    "8": "Clinton FiskProhibition # 594 614",
+    "9": "Clinton FiskProhibition % 0.34 0.39",
+    "10": "Clinton FiskProhibition electoralvotes - -",
+    "11": "Alson StreeterUnion Labor # - 10,630",
+    "12": "Alson StreeterUnion Labor % - 6.77",
+    "13": "Alson StreeterUnion Labor electoralvotes - -",
+    "14": "Margin # -60,137 -26,310",
+    "15": "Margin % -34.35 -16.75",
+    "16": "State Total # 175,085 157,058",
+    "17": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 10 7",
+    "2": "grover clevelanddemocratic # 117,314 86,062",
+    "3": "grover clevelanddemocratic % 67.00 54.80",
+    "4": "grover clevelanddemocratic electoralvotes 10 7",
+    "5": "benjamin harrisonrepublican # 57,177 59,752",
+    "6": "benjamin harrisonrepublican % 32.66 38.04",
+    "7": "benjamin harrisonrepublican electoralvotes - -",
+    "8": "clinton fiskprohibition # 594 614",
+    "9": "clinton fiskprohibition % 0.34 0.39",
+    "10": "clinton fiskprohibition electoralvotes - -",
+    "11": "alson streeterunion labor # - 10,630",
+    "12": "alson streeterunion labor % - 6.77",
+    "13": "alson streeterunion labor electoralvotes - -",
+    "14": "margin # -60,137 -26,310",
+    "15": "margin % -34.35 -16.75",
+    "16": "state total # 175,085 157,058",
+    "17": "state total  al ar"
+  },
+  "rep_keywords": [
+    "harrison"
+  ],
+  "dem_keywords": [
+    "cleveland"
+  ]
+}

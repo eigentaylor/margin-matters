@@ -1,0 +1,100 @@
+{
+  "year": 1896,
+  "r_col": 2,
+  "d_col": 14,
+  "total_col": 31,
+  "third_party_cols": [
+    {
+      "index": 17,
+      "name": "John Palmer"
+    },
+    {
+      "index": 20,
+      "name": "Joshua Levering"
+    },
+    {
+      "index": 23,
+      "name": "Charles Matchett"
+    },
+    {
+      "index": 26,
+      "name": "Charles Bentley"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama",
+    "1": "electoralvotes 11",
+    "2": "William McKinleyRepublican # 55,673",
+    "3": "William McKinleyRepublican % 28.61",
+    "4": "William McKinleyRepublican electoralvotes -",
+    "5": "William Jennings BryanDemocratic/Populist/Silver Democratic # 106,209",
+    "6": "William Jennings BryanDemocratic/Populist/Silver Democratic % 54.58",
+    "7": "William Jennings BryanDemocratic/Populist/Silver Democratic electoralvotes 11",
+    "8": "William Jennings BryanDemocratic/Populist/Silver Populist # 24,089",
+    "9": "William Jennings BryanDemocratic/Populist/Silver Populist % 12.38",
+    "10": "William Jennings BryanDemocratic/Populist/Silver Populist electoralvotes -",
+    "11": "William Jennings BryanDemocratic/Populist/Silver Silver # -",
+    "12": "William Jennings BryanDemocratic/Populist/Silver Silver % -",
+    "13": "William Jennings BryanDemocratic/Populist/Silver Silver electoralvotes -",
+    "14": "William Jennings BryanDemocratic/Populist/Silver Total # 130,298",
+    "15": "William Jennings BryanDemocratic/Populist/Silver Total % 66.96",
+    "16": "William Jennings BryanDemocratic/Populist/Silver Total electoralvotes 11",
+    "17": "John PalmerNational Democrat 6,375",
+    "18": "John PalmerNational Democrat 3.28",
+    "19": "John PalmerNational Democrat -",
+    "20": "Joshua LeveringProhibition 2,234",
+    "21": "Joshua LeveringProhibition 1.15",
+    "22": "Joshua LeveringProhibition -",
+    "23": "Charles MatchettSocialist Labor -",
+    "24": "Charles MatchettSocialist Labor -",
+    "25": "Charles MatchettSocialist Labor -",
+    "26": "Charles BentleyNational Prohibition -",
+    "27": "Charles BentleyNational Prohibition -",
+    "28": "Charles BentleyNational Prohibition -",
+    "29": "Margin -74,625",
+    "30": "Margin -38.35",
+    "31": "State Total 194,580",
+    "32": "State Total AL"
+  },
+  "col_desc_lower": {
+    "0": "state alabama",
+    "1": "electoralvotes 11",
+    "2": "william mckinleyrepublican # 55,673",
+    "3": "william mckinleyrepublican % 28.61",
+    "4": "william mckinleyrepublican electoralvotes -",
+    "5": "william jennings bryandemocratic/populist/silver democratic # 106,209",
+    "6": "william jennings bryandemocratic/populist/silver democratic % 54.58",
+    "7": "william jennings bryandemocratic/populist/silver democratic electoralvotes 11",
+    "8": "william jennings bryandemocratic/populist/silver populist # 24,089",
+    "9": "william jennings bryandemocratic/populist/silver populist % 12.38",
+    "10": "william jennings bryandemocratic/populist/silver populist electoralvotes -",
+    "11": "william jennings bryandemocratic/populist/silver silver # -",
+    "12": "william jennings bryandemocratic/populist/silver silver % -",
+    "13": "william jennings bryandemocratic/populist/silver silver electoralvotes -",
+    "14": "william jennings bryandemocratic/populist/silver total # 130,298",
+    "15": "william jennings bryandemocratic/populist/silver total % 66.96",
+    "16": "william jennings bryandemocratic/populist/silver total electoralvotes 11",
+    "17": "john palmernational democrat 6,375",
+    "18": "john palmernational democrat 3.28",
+    "19": "john palmernational democrat -",
+    "20": "joshua leveringprohibition 2,234",
+    "21": "joshua leveringprohibition 1.15",
+    "22": "joshua leveringprohibition -",
+    "23": "charles matchettsocialist labor -",
+    "24": "charles matchettsocialist labor -",
+    "25": "charles matchettsocialist labor -",
+    "26": "charles bentleynational prohibition -",
+    "27": "charles bentleynational prohibition -",
+    "28": "charles bentleynational prohibition -",
+    "29": "margin -74,625",
+    "30": "margin -38.35",
+    "31": "state total 194,580",
+    "32": "state total al"
+  },
+  "rep_keywords": [
+    "mckinley"
+  ],
+  "dem_keywords": [
+    "bryan"
+  ]
+}

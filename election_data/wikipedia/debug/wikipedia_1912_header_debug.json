@@ -1,0 +1,82 @@
+{
+  "year": 1912,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "William H. Taft"
+    },
+    {
+      "index": 11,
+      "name": "Eugene V. Debs"
+    },
+    {
+      "index": 14,
+      "name": "Eugene Chafin"
+    },
+    {
+      "index": 17,
+      "name": "Arthur Reimer"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arizona",
+    "1": "electoralvotes 12 3",
+    "2": "Woodrow WilsonDemocratic # 82,438 10,324",
+    "3": "Woodrow WilsonDemocratic % 69.89 43.52",
+    "4": "Woodrow WilsonDemocratic electoralvotes 12 3",
+    "5": "Theodore RooseveltProgressive \"Bull Moose\" # 22,680 6,949",
+    "6": "Theodore RooseveltProgressive \"Bull Moose\" % 19.23 29.29",
+    "7": "Theodore RooseveltProgressive \"Bull Moose\" electoralvotes - -",
+    "8": "William H. TaftRepublican # 9,807 3,021",
+    "9": "William H. TaftRepublican % 8.31 12.74",
+    "10": "William H. TaftRepublican electoralvotes - -",
+    "11": "Eugene V. DebsSocialist # 3,029 3,163",
+    "12": "Eugene V. DebsSocialist % 2.57 13.33",
+    "13": "Eugene V. DebsSocialist electoralvotes - -",
+    "14": "Eugene ChafinProhibition # - 265",
+    "15": "Eugene ChafinProhibition % - 1.12",
+    "16": "Eugene ChafinProhibition electoralvotes - -",
+    "17": "Arthur ReimerSocialist Labor # - -",
+    "18": "Arthur ReimerSocialist Labor % - -",
+    "19": "Arthur ReimerSocialist Labor electoralvotes - -",
+    "20": "Margin # 59,758 3,375",
+    "21": "Margin % 50.66 14.23",
+    "22": "State Total # 117,959 23,722",
+    "23": "State Total  AL AZ"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arizona",
+    "1": "electoralvotes 12 3",
+    "2": "woodrow wilsondemocratic # 82,438 10,324",
+    "3": "woodrow wilsondemocratic % 69.89 43.52",
+    "4": "woodrow wilsondemocratic electoralvotes 12 3",
+    "5": "theodore rooseveltprogressive \"bull moose\" # 22,680 6,949",
+    "6": "theodore rooseveltprogressive \"bull moose\" % 19.23 29.29",
+    "7": "theodore rooseveltprogressive \"bull moose\" electoralvotes - -",
+    "8": "william h. taftrepublican # 9,807 3,021",
+    "9": "william h. taftrepublican % 8.31 12.74",
+    "10": "william h. taftrepublican electoralvotes - -",
+    "11": "eugene v. debssocialist # 3,029 3,163",
+    "12": "eugene v. debssocialist % 2.57 13.33",
+    "13": "eugene v. debssocialist electoralvotes - -",
+    "14": "eugene chafinprohibition # - 265",
+    "15": "eugene chafinprohibition % - 1.12",
+    "16": "eugene chafinprohibition electoralvotes - -",
+    "17": "arthur reimersocialist labor # - -",
+    "18": "arthur reimersocialist labor % - -",
+    "19": "arthur reimersocialist labor electoralvotes - -",
+    "20": "margin # 59,758 3,375",
+    "21": "margin % 50.66 14.23",
+    "22": "state total # 117,959 23,722",
+    "23": "state total  al az"
+  },
+  "rep_keywords": [
+    "roosevelt"
+  ],
+  "dem_keywords": [
+    "wilson"
+  ]
+}

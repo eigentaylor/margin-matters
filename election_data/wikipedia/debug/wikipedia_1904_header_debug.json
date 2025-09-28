@@ -1,0 +1,82 @@
+{
+  "year": 1904,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Eugene V. Debs"
+    },
+    {
+      "index": 11,
+      "name": "Silas Swallow"
+    },
+    {
+      "index": 14,
+      "name": "Thomas"
+    },
+    {
+      "index": 17,
+      "name": "Charles Corregan"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 11 9",
+    "2": "Theodore RooseveltRepublican # 22,472 46,860",
+    "3": "Theodore RooseveltRepublican % 20.66 40.25",
+    "4": "Theodore RooseveltRepublican electoralvotes - -",
+    "5": "Alton B. ParkerDemocratic # 79,797 64,434",
+    "6": "Alton B. ParkerDemocratic % 73.35 55.35",
+    "7": "Alton B. ParkerDemocratic electoralvotes 11 9",
+    "8": "Eugene V. DebsSocialist # 853 1,816",
+    "9": "Eugene V. DebsSocialist % 0.78 1.56",
+    "10": "Eugene V. DebsSocialist electoralvotes - -",
+    "11": "Silas SwallowProhibition # 612 993",
+    "12": "Silas SwallowProhibition % 0.56 0.85",
+    "13": "Silas SwallowProhibition electoralvotes - -",
+    "14": "Thomas WatsonPopulist # 5,051 2,318",
+    "15": "Thomas WatsonPopulist % 4.64 1.99",
+    "16": "Thomas WatsonPopulist electoralvotes - -",
+    "17": "Charles CorreganSocialist Labor # - -",
+    "18": "Charles CorreganSocialist Labor % - -",
+    "19": "Charles CorreganSocialist Labor electoralvotes - -",
+    "20": "Margin # -57,325 -17,574",
+    "21": "Margin % -52.70 -15.10",
+    "22": "State total # 108,785 116,421",
+    "23": "State total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 11 9",
+    "2": "theodore rooseveltrepublican # 22,472 46,860",
+    "3": "theodore rooseveltrepublican % 20.66 40.25",
+    "4": "theodore rooseveltrepublican electoralvotes - -",
+    "5": "alton b. parkerdemocratic # 79,797 64,434",
+    "6": "alton b. parkerdemocratic % 73.35 55.35",
+    "7": "alton b. parkerdemocratic electoralvotes 11 9",
+    "8": "eugene v. debssocialist # 853 1,816",
+    "9": "eugene v. debssocialist % 0.78 1.56",
+    "10": "eugene v. debssocialist electoralvotes - -",
+    "11": "silas swallowprohibition # 612 993",
+    "12": "silas swallowprohibition % 0.56 0.85",
+    "13": "silas swallowprohibition electoralvotes - -",
+    "14": "thomas watsonpopulist # 5,051 2,318",
+    "15": "thomas watsonpopulist % 4.64 1.99",
+    "16": "thomas watsonpopulist electoralvotes - -",
+    "17": "charles corregansocialist labor # - -",
+    "18": "charles corregansocialist labor % - -",
+    "19": "charles corregansocialist labor electoralvotes - -",
+    "20": "margin # -57,325 -17,574",
+    "21": "margin % -52.70 -15.10",
+    "22": "state total # 108,785 116,421",
+    "23": "state total  al ar"
+  },
+  "rep_keywords": [
+    "roosevelt"
+  ],
+  "dem_keywords": [
+    "parker"
+  ]
+}

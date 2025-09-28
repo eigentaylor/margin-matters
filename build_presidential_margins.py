@@ -8,7 +8,9 @@ import ast
 
 
 THIRD_PARTY_WINS = {
-    1912: ['CA', 'MN', 'SD', 'MI', 'WA', 'PA'],
+    1892: ['KS', 'CO', 'ID', 'NV', 'ND'],
+    #1912: ['CA', 'MN', 'SD', 'MI', 'WA', 'PA'],
+    1912: ['UT', 'VT'],
     1924: ['WI'],
     1948: ['LA', 'MS', 'SC'], # AL too, technically, but we handle that specially
     1960: ['MS'],
@@ -299,6 +301,20 @@ def main():
                 else:
                     # prefer D when pres >= 0 else R
                     winner = 'D' if pres >= 0 else 'R'
+
+                # Special-case: Colorado (CO) in 1876 did not hold a popular election
+                # for president; the state's electors cast their votes for Rutherford B. Hayes (Republican).
+                # Force the winner to R and ensure 3 electoral votes so the site consistently
+                # colors CO red and awards the Republican 3 EVs for 1876.
+                if year == 1876 and abbr == 'CO':
+                    winner = 'R'
+                    # ensure the output electoral_votes reflects 3 EVs
+                    try:
+                        ev_val = int(out.get('electoral_votes', 0))
+                    except Exception:
+                        ev_val = 0
+                    if ev_val < 3:
+                        out['electoral_votes'] = 3
 
             out['color'] = COLORS.get(winner, 'transparent')
 

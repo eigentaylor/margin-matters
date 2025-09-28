@@ -658,11 +658,19 @@
               const id = d && d.id != null ? String(d.id).padStart(2,'0') : null;
               const abbr = id ? idToAbbr[id] : null;
               if (abbr){
-                const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
-                const ev = (info && info.ev != null) ? info.ev : '';
-                const marginStr = (info && info.marginStr) ? info.marginStr : '';
-                const label = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
-                if (typeof window.showMapTip === 'function') window.showMapTip(evt, label);
+                try {
+                  // Override tooltip for Colorado in 1876: show static EV/party label
+                  const curYear = (window._curYear != null) ? window._curYear : (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : null);
+                  if (abbr === 'CO' && curYear === 1876) {
+                    if (typeof window.showMapTip === 'function') window.showMapTip(evt, 'CO · 3 EV - R');
+                  } else {
+                    const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
+                    const ev = (info && info.ev != null) ? info.ev : '';
+                    const marginStr = (info && info.marginStr) ? info.marginStr : '';
+                    const label = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
+                    if (typeof window.showMapTip === 'function') window.showMapTip(evt, label);
+                  }
+                } catch(e) { /* ignore tooltip errors */ }
               }
             } catch(e){}
           })
@@ -1157,34 +1165,22 @@
         }
       }
     } catch(e) {}
-    // Combine sorted stops with preset stops appended at the end (preserve ordinal indices)
-    const allStops = stops.concat(presetStops);
+  // Keep slider stops as the base numeric stops only. Preset stops will be rendered
+  // as separate chips that set a numeric PV override (window._pvOverride) when clicked.
+  const allStops = stops.slice();
     try {
       const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s)||[]).length }));
       console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
     } catch(e) {}
-    try {
-      if (year === 2024) {
-        const arrDbg = byYear.get(year) || [];
-        const nonNatDbg = arrDbg.filter(r=>r && r.unit !== 'NATIONAL');
-        const rmStats = {
-          count: nonNatDbg.length,
-          undefinedRm: nonNatDbg.filter(r=> !isFinite(r.rm)).length,
-          zeroRm: nonNatDbg.filter(r=> isFinite(r.rm) && Math.abs(r.rm) < 1e-12).length
-        };
-        // console.log('[tester] year=2024 stops:', stops.length, stops);
-        // console.log('[tester] year=2024 rm stats:', rmStats);
-      }
-    } catch(e) {}
-    // Ensure every stop has an effective value (keep any precomputed ones). For preset stops, use a tiny D-nudge.
+    // Ensure every base stop has an effective value (keep any precomputed ones).
     for (let i=0;i<allStops.length;i++){
       const s = allStops[i];
       if (!stopToEff.has(s)) stopToEff.set(s, s + EPS);
     }
-    // store combined stops (original sorted stops + appended presets) for the year so the slider can index into them
+    // store only the base numeric stops for the slider; presets are separate
     stopsByYear.set(year, allStops);
     if (datalist){
-      // Show combined list including presets; for numeric readability keep percent formatting
+      // Only include base numeric stops in datalist
       datalist.innerHTML = allStops.map(v => `<option value="${(v*100).toFixed(1)}"></option>`).join('');
       const s = document.getElementById('pvSlider');
       if (s) s.setAttribute('list', 'pvStopsList');
@@ -1227,27 +1223,36 @@
       }).join('');
       // Preset chips: render on their own line
       const presetHtml = presetStops.map((v, pi) => {
-        const idx = stops.length + pi; // index into allStops
+        const idx = pi; // index into presetStops array
         const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
         const label = (sign === 'EVEN') ? 'EVEN' : ((v>0?'D+':'R+') + (Math.abs(v)*100).toFixed(1));
         const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
         const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
-        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-idx="${idx}">${label}</span>`;
+        // store numeric value on attribute so click handler sets an override instead of slider index
+        const name = null; // placeholder if we want to show preset name
+        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name||''}">${label}</span>`;
       }).join('');
       container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
-      container.querySelectorAll('span.btn, span.preset-chip').forEach((el) => {
+      container.querySelectorAll('span.btn').forEach((el) => {
         el.addEventListener('click', () => {
-          const i = Number(el.getAttribute('data-idx'));
-          const s = document.getElementById('pvSlider');
           // Changing PV stop should reset any active flips
           try { clearFlips(); } catch(e) {}
-          // Clear any custom PV override so slider selection takes effect
-          try { window._pvOverride = null; } catch(e) {}
-          if (s){ s.value = String(i); updateAll(); }
-          try {
-            const stopsNow = stopsByYear.get(year) || [];
-            console.log('[stops] chip click -> set slider index', { year, index: i, stopVal: stopsNow[i], eff: stopToEff.get(stopsNow[i]) });
-          } catch(e) {}
+          const pvValAttr = el.getAttribute('data-pv');
+          if (pvValAttr != null) {
+            // This is a preset chip: set numeric PV override instead of changing slider index
+            const val = parseFloat(pvValAttr);
+            if (!isNaN(val)) {
+              try { window._pvOverride = val; window._pvPresetName = el.getAttribute('data-name') || null; } catch(e) {}
+              try { updateAll(); } catch(e) {}
+              try { console.log('[stops] preset chip click -> set PV override', { year, val }); } catch(e) {}
+            }
+          } else {
+            // Regular stop chip: set slider index
+            const i = Number(el.getAttribute('data-idx'));
+            const s = document.getElementById('pvSlider');
+            try { window._pvOverride = null; } catch(e) {}
+            if (s){ s.value = String(i); updateAll(); }
+          }
         });
       });
     }
@@ -1525,10 +1530,21 @@
   }
   arr.forEach(r => {
       const unit = r.unit;
+      // Historical anomaly: Colorado (CO) in 1876 had no popular returns but its electors voted for Hayes (R).
+      // Force a tiny Republican tilt so the map colors CO red and the EVs count for R.
+      try {
+        if (year === 1876 && unit === 'CO') {
+          // Push relative margin slightly negative so all sign checks treat CO as R
+          r.rm = (typeof r.rm === 'number') ? (r.rm > 0 ? -Math.abs(EPS) : -Math.abs(EPS)) : -Math.abs(EPS);
+          // Ensure the per-year/unit EV lookup contains 3 EVs for CO:1876
+          try { if (window._evByUnitMap && typeof window._evByUnitMap.set === 'function') window._evByUnitMap.set(`${year}:CO`, 3); } catch(e) {}
+        }
+      } catch(e) {}
       if (!unit || unit === 'NATIONAL') return;
-      // If a flip scenario is active, flip the sign (winner reverses) by nudging margin to opposite winner by tiny epsilon
-      const flipped = isUnitFlipped(year, unit);
-      let m = (+r.rm || 0) + pv;
+  // If a flip scenario is active, flip the sign (winner reverses) by nudging margin to opposite winner by tiny epsilon
+  const flipped = isUnitFlipped(year, unit);
+  // Historical static: CO in 1876 should ignore national PV (treat as static Republican)
+  let m = (year === 1876 && unit === 'CO') ? (+r.rm || 0) : ((+r.rm || 0) + pv);
       if (flipped) {
         // If third-party yellow window (1968) we still want to switch from R/D to the other major party; push margin beyond 0 by EPS
         m = (m > 0 ? -EPS : EPS);
@@ -2275,6 +2291,8 @@ function updateFlipButtons(){
 window._activeFlip = null; // { year, mode, units: [{unit, votes_to_flip, ev}], votesSum }
 function isUnitFlipped(year, unit){
   const f = window._activeFlip; if (!f || f.year !== year) return false;
+  // Historical static: CO in 1876 is not flippable (its electors voted for Hayes)
+  if (year === 1876 && (unit === 'CO' || unit === 'CO-AL')) return false;
   // allow unit or at-large semantics
   if (unit === 'ME' || unit === 'NE') unit = unit + '-AL';
   const result = !!(f._set && f._set.has(unit));

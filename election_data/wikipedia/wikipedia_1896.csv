@@ -1,0 +1,47 @@
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
+1896,AL,130298,55673,6375,8609,"{""John Palmer"": 6375, ""Joshua Levering"": 2234}",194580
+1896,AR,110103,37512,893,1732,"{""Charles Bentley"": 893, ""Joshua Levering"": 839}",149347
+1896,CA,144766,146688,2573,6965,"{""Charles Bentley"": 1047, ""Charles Matchett"": 1611, ""John Palmer"": 1730, ""Joshua Levering"": 2573}",298419
+1896,CO,161005,26271,1717,2263,"{""Charles Bentley"": 386, ""Charles Matchett"": 159, ""John Palmer"": 1, ""Joshua Levering"": 1717}",189539
+1896,CT,56740,110285,4336,7365,"{""Charles Matchett"": 1223, ""John Palmer"": 4336, ""Joshua Levering"": 1806}",174390
+1896,DE,16574,20450,966,1432,"{""John Palmer"": 966, ""Joshua Levering"": 466}",38456
+1896,FL,32756,11298,1778,2434,"{""John Palmer"": 1778, ""Joshua Levering"": 656}",46488
+1896,GA,93885,59395,5483,9200,"{""John Palmer"": 3670, ""Joshua Levering"": 5483}",162480
+1896,ID,23135,6314,172,172,"{""Joshua Levering"": 172}",29621
+1896,IL,465613,607130,9796,18126,"{""Charles Bentley"": 793, ""Charles Matchett"": 1147, ""John Palmer"": 6390, ""Joshua Levering"": 9796}",1090869
+1896,IN,305573,323754,3056,7792,"{""Charles Bentley"": 2267, ""Charles Matchett"": 324, ""John Palmer"": 2145, ""Joshua Levering"": 3056}",637119
+1896,IA,223741,289293,4516,8513,"{""Charles Bentley"": 352, ""Charles Matchett"": 453, ""John Palmer"": 4516, ""Joshua Levering"": 3192}",521547
+1896,KS,171675,159345,1698,3527,"{""Charles Bentley"": 620, ""John Palmer"": 1209, ""Joshua Levering"": 1698}",334547
+1896,KY,217894,218171,5084,9863,"{""John Palmer"": 5084, ""Joshua Levering"": 4779}",445928
+1896,LA,77175,22037,1834,1834,"{""John Palmer"": 1834}",101046
+1896,ME-AL,34587,80403,1867,3429,"{""John Palmer"": 1867, ""Joshua Levering"": 1562}",118419
+1896,MD,104150,136959,5918,9140,"{""Charles Bentley"": 136, ""Charles Matchett"": 587, ""John Palmer"": 2499, ""Joshua Levering"": 5918}",250249
+1896,MA,105711,278976,11749,16881,"{""Charles Matchett"": 2114, ""John Palmer"": 11749, ""Joshua Levering"": 2998}",401568
+1896,MI,237166,293336,6923,15083,"{""Charles Bentley"": 1816, ""Charles Matchett"": 293, ""John Palmer"": 6923, ""Joshua Levering"": 4978}",545585
+1896,MN,139735,193503,4348,8524,"{""Charles Matchett"": 954, ""John Palmer"": 3222, ""Joshua Levering"": 4348}",341762
+1896,MS,63355,4819,1021,1417,"{""John Palmer"": 1021, ""Joshua Levering"": 396}",69591
+1896,MO,363667,304940,2365,5299,"{""Charles Bentley"": 292, ""Charles Matchett"": 599, ""John Palmer"": 2365, ""Joshua Levering"": 2043}",673906
+1896,MT,42628,10509,193,193,"{""Joshua Levering"": 193}",53330
+1896,NE-AL,115007,103064,2885,5111,"{""Charles Bentley"": 797, ""Charles Matchett"": 186, ""John Palmer"": 2885, ""Joshua Levering"": 1243}",223182
+1896,NV,8376,1938,0,0,{},10314
+1896,NH,21650,57444,3520,4576,"{""Charles Bentley"": 49, ""Charles Matchett"": 228, ""John Palmer"": 3520, ""Joshua Levering"": 779}",83670
+1896,NJ,133695,221535,6378,15981,"{""Charles Bentley"": 5617, ""Charles Matchett"": 3986, ""John Palmer"": 6378}",371211
+1896,NY,551369,819838,18950,52669,"{""Charles Matchett"": 17667, ""John Palmer"": 18950, ""Joshua Levering"": 16052}",1423876
+1896,NC,174408,155122,635,1807,"{""Charles Bentley"": 222, ""John Palmer"": 578, ""Joshua Levering"": 635}",331337
+1896,ND,20686,26335,358,370,"{""Joshua Levering"": 358}",47391
+1896,OH,477497,525991,5068,10807,"{""Charles Bentley"": 2716, ""Charles Matchett"": 1165, ""John Palmer"": 1858, ""Joshua Levering"": 5068}",1014295
+1896,OR,46739,48779,977,1896,"{""John Palmer"": 977, ""Joshua Levering"": 919}",97414
+1896,PA,433228,728300,19274,32827,"{""Charles Bentley"": 870, ""Charles Matchett"": 1683, ""John Palmer"": 11000, ""Joshua Levering"": 19274}",1194355
+1896,RI,14459,37437,1166,2889,"{""Charles Matchett"": 558, ""John Palmer"": 1166, ""Joshua Levering"": 1160}",54785
+1896,SC,58801,9313,824,824,"{""John Palmer"": 824}",68938
+1896,SD,41225,41042,683,683,"{""Joshua Levering"": 683}",82950
+1896,TN,167168,148683,3099,5052,"{""John Palmer"": 1953, ""Joshua Levering"": 3099}",320903
+1896,TX,370434,167520,5046,6832,"{""John Palmer"": 5046, ""Joshua Levering"": 1786}",544786
+1896,UT,64607,13491,0,21,"{""Other"": 21}",78119
+1896,VT,10640,51127,1331,2080,"{""John Palmer"": 1331, ""Joshua Levering"": 733}",63847
+1896,VA,154708,135379,2350,4587,"{""Charles Matchett"": 108, ""John Palmer"": 2129, ""Joshua Levering"": 2350}",294674
+1896,WA,53314,39153,968,1116,"{""Charles Bentley"": 148, ""Joshua Levering"": 968}",93583
+1896,WV,94480,105379,1220,1898,"{""John Palmer"": 678, ""Joshua Levering"": 1220}",201757
+1896,WI,165523,268135,7507,13751,"{""Charles Bentley"": 346, ""Charles Matchett"": 1314, ""John Palmer"": 4584, ""Joshua Levering"": 7507}",447409
+1896,WY,10861,10072,159,159,"{""Joshua Levering"": 159}",21092
+1896,NATIONAL,6510807,7112138,133537,315729,"{""Charles Bentley"": 19367, ""Charles Matchett"": 36359, ""John Palmer"": 133537, ""Joshua Levering"": 124896}",13938674

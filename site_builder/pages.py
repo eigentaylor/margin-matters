@@ -9,7 +9,7 @@ from .templates import INDEX_HTML, PAGE_HTML, DELTA_TOGGLE_JS
 from .header import make_header
 
 
-def make_index(states_sorted: List[str], rows: List[Dict] | None = None):
+def make_index(states_sorted: List[str], rows: List[Dict] | None = None, start_year: int = 1912):
     # Index no longer shows state link grid; that lives on state-pages.html
 
     # Compute year range for header

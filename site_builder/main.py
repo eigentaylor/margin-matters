@@ -3,7 +3,6 @@ import shutil
 import re
 from pathlib import Path
 
-import params
 from .config import CSV_PATH, OUT_DIR, STATE_DIR, UNIT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
 from .io_utils import ensure_dirs, write_text, read_csv
 from .pages import build_pages, make_data_page, make_methods_page, make_state_pages, make_index
@@ -73,6 +72,7 @@ def build_site():
             if max_year is None:
                 max_year = 2024
             year_range = f"{min_year}-{max_year}"
+            print(f"Debug: index.html year range {year_range} from data")
 
             hdr_full = make_header(f"U.S. Presidential Election State Results {year_range}", is_inner=False)
             # Extract small-links inner HTML
@@ -88,6 +88,9 @@ def build_site():
             txt = re.sub(r'(<h1>)U\.S\. Presidential Election State Results[\s\S]*?(</h1>)', rf'\1U.S. Presidential Election State Results {year_range}\2', txt, count=1)
             # Ensure footer includes updated Last updated timestamp
             txt = re.sub(r'(Last updated:\s*)([0-9\-:\sA-Z]+)', rf'\g<1>{LAST_UPDATED}', txt, count=1)
+            # set the correct min year on the year slider
+            # <input id="yearSlider" type="range" min="1912" max="2024" step="4" value="2024" style="flex:1;min-width:120px;" />
+            txt = re.sub(r'(<input id="yearSlider" type="range" min=")([0-9]+)(" max="2024")', rf'\g<1>{min_year}\3', txt, count=1)
             try:
                 idx_path.write_text(txt, encoding='utf-8')
             except Exception:
@@ -95,7 +98,7 @@ def build_site():
         else:
             # If index.html is missing, fall back to building it from template
             try:
-                make_index(states, rows)
+                make_index(states, rows, start_year=1912)
             except Exception as e:
                 print(f"Warning: couldn't build index.html (fallback): {e}")
     except Exception as e:

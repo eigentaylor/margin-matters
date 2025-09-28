@@ -1,6 +1,7 @@
 import csv
 import os
 from collections import defaultdict
+import traceback
 from typing import Dict, List, Tuple
 
 import params
@@ -60,7 +61,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
         stop_to_eff: Dict[float, float] = {}
 
         # EVEN and Actual effs
-        stop_to_eff[0.0] = 0.0 + EPS
+        stop_to_eff[0.0] = 0.0
         stop_to_eff[nat] = nat
 
         # helper to classify and append an output row for a single unit/stop
@@ -135,6 +136,9 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             if not abbr or abbr in ('NATIONAL', 'NAT'):
                 continue
             rm = parse_float(r.get('relative_margin'))
+            if parse_float(r.get('total_votes')) == 0:
+                # skip zero-vote states
+                continue
             t = parse_float(r.get('T_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
             d = parse_float(r.get('D_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
             r_ = parse_float(r.get('R_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
@@ -201,4 +205,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        traceback.print_exc()
+        print(f"Error occurred: {e}")

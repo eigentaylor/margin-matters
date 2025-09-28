@@ -78,6 +78,17 @@ def get_candidate_parties(year):
         1924: (['coolidge'], ['davis']),
         1920: (['harding'], ['cox']),
         1916: (['hughes'], ['wilson']),
+        #1912: (['taft'], ['wilson']),
+        1912: (['roosevelt'], ['wilson']), # Bull Moose Roosevelt was the main opponent
+        1908: (['taft'], ['bryan']),
+        1904: (['roosevelt'], ['parker']),
+        1900: (['mckinley'], ['bryan']),
+        1896: (['mckinley'], ['bryan']),
+        1892: (['harrison'], ['cleveland']),
+        1888: (['harrison'], ['cleveland']),
+        1884: (['blaine'], ['cleveland']),
+        1880: (['garfield'], ['hancock']),
+        1876: (['hayes'], ['tilden']),
     }
     
     return candidates.get(year, (['republican'], ['democratic']))
@@ -189,11 +200,16 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
     if year == 1968 or year == 1992 or year == 2012:
         pass # something weird is happening in these years
     
-    if year == 1960:
+    if year == 1896:
         pass # something weird is happening in this year
     
     # Analyze header to understand column structure
-    header_info = analyze_table_header(rows[0:4], rep_keywords, dem_keywords)
+    header_info = analyze_table_header(rows[0:4], rep_keywords, dem_keywords, year=year)
+    
+    if year == 1896:
+        header_info['d_col'] = 14
+        header_info['total_col'] = 31
+        pass # something weird is happening in this year
     
     if not header_info:
         print(f"    Could not understand table structure")
@@ -208,8 +224,8 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             'd_col': header_info.get('d_col'),
             'total_col': header_info.get('total_col'),
             'third_party_cols': header_info.get('third_party_cols', []),
-            'col_desc_raw': header_info.get('col_desc_raw', []),
-            'col_desc_lower': header_info.get('col_desc_lower', []),
+            'col_desc_raw': {i: desc for i, desc in enumerate(header_info.get('col_desc_raw', []))},
+            'col_desc_lower': {i: desc for i, desc in enumerate(header_info.get('col_desc_lower', []))},
             'rep_keywords': rep_keywords,
             'dem_keywords': dem_keywords,
         }
@@ -246,6 +262,8 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             state_name = state_name.split('Tooltip')[0].strip()
             # remove † or * symbol if it exists
             state_name = state_name.replace('†', '').replace('*', '').strip()
+            if state_name == 'Colorado' and year == 1876:
+                pass
             if 'district of columbia' in state_name.lower():
                 state_name = 'District of Columbia'
 
@@ -288,6 +306,8 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
 
                 # First try the detected total_col
                 total_votes = try_col(header_info['total_col'])
+                if total_votes == 921947783:
+                    total_votes = 9219477 # a footnote added extra digits
 
                 # Special-case historical 1984 table error: sometimes the header offset causes TOTALS to appear in first cell
                 cell_0_text = cells[0].get_text().strip() if len(cells) > 0 else ''
@@ -304,7 +324,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                         total_votes = try_col(alt_idx)
 
                 # If still zero, raise so the exception handler for rows can catch and skip the row with a warning
-                if total_votes == 0:
+                if total_votes == 0 and not (state_code == 'CO' and year == 1876):
                     raise ValueError(f"Could not determine numeric total_votes for state '{state_name}' (tried columns {tried_cols})")
             
             # If no total column, estimate from visible vote columns
@@ -406,7 +426,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
 
     return election_data
 
-def analyze_table_header(header_rows, rep_keywords, dem_keywords):
+def analyze_table_header(header_rows, rep_keywords, dem_keywords, year=None):
     """
     Analyze the table header to find which columns contain R and D vote counts.
     """
@@ -482,6 +502,16 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords):
     d_col = None
     total_col = None
     third_party_cols = []  # list of {index, name}
+    
+    if year == 1896:
+        d_col = 14
+        total_col = 31
+        third_party_cols = [
+            {'index': 17, 'name': 'John Palmer'},
+            {'index': 20, 'name': 'Joshua Levering'},
+            {'index': 23, 'name': 'Charles Matchett'},
+            {'index': 26, 'name': 'Charles Bentley'},
+        ]
 
     # Normalized keyword sets
     rep_keys = set([k.lower() for k in (rep_keywords + ['republican', 'rep', 'gop'])])
@@ -526,6 +556,8 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords):
                     return 'William Lemke'
                 elif 'William Foster' in raw_text:
                     return 'William Foster'
+                elif 'William H. TaftRepublican # 9,807' in raw_text:
+                    return 'William H. Taft'
                 else:
                     raise ValueError("Ambiguous William name")
             if n == 'Roger':
@@ -543,6 +575,8 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords):
             if n == 'John':
                 if 'John Hagelin' in raw_text:
                     return 'John Hagelin'
+                elif 'John Phelps' in raw_text:
+                    return 'John Phelps'
                 else:
                     raise ValueError("Ambiguous John name")
             if n == 'Finn':
@@ -553,6 +587,8 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords):
             if n == 'James':
                 if 'James Ferguson' in raw_text:
                     return 'James Ferguson'
+                elif 'James Weaver' in raw_text:
+                    return 'James Weaver'
                 else: 
                     raise ValueError("Ambiguous James name")
             if looks_like_name(n):
@@ -596,7 +632,7 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords):
         if is_votes_col(desc):
             cand_name = extract_candidate_name(col_desc_raw[i], desc)
             # Avoid misclassifying if the header clearly says Republican/Democratic
-            if (any(k in desc for k in rep_keys) or any(k in desc for k in dem_keys) or 'margin' in desc) and cand_name != 'Unpledged Electors':
+            if (any(k in desc for k in rep_keys) or any(k in desc for k in dem_keys) or 'margin' in desc) and cand_name != 'Unpledged Electors' and (cand_name != 'William H. Taft'):
                 continue
             third_party_cols.append({'index': i, 'name': cand_name})
 
@@ -715,7 +751,7 @@ def main():
     # Define years to scrape
     # Start with recent years that are most likely to work
     priority_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000]
-    START_YEAR = 1916
+    START_YEAR = 1876
     END_YEAR = 2024
     all_years = list(range(END_YEAR, START_YEAR - 1, -4))
     #all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968, 1964]
@@ -751,4 +787,8 @@ def main():
         print(f"\n❌ Scraping failed. Check your internet connection and try again.")
 
 if __name__ == "__main__":
+    import time
+    time_start = time.time()
     main()
+    time_end = time.time()
+    print(f"🕒 Elapsed time: {time_end - time_start:.2f} seconds")

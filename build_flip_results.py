@@ -200,9 +200,21 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
     year = rows_for_year[0]['year'] if rows_for_year else 0
     
     for r in rows_for_year:
+        # compute base EV from the data, but allow overrides for historical anomalies
         ev = int(r['electoral_votes'] or 0)
+
+        # Special-case: Colorado in 1876 had no popular-vote returns here; treat it as
+        # having 3 electoral votes and awarded to the Republican (Hayes). Exclude it
+        # from flip consideration later by not adding it to the generic ev_by_party loop.
+        if year == 1876 and r['abbr'] == 'CO':
+            ev = 3
+            total_ev += ev
+            ev_by_party['R'] += ev
+            # skip the normal processing for this row
+            continue
+
         total_ev += ev
-        
+
         # Special case for Alabama 1960: if AL won by D or T, allocate 5 D + 6 O instead of 11 to winner
         if year == 1960 and r['abbr'] == 'AL' and r['party_win'] in ('D', 'T'):
             ev_by_party['D'] += 5
@@ -228,6 +240,10 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
     # Build candidate flipping set: units not currently won by runner_party
     units = []
     for r in rows_for_year:
+        # Do not consider Colorado 1876 as a flippable unit; its EVs were assigned to R above.
+        if year == 1876 and r['abbr'] == 'CO':
+            continue
+
         if r['party_win'] == runner_party:
             continue
         ev = int(r['electoral_votes'] or 0)

@@ -1,0 +1,92 @@
+{
+  "year": 1908,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 25,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Eugene V. Debs"
+    },
+    {
+      "index": 11,
+      "name": "Eugene Chafin"
+    },
+    {
+      "index": 14,
+      "name": "Thomas"
+    },
+    {
+      "index": 17,
+      "name": "Thomas"
+    },
+    {
+      "index": 20,
+      "name": "August Gillhaus"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 11 9",
+    "2": "William Howard TaftRepublican # 25,561 56,624",
+    "3": "William Howard TaftRepublican % 24.31 37.30",
+    "4": "William Howard TaftRepublican electoralvotes - -",
+    "5": "William Jennings BryanDemocratic # 74,391 87,015",
+    "6": "William Jennings BryanDemocratic % 70.75 57.31",
+    "7": "William Jennings BryanDemocratic electoralvotes 11 9",
+    "8": "Eugene V. DebsSocialist # 1,450 5,842",
+    "9": "Eugene V. DebsSocialist % 1.38 3.85",
+    "10": "Eugene V. DebsSocialist electoralvotes - -",
+    "11": "Eugene ChafinProhibition # 690 1,026",
+    "12": "Eugene ChafinProhibition % 0.66 0.68",
+    "13": "Eugene ChafinProhibition electoralvotes - -",
+    "14": "Thomas HisgenIndependence # 497 289",
+    "15": "Thomas HisgenIndependence % 0.47 0.19",
+    "16": "Thomas HisgenIndependence electoralvotes - -",
+    "17": "Thomas WatsonPopulist # 1,576 1,026",
+    "18": "Thomas WatsonPopulist % 1.50 0.68",
+    "19": "Thomas WatsonPopulist electoralvotes - -",
+    "20": "August GillhausSocialist Labor # - -",
+    "21": "August GillhausSocialist Labor % - -",
+    "22": "August GillhausSocialist Labor electoralvotes - -",
+    "23": "Margin # -48,830 -30,391",
+    "24": "Margin % -46.44 -20.02",
+    "25": "State Total # 105,152 151,822",
+    "26": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 11 9",
+    "2": "william howard taftrepublican # 25,561 56,624",
+    "3": "william howard taftrepublican % 24.31 37.30",
+    "4": "william howard taftrepublican electoralvotes - -",
+    "5": "william jennings bryandemocratic # 74,391 87,015",
+    "6": "william jennings bryandemocratic % 70.75 57.31",
+    "7": "william jennings bryandemocratic electoralvotes 11 9",
+    "8": "eugene v. debssocialist # 1,450 5,842",
+    "9": "eugene v. debssocialist % 1.38 3.85",
+    "10": "eugene v. debssocialist electoralvotes - -",
+    "11": "eugene chafinprohibition # 690 1,026",
+    "12": "eugene chafinprohibition % 0.66 0.68",
+    "13": "eugene chafinprohibition electoralvotes - -",
+    "14": "thomas hisgenindependence # 497 289",
+    "15": "thomas hisgenindependence % 0.47 0.19",
+    "16": "thomas hisgenindependence electoralvotes - -",
+    "17": "thomas watsonpopulist # 1,576 1,026",
+    "18": "thomas watsonpopulist % 1.50 0.68",
+    "19": "thomas watsonpopulist electoralvotes - -",
+    "20": "august gillhaussocialist labor # - -",
+    "21": "august gillhaussocialist labor % - -",
+    "22": "august gillhaussocialist labor electoralvotes - -",
+    "23": "margin # -48,830 -30,391",
+    "24": "margin % -46.44 -20.02",
+    "25": "state total # 105,152 151,822",
+    "26": "state total  al ar"
+  },
+  "rep_keywords": [
+    "taft"
+  ],
+  "dem_keywords": [
+    "bryan"
+  ]
+}

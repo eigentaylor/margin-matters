@@ -1,0 +1,62 @@
+{
+  "year": 1884,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 16,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "John St. John"
+    },
+    {
+      "index": 11,
+      "name": "Benjamin Butler"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 10 7",
+    "2": "Grover ClevelandDemocratic # 92,736 72,734",
+    "3": "Grover ClevelandDemocratic % 60.37 57.83",
+    "4": "Grover ClevelandDemocratic electoralvotes 10 7",
+    "5": "James BlaineRepublican # 59,444 51,198",
+    "6": "James BlaineRepublican % 38.69 40.70",
+    "7": "James BlaineRepublican electoralvotes – –",
+    "8": "John St. JohnProhibition # 610 –",
+    "9": "John St. JohnProhibition % 0.40 –",
+    "10": "John St. JohnProhibition electoralvotes – –",
+    "11": "Benjamin Butler Greenback # 762 1,847",
+    "12": "Benjamin Butler Greenback % 0.50 1.47",
+    "13": "Benjamin Butler Greenback electoralvotes – –",
+    "14": "Margin # 33,292 21,536",
+    "15": "Margin % 21.67 17.12",
+    "16": "State Total # 153,624 125,779",
+    "17": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 10 7",
+    "2": "grover clevelanddemocratic # 92,736 72,734",
+    "3": "grover clevelanddemocratic % 60.37 57.83",
+    "4": "grover clevelanddemocratic electoralvotes 10 7",
+    "5": "james blainerepublican # 59,444 51,198",
+    "6": "james blainerepublican % 38.69 40.70",
+    "7": "james blainerepublican electoralvotes – –",
+    "8": "john st. johnprohibition # 610 –",
+    "9": "john st. johnprohibition % 0.40 –",
+    "10": "john st. johnprohibition electoralvotes – –",
+    "11": "benjamin butler greenback # 762 1,847",
+    "12": "benjamin butler greenback % 0.50 1.47",
+    "13": "benjamin butler greenback electoralvotes – –",
+    "14": "margin # 33,292 21,536",
+    "15": "margin % 21.67 17.12",
+    "16": "state total # 153,624 125,779",
+    "17": "state total  al ar"
+  },
+  "rep_keywords": [
+    "blaine"
+  ],
+  "dem_keywords": [
+    "cleveland"
+  ]
+}

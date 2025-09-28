@@ -1,0 +1,78 @@
+{
+  "year": 1900,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 22,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "John Woolley"
+    },
+    {
+      "index": 14,
+      "name": "Wharton"
+    },
+    {
+      "index": 17,
+      "name": "Joseph F. Malloney"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 11 8",
+    "2": "William McKinleyRepublican # 55,612 44,800",
+    "3": "William McKinleyRepublican % 34.82 35.04",
+    "4": "William McKinleyRepublican electoralvotes - -",
+    "5": "William Jennings BryanDemocratic # 97,129 81,142",
+    "6": "William Jennings BryanDemocratic % 60.82 63.46",
+    "7": "William Jennings BryanDemocratic electoralvotes 11 8",
+    "8": "John WoolleyProhibition # 2,763 584",
+    "9": "John WoolleyProhibition % 1.73 0.46",
+    "10": "John WoolleyProhibition electoralvotes - -",
+    "11": "Eugene V. DebsSocial Democratic # - -",
+    "12": "Eugene V. DebsSocial Democratic % - -",
+    "13": "Eugene V. DebsSocial Democratic electoralvotes - -",
+    "14": "Wharton BarkerPopulist # 4,188 972",
+    "15": "Wharton BarkerPopulist % 2.62 0.76",
+    "16": "Wharton BarkerPopulist electoralvotes - -",
+    "17": "Joseph F. MalloneySocialist Labor # - -",
+    "18": "Joseph F. MalloneySocialist Labor % - -",
+    "19": "Joseph F. MalloneySocialist Labor electoralvotes - -",
+    "20": "Margin # -41,517 -36,342",
+    "21": "Margin % -26.00 -28.42",
+    "22": "State Total # 159,692 127,866",
+    "23": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 11 8",
+    "2": "william mckinleyrepublican # 55,612 44,800",
+    "3": "william mckinleyrepublican % 34.82 35.04",
+    "4": "william mckinleyrepublican electoralvotes - -",
+    "5": "william jennings bryandemocratic # 97,129 81,142",
+    "6": "william jennings bryandemocratic % 60.82 63.46",
+    "7": "william jennings bryandemocratic electoralvotes 11 8",
+    "8": "john woolleyprohibition # 2,763 584",
+    "9": "john woolleyprohibition % 1.73 0.46",
+    "10": "john woolleyprohibition electoralvotes - -",
+    "11": "eugene v. debssocial democratic # - -",
+    "12": "eugene v. debssocial democratic % - -",
+    "13": "eugene v. debssocial democratic electoralvotes - -",
+    "14": "wharton barkerpopulist # 4,188 972",
+    "15": "wharton barkerpopulist % 2.62 0.76",
+    "16": "wharton barkerpopulist electoralvotes - -",
+    "17": "joseph f. malloneysocialist labor # - -",
+    "18": "joseph f. malloneysocialist labor % - -",
+    "19": "joseph f. malloneysocialist labor electoralvotes - -",
+    "20": "margin # -41,517 -36,342",
+    "21": "margin % -26.00 -28.42",
+    "22": "state total # 159,692 127,866",
+    "23": "state total  al ar"
+  },
+  "rep_keywords": [
+    "mckinley"
+  ],
+  "dem_keywords": [
+    "bryan"
+  ]
+}

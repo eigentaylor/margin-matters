@@ -1,0 +1,64 @@
+{
+  "year": 1876,
+  "r_col": 5,
+  "d_col": 2,
+  "total_col": 16,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Peter Cooper"
+    },
+    {
+      "index": 11,
+      "name": "Smith"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 10 6",
+    "2": "Samuel J. TildenDemocratic # 102,989 58,086",
+    "3": "Samuel J. TildenDemocratic % 59.98 59.92",
+    "4": "Samuel J. TildenDemocratic electoralvotes 10 6",
+    "5": "Rutherford B. HayesRepublican # 68,708 38,649",
+    "6": "Rutherford B. HayesRepublican % 40.02 39.87",
+    "7": "Rutherford B. HayesRepublican electoralvotes – –",
+    "8": "Peter CooperGreenback # – 211",
+    "9": "Peter CooperGreenback % – 0.22",
+    "10": "Peter CooperGreenback electoralvotes – –",
+    "11": "Green SmithProhibition # – –",
+    "12": "Green SmithProhibition % – –",
+    "13": "Green SmithProhibition electoralvotes – –",
+    "14": "Margin # −34,281 −19,437",
+    "15": "Margin % −19.97 −20.05",
+    "16": "State Total total votescast 171,699 96,946",
+    "17": "State Total % 2.04% 1.15%",
+    "18": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 10 6",
+    "2": "samuel j. tildendemocratic # 102,989 58,086",
+    "3": "samuel j. tildendemocratic % 59.98 59.92",
+    "4": "samuel j. tildendemocratic electoralvotes 10 6",
+    "5": "rutherford b. hayesrepublican # 68,708 38,649",
+    "6": "rutherford b. hayesrepublican % 40.02 39.87",
+    "7": "rutherford b. hayesrepublican electoralvotes – –",
+    "8": "peter coopergreenback # – 211",
+    "9": "peter coopergreenback % – 0.22",
+    "10": "peter coopergreenback electoralvotes – –",
+    "11": "green smithprohibition # – –",
+    "12": "green smithprohibition % – –",
+    "13": "green smithprohibition electoralvotes – –",
+    "14": "margin # −34,281 −19,437",
+    "15": "margin % −19.97 −20.05",
+    "16": "state total total votescast 171,699 96,946",
+    "17": "state total % 2.04% 1.15%",
+    "18": "state total  al ar"
+  },
+  "rep_keywords": [
+    "hayes"
+  ],
+  "dem_keywords": [
+    "tilden"
+  ]
+}

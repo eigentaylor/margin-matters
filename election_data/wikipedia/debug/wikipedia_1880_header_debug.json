@@ -1,0 +1,72 @@
+{
+  "year": 1880,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 19,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "James Weaver"
+    },
+    {
+      "index": 11,
+      "name": "Neal Dow"
+    },
+    {
+      "index": 14,
+      "name": "John Phelps"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 10 6",
+    "2": "James GarfieldRepublican # 56,221 42,436",
+    "3": "James GarfieldRepublican % 36.98 39.55",
+    "4": "James GarfieldRepublican electoralvotes – –",
+    "5": "Winfield HancockDemocratic # 91,185 60,775",
+    "6": "Winfield HancockDemocratic % 59.97 56.65",
+    "7": "Winfield HancockDemocratic electoralvotes 10 6",
+    "8": "James WeaverGreenback # 4,642 4,079",
+    "9": "James WeaverGreenback % 3.05 3.80",
+    "10": "James WeaverGreenback electoralvotes – –",
+    "11": "Neal DowProhibition # – –",
+    "12": "Neal DowProhibition % – –",
+    "13": "Neal DowProhibition electoralvotes – –",
+    "14": "John PhelpsAnti-Masonic # – –",
+    "15": "John PhelpsAnti-Masonic % – –",
+    "16": "John PhelpsAnti-Masonic electoralvotes – –",
+    "17": "Margin # −34,964 −18,339",
+    "18": "Margin % −22.99 −17.10",
+    "19": "State Total # 152,048 107,290",
+    "20": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 10 6",
+    "2": "james garfieldrepublican # 56,221 42,436",
+    "3": "james garfieldrepublican % 36.98 39.55",
+    "4": "james garfieldrepublican electoralvotes – –",
+    "5": "winfield hancockdemocratic # 91,185 60,775",
+    "6": "winfield hancockdemocratic % 59.97 56.65",
+    "7": "winfield hancockdemocratic electoralvotes 10 6",
+    "8": "james weavergreenback # 4,642 4,079",
+    "9": "james weavergreenback % 3.05 3.80",
+    "10": "james weavergreenback electoralvotes – –",
+    "11": "neal dowprohibition # – –",
+    "12": "neal dowprohibition % – –",
+    "13": "neal dowprohibition electoralvotes – –",
+    "14": "john phelpsanti-masonic # – –",
+    "15": "john phelpsanti-masonic % – –",
+    "16": "john phelpsanti-masonic electoralvotes – –",
+    "17": "margin # −34,964 −18,339",
+    "18": "margin % −22.99 −17.10",
+    "19": "state total # 152,048 107,290",
+    "20": "state total  al ar"
+  },
+  "rep_keywords": [
+    "garfield"
+  ],
+  "dem_keywords": [
+    "hancock"
+  ]
+}

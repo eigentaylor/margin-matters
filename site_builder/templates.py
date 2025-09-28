@@ -723,7 +723,7 @@ TESTER_JS = r"""
     }
     if (container){
       const nat = getNatMargin(year);
-      container.innerHTML = 'Stops: ' + stops.map((v,i) => {
+  const mainHtml = stops.map((v,i) => {
         // label rules: 0 => EVEN (no units), nat => Actual (no units), others => leanStr + small unit list
         const isEven = Math.abs(v) < 1e-12;
         const isNat = Math.abs(v - nat) < 1e-12;
@@ -795,13 +795,38 @@ TESTER_JS = r"""
         
         return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`; 
       }).join('');
+      // Preset chips: render on their own line and store numeric PV on data attribute so clicks set an override
+      const presetHtml = presetStops.map((v, pi) => {
+        const idx = pi; // index into presetStops array
+        const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
+        const label = (sign === 'EVEN') ? 'EVEN' : ((v>0?'D+':'R+') + (Math.abs(v)*100).toFixed(1));
+        const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
+        const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
+        // store numeric value on attribute so click handler sets an override instead of slider index
+        const name = null; // placeholder if we want to show preset name
+        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name||''}">${label}</span>`;
+      }).join('');
+      container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
       container.querySelectorAll('span.btn').forEach((el) => {
         el.addEventListener('click', () => {
-          const i = Number(el.getAttribute('data-idx'));
-          const s = document.getElementById('pvSlider');
           // Changing PV stop should reset any active flips
           try { clearFlips(); } catch(e) {}
-          if (s){ s.value = String(i); updateAll(); }
+          const pvValAttr = el.getAttribute('data-pv');
+          if (pvValAttr != null) {
+            // This is a preset chip: set numeric PV override instead of changing slider index
+            const val = parseFloat(pvValAttr);
+            if (!isNaN(val)) {
+              try { window._pvOverride = val; window._pvPresetName = el.getAttribute('data-name') || null; } catch(e) {}
+              try { updateAll(); } catch(e) {}
+              try { console.log('[stops] preset chip click -> set PV override', { year, val }); } catch(e) {}
+            }
+          } else {
+            // Regular stop chip: set slider index
+            const i = Number(el.getAttribute('data-idx'));
+            const s = document.getElementById('pvSlider');
+            try { window._pvOverride = null; } catch(e) {}
+            if (s){ s.value = String(i); updateAll(); }
+          }
         });
       });
     }
@@ -970,11 +995,12 @@ TESTER_JS = r"""
   const unitParties = new Map(); // unit -> 'Blue'|'Red'|'Even'
   let dEV = 0, rEV = 0, oEV = 0;
   arr.forEach(r => {
-      const unit = r.unit;
+    const unit = r.unit;
       if (!unit || unit === 'NATIONAL') return;
-      // If a flip scenario is active, flip the sign (winner reverses) by nudging margin to opposite winner by tiny epsilon
-      const flipped = isUnitFlipped(year, unit);
-      let m = (+r.rm || 0) + pv;
+  // If a flip scenario is active, flip the sign (winner reverses) by nudging margin to opposite winner by tiny epsilon
+  const flipped = isUnitFlipped(year, unit);
+  // Historical static: CO in 1876 should ignore national PV (treat as static Republican)
+  let m = (year === 1876 && unit === 'CO') ? (+r.rm || 0) : ((+r.rm || 0) + pv);
       if (flipped) {
         // If third-party yellow window (1968) we still want to switch from R/D to the other major party; push margin beyond 0 by EPS
         m = (m > 0 ? -EPS : EPS);
@@ -1312,6 +1338,8 @@ function updateFlipButtons(){
 window._activeFlip = null; // { year, mode, units: [{unit, votes_to_flip, ev}], votesSum }
 function isUnitFlipped(year, unit){
   const f = window._activeFlip; if (!f || f.year !== year) return false;
+  // Historical static: CO in 1876 is not flippable
+  if (year === 1876 && (unit === 'CO' || unit === 'CO-AL')) return false;
   // allow unit or at-large semantics
   if (unit === 'ME' || unit === 'NE') unit = unit + '-AL';
   const result = !!(f._set && f._set.has(unit));
