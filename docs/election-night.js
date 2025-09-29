@@ -424,32 +424,77 @@
       if (isAtLarge) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
+      const finalDVotes = totalVotes * dShareFinal;
+      const finalRVotes = totalVotes * rShareFinal;
+      const finalOTopVotes = totalVotes * topShareFinal;
+      const finalOTotalVotes = totalVotes * thirdPartyShare;
+      const finalMarginTwoParty = dTwoPartyFinal - rTwoPartyFinal;
+      const finalLeader = determineLeader(dShareFinal, rShareFinal, topShareFinal, 1);
+      const finalMarginStr = finalLeader === 'O' ? 'Other lead' : formatLean(finalMarginTwoParty);
+      const finalColor = safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
+      const finalCountedVotes = totalVotes;
+      const countedMargin = finalCountedVotes > EPS
+        ? ((finalDVotes - finalRVotes) / finalCountedVotes)
+        : 0;
+      let countedMarginStr = 'None';
+      const twoPartyVotes = finalDVotes + finalRVotes;
+      if (finalLeader === 'O') {
+        countedMarginStr = 'Other lead';
+      } else if (twoPartyVotes > EPS) {
+        const leanVal = (finalDVotes - finalRVotes) / twoPartyVotes;
+        countedMarginStr = Math.abs(leanVal) < 0.00005 ? 'EVEN' : formatLean(leanVal);
+      } else if (finalCountedVotes > EPS) {
+        countedMarginStr = 'EVEN';
+      }
+      const targetMetrics = {
+        reporting: 1,
+        leader: finalLeader,
+        margin: finalMarginTwoParty,
+        marginStr: finalMarginStr,
+        countedMargin,
+        countedMarginStr,
+        color: finalColor,
+        dShare: dShareFinal,
+        rShare: rShareFinal,
+        oShare: thirdPartyShare,
+        topThirdShare: topShareFinal,
+        totalThirdShare: thirdPartyShare,
+        confidence: 1,
+        dVotesCounted: finalDVotes,
+        rVotesCounted: finalRVotes,
+        oVotesCounted: finalOTopVotes,
+        oVotesCountedTotal: finalOTotalVotes,
+        countedVotes: finalCountedVotes,
+        remainingVotes: 0
+      };
+
       out.push({
         unitKey: unit,
         abbr,
         type: isDistrict ? 'district' : (isAtLarge ? 'atlarge' : 'state'),
         totalVotes,
-  thirdPartyShare,
-  topThirdShare,
+        thirdPartyShare,
+        topThirdShare,
         twoPartyShare,
         dTwoPartyFinal,
         rTwoPartyFinal,
         dShareFinal,
         rShareFinal,
-    winner,
+        winner,
         ev,
         startTime,
         duration,
-    callDeadline,
-    calledAt: null,
-    calledMetrics: null,
-    callRecord: null,
-    instantCall,
+        callDeadline,
+        calledAt: null,
+        calledMetrics: null,
+        callRecord: null,
+        instantCall,
         biasParams,
         pathSelections,
         aliases,
         pvWeight: isAtLarge ? 0 : 1,
-        closeness
+        closeness,
+        targetMetrics
       });
     });
 
@@ -577,7 +622,7 @@
     }
     const confidence = calculateConfidence(st, stats);
 
-    return {
+    let result = {
       reporting,
       leader,
       margin,
@@ -598,6 +643,12 @@
       countedVotes: stats.countedVotes,
       remainingVotes: stats.remainingVotes
     };
+
+    if (st.targetMetrics && reporting >= 1 - EPS) {
+      result = { ...result, ...st.targetMetrics };
+    }
+
+    return result;
   }
 
   function computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare){
@@ -954,7 +1005,9 @@
       state.lastLogKey = readySignature;
       if (elements.log) {
         const logEl = elements.log;
-        const nearBottom = (logEl.scrollHeight - logEl.clientHeight - logEl.scrollTop) <= 16;
+        const prevScrollTop = logEl.scrollTop;
+        const prevScrollHeight = logEl.scrollHeight;
+        const atBottom = prevScrollTop >= (prevScrollHeight - logEl.clientHeight - 4);
         logEl.innerHTML = '';
         if (renderLines.length) {
           const frag = document.createDocumentFragment();
@@ -966,7 +1019,13 @@
           });
           logEl.appendChild(frag);
         }
-        if (nearBottom) logEl.scrollTop = logEl.scrollHeight;
+        const newScrollHeight = logEl.scrollHeight;
+        if (atBottom) {
+          logEl.scrollTop = newScrollHeight;
+        } else {
+          const delta = newScrollHeight - prevScrollHeight;
+          logEl.scrollTop = Math.max(0, prevScrollTop + delta);
+        }
       }
     }
 
