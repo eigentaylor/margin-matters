@@ -845,6 +845,13 @@
       }
     }
 
+    if (typeof window.resetElectionNightSimulation === 'function') {
+      window.resetElectionNightSimulation(true);
+    } else if (window._electionNightActive) {
+      const enReset = document.getElementById('enReset');
+      if (enReset) enReset.click();
+    }
+
     if (genBtn) genBtn.addEventListener('click', async () => {
       const s = parseInt(seedInput.value) || 0; updateUrl({seed:s}); await runWithSeed(s);
     });

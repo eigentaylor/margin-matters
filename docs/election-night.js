@@ -6,10 +6,10 @@
   const THIRD_PARTY_COLOR = '#C9A400';
   const BASE_MINUTES_PER_SECOND = 6;
   const MIN_DURATION = 160;
-  const MIN_CALL_DELAY = 45;
+  const MIN_CALL_DELAY = 30;
   const EXTRA_CALL_WINDOW = 210;
   const TIME_OFFSET_MIN = 180;
-  const DEFAULT_CONFIDENCE_THRESHOLD = 0.6;
+  const DEFAULT_CONFIDENCE_THRESHOLD = 0.4;
   const MIN_REPORTING_TO_CALL = 0.2;
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc';
   const UNCALLED_BRIGHTEN = 0.45;
@@ -87,7 +87,10 @@
     prevAbbrColors: null,
     boxesDirty: false,
     callRecords: [],
-    confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD
+    confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
+    pvRandomCache: null,
+    pvRandomCacheMode: null,
+    pvRandomSeed: null
   };
 
   const elements = {
@@ -155,6 +158,9 @@
     if (elements.pvMode) {
       elements.pvMode.addEventListener('change', () => {
         state.pvMode = elements.pvMode.value || 'current';
+        state.pvRandomCache = null;
+        state.pvRandomCacheMode = null;
+        state.pvRandomSeed = null;
         if (!state.prepared) return;
         const resume = state.running;
         resetSimulation(false);
@@ -166,12 +172,17 @@
 
     if (elements.progress) {
       elements.progress.addEventListener('input', () => {
-        if (!state.prepared || state.suppressProgressEvent) return;
-        const t = parseFloat(elements.progress.value);
-        const clamped = Math.max(0, Math.min(1, isFinite(t) ? t : 0));
-        const newTime = state.simStart + clamped * (state.simEnd - state.simStart);
-        state.currentTime = newTime;
-        renderAt(state.currentTime);
+        if (state.suppressProgressEvent) return;
+        const raw = parseFloat(elements.progress.value);
+        const clamped = Math.max(0, Math.min(1, isFinite(raw) ? raw : 0));
+        if (!state.prepared) {
+          prepareSimulation();
+          if (!state.prepared) return;
+        }
+        const wasRunning = state.running;
+        if (wasRunning) pauseSimulation();
+        seekToProgress(clamped);
+        if (wasRunning) startSimulation();
         updateToggleLabel();
       });
     }
@@ -296,6 +307,84 @@
     renderAt(state.currentTime);
     state.prepared = true;
     updateToggleLabel();
+  }
+
+  function progressToTime(progress){
+    const clamped = Math.max(0, Math.min(1, isFinite(progress) ? progress : 0));
+    const span = state.simEnd - state.simStart;
+    if (!isFinite(span) || Math.abs(span) < EPS) return state.simStart;
+    return state.simStart + clamped * span;
+  }
+
+  function timeToProgress(timeMinutes){
+    const span = state.simEnd - state.simStart;
+    if (!isFinite(timeMinutes) || !isFinite(span) || Math.abs(span) < EPS) return 0;
+    return Math.max(0, Math.min(1, (timeMinutes - state.simStart) / span));
+  }
+
+  function advanceDeterministic(targetTime){
+    if (!state.prepared) return;
+    const clamped = Math.max(state.simStart, Math.min(state.simEnd, isFinite(targetTime) ? targetTime : state.simEnd));
+    const delta = clamped - state.currentTime;
+    if (Math.abs(delta) <= EPS) {
+      state.currentTime = clamped;
+      renderAt(clamped);
+      return;
+    }
+    const direction = delta >= 0 ? 1 : -1;
+    const total = Math.abs(delta);
+    const approxStep = 6; // minutes per slice
+    const maxSteps = 480;
+    const steps = Math.max(1, Math.min(maxSteps, Math.ceil(total / approxStep)));
+    let current = state.currentTime;
+    for (let i = 1; i <= steps; i++) {
+      const remaining = clamped - current;
+      const segmentsLeft = steps - i + 1;
+      const stepSize = remaining / segmentsLeft;
+      current = Math.max(state.simStart, Math.min(state.simEnd, current + stepSize));
+      state.currentTime = current;
+      renderAt(current);
+      if (direction > 0 && current >= clamped - EPS) break;
+      if (direction < 0 && current <= clamped + EPS) break;
+    }
+    if (Math.abs(current - clamped) > EPS) {
+      state.currentTime = clamped;
+      renderAt(clamped);
+    } else {
+      state.currentTime = clamped;
+    }
+  }
+
+  function seekToProgress(progress){
+    if (!state.prepared) return;
+    const targetTime = progressToTime(progress);
+    if (targetTime < state.currentTime - EPS) {
+      const savedMode = state.pvMode;
+      const savedCache = state.pvRandomCache;
+      const savedCacheMode = state.pvRandomCacheMode;
+      const savedSeed = state.pvRandomSeed;
+      const savedConfidence = state.confidenceThreshold;
+      const savedSpeed = state.speedMultiplier;
+      const savedPvOverride = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
+      resetSimulation(false);
+      state.pvMode = savedMode;
+      state.pvRandomCache = savedCache;
+      state.pvRandomCacheMode = savedCacheMode;
+      state.pvRandomSeed = savedSeed;
+      state.confidenceThreshold = savedConfidence;
+      state.speedMultiplier = savedSpeed;
+      if (savedPvOverride != null) window._pvOverride = savedPvOverride;
+      prepareSimulation();
+      if (!state.prepared) return;
+      if (elements.confidence) {
+        elements.confidence.value = String(Math.max(0, Math.min(1, savedConfidence)));
+      }
+      updateConfidenceLabel(savedConfidence);
+      if (elements.speed && isFinite(savedSpeed) && savedSpeed > 0) {
+        elements.speed.value = String(savedSpeed);
+      }
+    }
+    advanceDeterministic(targetTime);
   }
 
   function resetSimulation(restorePv){
@@ -878,8 +967,11 @@
       { el: rEl, pct: rPct, value: rEV }
     ];
 
-    let offset = 0;
-    const active = [];
+    let leftOffset = 0;
+    let rightOffset = 0;
+    const leftActive = [];
+    const rightActive = [];
+
     segments.forEach(seg => {
       if (!seg.el) return;
       const visible = seg.value > EPS;
@@ -889,21 +981,39 @@
         seg.el.style.width = '0%';
         return;
       }
-      seg.el.style.left = `${offset.toFixed(3)}%`;
-      seg.el.style.width = `${seg.pct.toFixed(3)}%`;
-      seg.el.style.right = 'auto';
-      offset += seg.pct;
-      active.push(seg.el);
+
+      const anchor = (seg.el.dataset && seg.el.dataset.anchor) || '';
+      const widthPct = `${seg.pct.toFixed(3)}%`;
+      if (anchor === 'right') {
+        seg.el.style.left = 'auto';
+        seg.el.style.right = `${rightOffset.toFixed(3)}%`;
+        seg.el.style.width = widthPct;
+        rightOffset += seg.pct;
+        rightActive.push(seg.el);
+      } else {
+        seg.el.style.left = `${leftOffset.toFixed(3)}%`;
+        seg.el.style.right = 'auto';
+        seg.el.style.width = widthPct;
+        leftOffset += seg.pct;
+        leftActive.push(seg.el);
+      }
     });
 
-    if (active.length) {
-      const first = active[0];
-      const last = active[active.length - 1];
-      first.style.borderTopLeftRadius = first.style.borderBottomLeftRadius = '9px';
-      if (active.length === 1) {
-        first.style.borderTopRightRadius = first.style.borderBottomRightRadius = '9px';
-      } else {
-        last.style.borderTopRightRadius = last.style.borderBottomRightRadius = '9px';
+    if (leftActive.length) {
+      const firstLeft = leftActive[0];
+      firstLeft.style.borderTopLeftRadius = firstLeft.style.borderBottomLeftRadius = '9px';
+      if (!rightActive.length) {
+        const lastLeft = leftActive[leftActive.length - 1];
+        lastLeft.style.borderTopRightRadius = lastLeft.style.borderBottomRightRadius = '9px';
+      }
+    }
+
+    if (rightActive.length) {
+      const firstRight = rightActive[0];
+      firstRight.style.borderTopRightRadius = firstRight.style.borderBottomRightRadius = '9px';
+      if (!leftActive.length) {
+        const lastRight = rightActive[rightActive.length - 1];
+        lastRight.style.borderTopLeftRadius = lastRight.style.borderBottomLeftRadius = '9px';
       }
     }
 
@@ -1217,9 +1327,24 @@
   function resolvePvValue(){
     const mode = state.pvMode || 'current';
     const current = getCurrentPv();
-    if (mode === 'current') return current;
+    if (mode === 'current') {
+      state.pvRandomCache = null;
+      state.pvRandomCacheMode = null;
+      state.pvRandomSeed = null;
+      return current;
+    }
 
-    const rng = mulberry32(Date.now() >>> 0);
+    if (state.pvRandomCache != null && state.pvRandomCacheMode === mode) {
+      window._pvOverride = state.pvRandomCache;
+      return state.pvRandomCache;
+    }
+
+    if (state.pvRandomSeed == null) {
+      const baseSeed = Date.now() >>> 0;
+      const year = getSelectedYear() || 0;
+      state.pvRandomSeed = hashCode(`${year}:${mode}:${baseSeed}`);
+    }
+    const rng = mulberry32(state.pvRandomSeed >>> 0);
     let sample = 0;
     for (let attempts = 0; attempts < 200; attempts++) {
       const draw = randStudentT4(rng) * 0.035;
@@ -1229,6 +1354,8 @@
       sample = draw;
       break;
     }
+    state.pvRandomCache = sample;
+    state.pvRandomCacheMode = mode;
     window._pvOverride = sample;
     return sample;
   }
@@ -1576,6 +1703,20 @@
     }
     return z / Math.sqrt(v / 4);
   }
+
+  window.resetElectionNightSimulation = function(restorePv = true){
+    resetSimulation(restorePv);
+  };
+
+  window.prepareElectionNightSimulation = function(){
+    if (!state.prepared) prepareSimulation();
+  };
+
+  window.seekElectionNightProgress = function(progress){
+    const clamped = Math.max(0, Math.min(1, isFinite(progress) ? progress : 0));
+    if (!state.prepared) prepareSimulation();
+    if (state.prepared) seekToProgress(clamped);
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
