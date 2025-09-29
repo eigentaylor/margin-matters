@@ -1,0 +1,41 @@
+{
+  "year": 1868,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 10,
+  "third_party_cols": [],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 8 5",
+    "2": "Ulysses S. GrantRepublican # 76,667 22,112",
+    "3": "Ulysses S. GrantRepublican % 51.25 53.68",
+    "4": "Ulysses S. GrantRepublican electoralvotes 8 5",
+    "5": "Horatio SeymourDemocratic # 72,921 19,078",
+    "6": "Horatio SeymourDemocratic % 48.75 46.32",
+    "7": "Horatio SeymourDemocratic electoralvotes – –",
+    "8": "Margin # 3,746 3,034",
+    "9": "Margin % 2.50 7.36",
+    "10": "State Total # 149,594 41,190",
+    "11": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 8 5",
+    "2": "ulysses s. grantrepublican # 76,667 22,112",
+    "3": "ulysses s. grantrepublican % 51.25 53.68",
+    "4": "ulysses s. grantrepublican electoralvotes 8 5",
+    "5": "horatio seymourdemocratic # 72,921 19,078",
+    "6": "horatio seymourdemocratic % 48.75 46.32",
+    "7": "horatio seymourdemocratic electoralvotes – –",
+    "8": "margin # 3,746 3,034",
+    "9": "margin % 2.50 7.36",
+    "10": "state total # 149,594 41,190",
+    "11": "state total  al ar"
+  },
+  "rep_keywords": [
+    "republican"
+  ],
+  "dem_keywords": [
+    "democratic"
+  ]
+}

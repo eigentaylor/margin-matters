@@ -1,0 +1,52 @@
+{
+  "year": 1872,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 13,
+  "third_party_cols": [
+    {
+      "index": 8,
+      "name": "Charles O'Conor"
+    }
+  ],
+  "col_desc_raw": {
+    "0": "State Alabama Arkansas",
+    "1": "electoralvotes 10 6",
+    "2": "Ulysses S. GrantRepublican # 90,272 41,373",
+    "3": "Ulysses S. GrantRepublican % 53.19 52.17",
+    "4": "Ulysses S. GrantRepublican electoralvotes 10 0",
+    "5": "Horace GreeleyDemocratic/Liberal Republican # 79,444 37,927",
+    "6": "Horace GreeleyDemocratic/Liberal Republican % 46.81 47.83",
+    "7": "Horace GreeleyDemocratic/Liberal Republican electoralvotes - -",
+    "8": "Charles O'ConorStraight-Out Democrat # - -",
+    "9": "Charles O'ConorStraight-Out Democrat % - -",
+    "10": "Charles O'ConorStraight-Out Democrat electoralvotes - -",
+    "11": "Margin # 10,828 3,446",
+    "12": "Margin % 6.38 4.35",
+    "13": "State Total # 169,716 79,300",
+    "14": "State Total  AL AR"
+  },
+  "col_desc_lower": {
+    "0": "state alabama arkansas",
+    "1": "electoralvotes 10 6",
+    "2": "ulysses s. grantrepublican # 90,272 41,373",
+    "3": "ulysses s. grantrepublican % 53.19 52.17",
+    "4": "ulysses s. grantrepublican electoralvotes 10 0",
+    "5": "horace greeleydemocratic/liberal republican # 79,444 37,927",
+    "6": "horace greeleydemocratic/liberal republican % 46.81 47.83",
+    "7": "horace greeleydemocratic/liberal republican electoralvotes - -",
+    "8": "charles o'conorstraight-out democrat # - -",
+    "9": "charles o'conorstraight-out democrat % - -",
+    "10": "charles o'conorstraight-out democrat electoralvotes - -",
+    "11": "margin # 10,828 3,446",
+    "12": "margin % 6.38 4.35",
+    "13": "state total # 169,716 79,300",
+    "14": "state total  al ar"
+  },
+  "rep_keywords": [
+    "grant"
+  ],
+  "dem_keywords": [
+    "greeley"
+  ]
+}

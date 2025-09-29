@@ -7,6 +7,9 @@ from pathlib import Path
 import sys
 import json
 
+GLOBAL_MIN_YEAR = 1868
+GLOBAL_MAX_YEAR = 2024
+
 def clean_number(text):
     """Extract integer from text containing numbers with commas, etc."""
     if not text or pd.isna(text):
@@ -89,8 +92,8 @@ def get_candidate_parties(year):
         1884: (['blaine'], ['cleveland']),
         1880: (['garfield'], ['hancock']),
         1876: (['hayes'], ['tilden']),
+        1872: (['grant'], ['greeley']),
     }
-    
     return candidates.get(year, (['republican'], ['democratic']))
 
 def scrape_wikipedia_election(year):
@@ -264,6 +267,8 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
             state_name = state_name.replace('†', '').replace('*', '').strip()
             if state_name == 'Colorado' and year == 1876:
                 pass
+            if state_name == 'Florida' and year == 1868:
+                pass
             if 'district of columbia' in state_name.lower():
                 state_name = 'District of Columbia'
 
@@ -324,7 +329,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                         total_votes = try_col(alt_idx)
 
                 # If still zero, raise so the exception handler for rows can catch and skip the row with a warning
-                if total_votes == 0 and not (state_code == 'CO' and year == 1876):
+                if total_votes == 0 and not ((state_code == 'CO' and year == 1876) or (state_code == 'FL' and year == 1868)):
                     raise ValueError(f"Could not determine numeric total_votes for state '{state_name}' (tried columns {tried_cols})")
             
             # If no total column, estimate from visible vote columns
@@ -337,13 +342,13 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                         idx = tp['index']
                         if idx < len(cells):
                             estimated_total += clean_number(cells[idx].get_text())
-                else:
-                    # Fallback heuristic: sum any other significant vote-looking columns
-                    for i, cell in enumerate(cells[2:], 2):
-                        if i != header_info['r_col'] and i != header_info['d_col']:
-                            votes = clean_number(cell.get_text())
-                            if votes > estimated_total * 0.01:  # Significant (>1% of total)
-                                estimated_total += votes
+                # else:
+                #     # Fallback heuristic: sum any other significant vote-looking columns
+                #     for i, cell in enumerate(cells[2:], 2):
+                #         if i != header_info['r_col'] and i != header_info['d_col']:
+                #             votes = clean_number(cell.get_text())
+                #             if votes > estimated_total * 0.01:  # Significant (>1% of total)
+                #                 estimated_total += votes
                 total_votes = estimated_total
             
             # Build third-party breakdown and compute totals
@@ -511,6 +516,10 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords, year=None):
             {'index': 20, 'name': 'Joshua Levering'},
             {'index': 23, 'name': 'Charles Matchett'},
             {'index': 26, 'name': 'Charles Bentley'},
+        ]
+    if year == 1872:
+        third_party_cols = [
+            {'index': 8, 'name': "Charles O'Conor"}
         ]
 
     # Normalized keyword sets
@@ -710,6 +719,22 @@ def scrape_multiple_years(years, output_dir="election_data/wikipedia"):
     
     # Combine all successful years
     if all_data:
+        csv_files = list(output_path.glob("wikipedia_*.csv"))
+        all_data = []
+        
+        for csv_file in csv_files:
+            try:
+                year = int(csv_file.stem.split('_')[-1])
+                if GLOBAL_MIN_YEAR <= year <= GLOBAL_MAX_YEAR:
+                    df = pd.read_csv(csv_file)
+                    all_data.append(df)
+            except Exception as e:
+                print(f"  ❌ Error reading {csv_file}: {e}")
+        
+        if not all_data:
+            print(f"  ❌ No valid CSV files found in the directory")
+            return None
+        
         combined_df = pd.concat(all_data, ignore_index=True)
         # sort by year and state
         combined_df = combined_df.sort_values(by=['year', 'abbr'])
@@ -751,7 +776,7 @@ def main():
     # Define years to scrape
     # Start with recent years that are most likely to work
     priority_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000]
-    START_YEAR = 1876
+    START_YEAR = 1868
     END_YEAR = 2024
     all_years = list(range(END_YEAR, START_YEAR - 1, -4))
     #all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968, 1964]

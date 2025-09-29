@@ -754,6 +754,8 @@
                   const tipInfoOpts = {};
                   if (abbr === 'CO' && curYear === 1876) {
                     tipInfoOpts.staticText = 'CO · 3 EV - R';
+                  } else if (abbr === 'FL' && curYear === 1868) {
+                    tipInfoOpts.staticText = 'FL · 3 EV - R';
                   } else {
                     tipInfoOpts.label = abbr;
                   }
@@ -1620,14 +1622,14 @@
       const unit = r.unit;
       // Historical anomaly: Colorado (CO) in 1876 had no popular returns but its electors voted for Hayes (R).
       // Force a tiny Republican tilt so the map colors CO red and the EVs count for R.
-      try {
-        if (year === 1876 && unit === 'CO') {
-          // Push relative margin slightly negative so all sign checks treat CO as R
-          r.rm = (typeof r.rm === 'number') ? (r.rm > 0 ? -Math.abs(EPS) : -Math.abs(EPS)) : -Math.abs(EPS);
-          // Ensure the per-year/unit EV lookup contains 3 EVs for CO:1876
-          try { if (window._evByUnitMap && typeof window._evByUnitMap.set === 'function') window._evByUnitMap.set(`${year}:CO`, 3); } catch(e) {}
-        }
-      } catch(e) {}
+      // try {
+      //   if (year === 1876 && unit === 'CO') {
+      //     // Push relative margin slightly negative so all sign checks treat CO as R
+      //     r.rm = (typeof r.rm === 'number') ? (r.rm > 0 ? -Math.abs(EPS) : -Math.abs(EPS)) : -Math.abs(EPS);
+      //     // Ensure the per-year/unit EV lookup contains 3 EVs for CO:1876
+      //     try { if (window._evByUnitMap && typeof window._evByUnitMap.set === 'function') window._evByUnitMap.set(`${year}:CO`, 3); } catch(e) {}
+      //   }
+      // } catch(e) {}
       if (!unit || unit === 'NATIONAL') return;
   // If a flip scenario is active, flip the sign (winner reverses) by nudging margin to opposite winner by tiny epsilon
   const flipped = isUnitFlipped(year, unit);

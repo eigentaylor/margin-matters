@@ -1,4 +1,8 @@
 year,metric,winner_party,winner_ev,runner_party,runner_ev,need,classic_min_votes,classic_ev,classic_states,no_majority_min_votes,no_majority_ev,no_majority_states,tie_min_votes,tie_ev,tie_states,total_ev
+1868,votes,R,214,D,80,148,27119,69,8,27119,69,8,27583,67,7,294
+1868,margin,R,214,D,80,148,8854,68,4,8854,68,4,9991,67,6,294
+1872,votes,R,300,D,66,184,68859,118,14,68712,117,13,68712,117,13,366
+1872,margin,R,300,D,66,184,22470,120,7,22418,117,7,22418,117,7,366
 1876,votes,R,185,D,184,185,445,7,1,445,7,1,-1,0,0,369
 1876,margin,R,185,D,184,185,244,7,1,244,7,1,-1,0,0,369
 1880,votes,R,213,D,156,185,7014,29,4,7014,29,4,-1,0,0,369

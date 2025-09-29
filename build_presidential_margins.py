@@ -56,12 +56,13 @@ def main():
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
             rows.append(r2)
             years.add(r2['year'])
-            if r2['year'] == 1876 and r2['abbr'] == 'CO':
+            if (r2['year'] == 1876 and r2['abbr'] == 'CO') or (r2['year'] == 1868 and r2['abbr'] == 'FL'):
                 # Special case: in 1876, Colorado's 3 electoral votes were awarded to Hayes (R)
                 # despite Tilden (D) winning the popular vote there. This was due to a disputed
                 # result and a controversial decision by the Electoral Commission. We will
                 # manually adjust the D and R votes to reflect this outcome, which also
                 # avoids a tie in the data that would complicate margin calculations.
+                # the same thing happened in Florida (FL) in 1868, so handle that too
                 r2['D_votes'] = 0
                 r2['R_votes'] = 1  # dummy non-zero to avoid tie logic
                 r2['total_votes'] = 1
@@ -316,7 +317,8 @@ def main():
                 # for president; the state's electors cast their votes for Rutherford B. Hayes (Republican).
                 # Force the winner to R and ensure 3 electoral votes so the site consistently
                 # colors CO red and awards the Republican 3 EVs for 1876.
-                if year == 1876 and abbr == 'CO':
+                # the same thing happened in Florida (FL) in 1868, so handle that too
+                if (year == 1876 and abbr == 'CO') or (year == 1868 and abbr == 'FL'):
                     winner = 'R'
                     r_votes = 1 # dummy non-zero to avoid tie logic
                     # ensure the output electoral_votes reflects 3 EVs
