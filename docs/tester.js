@@ -108,8 +108,82 @@
     } catch(e) {}
   }
   function moveMapTip(evt){ try { _placeTipAt(evt); } catch(e) {} }
-  function hideMapTip(){ try { const tip = _ensureTip(); if (tip) tip.style.display = 'none'; } catch(e) {} }
-  try { window.showMapTip = showMapTip; window.moveMapTip = moveMapTip; window.hideMapTip = hideMapTip; } catch(e) {}
+  const _activeTipState = {
+    info: null
+  };
+  function _setActiveTip(info){ _activeTipState.info = info || null; }
+  function _updateActiveTipCoords(evt){
+    if (!_activeTipState.info || !evt) return;
+    _activeTipState.info.clientX = evt.clientX;
+    _activeTipState.info.clientY = evt.clientY;
+  }
+  function refreshActiveMapTip(){
+    try {
+      const info = _activeTipState.info;
+      if (!info || typeof info.getText !== 'function') return;
+      const text = info.getText();
+      if (text == null) return;
+      const coords = {
+        clientX: info.clientX,
+        clientY: info.clientY
+      };
+      if (coords.clientX == null || coords.clientY == null) return;
+      showMapTip(coords, text);
+    } catch(e) {}
+  }
+  function hideMapTip(){
+    try {
+      const tip = _ensureTip();
+      if (tip) tip.style.display = 'none';
+    } catch(e) {}
+    _setActiveTip(null);
+  }
+  try {
+    window.showMapTip = function(evt, text, info){
+      if (info) {
+        _setActiveTip(info);
+        _updateActiveTipCoords(evt);
+      } else {
+        _setActiveTip(null);
+      }
+      showMapTip(evt, text);
+    };
+    window.moveMapTip = function(evt){
+      _updateActiveTipCoords(evt);
+      moveMapTip(evt);
+    };
+    window.hideMapTip = hideMapTip;
+    window.refreshActiveMapTip = refreshActiveMapTip;
+  } catch(e) {}
+
+  function createUnitTipInfo(unit, opts){
+    const options = { ...(opts || {}) };
+    return {
+      unit,
+      options,
+      clientX: null,
+      clientY: null,
+      getText: function(){ return formatUnitTooltip(unit, options); }
+    };
+  }
+
+  function formatUnitTooltip(unit, opts){
+    try {
+      const options = opts || {};
+      if (options.staticText != null) return options.staticText;
+      const display = options.label || unit;
+      const info = (typeof window.getAdjustedInfo === 'function') ? window.getAdjustedInfo(unit) : null;
+      let ev = options.evOverride;
+      if (info && info.ev != null && !isNaN(info.ev)) ev = info.ev;
+      let marginStr = options.marginOverride || '';
+      if (info && info.marginStr) marginStr = info.marginStr;
+      const parts = [];
+      if (display) parts.push(display);
+      if (ev != null && ev !== '') parts.push(`${ev} EV`);
+      if (marginStr) parts.push(marginStr);
+      return parts.join(' · ');
+    } catch(e) { return unit; }
+  }
 
   // Compute a "visual center" for a GeoJSON Polygon/MultiPolygon feature using
   // projected screen coordinates and a lightweight polylabel-like search.
@@ -379,12 +453,8 @@
         // Tooltip via centralized map tip (works even if boxes move later)
         const hoverHandler = function(evt){
           try {
-            const unit = d.unit;
-            const info = (window.getAdjustedInfo ? window.getAdjustedInfo(unit) : null) || {};
-            const ev = (info && info.ev != null) ? info.ev : d.ev;
-            const marginStr = (info && info.marginStr) ? info.marginStr : (d.marginStr || '');
-            const text = d.label + (ev!=null?` · ${ev} EV`:``) + (marginStr?` · ${marginStr}`:``);
-            if (typeof window.showMapTip === 'function') window.showMapTip(evt, text);
+            const tipInfo = createUnitTipInfo(d.unit, { label: d.label, evOverride: d.ev });
+            if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
           } catch(e) {}
         };
         g.on('mouseenter', hoverHandler)
@@ -659,17 +729,15 @@
               const abbr = id ? idToAbbr[id] : null;
               if (abbr){
                 try {
-                  // Override tooltip for Colorado in 1876: show static EV/party label
                   const curYear = (window._curYear != null) ? window._curYear : (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : null);
+                  const tipInfoOpts = {};
                   if (abbr === 'CO' && curYear === 1876) {
-                    if (typeof window.showMapTip === 'function') window.showMapTip(evt, 'CO · 3 EV - R');
+                    tipInfoOpts.staticText = 'CO · 3 EV - R';
                   } else {
-                    const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
-                    const ev = (info && info.ev != null) ? info.ev : '';
-                    const marginStr = (info && info.marginStr) ? info.marginStr : '';
-                    const label = abbr + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
-                    if (typeof window.showMapTip === 'function') window.showMapTip(evt, label);
+                    tipInfoOpts.label = abbr;
                   }
+                  const tipInfo = createUnitTipInfo(abbr, tipInfoOpts);
+                  if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
                 } catch(e) { /* ignore tooltip errors */ }
               }
             } catch(e){}
@@ -755,6 +823,7 @@
     const s = (Math.abs(x) * 100).toFixed(1);
     return (x > 0 ? 'D+' : 'R+') + s;
   }
+  try { window.leanStr = leanStr; } catch(e) {}
 
   function marginToColor(m, isThirdParty = false){
     if (isThirdParty) return '#C9A400'; // Yellow for third-party
@@ -769,6 +838,7 @@
     if (m < 0.20) return '#4169E1';
     return '#00008B';
   }
+  try { window.marginToColor = marginToColor; } catch(e) {}
 
   const byYear = new Map();
   const evByUnit = new Map();
@@ -1011,11 +1081,8 @@
                 try { if (cur && cur.toLowerCase && cur.toLowerCase() === '#ffd700') highlight = '#FFD700'; } catch(e) {}
                 sel.attr('fill', highlight);
                 const unit = sel.attr('data-unit');
-                const info = (window.getAdjustedInfo ? window.getAdjustedInfo(unit) : null) || {};
-                const ev = (info && info.ev != null) ? info.ev : '';
-                const marginStr = (info && info.marginStr) ? info.marginStr : '';
-                const text = unit + (ev!=='' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
-                if (typeof window.showMapTip === 'function') window.showMapTip(evt, text);
+                const tipInfo = createUnitTipInfo(unit, { label: unit });
+                if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
               } catch(e) {}
             })
             .on('mousemove', function(evt){ try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch(e){} })
@@ -1666,13 +1733,16 @@
 
     // Use smooth transitions for state fills
     (function(){
+      if (window._electionNightActive) {
+        window._electionNightLastAbbrColors = abbrColors;
+        return;
+      }
       const idToAbbr = {"01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT","10":"DE","11":"DC","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN","19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA","26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV","33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH","40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN","48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"};
       d3.selectAll('path.state').each(function(d){
         const id = String(d.id).padStart(2,'0');
         const abbr = idToAbbr[id];
         const entry = abbrColors.get(abbr);
         const fill = entry ? entry.color : '#2f2f2f';
-        // transition to new color
         try {
           d3.select(this)
             .transition()
@@ -1685,12 +1755,14 @@
           d3.select(this).attr('fill', fill);
         }
       });
-      // after coloring states, keep labels on top
       try { raiseStateLabelsLayer(); } catch(e) {}
     })();
 
   // color district polygons (ME/NE) if overlay loaded
     if (window._districtPaths) {
+      if (window._electionNightActive) {
+        window._electionNightLastUnitColors = unitColors;
+      } else {
       try {
         // Show/hide districts based on year availability
         const showME = year >= 1972;
@@ -1724,6 +1796,7 @@
         // after districts update, keep labels above them
         try { raiseStateLabelsLayer(); } catch(e) {}
       } catch (e) { /* ignore */ }
+      }
     }
 
   // Use actual total EV for the selected year (fallback to 538)
@@ -1732,26 +1805,69 @@
     const t = window._totalEvByYear && window._totalEvByYear.get(year);
     if (isFinite(t) && t > 0) totalEV = t;
   } catch(e) {}
-  // clamp and ensure sum displays correctly
-  const dPct = totalEV ? Math.max(0, Math.min(100, (dEV/totalEV)*100)) : 0;
-  const oPct = totalEV ? Math.max(0, Math.min(100, (oEV/totalEV)*100)) : 0;
-  // Fill remainder to avoid black gaps from rounding
-  const rPct = Math.max(0, Math.min(100, 100 - dPct - oPct));
+
+  const otherEV = oEV || 0;
+  const uEV = Math.max(0, totalEV - (dEV + rEV + otherEV));
+  const dPct = totalEV ? (dEV / totalEV) * 100 : 0;
+  const uPct = totalEV ? (uEV / totalEV) * 100 : 0;
+  const oPct = totalEV ? (otherEV / totalEV) * 100 : 0;
+  const rPct = totalEV ? (rEV / totalEV) * 100 : 0;
+
   const dEl = document.getElementById('evFillD');
+  const uEl = document.getElementById('evFillU');
   const oEl = document.getElementById('evFillO');
   const rEl = document.getElementById('evFillR');
-  if (dEl) dEl.style.width = `${dPct}%`;
-  if (oEl) {
-    oEl.style.left = `${dPct}%`;
-    oEl.style.width = `${oPct}%`;
-    oEl.style.display = (oPct > 0 ? '' : 'none');
+
+  const segments = [
+    { el: dEl, pct: dPct, value: dEV },
+    { el: uEl, pct: uPct, value: uEV },
+    { el: oEl, pct: oPct, value: otherEV },
+    { el: rEl, pct: rPct, value: rEV }
+  ];
+  let offset = 0;
+  const activeSegs = [];
+  segments.forEach(seg => {
+    if (!seg.el) return;
+    const visible = seg.value > EPS;
+    seg.el.style.display = visible ? '' : 'none';
+    seg.el.style.borderRadius = '0';
+    if (!visible) {
+      seg.el.style.width = '0%';
+      return;
+    }
+    seg.el.style.left = `${offset.toFixed(3)}%`;
+    seg.el.style.right = 'auto';
+    seg.el.style.width = `${Math.max(0, seg.pct).toFixed(3)}%`;
+    offset += Math.max(0, seg.pct);
+    activeSegs.push(seg.el);
+  });
+  if (activeSegs.length) {
+    const first = activeSegs[0];
+    const last = activeSegs[activeSegs.length - 1];
+    first.style.borderTopLeftRadius = first.style.borderBottomLeftRadius = '9px';
+    if (activeSegs.length === 1) {
+      first.style.borderTopRightRadius = first.style.borderBottomRightRadius = '9px';
+    } else {
+      last.style.borderTopRightRadius = last.style.borderBottomRightRadius = '9px';
+    }
   }
-  if (rEl) rEl.style.width = `${rPct}%`;
+
   const evText = document.getElementById('evText');
-  if (evText) evText.textContent = (oEV > 0) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
-  // Also reflect the EV split in the flip summary badge
+  if (evText) {
+    const parts = [`D ${dEV}`];
+    if (uEV > 0) parts.push(`U ${uEV}`);
+    if (otherEV > 0) parts.push(`O ${otherEV}`);
+    parts.push(`R ${rEV}`);
+    evText.textContent = (uEV > 0 || otherEV > 0) ? parts.join(' | ') : `${dEV} - ${rEV}`;
+  }
   const flipEC = document.getElementById('flipEC');
-  if (flipEC) flipEC.textContent = (oEV > 0) ? `D ${dEV} | O ${oEV} | R ${rEV}` : `${dEV} - ${rEV}`;
+  if (flipEC) {
+    const parts = [`D ${dEV}`];
+    if (uEV > 0) parts.push(`U ${uEV}`);
+    if (otherEV > 0) parts.push(`O ${otherEV}`);
+    parts.push(`R ${rEV}`);
+    flipEC.textContent = (uEV > 0 || otherEV > 0) ? parts.join(' | ') : `${dEV} - ${rEV}`;
+  }
   
   // Dynamic "Close states" panel (if present): list units with |margin| < 1.0 pp
   try {
@@ -2134,6 +2250,41 @@ window.getAdjustedInfo = function(unit){
     const pv = window._curPv || 0;
     if (!year) return null;
     const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+    const snapshot = (window._electionNightActive && window._electionNightSnapshot && window._electionNightSnapshot.size)
+      ? window._electionNightSnapshot
+      : null;
+    if (snapshot) {
+      const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0,2) : null;
+      const candidates = [];
+      if (unit && !candidates.includes(unit)) candidates.push(unit);
+      if (keyUnit && !candidates.includes(keyUnit)) candidates.push(keyUnit);
+      if (abbr && !candidates.includes(abbr)) candidates.push(abbr);
+      let snap = null;
+      for (const candidate of candidates) {
+        if (candidate && snapshot.has(candidate)) {
+          snap = snapshot.get(candidate);
+          if (snap) break;
+        }
+      }
+      if (snap) {
+        let evVal = snap.ev;
+        if (evVal == null) {
+          try { if (typeof window.getEvFor === 'function') evVal = window.getEvFor(year, keyUnit); } catch(e) {}
+        }
+        const hasMargin = snap.margin != null && isFinite(snap.margin);
+        const marginVal = hasMargin ? snap.margin : null;
+        let marginStrVal = snap.marginStr;
+        if (marginStrVal == null || marginStrVal === '') {
+          if (!hasMargin) marginStrVal = 'None';
+          else if (typeof leanStr === 'function') marginStrVal = leanStr(marginVal);
+          else {
+            const pct = (Math.abs(marginVal) * 100).toFixed(1);
+            marginStrVal = `${marginVal >= 0 ? 'D' : 'R'}+${pct}`;
+          }
+        }
+        return { ev: evVal, margin: marginVal, marginStr: marginStrVal };
+      }
+    }
     const rows = (function(){
       // byYear lives inside the IIFE; expose via window if available
       if (typeof window.getRowsForYear === 'function') return window.getRowsForYear(year);
