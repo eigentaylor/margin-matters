@@ -105,6 +105,7 @@
     log: null,
     logHeader: null,
     logUncalled: null,
+    logPanel: null,
     confidence: null,
     confidenceVal: null,
     victory: null
@@ -122,6 +123,9 @@
     elements.log = document.getElementById('enLog');
     elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
     elements.logUncalled = document.getElementById('enLogUncalled');
+    elements.logPanel = document.getElementById('enLogPanel');
+    // Hide the call log panel by default until the election-night simulation is active
+    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
   elements.confidence = document.getElementById('enConfidence');
   elements.confidenceVal = document.getElementById('enConfidenceVal');
   elements.victory = document.getElementById('enVictory');
@@ -251,6 +255,8 @@
     state.year = year;
 
     window._electionNightActive = true;
+  // Show the call log panel when the election-night simulation is prepared
+  try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) {}
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
@@ -445,6 +451,8 @@
     }
 
     window._electionNightActive = false;
+    // Hide the call log panel when the simulation is reset/stopped
+    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
     updateToggleLabel();
   }
 
