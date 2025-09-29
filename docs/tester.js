@@ -756,6 +756,8 @@
                     tipInfoOpts.staticText = 'CO · 3 EV - R';
                   } else if (abbr === 'FL' && curYear === 1868) {
                     tipInfoOpts.staticText = 'FL · 3 EV - R';
+                  } else if (abbr === 'LA' && curYear === 1864) {
+                    tipInfoOpts.staticText = 'LA · 7 EV - R';
                   } else {
                     tipInfoOpts.label = abbr;
                   }

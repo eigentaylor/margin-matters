@@ -247,6 +247,10 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
             # Florida 1868 had no popular vote returns here; treat it as having 3 electoral votes
             # and awarded to the Republican (Grant). Exclude it from flip consideration later.
             continue
+        if year == 1864 and r['abbr'] == 'LA':
+            # Louisiana 1864 had no popular vote returns here; treat it as having 7 electoral votes
+            # and awarded to the Republican (Lincoln). Exclude it from flip consideration later.
+            continue
         if year == 1960 and r['abbr'] == 'AL':
             # Alabama 1960 is split 5 D + 6 O if won by D or T, so cannot be flipped as a unit
             continue

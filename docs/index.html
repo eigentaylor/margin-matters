@@ -9,12 +9,12 @@
 </head>
 <body>
 <div class="container" style="text-align: center;">
-  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div><div class="legend">U.S. Presidential Election State Results 1868-2024</div></div>
+  <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><div class="small-links"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div><div class="legend">U.S. Presidential Election State Results 1864-2024</div></div>
   <div class="card">
     <div class="legend" style="text-align:left">Browse all state pages on the <a href="./state-pages.html">State Pages</a> directory. Maine and Nebraska link to district pages from their statewide pages.</div>
   </div>
   <div class="header">
-  <h1>U.S. Presidential Election State Results 1868-2024</h1>
+  <h1>U.S. Presidential Election State Results 1864-2024</h1>
     <span class="legend">Click a state to open its page</span>
   </div>
   <div class="card">
@@ -29,7 +29,7 @@
   <div style="display:grid;gap:10px">
     <div style="display:flex;align-items:center;gap:8px">
       <label for="yearSlider" style="flex:0 0 auto;min-width:48px">Year:</label>
-      <input id="yearSlider" type="range" min="1868" max="2024" step="4" value="2024" style="flex:1;min-width:120px;" />
+      <input id="yearSlider" type="range" min="1864" max="2024" step="4" value="2024" style="flex:1;min-width:120px;" />
       <span id="yearVal" style="margin-left:8px;flex:0 0 auto">2024</span>
     </div>
     <div>
@@ -87,8 +87,8 @@
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <label for="enConfidence" class="legend" style="min-width:110px;font-size:0.9rem">Call threshold</label>
-        <input id="enConfidence" type="range" min="0" max="1" step="0.01" value="0.55" style="flex:1" />
-        <span id="enConfidenceVal" class="legend" style="font-size:0.9rem">0.55</span>
+        <input id="enConfidence" type="range" min="0" max="1" step="0.01" value="0.4" style="flex:1" />
+        <span id="enConfidenceVal" class="legend" style="font-size:0.9rem">0.4</span>
       </div>
       <div class="legend" style="font-size:0.85rem;text-align:left;color:var(--muted)">Call log floats on the right so you can track updates while watching the map.</div>
     </div>
@@ -174,7 +174,7 @@
   </div>
   <footer>Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-29 06:08 UTC</footer>
+Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-09-29 06:27 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>

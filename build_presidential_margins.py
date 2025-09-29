@@ -56,17 +56,18 @@ def main():
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
             rows.append(r2)
             years.add(r2['year'])
-            if (r2['year'] == 1876 and r2['abbr'] == 'CO') or (r2['year'] == 1868 and r2['abbr'] == 'FL'):
+            if (r2['year'] == 1876 and r2['abbr'] == 'CO') or (r2['year'] == 1868 and r2['abbr'] == 'FL') or (r2['year'] == 1864 and r2['abbr'] == 'LA'):
                 # Special case: in 1876, Colorado's 3 electoral votes were awarded to Hayes (R)
                 # despite Tilden (D) winning the popular vote there. This was due to a disputed
                 # result and a controversial decision by the Electoral Commission. We will
                 # manually adjust the D and R votes to reflect this outcome, which also
                 # avoids a tie in the data that would complicate margin calculations.
-                # the same thing happened in Florida (FL) in 1868, so handle that too
+                # the same thing happened in Florida (FL) in 1868, and Louisiana in 1864 so handle that too
+                abbr = r2['abbr']
                 r2['D_votes'] = 0
                 r2['R_votes'] = 1  # dummy non-zero to avoid tie logic
                 r2['total_votes'] = 1
-                r2['electoral_votes'] = 3
+                r2['electoral_votes'] = 3 if abbr != 'LA' else 7 # LA had 7 EVs in 1864 while FL had 3 in 1868 and CO had 3 in 1876
 
     # index by (abbr) -> list of rows sorted by year
     by_state = defaultdict(list)

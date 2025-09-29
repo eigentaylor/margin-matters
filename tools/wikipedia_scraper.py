@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import json
 
-GLOBAL_MIN_YEAR = 1868
+GLOBAL_MIN_YEAR = 1864
 GLOBAL_MAX_YEAR = 2024
 
 def clean_number(text):
@@ -93,6 +93,8 @@ def get_candidate_parties(year):
         1880: (['garfield'], ['hancock']),
         1876: (['hayes'], ['tilden']),
         1872: (['grant'], ['greeley']),
+        1868: (['grant'], ['seymour']),
+        1864: (['lincoln'], ['mcclellan']),
     }
     return candidates.get(year, (['republican'], ['democratic']))
 
@@ -329,7 +331,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                         total_votes = try_col(alt_idx)
 
                 # If still zero, raise so the exception handler for rows can catch and skip the row with a warning
-                if total_votes == 0 and not ((state_code == 'CO' and year == 1876) or (state_code == 'FL' and year == 1868)):
+                if total_votes == 0 and not ((state_code == 'CO' and year == 1876) or (state_code == 'FL' and year == 1868) or (state_code == 'LA' and year == 1864)):
                     raise ValueError(f"Could not determine numeric total_votes for state '{state_name}' (tried columns {tried_cols})")
             
             # If no total column, estimate from visible vote columns
@@ -776,7 +778,7 @@ def main():
     # Define years to scrape
     # Start with recent years that are most likely to work
     priority_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000]
-    START_YEAR = 1868
+    START_YEAR = 1864
     END_YEAR = 2024
     all_years = list(range(END_YEAR, START_YEAR - 1, -4))
     #all_years = [2024, 2020, 2016, 2012, 2008, 2004, 2000, 1996, 1992, 1988, 1984, 1980, 1976, 1972, 1968, 1964]

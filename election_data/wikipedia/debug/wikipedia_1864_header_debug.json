@@ -1,0 +1,39 @@
+{
+  "year": 1864,
+  "r_col": 2,
+  "d_col": 5,
+  "total_col": 10,
+  "third_party_cols": [],
+  "col_desc_raw": {
+    "0": "State California Connecticut",
+    "1": "electoralvotes 5 6",
+    "2": "Abraham LincolnNational Union # 62,140 44,693",
+    "3": "Abraham LincolnNational Union % 58.63% 51.38%",
+    "4": "Abraham LincolnNational Union electoralvotes 5 6",
+    "5": "George B. McClellanDemocratic # 43,838 42,288",
+    "6": "George B. McClellanDemocratic % 41.36% 48.62%",
+    "7": "George B. McClellanDemocratic electoralvotes – –",
+    "8": "Margin # 18,302 2,405",
+    "9": "Margin % 17.27% 2.76%",
+    "10": "State Total # 105,986 86,981"
+  },
+  "col_desc_lower": {
+    "0": "state california connecticut",
+    "1": "electoralvotes 5 6",
+    "2": "abraham lincolnnational union # 62,140 44,693",
+    "3": "abraham lincolnnational union % 58.63% 51.38%",
+    "4": "abraham lincolnnational union electoralvotes 5 6",
+    "5": "george b. mcclellandemocratic # 43,838 42,288",
+    "6": "george b. mcclellandemocratic % 41.36% 48.62%",
+    "7": "george b. mcclellandemocratic electoralvotes – –",
+    "8": "margin # 18,302 2,405",
+    "9": "margin % 17.27% 2.76%",
+    "10": "state total # 105,986 86,981"
+  },
+  "rep_keywords": [
+    "lincoln"
+  ],
+  "dem_keywords": [
+    "mcclellan"
+  ]
+}
