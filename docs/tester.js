@@ -1851,18 +1851,39 @@
   ];
   let offset = 0;
   const activeSegs = [];
+  // Animate bar changes smoothly by applying CSS transitions to left/right/width
+  const TRANS_MS = 360;
+  const TRANS_EASE = 'cubic-bezier(0.22,0.61,0.36,1)';
   segments.forEach(seg => {
     if (!seg.el) return;
     const visible = seg.value > EPS;
-    seg.el.style.display = visible ? '' : 'none';
     seg.el.style.borderRadius = '0';
     if (!visible) {
+      // hide immediately (no transition) to avoid flicker when value is zero
+      try { seg.el.style.transition = 'none'; seg.el.style.willChange = 'auto'; } catch(e) {}
       seg.el.style.width = '0%';
+      seg.el.style.display = 'none';
       return;
     }
-    seg.el.style.left = `${offset.toFixed(3)}%`;
-    seg.el.style.right = 'auto';
-    seg.el.style.width = `${Math.max(0, seg.pct).toFixed(3)}%`;
+
+    // ensure element is visible before animating
+    try { seg.el.style.display = ''; } catch(e) {}
+    try {
+      seg.el.style.transition = `left ${TRANS_MS}ms ${TRANS_EASE}, right ${TRANS_MS}ms ${TRANS_EASE}, width ${TRANS_MS}ms ${TRANS_EASE}`;
+      seg.el.style.willChange = 'left, right, width';
+    } catch(e) {}
+
+    const anchor = (seg.el.dataset && seg.el.dataset.anchor) || '';
+    const widthPct = `${Math.max(0, seg.pct).toFixed(3)}%`;
+    if (anchor === 'right') {
+      seg.el.style.left = 'auto';
+      seg.el.style.right = `${offset.toFixed(3)}%`;
+      seg.el.style.width = widthPct;
+    } else {
+      seg.el.style.left = `${offset.toFixed(3)}%`;
+      seg.el.style.right = 'auto';
+      seg.el.style.width = widthPct;
+    }
     offset += Math.max(0, seg.pct);
     activeSegs.push(seg.el);
   });
