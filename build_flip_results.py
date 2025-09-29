@@ -243,6 +243,9 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         # Do not consider Colorado 1876 as a flippable unit; its EVs were assigned to R above.
         if year == 1876 and r['abbr'] == 'CO':
             continue
+        if year == 1960 and r['abbr'] == 'AL':
+            # Alabama 1960 is split 5 D + 6 O if won by D or T, so cannot be flipped as a unit
+            continue
 
         if r['party_win'] == runner_party:
             continue
