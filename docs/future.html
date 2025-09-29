@@ -40,9 +40,6 @@
 
     <div class="card" style="margin-top:12px">
       <div style="display:grid;gap:12px">
-        <div class="legend" style="text-align:left">Enter a seed to generate a "plausible" path of relative state margins for 2028–2048 using a Brownian-bridge around a "plausible" 2048 target. Then adjust the PV to see different results based on the national margin!<br />THIS IS A WORK IN PROGRESS! BUGS ARE GUARANTEED!</div>
-
-
         <div id="evBar" style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111">
           <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
           <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
@@ -50,6 +47,8 @@
           <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
           <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">D 0 | O 0 | R 0</div>
         </div>
+
+
         <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
           <div style="display:flex;flex-direction:column;gap:6px">
             <label for="yearSlider" class="legend">Year</label>
@@ -67,6 +66,7 @@
             <datalist id="pvStopsList"></datalist>
           </div>
         </div>
+        <div class="legend" style="text-align:left">Enter a seed to generate a "plausible" path of relative state margins for 2028–2048 using a Brownian-bridge around a "plausible" 2048 target. Then adjust the PV to see different results based on the national margin!<br />THIS IS A WORK IN PROGRESS! BUGS ARE GUARANTEED!</div>
 
         <div id="electionNightCard" class="card" style="background:transparent;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px">
           <div class="legend" style="text-align:left">Election night simulator (future scenarios)</div>
