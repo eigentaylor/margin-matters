@@ -2096,7 +2096,7 @@
         const optPrev = Array.from(baselineEl.options).find(o => String(o.value) === 'prev');
         const opt2024 = Array.from(baselineEl.options).find(o => String(o.value) === '2024');
         const prevYear = year - 4;
-        const hasPrev = (prevYear >= 1876) && byYear.has(prevYear);
+        const hasPrev = (prevYear >= 1916) && byYear.has(prevYear);
         // Disable or enable previous-election option
         if (optPrev) optPrev.disabled = !hasPrev;
         // If no previous election data, prefer comparing to 2024 (if available)
@@ -2118,8 +2118,8 @@
       // Now determine baseline selection and year
       const baselineMode = baselineEl ? baselineEl.value : 'prev';
       const baselineYear = (baselineMode === '2024') ? 2024 : (year - 4);
-      // Show panel only if baseline year is within historical bounds (1876+) and present in data
-      const showPanel = (baselineYear >= 1876) && byYear.has(baselineYear);
+      // Show panel only if baseline year is within historical bounds (1916+) and present in data
+      const showPanel = (baselineYear >= 1916) && byYear.has(baselineYear);
       if (!showPanel) {
         wrap.style.display = 'none';
       } else {

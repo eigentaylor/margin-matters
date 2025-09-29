@@ -9,7 +9,7 @@
   const MIN_CALL_DELAY = 45;
   const EXTRA_CALL_WINDOW = 210;
   const TIME_OFFSET_MIN = 180;
-  const CONFIDENCE_THRESHOLD = 0.6;
+  const DEFAULT_CONFIDENCE_THRESHOLD = 0.55;
   const MIN_REPORTING_TO_CALL = 0.2;
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc';
   const UNCALLED_BRIGHTEN = 0.45;
@@ -86,7 +86,8 @@
     prevUnitColors: null,
     prevAbbrColors: null,
     boxesDirty: false,
-    callRecords: []
+    callRecords: [],
+    confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD
   };
 
   const elements = {
@@ -100,7 +101,10 @@
     phase: null,
     log: null,
     logHeader: null,
-    logUncalled: null
+    logUncalled: null,
+    confidence: null,
+    confidenceVal: null,
+    victory: null
   };
 
   function init(){
@@ -115,6 +119,9 @@
     elements.log = document.getElementById('enLog');
     elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
     elements.logUncalled = document.getElementById('enLogUncalled');
+  elements.confidence = document.getElementById('enConfidence');
+  elements.confidenceVal = document.getElementById('enConfidenceVal');
+  elements.victory = document.getElementById('enVictory');
 
     if (elements.toggle) {
       elements.toggle.addEventListener('click', () => {
@@ -186,6 +193,19 @@
       });
     }
 
+    if (elements.confidence) {
+      const sliderVal = getConfidenceSliderValue();
+      state.confidenceThreshold = sliderVal;
+      updateConfidenceLabel(sliderVal);
+      elements.confidence.addEventListener('input', () => {
+        const val = getConfidenceSliderValue();
+        state.confidenceThreshold = val;
+        updateConfidenceLabel(val);
+      });
+    } else {
+      updateConfidenceLabel(state.confidenceThreshold);
+    }
+
     updateToggleLabel();
   }
 
@@ -200,6 +220,8 @@
     const pvValue = resolvePvValue();
     state.pvValue = pvValue;
     state.targetPvLabel = formatLean(pvValue);
+  state.confidenceThreshold = getConfidenceSliderValue();
+  updateConfidenceLabel(state.confidenceThreshold);
 
     if (typeof window.updateAll === 'function') window.updateAll();
 
@@ -225,6 +247,11 @@
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
     if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.victory) {
+      elements.victory.textContent = '';
+      elements.victory.className = 'en-log-victory';
+      elements.victory.style.display = 'none';
+    }
 
     const data = buildStateData(year, pvValue);
     state.stateData = data;
@@ -282,13 +309,15 @@
     state.currentTime = 0;
     state.lastTimestamp = null;
     state.lastLogKey = '';
-  state.lastUncalledKey = '';
+    state.lastUncalledKey = '';
     state.year = null;
     state.totalEvPool = 538;
     state.unitColorMap = null;
     state.abbrColorMap = null;
     state.boxesDirty = false;
     state.callRecords = [];
+    state.confidenceThreshold = getConfidenceSliderValue();
+    updateConfidenceLabel(state.confidenceThreshold);
 
     if (elements.progress) {
       state.suppressProgressEvent = true;
@@ -301,6 +330,11 @@
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
     if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.victory) {
+      elements.victory.textContent = '';
+      elements.victory.className = 'en-log-victory';
+      elements.victory.style.display = 'none';
+    }
 
     if (restorePv) {
       window._pvOverride = state.prevPvOverride;
@@ -494,7 +528,9 @@
         aliases,
         pvWeight: isAtLarge ? 0 : 1,
         closeness,
-        targetMetrics
+        targetMetrics,
+        callLeader: null,
+        misCallLogged: false
       });
     });
 
@@ -571,6 +607,7 @@
       };
       st.aliases.forEach(alias => state.snapshot.set(alias, snapshot));
       state.snapshot.set(st.unitKey, snapshot);
+      maybeEmitMiscall(st, metrics, timeMinutes);
     });
 
     flushSmallBoxes();
@@ -693,15 +730,44 @@
     return Math.min(1, Math.max(0, voteGap / Math.max(EPS, remainingVotes)));
   }
 
+  function maybeEmitMiscall(st, metrics, currentTime){
+    if (!st || !st.callRecord || st.misCallLogged) return;
+    if (st.callRecord.kind !== 'call') return;
+    const calledLeader = st.callRecord.leader;
+    const finalLeader = st.winner;
+    if (!calledLeader || calledLeader === finalLeader) return;
+    if (!metrics || metrics.reporting < 1 - EPS) return;
+    st.misCallLogged = true;
+    const correctionTime = Math.max(currentTime, st.callRecord.time + 0.01);
+    const finalLeaderText = formatLeader(finalLeader);
+    const calledLeaderText = formatLeader(calledLeader);
+    const callTimeStr = formatTimeLabel(st.callRecord.time);
+    const thresholdText = isFinite(st.callRecord.threshold)
+      ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
+      : '';
+    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
+    state.callRecords.push({
+      kind: 'notice',
+      noticeType: 'miscall',
+      unitKey: st.unitKey,
+      displayLabel: formatUnitLabel(st.unitKey),
+      time: correctionTime,
+      text: message,
+      calledLeader,
+      finalLeader
+    });
+    state.lastLogKey = '';
+  }
+
   function shouldCallState(st, metrics, currentTime){
     if (st.instantCall) {
       return currentTime >= st.startTime - EPS;
     }
     if (!metrics || metrics.leader == null) return false;
-    if (metrics.leader !== st.winner) return false;
     if (metrics.reporting < MIN_REPORTING_TO_CALL && currentTime < st.callDeadline - 5) return false;
     if (metrics.reporting >= 0.999) return true;
-    return metrics.confidence >= CONFIDENCE_THRESHOLD;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
 
   function shouldForceCall(st, metrics, currentTime){
@@ -712,7 +778,8 @@
     if (currentTime < st.callDeadline - EPS) return false;
     if (metrics.reporting < MIN_REPORTING_TO_CALL) return false;
     if (metrics.leader !== st.winner) return false;
-    return metrics.confidence >= CONFIDENCE_THRESHOLD;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
 
   function registerCall(st, metrics, currentTime){
@@ -725,15 +792,21 @@
       : 'None';
     const reporting = metrics ? metrics.reporting : 0;
     const confidence = metrics ? metrics.confidence : 1;
+    const calledLeader = metrics ? metrics.leader : null;
+    const thresholdUsed = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    st.callLeader = calledLeader;
     st.callRecord = {
+      kind: 'call',
       unitKey: st.unitKey,
       displayLabel: formatUnitLabel(st.unitKey),
       time: callTime,
-      leader: st.winner,
+      leader: calledLeader,
+      actualWinner: st.winner,
       marginStr: effectiveMarginStr,
       reporting,
       ev: st.ev,
       confidence,
+      threshold: thresholdUsed,
       dVotes: metrics ? metrics.dVotesCounted : null,
       rVotes: metrics ? metrics.rVotesCounted : null,
       oVotes: metrics ? metrics.oVotesCounted : null,
@@ -882,14 +955,37 @@
     state.suppressProgressEvent = false;
   }
 
+  function getConfidenceSliderValue(){
+    if (!elements.confidence) return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const raw = parseFloat(elements.confidence.value);
+    if (!isFinite(raw)) return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    return Math.max(0, Math.min(1, raw));
+  }
+
+  function updateConfidenceLabel(val){
+    const target = Math.max(0, Math.min(1, isFinite(val) ? val : getConfidenceSliderValue()));
+    if (elements.confidenceVal) {
+      elements.confidenceVal.textContent = target.toFixed(2);
+    }
+  }
+
   function updateCallLog(currentTime){
     const timeLabel = formatTimeLabel(currentTime);
-  if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
-  if (!elements.log && !elements.logUncalled) return;
-    const ready = state.callRecords
-      .filter(rec => currentTime >= rec.time - EPS)
+    if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
+    if (!elements.log && !elements.logUncalled && !elements.victory) return;
+
+    const readyEvents = state.callRecords
+      .filter(rec => rec && currentTime >= rec.time - EPS)
       .slice()
-      .sort((a, b) => a.time - b.time);
+      .sort((a, b) => {
+        if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
+        const orderMap = { call: 0, notice: 1, outcome: 2 };
+        const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
+        const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
+        if (orderA !== orderB) return orderA - orderB;
+        return (a.unitKey || '').localeCompare(b.unitKey || '');
+      });
+
     const uncalledCandidates = (state.stateData || [])
       .filter(st => st && st.calledAt == null && st.latestMetrics && st.latestMetrics.reporting > EPS)
       .map(st => {
@@ -911,13 +1007,15 @@
       })
       .slice(0, 3);
 
-    const readySignatureParts = [];
-    const renderLines = [];
+  const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
+    const callLines = [];
+    const signatureParts = [];
     const totalPool = state.totalEvPool || 538;
     const majority = Math.floor(totalPool / 2) + 1;
     let dRunning = 0, rRunning = 0, oRunning = 0;
     let outcome = null;
-    ready.forEach(record => {
+
+    readyCalls.forEach(record => {
       const live = state.snapshot.get(record.unitKey);
       if (live) {
         record.reporting = live.reporting;
@@ -932,9 +1030,10 @@
         record.topThirdShare = live.topThirdShare;
         record.totalThirdShare = live.totalThirdShare;
       }
-      if (record.leader === 'D') dRunning += record.ev || 0;
-      else if (record.leader === 'R') rRunning += record.ev || 0;
-      else oRunning += record.ev || 0;
+  const tallyWinner = record.actualWinner || record.leader;
+  if (tallyWinner === 'D') dRunning += record.ev || 0;
+  else if (tallyWinner === 'R') rRunning += record.ev || 0;
+  else oRunning += record.ev || 0;
       if (!outcome) {
         if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
         else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
@@ -943,14 +1042,17 @@
       const reportingText = formatReportingText(record.reporting);
       const marginText = formatMarginText(record.marginStr, record.leader);
       const confidenceText = formatConfidenceText(record.confidence);
-      renderLines.push({
+      const callLine = {
+        kind: 'call',
+        time: record.time,
         className: 'en-log-entry',
-        text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${reportingText}, ${marginText}, ${confidenceText})`
-      });
-      const confVal = isFinite(record.confidence) ? record.confidence : -1;
-      const repVal = isFinite(record.reporting) ? record.reporting : -1;
-      readySignatureParts.push(`${record.unitKey}:${confVal.toFixed(3)}:${repVal.toFixed(3)}:${record.marginStr || ''}`);
+        text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${reportingText}, ${marginText}, ${confidenceText})`,
+        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}`
+      };
+      callLines.push(callLine);
+      signatureParts.push(callLine.signature);
     });
+
     const finalD = dRunning;
     const finalR = rRunning;
     const finalO = oRunning;
@@ -959,37 +1061,82 @@
     if (!outcome && allCalled && Math.abs(dRunning - rRunning) <= EPS) {
       outcome = {
         type: 'T',
-        time: ready.length ? ready[ready.length - 1].time : currentTime,
+        time: readyCalls.length ? readyCalls[readyCalls.length - 1].time : currentTime,
         total: finalD,
         other: finalO
       };
     }
+
+    let outcomeLine = null;
+    let outcomeMessage = null;
+    let outcomeClass = '';
     if (outcome) {
       const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
-      let message;
       if (outcome.type === 'D') {
         const latestTotal = finalD;
         outcome.total = latestTotal;
-        message = `Democrats clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
+        outcomeMessage = `Democrats clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
+        outcomeClass = ' win-dem';
       } else if (outcome.type === 'R') {
         const latestTotal = finalR;
         outcome.total = latestTotal;
-        message = `Republicans clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
+        outcomeMessage = `Republicans clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
+        outcomeClass = ' win-rep';
       } else {
         const latestOther = finalO;
         outcome.other = latestOther;
-        message = `Electoral College tie: D ${finalD} | R ${finalR}${latestOther ? ` | Other ${latestOther}` : ''}.`;
+        outcomeMessage = `Electoral College tie: D ${finalD} | R ${finalR}${latestOther ? ` | Other ${latestOther}` : ''}.`;
+        outcomeClass = ' tie';
       }
-      const extraClass = outcome.type === 'D' ? ' win-dem'
-        : outcome.type === 'R' ? ' win-rep'
-        : ' tie';
-      const outcomeText = `${timeStr} – ${message}`;
-      renderLines.push({
-        className: `en-log-entry en-log-outcome${extraClass}`,
-        text: outcomeText
-      });
+      const outcomeText = `${timeStr} – ${outcomeMessage}`;
+      outcomeLine = {
+        kind: 'outcome',
+        time: outcome.time != null ? outcome.time : currentTime,
+        className: `en-log-entry en-log-outcome${outcomeClass}`,
+        text: outcomeText,
+        signature: `outcome:${outcome.type}:${outcomeText}`
+      };
     }
-    const readySignature = readySignatureParts.join('|');
+
+    if (elements.victory) {
+      if (outcomeLine) {
+        elements.victory.textContent = outcomeMessage || '';
+        elements.victory.className = `en-log-victory${outcomeClass}`;
+        elements.victory.style.display = '';
+      } else {
+        elements.victory.textContent = '';
+        elements.victory.className = 'en-log-victory';
+        elements.victory.style.display = 'none';
+      }
+    }
+
+    const noticeLines = readyEvents
+      .filter(rec => rec.kind === 'notice')
+      .map(rec => {
+        const text = rec.text || `${formatTimeLabel(rec.time)} – ${rec.noticeType || 'Notice'}${rec.displayLabel ? `: ${rec.displayLabel}` : ''}`;
+        return {
+          kind: 'notice',
+          time: rec.time,
+          className: 'en-log-entry en-log-notice',
+          text,
+          signature: `${rec.kind}:${rec.noticeType || ''}:${rec.unitKey || ''}:${rec.time.toFixed(3)}:${text}`
+        };
+      });
+    noticeLines.forEach(line => signatureParts.push(line.signature));
+    if (outcomeLine) signatureParts.push(outcomeLine.signature);
+
+    let renderLines = [...callLines, ...noticeLines];
+    if (outcomeLine) renderLines.push(outcomeLine);
+    renderLines.sort((a, b) => {
+      if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
+      const orderMap = { call: 0, notice: 1, outcome: 2 };
+      const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
+      const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
+      if (orderA !== orderB) return orderA - orderB;
+      return a.signature.localeCompare(b.signature);
+    });
+
+    const readySignature = signatureParts.join('|');
     const uncalledSignatureParts = uncalledCandidates.map(c => {
       const confVal = isFinite(c.confidence) ? c.confidence : -1;
       const repVal = isFinite(c.reporting) ? c.reporting : -1;

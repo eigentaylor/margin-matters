@@ -85,6 +85,11 @@
         <input id="enProgress" type="range" min="0" max="1" step="0.001" value="0" style="flex:1" />
         <span id="enTime" class="legend" style="font-size:0.9rem">19:00</span>
       </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <label for="enConfidence" class="legend" style="min-width:110px;font-size:0.9rem">Call threshold</label>
+        <input id="enConfidence" type="range" min="0" max="1" step="0.01" value="0.55" style="flex:1" />
+        <span id="enConfidenceVal" class="legend" style="font-size:0.9rem">0.55</span>
+      </div>
       <div class="legend" style="font-size:0.85rem;text-align:left;color:var(--muted)">Call log floats on the right so you can track updates while watching the map.</div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
@@ -177,6 +182,7 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
 <div id="enLogPanel" aria-live="polite" aria-label="Election night call log">
   <div class="en-log-header">Call log</div>
   <div id="enLog" class="en-log-body"></div>
+  <div id="enVictory" class="en-log-victory" style="display:none"></div>
   <div id="enLogUncalled" class="en-log-uncalled"></div>
 </div>
 

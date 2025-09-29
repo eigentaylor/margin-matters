@@ -273,12 +273,36 @@ body.has-delta-toggle{padding-bottom:60px}
 .en-log-outcome.win-dem{border-color:rgba(111,168,255,0.6);background:linear-gradient(145deg, rgba(111,168,255,0.15), rgba(30,60,120,0.25));color:#9ec8ff}
 .en-log-outcome.win-rep{border-color:rgba(255,153,153,0.6);background:linear-gradient(145deg, rgba(255,153,153,0.15), rgba(120,30,30,0.25));color:#ffb9b9}
 .en-log-outcome.tie{border-color:rgba(255,215,0,0.5);background:linear-gradient(145deg, rgba(255,215,0,0.18), rgba(80,80,10,0.25));color:#ffe27a}
+.en-log-notice{
+  color:#f0d28c;
+  font-style:italic;
+}
+.en-log-victory{
+  display:none;
+  margin-top:10px;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+  font-weight:800;
+  font-size:0.95rem;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  color:#f0f0f0;
+  box-shadow:0 8px 24px rgba(0,0,0,0.35);
+}
+.en-log-victory.win-dem{border-color:rgba(111,168,255,0.6);background:linear-gradient(145deg, rgba(111,168,255,0.15), rgba(30,60,120,0.25));color:#9ec8ff}
+.en-log-victory.win-rep{border-color:rgba(255,153,153,0.6);background:linear-gradient(145deg, rgba(255,153,153,0.15), rgba(120,30,30,0.25));color:#ffb9b9}
+.en-log-victory.tie{border-color:rgba(255,215,0,0.5);background:linear-gradient(145deg, rgba(255,215,0,0.18), rgba(80,80,10,0.25));color:#ffe27a}
 .en-log-uncalled{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;gap:8px}
 .en-log-uncalled:empty{display:none;margin-top:0;padding-top:0;border-top:none}
 .en-log-section-title{text-transform:uppercase;font-size:0.78rem;letter-spacing:0.08em;color:rgba(255,255,255,0.65)}
 .en-log-uncalled-cards{display:flex;flex-direction:column;gap:8px}
 .en-log-uncalled-card{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.35);color:rgba(255,255,255,0.88);font-size:0.9rem;line-height:1.35}
 .en-log-uncalled-card:hover{border-color:rgba(255,255,255,0.18);background:rgba(255,255,255,0.08)}
+
+#enConfidence{accent-color:var(--accent)}
+#enConfidenceVal{font-variant-numeric:tabular-nums;font-weight:700;color:#fff}
 
 @media (max-width: 1200px){
   #enLogPanel{
