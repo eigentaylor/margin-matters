@@ -177,10 +177,31 @@
       if (info && info.ev != null && !isNaN(info.ev)) ev = info.ev;
       let marginStr = options.marginOverride || '';
       if (info && info.marginStr) marginStr = info.marginStr;
+      const cappedMarginStr = (function(){
+        if (!marginStr || typeof marginStr !== 'string') return marginStr;
+        const match = marginStr.match(/^([A-Z])\+([\d.]+)$/);
+        if (!match) return marginStr;
+        const prefix = match[1];
+        const value = parseFloat(match[2]);
+        if (!isFinite(value) || value <= 99.9) return marginStr;
+        return `${prefix}+99.9`;
+      })();
       const parts = [];
       if (display) parts.push(display);
       if (ev != null && ev !== '') parts.push(`${ev} EV`);
-      if (marginStr) parts.push(marginStr);
+      if (cappedMarginStr) parts.push(cappedMarginStr);
+      if (info) {
+        if (info.called) {
+          parts.push('Called');
+        } else {
+          const reporting = (info.reporting != null && isFinite(info.reporting)) ? info.reporting : 0;
+          const confidence = (info.confidence != null && isFinite(info.confidence)) ? info.confidence : null;
+          if (reporting > EPS && confidence != null) {
+            const pct = Math.max(0, Math.min(100, Math.round(confidence * 100)));
+            parts.push(`Confidence ${pct}%`);
+          }
+        }
+      }
       return parts.join(' · ');
     } catch(e) { return unit; }
   }
@@ -2282,7 +2303,17 @@ window.getAdjustedInfo = function(unit){
             marginStrVal = `${marginVal >= 0 ? 'D' : 'R'}+${pct}`;
           }
         }
-        return { ev: evVal, margin: marginVal, marginStr: marginStrVal };
+          const calledVal = !!snap.called;
+          const reportingVal = (snap.reporting != null && isFinite(snap.reporting)) ? Math.max(0, Math.min(1, snap.reporting)) : 0;
+          const confidenceVal = (snap.confidence != null && isFinite(snap.confidence)) ? Math.max(0, Math.min(1, snap.confidence)) : 0;
+          return {
+            ev: evVal,
+            margin: marginVal,
+            marginStr: marginStrVal,
+            called: calledVal,
+            reporting: reportingVal,
+            confidence: confidenceVal
+          };
       }
     }
     const rows = (function(){
@@ -2301,7 +2332,7 @@ window.getAdjustedInfo = function(unit){
   let ev = null;
   try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, keyUnit); } catch(e) {}
   if ((ev == null || isNaN(ev)) && r && isFinite(+r.ev)) ev = +r.ev;
-    if (!r) return { ev, margin: null, marginStr: '' };
+    if (!r) return { ev, margin: null, marginStr: '', called: false, reporting: 0, confidence: 0 };
     // Default margin from row
     let m = (+r.rm || 0) + (pv || 0);
     // Special case: For ME/NE statewide tooltips, recompute at-large margin from districts when available
@@ -2357,7 +2388,10 @@ window.getAdjustedInfo = function(unit){
       m = (m > 0 ? -0.000001 : 0.000001); // Use small epsilon like in updateAll
       console.log('getAdjustedInfo: unit flipped', {unit, keyUnit, originalMargin: (+r.rm || 0) + (pv || 0), flippedMargin: m});
     }
-    return { ev, margin: m, marginStr: (function(){
+    return {
+      ev,
+      margin: m,
+      marginStr: (function(){
       if (!isFinite(m)) return '';
       if (Math.abs(m) < 0.000005) return 'EVEN';
       
@@ -2386,7 +2420,11 @@ window.getAdjustedInfo = function(unit){
       
       const s = (Math.abs(m) * 100).toFixed(1);
       return (m > 0 ? 'D+' : 'R+') + s;
-    })() };
+    })(),
+    called: false,
+    reporting: 0,
+    confidence: 0
+  };
   } catch(e) { return null; }
 }
 

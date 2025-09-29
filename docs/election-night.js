@@ -77,6 +77,7 @@
     lastTimestamp: null,
     rafId: null,
     lastLogKey: '',
+    lastUncalledKey: '',
     suppressProgressEvent: false,
     year: null,
     totalEvPool: 538,
@@ -98,7 +99,8 @@
     progress: null,
     phase: null,
     log: null,
-    logHeader: null
+    logHeader: null,
+    logUncalled: null
   };
 
   function init(){
@@ -111,7 +113,8 @@
     elements.progress = document.getElementById('enProgress');
     elements.phase = document.getElementById('enPhase');
     elements.log = document.getElementById('enLog');
-  elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
+    elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
+    elements.logUncalled = document.getElementById('enLogUncalled');
 
     if (elements.toggle) {
       elements.toggle.addEventListener('click', () => {
@@ -218,8 +221,10 @@
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
+    state.lastUncalledKey = '';
     if (elements.log) elements.log.innerHTML = '';
-  if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.logUncalled) elements.logUncalled.innerHTML = '';
+    if (elements.logHeader) elements.logHeader.textContent = 'Call log';
 
     const data = buildStateData(year, pvValue);
     state.stateData = data;
@@ -277,6 +282,7 @@
     state.currentTime = 0;
     state.lastTimestamp = null;
     state.lastLogKey = '';
+  state.lastUncalledKey = '';
     state.year = null;
     state.totalEvPool = 538;
     state.unitColorMap = null;
@@ -293,7 +299,8 @@
     if (elements.timeLabel) elements.timeLabel.textContent = '19:00';
     if (elements.pvDisplay) elements.pvDisplay.textContent = 'PV: —';
     if (elements.log) elements.log.innerHTML = '';
-  if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.logUncalled) elements.logUncalled.innerHTML = '';
+    if (elements.logHeader) elements.logHeader.textContent = 'Call log';
 
     if (restorePv) {
       window._pvOverride = state.prevPvOverride;
@@ -365,8 +372,14 @@
       const totalVotes = totalFromRow(row);
       if (!isFinite(totalVotes) || totalVotes <= 0) return;
 
-      const totalVotesThird = +row.tVotes || 0;
-      const thirdPartyShare = clamp01(totalVotesThird ? (totalVotesThird / totalVotes) : (+row.tp || 0));
+      const totalThirdVotesRaw = +row.tVotes || 0;
+      const totalThirdVotes = Math.max(0, Math.min(totalVotes, totalThirdVotesRaw));
+      const totalThirdShare = clamp01(totalVotes > 0 ? (totalThirdVotes / totalVotes) : 0);
+      let topThirdShare = clamp01(isFinite(+row.tp) ? (+row.tp) : totalThirdShare);
+      if (topThirdShare > totalThirdShare + EPS) {
+        topThirdShare = Math.min(topThirdShare, totalThirdShare);
+      }
+      const thirdPartyShare = totalThirdShare;
       const baseMargin = +row.rm || 0;
       let adjustedMargin = baseMargin + pvValue;
       if (typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit)) {
@@ -382,9 +395,10 @@
       const rTwoPartyFinal = 1 - dTwoPartyFinal;
       const dShareFinal = twoPartyShare * dTwoPartyFinal;
       const rShareFinal = twoPartyShare * rTwoPartyFinal;
+      const topShareFinal = Math.max(0, Math.min(1, topThirdShare));
 
-  let winner = determineWinner(adjustedMargin, thirdPartyShare, baseMargin, pvValue);
-  if (year === 1876 && abbr === 'CO') winner = 'R';
+      let winner = determineWinner(dShareFinal, rShareFinal, topShareFinal);
+    if (year === 1876 && abbr === 'CO') winner = 'R';
       const ev = getEv(year, unit);
 
       const startTime = getStateStartTime(abbr);
@@ -415,7 +429,8 @@
         abbr,
         type: isDistrict ? 'district' : (isAtLarge ? 'atlarge' : 'state'),
         totalVotes,
-        thirdPartyShare,
+  thirdPartyShare,
+  topThirdShare,
         twoPartyShare,
         dTwoPartyFinal,
         rTwoPartyFinal,
@@ -499,7 +514,15 @@
         reporting: metrics.reporting,
         called: isCalled,
         leader: metrics.leader,
-        confidence: metrics.confidence
+        confidence: metrics.confidence,
+        dVotes: metrics.dVotesCounted,
+        rVotes: metrics.rVotesCounted,
+        oVotes: metrics.oVotesCounted,
+        oVotesTotal: metrics.oVotesCountedTotal,
+        countedVotes: metrics.countedVotes,
+        remainingVotes: metrics.remainingVotes,
+        topThirdShare: metrics.topThirdShare,
+        totalThirdShare: metrics.totalThirdShare
       };
       st.aliases.forEach(alias => state.snapshot.set(alias, snapshot));
       state.snapshot.set(st.unitKey, snapshot);
@@ -529,11 +552,13 @@
     const blend = Math.pow(Math.max(0, Math.min(1, reporting)), 3);
     const dShareBlend = (dTwoParty * (1 - blend) + st.dTwoPartyFinal * blend);
     const rShareBlend = 1 - dShareBlend;
+    const totalThirdShare = st.thirdPartyShare;
+    const topThirdShare = (st.topThirdShare != null) ? st.topThirdShare : totalThirdShare;
     const dShare = st.twoPartyShare * dShareBlend;
     const rShare = st.twoPartyShare * rShareBlend;
-    const oShare = st.thirdPartyShare;
+    const oShare = totalThirdShare;
 
-    const leader = determineLeader(dShare, rShare, oShare, reporting);
+    const leader = determineLeader(dShare, rShare, topThirdShare, reporting);
     const margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
     const marginStr = (reporting > 0 && leader !== 'O') ? formatLean(margin) : (leader === 'O' && reporting > 0 ? 'Other lead' : '');
 
@@ -543,7 +568,7 @@
     const intensity = Math.pow(Math.max(0, Math.min(1, reporting)), 0.7);
     const color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
 
-  const stats = computeVoteStats(st, reporting, dShare, rShare, oShare);
+    const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
@@ -563,21 +588,35 @@
       dShare,
       rShare,
       oShare,
+      topThirdShare,
+      totalThirdShare,
       confidence,
       dVotesCounted: stats.dCounted,
       rVotesCounted: stats.rCounted,
       oVotesCounted: stats.oCounted,
-      countedVotes: stats.countedVotes
+      oVotesCountedTotal: stats.oTotalCounted,
+      countedVotes: stats.countedVotes,
+      remainingVotes: stats.remainingVotes
     };
   }
 
-  function computeVoteStats(st, reporting, dShare, rShare, oShare){
+  function computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare){
     const countedVotes = st.totalVotes * Math.max(0, Math.min(1, reporting));
     const dCounted = countedVotes * Math.max(0, Math.min(1, dShare));
     const rCounted = countedVotes * Math.max(0, Math.min(1, rShare));
-    const oCounted = countedVotes * Math.max(0, Math.min(1, oShare || 0));
+    const totalThirdClamped = Math.max(0, Math.min(1, totalThirdShare || 0));
+    const topThirdClamped = Math.max(0, Math.min(1, (topThirdShare != null ? topThirdShare : totalThirdClamped)));
+    const oTotalCounted = countedVotes * totalThirdClamped;
+    const oCounted = countedVotes * topThirdClamped;
     const remainingVotes = Math.max(0, st.totalVotes - countedVotes);
-    return { countedVotes, dCounted, rCounted, oCounted, remainingVotes };
+    return {
+      countedVotes,
+      dCounted,
+      rCounted,
+      oCounted,
+      oTotalCounted,
+      remainingVotes
+    };
   }
 
   function calculateConfidence(st, stats){
@@ -643,7 +682,15 @@
       marginStr: effectiveMarginStr,
       reporting,
       ev: st.ev,
-      confidence
+      confidence,
+      dVotes: metrics ? metrics.dVotesCounted : null,
+      rVotes: metrics ? metrics.rVotesCounted : null,
+      oVotes: metrics ? metrics.oVotesCounted : null,
+      oVotesTotal: metrics ? metrics.oVotesCountedTotal : null,
+      countedVotes: metrics ? metrics.countedVotes : null,
+      remainingVotes: metrics ? metrics.remainingVotes : null,
+      topThirdShare: metrics ? metrics.topThirdShare : null,
+      totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
   }
@@ -669,7 +716,15 @@
         marginStr: metrics.countedMarginStr,
         leader: metrics.leader,
         confidence: metrics.confidence,
-        called: st.calledAt != null
+        called: st.calledAt != null,
+        dVotes: metrics.dVotesCounted,
+        rVotes: metrics.rVotesCounted,
+        oVotes: metrics.oVotesCounted,
+        oVotesTotal: metrics.oVotesCountedTotal,
+        countedVotes: metrics.countedVotes,
+        remainingVotes: metrics.remainingVotes,
+        topThirdShare: metrics.topThirdShare,
+        totalThirdShare: metrics.totalThirdShare
       } : { color };
       state.abbrColorMap.set(st.abbr, info);
     }
@@ -778,20 +833,35 @@
 
   function updateCallLog(currentTime){
     const timeLabel = formatTimeLabel(currentTime);
-    if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
-    if (!elements.log) return;
+  if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
+  if (!elements.log && !elements.logUncalled) return;
     const ready = state.callRecords
       .filter(rec => currentTime >= rec.time - EPS)
       .slice()
       .sort((a, b) => a.time - b.time);
-    const signature = ready.map(rec => rec.unitKey).join('|');
-    if (signature === state.lastLogKey) return;
-    state.lastLogKey = signature;
+    const uncalledCandidates = (state.stateData || [])
+      .filter(st => st && st.calledAt == null && st.latestMetrics && st.latestMetrics.reporting > EPS)
+      .map(st => {
+        const metrics = st.latestMetrics;
+        return {
+          unitKey: st.unitKey,
+          displayLabel: formatUnitLabel(st.unitKey),
+          confidence: isFinite(metrics.confidence) ? metrics.confidence : 0,
+          reporting: isFinite(metrics.reporting) ? metrics.reporting : 0,
+          leader: metrics.leader,
+          marginStr: metrics.countedMarginStr,
+          ev: st.ev || 0
+        };
+      })
+      .sort((a, b) => {
+        const confDiff = (b.confidence || 0) - (a.confidence || 0);
+        if (Math.abs(confDiff) > EPS) return confDiff;
+        return (b.reporting || 0) - (a.reporting || 0);
+      })
+      .slice(0, 3);
 
-    elements.log.innerHTML = '';
-    if (!ready.length) return;
-
-    const frag = document.createDocumentFragment();
+    const readySignatureParts = [];
+    const renderLines = [];
     const totalPool = state.totalEvPool || 538;
     const majority = Math.floor(totalPool / 2) + 1;
     let dRunning = 0, rRunning = 0, oRunning = 0;
@@ -802,6 +872,14 @@
         record.reporting = live.reporting;
         record.marginStr = live.marginStr;
         record.confidence = live.confidence;
+        record.dVotes = live.dVotes;
+        record.rVotes = live.rVotes;
+        record.oVotes = live.oVotes;
+        record.oVotesTotal = live.oVotesTotal;
+        record.countedVotes = live.countedVotes;
+        record.remainingVotes = live.remainingVotes;
+        record.topThirdShare = live.topThirdShare;
+        record.totalThirdShare = live.totalThirdShare;
       }
       if (record.leader === 'D') dRunning += record.ev || 0;
       else if (record.leader === 'R') rRunning += record.ev || 0;
@@ -810,14 +888,17 @@
         if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
         else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
       }
-      const line = document.createElement('div');
-      line.className = 'en-log-entry';
       const leaderText = formatLeader(record.leader);
       const reportingText = formatReportingText(record.reporting);
       const marginText = formatMarginText(record.marginStr, record.leader);
       const confidenceText = formatConfidenceText(record.confidence);
-      line.textContent = `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${reportingText}, ${marginText}, ${confidenceText})`;
-      frag.appendChild(line);
+      renderLines.push({
+        className: 'en-log-entry',
+        text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${reportingText}, ${marginText}, ${confidenceText})`
+      });
+      const confVal = isFinite(record.confidence) ? record.confidence : -1;
+      const repVal = isFinite(record.reporting) ? record.reporting : -1;
+      readySignatureParts.push(`${record.unitKey}:${confVal.toFixed(3)}:${repVal.toFixed(3)}:${record.marginStr || ''}`);
     });
     const finalD = dRunning;
     const finalR = rRunning;
@@ -833,7 +914,6 @@
       };
     }
     if (outcome) {
-      const outcomeLine = document.createElement('div');
       const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
       let message;
       if (outcome.type === 'D') {
@@ -852,12 +932,80 @@
       const extraClass = outcome.type === 'D' ? ' win-dem'
         : outcome.type === 'R' ? ' win-rep'
         : ' tie';
-      outcomeLine.className = `en-log-entry en-log-outcome${extraClass}`;
-      outcomeLine.textContent = `${timeStr} – ${message}`;
-      frag.appendChild(outcomeLine);
+      const outcomeText = `${timeStr} – ${message}`;
+      renderLines.push({
+        className: `en-log-entry en-log-outcome${extraClass}`,
+        text: outcomeText
+      });
     }
-    elements.log.appendChild(frag);
-    elements.log.scrollTop = elements.log.scrollHeight;
+    const readySignature = readySignatureParts.join('|');
+    const uncalledSignatureParts = uncalledCandidates.map(c => {
+      const confVal = isFinite(c.confidence) ? c.confidence : -1;
+      const repVal = isFinite(c.reporting) ? c.reporting : -1;
+      return `${c.unitKey}:${confVal.toFixed(3)}:${repVal.toFixed(3)}`;
+    });
+    const uncalledSignature = uncalledSignatureParts.join('|');
+
+    const shouldUpdateLog = readySignature !== state.lastLogKey;
+    const shouldUpdateUncalled = uncalledSignature !== state.lastUncalledKey;
+    if (!shouldUpdateLog && !shouldUpdateUncalled) return;
+
+    if (shouldUpdateLog) {
+      state.lastLogKey = readySignature;
+      if (elements.log) {
+        const logEl = elements.log;
+        const nearBottom = (logEl.scrollHeight - logEl.clientHeight - logEl.scrollTop) <= 16;
+        logEl.innerHTML = '';
+        if (renderLines.length) {
+          const frag = document.createDocumentFragment();
+          renderLines.forEach(lineInfo => {
+            const line = document.createElement('div');
+            line.className = lineInfo.className;
+            line.textContent = lineInfo.text;
+            frag.appendChild(line);
+          });
+          logEl.appendChild(frag);
+        }
+        if (nearBottom) logEl.scrollTop = logEl.scrollHeight;
+      }
+    }
+
+    if (shouldUpdateUncalled) {
+      state.lastUncalledKey = uncalledSignature;
+      if (elements.logUncalled) {
+        const container = elements.logUncalled;
+        container.innerHTML = '';
+        if (uncalledCandidates.length) {
+          const title = document.createElement('div');
+          title.className = 'en-log-section-title';
+          title.textContent = 'STILL COUNTING (UNCALLED, TOP 3)';
+          container.appendChild(title);
+          const cardsContainer = document.createElement('div');
+          cardsContainer.className = 'en-log-uncalled-cards';
+          uncalledCandidates.forEach(candidate => {
+            const card = document.createElement('div');
+            card.className = 'en-log-uncalled-card';
+            const label = candidate.ev > 0
+              ? `${candidate.displayLabel} (${candidate.ev} EV)`
+              : candidate.displayLabel;
+            const infoParts = [];
+            if (candidate.leader) {
+              infoParts.push(`${formatLeader(candidate.leader)} lead`);
+            }
+            const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
+            if (marginDisplay && marginDisplay !== 'None') {
+              infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
+            }
+            const confPct = Math.max(0, Math.min(100, Math.round((candidate.confidence || 0) * 100)));
+            infoParts.push(`Confidence ${confPct}%`);
+            infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
+            card.textContent = `${label} – ${infoParts.join(' · ')}`;
+            cardsContainer.appendChild(card);
+          });
+          container.appendChild(cardsContainer);
+        }
+      }
+    }
   }
 
   function resolvePvValue(){
@@ -977,16 +1125,19 @@
     else elements.toggle.textContent = 'Resume';
   }
 
-  function determineWinner(adjustedMargin, thirdShare, baseMargin, pvValue){
-    const windowRadius = 3 * thirdShare - 1;
-    if (windowRadius > 0) {
-      const nD = -baseMargin + windowRadius;
-      const nR = -baseMargin - windowRadius;
-      if (pvValue > nR + EPS && pvValue < nD - EPS) return 'O';
-    }
-    if (adjustedMargin > EPS) return 'D';
-    if (adjustedMargin < -EPS) return 'R';
-    return 'T';
+  function determineWinner(dShare, rShare, oShare){
+    const shares = [
+      { code: 'D', value: isFinite(dShare) ? dShare : 0 },
+      { code: 'R', value: isFinite(rShare) ? rShare : 0 },
+      { code: 'O', value: isFinite(oShare) ? oShare : 0 }
+    ];
+    shares.sort((a, b) => b.value - a.value);
+    const top = shares[0];
+    const runnerUp = shares[1];
+    if (!top) return 'T';
+    if (!runnerUp) return top.code;
+    if (top.value - runnerUp.value <= EPS) return 'T';
+    return top.code;
   }
 
   function determineLeader(dShare, rShare, oShare, reporting){
