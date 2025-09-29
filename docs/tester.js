@@ -2118,8 +2118,8 @@
       // Now determine baseline selection and year
       const baselineMode = baselineEl ? baselineEl.value : 'prev';
       const baselineYear = (baselineMode === '2024') ? 2024 : (year - 4);
-      // Show panel only if baseline year is within historical bounds (1916+) and present in data
-      const showPanel = (baselineYear >= 1916) && byYear.has(baselineYear);
+      // Show panel only if baseline year is within historical bounds (1876+) and present in data
+      const showPanel = (baselineYear >= 1876) && byYear.has(baselineYear);
       if (!showPanel) {
         wrap.style.display = 'none';
       } else {
