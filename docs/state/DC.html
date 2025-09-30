@@ -12,28 +12,46 @@
   <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><div class="small-links"><a class="btn" href="../index.html">Home</a><a class="btn" href="../state-pages.html">State Pages</a><a class="btn" href="../paths2028.html">2028 Paths</a><a class="btn" href="../ranker.html">Ranker</a><a class="btn" href="../trend-viewer.html">Trend Viewer</a><a class="btn" href="../future.html">"""Future"""</a><a class="btn" href="../methods.html">Methods</a><a class="btn" href="../presidential_margins.html">Data (CSV)</a></div><div class="legend">District of Columbia (DC) — Statewide</div></div>
   <a class="back" href="../index.html">← Back to Map</a>
   <div class="header"><h1 style="margin:0">District of Columbia (DC) — Statewide</h1></div>
-  <div class="card center">
-  <img class="plot" alt="Plot1 for DC" src="../plots/DC_plot1.png">
-  <div class="legend" style="margin-top:8px">Margins · 3rd-Party share · Pres. deltas</div>
-</div>
-<div class="card center">
-  <img class="plot" alt="Plot2 for DC" src="../plots/DC_plot2.png">
-  <div class="legend" style="margin-top:8px">Relative margins · Relative 3rd-Party · Rel. deltas</div>
-</div>
   
+  <!-- Interactive Chart Section -->
   <div class="card">
+    <h2 style="margin-top:0">Interactive Chart</h2>
+    <div id="chart-container" style="min-height: 520px;">
+      <div id="chart-controls" style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-twoparty"> Two-party margins
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-relative"> Relative margins
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-delta"> Show deltas
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-thirdparty"> Third-party share
+        </label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label for="year-start">Years:</label>
+          <input type="number" id="year-start" min="1864" max="2024" placeholder="Start" style="width: 80px;">
+          <span>to</span>
+          <input type="number" id="year-end" min="1864" max="2024" placeholder="End" style="width: 80px;">
+        </div>
+      </div>
+      <div id="interactive-chart"></div>
+      <div id="chart-notes" class="legend" style="margin-top: 8px;"></div>
+    </div>
+  </div>
+  
+  
+  <div class="card" data-table-type="total">
   <h2 style="margin-top:0">District of Columbia (DC) — Total Data</h2>
   <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>State Margin</th><th>Nat. Margin</th><th>Rel. Margin</th><th>Total votes</th><th>EVs</th></tr></thead><tbody><tr><td>1964</td><td><span class="cell-inner"><span class="raw">169,796(85.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28,801(14.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+71.0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+22.6</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+48.4</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">198,597</span><span class="delta"></span></span></td><td>3</td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">139,566(81.8%)</span><span class="delta">(Δ -30,230)</span></span></td><td><span class="cell-inner"><span class="raw">31,012(18.2%)</span><span class="delta">(Δ 2,211)</span></span></td><td><span class="cell-inner"><span class="raw">D+63.6</span><span class="delta">(Δ R+7.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+0.7</span><span class="delta">(Δ R+23.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+64.3</span><span class="delta">(Δ D+15.9)</span></span></td><td><span class="cell-inner"><span class="raw">170,578</span><span class="delta">(Δ -28,019)</span></span></td><td>3</td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">127,627(78.4%)</span><span class="delta">(Δ -11,939)</span></span></td><td><span class="cell-inner"><span class="raw">35,226(21.6%)</span><span class="delta">(Δ 4,214)</span></span></td><td><span class="cell-inner"><span class="raw">D+56.5</span><span class="delta">(Δ R+7.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+23.1</span><span class="delta">(Δ R+22.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+79.7</span><span class="delta">(Δ D+15.4)</span></span></td><td><span class="cell-inner"><span class="raw">163,421</span><span class="delta">(Δ -7,157)</span></span></td><td>3</td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">137,818(83.0%)</span><span class="delta">(Δ 10,191)</span></span></td><td><span class="cell-inner"><span class="raw">27,873(16.8%)</span><span class="delta">(Δ -7,353)</span></span></td><td><span class="cell-inner"><span class="raw">D+65.1</span><span class="delta">(Δ D+8.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ D+25.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+63.1</span><span class="delta">(Δ R+16.6)</span></span></td><td><span class="cell-inner"><span class="raw">168,830</span><span class="delta">(Δ 5,409)</span></span></td><td>3</td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">130,231(76.8%)</span><span class="delta">(Δ -7,587)</span></span></td><td><span class="cell-inner"><span class="raw">23,313(13.7%)</span><span class="delta">(Δ -4,560)</span></span></td><td><span class="cell-inner"><span class="raw">D+61.5</span><span class="delta">(Δ R+3.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.7</span><span class="delta">(Δ R+11.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+71.2</span><span class="delta">(Δ D+8.2)</span></span></td><td><span class="cell-inner"><span class="raw">173,889</span><span class="delta">(Δ 5,059)</span></span></td><td>3</td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">180,408(86.0%)</span><span class="delta">(Δ 50,177)</span></span></td><td><span class="cell-inner"><span class="raw">29,009(13.8%)</span><span class="delta">(Δ 5,696)</span></span></td><td><span class="cell-inner"><span class="raw">D+71.7</span><span class="delta">(Δ D+10.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.2</span><span class="delta">(Δ R+8.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+89.9</span><span class="delta">(Δ D+18.6)</span></span></td><td><span class="cell-inner"><span class="raw">211,288</span><span class="delta">(Δ 37,399)</span></span></td><td>3</td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">159,407(83.9%)</span><span class="delta">(Δ -21,001)</span></span></td><td><span class="cell-inner"><span class="raw">27,590(14.5%)</span><span class="delta">(Δ -1,419)</span></span></td><td><span class="cell-inner"><span class="raw">D+68.3</span><span class="delta">(Δ R+3.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.7</span><span class="delta">(Δ D+10.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+76.1</span><span class="delta">(Δ R+13.8)</span></span></td><td><span class="cell-inner"><span class="raw">192,877</span><span class="delta">(Δ -18,411)</span></span></td><td>3</td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">192,619(86.4%)</span><span class="delta">(Δ 33,212)</span></span></td><td><span class="cell-inner"><span class="raw">20,698(9.3%)</span><span class="delta">(Δ -6,892)</span></span></td><td><span class="cell-inner"><span class="raw">D+75.5</span><span class="delta">(Δ D+7.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+5.6</span><span class="delta">(Δ D+13.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+70.0</span><span class="delta">(Δ R+6.1)</span></span></td><td><span class="cell-inner"><span class="raw">227,572</span><span class="delta">(Δ 34,695)</span></span></td><td>3</td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">158,220(87.7%)</span><span class="delta">(Δ -34,399)</span></span></td><td><span class="cell-inner"><span class="raw">17,339(9.6%)</span><span class="delta">(Δ -3,359)</span></span></td><td><span class="cell-inner"><span class="raw">D+75.9</span><span class="delta">(Δ D+0.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+8.5</span><span class="delta">(Δ D+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+67.3</span><span class="delta">(Δ R+2.7)</span></span></td><td><span class="cell-inner"><span class="raw">185,726</span><span class="delta">(Δ -41,846)</span></span></td><td>3</td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">171,923(85.7%)</span><span class="delta">(Δ 13,703)</span></span></td><td><span class="cell-inner"><span class="raw">18,073(9.0%)</span><span class="delta">(Δ 734)</span></span></td><td><span class="cell-inner"><span class="raw">D+76.2</span><span class="delta">(Δ D+0.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.5</span><span class="delta">(Δ R+8.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+75.7</span><span class="delta">(Δ D+8.4)</span></span></td><td><span class="cell-inner"><span class="raw">201,894</span><span class="delta">(Δ 16,168)</span></span></td><td>3</td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">202,970(89.9%)</span><span class="delta">(Δ 31,047)</span></span></td><td><span class="cell-inner"><span class="raw">21,256(9.4%)</span><span class="delta">(Δ 3,183)</span></span></td><td><span class="cell-inner"><span class="raw">D+79.8</span><span class="delta">(Δ D+3.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+82.3</span><span class="delta">(Δ D+6.6)</span></span></td><td><span class="cell-inner"><span class="raw">227,586</span><span class="delta">(Δ 25,692)</span></span></td><td>3</td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">245,800(93.1%)</span><span class="delta">(Δ 42,830)</span></span></td><td><span class="cell-inner"><span class="raw">17,367(6.6%)</span><span class="delta">(Δ -3,889)</span></span></td><td><span class="cell-inner"><span class="raw">D+85.9</span><span class="delta">(Δ D+6.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.3</span><span class="delta">(Δ D+9.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+78.7</span><span class="delta">(Δ R+3.7)</span></span></td><td><span class="cell-inner"><span class="raw">265,853</span><span class="delta">(Δ 38,267)</span></span></td><td>3</td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">267,070(91.8%)</span><span class="delta">(Δ 21,270)</span></span></td><td><span class="cell-inner"><span class="raw">21,381(7.3%)</span><span class="delta">(Δ 4,014)</span></span></td><td><span class="cell-inner"><span class="raw">D+83.6</span><span class="delta">(Δ R+2.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.9</span><span class="delta">(Δ R+3.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+79.8</span><span class="delta">(Δ D+1.1)</span></span></td><td><span class="cell-inner"><span class="raw">293,764</span><span class="delta">(Δ 27,911)</span></span></td><td>3</td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">282,830(94.1%)</span><span class="delta">(Δ 15,760)</span></span></td><td><span class="cell-inner"><span class="raw">12,723(4.2%)</span><span class="delta">(Δ -8,658)</span></span></td><td><span class="cell-inner"><span class="raw">D+86.8</span><span class="delta">(Δ D+3.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ R+1.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+84.7</span><span class="delta">(Δ D+4.9)</span></span></td><td><span class="cell-inner"><span class="raw">311,268</span><span class="delta">(Δ 17,504)</span></span></td><td>3</td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">317,323(93.9%)</span><span class="delta">(Δ 34,493)</span></span></td><td><span class="cell-inner"><span class="raw">18,586(5.5%)</span><span class="delta">(Δ 5,863)</span></span></td><td><span class="cell-inner"><span class="raw">D+86.8</span><span class="delta">(Δ R+0.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ D+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+82.3</span><span class="delta">(Δ R+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">344,356</span><span class="delta">(Δ 33,088)</span></span></td><td>3</td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">294,185(92.5%)</span><span class="delta">(Δ -23,138)</span></span></td><td><span class="cell-inner"><span class="raw">21,076(6.6%)</span><span class="delta">(Δ 2,490)</span></span></td><td><span class="cell-inner"><span class="raw">D+83.8</span><span class="delta">(Δ R+2.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.5</span><span class="delta">(Δ R+5.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+85.3</span><span class="delta">(Δ D+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">325,869</span><span class="delta">(Δ -18,487)</span></span></td><td>3</td></tr></tbody></table></div>
 </div>
-  <div class="card">
+  <div class="card" data-table-type="third-party">
   <h2 style="margin-top:0">District of Columbia (DC) — Third-Party Data</h2>
-  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Other votes</th><th>State 3rd-Party Share</th><th>3rd-Party Nat. Share</th><th>3rd-Party Rel. Share</th></tr></thead><tbody><tr><td>1964</td><td><span class="cell-inner"><span class="raw">169,796(85.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28,801(14.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.48%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.48%</span><span class="delta"></span></span></td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">139,566(81.8%)</span><span class="delta">(Δ -30,230)</span></span></td><td><span class="cell-inner"><span class="raw">31,012(18.2%)</span><span class="delta">(Δ 2,211)</span></span></td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13.86%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-13.86%</span><span class="delta"></span></span></td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">127,627(78.4%)</span><span class="delta">(Δ -11,939)</span></span></td><td><span class="cell-inner"><span class="raw">35,226(21.6%)</span><span class="delta">(Δ 4,214)</span></span></td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.35%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.80%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-1.46%</span><span class="delta"></span></span></td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">137,818(83.0%)</span><span class="delta">(Δ 10,191)</span></span></td><td><span class="cell-inner"><span class="raw">27,873(16.8%)</span><span class="delta">(Δ -7,353)</span></span></td><td><span class="cell-inner"><span class="raw">274(0.2%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.86%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.90%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.04%</span><span class="delta"></span></span></td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">130,231(76.8%)</span><span class="delta">(Δ -7,587)</span></span></td><td><span class="cell-inner"><span class="raw">23,313(13.7%)</span><span class="delta">(Δ -4,560)</span></span></td><td><span class="cell-inner"><span class="raw">16,131(9.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">11.70%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">8.24%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.46%</span><span class="delta"></span></span></td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">180,408(86.0%)</span><span class="delta">(Δ 50,177)</span></span></td><td><span class="cell-inner"><span class="raw">29,009(13.8%)</span><span class="delta">(Δ 5,696)</span></span></td><td><span class="cell-inner"><span class="raw">279(0.1%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.89%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.67%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.22%</span><span class="delta"></span></span></td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">159,407(83.9%)</span><span class="delta">(Δ -21,001)</span></span></td><td><span class="cell-inner"><span class="raw">27,590(14.5%)</span><span class="delta">(Δ -1,419)</span></span></td><td><span class="cell-inner"><span class="raw">2,901(1.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.98%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.07%</span><span class="delta"></span></span></td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">192,619(86.4%)</span><span class="delta">(Δ 33,212)</span></span></td><td><span class="cell-inner"><span class="raw">20,698(9.3%)</span><span class="delta">(Δ -6,892)</span></span></td><td><span class="cell-inner"><span class="raw">9,681(4.3%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.26%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">19.55%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-13.28%</span><span class="delta"></span></span></td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">158,220(87.7%)</span><span class="delta">(Δ -34,399)</span></span></td><td><span class="cell-inner"><span class="raw">17,339(9.6%)</span><span class="delta">(Δ -3,359)</span></span></td><td><span class="cell-inner"><span class="raw">4,780(2.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.47%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">10.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-4.58%</span><span class="delta"></span></span></td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">171,923(85.7%)</span><span class="delta">(Δ 13,703)</span></span></td><td><span class="cell-inner"><span class="raw">18,073(9.0%)</span><span class="delta">(Δ 734)</span></span></td><td><span class="cell-inner"><span class="raw">10,576(5.3%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.89%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.75%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.15%</span><span class="delta"></span></span></td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">202,970(89.9%)</span><span class="delta">(Δ 31,047)</span></span></td><td><span class="cell-inner"><span class="raw">21,256(9.4%)</span><span class="delta">(Δ 3,183)</span></span></td><td><span class="cell-inner"><span class="raw">1,485(0.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.48%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.48%</span><span class="delta"></span></span></td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">245,800(93.1%)</span><span class="delta">(Δ 42,830)</span></span></td><td><span class="cell-inner"><span class="raw">17,367(6.6%)</span><span class="delta">(Δ -3,889)</span></span></td><td><span class="cell-inner"><span class="raw">958(0.4%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.01%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.42%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.41%</span><span class="delta"></span></span></td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">267,070(91.8%)</span><span class="delta">(Δ 21,270)</span></span></td><td><span class="cell-inner"><span class="raw">21,381(7.3%)</span><span class="delta">(Δ 4,014)</span></span></td><td><span class="cell-inner"><span class="raw">2,458(0.8%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.81%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.08%</span><span class="delta"></span></span></td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">282,830(94.1%)</span><span class="delta">(Δ 15,760)</span></span></td><td><span class="cell-inner"><span class="raw">12,723(4.2%)</span><span class="delta">(Δ -8,658)</span></span></td><td><span class="cell-inner"><span class="raw">4,906(1.6%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.68%</span><span class="delta"></span></span></td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">317,323(93.9%)</span><span class="delta">(Δ 34,493)</span></span></td><td><span class="cell-inner"><span class="raw">18,586(5.5%)</span><span class="delta">(Δ 5,863)</span></span></td><td><span class="cell-inner"><span class="raw">2,036(0.6%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.45%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.84%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.61%</span><span class="delta"></span></span></td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">294,185(92.5%)</span><span class="delta">(Δ -23,138)</span></span></td><td><span class="cell-inner"><span class="raw">21,076(6.6%)</span><span class="delta">(Δ 2,490)</span></span></td><td><span class="cell-inner"><span class="raw">2,778(0.9%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.26%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.88%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.38%</span><span class="delta"></span></span></td></tr></tbody></table></div>
+  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Other votes</th><th>Top 3rd-Party Candidate</th><th>Top 3rd-Party Share</th><th>Total 3rd-Party Votes</th><th>State 3rd-Party Share</th><th>3rd-Party Nat. Share</th><th>3rd-Party Rel. Share</th></tr></thead><tbody><tr><td>1964</td><td><span class="cell-inner"><span class="raw">169,796(85.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28,801(14.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td></td><td><span class="cell-inner"><span class="raw">0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.48%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.48%</span><span class="delta"></span></span></td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">139,566(81.8%)</span><span class="delta">(Δ -30,230)</span></span></td><td><span class="cell-inner"><span class="raw">31,012(18.2%)</span><span class="delta">(Δ 2,211)</span></span></td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td></td><td><span class="cell-inner"><span class="raw">0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13.86%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-13.86%</span><span class="delta"></span></span></td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">127,627(78.4%)</span><span class="delta">(Δ -11,939)</span></span></td><td><span class="cell-inner"><span class="raw">35,226(21.6%)</span><span class="delta">(Δ 4,214)</span></span></td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td></td><td><span class="cell-inner"><span class="raw">568</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.35%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.80%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-1.46%</span><span class="delta"></span></span></td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">137,818(83.0%)</span><span class="delta">(Δ 10,191)</span></span></td><td><span class="cell-inner"><span class="raw">27,873(16.8%)</span><span class="delta">(Δ -7,353)</span></span></td><td><span class="cell-inner"><span class="raw">274(0.2%)</span><span class="delta"></span></span></td><td>Roger MacBride</td><td>0.0016229343126221644</td><td><span class="cell-inner"><span class="raw">3,139</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.86%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.90%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.04%</span><span class="delta"></span></span></td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">130,231(76.8%)</span><span class="delta">(Δ -7,587)</span></span></td><td><span class="cell-inner"><span class="raw">23,313(13.7%)</span><span class="delta">(Δ -4,560)</span></span></td><td><span class="cell-inner"><span class="raw">16,131(9.5%)</span><span class="delta"></span></span></td><td>John Anderson</td><td>0.09276607490985629</td><td><span class="cell-inner"><span class="raw">20,345</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">11.70%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">8.24%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.46%</span><span class="delta"></span></span></td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">180,408(86.0%)</span><span class="delta">(Δ 50,177)</span></span></td><td><span class="cell-inner"><span class="raw">29,009(13.8%)</span><span class="delta">(Δ 5,696)</span></span></td><td><span class="cell-inner"><span class="raw">279(0.1%)</span><span class="delta"></span></span></td><td>David Bergland</td><td>0.0013204725303850669</td><td><span class="cell-inner"><span class="raw">1,871</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.89%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.67%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.22%</span><span class="delta"></span></span></td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">159,407(83.9%)</span><span class="delta">(Δ -21,001)</span></span></td><td><span class="cell-inner"><span class="raw">27,590(14.5%)</span><span class="delta">(Δ -1,419)</span></span></td><td><span class="cell-inner"><span class="raw">2,901(1.5%)</span><span class="delta"></span></span></td><td>Lenora Fulani</td><td>0.015040673589904447</td><td><span class="cell-inner"><span class="raw">5,880</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.98%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.07%</span><span class="delta"></span></span></td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">192,619(86.4%)</span><span class="delta">(Δ 33,212)</span></span></td><td><span class="cell-inner"><span class="raw">20,698(9.3%)</span><span class="delta">(Δ -6,892)</span></span></td><td><span class="cell-inner"><span class="raw">9,681(4.3%)</span><span class="delta"></span></span></td><td>Ross Perot</td><td>0.042540382823897493</td><td><span class="cell-inner"><span class="raw">14,255</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.26%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">19.55%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-13.28%</span><span class="delta"></span></span></td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">158,220(87.7%)</span><span class="delta">(Δ -34,399)</span></span></td><td><span class="cell-inner"><span class="raw">17,339(9.6%)</span><span class="delta">(Δ -3,359)</span></span></td><td><span class="cell-inner"><span class="raw">4,780(2.7%)</span><span class="delta"></span></span></td><td>Ralph Nader</td><td>0.02573683813790207</td><td><span class="cell-inner"><span class="raw">10,167</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.47%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">10.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-4.58%</span><span class="delta"></span></span></td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">171,923(85.7%)</span><span class="delta">(Δ 13,703)</span></span></td><td><span class="cell-inner"><span class="raw">18,073(9.0%)</span><span class="delta">(Δ 734)</span></span></td><td><span class="cell-inner"><span class="raw">10,576(5.3%)</span><span class="delta"></span></span></td><td>Ralph Nader</td><td>0.052383924237471145</td><td><span class="cell-inner"><span class="raw">11,898</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.89%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.75%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.15%</span><span class="delta"></span></span></td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">202,970(89.9%)</span><span class="delta">(Δ 31,047)</span></span></td><td><span class="cell-inner"><span class="raw">21,256(9.4%)</span><span class="delta">(Δ 3,183)</span></span></td><td><span class="cell-inner"><span class="raw">1,485(0.7%)</span><span class="delta"></span></span></td><td>Ralph Nader</td><td>0.006525005931823574</td><td><span class="cell-inner"><span class="raw">3,360</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.48%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.48%</span><span class="delta"></span></span></td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">245,800(93.1%)</span><span class="delta">(Δ 42,830)</span></span></td><td><span class="cell-inner"><span class="raw">17,367(6.6%)</span><span class="delta">(Δ -3,889)</span></span></td><td><span class="cell-inner"><span class="raw">958(0.4%)</span><span class="delta"></span></span></td><td>Ralph Nader</td><td>0.00360349516462105</td><td><span class="cell-inner"><span class="raw">2,686</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.01%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.42%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.41%</span><span class="delta"></span></span></td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">267,070(91.8%)</span><span class="delta">(Δ 21,270)</span></span></td><td><span class="cell-inner"><span class="raw">21,381(7.3%)</span><span class="delta">(Δ 4,014)</span></span></td><td><span class="cell-inner"><span class="raw">2,458(0.8%)</span><span class="delta"></span></span></td><td>Stein/Honkala</td><td>0.008367260794379161</td><td><span class="cell-inner"><span class="raw">5,313</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.81%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.08%</span><span class="delta"></span></span></td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">282,830(94.1%)</span><span class="delta">(Δ 15,760)</span></span></td><td><span class="cell-inner"><span class="raw">12,723(4.2%)</span><span class="delta">(Δ -8,658)</span></span></td><td><span class="cell-inner"><span class="raw">4,906(1.6%)</span><span class="delta"></span></span></td><td>Johnson/Weld</td><td>0.01576133749694797</td><td><span class="cell-inner"><span class="raw">15,715</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.68%</span><span class="delta"></span></span></td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">317,323(93.9%)</span><span class="delta">(Δ 34,493)</span></span></td><td><span class="cell-inner"><span class="raw">18,586(5.5%)</span><span class="delta">(Δ 5,863)</span></span></td><td><span class="cell-inner"><span class="raw">2,036(0.6%)</span><span class="delta"></span></span></td><td>Jorgensen/Cohen</td><td>0.005912485915738364</td><td><span class="cell-inner"><span class="raw">8,447</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.45%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.84%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.61%</span><span class="delta"></span></span></td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">294,185(92.5%)</span><span class="delta">(Δ -23,138)</span></span></td><td><span class="cell-inner"><span class="raw">21,076(6.6%)</span><span class="delta">(Δ 2,490)</span></span></td><td><span class="cell-inner"><span class="raw">2,778(0.9%)</span><span class="delta"></span></span></td><td>Kennedy/Shanahan</td><td>0.008524898041851173</td><td><span class="cell-inner"><span class="raw">10,608</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.26%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.88%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.38%</span><span class="delta"></span></span></td></tr></tbody></table></div>
 </div>
-  <div class="card center">
-  <img class="plot" alt="Plot3 for DC" src="../plots/DC_plot3_two_party.png">
-  <div class="legend" style="margin-top:8px">Two-party margins · relative · deltas</div>
-</div>
-  <div class="card">
+  <div class="card" data-table-type="two-party">
   <h2 style="margin-top:0">District of Columbia (DC) — Two-Party Data</h2>
   <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>2-Party Margin</th><th>2-Party Nat. Margin</th><th>2-Party Rel. Margin</th><th>EVs</th></tr></thead><tbody><tr><td>1964</td><td><span class="cell-inner"><span class="raw">169,796(85.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28,801(14.5%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+71.0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+22.7</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+48.3</span><span class="delta"></span></span></td><td>3</td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">139,566(81.8%)</span><span class="delta">(Δ -30,230)</span></span></td><td><span class="cell-inner"><span class="raw">31,012(18.2%)</span><span class="delta">(Δ 2,211)</span></span></td><td><span class="cell-inner"><span class="raw">D+63.6</span><span class="delta">(Δ R+7.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+0.8</span><span class="delta">(Δ R+23.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+64.5</span><span class="delta">(Δ D+16.1)</span></span></td><td>3</td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">127,627(78.4%)</span><span class="delta">(Δ -11,939)</span></span></td><td><span class="cell-inner"><span class="raw">35,226(21.6%)</span><span class="delta">(Δ 4,214)</span></span></td><td><span class="cell-inner"><span class="raw">D+56.7</span><span class="delta">(Δ R+6.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+23.6</span><span class="delta">(Δ R+22.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+80.3</span><span class="delta">(Δ D+15.9)</span></span></td><td>3</td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">137,818(83.2%)</span><span class="delta">(Δ 10,191)</span></span></td><td><span class="cell-inner"><span class="raw">27,873(16.8%)</span><span class="delta">(Δ -7,353)</span></span></td><td><span class="cell-inner"><span class="raw">D+66.4</span><span class="delta">(Δ D+9.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ D+25.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+64.3</span><span class="delta">(Δ R+16.1)</span></span></td><td>3</td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">130,231(84.8%)</span><span class="delta">(Δ -7,587)</span></span></td><td><span class="cell-inner"><span class="raw">23,313(15.2%)</span><span class="delta">(Δ -4,560)</span></span></td><td><span class="cell-inner"><span class="raw">D+69.6</span><span class="delta">(Δ D+3.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+10.6</span><span class="delta">(Δ R+12.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+80.2</span><span class="delta">(Δ D+16.0)</span></span></td><td>3</td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">180,408(86.1%)</span><span class="delta">(Δ 50,177)</span></span></td><td><span class="cell-inner"><span class="raw">29,009(13.9%)</span><span class="delta">(Δ 5,696)</span></span></td><td><span class="cell-inner"><span class="raw">D+72.3</span><span class="delta">(Δ D+2.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.3</span><span class="delta">(Δ R+7.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+90.6</span><span class="delta">(Δ D+10.4)</span></span></td><td>3</td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">159,407(85.2%)</span><span class="delta">(Δ -21,001)</span></span></td><td><span class="cell-inner"><span class="raw">27,590(14.8%)</span><span class="delta">(Δ -1,419)</span></span></td><td><span class="cell-inner"><span class="raw">D+70.5</span><span class="delta">(Δ R+1.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.8</span><span class="delta">(Δ D+10.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+78.3</span><span class="delta">(Δ R+12.3)</span></span></td><td>3</td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">192,619(90.3%)</span><span class="delta">(Δ 33,212)</span></span></td><td><span class="cell-inner"><span class="raw">20,698(9.7%)</span><span class="delta">(Δ -6,892)</span></span></td><td><span class="cell-inner"><span class="raw">D+80.6</span><span class="delta">(Δ D+10.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+6.9</span><span class="delta">(Δ D+14.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+73.7</span><span class="delta">(Δ R+4.6)</span></span></td><td>3</td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">158,220(90.1%)</span><span class="delta">(Δ -34,399)</span></span></td><td><span class="cell-inner"><span class="raw">17,339(9.9%)</span><span class="delta">(Δ -3,359)</span></span></td><td><span class="cell-inner"><span class="raw">D+80.2</span><span class="delta">(Δ R+0.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.5</span><span class="delta">(Δ D+2.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+70.8</span><span class="delta">(Δ R+2.9)</span></span></td><td>3</td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">171,923(90.5%)</span><span class="delta">(Δ 13,703)</span></span></td><td><span class="cell-inner"><span class="raw">18,073(9.5%)</span><span class="delta">(Δ 734)</span></span></td><td><span class="cell-inner"><span class="raw">D+81.0</span><span class="delta">(Δ D+0.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.5</span><span class="delta">(Δ R+8.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+80.4</span><span class="delta">(Δ D+9.7)</span></span></td><td>3</td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">202,970(90.5%)</span><span class="delta">(Δ 31,047)</span></span></td><td><span class="cell-inner"><span class="raw">21,256(9.5%)</span><span class="delta">(Δ 3,183)</span></span></td><td><span class="cell-inner"><span class="raw">D+81.0</span><span class="delta">(Δ D+0.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+83.5</span><span class="delta">(Δ D+3.1)</span></span></td><td>3</td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">245,800(93.4%)</span><span class="delta">(Δ 42,830)</span></span></td><td><span class="cell-inner"><span class="raw">17,367(6.6%)</span><span class="delta">(Δ -3,889)</span></span></td><td><span class="cell-inner"><span class="raw">D+86.8</span><span class="delta">(Δ D+5.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.4</span><span class="delta">(Δ D+9.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+79.4</span><span class="delta">(Δ R+4.1)</span></span></td><td>3</td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">267,070(92.6%)</span><span class="delta">(Δ 21,270)</span></span></td><td><span class="cell-inner"><span class="raw">21,381(7.4%)</span><span class="delta">(Δ 4,014)</span></span></td><td><span class="cell-inner"><span class="raw">D+85.2</span><span class="delta">(Δ R+1.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.9</span><span class="delta">(Δ R+3.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+81.2</span><span class="delta">(Δ D+1.8)</span></span></td><td>3</td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">282,830(95.7%)</span><span class="delta">(Δ 15,760)</span></span></td><td><span class="cell-inner"><span class="raw">12,723(4.3%)</span><span class="delta">(Δ -8,658)</span></span></td><td><span class="cell-inner"><span class="raw">D+91.4</span><span class="delta">(Δ D+6.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.2</span><span class="delta">(Δ R+1.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+89.2</span><span class="delta">(Δ D+7.9)</span></span></td><td>3</td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">317,323(94.5%)</span><span class="delta">(Δ 34,493)</span></span></td><td><span class="cell-inner"><span class="raw">18,586(5.5%)</span><span class="delta">(Δ 5,863)</span></span></td><td><span class="cell-inner"><span class="raw">D+88.9</span><span class="delta">(Δ R+2.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ D+2.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+84.4</span><span class="delta">(Δ R+4.8)</span></span></td><td>3</td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">294,185(93.3%)</span><span class="delta">(Δ -23,138)</span></span></td><td><span class="cell-inner"><span class="raw">21,076(6.7%)</span><span class="delta">(Δ 2,490)</span></span></td><td><span class="cell-inner"><span class="raw">D+86.6</span><span class="delta">(Δ R+2.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.5</span><span class="delta">(Δ R+6.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+88.1</span><span class="delta">(Δ D+3.7)</span></span></td><td>3</td></tr></tbody></table></div>
 </div>
@@ -41,19 +59,22 @@
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
 Please report any innaccuracies to me through discord: eigentaylor ·</footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="../utils/TrendsChart.js"></script>
 <script>
 
-// Delta toggle functionality
+// Enhanced toggle functionality for state/unit pages
 (function() {
-  // Create and add the delta toggle footer
-  function createDeltaToggle() {
+  // Create and add the enhanced toggle footer
+  function createEnhancedToggle() {
     // Check if there are any tables with delta data
     const tablesWithDeltas = document.querySelectorAll('table .delta');
     if (tablesWithDeltas.length === 0) {
       return; // No deltas to toggle
     }
     
-    // Create the footer element
+    // Create the footer element with additional toggles
     const footer = document.createElement('div');
     footer.className = 'delta-toggle-footer';
     footer.innerHTML = `
@@ -61,15 +82,55 @@ Please report any innaccuracies to me through discord: eigentaylor ·</footer>
         <input type="checkbox" id="deltaToggle" checked>
         <label for="deltaToggle">Show deltas (Δ changes from previous election)</label>
       </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="twoPartyToggle">
+        <label for="twoPartyToggle">Two-party margin mode</label>
+      </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="relativeToggle">
+        <label for="relativeToggle">Relative margin mode</label>
+      </div>
     `;
     
     // Add footer to body
     document.body.appendChild(footer);
     document.body.classList.add('has-delta-toggle');
     
-    // Add event listener for toggle
-    const toggle = document.getElementById('deltaToggle');
-    toggle.addEventListener('change', function() {
+    // Table visibility control
+    const updateTableVisibility = () => {
+      const twoPartyMode = document.getElementById('twoPartyToggle').checked;
+      const relativeMode = document.getElementById('relativeToggle').checked;
+      
+      // Get all table sections
+      const totalDataTable = document.querySelector('[data-table-type="total"]');
+      const thirdPartyTable = document.querySelector('[data-table-type="third-party"]');
+      const twoPartyTable = document.querySelector('[data-table-type="two-party"]');
+      
+      // Hide all tables initially
+      if (totalDataTable) totalDataTable.style.display = 'none';
+      if (thirdPartyTable) thirdPartyTable.style.display = 'none';
+      if (twoPartyTable) twoPartyTable.style.display = 'none';
+      
+      // Show appropriate table based on mode
+      if (twoPartyMode) {
+        if (twoPartyTable) twoPartyTable.style.display = 'block';
+      } else if (relativeMode) {
+        // For relative mode, show third-party table if available, otherwise total
+        if (thirdPartyTable) thirdPartyTable.style.display = 'block';
+        else if (totalDataTable) totalDataTable.style.display = 'block';
+      } else {
+        // Default: show total data table
+        if (totalDataTable) totalDataTable.style.display = 'block';
+      }
+      
+      // Store state
+      localStorage.setItem('twoPartyMode', twoPartyMode);
+      localStorage.setItem('relativeMode', relativeMode);
+    };
+    
+    // Delta toggle functionality
+    const deltaToggle = document.getElementById('deltaToggle');
+    deltaToggle.addEventListener('change', function() {
       if (this.checked) {
         document.body.classList.remove('hide-deltas');
         localStorage.setItem('showDeltas', 'true');
@@ -79,22 +140,131 @@ Please report any innaccuracies to me through discord: eigentaylor ·</footer>
       }
     });
     
-    // Restore saved state
-    const savedState = localStorage.getItem('showDeltas');
-    if (savedState === 'false') {
-      toggle.checked = false;
+    // Table mode toggle functionality
+    document.getElementById('twoPartyToggle').addEventListener('change', function() {
+      if (this.checked) {
+        document.getElementById('relativeToggle').checked = false;
+      }
+      updateTableVisibility();
+    });
+    
+    document.getElementById('relativeToggle').addEventListener('change', function() {
+      if (this.checked) {
+        document.getElementById('twoPartyToggle').checked = false;
+      }
+      updateTableVisibility();
+    });
+    
+    // Restore saved states
+    const savedDeltas = localStorage.getItem('showDeltas');
+    if (savedDeltas === 'false') {
+      deltaToggle.checked = false;
       document.body.classList.add('hide-deltas');
     }
+    
+    const savedTwoParty = localStorage.getItem('twoPartyMode') === 'true';
+    const savedRelative = localStorage.getItem('relativeMode') === 'true';
+    document.getElementById('twoPartyToggle').checked = savedTwoParty;
+    document.getElementById('relativeToggle').checked = savedRelative;
+    
+    // Set initial table visibility
+    updateTableVisibility();
   }
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createDeltaToggle);
+    document.addEventListener('DOMContentLoaded', createEnhancedToggle);
   } else {
-    createDeltaToggle();
+    createEnhancedToggle();
   }
 })();
 
+
+// Interactive chart functionality
+(function() {
+  let chart = null;
+  let chartData = null;
+  
+  // Load data and initialize chart
+  Promise.all([
+    d3.csv('../presidential_margins.csv')
+  ]).then(([data]) => {
+    chartData = data;
+    
+    // Create chart
+    const chartContainer = document.getElementById('interactive-chart');
+    if (chartContainer) {
+      chart = TrendsChart.create(chartContainer);
+      updateChart();
+    }
+    
+    // Set up event listeners
+    const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty'];
+    controls.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', updateChart);
+    });
+    
+    const yearStart = document.getElementById('year-start');
+    const yearEnd = document.getElementById('year-end');
+    if (yearStart) yearStart.addEventListener('input', updateChart);
+    if (yearEnd) yearEnd.addEventListener('input', updateChart);
+    
+    // Restore saved chart preferences
+    const savedTwoParty = localStorage.getItem('chartTwoParty') === 'true';
+    const savedRelative = localStorage.getItem('chartRelative') === 'true';
+    const savedDelta = localStorage.getItem('chartDelta') === 'true';
+    const savedThirdParty = localStorage.getItem('chartThirdParty') === 'true';
+    
+    if (document.getElementById('chart-twoparty')) document.getElementById('chart-twoparty').checked = savedTwoParty;
+    if (document.getElementById('chart-relative')) document.getElementById('chart-relative').checked = savedRelative;
+    if (document.getElementById('chart-delta')) document.getElementById('chart-delta').checked = savedDelta;
+    if (document.getElementById('chart-thirdparty')) document.getElementById('chart-thirdparty').checked = savedThirdParty;
+    
+    updateChart();
+  }).catch(err => {
+    console.error('Failed to load chart data:', err);
+    const chartContainer = document.getElementById('interactive-chart');
+    if (chartContainer) {
+      chartContainer.innerHTML = '<div class="legend" style="text-align: center; padding: 40px;">Unable to load interactive chart. Please ensure the data files are available.</div>';
+    }
+  });
+  
+  function updateChart() {
+    if (!chart || !chartData) return;
+    
+    const state = 'DC'; // Will be replaced during build
+    const twoP = document.getElementById('chart-twoparty')?.checked || false;
+    const rel = document.getElementById('chart-relative')?.checked || false;
+    const delta = document.getElementById('chart-delta')?.checked || false;
+    const thirdParty = document.getElementById('chart-thirdparty')?.checked || false;
+    
+    const yearStart = parseInt(document.getElementById('year-start')?.value) || null;
+    const yearEnd = parseInt(document.getElementById('year-end')?.value) || null;
+    
+    // Save preferences
+    localStorage.setItem('chartTwoParty', twoP);
+    localStorage.setItem('chartRelative', rel);
+    localStorage.setItem('chartDelta', delta);
+    localStorage.setItem('chartThirdParty', thirdParty);
+    
+    const metric = thirdParty ? 'thirdParty' : 'margin';
+    const chartType = 'line'; // Could be made configurable
+    
+    chart.update({
+      data: chartData,
+      state: state,
+      metric: metric,
+      chart: chartType,
+      rel: rel,
+      delta: delta,
+      twoP: twoP,
+      yearStart: yearStart,
+      yearEnd: yearEnd,
+      notesEl: document.getElementById('chart-notes')
+    });
+  }
+})();
 </script>
 </body>
 </html>

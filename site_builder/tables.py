@@ -64,7 +64,8 @@ def split_columns_into_three(headers: List[str]) -> Tuple[List[str], List[str], 
                 tp.append(c)
         elif 'third' in lname or '3p' in lname or c in (
             'T_votes', 'T_pct', 'third_party_share', 'third_party_relative_share',
-            'third_party_national_share', 'third_party_votes', 'top_third_party'
+            'third_party_national_share', 'third_party_votes', 'top_third_party', 
+            'top_third_party_share'
         ):
             if c not in third:
                 third.append(c)
@@ -113,6 +114,8 @@ def describe_column(col: str) -> str:
         return 'Total votes for all third-party / other candidates combined (may exceed top candidate).'
     if k == 'top_third_party':
         return 'Name of the highest-vote third-party / other candidate in that state and year.'
+    if k == 'top_third_party_share':
+        return 'Vote share percentage of the top-performing third-party candidate.'
     if 'pct' in k:
         return 'Percentage share of the vote.'
     if 'delta' in k:

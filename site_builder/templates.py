@@ -300,16 +300,133 @@ PAGE_HTML = r"""<!doctype html>
   %HEADER%
   <a class="back" href="../index.html">← Back to Map</a>
   <div class="header"><h1 style="margin:0">%HEADING%</h1></div>
-  %PLOT_SECTION%
+  
+  <!-- Interactive Chart Section -->
+  <div class="card">
+    <h2 style="margin-top:0">Interactive Chart</h2>
+    <div id="chart-container" style="min-height: 520px;">
+      <div id="chart-controls" style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-twoparty"> Two-party margins
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-relative"> Relative margins
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-delta"> Show deltas
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox" id="chart-thirdparty"> Third-party share
+        </label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label for="year-start">Years:</label>
+          <input type="number" id="year-start" min="1864" max="2024" placeholder="Start" style="width: 80px;">
+          <span>to</span>
+          <input type="number" id="year-end" min="1864" max="2024" placeholder="End" style="width: 80px;">
+        </div>
+      </div>
+      <div id="interactive-chart"></div>
+      <div id="chart-notes" class="legend" style="margin-top: 8px;"></div>
+    </div>
+  </div>
+  
   %EXTRA_LINKS%
   %TABLE1_SECTION%
   %TABLE3_SECTION%
-  %PLOT3_SECTION%
   %TABLE2_SECTION%
   <footer>%FOOTER_TEXT%</footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="../utils/TrendsChart.js"></script>
 <script>
 %DELTA_TOGGLE_JS%
+
+// Interactive chart functionality
+(function() {
+  let chart = null;
+  let chartData = null;
+  
+  // Load data and initialize chart
+  Promise.all([
+    d3.csv('../presidential_margins.csv')
+  ]).then(([data]) => {
+    chartData = data;
+    
+    // Create chart
+    const chartContainer = document.getElementById('interactive-chart');
+    if (chartContainer) {
+      chart = TrendsChart.create(chartContainer);
+      updateChart();
+    }
+    
+    // Set up event listeners
+    const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty'];
+    controls.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', updateChart);
+    });
+    
+    const yearStart = document.getElementById('year-start');
+    const yearEnd = document.getElementById('year-end');
+    if (yearStart) yearStart.addEventListener('input', updateChart);
+    if (yearEnd) yearEnd.addEventListener('input', updateChart);
+    
+    // Restore saved chart preferences
+    const savedTwoParty = localStorage.getItem('chartTwoParty') === 'true';
+    const savedRelative = localStorage.getItem('chartRelative') === 'true';
+    const savedDelta = localStorage.getItem('chartDelta') === 'true';
+    const savedThirdParty = localStorage.getItem('chartThirdParty') === 'true';
+    
+    if (document.getElementById('chart-twoparty')) document.getElementById('chart-twoparty').checked = savedTwoParty;
+    if (document.getElementById('chart-relative')) document.getElementById('chart-relative').checked = savedRelative;
+    if (document.getElementById('chart-delta')) document.getElementById('chart-delta').checked = savedDelta;
+    if (document.getElementById('chart-thirdparty')) document.getElementById('chart-thirdparty').checked = savedThirdParty;
+    
+    updateChart();
+  }).catch(err => {
+    console.error('Failed to load chart data:', err);
+    const chartContainer = document.getElementById('interactive-chart');
+    if (chartContainer) {
+      chartContainer.innerHTML = '<div class="legend" style="text-align: center; padding: 40px;">Unable to load interactive chart. Please ensure the data files are available.</div>';
+    }
+  });
+  
+  function updateChart() {
+    if (!chart || !chartData) return;
+    
+    const state = '%STATE_ABBR%'; // Will be replaced during build
+    const twoP = document.getElementById('chart-twoparty')?.checked || false;
+    const rel = document.getElementById('chart-relative')?.checked || false;
+    const delta = document.getElementById('chart-delta')?.checked || false;
+    const thirdParty = document.getElementById('chart-thirdparty')?.checked || false;
+    
+    const yearStart = parseInt(document.getElementById('year-start')?.value) || null;
+    const yearEnd = parseInt(document.getElementById('year-end')?.value) || null;
+    
+    // Save preferences
+    localStorage.setItem('chartTwoParty', twoP);
+    localStorage.setItem('chartRelative', rel);
+    localStorage.setItem('chartDelta', delta);
+    localStorage.setItem('chartThirdParty', thirdParty);
+    
+    const metric = thirdParty ? 'thirdParty' : 'margin';
+    const chartType = 'line'; // Could be made configurable
+    
+    chart.update({
+      data: chartData,
+      state: state,
+      metric: metric,
+      chart: chartType,
+      rel: rel,
+      delta: delta,
+      twoP: twoP,
+      yearStart: yearStart,
+      yearEnd: yearEnd,
+      notesEl: document.getElementById('chart-notes')
+    });
+  }
+})();
 </script>
 </body>
 </html>
@@ -1473,19 +1590,19 @@ FAVICON_SVG = r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <path d="M20 28 L28 36 L44 20" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>'''
 
-# JavaScript for delta toggle functionality
-DELTA_TOGGLE_JS = r"""
-// Delta toggle functionality
+# JavaScript for table and toggle functionality
+ENHANCED_TOGGLE_JS = r"""
+// Enhanced toggle functionality for state/unit pages
 (function() {
-  // Create and add the delta toggle footer
-  function createDeltaToggle() {
+  // Create and add the enhanced toggle footer
+  function createEnhancedToggle() {
     // Check if there are any tables with delta data
     const tablesWithDeltas = document.querySelectorAll('table .delta');
     if (tablesWithDeltas.length === 0) {
       return; // No deltas to toggle
     }
     
-    // Create the footer element
+    // Create the footer element with additional toggles
     const footer = document.createElement('div');
     footer.className = 'delta-toggle-footer';
     footer.innerHTML = `
@@ -1493,15 +1610,55 @@ DELTA_TOGGLE_JS = r"""
         <input type="checkbox" id="deltaToggle" checked>
         <label for="deltaToggle">Show deltas (Δ changes from previous election)</label>
       </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="twoPartyToggle">
+        <label for="twoPartyToggle">Two-party margin mode</label>
+      </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="relativeToggle">
+        <label for="relativeToggle">Relative margin mode</label>
+      </div>
     `;
     
     // Add footer to body
     document.body.appendChild(footer);
     document.body.classList.add('has-delta-toggle');
     
-    // Add event listener for toggle
-    const toggle = document.getElementById('deltaToggle');
-    toggle.addEventListener('change', function() {
+    // Table visibility control
+    const updateTableVisibility = () => {
+      const twoPartyMode = document.getElementById('twoPartyToggle').checked;
+      const relativeMode = document.getElementById('relativeToggle').checked;
+      
+      // Get all table sections
+      const totalDataTable = document.querySelector('[data-table-type="total"]');
+      const thirdPartyTable = document.querySelector('[data-table-type="third-party"]');
+      const twoPartyTable = document.querySelector('[data-table-type="two-party"]');
+      
+      // Hide all tables initially
+      if (totalDataTable) totalDataTable.style.display = 'none';
+      if (thirdPartyTable) thirdPartyTable.style.display = 'none';
+      if (twoPartyTable) twoPartyTable.style.display = 'none';
+      
+      // Show appropriate table based on mode
+      if (twoPartyMode) {
+        if (twoPartyTable) twoPartyTable.style.display = 'block';
+      } else if (relativeMode) {
+        // For relative mode, show third-party table if available, otherwise total
+        if (thirdPartyTable) thirdPartyTable.style.display = 'block';
+        else if (totalDataTable) totalDataTable.style.display = 'block';
+      } else {
+        // Default: show total data table
+        if (totalDataTable) totalDataTable.style.display = 'block';
+      }
+      
+      // Store state
+      localStorage.setItem('twoPartyMode', twoPartyMode);
+      localStorage.setItem('relativeMode', relativeMode);
+    };
+    
+    // Delta toggle functionality
+    const deltaToggle = document.getElementById('deltaToggle');
+    deltaToggle.addEventListener('change', function() {
       if (this.checked) {
         document.body.classList.remove('hide-deltas');
         localStorage.setItem('showDeltas', 'true');
@@ -1511,19 +1668,42 @@ DELTA_TOGGLE_JS = r"""
       }
     });
     
-    // Restore saved state
-    const savedState = localStorage.getItem('showDeltas');
-    if (savedState === 'false') {
-      toggle.checked = false;
+    // Table mode toggle functionality
+    document.getElementById('twoPartyToggle').addEventListener('change', function() {
+      if (this.checked) {
+        document.getElementById('relativeToggle').checked = false;
+      }
+      updateTableVisibility();
+    });
+    
+    document.getElementById('relativeToggle').addEventListener('change', function() {
+      if (this.checked) {
+        document.getElementById('twoPartyToggle').checked = false;
+      }
+      updateTableVisibility();
+    });
+    
+    // Restore saved states
+    const savedDeltas = localStorage.getItem('showDeltas');
+    if (savedDeltas === 'false') {
+      deltaToggle.checked = false;
       document.body.classList.add('hide-deltas');
     }
+    
+    const savedTwoParty = localStorage.getItem('twoPartyMode') === 'true';
+    const savedRelative = localStorage.getItem('relativeMode') === 'true';
+    document.getElementById('twoPartyToggle').checked = savedTwoParty;
+    document.getElementById('relativeToggle').checked = savedRelative;
+    
+    // Set initial table visibility
+    updateTableVisibility();
   }
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createDeltaToggle);
+    document.addEventListener('DOMContentLoaded', createEnhancedToggle);
   } else {
-    createDeltaToggle();
+    createEnhancedToggle();
   }
 })();
 """
