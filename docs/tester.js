@@ -857,6 +857,8 @@
       flip: params.get('flip') || null,
       // metric selection (votes|margin)
       metric: (params.get('metric') || '').toLowerCase() || null,
+      // proportional EV mode
+      propEv: params.get('propEv') === 'true' || params.get('propEv') === '1',
   // (no flipped flag anymore)
     };
     const pvRaw = params.get('pv');
@@ -893,6 +895,16 @@
       const m = sel ? String(sel.value || '').toLowerCase() : '';
       if (m) url.searchParams.set('metric', m);
       else url.searchParams.delete('metric');
+    } catch(e) {}
+
+    // Persist proportional EV mode
+    try {
+      const propEvToggle = document.getElementById('propEvToggle');
+      if (propEvToggle && propEvToggle.checked) {
+        url.searchParams.set('propEv', 'true');
+      } else {
+        url.searchParams.delete('propEv');
+      }
     } catch(e) {}
 
   // No flipped URL param: we store PV overrides directly as numeric values (possibly negative)
@@ -1504,6 +1516,14 @@
       const sel = document.getElementById('flipMetric');
       if (sel && urlParams.metric && (urlParams.metric === 'votes' || urlParams.metric === 'margin')) {
         sel.value = urlParams.metric;
+      }
+    } catch(e) {}
+    
+    // Preselect proportional EV mode from URL if present
+    try {
+      const propEvToggle = document.getElementById('propEvToggle');
+      if (propEvToggle && urlParams.propEv) {
+        propEvToggle.checked = true;
       }
     } catch(e) {}
     
