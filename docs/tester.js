@@ -190,6 +190,16 @@
       if (display) parts.push(display);
       if (ev != null && ev !== '') parts.push(`${ev} EV`);
       if (cappedMarginStr) parts.push(cappedMarginStr);
+      const reportingText = (function(){
+        if (!window._electionNightActive) return '';
+        if (!info || info.reporting == null) return '';
+        const value = Number(info.reporting);
+        if (!isFinite(value) || value < 0) return '';
+        const pct = Math.max(0, Math.min(100, value * 100));
+        const label = (pct >= 99.95) ? '100.0% counted' : `${pct.toFixed(1)}% counted`;
+        return label;
+      })();
+      if (reportingText) parts.push(reportingText);
       if (info) {
         if (info.called) {
           parts.push('Called');
@@ -879,6 +889,13 @@
   // Remap for known label mismatches between GeoJSON and CSV keys
   const UNIT_REMAP = {};
 
+  function clampShare(value){
+    const v = Number(value);
+    if (!isFinite(v) || v <= 0) return 0;
+    if (v >= 1) return 1;
+    return v;
+  }
+
   function dbg(){ 
   //console.log('[tester]', ...arguments); 
   }
@@ -896,13 +913,21 @@
       const rm = +r.relative_margin || 0;
       const nm = +r.national_margin || 0;
       const ev = +r.electoral_votes || 0;
-      const tp = +r.T_votes / +r.total_votes || 0;
       // include vote totals for adjusted PV calculations
       const dVotes = +r.D_votes || 0;
       const rVotes = +r.R_votes || 0;
       const tVotes = +r.third_party_votes || 0;
-      const total = +r.total_votes || (dVotes + rVotes + tVotes) || 0;
-      const row = { year, unit, rm, nm, ev, tp, dVotes, rVotes, tVotes, total };
+      const totalVotes = +r.total_votes || (dVotes + rVotes + tVotes) || 0;
+      const topThirdVotes = +r.T_votes || 0;
+      const topThirdShareRaw = (r.top_third_party_share !== undefined && r.top_third_party_share !== null)
+        ? +r.top_third_party_share
+        : (totalVotes > 0 ? topThirdVotes / totalVotes : 0);
+      const totalThirdShareRaw = (r.third_party_share !== undefined && r.third_party_share !== null)
+        ? +r.third_party_share
+        : (totalVotes > 0 ? tVotes / totalVotes : 0);
+      const topThirdShare = clampShare(topThirdShareRaw);
+      const thirdShare = clampShare(totalThirdShareRaw);
+      const row = { year, unit, rm, nm, ev, tp: topThirdShare, thirdShare, dVotes, rVotes, tVotes, total: totalVotes, topThirdVotes };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
       if (ev > 0) evByUnit.set(`${year}:${unit}`, ev);
@@ -2058,7 +2083,7 @@
       if (r.unit.includes('-') && !r.unit.endsWith('-AL')) continue;
       const total = +r.total || (+r.dVotes + +r.rVotes + +r.tVotes) || 0;
       if (!isFinite(total) || total <= 0) continue;
-      const tp = Math.max(0, Math.min(1, +r.tp || 0));
+  const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
       const flipped = isUnitFlipped(year, r.unit);
       let rmAdj = (+r.rm || 0) + pv;
       if (flipped) rmAdj = -rmAdj; // swap two-party shares

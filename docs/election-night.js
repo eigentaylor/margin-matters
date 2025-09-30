@@ -1,19 +1,43 @@
 (function(){
   'use strict';
 
+  // election-night simulator
+  // This script builds a reproducible, time-based simulation of how
+  // vote counts and calls might unfold on election night. It is used
+  // by the site to animate the map, small boxes, EV bar, and call log.
+
+  // Small epsilon for numeric comparisons
   const EPS = 1e-6;
+  // Default colors (neutral and third-party)
   const NEUTRAL_COLOR = '#2f2f2f';
   const THIRD_PARTY_COLOR = '#C9A400';
+  // Simulation timing and pacing constants
+  // BASE_MINUTES_PER_SECOND: how many simulated minutes pass per real second
   const BASE_MINUTES_PER_SECOND = 6;
+  // Minimum reporting duration for a unit (in minutes)
   const MIN_DURATION = 160;
-  const MIN_CALL_DELAY = 30;
+  // Early minimum delay before a call may be considered (minutes)
+  const MIN_CALL_DELAY = 15;
+  // Extra window used when computing flexible call deadlines
   const EXTRA_CALL_WINDOW = 210;
+  // Time offset (minutes) used so times like "19:00" map to ET minutes
   const TIME_OFFSET_MIN = 180;
+  // Confidence threshold defaults and reporting cutoffs
   const DEFAULT_CONFIDENCE_THRESHOLD = 0.3;
   const MIN_REPORTING_TO_CALL = 0.2;
-  const BRIGHT_TOSSUP_COLOR = '#bcbcbc';
-  const UNCALLED_BRIGHTEN = 0.45;
+  // Visual constants for uncalled/tossup styling
+  const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
+  const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
+  // Tiny epsilon used when forcing flips to avoid exact zero margins
+  const FLIP_MARGIN_EPS = 2e-6; // small margin to represent a flipped outcome without zero
+  // Batch scheduling constraints used for reporting schedule generation
+  const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
+  const BATCH_MAX_GAP = 4; // nominal maximum minutes between batches (used as cap)
+  const MIN_BATCH_COUNT = 6; // minimum number of batches to generate for a unit
+  const MAX_BATCH_COUNT = 12; // maximum number of batches to generate for a unit
 
+  // Known poll-closing times (ET) grouped by states. Used to set when
+  // counting should realistically start for each state.
   const POLL_CLOSINGS = {
     '15:00': ['KY','IN','PR'],
     '16:00': ['VT','VA','SC','GA'],
@@ -26,18 +50,27 @@
     '22:00': ['AK','HI']
   };
 
+  // Relative counting speeds by state. Values >1 count faster than
+  // average, values <1 are slower. Used when estimating reporting
+  // duration for each state.
   const STATE_COUNTING_SPEEDS = {
     AL: 1.1, AK: 0.7, AZ: 0.9, AR: 1.0, CA: 0.7, CO: 0.9, CT: 0.9, DE: 1.0,
     DC: 1.0, FL: 1.2, GA: 1.1, HI: 0.6, ID: 1.3, IL: 1.1, IN: 1.1, IA: 1.2,
     KS: 1.0, KY: 1.0, LA: 1.0, ME: 0.8, MD: 1.0, MA: 0.9, MI: 1.0, MN: 0.9,
     MS: 1.0, MO: 1.0, MT: 0.7, NE: 1.2, NV: 0.7, NH: 1.0, NJ: 0.9, NM: 0.9,
-    NY: 0.8, NC: 1.0, ND: 1.3, OH: 1.1, OK: 1.0, OR: 0.8, PA: 0.8, PR: 0.6,
+    NY: 0.7, NC: 1.0, ND: 1.3, OH: 1.1, OK: 1.0, OR: 0.8, PA: 0.7, PR: 0.6,
     RI: 0.9, SC: 1.0, SD: 1.2, TN: 1.1, TX: 1.2, UT: 1.0, VT: 0.8, VA: 1.0,
-    WA: 0.8, WV: 0.9, WI: 1.1, WY: 0.7
+    WA: 0.8, WV: 0.9, WI: 1.0, WY: 0.7
   };
 
+  // States where mail/absentee ballots are common and reporting tends to
+  // be delayed or front-loaded differently. Affects reporting schedule
+  // shapes when generating batches.
   const MAIL_HEAVY_STATES = new Set(['AZ','CA','CO','HI','NV','NJ','NY','OR','UT','VT','WA','MI','PA','WI','MN']);
 
+  // Named phases of election night used to tune heuristics such as the
+  // phase dampener in the bias model. Times are converted to minutes
+  // (with an offset) so we can compare against the simulation clock.
   const PHASES = [
     { name: 'Early', start: toMinutesWithOffset('19:00'), end: toMinutesWithOffset('20:30') },
     { name: 'Mid', start: toMinutesWithOffset('20:30'), end: toMinutesWithOffset('22:00') },
@@ -46,6 +79,8 @@
     { name: 'Final', start: toMinutesWithOffset('25:00'), end: toMinutesWithOffset('28:00') }
   ];
 
+  // Mapping of two-letter state abbreviations to their full names used
+  // when formatting labels for the UI and call log.
   const STATE_NAMES = {
     AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California', CO:'Colorado', CT:'Connecticut',
     DE:'Delaware', DC:'District of Columbia', FL:'Florida', GA:'Georgia', HI:'Hawaii', ID:'Idaho', IL:'Illinois',
@@ -57,6 +92,9 @@
     WI:'Wisconsin', WY:'Wyoming'
   };
 
+  // Runtime simulation state. This object stores everything needed to
+  // keep the simulation consistent across frames: whether it's prepared,
+  // running, current time window, per-unit data, UI caches, and call logs.
   const state = {
     prepared: false,
     running: false,
@@ -93,6 +131,8 @@
     pvRandomSeed: null
   };
 
+  // Cached DOM elements for interactive controls and displays. Populated
+  // by init() to reduce repeated DOM lookups during animation.
   const elements = {
     toggle: null,
     reset: null,
@@ -111,6 +151,11 @@
     victory: null
   };
 
+  /**
+   * Wire up the UI: find DOM nodes, attach event listeners (toggle,
+   * reset, speed, PV mode, progress slider), and initialize labels.
+   * This function runs on DOMContentLoaded.
+   */
   function init(){
     elements.toggle = document.getElementById('enToggle');
     elements.reset = document.getElementById('enReset');
@@ -224,6 +269,11 @@
     updateToggleLabel();
   }
 
+  /**
+   * Prepare the simulation data for the selected year and PV scenario.
+   * This builds per-unit state objects, computes simStart/simEnd, and
+   * resets call logs and cached colors. It does not start the RAF loop.
+   */
   function prepareSimulation(){
     const year = getSelectedYear();
     if (!year) return;
@@ -401,6 +451,7 @@
     state.stateData = [];
     state.snapshot = new Map();
     window._electionNightSnapshot = null;
+  window._electionNightActive = false;
     state.currentTime = 0;
     state.lastTimestamp = null;
     state.lastLogKey = '';
@@ -431,12 +482,20 @@
       elements.victory.style.display = 'none';
     }
 
+    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
+    if (typeof window.hideMapTip === 'function') {
+      try { window.hideMapTip(); } catch(e) {}
+    }
+
     if (restorePv) {
       window._pvOverride = state.prevPvOverride;
       if (state.prevPvPresetName != null) window._pvPresetName = state.prevPvPresetName;
-      if (typeof window.updateAll === 'function') window.updateAll();
       const pvSlider = document.getElementById('pvSlider');
       if (pvSlider && state.prevPvSliderValue != null) pvSlider.value = state.prevPvSliderValue;
+    }
+
+    if (typeof window.updateAll === 'function') {
+      try { window.updateAll(); } catch(e) {}
     }
 
     if (state.prevUnitColors) {
@@ -449,10 +508,6 @@
       const year = getSelectedYear();
       try { window.renderSmallStateBoxes(year, window._lastAbbrColors, window._lastUnitColors); } catch(e) {}
     }
-
-    window._electionNightActive = false;
-    // Hide the call log panel when the simulation is reset/stopped
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
     updateToggleLabel();
   }
 
@@ -471,6 +526,12 @@
     updateToggleLabel();
   }
 
+  /**
+   * RAF tick handler. Converts elapsed wall-clock time (timestamp)
+   * into simulated minutes using speedMultiplier and minutesPerSecond,
+   * advances state.currentTime, renders a frame, and enqueues the next
+   * tick while the simulation remains running.
+   */
   function tick(timestamp){
     if (!state.running) return;
     if (!state.lastTimestamp) state.lastTimestamp = timestamp;
@@ -486,15 +547,24 @@
     }
   }
 
+  /**
+   * Build the per-unit array used by the simulator. For each input row (unit)
+   * this computes final vote shares, an expected reporting schedule,
+   * bias parameters, and derived values like startTime and duration.
+   * The returned array is stored in state.stateData and consumed by
+   * renderAt/computeMetrics.
+   */
   function buildStateData(year, pvValue){
     const rows = (window._byYearMap && window._byYearMap.get(year)) || [];
     if (!rows.length) return [];
+    const baselineUnitColors = state.prevUnitColors ? new Map(state.prevUnitColors) : new Map();
+    const baselineAbbrColors = state.prevAbbrColors ? new Map(state.prevAbbrColors) : new Map();
     const out = [];
 
     rows.forEach(row => {
       if (!row || !row.unit || row.unit === 'NATIONAL') return;
       const unit = String(row.unit);
-      const abbr = unit.slice(0,2);
+      const abbr = unit.slice(0, 2);
       const isAtLarge = /-AL$/.test(unit);
       const isDistrict = /-(0[1-9])$/.test(unit);
       const isState = /^[A-Z]{2}$/.test(unit) || unit === 'DC';
@@ -503,40 +573,54 @@
       const totalVotes = totalFromRow(row);
       if (!isFinite(totalVotes) || totalVotes <= 0) return;
 
-      const totalThirdVotesRaw = +row.tVotes || 0;
-      const totalThirdVotes = Math.max(0, Math.min(totalVotes, totalThirdVotesRaw));
-      const totalThirdShare = clamp01(totalVotes > 0 ? (totalThirdVotes / totalVotes) : 0);
-      let topThirdShare = clamp01(isFinite(+row.tp) ? (+row.tp) : totalThirdShare);
+      const thirdPartyVotes = Math.max(0, Math.min(totalVotes, +row.tVotes || 0));
+      const totalThirdShare = clamp01(
+        row.thirdShare != null ? +row.thirdShare : (totalVotes > 0 ? thirdPartyVotes / totalVotes : 0)
+      );
+      let topThirdShare = clamp01(
+        row.topThirdShare != null ? +row.topThirdShare : (isFinite(+row.tp) ? +row.tp : totalThirdShare)
+      );
       if (topThirdShare > totalThirdShare + EPS) {
         topThirdShare = Math.min(topThirdShare, totalThirdShare);
       }
-      const thirdPartyShare = totalThirdShare;
-      const baseMargin = +row.rm || 0;
-      let adjustedMargin = baseMargin + pvValue;
-      if (typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit)) {
-        adjustedMargin = -adjustedMargin;
+
+      let adjustedMargin = (+row.rm || 0) + pvValue;
+      const flipped = typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit);
+      if (flipped) {
+        adjustedMargin = adjustedMargin >= 0 ? -FLIP_MARGIN_EPS : FLIP_MARGIN_EPS;
       }
       if (year === 1876 && abbr === 'CO') {
         const forced = Math.abs(adjustedMargin);
         adjustedMargin = forced > 0 ? -forced : -0.06;
       }
 
-      const twoPartyShare = Math.max(0, Math.min(1, 1 - thirdPartyShare));
-      const dTwoPartyFinal = clamp01(0.5 + adjustedMargin / 2);
-      const rTwoPartyFinal = 1 - dTwoPartyFinal;
-      const dShareFinal = twoPartyShare * dTwoPartyFinal;
-      const rShareFinal = twoPartyShare * rTwoPartyFinal;
-      const topShareFinal = Math.max(0, Math.min(1, topThirdShare));
+      const twoPartyShare = Math.max(0, Math.min(1, 1 - totalThirdShare));
+      let dTwoPartyFinal = clamp01(0.5 + adjustedMargin / 2);
+      let rTwoPartyFinal = 1 - dTwoPartyFinal;
+      if (!isFinite(dTwoPartyFinal)) dTwoPartyFinal = 0.5;
+      if (!isFinite(rTwoPartyFinal)) rTwoPartyFinal = 0.5;
 
-      let winner = determineWinner(dShareFinal, rShareFinal, topShareFinal);
-    if (year === 1876 && abbr === 'CO') winner = 'R';
+      let dShareFinal = twoPartyShare * dTwoPartyFinal;
+      let rShareFinal = twoPartyShare * rTwoPartyFinal;
+
+      if (year === 1948 && abbr === 'AL') {
+        dShareFinal = 0;
+        rShareFinal = twoPartyShare;
+        topThirdShare = Math.max(topThirdShare, totalThirdShare);
+      }
+
+      let winner = determineWinner(dShareFinal, rShareFinal, topThirdShare);
+      if (year === 1876 && abbr === 'CO') winner = 'R';
+      const thirdPartyDominant = winner === 'O';
+
       const ev = getEv(year, unit);
 
       const startTime = getStateStartTime(abbr);
       const closeness = 1 - Math.min(1, Math.abs(adjustedMargin) / 0.12);
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
       let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
-      const rng = mulberry32(hashCode(`${year}-${unit}-${Math.round(pvValue*10000)}`));
+      const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
+      const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
       let callDeadline = startTime + MIN_CALL_DELAY + closeness * EXTRA_CALL_WINDOW + jitter;
       callDeadline = Math.max(startTime + 10, Math.min(callDeadline, startTime + duration - 10));
@@ -547,7 +631,9 @@
         callDeadline = startTime + 1;
       }
 
-      const biasParams = instantCall ? null : createBiasParams(unit, adjustedMargin, closeness, rng);
+      const mailHeavy = MAIL_HEAVY_STATES.has(abbr);
+      const reportingSchedule = generateReportingSchedule(startTime, duration, closeness, mailHeavy, rng);
+      const biasParams = (instantCall || thirdPartyDominant) ? null : createBiasParams(unit, adjustedMargin, closeness, rng);
       const pathSelections = collectPathSelections(unit, abbr);
       if (!pathSelections.length) return;
 
@@ -557,26 +643,30 @@
 
       const finalDVotes = totalVotes * dShareFinal;
       const finalRVotes = totalVotes * rShareFinal;
-      const finalOTopVotes = totalVotes * topShareFinal;
-      const finalOTotalVotes = totalVotes * thirdPartyShare;
-      const finalMarginTwoParty = dTwoPartyFinal - rTwoPartyFinal;
-      const finalLeader = determineLeader(dShareFinal, rShareFinal, topShareFinal, 1);
+      const finalOTopVotes = totalVotes * topThirdShare;
+      const finalOTotalVotes = totalVotes * totalThirdShare;
+      const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
+      const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1);
+      const baselineAbbr = baselineAbbrColors.get(abbr);
+      let finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
+      if (!finalColor) {
+        const baselineUnit = baselineUnitColors.get(unit);
+        finalColor = baselineUnit || safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
+      }
       const finalMarginStr = finalLeader === 'O' ? 'Other lead' : formatLean(finalMarginTwoParty);
-      const finalColor = safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
-      const finalCountedVotes = totalVotes;
-      const countedMargin = finalCountedVotes > EPS
-        ? ((finalDVotes - finalRVotes) / finalCountedVotes)
-        : 0;
-      let countedMarginStr = 'None';
       const twoPartyVotes = finalDVotes + finalRVotes;
-      if (finalLeader === 'O') {
-        countedMarginStr = 'Other lead';
-      } else if (twoPartyVotes > EPS) {
-        const leanVal = (finalDVotes - finalRVotes) / twoPartyVotes;
-        countedMarginStr = Math.abs(leanVal) < 0.00005 ? 'EVEN' : formatLean(leanVal);
-      } else if (finalCountedVotes > EPS) {
+      const countedMargin = totalVotes > EPS ? ((finalDVotes - finalRVotes) / totalVotes) : 0;
+      let countedMarginStr = 'None';
+      if (finalLeader === 'O') countedMarginStr = 'Other lead';
+      else if (twoPartyVotes > EPS) {
+        const twoPartyLean = (finalDVotes - finalRVotes) / twoPartyVotes;
+        countedMarginStr = Math.abs(twoPartyLean) < 0.0000000005 ? 'EVEN' : formatLean(twoPartyLean);
+      } else if (totalVotes > EPS) {
         countedMarginStr = 'EVEN';
       }
+
+      const evAllocations = buildEvAllocations(year, abbr, unit, ev, winner);
+
       const targetMetrics = {
         reporting: 1,
         leader: finalLeader,
@@ -587,15 +677,15 @@
         color: finalColor,
         dShare: dShareFinal,
         rShare: rShareFinal,
-        oShare: thirdPartyShare,
-        topThirdShare: topShareFinal,
-        totalThirdShare: thirdPartyShare,
+        oShare: totalThirdShare,
+        topThirdShare,
+        totalThirdShare,
         confidence: 1,
         dVotesCounted: finalDVotes,
         rVotesCounted: finalRVotes,
         oVotesCounted: finalOTopVotes,
         oVotesCountedTotal: finalOTotalVotes,
-        countedVotes: finalCountedVotes,
+        countedVotes: totalVotes,
         remainingVotes: 0
       };
 
@@ -604,7 +694,7 @@
         abbr,
         type: isDistrict ? 'district' : (isAtLarge ? 'atlarge' : 'state'),
         totalVotes,
-        thirdPartyShare,
+        thirdPartyShare: totalThirdShare,
         topThirdShare,
         twoPartyShare,
         dTwoPartyFinal,
@@ -613,6 +703,8 @@
         rShareFinal,
         winner,
         ev,
+        evAllocations,
+        evCalledAllocations: null,
         startTime,
         duration,
         callDeadline,
@@ -627,13 +719,180 @@
         closeness,
         targetMetrics,
         callLeader: null,
-        misCallLogged: false
+        misCallLogged: false,
+        thirdPartyDominant,
+        reportingSchedule,
+        rngSeed
       });
     });
 
     return out;
   }
 
+  function buildEvAllocations(year, abbr, unit, ev, winner){
+    const allocations = { D: 0, R: 0, O: 0 };
+    if (!isFinite(ev) || ev <= 0) return allocations;
+
+    if (year === 1960 && abbr === 'AL' && winner !== 'R') {
+      const demPortion = Math.min(ev, 5);
+      allocations.D = demPortion;
+      allocations.O = Math.max(0, ev - demPortion);
+      return allocations;
+    }
+
+    if (winner === 'D') allocations.D = ev;
+    else if (winner === 'R') allocations.R = ev;
+    else allocations.O = ev;
+    return allocations;
+  }
+
+  function buildCallAllocation(st, leader){
+    const allocation = { D: 0, R: 0, O: 0 };
+    const totalEv = isFinite(st.ev) ? st.ev : 0;
+    if (!leader || totalEv <= 0) return allocation;
+    if (leader === 'D') allocation.D = totalEv;
+    else if (leader === 'R') allocation.R = totalEv;
+    else allocation.O = totalEv;
+    return allocation;
+  }
+
+  function generateReportingSchedule(startTime, duration, closeness, mailHeavy, rng){
+    if (!isFinite(startTime) || !isFinite(duration) || duration <= 0) {
+      return [{ time: isFinite(startTime) ? startTime : 0, reporting: 1 }];
+    }
+
+    let batchCount = Math.round(duration / (mailHeavy ? 18 : 14));
+    batchCount = Math.max(MIN_BATCH_COUNT, Math.min(MAX_BATCH_COUNT, batchCount));
+    const schedule = [];
+    const timeWeights = [];
+    const reportWeights = [];
+    let timeWeightSum = 0;
+    let reportWeightSum = 0;
+
+    for (let i = 0; i < batchCount; i++) {
+      const phaseBias = mailHeavy ? (i + 1) : (batchCount - i);
+      const timeWeight = Math.max(0.05, phaseBias + rng());
+      timeWeights.push(timeWeight);
+      timeWeightSum += timeWeight;
+
+      let reportBias = 0.6 + closeness * 0.8 + rng() * 0.9;
+      if (!mailHeavy && i === 0) reportBias *= 0.5;
+      if (mailHeavy && i < batchCount / 2) reportBias *= 0.6;
+      reportBias = Math.max(0.05, reportBias);
+      reportWeights.push(reportBias);
+      reportWeightSum += reportBias;
+    }
+
+    let currentTime = startTime;
+    let currentReporting = 0;
+    for (let i = 0; i < batchCount; i++) {
+      let interval = duration * (timeWeights[i] / timeWeightSum);
+      interval = Math.max(BATCH_MIN_GAP, Math.min(BATCH_MAX_GAP * 3, interval));
+      const remainingTime = (startTime + duration) - currentTime;
+      if (interval > remainingTime) interval = remainingTime;
+      currentTime = Math.min(startTime + duration, currentTime + interval);
+
+      let increment = (reportWeights[i] / reportWeightSum) * (1 - currentReporting);
+      increment = Math.max(0.03, increment);
+      if (i === batchCount - 1) {
+        currentReporting = 1;
+      } else {
+        currentReporting = Math.min(1, currentReporting + increment);
+      }
+      schedule.push({ time: currentTime, reporting: currentReporting });
+    }
+
+    if (!schedule.length) {
+      schedule.push({ time: startTime + duration, reporting: 1 });
+    } else {
+      const last = schedule[schedule.length - 1];
+      last.time = startTime + duration;
+      last.reporting = 1;
+    }
+    return refineReportingScheduleTail(schedule, startTime, duration, closeness);
+  }
+
+  function refineReportingScheduleTail(schedule, startTime, duration, closeness){
+    if (!Array.isArray(schedule) || schedule.length < 2) return schedule;
+    const endTime = startTime + duration;
+    const trigger = 0.75 + (1 - Math.max(0, Math.min(1, closeness || 0))) * 0.12;
+    const rawMaxJump = 0.045 - 0.02 * Math.max(0, Math.min(1, closeness || 0));
+    const tailMaxJump = Math.max(0.012, rawMaxJump);
+
+    const refined = [];
+    let prev = null;
+    for (let i = 0; i < schedule.length; i++) {
+      const entry = schedule[i] || {};
+      const current = {
+        time: isFinite(entry.time) ? entry.time : startTime + (duration * (i / Math.max(1, schedule.length - 1))),
+        reporting: clamp01(isFinite(entry.reporting) ? entry.reporting : 0)
+      };
+      if (!prev) {
+        refined.push({ ...current });
+        prev = refined[refined.length - 1];
+        continue;
+      }
+
+      const interval = Math.max(0, current.time - prev.time);
+      const diff = Math.max(0, current.reporting - prev.reporting);
+      const smoothingActive = (prev.reporting >= trigger || current.reporting >= trigger) && diff > tailMaxJump + EPS;
+      if (smoothingActive) {
+        const segments = Math.max(2, Math.ceil(diff / tailMaxJump));
+        for (let s = 1; s < segments; s++) {
+          const ratio = s / segments;
+          const interp = {
+            time: prev.time + interval * ratio,
+            reporting: clamp01(prev.reporting + diff * ratio)
+          };
+          refined.push(interp);
+        }
+      }
+
+      refined.push({ ...current });
+      prev = refined[refined.length - 1];
+    }
+
+    const minTimeStep = Math.max(0.05, Math.min(0.5, duration / 360));
+    for (let i = 1; i < refined.length; i++) {
+      const prevEntry = refined[i - 1];
+      const entry = refined[i];
+      if (entry.time <= prevEntry.time) {
+        entry.time = Math.min(endTime, prevEntry.time + minTimeStep);
+      }
+    }
+
+    for (let i = refined.length - 2; i >= 0; i--) {
+      const entry = refined[i];
+      const next = refined[i + 1];
+      if (entry.time >= next.time) {
+        entry.time = Math.max(startTime, next.time - minTimeStep);
+      }
+    }
+
+    for (let i = 1; i < refined.length; i++) {
+      const prevEntry = refined[i - 1];
+      const entry = refined[i];
+      if (entry.time <= prevEntry.time) {
+        entry.time = Math.min(endTime, prevEntry.time + minTimeStep);
+      }
+    }
+
+    const last = refined[refined.length - 1];
+    if (last) {
+      last.time = endTime;
+      last.reporting = 1;
+    }
+
+    return refined;
+  }
+
+  /**
+   * Render the simulation at a specific time (minutes). This iterates
+   * over every unit, computes its current metrics, potentially registers
+   * calls, updates map colors and small-box summaries, accumulates EV
+   * tallies, and then updates UI widgets (EV bar, PV display, progress
+   * slider, and the call log).
+   */
   function renderAt(timeMinutes){
     if (!state.stateData.length) return;
 
@@ -661,6 +920,14 @@
 
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
 
+      if (metrics.reporting >= 1 - EPS && st.evAllocations) {
+        if (!st.evCalledAllocations) {
+          st.evCalledAllocations = { ...st.evAllocations };
+        } else if (st.callLeader && st.callLeader === st.winner) {
+          st.evCalledAllocations = { ...st.evAllocations };
+        }
+      }
+
       let displayColor = metrics.color;
       if (!isCalled && metrics.reporting > 0) {
         if (metrics.margin != null && Math.abs(metrics.margin) < 0.01) {
@@ -671,10 +938,11 @@
       }
       applyColor(st, displayColor, metrics);
 
-      if (isCalled) {
-        if (st.winner === 'D') dEV += st.ev;
-        else if (st.winner === 'R') rEV += st.ev;
-        else oEV += st.ev;
+      const evAllocation = st.evCalledAllocations || (metrics.reporting >= 1 - EPS ? st.evAllocations : null);
+      if (evAllocation) {
+        dEV += evAllocation.D || 0;
+        rEV += evAllocation.R || 0;
+        oEV += evAllocation.O || 0;
       }
 
       if (st.pvWeight) {
@@ -687,6 +955,8 @@
 
       const snapshot = {
         ev: st.ev,
+        evAllocations: st.evAllocations ? { ...st.evAllocations } : null,
+        evCalledAllocations: st.evCalledAllocations ? { ...st.evCalledAllocations } : null,
         margin: metrics.countedMargin,
         marginStr: metrics.countedMarginStr,
         reporting: metrics.reporting,
@@ -721,40 +991,67 @@
   }
 
   function computeMetrics(st, timeMinutes, phaseName){
+    // Compute the current reporting fraction for this unit
     const reporting = computeReportingFraction(st, timeMinutes);
-    const bias = logisticBias(st.biasParams, reporting, phaseName);
-    const rawD = st.dTwoPartyFinal * Math.max(0.2, bias);
-    const rawR = Math.max(EPS, st.rTwoPartyFinal);
-    const sumRaw = rawD + rawR;
-    const dTwoParty = sumRaw > EPS ? rawD / sumRaw : 0.5;
-    const rTwoParty = 1 - dTwoParty;
-    const blend = Math.pow(Math.max(0, Math.min(1, reporting)), 3);
-    const dShareBlend = (dTwoParty * (1 - blend) + st.dTwoPartyFinal * blend);
-    const rShareBlend = 1 - dShareBlend;
+    const thirdPartyDominant = !!st.thirdPartyDominant;
     const totalThirdShare = st.thirdPartyShare;
     const topThirdShare = (st.topThirdShare != null) ? st.topThirdShare : totalThirdShare;
-    const dShare = st.twoPartyShare * dShareBlend;
-    const rShare = st.twoPartyShare * rShareBlend;
-    const oShare = totalThirdShare;
 
-    const leader = determineLeader(dShare, rShare, topThirdShare, reporting);
-    const margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
-    const marginStr = (reporting > 0 && leader !== 'O') ? formatLean(margin) : (leader === 'O' && reporting > 0 ? 'Other lead' : '');
+    let dShare;
+    let rShare;
+    let oShare;
+    let leader;
+    let margin = null;
+    let marginStr = '';
+    let color;
 
-    const baseColor = leader === 'O'
-      ? THIRD_PARTY_COLOR
-      : safeMarginToColor(margin || 0, leader === 'O');
-    const intensity = Math.pow(Math.max(0, Math.min(1, reporting)), 0.7);
-    const color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
+  // If a third party dominates the unit, we don't run the two-party
+  // bias model and instead show the final shares directly until reporting
+  // occurs.
+  if (thirdPartyDominant) {
+      dShare = st.dShareFinal;
+      rShare = st.rShareFinal;
+      oShare = totalThirdShare;
+      leader = reporting > 0 ? 'O' : null;
+      margin = 0;
+      marginStr = leader ? 'Other lead' : '';
+      color = st.targetMetrics && st.targetMetrics.color ? st.targetMetrics.color : THIRD_PARTY_COLOR;
+  } else {
+      const bias = logisticBias(st.biasParams, reporting, phaseName);
+      const rawD = st.dTwoPartyFinal * Math.max(0.15, bias);
+      const rawR = Math.max(EPS, st.rTwoPartyFinal);
+      const sumRaw = rawD + rawR;
+      const dTwoParty = sumRaw > EPS ? rawD / sumRaw : 0.5;
+      const rTwoParty = 1 - dTwoParty;
+      const blend = Math.pow(Math.max(0, Math.min(1, reporting)), 3);
+      const dShareBlend = (dTwoParty * (1 - blend) + st.dTwoPartyFinal * blend);
+      const rShareBlend = 1 - dShareBlend;
+      dShare = st.twoPartyShare * dShareBlend;
+      rShare = st.twoPartyShare * rShareBlend;
+      oShare = totalThirdShare;
+      leader = determineLeader(dShare, rShare, topThirdShare, reporting);
+      margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
+      if (leader === 'O') marginStr = 'Other lead';
+      else marginStr = (reporting > 0) ? formatLean(margin) : '';
+      const baseColor = leader === 'O'
+        ? THIRD_PARTY_COLOR
+        : safeMarginToColor(margin || 0, leader === 'O');
+      const intensity = Math.pow(Math.max(0, Math.min(1, reporting)), 0.7);
+      color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
+    }
 
-    const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
+  // Given the current shares and reporting fraction compute vote totals
+  // and how many votes remain.
+  const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
       if (leader === 'O') countedMarginStr = 'Other lead';
       else countedMarginStr = formatLean(countedMargin);
     }
-    const confidence = calculateConfidence(st, stats);
+  // Compute a simple confidence metric based on the counted votes and
+  // remaining ballots.
+  const confidence = calculateConfidence(st, stats);
 
     let result = {
       reporting,
@@ -786,6 +1083,7 @@
   }
 
   function computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare){
+    // Return numerical totals for counted votes given a reporting fraction
     const countedVotes = st.totalVotes * Math.max(0, Math.min(1, reporting));
     const dCounted = countedVotes * Math.max(0, Math.min(1, dShare));
     const rCounted = countedVotes * Math.max(0, Math.min(1, rShare));
@@ -805,6 +1103,12 @@
   }
 
   function calculateConfidence(st, stats){
+    // Heuristic confidence calculation:
+    // - If there are no counted votes => 0 confidence.
+    // - If no remaining votes => 1 if leader > runner, else 0.
+    // - Otherwise confidence is proportional to the vote gap divided by
+    //   remaining votes (clamped to [0,1]). This approximates how likely
+    //   the leader is to hold given worst-case remaining ballots.
     if (!st) return 0;
     const { countedVotes, dCounted, rCounted, oCounted, remainingVotes } = stats;
     if (countedVotes <= EPS) return 0;
@@ -853,10 +1157,17 @@
       calledLeader,
       finalLeader
     });
+    st.evCalledAllocations = st.evAllocations ? { ...st.evAllocations } : null;
+    triggerTipRefresh();
     state.lastLogKey = '';
   }
 
   function shouldCallState(st, metrics, currentTime){
+    // Decide whether the simulator should call the unit now.
+    // - instantCall units are called as soon as their startTime is reached.
+    // - otherwise: require some reporting OR that we're past the call deadline
+    //   and that confidence exceeds the chosen threshold. A full-reporting
+    //   (>= 0.999) forces a call.
     if (st.instantCall) {
       return currentTime >= st.startTime - EPS;
     }
@@ -868,6 +1179,10 @@
   }
 
   function shouldForceCall(st, metrics, currentTime){
+    // Force a call at or after the callDeadline if reporting is sufficient
+    // and the visible leader matches the final winner. This helps ensure
+    // the simulator will eventually call states even if confidence is
+    // borderline.
     if (!metrics || metrics.leader == null) return false;
     if (metrics.reporting >= 0.999) {
       return metrics.leader === st.winner;
@@ -880,18 +1195,23 @@
   }
 
   function registerCall(st, metrics, currentTime){
+    // Record a call for `st` at callTime and create a callRecord object
+    // that will later be rendered in the call log. The call record stores
+    // a snapshot of the observed metrics and the EV allocation used.
     if (!st || st.calledAt != null) return;
     const callTime = Math.max(currentTime, st.startTime);
     st.calledAt = callTime;
     st.calledMetrics = metrics ? { ...metrics } : null;
     const effectiveMarginStr = metrics
       ? metrics.countedMarginStr
-      : 'None';
+      : '';
     const reporting = metrics ? metrics.reporting : 0;
     const confidence = metrics ? metrics.confidence : 1;
     const calledLeader = metrics ? metrics.leader : null;
     const thresholdUsed = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     st.callLeader = calledLeader;
+    const callAllocation = buildCallAllocation(st, calledLeader);
+    st.evCalledAllocations = { ...callAllocation };
     st.callRecord = {
       kind: 'call',
       unitKey: st.unitKey,
@@ -902,6 +1222,8 @@
       marginStr: effectiveMarginStr,
       reporting,
       ev: st.ev,
+      evAllocations: callAllocation,
+      finalAllocations: st.evAllocations ? { ...st.evAllocations } : null,
       confidence,
       threshold: thresholdUsed,
       dVotes: metrics ? metrics.dVotesCounted : null,
@@ -914,6 +1236,7 @@
       totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
+    triggerTipRefresh();
   }
 
   function flushSmallBoxes(){
@@ -1159,6 +1482,8 @@
         record.remainingVotes = live.remainingVotes;
         record.topThirdShare = live.topThirdShare;
         record.totalThirdShare = live.totalThirdShare;
+        if (live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
+        if (live.evAllocations) record.finalAllocations = { ...live.evAllocations };
       }
   const tallyWinner = record.actualWinner || record.leader;
   if (tallyWinner === 'D') dRunning += record.ev || 0;
@@ -1172,12 +1497,18 @@
       const reportingText = formatReportingText(record.reporting);
       const marginText = formatMarginText(record.marginStr, record.leader);
       const confidenceText = formatConfidenceText(record.confidence);
+      const evText = formatEvAllocationsForLog(record.evAllocations, record.finalAllocations);
+      const infoParts = [reportingText, marginText, confidenceText];
+      if (evText) infoParts.push(evText);
+      const infoJoined = infoParts.filter(Boolean).join(', ');
+      const evSigCall = record.evAllocations ? `${record.evAllocations.D||0}-${record.evAllocations.R||0}-${record.evAllocations.O||0}` : 'na';
+      const evSigFinal = record.finalAllocations ? `${record.finalAllocations.D||0}-${record.finalAllocations.R||0}-${record.finalAllocations.O||0}` : 'na';
       const callLine = {
         kind: 'call',
         time: record.time,
         className: 'en-log-entry',
-        text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${reportingText}, ${marginText}, ${confidenceText})`,
-        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}`
+        text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${infoJoined})`,
+        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}:${evSigCall}:${evSigFinal}`
       };
       callLines.push(callLine);
       signatureParts.push(callLine.signature);
@@ -1344,6 +1675,24 @@
     }
   }
 
+  function triggerTipRefresh(){
+    if (typeof window === 'undefined' || typeof window.refreshActiveMapTip !== 'function') return;
+    const runner = () => {
+      try { window.refreshActiveMapTip(); } catch(e) {}
+    };
+    try {
+      if (typeof window.requestAnimationFrame === 'function') {
+        window.requestAnimationFrame(() => runner());
+      } else if (typeof window.setTimeout === 'function') {
+        window.setTimeout(runner, 0);
+      } else {
+        runner();
+      }
+    } catch(e) {
+      runner();
+    }
+  }
+
   function resolvePvValue(){
     const mode = state.pvMode || 'current';
     const current = getCurrentPv();
@@ -1463,7 +1812,24 @@
       if (timeMinutes <= st.startTime) return 0;
       return 1;
     }
+    if (!isFinite(timeMinutes)) return 0;
     if (timeMinutes <= st.startTime) return 0;
+
+    const schedule = Array.isArray(st.reportingSchedule) ? st.reportingSchedule : null;
+    if (schedule && schedule.length) {
+      let reporting = 0;
+      for (let i = 0; i < schedule.length; i++) {
+        const entry = schedule[i];
+        if (!entry) continue;
+        const entryTime = isFinite(entry.time) ? entry.time : st.startTime;
+        if (timeMinutes + EPS < entryTime) break;
+        const nextReporting = isFinite(entry.reporting) ? entry.reporting : reporting;
+        reporting = Math.max(0, Math.min(1, nextReporting));
+      }
+      if (timeMinutes >= st.startTime + st.duration - EPS) reporting = 1;
+      return reporting;
+    }
+
     if (timeMinutes >= st.startTime + st.duration) return 1;
     const normalized = (timeMinutes - st.startTime) / st.duration;
     const eased = normalized * normalized * (3 - 2 * normalized);
@@ -1523,10 +1889,31 @@
     return `Confidence ${(confidence * 100).toFixed(0)}%`;
   }
 
+  function formatEvAllocationsForLog(callAlloc, finalAlloc){
+    const toParts = alloc => {
+      if (!alloc) return [];
+      const parts = [];
+      if (alloc.D) parts.push(`D ${alloc.D}`);
+      if (alloc.R) parts.push(`R ${alloc.R}`);
+      if (alloc.O) parts.push(`O ${alloc.O}`);
+      return parts;
+    };
+    const callParts = toParts(callAlloc);
+    const finalParts = toParts(finalAlloc);
+    if (!callParts.length && !finalParts.length) return '';
+    const callText = callParts.length ? callParts.join(' | ') : '';
+    const finalText = finalParts.length ? finalParts.join(' | ') : '';
+    if (callText && finalText && callText !== finalText) {
+      return `EV ${callText} → ${finalText}`;
+    }
+    const text = finalText || callText;
+    return text ? `EV ${text}` : '';
+  }
+
   function formatLean(value){
     if (!isFinite(value)) return 'EVEN';
     if (typeof window.leanStr === 'function') return window.leanStr(value);
-    if (Math.abs(value) < 0.00005) return 'EVEN';
+    //if (Math.abs(value) < 0.00005) return 'EVEN';
     const pct = (Math.abs(value) * 100).toFixed(1);
     return `${value > 0 ? 'D' : 'R'}+${pct}`;
   }
