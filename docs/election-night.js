@@ -70,6 +70,8 @@
     simEnd: 0,
     stateData: [],
     snapshot: new Map(),
+  baselineFinal: null,
+  finalTargets: null,
     totalEligibleVotes: 0,
     prevPvOverride: null,
     prevPvSliderValue: null,
@@ -270,12 +272,36 @@
       elements.victory.style.display = 'none';
     }
 
-    const data = buildStateData(year, pvValue);
+    const data = buildStateData(year, pvValue, state.prevAbbrColors);
     state.stateData = data;
     if (!data.length) {
       updateToggleLabel();
       return;
     }
+
+    state.baselineFinal = new Map();
+    state.finalTargets = new Map();
+    data.forEach(st => {
+      if (!st) return;
+      const baseline = deriveBaselineRecord(st, state.prevAbbrColors);
+      const expected = buildFinalTargetRecord(st);
+      if (baseline) {
+        state.baselineFinal.set(st.unitKey, { ...baseline });
+        st.aliases.forEach(alias => {
+          if (alias === st.unitKey) return;
+          state.baselineFinal.set(alias, { ...baseline, aliasOf: st.unitKey });
+        });
+      }
+      if (expected) {
+        state.finalTargets.set(st.unitKey, { ...expected });
+        st.aliases.forEach(alias => {
+          if (alias === st.unitKey) return;
+          state.finalTargets.set(alias, { ...expected, aliasOf: st.unitKey });
+        });
+      }
+    });
+    window._electionNightBaseline = state.baselineFinal;
+    window._electionNightExpectedFinals = state.finalTargets;
 
     state.totalEvPool = determineEvPool(year, data);
 
@@ -401,6 +427,10 @@
     state.stateData = [];
     state.snapshot = new Map();
     window._electionNightSnapshot = null;
+  state.baselineFinal = null;
+  state.finalTargets = null;
+  window._electionNightBaseline = null;
+  window._electionNightExpectedFinals = null;
     state.currentTime = 0;
     state.lastTimestamp = null;
     state.lastLogKey = '';
@@ -486,7 +516,7 @@
     }
   }
 
-  function buildStateData(year, pvValue){
+  function buildStateData(year, pvValue, baselineAbbrMap){
     const rows = (window._byYearMap && window._byYearMap.get(year)) || [];
     if (!rows.length) return [];
     const out = [];
@@ -510,7 +540,8 @@
       if (topThirdShare > totalThirdShare + EPS) {
         topThirdShare = Math.min(topThirdShare, totalThirdShare);
       }
-      const thirdPartyShare = totalThirdShare;
+    let thirdPartyShare = totalThirdShare;
+
       const baseMargin = +row.rm || 0;
       let adjustedMargin = baseMargin + pvValue;
       if (typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit)) {
@@ -521,22 +552,74 @@
         adjustedMargin = forced > 0 ? -forced : -0.06;
       }
 
-      const twoPartyShare = Math.max(0, Math.min(1, 1 - thirdPartyShare));
-      const dTwoPartyFinal = clamp01(0.5 + adjustedMargin / 2);
-      const rTwoPartyFinal = 1 - dTwoPartyFinal;
-      const dShareFinal = twoPartyShare * dTwoPartyFinal;
-      const rShareFinal = twoPartyShare * rTwoPartyFinal;
-      const topShareFinal = Math.max(0, Math.min(1, topThirdShare));
+      const baselineEntry = (baselineAbbrMap && baselineAbbrMap.get) ? baselineAbbrMap.get(abbr) : null;
+      const baselineMargin = extractBaselineMargin(baselineEntry);
+      const rowWinner = resolveRowWinner(row);
+      const baselineWinner = resolveBaselineWinner(baselineEntry);
+      const targetMarginBase = (baselineMargin != null && isFinite(baselineMargin)) ? baselineMargin : adjustedMargin;
 
-      let winner = determineWinner(dShareFinal, rShareFinal, topShareFinal);
-    if (year === 1876 && abbr === 'CO') winner = 'R';
+      let twoPartyShare = Math.max(0, Math.min(1, 1 - thirdPartyShare));
+      const baseTwoParty = clamp01(0.5 + targetMarginBase / 2);
+      const baseDShare = twoPartyShare * baseTwoParty;
+      const baseRShare = twoPartyShare * (1 - baseTwoParty);
+      const baseWinner = determineWinner(baseDShare, baseRShare, topThirdShare);
+
+      let winner = baselineWinner || rowWinner || baseWinner || null;
+      if (winner === 'O' && topThirdShare < Math.max(baseDShare, baseRShare) - EPS) {
+        winner = baseDShare >= baseRShare ? 'D' : 'R';
+      }
+      if (!winner) winner = baseDShare >= baseRShare ? 'D' : 'R';
+      if (!baselineWinner && typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit)) {
+        winner = invertWinnerCode(winner);
+      }
+      if (year === 1876 && abbr === 'CO') winner = 'R';
+
+      let marginForShares = adjustMarginForWinner(targetMarginBase, winner);
+      const activeFlipInfo = getActiveFlipInfo(year, unit, abbr);
+      if (activeFlipInfo) {
+        const pctTotal = Math.max(0, +activeFlipInfo.pct_of_state_votes || 0) / 100;
+        const twoParty = Math.max(EPS, 1 - thirdPartyShare);
+        const baseAbs = pctTotal > 0 ? (2 * pctTotal) / twoParty : 0;
+        const desiredMargin = winner === 'D' ? baseAbs : (winner === 'R' ? -baseAbs : 0);
+        marginForShares = adjustMarginForWinner(desiredMargin, winner);
+      }
+
+      let dTwoPartyFinal = clamp01(0.5 + marginForShares / 2);
+      let rTwoPartyFinal = 1 - dTwoPartyFinal;
+      let dShareFinal = twoPartyShare * dTwoPartyFinal;
+      let rShareFinal = twoPartyShare * rTwoPartyFinal;
+      let topShareFinal = Math.max(0, Math.min(1, topThirdShare));
+
+      if (winner !== 'O') {
+        const majorShare = Math.max(dShareFinal, rShareFinal);
+        const maxThirdShare = Math.max(0, majorShare - 0.002);
+        if (thirdPartyShare > maxThirdShare) {
+          thirdPartyShare = Math.max(0, Math.min(maxThirdShare, thirdPartyShare));
+        }
+        if (topShareFinal > maxThirdShare) {
+          topShareFinal = Math.max(0, Math.min(maxThirdShare, topShareFinal));
+        }
+        if (topShareFinal > thirdPartyShare) {
+          topShareFinal = Math.max(0, Math.min(thirdPartyShare, topShareFinal));
+        }
+        twoPartyShare = Math.max(0, Math.min(1, 1 - thirdPartyShare));
+        dTwoPartyFinal = clamp01(0.5 + marginForShares / 2);
+        rTwoPartyFinal = 1 - dTwoPartyFinal;
+        dShareFinal = twoPartyShare * dTwoPartyFinal;
+        rShareFinal = twoPartyShare * rTwoPartyFinal;
+      }
+
+      thirdPartyShare = Math.max(0, Math.min(1, thirdPartyShare));
+      twoPartyShare = Math.max(0, Math.min(1, 1 - thirdPartyShare));
+      topShareFinal = Math.max(0, Math.min(thirdPartyShare, topShareFinal));
+      const finalTopShare = topShareFinal;
+
       const ev = getEv(year, unit);
-
       const startTime = getStateStartTime(abbr);
-      const closeness = 1 - Math.min(1, Math.abs(adjustedMargin) / 0.12);
+      const rng = mulberry32(hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`));
+      const closeness = 1 - Math.min(1, Math.abs(marginForShares) / 0.12);
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
       let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
-      const rng = mulberry32(hashCode(`${year}-${unit}-${Math.round(pvValue*10000)}`));
       const jitter = (rng() - 0.5) * 24;
       let callDeadline = startTime + MIN_CALL_DELAY + closeness * EXTRA_CALL_WINDOW + jitter;
       callDeadline = Math.max(startTime + 10, Math.min(callDeadline, startTime + duration - 10));
@@ -547,7 +630,9 @@
         callDeadline = startTime + 1;
       }
 
-      const biasParams = instantCall ? null : createBiasParams(unit, adjustedMargin, closeness, rng);
+      const biasParams = instantCall ? null : createBiasParams(unit, marginForShares, closeness, rng);
+      const reportingProfile = createReportingProfile(totalVotes, closeness, rng);
+      const thirdCountingParams = createThirdCountingParams(winner, closeness, rng);
       const pathSelections = collectPathSelections(unit, abbr);
       if (!pathSelections.length) return;
 
@@ -555,31 +640,29 @@
       if (isAtLarge) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
+      topThirdShare = finalTopShare;
+
       const finalDVotes = totalVotes * dShareFinal;
       const finalRVotes = totalVotes * rShareFinal;
-      const finalOTopVotes = totalVotes * topShareFinal;
+      const finalOTopVotes = totalVotes * finalTopShare;
       const finalOTotalVotes = totalVotes * thirdPartyShare;
-      const finalMarginTwoParty = dTwoPartyFinal - rTwoPartyFinal;
-      const finalLeader = determineLeader(dShareFinal, rShareFinal, topShareFinal, 1);
-      const finalMarginStr = finalLeader === 'O' ? 'Other lead' : formatLean(finalMarginTwoParty);
-      const finalColor = safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
+      const finalMarginTwoParty = marginForShares;
+      const finalLeader = winner;
+      const finalMarginStr = finalLeader === 'O'
+        ? 'Other lead'
+        : (Math.abs(finalMarginTwoParty) < 0.00005 ? 'EVEN' : formatLean(finalMarginTwoParty));
+      const finalColor = (baselineEntry && baselineEntry.color) ? baselineEntry.color : safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
       const finalCountedVotes = totalVotes;
-      const countedMargin = finalCountedVotes > EPS
-        ? ((finalDVotes - finalRVotes) / finalCountedVotes)
-        : 0;
-      let countedMarginStr = 'None';
       const twoPartyVotes = finalDVotes + finalRVotes;
-      if (finalLeader === 'O') {
-        countedMarginStr = 'Other lead';
-      } else if (twoPartyVotes > EPS) {
-        const leanVal = (finalDVotes - finalRVotes) / twoPartyVotes;
-        countedMarginStr = Math.abs(leanVal) < 0.00005 ? 'EVEN' : formatLean(leanVal);
-      } else if (finalCountedVotes > EPS) {
-        countedMarginStr = 'EVEN';
-      }
+      const countedMargin = finalLeader === 'O' ? 0 : (twoPartyVotes > EPS ? ((finalDVotes - finalRVotes) / twoPartyVotes) : 0);
+      const countedMarginStr = finalLeader === 'O'
+        ? 'Other lead'
+        : (Math.abs(countedMargin) < 0.00005 ? 'EVEN' : formatLean(countedMargin));
+
       const targetMetrics = {
         reporting: 1,
         leader: finalLeader,
+  projectedWinner: finalLeader,
         margin: finalMarginTwoParty,
         marginStr: finalMarginStr,
         countedMargin,
@@ -587,16 +670,23 @@
         color: finalColor,
         dShare: dShareFinal,
         rShare: rShareFinal,
-        oShare: thirdPartyShare,
-        topThirdShare: topShareFinal,
-        totalThirdShare: thirdPartyShare,
+  oShare: thirdPartyShare,
+  topThirdShare: finalTopShare,
+  totalThirdShare: thirdPartyShare,
         confidence: 1,
         dVotesCounted: finalDVotes,
         rVotesCounted: finalRVotes,
-        oVotesCounted: finalOTopVotes,
+  oVotesCounted: finalOTopVotes,
         oVotesCountedTotal: finalOTotalVotes,
+        dVotesCountedGlobal: finalDVotes,
+        rVotesCountedGlobal: finalRVotes,
+  oVotesCountedGlobal: finalOTopVotes,
         countedVotes: finalCountedVotes,
-        remainingVotes: 0
+        remainingVotes: 0,
+        thirdReporting: 1,
+        thirdLagFactor: 1,
+        flipVotesToFlip: activeFlipInfo ? (+activeFlipInfo.votes_to_flip || 0) : null,
+        flipPctToFlip: activeFlipInfo ? (+activeFlipInfo.pct_of_state_votes || 0) : null
       };
 
       out.push({
@@ -604,8 +694,8 @@
         abbr,
         type: isDistrict ? 'district' : (isAtLarge ? 'atlarge' : 'state'),
         totalVotes,
-        thirdPartyShare,
-        topThirdShare,
+  thirdPartyShare,
+  topThirdShare: finalTopShare,
         twoPartyShare,
         dTwoPartyFinal,
         rTwoPartyFinal,
@@ -621,17 +711,74 @@
         callRecord: null,
         instantCall,
         biasParams,
+        reportingProfile,
+        thirdCountingParams,
         pathSelections,
         aliases,
         pvWeight: isAtLarge ? 0 : 1,
         closeness,
         targetMetrics,
+        flipInfo: activeFlipInfo ? {
+          unit: activeFlipInfo.unit || unit,
+          votes_to_flip: +activeFlipInfo.votes_to_flip || 0,
+          pct_of_state_votes: +activeFlipInfo.pct_of_state_votes || 0
+        } : null,
         callLeader: null,
         misCallLogged: false
       });
     });
 
     return out;
+  }
+
+  function deriveBaselineRecord(st, baselineAbbrMap){
+    if (!st) return null;
+    const baselineEntry = (baselineAbbrMap && baselineAbbrMap.get) ? baselineAbbrMap.get(st.abbr) : null;
+    const baselineMargin = extractBaselineMargin(baselineEntry);
+    const expectedColor = baselineEntry && baselineEntry.color ? baselineEntry.color : (st.targetMetrics ? st.targetMetrics.color : null);
+    const baselineWinner = resolveBaselineWinner(baselineEntry);
+    const targetMargin = st.targetMetrics ? st.targetMetrics.margin : null;
+    const countedMargin = st.targetMetrics ? st.targetMetrics.countedMargin : null;
+    const marginDelta = (baselineMargin != null && targetMargin != null) ? (targetMargin - baselineMargin) : null;
+    const flipInfo = st.flipInfo || null;
+    return {
+      unit: st.unitKey,
+      abbr: st.abbr,
+      ev: st.ev,
+      baselineMargin,
+      targetMargin,
+      countedMargin,
+      marginDelta,
+      color: expectedColor,
+      winner: baselineWinner || st.winner,
+      thirdPartyWinner: st.winner === 'O',
+      topThirdShare: st.topThirdShare,
+      totalThirdShare: st.thirdPartyShare,
+      flipVotesToFlip: flipInfo ? (+flipInfo.votes_to_flip || 0) : null,
+      flipPctToFlip: flipInfo ? (+flipInfo.pct_of_state_votes || 0) : null
+    };
+  }
+
+  function buildFinalTargetRecord(st){
+    if (!st || !st.targetMetrics) return null;
+    const t = st.targetMetrics;
+    const flipInfo = st.flipInfo || null;
+    return {
+      unit: st.unitKey,
+      abbr: st.abbr,
+      ev: st.ev,
+      winner: st.winner,
+      margin: t.margin,
+      marginStr: t.marginStr,
+      countedMargin: t.countedMargin,
+      countedMarginStr: t.countedMarginStr,
+      color: t.color,
+      thirdPartyWinner: st.winner === 'O',
+      topThirdShare: st.topThirdShare,
+      totalThirdShare: st.thirdPartyShare,
+      flipVotesToFlip: flipInfo ? (+flipInfo.votes_to_flip || 0) : null,
+      flipPctToFlip: flipInfo ? (+flipInfo.pct_of_state_votes || 0) : null
+    };
   }
 
   function renderAt(timeMinutes){
@@ -678,11 +825,14 @@
       }
 
       if (st.pvWeight) {
-        const counted = st.totalVotes * metrics.reporting;
-        dCounted += counted * metrics.dShare;
-        rCounted += counted * metrics.rShare;
-        oCounted += counted * metrics.oShare;
-        countedVotes += counted;
+          const dGlobal = isFinite(metrics.dVotesCountedGlobal) ? metrics.dVotesCountedGlobal : metrics.dVotesCounted;
+          const rGlobal = isFinite(metrics.rVotesCountedGlobal) ? metrics.rVotesCountedGlobal : metrics.rVotesCounted;
+          const oGlobal = isFinite(metrics.oVotesCountedGlobal) ? metrics.oVotesCountedGlobal : metrics.oVotesCounted;
+          const countedGlobal = isFinite(metrics.countedVotes) ? metrics.countedVotes : (dGlobal + rGlobal + oGlobal);
+          dCounted += dGlobal;
+          rCounted += rGlobal;
+          oCounted += oGlobal;
+          countedVotes += countedGlobal;
       }
 
       const snapshot = {
@@ -692,15 +842,23 @@
         reporting: metrics.reporting,
         called: isCalled,
         leader: metrics.leader,
+  projectedWinner: metrics.projectedWinner,
         confidence: metrics.confidence,
         dVotes: metrics.dVotesCounted,
         rVotes: metrics.rVotesCounted,
         oVotes: metrics.oVotesCounted,
         oVotesTotal: metrics.oVotesCountedTotal,
+        dVotesGlobal: metrics.dVotesCountedGlobal,
+        rVotesGlobal: metrics.rVotesCountedGlobal,
+        oVotesGlobal: metrics.oVotesCountedGlobal,
         countedVotes: metrics.countedVotes,
         remainingVotes: metrics.remainingVotes,
         topThirdShare: metrics.topThirdShare,
-        totalThirdShare: metrics.totalThirdShare
+        totalThirdShare: metrics.totalThirdShare,
+        thirdReporting: metrics.thirdReporting,
+        thirdLagFactor: metrics.thirdLagFactor,
+        flipVotesToFlip: metrics.flipVotesToFlip,
+        flipPctToFlip: metrics.flipPctToFlip
       };
       st.aliases.forEach(alias => state.snapshot.set(alias, snapshot));
       state.snapshot.set(st.unitKey, snapshot);
@@ -722,7 +880,7 @@
 
   function computeMetrics(st, timeMinutes, phaseName){
     const reporting = computeReportingFraction(st, timeMinutes);
-    const bias = logisticBias(st.biasParams, reporting, phaseName);
+    const bias = (st.winner === 'O') ? 1 : logisticBias(st.biasParams, reporting, phaseName);
     const rawD = st.dTwoPartyFinal * Math.max(0.2, bias);
     const rawR = Math.max(EPS, st.rTwoPartyFinal);
     const sumRaw = rawD + rawR;
@@ -737,9 +895,21 @@
     const rShare = st.twoPartyShare * rShareBlend;
     const oShare = totalThirdShare;
 
-    const leader = determineLeader(dShare, rShare, topThirdShare, reporting);
-    const margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
-    const marginStr = (reporting > 0 && leader !== 'O') ? formatLean(margin) : (leader === 'O' && reporting > 0 ? 'Other lead' : '');
+    const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
+    const leader = determineLeaderFromCounts(stats, st.winner);
+    const displayLeader = reporting > EPS ? leader : null;
+  const twoPartyCounted = stats.dCounted + stats.rCounted;
+  let margin = twoPartyCounted > EPS ? ((stats.dCounted - stats.rCounted) / twoPartyCounted) : null;
+  if (leader === 'D' && margin != null && margin < 0) margin = Math.abs(margin);
+  if (leader === 'R' && margin != null && margin > 0) margin = -Math.abs(margin);
+  if (leader === 'O') margin = 0;
+    if (!displayLeader) margin = null;
+    let marginStr = '';
+    if (displayLeader && twoPartyCounted > EPS) {
+      marginStr = displayLeader === 'O' ? 'Other lead' : formatLean(margin);
+    } else if (reporting > 0 && leader === 'O') {
+      marginStr = 'Other lead';
+    }
 
     const baseColor = leader === 'O'
       ? THIRD_PARTY_COLOR
@@ -747,18 +917,19 @@
     const intensity = Math.pow(Math.max(0, Math.min(1, reporting)), 0.7);
     const color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
 
-    const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
-    const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
+    const countedMargin = margin;
     let countedMarginStr = 'None';
-    if (stats.countedVotes > EPS) {
-      if (leader === 'O') countedMarginStr = 'Other lead';
-      else countedMarginStr = formatLean(countedMargin);
+    if (displayLeader && twoPartyCounted > EPS) {
+      countedMarginStr = displayLeader === 'O' ? 'Other lead' : formatLean(countedMargin);
     }
+    if (!marginStr) marginStr = 'None';
+
     const confidence = calculateConfidence(st, stats);
 
     let result = {
       reporting,
-      leader,
+      leader: displayLeader,
+      projectedWinner: leader,
       margin,
       marginStr,
       countedMargin,
@@ -774,8 +945,15 @@
       rVotesCounted: stats.rCounted,
       oVotesCounted: stats.oCounted,
       oVotesCountedTotal: stats.oTotalCounted,
+      dVotesCountedGlobal: stats.dVotesGlobal,
+      rVotesCountedGlobal: stats.rVotesGlobal,
+      oVotesCountedGlobal: stats.oVotesGlobal,
       countedVotes: stats.countedVotes,
-      remainingVotes: stats.remainingVotes
+      remainingVotes: stats.remainingVotes,
+      thirdReporting: stats.thirdReporting,
+      thirdLagFactor: stats.thirdLagFactor,
+      flipVotesToFlip: st.flipInfo ? (+st.flipInfo.votes_to_flip || 0) : (st.targetMetrics ? st.targetMetrics.flipVotesToFlip : null),
+      flipPctToFlip: st.flipInfo ? (+st.flipInfo.pct_of_state_votes || 0) : (st.targetMetrics ? st.targetMetrics.flipPctToFlip : null)
     };
 
     if (st.targetMetrics && reporting >= 1 - EPS) {
@@ -785,22 +963,82 @@
     return result;
   }
 
+  function computeThirdPartyReporting(st, reporting){
+    const clamped = clamp01(reporting);
+    if (clamped <= EPS) return 0;
+    if (!st || !st.thirdCountingParams) return clamped;
+    if (st.winner === 'O') return clamped;
+    const params = st.thirdCountingParams;
+    const power = Math.max(1, params.power || 1.2);
+    const floor = Math.min(0.95, Math.max(0, params.floor ?? 0.25));
+    const powVal = Math.pow(clamped, power);
+    const floorVal = clamped * floor;
+    const slowed = Math.max(floorVal, Math.min(clamped, powVal));
+    return Math.max(0, Math.min(clamped, slowed));
+  }
+
   function computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare){
-    const countedVotes = st.totalVotes * Math.max(0, Math.min(1, reporting));
-    const dCounted = countedVotes * Math.max(0, Math.min(1, dShare));
-    const rCounted = countedVotes * Math.max(0, Math.min(1, rShare));
+    const reportingClamped = clamp01(reporting);
+    const countedVotes = st.totalVotes * reportingClamped;
+    const dClamped = Math.max(0, Math.min(1, dShare || 0));
+    const rClamped = Math.max(0, Math.min(1, rShare || 0));
     const totalThirdClamped = Math.max(0, Math.min(1, totalThirdShare || 0));
-    const topThirdClamped = Math.max(0, Math.min(1, (topThirdShare != null ? topThirdShare : totalThirdClamped)));
-    const oTotalCounted = countedVotes * totalThirdClamped;
-    const oCounted = countedVotes * topThirdClamped;
+    const topThirdClamped = Math.max(0, Math.min(totalThirdClamped, (topThirdShare != null ? topThirdShare : totalThirdClamped)));
+
+    if (countedVotes <= EPS) {
+      return {
+        countedVotes: 0,
+        dCounted: 0,
+        rCounted: 0,
+        oCounted: 0,
+        oTotalCounted: 0,
+        dVotesGlobal: 0,
+        rVotesGlobal: 0,
+        oVotesGlobal: 0,
+        remainingVotes: st.totalVotes,
+        thirdReporting: 0,
+        thirdLagFactor: 0
+      };
+    }
+
+    const thirdReporting = computeThirdPartyReporting(st, reportingClamped);
+    const thirdLagFactor = reportingClamped > EPS ? Math.min(1, thirdReporting / reportingClamped) : 0;
+
+    const dBase = countedVotes * dClamped;
+    const rBase = countedVotes * rClamped;
+    const thirdBase = countedVotes * totalThirdClamped;
+    const topThirdBase = countedVotes * topThirdClamped;
+
+    const reportedThird = thirdBase * thirdLagFactor;
+    const reportedTopThird = topThirdBase * thirdLagFactor;
+    const withheldThird = Math.max(0, thirdBase - reportedThird);
+    const twoPartyShare = Math.max(EPS, dClamped + rClamped);
+    const dShareTwoParty = dClamped / twoPartyShare;
+    const rShareTwoParty = rClamped / twoPartyShare;
+    const redistributedD = withheldThird * dShareTwoParty;
+    const redistributedR = withheldThird * rShareTwoParty;
+
+    const dVisible = dBase + redistributedD;
+    const rVisible = rBase + redistributedR;
+    const oVisible = reportedTopThird;
+
+    const dGlobal = dVisible;
+    const rGlobal = rVisible;
+    const oGlobal = oVisible;
     const remainingVotes = Math.max(0, st.totalVotes - countedVotes);
+
     return {
       countedVotes,
-      dCounted,
-      rCounted,
-      oCounted,
-      oTotalCounted,
-      remainingVotes
+      dCounted: dVisible,
+      rCounted: rVisible,
+      oCounted: oVisible,
+      oTotalCounted: reportedThird,
+      dVotesGlobal: dGlobal,
+      rVotesGlobal: rGlobal,
+      oVotesGlobal: oGlobal,
+      remainingVotes,
+      thirdReporting,
+      thirdLagFactor
     };
   }
 
@@ -861,6 +1099,7 @@
       return currentTime >= st.startTime - EPS;
     }
     if (!metrics || metrics.leader == null) return false;
+    if (metrics.leader === 'O' && st.winner !== 'O') return false;
     if (metrics.reporting < MIN_REPORTING_TO_CALL && currentTime < st.callDeadline - 5) return false;
     if (metrics.reporting >= 0.999) return true;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
@@ -869,6 +1108,7 @@
 
   function shouldForceCall(st, metrics, currentTime){
     if (!metrics || metrics.leader == null) return false;
+    if (metrics.leader === 'O' && st.winner !== 'O') return false;
     if (metrics.reporting >= 0.999) {
       return metrics.leader === st.winner;
     }
@@ -889,7 +1129,11 @@
       : 'None';
     const reporting = metrics ? metrics.reporting : 0;
     const confidence = metrics ? metrics.confidence : 1;
-    const calledLeader = metrics ? metrics.leader : null;
+    let calledLeader = metrics ? metrics.leader : null;
+    if ((!calledLeader || calledLeader === 'O') && st.winner !== 'O') {
+      calledLeader = st.winner;
+    }
+    if (!calledLeader) calledLeader = st.winner;
     const thresholdUsed = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     st.callLeader = calledLeader;
     st.callRecord = {
@@ -897,8 +1141,9 @@
       unitKey: st.unitKey,
       displayLabel: formatUnitLabel(st.unitKey),
       time: callTime,
-      leader: calledLeader,
-      actualWinner: st.winner,
+  leader: calledLeader,
+  projectedWinner: metrics ? metrics.projectedWinner : st.winner,
+  actualWinner: st.winner,
       marginStr: effectiveMarginStr,
       reporting,
       ev: st.ev,
@@ -911,7 +1156,11 @@
       countedVotes: metrics ? metrics.countedVotes : null,
       remainingVotes: metrics ? metrics.remainingVotes : null,
       topThirdShare: metrics ? metrics.topThirdShare : null,
-      totalThirdShare: metrics ? metrics.totalThirdShare : null
+      totalThirdShare: metrics ? metrics.totalThirdShare : null,
+      thirdReporting: metrics ? metrics.thirdReporting : null,
+      thirdLagFactor: metrics ? metrics.thirdLagFactor : null,
+      flipVotesToFlip: metrics ? metrics.flipVotesToFlip : null,
+      flipPctToFlip: metrics ? metrics.flipPctToFlip : null
     };
     state.callRecords.push(st.callRecord);
   }
@@ -936,16 +1185,24 @@
         margin: metrics.countedMargin,
         marginStr: metrics.countedMarginStr,
         leader: metrics.leader,
+  projectedWinner: metrics.projectedWinner,
         confidence: metrics.confidence,
         called: st.calledAt != null,
         dVotes: metrics.dVotesCounted,
         rVotes: metrics.rVotesCounted,
         oVotes: metrics.oVotesCounted,
         oVotesTotal: metrics.oVotesCountedTotal,
+        dVotesGlobal: metrics.dVotesCountedGlobal,
+        rVotesGlobal: metrics.rVotesCountedGlobal,
+        oVotesGlobal: metrics.oVotesCountedGlobal,
         countedVotes: metrics.countedVotes,
         remainingVotes: metrics.remainingVotes,
         topThirdShare: metrics.topThirdShare,
-        totalThirdShare: metrics.totalThirdShare
+        totalThirdShare: metrics.totalThirdShare,
+        thirdReporting: metrics.thirdReporting,
+        thirdLagFactor: metrics.thirdLagFactor,
+        flipVotesToFlip: metrics.flipVotesToFlip,
+        flipPctToFlip: metrics.flipPctToFlip
       } : { color };
       state.abbrColorMap.set(st.abbr, info);
     }
@@ -1435,6 +1692,32 @@
     return { favored, midpoint, steepness, strength, linger };
   }
 
+  function createReportingProfile(totalVotes, closeness, rng){
+    const rand = rng || Math.random;
+    const safeTotal = Math.max(1, totalVotes);
+    const baseChunks = safeTotal / 85000;
+    const closenessBonus = 12 + closeness * 28;
+    const approxChunks = Math.max(10, Math.min(140, Math.round(baseChunks + closenessBonus)));
+    const rawStep = 1 / Math.max(EPS, approxChunks);
+    const stepBoost = 1.35 + 0.55 * rand();
+    const step = Math.min(0.22, Math.max(0.01, rawStep * stepBoost));
+    const holdBase = 0.5 + 0.18 * rand();
+    const hold = Math.min(0.94, Math.max(0.35, holdBase + (0.22 * (1 - closeness))));
+    const offset = step * rand() * 0.8;
+    return { step, hold, offset };
+  }
+
+  function createThirdCountingParams(winner, closeness, rng){
+    const rand = rng || Math.random;
+    if (winner === 'O') {
+      return { power: 1, floor: 1 };
+    }
+    const basePower = 1.2 + 0.35 * (0.4 + closeness) + 0.15 * rand();
+    const power = Math.min(1.85, Math.max(1.05, basePower));
+    const floor = Math.min(0.85, Math.max(0.15, 0.25 + 0.25 * rand()));
+    return { power, floor };
+  }
+
   function logisticBias(params, reporting, phaseName){
     if (!params) return 1;
     const midpoint = params.midpoint;
@@ -1467,7 +1750,35 @@
     if (timeMinutes >= st.startTime + st.duration) return 1;
     const normalized = (timeMinutes - st.startTime) / st.duration;
     const eased = normalized * normalized * (3 - 2 * normalized);
-    return clamp01(eased);
+    const quantized = applyReportingProfile(st, eased);
+    return clamp01(quantized);
+  }
+
+  function applyReportingProfile(st, rawFraction){
+    if (!st || !st.reportingProfile) return clamp01(rawFraction);
+    const profile = st.reportingProfile;
+    const clamped = clamp01(rawFraction);
+    if (clamped <= EPS) return 0;
+    if (clamped >= 1 - EPS) return 1;
+    const step = Math.max(EPS, profile.step || 0.01);
+    const hold = Math.min(0.95, Math.max(0.1, profile.hold || 0.5));
+    const offset = profile.offset || 0;
+    const shifted = clamped + offset;
+    const bucket = Math.floor(shifted / step);
+    const base = Math.max(0, bucket * step - offset);
+    let next = base + step;
+    if (next > 1) next = 1;
+    const span = Math.max(EPS, next - base);
+    const progress = (clamped - base) / span;
+    if (progress <= 0) return clamp01(base);
+    if (progress < hold) {
+      const warmup = base + span * 0.08 * (progress / hold);
+      return clamp01(warmup);
+    }
+    const eased = Math.pow((progress - hold) / Math.max(1 - hold, EPS), 0.45);
+    const jumpStart = base + span * 0.3;
+    const value = Math.min(next, jumpStart + (span - span * 0.3) * Math.min(1, eased));
+    return clamp01(value);
   }
 
   function updateToggleLabel(){
@@ -1476,6 +1787,138 @@
     else if (!state.prepared) elements.toggle.textContent = 'Start';
     else if (state.currentTime >= state.simEnd - EPS) elements.toggle.textContent = 'Replay';
     else elements.toggle.textContent = 'Resume';
+  }
+
+  function normalizeWinnerCode(value){
+    if (value == null) return null;
+    const str = String(value).trim().toLowerCase();
+    if (!str) return null;
+    if (str === 'd' || str.startsWith('dem')) return 'D';
+    if (str === 'r' || str.startsWith('rep')) return 'R';
+    if (str === 'o' || str.startsWith('oth') || str.startsWith('3') || str.startsWith('third')) return 'O';
+    if (str === 't' || str === 'tie') return null;
+    return null;
+  }
+
+  function colorToWinner(color){
+    if (!color) return null;
+    const str = String(color).toLowerCase();
+    if (str.includes('blue')) return 'D';
+    if (str.includes('red')) return 'R';
+    if (str.includes('yellow') || str.includes('gold') || str.includes('orange')) return 'O';
+    if (/^#+[0-9a-f]{6}$/i.test(str)) {
+      const hex = str.replace('#','');
+      const r = parseInt(hex.slice(0,2), 16);
+      const g = parseInt(hex.slice(2,4), 16);
+      const b = parseInt(hex.slice(4,6), 16);
+      if ([r,g,b].some(v => Number.isNaN(v))) return null;
+      if (b >= r && b >= g) return 'D';
+      if (r >= b && r >= g) return 'R';
+      if (g >= r && g >= b) return 'O';
+    }
+    return null;
+  }
+
+  function extractBaselineMargin(entry){
+    if (!entry) return null;
+    if (isFinite(entry.margin)) return entry.margin;
+    if (isFinite(entry.m)) return entry.m;
+    if (typeof entry.marginStr === 'string') {
+      const lean = entry.marginStr.trim().toUpperCase();
+      if (lean === 'EVEN') return 0;
+      const match = lean.match(/^(D|R)\+([0-9]+(?:\.[0-9]+)?)$/);
+      if (match) {
+        const sign = match[1] === 'D' ? 1 : -1;
+        const value = parseFloat(match[2]) / 100;
+        if (isFinite(value)) return sign * value;
+      }
+    }
+    return null;
+  }
+
+  function resolveBaselineWinner(entry){
+    if (!entry) return null;
+    const fromWinner = normalizeWinnerCode(entry.winner);
+    if (fromWinner) return fromWinner;
+    const fromLeader = normalizeWinnerCode(entry.leader);
+    if (fromLeader) return fromLeader;
+    const fromColor = colorToWinner(entry.color);
+    if (fromColor) return fromColor;
+    const baselineMargin = extractBaselineMargin(entry);
+    if (baselineMargin != null && Math.abs(baselineMargin) > EPS) return baselineMargin > 0 ? 'D' : 'R';
+    return null;
+  }
+
+  function resolveRowWinner(row){
+    if (!row) return null;
+    const direct = normalizeWinnerCode(row.winner);
+    if (direct) return direct;
+    const leader = normalizeWinnerCode(row.leader);
+    if (leader) return leader;
+    const colorWinner = colorToWinner(row.color || row.baseColor);
+    if (colorWinner) return colorWinner;
+    if (typeof row.pres_margin === 'number' && Math.abs(row.pres_margin) > EPS) return row.pres_margin > 0 ? 'D' : 'R';
+    if (typeof row.rm === 'number' && Math.abs(row.rm) > EPS) return row.rm > 0 ? 'D' : 'R';
+    if (typeof row.two_party_margin === 'number' && Math.abs(row.two_party_margin) > EPS) return row.two_party_margin > 0 ? 'D' : 'R';
+    if (typeof row.margin === 'number' && Math.abs(row.margin) > EPS) return row.margin > 0 ? 'D' : 'R';
+    if (typeof row.marginStr === 'string') {
+      const code = normalizeWinnerCode(row.marginStr.slice(0,1));
+      if (code) return code;
+    }
+    return null;
+  }
+
+  function invertWinnerCode(code){
+    if (code === 'D') return 'R';
+    if (code === 'R') return 'D';
+    return code;
+  }
+
+  function adjustMarginForWinner(margin, winner){
+    let result = isFinite(margin) ? margin : 0;
+    const MIN_WIN_MARGIN = 2e-5;
+    if (winner === 'D') {
+      if (result < 0) result = -result;
+      if (result < MIN_WIN_MARGIN) result = MIN_WIN_MARGIN;
+    } else if (winner === 'R') {
+      if (result > 0) result = -result;
+      if (result > -MIN_WIN_MARGIN) result = -MIN_WIN_MARGIN;
+    } else if (winner === 'O') {
+      result = Math.max(-0.45, Math.min(0.45, result));
+    }
+    return result;
+  }
+
+  function normalizeUnitKey(value){
+    if (!value) return null;
+    const str = String(value).trim().toUpperCase();
+    if (!str) return null;
+    if (/^[A-Z]{2}$/.test(str)) return str;
+    if (/^[A-Z]{2}-AL$/.test(str)) return str;
+    if (/^[A-Z]{2}-0[1-9]$/.test(str)) return str;
+    return str;
+  }
+
+  function getActiveFlipInfo(year, unit, abbr){
+    const flip = (typeof window !== 'undefined') ? window._activeFlip : null;
+    if (!flip || flip.year !== year || !Array.isArray(flip.units)) return null;
+    const unitKey = normalizeUnitKey(unit);
+    const abbrKey = normalizeUnitKey(abbr);
+    for (const info of flip.units) {
+      if (!info) continue;
+      const infoKey = normalizeUnitKey(info.unit);
+      if (!infoKey) continue;
+      if (infoKey === unitKey || infoKey === abbrKey) return info;
+      if (infoKey.endsWith('-AL')) {
+        const base = infoKey.slice(0, 2);
+        if (unitKey === base || unitKey === `${base}-AL` || abbrKey === base) return info;
+      }
+      if (unitKey && unitKey.endsWith('-AL')) {
+        const base = unitKey.slice(0, 2);
+        if (infoKey === base) return info;
+      }
+    }
+    return null;
   }
 
   function determineWinner(dShare, rShare, oShare){
@@ -1498,6 +1941,24 @@
     if (dShare >= rShare && dShare >= oShare) return 'D';
     if (rShare >= dShare && rShare >= oShare) return 'R';
     return 'O';
+  }
+
+  function determineLeaderFromCounts(stats, fallbackWinner){
+    if (!stats || stats.countedVotes <= EPS) return fallbackWinner || null;
+    const dGlobal = isFinite(stats.dVotesGlobal) ? stats.dVotesGlobal : stats.dCounted;
+    const rGlobal = isFinite(stats.rVotesGlobal) ? stats.rVotesGlobal : stats.rCounted;
+    const oGlobal = isFinite(stats.oVotesGlobal) ? stats.oVotesGlobal : stats.oCounted;
+    const total = dGlobal + rGlobal + oGlobal;
+    if (total <= EPS) return fallbackWinner || null;
+    const dShare = dGlobal / total;
+    const rShare = rGlobal / total;
+    const oShare = oGlobal / total;
+    const winner = determineWinner(dShare, rShare, oShare);
+    if (!winner || winner === 'T') return fallbackWinner || null;
+    if (winner === 'O' && fallbackWinner && fallbackWinner !== 'O') {
+      return fallbackWinner;
+    }
+    return winner;
   }
 
   function formatLeader(code){
