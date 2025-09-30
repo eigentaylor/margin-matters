@@ -52,6 +52,7 @@ def main():
             # New: total third-party votes and per-candidate breakdown
             r2['third_party_votes'] = safe_int(r.get('third_party_votes', 0))
             r2['third_party_results'] = r.get('third_party_results', '')
+            r2['top_third_party_share'] = r2['T_votes'] / r2['total_votes'] if r2['total_votes'] > 0 else 0.0
             # capture electoral_votes if present
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
             rows.append(r2)
@@ -235,7 +236,9 @@ def main():
                 'year': year,
                 'abbr': abbr,
                 'D_votes': r['D_votes'],
+                'D_share': r['D_votes'] / r['total_votes'] if r['total_votes'] > 0 else 0.0,
                 'R_votes': r['R_votes'],
+                'R_share': r['R_votes'] / r['total_votes'] if r['total_votes'] > 0 else 0.0,
                 'third_party_votes': r.get('third_party_votes', 0),
                 'D_delta': D_delta,
                 'R_delta': R_delta,
@@ -247,6 +250,7 @@ def main():
                 'third_party_results': r.get('third_party_results', ''),
                 # top_third_party will be filled in below after parsing third_party_results
                 'top_third_party': '',
+                'top_third_party_share': r.get('top_third_party_share', 0.0),
                 
                 'pres_margin': f"{pres:.12f}",
                 'pres_margin_delta': f"{pres_delta:.12f}" if pres_delta is not None else '0',
@@ -391,7 +395,9 @@ def main():
 
     # write CSV
     fieldnames = [
-        'year', 'abbr', 'D_votes', 'R_votes', 'electoral_votes', 'T_votes', 'top_third_party', 'third_party_votes', 'total_votes', 'third_party_results',
+        'year', 'abbr', 'D_votes', 'R_votes', 'electoral_votes', 'T_votes',
+        'D_share', 'R_share', 
+        'top_third_party_share', 'top_third_party', 'third_party_votes', 'total_votes', 'third_party_results',
         'D_delta', 'R_delta', 'total_delta',
         'pres_margin', 'pres_margin_delta',
         'national_margin', 'national_margin_delta',

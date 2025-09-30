@@ -4,6 +4,8 @@ from collections import defaultdict
 import traceback
 from typing import Dict, List, Tuple
 
+import numpy as np
+
 import params
 
 
@@ -75,6 +77,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 'R': parse_float(r['R_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
                 'T': parse_float(r['T_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
             }
+            assert np.isclose(original_margins['T'], r.get('top_third_party_share', 0.0), atol=1e-6), f"Mismatch T share {original_margins['T']} vs {r.get('top_third_party_share', 0.0)}"
             tp = original_margins['T']
             original_winner = max(original_margins, key=lambda k: original_margins.get(k, 0))
             a_local = 3 * tp - 1
