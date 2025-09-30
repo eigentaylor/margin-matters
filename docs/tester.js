@@ -138,13 +138,15 @@
       // Get base vote counts
       let dVotes = +r.dVotes || 0;
       let rVotes = +r.rVotes || 0;
-      let tVotes = +r.tVotes || 0;
-      let total = +r.total || (dVotes + rVotes + tVotes) || 0;
+      let topThirdVotes = +r.topThirdVotes || 0; // Use top third party votes only
+      let total = +r.total || (dVotes + rVotes + (+r.tVotes || 0)) || 0;
       
+      // Don't display vote info if there are no votes at all (e.g., CO 1876, FL 1868, LA 1864)
       if (total <= 0) return null;
       
       // Adjust for PV margin change and flips
       const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      const topThirdShare = Math.max(0, Math.min(1, (+r.tp) || 0)); // Top third party share specifically
       const flipped = isUnitFlipped(year, keyUnit);
       let rmAdj = (+r.rm || 0) + pv;
       if (flipped) {
@@ -156,20 +158,20 @@
       twoD = Math.max(0, Math.min(1, twoD));
       
       // Calculate final vote shares
-      const dShare = (1 - tp) * twoD;
-      const rShare = (1 - tp) * (1 - twoD);
-      const tShare = tp;
+      const dShare = (1 - topThirdShare) * twoD; // Use top third party share, not total third party
+      const rShare = (1 - topThirdShare) * (1 - twoD);
+      const topThirdShareAdj = topThirdShare; // Top third party gets its share
       
       // Calculate adjusted vote counts
       const dVotesAdj = Math.round(total * dShare);
       const rVotesAdj = Math.round(total * rShare);
-      const tVotesAdj = Math.round(total * tShare);
+      const topThirdVotesAdj = Math.round(total * topThirdShareAdj);
       
       return {
         D: dVotesAdj,
         R: rVotesAdj,
-        O: tVotesAdj,
-        total: dVotesAdj + rVotesAdj + tVotesAdj
+        O: topThirdVotesAdj, // Only top third party votes
+        total: dVotesAdj + rVotesAdj + topThirdVotesAdj
       };
     } catch(e) {
       return null;
@@ -384,9 +386,14 @@
       if (voteTallies) {
         const voteParts = [];
         const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+        
+        // Only display parties with votes
         if (voteTallies.D > 0) voteParts.push(`D: ${formatter(voteTallies.D)}`);
         if (voteTallies.R > 0) voteParts.push(`R: ${formatter(voteTallies.R)}`);
+        // Only display top third party if it has votes (not all third parties)
         if (voteTallies.O > 0) voteParts.push(`O: ${formatter(voteTallies.O)}`);
+        
+        // Only add vote row if we have votes to display
         if (voteParts.length) {
           rows.push(voteParts.join(' | '));
         }
