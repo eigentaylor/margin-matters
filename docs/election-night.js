@@ -665,7 +665,7 @@
         countedMarginStr = 'EVEN';
       }
 
-      const evAllocations = buildEvAllocations(year, abbr, unit, ev, winner);
+      const evAllocations = buildEvAllocations(year, abbr, unit, ev, winner, finalDVotes, finalRVotes, finalOTotalVotes, topThirdShare);
 
       const targetMetrics = {
         reporting: 1,
@@ -729,10 +729,62 @@
     return out;
   }
 
-  function buildEvAllocations(year, abbr, unit, ev, winner){
+  function buildEvAllocations(year, abbr, unit, ev, winner, dVotes, rVotes, oVotes, topThirdShare){
     const allocations = { D: 0, R: 0, O: 0 };
     if (!isFinite(ev) || ev <= 0) return allocations;
 
+    // Check if proportional EV mode is enabled
+    const isProportional = (() => {
+      try {
+        const toggle = document.getElementById('propEvToggle');
+        return toggle && toggle.checked;
+      } catch(e) {
+        return false;
+      }
+    })();
+
+    if (isProportional && dVotes != null && rVotes != null && oVotes != null) {
+      // Use proportional allocation
+      const total = dVotes + rVotes + oVotes;
+      if (total > 0) {
+        // Calculate exact proportional shares
+        const dShare = dVotes / total;
+        const rShare = rVotes / total;
+        const oShare = oVotes / total;
+        
+        // Calculate integer portions (quotas)
+        const dQuota = Math.floor(dShare * ev);
+        const rQuota = Math.floor(rShare * ev);
+        const oQuota = Math.floor(oShare * ev);
+        
+        allocations.D = dQuota;
+        allocations.R = rQuota;
+        allocations.O = oQuota;
+        
+        let remaining = ev - (dQuota + rQuota + oQuota);
+        
+        // Allocate remaining EVs using largest remainder method
+        if (remaining > 0) {
+          const remainders = [
+            { party: 'D', remainder: (dShare * ev) - dQuota },
+            { party: 'R', remainder: (rShare * ev) - rQuota },
+            { party: 'O', remainder: (oShare * ev) - oQuota }
+          ];
+          
+          // Sort by remainder descending
+          remainders.sort((a, b) => b.remainder - a.remainder);
+          
+          // Allocate remaining EVs to parties with largest remainders
+          for (let i = 0; i < remaining; i++) {
+            allocations[remainders[i].party]++;
+          }
+        }
+        
+        return allocations;
+      }
+    }
+
+    // Fall back to original winner-take-all logic
     if (year === 1960 && abbr === 'AL' && winner !== 'R') {
       const demPortion = Math.min(ev, 5);
       allocations.D = demPortion;

@@ -164,6 +164,9 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .hide-deltas .delta{display:none !important}
 /* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
 body.has-delta-toggle{padding-bottom:60px}
+
+/* Add padding to body when proportional EV toggle is visible */
+body.has-prop-ev-toggle{padding-bottom:60px}
 /* PV tools specific styling to match future.html dark look
   Ensure high contrast white text on dark backgrounds so controls
   remain readable when pages are rebuilt from templates. */

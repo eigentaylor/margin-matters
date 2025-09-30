@@ -8,6 +8,54 @@
   // Very small states to skip labeling on the map
   const SMALL_STATES = new Set(["MA","RI","CT","NJ","DE","MD","DC","NH","VT"]);
 
+  // Proportional EV allocation function using largest remainder method
+  function allocateProportionalEVs(dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare) {
+    const total = dVotes + rVotes + oVotes;
+    if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0 };
+    
+    // Calculate exact proportional shares
+    const dShare = dVotes / total;
+    const rShare = rVotes / total;
+    const oShare = oVotes / total;
+    
+    // Calculate integer portions (quotas)
+    const dQuota = Math.floor(dShare * totalEVs);
+    const rQuota = Math.floor(rShare * totalEVs);
+    const oQuota = Math.floor(oShare * totalEVs);
+    
+    let allocated = { D: dQuota, R: rQuota, O: oQuota };
+    let remaining = totalEVs - (dQuota + rQuota + oQuota);
+    
+    // Allocate remaining EVs using largest remainder method
+    if (remaining > 0) {
+      const remainders = [
+        { party: 'D', remainder: (dShare * totalEVs) - dQuota },
+        { party: 'R', remainder: (rShare * totalEVs) - rQuota },
+        { party: 'O', remainder: (oShare * totalEVs) - oQuota }
+      ];
+      
+      // Sort by remainder descending
+      remainders.sort((a, b) => b.remainder - a.remainder);
+      
+      // Allocate remaining EVs to parties with largest remainders
+      for (let i = 0; i < remaining; i++) {
+        allocated[remainders[i].party]++;
+      }
+    }
+    
+    return allocated;
+  }
+
+  // Check if proportional EV mode is enabled
+  function isProportionalEvMode() {
+    try {
+      const toggle = document.getElementById('propEvToggle');
+      return toggle && toggle.checked;
+    } catch(e) {
+      return false;
+    }
+  }
+
   // Tunable config for small-state overlay placement and sizing (exposed via window.smallBoxesConfig)
   const _defaultSmallBoxesConfig = {
     // If x is a number, use absolute x. Otherwise, compute from right margin.
@@ -1525,6 +1573,30 @@
   if (btnReset) btnReset.addEventListener('click', () => { clearFlips(); updateAll(); });
   // Initial button visibility update
   updateFlipButtons();
+  
+  // Initialize proportional EV mode toggle
+  const propEvToggle = document.getElementById('propEvToggle');
+  const propEvFooter = document.getElementById('propEvFooter');
+  if (propEvToggle && propEvFooter) {
+    // Show the footer and add body class for padding
+    propEvFooter.style.display = 'flex';
+    document.body.classList.add('has-prop-ev-toggle');
+    
+    // Add event listener for toggle changes
+    propEvToggle.addEventListener('change', () => {
+      // Clear any active flip scenarios when toggling proportional mode
+      clearFlips();
+      updateAll();
+      
+      // Update URL to preserve state
+      const yearEl = document.getElementById('yearSlider');
+      const pvEl = document.getElementById('pvSlider');
+      const year = yearEl ? parseInt(yearEl.value) : null;
+      const pvIndex = pvEl ? parseInt(pvEl.value) : null;
+      updateUrl(year, pvIndex, null);
+    });
+  }
+  
   updateAll();
   
   // Wire the PV Flip button to also toggle a flipped flag and update the URL so shares can preserve a flipped PV
@@ -1684,15 +1756,31 @@
   // Count EVs, ensuring the tipping-point state is included (no black sliver)
   // Third-party EV handling: classify as Other when PV is strictly within the yellow window
   if (!counted) {
-    const t = +r.tp || 0;
-    const a = 3*t - 1;
-    if (a > 0) {
-      const rVal = +(r.rm || 0);
-      const nD = -rVal + a;
-      const nR = -rVal - a;
-      if (pv > nR + EPS && pv < nD - EPS) {
-        if (!isNaN(ev)) oEV += ev; // Other wins here
-        counted = true;
+    // Check if proportional EV mode is enabled
+    if (isProportionalEvMode()) {
+      // Proportional EV allocation
+      const dVotes = +r.dVotes || 0;
+      const rVotes = +r.rVotes || 0;
+      const tVotes = +r.tVotes || 0;
+      const topThirdShare = +r.tp || 0;
+      
+      const allocation = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+      dEV += allocation.D;
+      rEV += allocation.R;
+      oEV += allocation.O;
+      counted = true;
+    } else {
+      // Original winner-take-all logic
+      const t = +r.tp || 0;
+      const a = 3*t - 1;
+      if (a > 0) {
+        const rVal = +(r.rm || 0);
+        const nD = -rVal + a;
+        const nR = -rVal - a;
+        if (pv > nR + EPS && pv < nD - EPS) {
+          if (!isNaN(ev)) oEV += ev; // Other wins here
+          counted = true;
+        }
       }
     }
   }
@@ -2559,6 +2647,14 @@ function applyFlip(mode){
   console.log('applyFlip', mode);
   try {
     window._applyingFlip = true; // Flag to prevent clearing during PV slider change
+    
+    // Turn off proportional EV mode when applying flip scenarios
+    const propEvToggle = document.getElementById('propEvToggle');
+    if (propEvToggle && propEvToggle.checked) {
+      propEvToggle.checked = false;
+      console.log('applyFlip: disabled proportional EV mode for flip scenario');
+    }
+    
     const yearEl = document.getElementById('yearSlider');
     const year = +yearEl.value;
     const by = getFlipScenariosForYearMetric(year);
