@@ -929,6 +929,9 @@
       }
 
       let displayColor = metrics.color;
+      if (st.thirdPartyDominant && metrics.reporting <= EPS) {
+        displayColor = NEUTRAL_COLOR;
+      }
       if (!isCalled && metrics.reporting > 0) {
         if (metrics.margin != null && Math.abs(metrics.margin) < 0.01) {
           displayColor = BRIGHT_TOSSUP_COLOR;
