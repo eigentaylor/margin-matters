@@ -57,6 +57,7 @@
   }
 
   // Calculate proportional EV allocation for a specific unit
+  // Returns {D: number, R: number, O: number} or null if proportional mode is off
   function calculateUnitProportionalEVs(unit) {
     try {
       if (!isProportionalEvMode()) return null;
@@ -116,6 +117,7 @@
   }
 
   // Calculate vote tallies for a specific unit (for index.html - real elections only)
+  // Returns {D: number, R: number, O: number, total: number} or null if not applicable
   function calculateUnitVoteTallies(unit) {
     try {
       // Only show vote tallies on index.html (real elections), not tester or future
