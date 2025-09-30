@@ -1778,13 +1778,24 @@
   if (!counted) {
     // Check if proportional EV mode is enabled
     if (isProportionalEvMode()) {
-      // Proportional EV allocation
-      const dVotes = +r.dVotes || 0;
-      const rVotes = +r.rVotes || 0;
-      const tVotes = +r.tVotes || 0;
+      // Proportional EV allocation using PV-adjusted vote totals so the PV slider affects allocations
+      const total = +r.total || (+r.dVotes || 0) + (+r.rVotes || 0) + (+r.tVotes || 0) || 0;
+      // third-party share (use thirdShare if present, else tp)
+      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      // Adjust two-party split by current PV and flips
+      let rmAdj = (+r.rm || 0) + pv;
+      if (flipped) rmAdj = -rmAdj;
+      let twoD = 0.5 + rmAdj / 2;
+      if (!isFinite(twoD)) twoD = 0.5;
+      twoD = Math.max(0, Math.min(1, twoD));
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      const dVotesAdj = total * dShare;
+      const rVotesAdj = total * rShare;
+      const tVotesAdj = total * tShare;
       const topThirdShare = +r.tp || 0;
-      
-      const allocation = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+      const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare);
       dEV += allocation.D;
       rEV += allocation.R;
       oEV += allocation.O;
