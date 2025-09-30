@@ -332,6 +332,23 @@
   marginsAll.forEach(r => { if (+r.year===2024) totals2024.set(r.abbr, +r.total_votes||0); });
     // compute at-large from districts if needed
     applyAtLarge(paths, totals2024);
+    const baseRows2024 = new Map();
+    marginsAll.forEach(r => { if (+r.year===2024 && r.abbr) baseRows2024.set(r.abbr, r); });
+    function clampShare(value){
+      const v = Number(value);
+      if (!isFinite(v) || v <= 0) return 0;
+      if (v >= 1) return 1;
+      return v;
+    }
+    function getBaseRow(abbr){
+      if (!abbr) return null;
+      if (baseRows2024.has(abbr)) return baseRows2024.get(abbr);
+      if (abbr.includes('-')) {
+        const state = abbr.split('-')[0];
+        if (baseRows2024.has(state)) return baseRows2024.get(state);
+      }
+      return null;
+    }
     // national margin for 2024 baseline
     function natMargin2024(){
       // Prefer explicit NATIONAL row if present
@@ -346,33 +363,80 @@
     }
     const nat2024 = natMargin2024();
     years.forEach(Y => {
+      const nationalMargin = (Y === 2024) ? nat2024 : 0.0;
       const rows = [];
-      // build national row as weighted avg of states with nat margin set to 0.0 in future mode
-      let wts=[], vals=[];
-      if (Y === 2024) {
-        // Use actual 2024 rows from marginsAll
-        const natRow = marginsAll.find(r => +r.year===2024 && (r.abbr==='NATIONAL' || r.unit==='NATIONAL'));
-        const nat = (natRow && isFinite(+natRow.national_margin)) ? +natRow.national_margin : nat2024;
-        const natD = +((natRow && natRow.D_votes) || 0);
-        const natR = +((natRow && natRow.R_votes) || 0);
-        const natT = +((natRow && natRow.T_votes) || 0);
-        const natTot = +((natRow && natRow.total_votes) || (natD+natR+natT) || 0);
-        rows.push({year:Y, unit:'NATIONAL', rm:0, nm:nat, ev:0, tp:0, dVotes:natD, rVotes:natR, tVotes:natT, total:natTot});
-      } else {
-        paths.forEach((rec, abbr) => { const tv = totals2024.get(abbr)||1; const val = rec[Y]; if (isFinite(val)) { wts.push(tv); vals.push(val + 0.0); } });
-        const nat = 0.0; // explicitly set future national margin to 0.0
-        rows.push({ year:Y, unit:'NATIONAL', rm:0, nm:nat, ev:0, tp:0, dVotes:0, rVotes:0, tVotes:0, total: wts.reduce((a,b)=>a+b,0) });
-      }
+      let natD = 0, natR = 0, natT = 0, natTotal = 0, natTopThirdVotes = 0;
       // make per-unit rows
       paths.forEach((rec, abbr) => {
-        const rm = (Y === 2024) ? rec.rel_2024 : rec[Y]; // relative margin (use rel_2024 for 2024)
-        const nm = (Y===2024 ? nat2024 : 0.0); // future national margin = 0.0; 2024 uses actual
-        // keep third-party share from 2024 for color windows; fallback to 0
-        const tpRow = marginsAll.find(r => +r.year===2024 && r.abbr===abbr);
-        const tp = tpRow ? (+tpRow.third_party_share||0) : 0;
+        if (!rec || !abbr) return;
+        const rel = (Y === 2024) ? rec.rel_2024 : rec[Y];
+        const rm = isFinite(rel) ? rel : 0;
+  const base = getBaseRow(abbr);
+  const totalVotes = base ? (+base.total_votes || (+base.D_votes||0) + (+base.R_votes||0) + (+base.third_party_votes||0)) : (totals2024.get(abbr) || 0);
+  // For simulated future years we do NOT model third-party votes; allocate only between D and R.
+  const isFutureYear = (Y > 2024);
+  const thirdShare = isFutureYear ? 0 : clampShare(base ? base.third_party_share : 0);
+  const topThirdShare = isFutureYear ? 0 : clampShare(base ? base.top_third_party_share : thirdShare);
+  const tVotes = isFutureYear ? 0 : Math.max(0, totalVotes * thirdShare);
+        const twoPartyTotal = Math.max(0, totalVotes - tVotes);
+        let dShare2 = 0.5 + (rm + nationalMargin) / 2;
+        if (!isFinite(dShare2)) dShare2 = 0.5;
+        dShare2 = Math.max(0, Math.min(1, dShare2));
+        let rShare2 = 1 - dShare2;
+        if (!isFinite(rShare2)) rShare2 = 0.5;
+        rShare2 = Math.max(0, Math.min(1, rShare2));
+        const denom = dShare2 + rShare2;
+        if (denom > 0) {
+          dShare2 /= denom;
+          rShare2 /= denom;
+        } else {
+          dShare2 = rShare2 = 0.5;
+        }
+        const dVotes = twoPartyTotal * dShare2;
+        const rVotes = twoPartyTotal * rShare2;
+  const topThirdVotes = isFutureYear ? 0 : Math.max(0, Math.min(totalVotes, topThirdShare * totalVotes));
         // EV: reuse 2024 mapping
         const ev = evMap.get(`2024:${abbr}`) || 0;
-        rows.push({ year:Y, unit:abbr, rm: rm, nm: nm, ev: ev, tp: tp, dVotes:0, rVotes:0, tVotes:0, total: totals2024.get(abbr)||0 });
+        rows.push({
+          year: Y,
+          unit: abbr,
+          rm,
+          nm: nationalMargin,
+          ev,
+          tp: topThirdShare,
+          thirdShare,
+          dVotes,
+          rVotes,
+          tVotes,
+          total: totalVotes,
+          topThirdVotes
+        });
+        const includeInNat = !(abbr.includes('-') && !abbr.endsWith('-AL'));
+        if (includeInNat) {
+          natD += dVotes;
+          natR += rVotes;
+          natT += tVotes;
+          natTotal += totalVotes;
+          natTopThirdVotes += topThirdVotes;
+        }
+      });
+      const natTwo = natD + natR;
+      const natNm = (Y === 2024) ? nat2024 : (natTwo > 0 ? (natD - natR) / natTwo : 0);
+      const natThirdShare = natTotal > 0 ? natT / natTotal : 0;
+      const natTopThirdShare = natTotal > 0 ? natTopThirdVotes / natTotal : 0;
+      rows.unshift({
+        year: Y,
+        unit: 'NATIONAL',
+        rm: 0,
+        nm: natNm,
+        ev: 0,
+        tp: natTopThirdShare,
+        thirdShare: natThirdShare,
+        dVotes: natD,
+        rVotes: natR,
+        tVotes: natT,
+        total: natTotal,
+        topThirdVotes: natTopThirdVotes
       });
       byYear.set(Y, rows);
     });
