@@ -126,15 +126,19 @@
         seriesG.append('path').datum(dataS).attr('fill','none').attr('stroke', color.state).attr('stroke-width',2).attr('d', line);
         if (dataN.length) seriesG.append('path').datum(dataN).attr('fill','none').attr('stroke', color.nat).attr('stroke-dasharray','5 5').attr('stroke-width',2).attr('d', line);
         
-        // Add interactive points
+        // Add interactive points (always show them like Trend Viewer)
         pointsG.selectAll('circle.data-point')
           .data(dataS)
           .join('circle')
           .attr('class', 'data-point')
           .attr('cx', d => x(d.year))
           .attr('cy', d => y(d.value))
-          .attr('r', 5)
-          .attr('fill', d => d.color || color.state)
+          .attr('r', 4)
+          .attr('fill', d => {
+            // Use color from CSV if available, otherwise use default based on value
+            if (d.color) return d.color;
+            return d.value >= 0 ? color.stateFillPos : color.stateFillNeg;
+          })
           .attr('stroke', '#fff')
           .attr('stroke-width', 1.5)
           .style('cursor', 'pointer')
@@ -142,7 +146,7 @@
             d3.select(this)
               .transition()
               .duration(150)
-              .attr('r', 7)
+              .attr('r', 6)
               .attr('stroke-width', 2);
             tooltip
               .style('opacity', 1)
@@ -158,12 +162,12 @@
             d3.select(this)
               .transition()
               .duration(150)
-              .attr('r', 5)
+              .attr('r', 4)
               .attr('stroke-width', 1.5);
             tooltip.style('opacity', 0);
           })
           .on('click', function(event, d) {
-            // Optional: copy value to clipboard or show more details
+            // Copy value to clipboard
             navigator.clipboard?.writeText(`${d.year}: ${d.str}`);
           });
       } else {
@@ -175,7 +179,10 @@
           .attr('width', stateW)
           .attr('y', d=> Math.min(y(0), y(d.value)))
           .attr('height', d=> Math.abs(y(d.value) - y(0)))
-          .attr('fill', d=> d.color || (d.value>=0? color.stateFillPos : color.stateFillNeg))
+          .attr('fill', d=> {
+            if (d.color) return d.color;
+            return d.value>=0? color.stateFillPos : color.stateFillNeg;
+          })
           .style('cursor', 'pointer')
           .on('mouseover', function(event, d) {
             d3.select(this).style('opacity', 0.8);

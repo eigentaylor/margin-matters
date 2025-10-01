@@ -131,6 +131,16 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:non
 input[type="range"]::-moz-range-thumb{width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;border:none}
 input[type="range"]:focus{outline:2px solid var(--accent);outline-offset:2px}
 
+/* Dual-handle range slider */
+.dual-range-slider{position:relative;height:6px;margin:20px 0}
+.slider-track{position:absolute;width:100%;height:6px;background:#2a2a2a;border-radius:5px;top:0}
+.slider-range{position:absolute;height:6px;background:var(--accent);border-radius:5px;top:0;pointer-events:none}
+.dual-range-slider .slider-input{position:absolute;width:100%;height:6px;background:transparent;pointer-events:none;top:0;margin:0}
+.dual-range-slider .slider-input::-webkit-slider-thumb{pointer-events:auto;z-index:10}
+.dual-range-slider .slider-input::-moz-range-thumb{pointer-events:auto;z-index:10}
+.dual-range-slider #year-end{z-index:5}
+.dual-range-slider #year-start{z-index:6}
+
 /* Mobile-friendly chart controls */
 #chart-controls{display:flex;flex-direction:column;gap:12px}
 #chart-controls > div:first-child{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
@@ -337,16 +347,16 @@ PAGE_HTML = r"""<!doctype html>
           </label>
         </div>
         <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label for="year-range" style="font-size: 0.9rem;">Year Range: <span id="year-range-display">1864-2024</span></label>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 0.85rem; min-width: 40px;">1864</span>
-            <input type="range" id="year-start" min="1864" max="2024" value="1864" step="4" style="flex: 1;">
-            <span style="font-size: 0.85rem; min-width: 40px;">2024</span>
+          <label for="year-range-slider" style="font-size: 0.9rem;">Year Range: <span id="year-range-display">1864-2024</span></label>
+          <div class="dual-range-slider">
+            <div class="slider-track"></div>
+            <div class="slider-range" id="slider-range"></div>
+            <input type="range" id="year-start" min="1864" max="2024" value="1864" step="4" class="slider-input">
+            <input type="range" id="year-end" min="1864" max="2024" value="2024" step="4" class="slider-input">
           </div>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 0.85rem; min-width: 40px;">1864</span>
-            <input type="range" id="year-end" min="1864" max="2024" value="2024" step="4" style="flex: 1;">
-            <span style="font-size: 0.85rem; min-width: 40px;">2024</span>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #888;">
+            <span>1864</span>
+            <span>2024</span>
           </div>
         </div>
       </div>
@@ -423,21 +433,42 @@ PAGE_HTML = r"""<!doctype html>
     const yearStart = document.getElementById('year-start');
     const yearEnd = document.getElementById('year-end');
     const yearRangeDisplay = document.getElementById('year-range-display');
+    const sliderRange = document.getElementById('slider-range');
     
     const updateYearDisplay = () => {
       if (yearRangeDisplay && yearStart && yearEnd) {
-        yearRangeDisplay.textContent = `${yearStart.value}-${yearEnd.value}`;
+        const start = parseInt(yearStart.value);
+        const end = parseInt(yearEnd.value);
+        yearRangeDisplay.textContent = `${start}-${end}`;
+        
+        // Update the visual range indicator
+        if (sliderRange) {
+          const min = parseInt(yearStart.min);
+          const max = parseInt(yearStart.max);
+          const percentStart = ((start - min) / (max - min)) * 100;
+          const percentEnd = ((end - min) / (max - min)) * 100;
+          sliderRange.style.left = percentStart + '%';
+          sliderRange.style.width = (percentEnd - percentStart) + '%';
+        }
       }
     };
     
     if (yearStart) {
       yearStart.addEventListener('input', () => {
+        // Ensure start doesn't exceed end
+        if (parseInt(yearStart.value) > parseInt(yearEnd.value)) {
+          yearStart.value = yearEnd.value;
+        }
         updateYearDisplay();
         updateChart();
       });
     }
     if (yearEnd) {
       yearEnd.addEventListener('input', () => {
+        // Ensure end doesn't go below start
+        if (parseInt(yearEnd.value) < parseInt(yearStart.value)) {
+          yearEnd.value = yearStart.value;
+        }
         updateYearDisplay();
         updateChart();
       });
