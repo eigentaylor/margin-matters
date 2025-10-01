@@ -76,37 +76,27 @@
       const ev = +r.ev || 0;
       if (ev <= 0) return null;
       
+      // Get base vote counts
+      let dVotes = +r.dVotes || 0;
+      let rVotes = +r.rVotes || 0;
+      let tVotes = +r.tVotes || 0;
+      const total = +r.total || (dVotes + rVotes + tVotes) || 0;
+      if (total <= 0) return null;
+      
+      // Get third-party share
+      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      
+      // Check if this unit has a flip scenario active
       const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
       const flipped = isUnitFlipped(year, keyUnit);
-
-      if (flipped && activeFlip && activeFlip.units) {
-        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-        if (flipUnit && flipUnit.votes_to_flip) {
-          let dVotesBase = Math.max(0, +r.dVotes || 0);
-          let rVotesBase = Math.max(0, +r.rVotes || 0);
-          let tVotesBase = Math.max(0, +r.tVotes || 0);
-          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotesBase >= rVotesBase) {
-            dVotesBase = Math.max(0, dVotesBase - votesToFlip);
-            rVotesBase = rVotesBase + votesToFlip;
-          } else {
-            dVotesBase = dVotesBase + votesToFlip;
-            rVotesBase = Math.max(0, rVotesBase - votesToFlip);
-          }
-          const topThirdShare = totalVotesFromRow(r) > 0 ? (Math.max(0, +r.topThirdVotes || 0) / totalVotesFromRow(r)) : 0;
-          return allocateProportionalEVs(dVotesBase, rVotesBase, Math.max(0, tVotesBase), ev, topThirdShare);
-        }
-      }
-      // console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
-      const breakdown = computePvAdjustedBreakdown(r, pv, getNatMargin(year));
-      let dVotes = Math.max(0, breakdown.dVotes);
-      let rVotes = Math.max(0, breakdown.rVotes);
-      let tVotes = Math.max(0, breakdown.totalThirdVotes);
-
+      
+      // For flipped states, use exact votes from flip_details.csv
       if (flipped && activeFlip && activeFlip.units) {
         const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
         if (flipUnit && flipUnit.votes_to_flip) {
           const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          
+          // Apply the exact vote flip: move votes_to_flip from winner to loser
           if (dVotes >= rVotes) {
             dVotes = Math.max(0, dVotes - votesToFlip);
             rVotes = rVotes + votesToFlip;
@@ -114,11 +104,38 @@
             dVotes = dVotes + votesToFlip;
             rVotes = Math.max(0, rVotes - votesToFlip);
           }
+          
+          // Calculate proportional allocation with exact flipped votes
+          const topThirdShare = +r.tp || 0;
+          const allocation = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+          return allocation;
         }
       }
-
-      const topThirdShare = breakdown.topThirdShareOfTotal;
-      return allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+      
+      // For non-flipped states, apply normal PV adjustment
+      let rmAdj = (+r.rm || 0) + pv;
+      
+      // Calculate adjusted two-party share
+      let twoD = 0.5 + rmAdj / 2;
+      twoD = Math.max(0, Math.min(1, twoD));
+      
+      // Calculate final vote shares
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      
+      // Calculate vote counts
+      const dVotesAdj = total * dShare;
+      const rVotesAdj = total * rShare;
+      const tVotesAdj = total * tShare;
+      
+      // Use top third party share for allocation
+      const topThirdShare = +r.tp || 0;
+      
+      // Calculate proportional allocation
+      const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare);
+      
+      return allocation;
     } catch(e) {
       return null;
     }
@@ -182,68 +199,68 @@
       const r = rows.find(x => x.unit === keyUnit);
       if (!r) return null;
       
-      const total = totalVotesFromRow(r);
+      // Get base vote counts
+      let dVotes = +r.dVotes || 0;
+      let rVotes = +r.rVotes || 0;
+      let topThirdVotes = +r.topThirdVotes || 0; // Use top third party votes only
+      let total = +r.total || (dVotes + rVotes + (+r.tVotes || 0)) || 0;
+      
+      // Don't display vote info if there are no votes at all (e.g., CO 1876, FL 1868, LA 1864)
       if (total <= 0) return null;
-
+      
+      // Check if this unit has a flip scenario active
       const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
       const flipped = isUnitFlipped(year, keyUnit);
-
+      
+      // For flipped states, use exact votes from flip_details.csv
       if (flipped && activeFlip && activeFlip.units) {
         const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
         if (flipUnit && flipUnit.votes_to_flip) {
-          let dVotesBase = Math.max(0, +r.dVotes || 0);
-          let rVotesBase = Math.max(0, +r.rVotes || 0);
-          const topThirdVotesBase = Math.max(0, +r.topThirdVotes || 0);
           const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotesBase >= rVotesBase) {
-            dVotesBase = Math.max(0, dVotesBase - votesToFlip);
-            rVotesBase = rVotesBase + votesToFlip;
+          
+          // Apply the exact vote flip: move votes_to_flip from winner to loser
+          if (dVotes >= rVotes) {
+            dVotes = Math.max(0, dVotes - votesToFlip);
+            rVotes = rVotes + votesToFlip;
           } else {
-            dVotesBase = dVotesBase + votesToFlip;
-            rVotesBase = Math.max(0, rVotesBase - votesToFlip);
+            dVotes = dVotes + votesToFlip;
+            rVotes = Math.max(0, rVotes - votesToFlip);
           }
+          
+          // Return exact flipped votes without further PV adjustment
           return {
-            D: Math.round(dVotesBase),
-            R: Math.round(rVotesBase),
-            O: Math.round(topThirdVotesBase),
-            total: Math.round(dVotesBase + rVotesBase + topThirdVotesBase)
+            D: Math.round(dVotes),
+            R: Math.round(rVotes),
+            O: Math.round(topThirdVotes), // Third party votes unchanged by flip
+            total: Math.round(dVotes + rVotes + topThirdVotes)
           };
         }
       }
-      // Apply PV adjustment to get estimated vote tallies
-      // console.log('Calculating vote tallies for', keyUnit, 'with PV shift', pv, 'and row', r, 'nat margin', getNatMargin(year));
-      const breakdown = computePvAdjustedBreakdown(r, pv, getNatMargin(year));
-      if ((breakdown.dVotes || 0) <= EPS && (breakdown.rVotes || 0) <= EPS && (breakdown.topThirdVotes || 0) <= EPS) {
-        return null;
-      }
-
-      let dVotesAdj = Math.max(0, breakdown.dVotes);
-      let rVotesAdj = Math.max(0, breakdown.rVotes);
-      let topThirdVotesAdj = Math.max(0, breakdown.topThirdVotes);
-
-      if (flipped && activeFlip && activeFlip.units) {
-        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-        if (flipUnit && flipUnit.votes_to_flip) {
-          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotesAdj >= rVotesAdj) {
-            dVotesAdj = Math.max(0, dVotesAdj - votesToFlip);
-            rVotesAdj = rVotesAdj + votesToFlip;
-          } else {
-            dVotesAdj = dVotesAdj + votesToFlip;
-            rVotesAdj = Math.max(0, rVotesAdj - votesToFlip);
-          }
-        }
-      }
-
-      const dRounded = Math.round(dVotesAdj);
-      const rRounded = Math.round(rVotesAdj);
-      const oRounded = Math.round(topThirdVotesAdj);
-
+      
+      // For non-flipped states, apply normal PV adjustment
+      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      const topThirdShare = Math.max(0, Math.min(1, (+r.tp) || 0)); // Top third party share specifically
+      let rmAdj = (+r.rm || 0) + pv;
+      
+      // Calculate adjusted two-party share
+      let twoD = 0.5 + rmAdj / 2;
+      twoD = Math.max(0, Math.min(1, twoD));
+      
+      // Calculate final vote shares
+      const dShare = (1 - topThirdShare) * twoD; // Use top third party share, not total third party
+      const rShare = (1 - topThirdShare) * (1 - twoD);
+      const topThirdShareAdj = topThirdShare; // Top third party gets its share
+      
+      // Calculate adjusted vote counts
+      const dVotesAdj = Math.round(total * dShare);
+      const rVotesAdj = Math.round(total * rShare);
+      const topThirdVotesAdj = Math.round(total * topThirdShareAdj);
+      
       return {
-        D: dRounded,
-        R: rRounded,
-        O: oRounded,
-        total: dRounded + rRounded + oRounded
+        D: dVotesAdj,
+        R: rVotesAdj,
+        O: topThirdVotesAdj, // Only top third party votes
+        total: dVotesAdj + rVotesAdj + topThirdVotesAdj
       };
     } catch(e) {
       return null;
@@ -467,12 +484,6 @@
         
         // Find the party with the highest vote tally
         const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
-        const frontRunner = (function(){
-          if (voteTallies.D === maxVotes) return 'D';
-          if (voteTallies.R === maxVotes) return 'R';
-          if (voteTallies.O === maxVotes) return 'O';
-          return null;
-        })();
         // Only display parties with votes, add star to the highest
         if (voteTallies.D > 0) voteParts.push(`${voteTallies.D === maxVotes ? 'D*' : 'D'}: ${formatter(voteTallies.D)}`);
         if (voteTallies.R > 0) voteParts.push(`${voteTallies.R === maxVotes ? 'R*' : 'R'}: ${formatter(voteTallies.R)}`);
@@ -482,19 +493,6 @@
         // Only add vote row if we have votes to display
         if (voteParts.length) {
           rows.push(voteParts.join(' | '));
-        }
-        
-        // Add vote margin between top and runner-up
-        const votes = [
-          { party: 'D', count: voteTallies.D },
-          { party: 'R', count: voteTallies.R },
-          { party: 'O', count: voteTallies.O }
-        ].filter(v => v.count > 0).sort((a, b) => b.count - a.count);
-        
-        if (votes.length >= 2) {
-          const margin = votes[0].count - votes[1].count;
-          const marginText = `${frontRunner}+${formatter(margin)} vote${margin !== 1 ? 's' : ''}`;
-          rows.push(marginText);
         }
       }
       
@@ -1198,73 +1196,6 @@
     return '#00008B';
   }
   try { window.marginToColor = marginToColor; } catch(e) {}
-
-  function clampMargin(value){
-    if (!isFinite(value)) return 0;
-    const LIMIT = 1 - 1e-9;
-    if (value > LIMIT) return LIMIT;
-    if (value < -LIMIT) return -LIMIT;
-    return value;
-  }
-
-  function totalVotesFromRow(row){
-    const direct = +row.total;
-    if (isFinite(direct) && direct > 0) return direct;
-    const fallback = (+row.dVotes || 0) + (+row.rVotes || 0) + (+row.tVotes || 0);
-    return fallback > 0 ? fallback : 0;
-  }
-
-  function computePvAdjustedBreakdown(row, pvShift = 0, natActualMargin = 0){
-    // Given a data row with dVotes, rVotes, tVotes (or total), and a desired PV shift,
-    const pv = isFinite(pvShift) ? 1 * (pvShift - natActualMargin) : 0;
-    //console.log({ pvShift, natActualMargin, pv });
-    const totalVotes = totalVotesFromRow(row);
-
-    let dVotesBase = Math.max(0, +row.dVotes || 0);
-    let rVotesBase = Math.max(0, +row.rVotes || 0);
-
-    let totalThirdVotes = +row.tVotes;
-    if (!isFinite(totalThirdVotes) || totalThirdVotes < 0) {
-      totalThirdVotes = Math.max(0, totalVotes - dVotesBase - rVotesBase);
-    }
-    if (totalVotes > 0) totalThirdVotes = Math.min(totalVotes, totalThirdVotes);
-    else totalThirdVotes = 0;
-
-    let topThirdVotes = +row.topThirdVotes;
-    if (!isFinite(topThirdVotes) || topThirdVotes < 0) topThirdVotes = totalThirdVotes;
-    topThirdVotes = Math.max(0, Math.min(totalThirdVotes, topThirdVotes));
-
-    const otherThirdVotes = Math.max(0, totalThirdVotes - topThirdVotes);
-    const twoPartyVotes = Math.max(0, totalVotes - totalThirdVotes);
-
-    const twoPartyDenom = twoPartyVotes > EPS ? twoPartyVotes : 0;
-    let baseDShareTwoParty = twoPartyDenom > 0 ? dVotesBase / twoPartyDenom : 0.5;
-    if (!isFinite(baseDShareTwoParty)) baseDShareTwoParty = 0.5;
-    baseDShareTwoParty = Math.max(0, Math.min(1, baseDShareTwoParty));
-
-    const baseMargin = clampMargin(2 * baseDShareTwoParty - 1);
-    const targetMargin = clampMargin(baseMargin + pv);
-    const targetDShareTwoParty = (targetMargin + 1) / 2;
-    const targetRShareTwoParty = 1 - targetDShareTwoParty;
-
-    const adjustedDVotes = twoPartyVotes * targetDShareTwoParty;
-    const adjustedRVotes = twoPartyVotes * targetRShareTwoParty;
-
-    return {
-      totalVotes,
-      dVotes: adjustedDVotes,
-      rVotes: adjustedRVotes,
-      twoPartyVotes,
-      totalThirdVotes,
-      topThirdVotes,
-      otherThirdVotes,
-      baseMargin,
-      targetMargin,
-      twoPartyShareOfTotal: totalVotes > EPS ? twoPartyVotes / totalVotes : 0,
-      topThirdShareOfTotal: totalVotes > EPS ? topThirdVotes / totalVotes : 0,
-      totalThirdShareOfTotal: totalVotes > EPS ? totalThirdVotes / totalVotes : 0
-    };
-  }
 
   const byYear = new Map();
   const evByUnit = new Map();
@@ -2725,9 +2656,6 @@
   window._getNatMargin = getNatMargin;
   window._STOP_EPS = STOP_EPS;
   window.updateUrl = updateUrl;
-  
-  // Expose proportional EV allocation for use in modal
-  window.allocateProportionalEVs = allocateProportionalEVs;
 })();
 
 // Current metric helper and options filter
@@ -2988,9 +2916,9 @@ function isUnitFlipped(year, unit){
   // allow unit or at-large semantics
   if (unit === 'ME' || unit === 'NE') unit = unit + '-AL';
   const result = !!(f._set && f._set.has(unit));
-  // if (f._set && f._set.size > 0) {
-  //   console.log('isUnitFlipped check', {unit, hasUnit: result, setContents: Array.from(f._set)});
-  // }
+  if (f._set && f._set.size > 0) {
+    console.log('isUnitFlipped check', {unit, hasUnit: result, setContents: Array.from(f._set)});
+  }
   return result;
 }
 function clearFlips(){
@@ -3130,540 +3058,3 @@ function renderFlipDetails(){
     // EC badge is updated by updateAll; here we just ensure badge shows current numbers after next update
   } catch(e) {}
 }
-
-// ============================================================================
-// EV Breakdown Modal Functionality
-// ============================================================================
-
-(function() {
-  // State for the EV breakdown modal
-  let currentSort = { column: 'state', ascending: true };
-  
-  // Initialize the modal when DOM is ready
-  function initEvBreakdownModal() {
-    const propEvToggle = document.getElementById('propEvToggle');
-    const evBreakdownBtn = document.getElementById('evBreakdownBtn');
-    const evBreakdownModal = document.getElementById('evBreakdownModal');
-    const evBreakdownClose = document.getElementById('evBreakdownClose');
-    
-    if (!propEvToggle || !evBreakdownBtn || !evBreakdownModal) return;
-    
-    // Always show the button (regardless of proportional mode)
-    evBreakdownBtn.style.display = 'inline-block';
-    
-    // Update table when proportional EV toggle changes
-    propEvToggle.addEventListener('change', function() {
-      // Update the table if modal is open
-      if (evBreakdownModal.style.display === 'flex') {
-        updateEvBreakdownTable();
-      }
-    });
-    
-    // Open modal
-    evBreakdownBtn.addEventListener('click', function() {
-      updateEvBreakdownTable();
-      evBreakdownModal.style.display = 'flex';
-    });
-    
-    // Close modal
-    if (evBreakdownClose) {
-      evBreakdownClose.addEventListener('click', function() {
-        evBreakdownModal.style.display = 'none';
-      });
-    }
-    
-    // Close on background click
-    evBreakdownModal.addEventListener('click', function(e) {
-      if (e.target === evBreakdownModal) {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
-    
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && evBreakdownModal.style.display === 'flex') {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
-    
-    // Add sorting listeners to table headers
-    const table = document.getElementById('evBreakdownTable');
-    if (table) {
-      const headers = table.querySelectorAll('th.sortable');
-      headers.forEach(header => {
-        header.addEventListener('click', function() {
-          const column = this.getAttribute('data-column');
-          if (currentSort.column === column) {
-            currentSort.ascending = !currentSort.ascending;
-          } else {
-            currentSort.column = column;
-            currentSort.ascending = true;
-          }
-          updateEvBreakdownTable();
-        });
-      });
-    }
-    
-    // Update table when year or PV changes (if modal is open)
-    const yearSlider = document.getElementById('yearSlider');
-    const pvSlider = document.getElementById('pvSlider');
-    
-    if (yearSlider) {
-      yearSlider.addEventListener('input', function() {
-        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
-          // Use setTimeout to ensure updateAll() has completed
-          setTimeout(() => updateEvBreakdownTable(), 50);
-        }
-      });
-    }
-    
-    if (pvSlider) {
-      pvSlider.addEventListener('input', function() {
-        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
-          // Use setTimeout to ensure updateAll() has completed
-          setTimeout(() => updateEvBreakdownTable(), 50);
-        }
-      });
-    }
-  }
-  
-  // Get EV allocations for all states
-  function getAllEvAllocations() {
-    const year = window._curYear;
-    if (!year) return [];
-    
-    const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-    if (!rows || !rows.length) return [];
-    
-    const isProportional = (() => {
-      try {
-        const toggle = document.getElementById('propEvToggle');
-        return toggle && toggle.checked;
-      } catch(e) {
-        return false;
-      }
-    })();
-    
-    const isElectionNight = window._electionNightActive || false;
-    const snapshot = window._electionNightSnapshot || null;
-    
-    const allocations = [];
-    
-    // Get all unique state/unit codes (excluding NATIONAL)
-    const processedStates = new Set();
-    rows.forEach(r => {
-      if (!r || !r.unit) return;
-      const unit = r.unit;
-      
-      // Skip national totals
-      if (unit === 'NATIONAL' || unit === 'NAT') return;
-      
-      // Use the unit as-is for display (including ME-01, ME-02, NE-01, NE-02, NE-03)
-      let displayUnit = unit;
-      
-      // Skip duplicates
-      if (processedStates.has(displayUnit)) return;
-      processedStates.add(displayUnit);
-      
-      const ev = +r.ev || 0;
-      if (ev <= 0) return;
-      
-      // Get state name
-      const stateName = getStateName(displayUnit);
-      
-      // Initialize allocation
-      let dEV = 0, rEV = 0, oEV = 0;
-      let showBlank = false;
-      let dVotes = 0, rVotes = 0, oVotes = 0;
-      
-      // Check if we should show blank (election night mode)
-      if (isElectionNight && snapshot) {
-        // snapshot is a Map, get the state data by unit key
-        const stateData = snapshot.get(displayUnit);
-        if (stateData) {
-          const called = stateData.called || false;
-          const reporting = stateData.reporting || 0;
-          
-          // Show blank if not called or not 100% counted
-          if (!called || reporting < 0.999) {
-            showBlank = true;
-          } else {
-            // Use election night vote counts
-            dVotes = stateData.dVotes || 0;
-            rVotes = stateData.rVotes || 0;
-            oVotes = stateData.oVotes || 0;
-          }
-        } else {
-          showBlank = true;
-        }
-      }
-      
-      // Calculate allocations if not blank
-      if (!showBlank) {
-        // Special case: Alabama 1960 - always show proportional split
-        if (year === 1960 && displayUnit === 'AL') {
-          // Check winner with PV adjustment (use >= 0 to match map logic)
-          const margin = +r.rm || 0;
-          const pv = window._curPv || 0;
-          const adjMargin = margin + pv;
-          const winner = adjMargin >= 0 ? 'D' : 'R';  // Match map's m >= 0 check
-          
-          if (winner !== 'R') {
-            // Democrats/Third party win: 5D, 6O split
-            dEV = Math.min(ev, 5);
-            oEV = Math.max(0, ev - dEV);
-          } else {
-            // Republicans win: normal winner-take-all
-            rEV = ev;
-          }
-          
-          // Get vote counts for Alabama 1960
-          if (!isElectionNight) {
-            dVotes = +r.dVotes || 0;
-            rVotes = +r.rVotes || 0;
-            oVotes = +r.tVotes || 0;
-          }
-        } else if (isProportional) {
-          // Use proportional allocation
-          // Get base vote counts for BOTH EV allocation AND margin display
-          const baseD = +r.dVotes || 0;
-          const baseR = +r.rVotes || 0;
-          const baseO = +r.tVotes || 0;
-          
-          // Store the original votes for margin display (before PV adjustment)
-          dVotes = baseD;
-          rVotes = baseR;
-          oVotes = baseO;
-          
-          if (!isElectionNight) {
-            // Apply PV adjustment ONLY for EV allocation calculation
-            const pv = window._curPv || 0;
-            const total = +r.total || (baseD + baseR + baseO) || 0;
-            let dVotesAdj = baseD;
-            let rVotesAdj = baseR;
-            let oVotesAdj = baseO;
-            
-            if (total > 0 && pv !== 0) {
-              // Apply uniform swing adjustment for EV allocation
-              const rm = +r.rm || 0;
-              const adjMargin = rm + pv;
-              const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
-              
-              // Calculate adjusted two-party share
-              let twoD = 0.5 + adjMargin / 2;
-              twoD = Math.max(0, Math.min(1, twoD));
-              
-              const dShare = (1 - tp) * twoD;
-              const rShare = (1 - tp) * (1 - twoD);
-              const oShare = tp;
-              
-              dVotesAdj = total * dShare;
-              rVotesAdj = total * rShare;
-              oVotesAdj = total * oShare;
-            }
-            
-            // Allocate EVs proportionally using adjusted votes
-            const allocFn = window.allocateProportionalEVs || function(d, r, o, ev) {
-              // Fallback if function not available
-              return { D: 0, R: 0, O: 0 };
-            };
-            const alloc = allocFn(dVotesAdj, rVotesAdj, oVotesAdj, ev, +r.tp || 0);
-            dEV = alloc.D;
-            rEV = alloc.R;
-            oEV = alloc.O;
-          }
-        } else {
-          // Winner-take-all - match map logic exactly
-          const margin = +r.rm || 0;
-          const pv = window._curPv || 0;
-          const adjMargin = margin + pv;
-          
-          // Match the map's logic from updateAll()
-          if (adjMargin > 0) {
-            dEV = ev;
-          } else if (adjMargin < 0) {
-            rEV = ev;
-          } else {
-            // Tie-breaking: match map's logic (line 2083-2085)
-            // Get national margin and stop value for tie-breaking
-            const nat = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
-            const stopVal = pv;  // Current PV is the stop value
-            const side = Math.sign((stopVal || 0) - (nat || 0));
-            if (side >= 0) dEV = ev;
-            else rEV = ev;
-          }
-
-          // Get vote counts
-          if (!isElectionNight) {
-            dVotes = +r.dVotes || 0;
-            rVotes = +r.rVotes || 0;
-            oVotes = +r.tVotes || 0;
-          }
-        }
-      }
-      
-      // Calculate vote percentages for margin column
-      let dPct = 0, rPct = 0, oPct = 0;
-      if (!showBlank && (dVotes > 0 || rVotes > 0 || oVotes > 0)) {
-        const totalVotes = dVotes + rVotes + oVotes;
-        if (totalVotes > 0) {
-          dPct = (dVotes / totalVotes) * 100;
-          rPct = (rVotes / totalVotes) * 100;
-          oPct = (oVotes / totalVotes) * 100;
-        }
-      }
-      
-      allocations.push({
-        state: displayUnit,
-        stateName: stateName,
-        dEV: showBlank ? null : dEV,
-        rEV: showBlank ? null : rEV,
-        oEV: showBlank ? null : oEV,
-        totalEV: ev,
-        dVotes: showBlank ? null : dVotes,
-        rVotes: showBlank ? null : rVotes,
-        oVotes: showBlank ? null : oVotes,
-        dPct: showBlank ? null : dPct,
-        rPct: showBlank ? null : rPct,
-        oPct: showBlank ? null : oPct,
-        showBlank: showBlank
-      });
-    });
-    
-    return allocations;
-  }
-  
-  // Get full state name from abbreviation
-  function getStateName(abbr) {
-    const STATE_NAMES = {
-      'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
-      'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'DC': 'District of Columbia',
-      'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois',
-      'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana',
-      'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota',
-      'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
-      'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
-      'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon',
-      'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota',
-      'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia',
-      'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
-    };
-    
-    // Handle ME-AL, NE-AL, ME-01, NE-02, etc.
-    if (abbr.includes('-')) {
-      const parts = abbr.split('-');
-      const state = STATE_NAMES[parts[0]] || parts[0];
-      if (parts[1] === 'AL') {
-        return `${state} At-Large`;
-      } else {
-        return `${state} CD-${parts[1]}`;
-      }
-    }
-    
-    return STATE_NAMES[abbr] || abbr;
-  }
-  
-  // Sort allocations based on current sort state
-  function sortAllocations(allocations) {
-    const sorted = [...allocations];
-    const { column, ascending } = currentSort;
-    
-    sorted.sort((a, b) => {
-      let aVal, bVal;
-      
-      switch(column) {
-        case 'state':
-          aVal = a.stateName;
-          bVal = b.stateName;
-          break;
-        case 'margin':
-          // Sort by Democratic percentage
-          aVal = a.dPct === null ? -1 : a.dPct;
-          bVal = b.dPct === null ? -1 : b.dPct;
-          break;
-        case 'd':
-          aVal = a.dEV === null ? -1 : a.dEV;
-          bVal = b.dEV === null ? -1 : b.dEV;
-          break;
-        case 'r':
-          aVal = a.rEV === null ? -1 : a.rEV;
-          bVal = b.rEV === null ? -1 : b.rEV;
-          break;
-        case 'o':
-          aVal = a.oEV === null ? -1 : a.oEV;
-          bVal = b.oEV === null ? -1 : b.oEV;
-          break;
-        case 'total':
-          aVal = a.totalEV;
-          bVal = b.totalEV;
-          break;
-        default:
-          return 0;
-      }
-      
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return ascending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-      } else {
-        return ascending ? (aVal - bVal) : (bVal - aVal);
-      }
-    });
-    
-    return sorted;
-  }
-  
-  // Update the table with current data
-  function updateEvBreakdownTable() {
-    const tbody = document.getElementById('evBreakdownBody');
-    const table = document.getElementById('evBreakdownTable');
-    if (!tbody || !table) return;
-    
-    // Update sort indicators in headers
-    const headers = table.querySelectorAll('th.sortable');
-    headers.forEach(header => {
-      const column = header.getAttribute('data-column');
-      header.classList.remove('sorted-asc', 'sorted-desc');
-      if (column === currentSort.column) {
-        header.classList.add(currentSort.ascending ? 'sorted-asc' : 'sorted-desc');
-      }
-    });
-    
-    // Get and sort allocations
-    const allocations = getAllEvAllocations();
-    const sorted = sortAllocations(allocations);
-    
-    // Build table rows
-    tbody.innerHTML = '';
-    
-    // Calculate totals
-    let totalD = 0, totalR = 0, totalO = 0, totalAll = 0;
-    
-    sorted.forEach(alloc => {
-      const row = document.createElement('tr');
-      row.setAttribute('data-state', alloc.state);
-      
-      // State name cell (with hover tooltip)
-      const stateCell = document.createElement('td');
-      stateCell.textContent = alloc.stateName;
-      if (!alloc.showBlank && alloc.dVotes !== null) {
-        const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
-        const voteInfo = [];
-        if (alloc.dVotes > 0) voteInfo.push(`D: ${formatter(alloc.dVotes)}`);
-        if (alloc.rVotes > 0) voteInfo.push(`R: ${formatter(alloc.rVotes)}`);
-        if (alloc.oVotes > 0) voteInfo.push(`O: ${formatter(alloc.oVotes)}`);
-        stateCell.title = voteInfo.join(' | ');
-      }
-      row.appendChild(stateCell);
-      
-      // Margin column (D%, R%, O%)
-      const marginCell = document.createElement('td');
-      if (alloc.showBlank) {
-        marginCell.textContent = '—';
-        marginCell.classList.add('blank-entry');
-      } else {
-        const dPct = alloc.dPct || 0;
-        const rPct = alloc.rPct || 0;
-        const oPct = alloc.oPct || 0;
-        marginCell.textContent = `${dPct.toFixed(1)}%, ${rPct.toFixed(1)}%, ${oPct.toFixed(1)}%`;
-      }
-      row.appendChild(marginCell);
-      
-      // D EVs
-      const dCell = document.createElement('td');
-      if (alloc.showBlank) {
-        dCell.textContent = '—';
-        dCell.classList.add('blank-entry');
-      } else {
-        const dEV = alloc.dEV || 0;
-        const percent = alloc.totalEV > 0 ? Math.round((dEV / alloc.totalEV) * 100) : 0;
-        dCell.textContent = dEV > 0 ? `${dEV} (${percent}%)` : dEV;
-        totalD += dEV;
-      }
-      row.appendChild(dCell);
-      
-      // R EVs
-      const rCell = document.createElement('td');
-      if (alloc.showBlank) {
-        rCell.textContent = '—';
-        rCell.classList.add('blank-entry');
-      } else {
-        const rEV = alloc.rEV || 0;
-        const percent = alloc.totalEV > 0 ? Math.round((rEV / alloc.totalEV) * 100) : 0;
-        rCell.textContent = rEV > 0 ? `${rEV} (${percent}%)` : rEV;
-        totalR += rEV;
-      }
-      row.appendChild(rCell);
-      
-      // O EVs
-      const oCell = document.createElement('td');
-      if (alloc.showBlank) {
-        oCell.textContent = '—';
-        oCell.classList.add('blank-entry');
-      } else {
-        const oEV = alloc.oEV || 0;
-        const percent = alloc.totalEV > 0 ? Math.round((oEV / alloc.totalEV) * 100) : 0;
-        oCell.textContent = oEV > 0 ? `${oEV} (${percent}%)` : oEV;
-        totalO += oEV;
-      }
-      row.appendChild(oCell);
-      
-      // Total EVs (always shown)
-      const totalCell = document.createElement('td');
-      totalCell.textContent = alloc.totalEV;
-      totalAll += alloc.totalEV;
-      row.appendChild(totalCell);
-      
-      tbody.appendChild(row);
-    });
-    
-    // Add total row
-    const totalRow = document.createElement('tr');
-    totalRow.classList.add('total-row');
-    
-    const totalLabelCell = document.createElement('td');
-    totalLabelCell.textContent = 'Total';
-    totalLabelCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalLabelCell);
-    
-    // Empty cell for margin column in total row
-    const totalMarginCell = document.createElement('td');
-    totalMarginCell.textContent = '—';
-    totalMarginCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalMarginCell);
-    
-    const totalDCell = document.createElement('td');
-    const totalDPercent = totalAll > 0 ? ((totalD / totalAll) * 100).toFixed(1) : '0.0';
-    totalDCell.textContent = totalD > 0 ? `${totalD} (${totalDPercent}%)` : totalD;
-    totalDCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalDCell);
-    
-    const totalRCell = document.createElement('td');
-    const totalRPercent = totalAll > 0 ? ((totalR / totalAll) * 100).toFixed(1) : '0.0';
-    totalRCell.textContent = totalR > 0 ? `${totalR} (${totalRPercent}%)` : totalR;
-    totalRCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalRCell);
-    
-    const totalOCell = document.createElement('td');
-    const totalOPercent = totalAll > 0 ? ((totalO / totalAll) * 100).toFixed(1) : '0.0';
-    totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
-    totalOCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalOCell);
-    
-    const totalAllCell = document.createElement('td');
-    totalAllCell.textContent = totalAll;
-    totalAllCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalAllCell);
-    
-    tbody.appendChild(totalRow);
-  }
-  
-  // Expose update function globally so it can be called during election night
-  window.updateEvBreakdownTable = updateEvBreakdownTable;
-  
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEvBreakdownModal);
-  } else {
-    initEvBreakdownModal();
-  }
-})();
-

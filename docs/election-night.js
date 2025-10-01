@@ -29,12 +29,12 @@
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
   // Tiny epsilon used when forcing flips to avoid exact zero margins
-  const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
+  const FLIP_MARGIN_EPS = 2e-6; // small margin to represent a flipped outcome without zero
   // Batch scheduling constraints used for reporting schedule generation
   const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
-  const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
-  const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
-  const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
+  const BATCH_MAX_GAP = 4; // nominal maximum minutes between batches (used as cap)
+  const MIN_BATCH_COUNT = 6; // minimum number of batches to generate for a unit
+  const MAX_BATCH_COUNT = 12; // maximum number of batches to generate for a unit
 
   // Known poll-closing times (ET) grouped by states. Used to set when
   // counting should realistically start for each state.
@@ -91,14 +91,6 @@
     TN:'Tennessee', TX:'Texas', UT:'Utah', VT:'Vermont', VA:'Virginia', WA:'Washington', WV:'West Virginia',
     WI:'Wisconsin', WY:'Wyoming'
   };
-
-  function clampMargin(value){
-    if (!isFinite(value)) return 0;
-    const LIMIT = 1 - 1e-9;
-    if (value > LIMIT) return LIMIT;
-    if (value < -LIMIT) return -LIMIT;
-    return value;
-  }
 
   // Runtime simulation state. This object stores everything needed to
   // keep the simulation consistent across frames: whether it's prepared,
@@ -582,115 +574,42 @@
       if (!isFinite(totalVotes) || totalVotes <= 0) return;
 
       const thirdPartyVotes = Math.max(0, Math.min(totalVotes, +row.tVotes || 0));
-      const totalThirdShareInitial = clamp01(
+      const totalThirdShare = clamp01(
         row.thirdShare != null ? +row.thirdShare : (totalVotes > 0 ? thirdPartyVotes / totalVotes : 0)
       );
-      let topThirdShareInitial = clamp01(
-        row.topThirdShare != null ? +row.topThirdShare : (isFinite(+row.tp) ? +row.tp : totalThirdShareInitial)
+      let topThirdShare = clamp01(
+        row.topThirdShare != null ? +row.topThirdShare : (isFinite(+row.tp) ? +row.tp : totalThirdShare)
       );
-      if (topThirdShareInitial > totalThirdShareInitial + EPS) {
-        topThirdShareInitial = Math.min(topThirdShareInitial, totalThirdShareInitial);
+      if (topThirdShare > totalThirdShare + EPS) {
+        topThirdShare = Math.min(topThirdShare, totalThirdShare);
       }
 
+      let adjustedMargin = (+row.rm || 0) + pvValue;
       const flipped = typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit);
       if (flipped) {
-        try {
-          const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
-          if (activeFlip && Array.isArray(activeFlip.units)) {
-            const match = activeFlip.units.find(u => u.unit === unit || u.unit === abbr || u.unit === (abbr + '-AL'));
-            if (match) row.__flipInfo = match;
-          }
-        } catch(e) { /* ignore */ }
+        adjustedMargin = adjustedMargin >= 0 ? -FLIP_MARGIN_EPS : FLIP_MARGIN_EPS;
       }
-
-      const baseDVotes = Math.max(0, +row.dVotes || 0);
-      const baseRVotes = Math.max(0, +row.rVotes || 0);
-      let finalOTotalVotes = thirdPartyVotes;
-      if (finalOTotalVotes <= 0 && totalVotes > 0) {
-        finalOTotalVotes = Math.max(0, totalVotes - baseDVotes - baseRVotes);
-      }
-      finalOTotalVotes = Math.min(totalVotes, finalOTotalVotes);
-
-      let baseTopThirdVotes = +row.topThirdVotes;
-      if (!isFinite(baseTopThirdVotes) || baseTopThirdVotes < 0) {
-        baseTopThirdVotes = topThirdShareInitial * totalVotes;
-      }
-      baseTopThirdVotes = Math.max(0, Math.min(finalOTotalVotes, baseTopThirdVotes));
-      let finalOTopVotes = baseTopThirdVotes;
-
-      const twoPartyVotesBase = Math.max(0, totalVotes - finalOTotalVotes);
-      const hasTwoPartyData = twoPartyVotesBase > EPS && (baseDVotes + baseRVotes > 0);
-      const baseMargin = hasTwoPartyData ? clampMargin((baseDVotes - baseRVotes) / twoPartyVotesBase) : null;
-
-      let targetMargin = clampMargin(((baseMargin != null) ? baseMargin : (+row.rm || 0)) + pvValue);
       if (year === 1876 && abbr === 'CO') {
-        const forced = Math.abs(targetMargin);
-        targetMargin = forced > 0 ? -forced : -0.06;
+        const forced = Math.abs(adjustedMargin);
+        adjustedMargin = forced > 0 ? -forced : -0.06;
       }
 
-      const targetDTwoPartyShare = (targetMargin + 1) / 2;
-      const targetRTwoPartyShare = 1 - targetDTwoPartyShare;
-      const twoPartyVotesUsed = twoPartyVotesBase > EPS ? twoPartyVotesBase : Math.max(0, (1 - totalThirdShareInitial) * totalVotes);
-
-      let finalDVotes = twoPartyVotesUsed * targetDTwoPartyShare;
-      let finalRVotes = twoPartyVotesUsed - finalDVotes;
-
-      if (year === 1948 && abbr === 'AL') {
-        finalDVotes = 0;
-        finalRVotes = twoPartyVotesUsed;
-        finalOTopVotes = Math.max(finalOTopVotes, finalOTotalVotes);
-      }
-
-      // Apply exact flip adjustments - use base votes before PV adjustments for precision
-      if (row.__flipInfo && (row.__flipInfo.votes_to_flip != null)) {
-        const votesToFlip = Math.max(0, +row.__flipInfo.votes_to_flip || 0);
-        if (isFinite(votesToFlip) && votesToFlip > 0) {
-          // Start from base votes for exact flipping (ignoring PV adjustments for flip scenarios)
-          const baseD = baseDVotes;
-          const baseR = baseRVotes;
-          const baseTotal = totalVotes;
-          
-          // Determine which party to flip from (the one with more base votes)
-          if (baseD >= baseR) {
-            // Flip from D to R
-            finalDVotes = Math.max(0, baseD - votesToFlip);
-            finalRVotes = baseR + votesToFlip;
-          } else {
-            // Flip from R to D
-            finalDVotes = baseD + votesToFlip;
-            finalRVotes = Math.max(0, baseR - votesToFlip);
-          }
-          // Note: finalOTotalVotes and finalOTopVotes remain unchanged from earlier calculation
-        }
-      }
-
-      const twoPartyVotesFinal = finalDVotes + finalRVotes;
-      const twoPartyShare = totalVotes > EPS ? twoPartyVotesFinal / totalVotes : 0;
-      let dTwoPartyFinal = twoPartyVotesFinal > EPS ? finalDVotes / twoPartyVotesFinal : 0.5;
+      const twoPartyShare = Math.max(0, Math.min(1, 1 - totalThirdShare));
+      let dTwoPartyFinal = clamp01(0.5 + adjustedMargin / 2);
       let rTwoPartyFinal = 1 - dTwoPartyFinal;
       if (!isFinite(dTwoPartyFinal)) dTwoPartyFinal = 0.5;
       if (!isFinite(rTwoPartyFinal)) rTwoPartyFinal = 0.5;
 
-      let dShareFinal = totalVotes > EPS ? finalDVotes / totalVotes : 0;
-      let rShareFinal = totalVotes > EPS ? finalRVotes / totalVotes : 0;
-      const totalThirdShare = totalVotes > EPS ? finalOTotalVotes / totalVotes : totalThirdShareInitial;
-      let topThirdShare = totalVotes > EPS ? finalOTopVotes / totalVotes : topThirdShareInitial;
-      let adjustedMargin = twoPartyVotesFinal > EPS ? clampMargin((finalDVotes - finalRVotes) / twoPartyVotesFinal) : targetMargin;
+      let dShareFinal = twoPartyShare * dTwoPartyFinal;
+      let rShareFinal = twoPartyShare * rTwoPartyFinal;
 
-      // Prefer actual vote totals when deciding the final winner to avoid
-      // ties due to tiny floating-point share differences. Fall back to
-      // share-based decision if vote totals are not available.
-      let winner;
-      if (isFinite(finalDVotes) || isFinite(finalRVotes) || isFinite(finalOTopVotes)) {
-        const dVotesFinal = isFinite(finalDVotes) ? finalDVotes : 0;
-        const rVotesFinal = isFinite(finalRVotes) ? finalRVotes : 0;
-        const oVotesFinal = isFinite(finalOTopVotes) ? finalOTopVotes : 0;
-        if (dVotesFinal >= rVotesFinal && dVotesFinal >= oVotesFinal) winner = 'D';
-        else if (rVotesFinal >= dVotesFinal && rVotesFinal >= oVotesFinal) winner = 'R';
-        else winner = 'O';
-      } else {
-        winner = determineWinner(dShareFinal, rShareFinal, topThirdShare);
+      if (year === 1948 && abbr === 'AL') {
+        dShareFinal = 0;
+        rShareFinal = twoPartyShare;
+        topThirdShare = Math.max(topThirdShare, totalThirdShare);
       }
+
+      let winner = determineWinner(dShareFinal, rShareFinal, topThirdShare);
       if (year === 1876 && abbr === 'CO') winner = 'R';
       const thirdPartyDominant = winner === 'O';
 
@@ -722,11 +641,12 @@
       if (isAtLarge) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
-      const finalOTopVotesOut = finalOTopVotes;
-      const finalOTotalVotesOut = finalOTotalVotes;
-
+      const finalDVotes = totalVotes * dShareFinal;
+      const finalRVotes = totalVotes * rShareFinal;
+      const finalOTopVotes = totalVotes * topThirdShare;
+      const finalOTotalVotes = totalVotes * totalThirdShare;
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
-  const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1, { dVotes: finalDVotes, rVotes: finalRVotes, oVotes: finalOTopVotes, countedVotes: twoPartyVotesFinal });
+      const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1);
       const baselineAbbr = baselineAbbrColors.get(abbr);
       let finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
       if (!finalColor) {
@@ -740,8 +660,7 @@
       if (finalLeader === 'O') countedMarginStr = 'Other lead';
       else if (twoPartyVotes > EPS) {
         const twoPartyLean = (finalDVotes - finalRVotes) / twoPartyVotes;
-        //countedMarginStr = Math.abs(twoPartyLean) < 0.0000000005 ? 'EVEN' : formatLean(twoPartyLean);
-        countedMarginStr = formatLean(twoPartyLean);
+        countedMarginStr = Math.abs(twoPartyLean) < 0.0000000005 ? 'EVEN' : formatLean(twoPartyLean);
       } else if (totalVotes > EPS) {
         countedMarginStr = 'EVEN';
       }
@@ -762,10 +681,10 @@
         topThirdShare,
         totalThirdShare,
         confidence: 1,
-    dVotesCounted: finalDVotes,
-    rVotesCounted: finalRVotes,
-    oVotesCounted: finalOTopVotesOut,
-    oVotesCountedTotal: finalOTotalVotesOut,
+        dVotesCounted: finalDVotes,
+        rVotesCounted: finalRVotes,
+        oVotesCounted: finalOTopVotes,
+        oVotesCountedTotal: finalOTotalVotes,
         countedVotes: totalVotes,
         remainingVotes: 0
       };
@@ -1121,17 +1040,6 @@
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
-    
-    // Update EV breakdown table during election night if modal is open
-    if (typeof window.updateEvBreakdownTable === 'function') {
-      try {
-        const modal = document.getElementById('evBreakdownModal');
-        if (modal && modal.style.display !== 'none') {
-          window.updateEvBreakdownTable();
-        }
-      } catch(e) {}
-    }
-    
     if (typeof window.refreshActiveMapTip === 'function') {
       try { window.refreshActiveMapTip(); } catch(e) {}
     }
@@ -1176,9 +1084,7 @@
       dShare = st.twoPartyShare * dShareBlend;
       rShare = st.twoPartyShare * rShareBlend;
       oShare = totalThirdShare;
-  // prefer actual counted vote totals when available (stats computed below)
-  const statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
-  leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
+      leader = determineLeader(dShare, rShare, topThirdShare, reporting);
       margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
       if (leader === 'O') marginStr = 'Other lead';
       else marginStr = (reporting > 0) ? formatLean(margin) : '';
@@ -1316,13 +1222,13 @@
     // - instantCall units are called as soon as their startTime is reached.
     // - otherwise: require some reporting OR that we're past the call deadline
     //   and that confidence exceeds the chosen threshold. A full-reporting
-    //   (>= 1.0) forces a call.
+    //   (>= 0.999) forces a call.
     if (st.instantCall) {
       return currentTime >= st.startTime - EPS;
     }
     if (!metrics || metrics.leader == null) return false;
     if (metrics.reporting < MIN_REPORTING_TO_CALL && currentTime < st.callDeadline - 5) return false;
-    if (metrics.reporting >= 1.0) return true;
+    if (metrics.reporting >= 0.999) return true;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
@@ -1333,7 +1239,7 @@
     // the simulator will eventually call states even if confidence is
     // borderline.
     if (!metrics || metrics.leader == null) return false;
-    if (metrics.reporting >= 1.0) {
+    if (metrics.reporting >= 0.999) {
       return metrics.leader === st.winner;
     }
     if (currentTime < st.callDeadline - EPS) return false;
@@ -1606,7 +1512,8 @@
         const confDiff = (b.confidence || 0) - (a.confidence || 0);
         if (Math.abs(confDiff) > EPS) return confDiff;
         return (b.reporting || 0) - (a.reporting || 0);
-      });
+      })
+      .slice(0, 3);
 
   const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
     const callLines = [];
@@ -1793,7 +1700,7 @@
         if (uncalledCandidates.length) {
           const title = document.createElement('div');
           title.className = 'en-log-section-title';
-          title.textContent = 'STILL COUNTING (UNCALLED)';
+          title.textContent = 'STILL COUNTING (UNCALLED, TOP 3)';
           container.appendChild(title);
           const cardsContainer = document.createElement('div');
           cardsContainer.className = 'en-log-uncalled-cards';
@@ -2007,21 +1914,8 @@
     return top.code;
   }
 
-  // Determine visible leader. Prefer vote counts when available (stats object with dCounted/rCounted/oCounted/countedVotes)
-  function determineLeader(dShare, rShare, oShare, reporting, stats){
+  function determineLeader(dShare, rShare, oShare, reporting){
     if (reporting <= 0) return null;
-    // If stats with counted votes are provided and there are counted votes, use them
-    if (stats && isFinite(stats.countedVotes) && stats.countedVotes > EPS) {
-      const dVotes = isFinite(stats.dCounted) ? stats.dCounted : (isFinite(stats.dVotes) ? stats.dVotes : (isFinite(stats.d) ? stats.d : 0));
-      const rVotes = isFinite(stats.rCounted) ? stats.rCounted : (isFinite(stats.rVotes) ? stats.rVotes : (isFinite(stats.r) ? stats.r : 0));
-      // oCounted may be named oCounted or oTotalCounted or oVotes; prefer in that order
-      const oVotes = isFinite(stats.oCounted) ? stats.oCounted : (isFinite(stats.oTotalCounted) ? stats.oTotalCounted : (isFinite(stats.oVotes) ? stats.oVotes : 0));
-      if (dVotes >= rVotes && dVotes >= oVotes) return 'D';
-      if (rVotes >= dVotes && rVotes >= oVotes) return 'R';
-      return 'O';
-    }
-
-    // Fall back to share-based decision if no vote totals available
     if (dShare >= rShare && dShare >= oShare) return 'D';
     if (rShare >= dShare && rShare >= oShare) return 'R';
     return 'O';
@@ -2031,7 +1925,6 @@
     if (code === 'D') return 'Democrats';
     if (code === 'R') return 'Republicans';
     if (code === 'O') return 'Other';
-    console.warn('Unknown leader code', code);
     return 'No call';
   }
 
@@ -2073,7 +1966,7 @@
   }
 
   function formatLean(value){
-    if (!isFinite(value)) return 'ERROR';
+    if (!isFinite(value)) return 'EVEN';
     if (typeof window.leanStr === 'function') return window.leanStr(value);
     //if (Math.abs(value) < 0.00005) return 'EVEN';
     const pct = (Math.abs(value) * 100).toFixed(1);
