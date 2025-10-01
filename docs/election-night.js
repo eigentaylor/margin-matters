@@ -1135,6 +1135,17 @@
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
+    
+    // Update EV breakdown table during election night if modal is open
+    if (typeof window.updateEvBreakdownTable === 'function') {
+      try {
+        const modal = document.getElementById('evBreakdownModal');
+        if (modal && modal.style.display !== 'none') {
+          window.updateEvBreakdownTable();
+        }
+      } catch(e) {}
+    }
+    
     if (typeof window.refreshActiveMapTip === 'function') {
       try { window.refreshActiveMapTip(); } catch(e) {}
     }
