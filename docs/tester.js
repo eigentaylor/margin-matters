@@ -56,6 +56,216 @@
     }
   }
 
+  // Calculate proportional EV allocation for a specific unit
+  // Returns {D: number, R: number, O: number} or null if proportional mode is off
+  function calculateUnitProportionalEVs(unit) {
+    try {
+      if (!isProportionalEvMode()) return null;
+      
+      const year = window._curYear;
+      const pv = window._curPv || 0;
+      if (!year) return null;
+      
+      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+      if (!rows || !rows.length) return null;
+      
+      const r = rows.find(x => x.unit === keyUnit);
+      if (!r) return null;
+      
+      const ev = +r.ev || 0;
+      if (ev <= 0) return null;
+      
+      // Get base vote counts
+      let dVotes = +r.dVotes || 0;
+      let rVotes = +r.rVotes || 0;
+      let tVotes = +r.tVotes || 0;
+      const total = +r.total || (dVotes + rVotes + tVotes) || 0;
+      if (total <= 0) return null;
+      
+      // Get third-party share
+      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      
+      // Check if this unit has a flip scenario active
+      const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
+      const flipped = isUnitFlipped(year, keyUnit);
+      
+      // For flipped states, use exact votes from flip_details.csv
+      if (flipped && activeFlip && activeFlip.units) {
+        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+        if (flipUnit && flipUnit.votes_to_flip) {
+          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          
+          // Apply the exact vote flip: move votes_to_flip from winner to loser
+          if (dVotes >= rVotes) {
+            dVotes = Math.max(0, dVotes - votesToFlip);
+            rVotes = rVotes + votesToFlip;
+          } else {
+            dVotes = dVotes + votesToFlip;
+            rVotes = Math.max(0, rVotes - votesToFlip);
+          }
+          
+          // Calculate proportional allocation with exact flipped votes
+          const topThirdShare = +r.tp || 0;
+          const allocation = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+          return allocation;
+        }
+      }
+      
+      // For non-flipped states, apply normal PV adjustment
+      let rmAdj = (+r.rm || 0) + pv;
+      
+      // Calculate adjusted two-party share
+      let twoD = 0.5 + rmAdj / 2;
+      twoD = Math.max(0, Math.min(1, twoD));
+      
+      // Calculate final vote shares
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      
+      // Calculate vote counts
+      const dVotesAdj = total * dShare;
+      const rVotesAdj = total * rShare;
+      const tVotesAdj = total * tShare;
+      
+      // Use top third party share for allocation
+      const topThirdShare = +r.tp || 0;
+      
+      // Calculate proportional allocation
+      const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare);
+      
+      return allocation;
+    } catch(e) {
+      return null;
+    }
+  }
+
+  // Calculate vote tallies for a specific unit (for index.html - real elections only)
+  // Returns {D: number, R: number, O: number, total: number} or null if not applicable
+  function calculateUnitVoteTallies(unit) {
+    try {
+      // Only show vote tallies on index.html (real elections), not tester or future
+      const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
+      if (!isIndexPage) return null;
+      
+      const year = window._curYear;
+      const pv = window._curPv || 0;
+      if (!year || year > 2024) return null; // Only real elections
+      
+      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+      
+      // During election night, use the counted votes from the snapshot
+      if (window._electionNightActive && window._electionNightSnapshot) {
+        const snapshot = window._electionNightSnapshot;
+        const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0,2) : null;
+        const candidates = [];
+        if (unit && !candidates.includes(unit)) candidates.push(unit);
+        if (keyUnit && !candidates.includes(keyUnit)) candidates.push(keyUnit);
+        if (abbr && !candidates.includes(abbr)) candidates.push(abbr);
+        
+        let snap = null;
+        for (const candidate of candidates) {
+          if (candidate && snapshot.has(candidate)) {
+            snap = snapshot.get(candidate);
+            if (snap) break;
+          }
+        }
+        
+        if (snap) {
+          // Use the counted votes from the snapshot (starts at 0, grows as batches come in)
+          const dVotes = snap.dVotes || 0;
+          const rVotes = snap.rVotes || 0;
+          const oVotes = snap.oVotes || 0; // This is the top third party votes during election night
+          
+          // Don't display if no votes have been counted yet
+          const total = dVotes + rVotes + oVotes;
+          if (total <= 0) return null;
+          
+          return {
+            D: Math.round(dVotes),
+            R: Math.round(rVotes),
+            O: Math.round(oVotes),
+            total: Math.round(total)
+          };
+        }
+      }
+      
+      // For non-election-night mode, use the normal calculation
+      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+      if (!rows || !rows.length) return null;
+      
+      const r = rows.find(x => x.unit === keyUnit);
+      if (!r) return null;
+      
+      // Get base vote counts
+      let dVotes = +r.dVotes || 0;
+      let rVotes = +r.rVotes || 0;
+      let topThirdVotes = +r.topThirdVotes || 0; // Use top third party votes only
+      let total = +r.total || (dVotes + rVotes + (+r.tVotes || 0)) || 0;
+      
+      // Don't display vote info if there are no votes at all (e.g., CO 1876, FL 1868, LA 1864)
+      if (total <= 0) return null;
+      
+      // Check if this unit has a flip scenario active
+      const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
+      const flipped = isUnitFlipped(year, keyUnit);
+      
+      // For flipped states, use exact votes from flip_details.csv
+      if (flipped && activeFlip && activeFlip.units) {
+        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+        if (flipUnit && flipUnit.votes_to_flip) {
+          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          
+          // Apply the exact vote flip: move votes_to_flip from winner to loser
+          if (dVotes >= rVotes) {
+            dVotes = Math.max(0, dVotes - votesToFlip);
+            rVotes = rVotes + votesToFlip;
+          } else {
+            dVotes = dVotes + votesToFlip;
+            rVotes = Math.max(0, rVotes - votesToFlip);
+          }
+          
+          // Return exact flipped votes without further PV adjustment
+          return {
+            D: Math.round(dVotes),
+            R: Math.round(rVotes),
+            O: Math.round(topThirdVotes), // Third party votes unchanged by flip
+            total: Math.round(dVotes + rVotes + topThirdVotes)
+          };
+        }
+      }
+      
+      // For non-flipped states, apply normal PV adjustment
+      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      const topThirdShare = Math.max(0, Math.min(1, (+r.tp) || 0)); // Top third party share specifically
+      let rmAdj = (+r.rm || 0) + pv;
+      
+      // Calculate adjusted two-party share
+      let twoD = 0.5 + rmAdj / 2;
+      twoD = Math.max(0, Math.min(1, twoD));
+      
+      // Calculate final vote shares
+      const dShare = (1 - topThirdShare) * twoD; // Use top third party share, not total third party
+      const rShare = (1 - topThirdShare) * (1 - twoD);
+      const topThirdShareAdj = topThirdShare; // Top third party gets its share
+      
+      // Calculate adjusted vote counts
+      const dVotesAdj = Math.round(total * dShare);
+      const rVotesAdj = Math.round(total * rShare);
+      const topThirdVotesAdj = Math.round(total * topThirdShareAdj);
+      
+      return {
+        D: dVotesAdj,
+        R: rVotesAdj,
+        O: topThirdVotesAdj, // Only top third party votes
+        total: dVotesAdj + rVotesAdj + topThirdVotesAdj
+      };
+    } catch(e) {
+      return null;
+    }
+  }
+
   // Tunable config for small-state overlay placement and sizing (exposed via window.smallBoxesConfig)
   const _defaultSmallBoxesConfig = {
     // If x is a number, use absolute x. Otherwise, compute from right margin.
@@ -150,7 +360,9 @@
   function showMapTip(evt, text){
     try {
       const tip = _ensureTip(); if (!tip) return;
-      tip.textContent = text != null ? String(text) : '';
+      // Handle multi-line tooltips by converting newlines to <br> tags
+      const content = text != null ? String(text).replace(/\n/g, '<br>') : '';
+      tip.innerHTML = content;
       tip.style.display = 'block';
       _placeTipAt(evt);
     } catch(e) {}
@@ -234,10 +446,48 @@
         if (!isFinite(value) || value <= 99.9) return marginStr;
         return `${prefix}+99.9`;
       })();
-      const parts = [];
-      if (display) parts.push(display);
-      if (ev != null && ev !== '') parts.push(`${ev} EV`);
-      if (cappedMarginStr) parts.push(cappedMarginStr);
+      
+      // Build tooltip content with multiple rows
+      const rows = [];
+      
+      // First row: Basic info (display name, EV, margin)
+      const basicParts = [];
+      if (display) basicParts.push(display);
+      if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
+      if (cappedMarginStr) basicParts.push(cappedMarginStr);
+      if (basicParts.length) rows.push(basicParts.join(' · '));
+      
+      // Second row: EV allocation (for proportional mode)
+      const evAllocation = calculateUnitProportionalEVs(unit);
+      if (evAllocation) {
+        const evParts = [];
+        if (evAllocation.D > 0) evParts.push(`D: ${evAllocation.D}`);
+        if (evAllocation.R > 0) evParts.push(`R: ${evAllocation.R}`);
+        if (evAllocation.O > 0) evParts.push(`O: ${evAllocation.O}`);
+        if (evParts.length) {
+          rows.push(evParts.join(' | '));
+        }
+      }
+      
+      // Third row: Vote tallies (for index.html - real elections only)
+      const voteTallies = calculateUnitVoteTallies(unit);
+      if (voteTallies) {
+        const voteParts = [];
+        const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+        
+        // Only display parties with votes
+        if (voteTallies.D > 0) voteParts.push(`D: ${formatter(voteTallies.D)}`);
+        if (voteTallies.R > 0) voteParts.push(`R: ${formatter(voteTallies.R)}`);
+        // Only display top third party if it has votes (not all third parties)
+        if (voteTallies.O > 0) voteParts.push(`O: ${formatter(voteTallies.O)}`);
+        
+        // Only add vote row if we have votes to display
+        if (voteParts.length) {
+          rows.push(voteParts.join(' | '));
+        }
+      }
+      
+      // Election night reporting info
       const reportingText = (function(){
         if (!window._electionNightActive) return '';
         if (!info || info.reporting == null) return '';
@@ -247,20 +497,23 @@
         const label = (pct >= 99.95) ? '100.0% counted' : `${pct.toFixed(1)}% counted`;
         return label;
       })();
-      if (reportingText) parts.push(reportingText);
+      if (reportingText) rows.push(reportingText);
+      
+      // Called/confidence info
       if (info) {
         if (info.called) {
-          parts.push('Called');
+          rows.push('Called');
         } else {
           const reporting = (info.reporting != null && isFinite(info.reporting)) ? info.reporting : 0;
           const confidence = (info.confidence != null && isFinite(info.confidence)) ? info.confidence : null;
           if (reporting > EPS && confidence != null) {
             const pct = Math.max(0, Math.min(100, Math.round(confidence * 100)));
-            parts.push(`Confidence ${pct}%`);
+            rows.push(`Confidence ${pct}%`);
           }
         }
       }
-      return parts.join(' · ');
+      
+      return rows.join('\n');
     } catch(e) { return unit; }
   }
 
