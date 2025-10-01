@@ -3406,6 +3406,10 @@ function renderFlipDetails(){
     
     // Build table rows
     tbody.innerHTML = '';
+    
+    // Calculate totals
+    let totalD = 0, totalR = 0, totalO = 0, totalAll = 0;
+    
     sorted.forEach(alloc => {
       const row = document.createElement('tr');
       row.setAttribute('data-state', alloc.state);
@@ -3429,7 +3433,9 @@ function renderFlipDetails(){
         dCell.textContent = '—';
         dCell.classList.add('blank-entry');
       } else {
-        dCell.textContent = alloc.dEV || 0;
+        const dEV = alloc.dEV || 0;
+        dCell.textContent = dEV;
+        totalD += dEV;
       }
       row.appendChild(dCell);
       
@@ -3439,7 +3445,9 @@ function renderFlipDetails(){
         rCell.textContent = '—';
         rCell.classList.add('blank-entry');
       } else {
-        rCell.textContent = alloc.rEV || 0;
+        const rEV = alloc.rEV || 0;
+        rCell.textContent = rEV;
+        totalR += rEV;
       }
       row.appendChild(rCell);
       
@@ -3449,17 +3457,51 @@ function renderFlipDetails(){
         oCell.textContent = '—';
         oCell.classList.add('blank-entry');
       } else {
-        oCell.textContent = alloc.oEV || 0;
+        const oEV = alloc.oEV || 0;
+        oCell.textContent = oEV;
+        totalO += oEV;
       }
       row.appendChild(oCell);
       
       // Total EVs (always shown)
       const totalCell = document.createElement('td');
       totalCell.textContent = alloc.totalEV;
+      totalAll += alloc.totalEV;
       row.appendChild(totalCell);
       
       tbody.appendChild(row);
     });
+    
+    // Add total row
+    const totalRow = document.createElement('tr');
+    totalRow.classList.add('total-row');
+    
+    const totalLabelCell = document.createElement('td');
+    totalLabelCell.textContent = 'Total';
+    totalLabelCell.style.fontWeight = 'bold';
+    totalRow.appendChild(totalLabelCell);
+    
+    const totalDCell = document.createElement('td');
+    totalDCell.textContent = totalD;
+    totalDCell.style.fontWeight = 'bold';
+    totalRow.appendChild(totalDCell);
+    
+    const totalRCell = document.createElement('td');
+    totalRCell.textContent = totalR;
+    totalRCell.style.fontWeight = 'bold';
+    totalRow.appendChild(totalRCell);
+    
+    const totalOCell = document.createElement('td');
+    totalOCell.textContent = totalO;
+    totalOCell.style.fontWeight = 'bold';
+    totalRow.appendChild(totalOCell);
+    
+    const totalAllCell = document.createElement('td');
+    totalAllCell.textContent = totalAll;
+    totalAllCell.style.fontWeight = 'bold';
+    totalRow.appendChild(totalAllCell);
+    
+    tbody.appendChild(totalRow);
   }
   
   // Expose update function globally so it can be called during election night

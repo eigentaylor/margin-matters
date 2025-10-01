@@ -369,3 +369,5 @@ body.has-prop-ev-toggle{padding-bottom:60px}
 .ev-breakdown-table tbody tr:hover{background:#151515;cursor:pointer}
 .ev-breakdown-table td:first-child{text-align:left;font-weight:500}
 .ev-breakdown-table .blank-entry{color:var(--muted);font-style:italic}
+.ev-breakdown-table .total-row{border-top:2px solid var(--border);background:#161616}
+.ev-breakdown-table .total-row td{padding-top:14px;font-weight:700}
