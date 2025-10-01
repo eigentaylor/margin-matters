@@ -33,8 +33,9 @@
   // Batch scheduling constraints used for reporting schedule generation
   const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
   const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
-  const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
-  const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
+  const MIN_BATCH_COUNT = 60; // minimum number of batches to generate for a unit (increased for continuous counting)
+  const MAX_BATCH_COUNT = 120; // maximum number of batches to generate for a unit (increased for continuous counting)
+  const DISPLAY_UPDATE_INTERVAL = 2; // minutes between display updates (to avoid too frequent UI changes)
 
   // Known poll-closing times (ET) grouped by states. Used to set when
   // counting should realistically start for each state.
@@ -951,6 +952,10 @@
     const trigger = 0.75 + (1 - Math.max(0, Math.min(1, closeness || 0))) * 0.12;
     const rawMaxJump = 0.045 - 0.02 * Math.max(0, Math.min(1, closeness || 0));
     const tailMaxJump = Math.max(0.012, rawMaxJump);
+    
+    // For extremely close races (closeness > 0.8), add extra slowdown near 100%
+    const isExtremelyClose = closeness > 0.8;
+    const extremeSlowdownThreshold = 0.95; // Start extreme slowdown at 95% reporting
 
     const refined = [];
     let prev = null;
@@ -968,9 +973,18 @@
 
       const interval = Math.max(0, current.time - prev.time);
       const diff = Math.max(0, current.reporting - prev.reporting);
-      const smoothingActive = (prev.reporting >= trigger || current.reporting >= trigger) && diff > tailMaxJump + EPS;
+      
+      // Apply even more aggressive smoothing for extremely close races near the end
+      let effectiveTailMaxJump = tailMaxJump;
+      if (isExtremelyClose && prev.reporting >= extremeSlowdownThreshold) {
+        // Reduce max jump dramatically - slow counting way down near the end
+        const extremeFactor = 0.3; // Make jumps 70% smaller
+        effectiveTailMaxJump = tailMaxJump * extremeFactor;
+      }
+      
+      const smoothingActive = (prev.reporting >= trigger || current.reporting >= trigger) && diff > effectiveTailMaxJump + EPS;
       if (smoothingActive) {
-        const segments = Math.max(2, Math.ceil(diff / tailMaxJump));
+        const segments = Math.max(2, Math.ceil(diff / effectiveTailMaxJump));
         for (let s = 1; s < segments; s++) {
           const ratio = s / segments;
           const interp = {

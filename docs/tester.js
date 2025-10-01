@@ -2159,9 +2159,34 @@
   }
       const st = unit.slice(0,2);
       const prev = abbrColors.get(st);
-      // Special pluralities: dynamic yellow window using third-party share (any year)
+      // Determine color based on actual vote winner, not just margin
       let color;
       const rVal = +(r.rm || 0);
+      
+      // Calculate actual votes adjusted by PV to determine who wins
+      const total = +r.total || (+r.dVotes || 0) + (+r.rVotes || 0) + (+r.tVotes || 0) || 0;
+      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+      let rmAdj = (+r.rm || 0) + pv;
+      if (flipped) rmAdj = -rmAdj;
+      let twoD = 0.5 + rmAdj / 2;
+      if (!isFinite(twoD)) twoD = 0.5;
+      twoD = Math.max(0, Math.min(1, twoD));
+      const dShare = (1 - tp) * twoD;
+      const rShare = (1 - tp) * (1 - twoD);
+      const tShare = tp;
+      const dVotesAdj = total * dShare;
+      const rVotesAdj = total * rShare;
+      const tVotesAdj = total * tShare;
+      
+      // Determine winner by actual votes
+      let winner = 'D'; // default
+      if (tVotesAdj > dVotesAdj && tVotesAdj > rVotesAdj) {
+        winner = 'O';
+      } else if (rVotesAdj > dVotesAdj) {
+        winner = 'R';
+      }
+      
+      // Special pluralities: dynamic yellow window using third-party share (any year)
       {
         const t = +r.tp || 0;
           a = 3*t - 1;
@@ -2169,8 +2194,11 @@
             a = 0.0;
             color = (pv < -rVal) ? marginToColor(m) : '#FFD700'; // Thurmond vs Dewey (no Truman here)
           }
-          else if (a > 0) {
-            // Use same boundaries as EV counting: strict inside (nR + EPS, nD - EPS)
+          else if (a > 0 && winner === 'O') {
+            // Third party wins - use yellow
+            color = '#FFD700';
+          } else if (a > 0) {
+            // Third party doesn't win, but within window?
             const nD = -rVal + a;
             const nR = -rVal - a;
             if (pv > nR + EPS && pv < nD - EPS) {
@@ -2179,6 +2207,7 @@
               color = marginToColor(m);
             }
           } else {
+            // No third party, use standard margin coloring
             color = marginToColor(m);
           }
       }

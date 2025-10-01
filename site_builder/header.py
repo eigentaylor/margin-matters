@@ -11,6 +11,7 @@ def make_header(title: str, is_inner: bool = False) -> str:
     prefix = ".." if is_inner else "."
     return (
         f'<div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">'
+        f'<button class="header-toggle-btn" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>'
         f'<div class="small-links">'
         f'<a class="btn" href="{prefix}/index.html">Home</a>'
         f'<a class="btn" href="{prefix}/state-pages.html">State Pages</a>'
@@ -24,6 +25,19 @@ def make_header(title: str, is_inner: bool = False) -> str:
         f'</div>'
         f'<div class="legend">{title}</div>'
         f'</div>'
+        f'<script>'
+        f'(function(){{'
+        f'const btn=document.querySelector(".header-toggle-btn");'
+        f'const links=document.querySelector(".site-header .small-links");'
+        f'if(btn&&links){{'
+        f'btn.addEventListener("click",()=>{{'
+        f'const exp=btn.getAttribute("aria-expanded")==="true";'
+        f'btn.setAttribute("aria-expanded",exp?"false":"true");'
+        f'links.classList.toggle("expanded");'
+        f'}});'
+        f'}}'
+        f'}})()'
+        f'</script>'
     )
 
 

@@ -86,8 +86,13 @@ def main():
         for r in lst:
             two_party_total = r['D_votes'] + r['R_votes']
             total = r['total_votes'] if r['total_votes'] != 0 else 1
-            r['two_party_margin'] = (r['D_votes'] - r['R_votes']) / two_party_total if two_party_total > 0 else 0.0
-            r['pres_margin'] = (r['D_votes'] - r['R_votes']) / total
+            # Special case: if total votes = 1, treat as margin = 0 (essentially no meaningful data)
+            if total == 1:
+                r['two_party_margin'] = 0.0
+                r['pres_margin'] = 0.0
+            else:
+                r['two_party_margin'] = (r['D_votes'] - r['R_votes']) / two_party_total if two_party_total > 0 else 0.0
+                r['pres_margin'] = (r['D_votes'] - r['R_votes']) / total
             # Use total third-party votes (not max single candidate) for share
             tp_total_votes = r.get('third_party_votes', None)
             if tp_total_votes is None:
