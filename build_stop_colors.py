@@ -30,7 +30,7 @@ def load_margins(path_candidates: List[str]) -> List[Dict]:
 
 
 def build_stop_rows(rows: List[Dict]) -> List[Dict]:
-    # Group by year and build stops mirroring tester.js logic
+    # Group by year and build stops based on where winner changes when adjusting votes by PV
     by_year: Dict[int, List[Dict]] = defaultdict(list)
     for r in rows:
         try:
@@ -54,23 +54,17 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             ms = [parse_float(r.get('national_margin')) for r in lst if r.get('national_margin')]
             nat = sum(ms) / len(ms) if ms else 0.0
 
-        # Build stops
-        stops_set = set([0.0])
+        # For each unit, find PV values where winner changes
+        all_stops = set([0.0])  # Always include EVEN
         if abs(nat) <= PV_CAP:
-            stops_set.add(nat)
-
-        stop_to_units: Dict[float, List[str]] = defaultdict(list)
-        stop_to_eff: Dict[float, float] = {}
-
-        # EVEN and Actual effs
-        stop_to_eff[0.0] = 0.0
-        stop_to_eff[nat] = nat
-
-        # helper to classify and append an output row for a single unit/stop
-        def classify_and_append(s: float, eff: float, r: Dict):
+            all_stops.add(nat)  # Always include actual national margin
+        
+        unit_stop_info = {}  # unit -> list of (stop, eff, winner)
+        
+        for r in lst:
             abbr = r.get('abbr')
-            rm = parse_float(r.get('relative_margin'))
-            nat = parse_float(r.get('national_margin'))
+            if not abbr or abbr in ('NATIONAL', 'NAT'):
+                continue
             
             # Get raw vote counts
             d_votes = parse_float(r.get('D_votes', 0))
@@ -82,148 +76,129 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 total_votes = d_votes + r_votes + t_votes
             
             if total_votes <= 0:
-                # No votes, fallback to margin-based logic
-                m = rm + eff
-                if m > 0:
-                    winner = 'D'
-                elif m < 0:
-                    winner = 'R'
-                else:
-                    side = 1 if (s - nat) >= 0 else -1
-                    winner = 'D' if side >= 0 else 'R'
-            else:
-                # Calculate adjusted vote shares using actual votes
-                # The PV shift (eff - nat) represents a national shift that affects D and R equally
-                # Third party votes stay constant
-                tp_share = t_votes / total_votes
-                two_party_total = d_votes + r_votes
-                
-                if two_party_total > 0:
-                    # Current two-party margin
-                    current_two_party_margin = (d_votes - r_votes) / two_party_total
-                    # Adjust by PV shift (eff - nat gives the shift from original national margin)
-                    adjusted_two_party_margin = current_two_party_margin + (eff - nat)
-                    # Clamp to valid range
-                    adjusted_two_party_margin = max(-1, min(1, adjusted_two_party_margin))
-                    
-                    # Convert back to shares
-                    d_two_party_share = (adjusted_two_party_margin + 1) / 2
-                    r_two_party_share = 1 - d_two_party_share
-                    
-                    # Apply to total votes
-                    d_adjusted = total_votes * (1 - tp_share) * d_two_party_share
-                    r_adjusted = total_votes * (1 - tp_share) * r_two_party_share
-                    t_adjusted = t_votes  # Third party votes unchanged
-                else:
-                    # No two-party votes, only third party
-                    d_adjusted = 0
-                    r_adjusted = 0
-                    t_adjusted = t_votes
-                
-                # Determine winner by who has most votes
-                if d_adjusted > r_adjusted and d_adjusted > t_adjusted:
-                    winner = 'D'
-                elif r_adjusted > d_adjusted and r_adjusted > t_adjusted:
-                    winner = 'R'
-                elif t_adjusted > d_adjusted and t_adjusted > r_adjusted:
-                    winner = 'T'
-                else:
-                    # Tie or near-tie, use margin as tiebreaker
-                    m = rm + eff
-                    if m > 0:
-                        winner = 'D'
-                    elif m < 0:
-                        winner = 'R'
-                    else:
-                        winner = 'T' if t_adjusted > 0 else 'D'
-
-            color_name = 'BLUE' if winner == 'D' else ('RED' if winner == 'R' else 'YELLOW')
-            color_css = params.COLORS.get(winner, 'transparent')
-            if color_css == 'deepskyblue':
-                color_css = 'blue' # darker blue for visibility
+                continue
             
-            out.append({
-                'year': year,
-                'stop': f"{s:.12f}",
-                'stop_key': f"{s:.{STOP_KEY_PREC}f}",
-                'effective_pv': f"{eff:.12f}",
-                'unit': abbr,
-                'winner': winner,
-                'result_color_name': color_name,
-                'color_css': color_css,
-            })
-
-        for r in lst:
-            abbr = r.get('abbr')
-            if not abbr or abbr in ('NATIONAL', 'NAT'):
-                continue
-            rm = parse_float(r.get('relative_margin'))
-            if parse_float(r.get('total_votes')) == 0:
-                # skip zero-vote states
-                continue
-            t = parse_float(r.get('T_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
-            d = parse_float(r.get('D_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
-            r_ = parse_float(r.get('R_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
-            a = 3 * t - 1
-            nat = parse_float(r.get('national_margin'))
-            if abbr == 'AL' and year == 1948:
-                a = 0.0
-            if a > 0:# and not (year == 1948 and abbr == 'AL'):
-                #nD = -rm + a
-                nD = nat + 2 * (t - d)
-                #nR = -rm - a
-                nR = nat + 2 * (r_ - t)
-                if abs(nD) <= PV_CAP:
-                    stops_set.add(nD)
-                    stop_to_units[nD].append(abbr)
-                    # nudge inside the yellow window
-                    sgn = 1.0 if (nD - nat) > 0 else (-1.0 if (nD - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(nD, nD + sgn * EPS)
-                    classify_and_append(nD, eff, r)
-                if abs(nR) <= PV_CAP:
-                    stops_set.add(nR)
-                    stop_to_units[nR].append(abbr)
-                    sgn = 1.0 if (nR - nat) > 0 else (-1.0 if (nR - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(nR, nR + sgn * EPS)
-                    classify_and_append(nR, eff, r)
-            else:
-                val = -rm
-                if abs(val) <= PV_CAP:
-                    stops_set.add(val)
-                    stop_to_units[val].append(abbr)
-                    sgn = 1.0 if (val - nat) > 0 else (-1.0 if (val - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(val, val + sgn * EPS)
-                    classify_and_append(val, eff, r)
-
-        # Ensure any stop without eff gets a small nudge toward D side
-        for s in list(stops_set):
-            if s not in stop_to_eff:
-                print(f"Debug: {year} stop {s} missing eff, adding small nudge")
-                stop_to_eff[s] = s + EPS
+            # Calculate initial percentages
+            d_pct = d_votes / total_votes
+            r_pct = r_votes / total_votes
+            t_pct = t_votes / total_votes
+            
+            # Function to get winner at a given PV shift
+            def get_winner_at_pv(pv):
+                # Adjust D and R percentages by PV
+                d_pct_adj = d_pct + pv / 2
+                r_pct_adj = r_pct - pv / 2
+                # T stays constant
+                t_pct_adj = t_pct
+                
+                # Convert to vote counts
+                d_votes_adj = d_pct_adj * total_votes
+                r_votes_adj = r_pct_adj * total_votes
+                t_votes_adj = t_pct_adj * total_votes
+                
+                # Find winner
+                if d_votes_adj > r_votes_adj and d_votes_adj > t_votes_adj:
+                    return 'D'
+                elif r_votes_adj > d_votes_adj and r_votes_adj > t_votes_adj:
+                    return 'R'
+                elif t_votes_adj > d_votes_adj and t_votes_adj > r_votes_adj:
+                    return 'T'
+                else:
+                    # Tie - use margin as tiebreaker
+                    margin = d_pct_adj - r_pct_adj
+                    return 'D' if margin >= 0 else 'R'
+            
+            # Find critical PV values where winner changes
+            unit_stops = []
+            
+            # Check at EVEN (0.0)
+            winner_at_0 = get_winner_at_pv(0.0)
+            unit_stops.append((0.0, 0.0 + EPS, winner_at_0))
+            all_stops.add(0.0)
+            
+            # Check at national margin
+            if abs(nat) <= PV_CAP:
+                winner_at_nat = get_winner_at_pv(nat)
+                unit_stops.append((nat, nat, winner_at_nat))
+                all_stops.add(nat)
+            
+            # Find PV where D and R tie (D_votes_adj = R_votes_adj)
+            # d_pct + pv/2 = r_pct - pv/2
+            # pv = r_pct - d_pct
+            pv_dr_tie = (r_pct - d_pct) * total_votes / total_votes  # simplifies to r_pct - d_pct
+            pv_dr_tie = r_pct - d_pct
+            if abs(pv_dr_tie) <= PV_CAP:
+                winner_before = get_winner_at_pv(pv_dr_tie - 0.001)
+                winner_after = get_winner_at_pv(pv_dr_tie + 0.001)
+                if winner_before != winner_after:
+                    unit_stops.append((pv_dr_tie, pv_dr_tie + EPS * (1 if pv_dr_tie >= 0 else -1), winner_after))
+                    all_stops.add(pv_dr_tie)
+            
+            # Find PV where D and T tie (D_votes_adj = T_votes)
+            # (d_pct + pv/2) * total = t_pct * total
+            # d_pct + pv/2 = t_pct
+            # pv = 2 * (t_pct - d_pct)
+            pv_dt_tie = 2 * (t_pct - d_pct)
+            if abs(pv_dt_tie) <= PV_CAP:
+                winner_before = get_winner_at_pv(pv_dt_tie - 0.001)
+                winner_after = get_winner_at_pv(pv_dt_tie + 0.001)
+                if winner_before != winner_after:
+                    unit_stops.append((pv_dt_tie, pv_dt_tie + EPS * (1 if pv_dt_tie >= 0 else -1), winner_after))
+                    all_stops.add(pv_dt_tie)
+            
+            # Find PV where R and T tie (R_votes_adj = T_votes)
+            # (r_pct - pv/2) * total = t_pct * total
+            # r_pct - pv/2 = t_pct
+            # pv = 2 * (r_pct - t_pct)
+            pv_rt_tie = 2 * (r_pct - t_pct)
+            if abs(pv_rt_tie) <= PV_CAP:
+                winner_before = get_winner_at_pv(pv_rt_tie - 0.001)
+                winner_after = get_winner_at_pv(pv_rt_tie + 0.001)
+                if winner_before != winner_after:
+                    unit_stops.append((pv_rt_tie, pv_rt_tie + EPS * (1 if pv_rt_tie >= 0 else -1), winner_after))
+                    all_stops.add(pv_rt_tie)
+            
+            unit_stop_info[abbr] = unit_stops
         
-        # Ensure every unit is classified at EVEN (0.0) and national margin
+        # Now generate output rows for each unit at each stop
         for r in lst:
             abbr = r.get('abbr')
             if not abbr or abbr in ('NATIONAL', 'NAT'):
                 continue
-            if parse_float(r.get('total_votes')) == 0:
+            
+            d_votes = parse_float(r.get('D_votes', 0))
+            r_votes = parse_float(r.get('R_votes', 0))
+            t_votes = parse_float(r.get('T_votes', 0))
+            total_votes = parse_float(r.get('total_votes', 0))
+            
+            if total_votes <= 0:
+                total_votes = d_votes + r_votes + t_votes
+            
+            if total_votes <= 0:
                 continue
             
-            # Classify at EVEN (0.0)
-            if 0.0 not in [s for s, u in [(s, u) for s in stops_set for u in stop_to_units.get(s, []) if u == abbr]]:
-                classify_and_append(0.0, 0.0 + EPS, r)
+            d_pct = d_votes / total_votes
+            r_pct = r_votes / total_votes
+            t_pct = t_votes / total_votes
             
-            # Classify at national margin
-            if nat is not None and abs(nat) <= PV_CAP:
-                nat_found = False
-                for s in stops_set:
-                    if abs(s - nat) < 1e-9 and abbr in stop_to_units.get(s, []):
-                        nat_found = True
-                        break
-                if not nat_found:
-                    classify_and_append(nat, nat, r)
+            # Generate entry for each stop this unit should have
+            for stop, eff, winner in unit_stop_info.get(abbr, []):
+                color_name = 'BLUE' if winner == 'D' else ('RED' if winner == 'R' else 'YELLOW')
+                color_css = params.COLORS.get(winner, 'transparent')
+                if color_css == 'deepskyblue':
+                    color_css = 'blue'
+                
+                out.append({
+                    'year': year,
+                    'stop': f"{stop:.12f}",
+                    'stop_key': f"{stop:.{STOP_KEY_PREC}f}",
+                    'effective_pv': f"{eff:.12f}",
+                    'unit': abbr,
+                    'winner': winner,
+                    'result_color_name': color_name,
+                    'color_css': color_css,
+                })
 
-    # No additional winner pass needed; rows appended inline above
     return out
 
 
