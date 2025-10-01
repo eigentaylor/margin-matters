@@ -280,6 +280,35 @@
     <input type="checkbox" id="propEvToggle" />
     <label for="propEvToggle">Proportional Electoral Votes</label>
   </div>
+  <button id="evBreakdownBtn" class="btn" style="margin-left:12px">View EV Breakdown</button>
+</div>
+
+<!-- EV Breakdown Modal -->
+<div id="evBreakdownModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="margin:0">Electoral Vote Breakdown by State</h3>
+      <button id="evBreakdownClose" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="table-wrap">
+        <table id="evBreakdownTable" class="ev-breakdown-table">
+          <thead>
+            <tr>
+              <th class="sortable" data-column="state">State</th>
+              <th class="sortable" data-column="margin">Margin (D%, R%, O%)</th>
+              <th class="sortable" data-column="d">D EVs</th>
+              <th class="sortable" data-column="r">R EVs</th>
+              <th class="sortable" data-column="o">O EVs</th>
+              <th class="sortable" data-column="total">Total EVs</th>
+            </tr>
+          </thead>
+          <tbody id="evBreakdownBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
