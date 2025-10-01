@@ -1570,8 +1570,7 @@
         const confDiff = (b.confidence || 0) - (a.confidence || 0);
         if (Math.abs(confDiff) > EPS) return confDiff;
         return (b.reporting || 0) - (a.reporting || 0);
-      })
-      .slice(0, 3);
+      });
 
   const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
     const callLines = [];
@@ -1758,7 +1757,7 @@
         if (uncalledCandidates.length) {
           const title = document.createElement('div');
           title.className = 'en-log-section-title';
-          title.textContent = 'STILL COUNTING (UNCALLED, TOP 3)';
+          title.textContent = 'STILL COUNTING (UNCALLED)';
           container.appendChild(title);
           const cardsContainer = document.createElement('div');
           cardsContainer.className = 'en-log-uncalled-cards';

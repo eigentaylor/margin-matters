@@ -477,6 +477,19 @@
         if (voteParts.length) {
           rows.push(voteParts.join(' | '));
         }
+        
+        // Add vote margin between top and runner-up
+        const votes = [
+          { party: 'D', count: voteTallies.D },
+          { party: 'R', count: voteTallies.R },
+          { party: 'O', count: voteTallies.O }
+        ].filter(v => v.count > 0).sort((a, b) => b.count - a.count);
+        
+        if (votes.length >= 2) {
+          const margin = votes[0].count - votes[1].count;
+          const marginText = `${formatter(margin)} vote${margin !== 1 ? 's' : ''} separating top and runner-up`;
+          rows.push(marginText);
+        }
       }
       
       // Election night reporting info
