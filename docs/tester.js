@@ -3049,3 +3049,390 @@ function renderFlipDetails(){
     // EC badge is updated by updateAll; here we just ensure badge shows current numbers after next update
   } catch(e) {}
 }
+
+// ============================================================================
+// EV Breakdown Modal Functionality
+// ============================================================================
+
+(function() {
+  // State for the EV breakdown modal
+  let currentSort = { column: 'state', ascending: true };
+  
+  // Initialize the modal when DOM is ready
+  function initEvBreakdownModal() {
+    const propEvToggle = document.getElementById('propEvToggle');
+    const evBreakdownBtn = document.getElementById('evBreakdownBtn');
+    const evBreakdownModal = document.getElementById('evBreakdownModal');
+    const evBreakdownClose = document.getElementById('evBreakdownClose');
+    
+    if (!propEvToggle || !evBreakdownBtn || !evBreakdownModal) return;
+    
+    // Initialize button visibility based on current checkbox state
+    evBreakdownBtn.style.display = propEvToggle.checked ? 'inline-block' : 'none';
+    
+    // Show/hide breakdown button based on proportional EV toggle
+    propEvToggle.addEventListener('change', function() {
+      evBreakdownBtn.style.display = this.checked ? 'inline-block' : 'none';
+      if (!this.checked && evBreakdownModal.style.display === 'flex') {
+        evBreakdownModal.style.display = 'none';
+      }
+    });
+    
+    // Open modal
+    evBreakdownBtn.addEventListener('click', function() {
+      updateEvBreakdownTable();
+      evBreakdownModal.style.display = 'flex';
+    });
+    
+    // Close modal
+    if (evBreakdownClose) {
+      evBreakdownClose.addEventListener('click', function() {
+        evBreakdownModal.style.display = 'none';
+      });
+    }
+    
+    // Close on background click
+    evBreakdownModal.addEventListener('click', function(e) {
+      if (e.target === evBreakdownModal) {
+        evBreakdownModal.style.display = 'none';
+      }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && evBreakdownModal.style.display === 'flex') {
+        evBreakdownModal.style.display = 'none';
+      }
+    });
+    
+    // Add sorting listeners to table headers
+    const table = document.getElementById('evBreakdownTable');
+    if (table) {
+      const headers = table.querySelectorAll('th.sortable');
+      headers.forEach(header => {
+        header.addEventListener('click', function() {
+          const column = this.getAttribute('data-column');
+          if (currentSort.column === column) {
+            currentSort.ascending = !currentSort.ascending;
+          } else {
+            currentSort.column = column;
+            currentSort.ascending = true;
+          }
+          updateEvBreakdownTable();
+        });
+      });
+    }
+  }
+  
+  // Get EV allocations for all states
+  function getAllEvAllocations() {
+    const year = window._curYear;
+    if (!year) return [];
+    
+    const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+    if (!rows || !rows.length) return [];
+    
+    const isProportional = (() => {
+      try {
+        const toggle = document.getElementById('propEvToggle');
+        return toggle && toggle.checked;
+      } catch(e) {
+        return false;
+      }
+    })();
+    
+    const isElectionNight = window._electionNightActive || false;
+    const snapshot = window._electionNightSnapshot || null;
+    
+    const allocations = [];
+    
+    // Get all unique state/unit codes (excluding NATIONAL and districts)
+    const processedStates = new Set();
+    rows.forEach(r => {
+      if (!r || !r.unit) return;
+      const unit = r.unit;
+      
+      // Skip national totals
+      if (unit === 'NATIONAL' || unit === 'NAT') return;
+      
+      // For Maine and Nebraska, use at-large
+      let displayUnit = unit;
+      if (unit === 'ME-AL') displayUnit = 'ME';
+      else if (unit === 'NE-AL') displayUnit = 'NE';
+      // Skip congressional districts (they're already counted in at-large)
+      else if (unit.match(/^(ME|NE)-\d+$/)) return;
+      
+      // Skip duplicates
+      if (processedStates.has(displayUnit)) return;
+      processedStates.add(displayUnit);
+      
+      const ev = +r.ev || 0;
+      if (ev <= 0) return;
+      
+      // Get state name
+      const stateName = getStateName(displayUnit);
+      
+      // Initialize allocation
+      let dEV = 0, rEV = 0, oEV = 0;
+      let showBlank = false;
+      let dVotes = 0, rVotes = 0, oVotes = 0;
+      
+      // Check if we should show blank (election night mode)
+      if (isElectionNight && snapshot) {
+        const stateData = snapshot.states && snapshot.states.find(s => s.unit === unit || s.abbr === displayUnit);
+        if (stateData) {
+          const called = stateData.called || false;
+          const reporting = stateData.reporting || 0;
+          
+          // Show blank if not called or not 100% counted
+          if (!called || reporting < 0.999) {
+            showBlank = true;
+          } else {
+            // Use election night vote counts
+            dVotes = stateData.dTotalCounted || 0;
+            rVotes = stateData.rTotalCounted || 0;
+            oVotes = stateData.oTotalCounted || 0;
+          }
+        } else {
+          showBlank = true;
+        }
+      }
+      
+      // Calculate allocations if not blank
+      if (!showBlank) {
+        // Special case: Alabama 1960 - always show proportional split
+        if (year === 1960 && displayUnit === 'AL') {
+          // Check winner
+          const margin = +r.margin || 0;
+          const winner = margin > 0 ? 'D' : (margin < 0 ? 'R' : 'O');
+          
+          if (winner !== 'R') {
+            // Democrats/Third party win: 5D, 6O split
+            dEV = Math.min(ev, 5);
+            oEV = Math.max(0, ev - dEV);
+          } else {
+            // Republicans win: normal winner-take-all
+            rEV = ev;
+          }
+          
+          // Get vote counts for Alabama 1960
+          if (!isElectionNight) {
+            dVotes = +r.dVotes || 0;
+            rVotes = +r.rVotes || 0;
+            oVotes = +r.tVotes || 0;
+          }
+        } else if (isProportional) {
+          // Use proportional allocation
+          if (!isElectionNight) {
+            // Get base vote counts
+            dVotes = +r.dVotes || 0;
+            rVotes = +r.rVotes || 0;
+            oVotes = +r.tVotes || 0;
+            
+            // Apply PV adjustment
+            const pv = window._curPv || 0;
+            const total = +r.total || (dVotes + rVotes + oVotes) || 0;
+            if (total > 0) {
+              const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+              const twoPartyBase = total * (1 - tp);
+              const baseDShare = twoPartyBase > 0 ? (dVotes - oVotes * (dVotes / (dVotes + rVotes))) / twoPartyBase : 0.5;
+              const adjDShare = Math.max(0, Math.min(1, baseDShare + pv));
+              const adjRShare = 1 - adjDShare;
+              
+              dVotes = adjDShare * twoPartyBase + oVotes * (adjDShare > adjRShare ? 1 : 0);
+              rVotes = adjRShare * twoPartyBase + oVotes * (adjRShare > adjDShare ? 1 : 0);
+            }
+          }
+          
+          // Allocate EVs proportionally
+          const alloc = allocateProportionalEVs(dVotes, rVotes, oVotes, ev, 0);
+          dEV = alloc.D;
+          rEV = alloc.R;
+          oEV = alloc.O;
+        } else {
+          // Winner-take-all
+          const margin = +r.margin || 0;
+          const pv = window._curPv || 0;
+          const adjMargin = margin + pv;
+          const winner = adjMargin > 0 ? 'D' : (adjMargin < 0 ? 'R' : 'O');
+          
+          if (winner === 'D') dEV = ev;
+          else if (winner === 'R') rEV = ev;
+          else oEV = ev;
+          
+          // Get vote counts
+          if (!isElectionNight) {
+            dVotes = +r.dVotes || 0;
+            rVotes = +r.rVotes || 0;
+            oVotes = +r.tVotes || 0;
+          }
+        }
+      }
+      
+      allocations.push({
+        state: displayUnit,
+        stateName: stateName,
+        dEV: showBlank ? null : dEV,
+        rEV: showBlank ? null : rEV,
+        oEV: showBlank ? null : oEV,
+        totalEV: ev,
+        dVotes: showBlank ? null : dVotes,
+        rVotes: showBlank ? null : rVotes,
+        oVotes: showBlank ? null : oVotes,
+        showBlank: showBlank
+      });
+    });
+    
+    return allocations;
+  }
+  
+  // Get full state name from abbreviation
+  function getStateName(abbr) {
+    const STATE_NAMES = {
+      'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+      'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'DC': 'District of Columbia',
+      'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois',
+      'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana',
+      'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota',
+      'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
+      'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
+      'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon',
+      'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota',
+      'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia',
+      'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+    };
+    return STATE_NAMES[abbr] || abbr;
+  }
+  
+  // Sort allocations based on current sort state
+  function sortAllocations(allocations) {
+    const sorted = [...allocations];
+    const { column, ascending } = currentSort;
+    
+    sorted.sort((a, b) => {
+      let aVal, bVal;
+      
+      switch(column) {
+        case 'state':
+          aVal = a.stateName;
+          bVal = b.stateName;
+          break;
+        case 'd':
+          aVal = a.dEV === null ? -1 : a.dEV;
+          bVal = b.dEV === null ? -1 : b.dEV;
+          break;
+        case 'r':
+          aVal = a.rEV === null ? -1 : a.rEV;
+          bVal = b.rEV === null ? -1 : b.rEV;
+          break;
+        case 'o':
+          aVal = a.oEV === null ? -1 : a.oEV;
+          bVal = b.oEV === null ? -1 : b.oEV;
+          break;
+        case 'total':
+          aVal = a.totalEV;
+          bVal = b.totalEV;
+          break;
+        default:
+          return 0;
+      }
+      
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return ascending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      } else {
+        return ascending ? (aVal - bVal) : (bVal - aVal);
+      }
+    });
+    
+    return sorted;
+  }
+  
+  // Update the table with current data
+  function updateEvBreakdownTable() {
+    const tbody = document.getElementById('evBreakdownBody');
+    const table = document.getElementById('evBreakdownTable');
+    if (!tbody || !table) return;
+    
+    // Update sort indicators in headers
+    const headers = table.querySelectorAll('th.sortable');
+    headers.forEach(header => {
+      const column = header.getAttribute('data-column');
+      header.classList.remove('sorted-asc', 'sorted-desc');
+      if (column === currentSort.column) {
+        header.classList.add(currentSort.ascending ? 'sorted-asc' : 'sorted-desc');
+      }
+    });
+    
+    // Get and sort allocations
+    const allocations = getAllEvAllocations();
+    const sorted = sortAllocations(allocations);
+    
+    // Build table rows
+    tbody.innerHTML = '';
+    sorted.forEach(alloc => {
+      const row = document.createElement('tr');
+      row.setAttribute('data-state', alloc.state);
+      
+      // State name cell (with hover tooltip)
+      const stateCell = document.createElement('td');
+      stateCell.textContent = alloc.stateName;
+      if (!alloc.showBlank && alloc.dVotes !== null) {
+        const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+        const voteInfo = [];
+        if (alloc.dVotes > 0) voteInfo.push(`D: ${formatter(alloc.dVotes)}`);
+        if (alloc.rVotes > 0) voteInfo.push(`R: ${formatter(alloc.rVotes)}`);
+        if (alloc.oVotes > 0) voteInfo.push(`O: ${formatter(alloc.oVotes)}`);
+        stateCell.title = voteInfo.join(' | ');
+      }
+      row.appendChild(stateCell);
+      
+      // D EVs
+      const dCell = document.createElement('td');
+      if (alloc.showBlank) {
+        dCell.textContent = '—';
+        dCell.classList.add('blank-entry');
+      } else {
+        dCell.textContent = alloc.dEV || 0;
+      }
+      row.appendChild(dCell);
+      
+      // R EVs
+      const rCell = document.createElement('td');
+      if (alloc.showBlank) {
+        rCell.textContent = '—';
+        rCell.classList.add('blank-entry');
+      } else {
+        rCell.textContent = alloc.rEV || 0;
+      }
+      row.appendChild(rCell);
+      
+      // O EVs
+      const oCell = document.createElement('td');
+      if (alloc.showBlank) {
+        oCell.textContent = '—';
+        oCell.classList.add('blank-entry');
+      } else {
+        oCell.textContent = alloc.oEV || 0;
+      }
+      row.appendChild(oCell);
+      
+      // Total EVs (always shown)
+      const totalCell = document.createElement('td');
+      totalCell.textContent = alloc.totalEV;
+      row.appendChild(totalCell);
+      
+      tbody.appendChild(row);
+    });
+  }
+  
+  // Expose update function globally so it can be called during election night
+  window.updateEvBreakdownTable = updateEvBreakdownTable;
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEvBreakdownModal);
+  } else {
+    initEvBreakdownModal();
+  }
+})();
+

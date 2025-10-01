@@ -1040,6 +1040,17 @@
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
+    
+    // Update EV breakdown modal if it's open
+    if (typeof window.updateEvBreakdownTable === 'function') {
+      try {
+        const modal = document.getElementById('evBreakdownModal');
+        if (modal && modal.style.display === 'flex') {
+          window.updateEvBreakdownTable();
+        }
+      } catch(e) {}
+    }
+    
     if (typeof window.refreshActiveMapTip === 'function') {
       try { window.refreshActiveMapTip(); } catch(e) {}
     }
