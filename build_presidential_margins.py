@@ -306,7 +306,7 @@ def main():
                 tv = r.get('T_votes', 0)
 
             # winner letter: 'D', 'R', or 'T' (largest raw votes)
-            if (tv > dv and tv > rv) or (year == 1948 and abbr == 'AL'):
+            if (tv > dv and tv > rv) or (year in [1948, 1960] and abbr == 'AL'):
                 winner = 'T'
             elif dv > rv:
                 winner = 'D'
