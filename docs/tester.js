@@ -76,27 +76,37 @@
       const ev = +r.ev || 0;
       if (ev <= 0) return null;
       
-      // Get base vote counts
-      let dVotes = +r.dVotes || 0;
-      let rVotes = +r.rVotes || 0;
-      let tVotes = +r.tVotes || 0;
-      const total = +r.total || (dVotes + rVotes + tVotes) || 0;
-      if (total <= 0) return null;
-      
-      // Get third-party share
-      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
-      
-      // Check if this unit has a flip scenario active
       const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
       const flipped = isUnitFlipped(year, keyUnit);
-      
-      // For flipped states, use exact votes from flip_details.csv
+
+      if (flipped && activeFlip && activeFlip.units) {
+        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+        if (flipUnit && flipUnit.votes_to_flip) {
+          let dVotesBase = Math.max(0, +r.dVotes || 0);
+          let rVotesBase = Math.max(0, +r.rVotes || 0);
+          let tVotesBase = Math.max(0, +r.tVotes || 0);
+          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          if (dVotesBase >= rVotesBase) {
+            dVotesBase = Math.max(0, dVotesBase - votesToFlip);
+            rVotesBase = rVotesBase + votesToFlip;
+          } else {
+            dVotesBase = dVotesBase + votesToFlip;
+            rVotesBase = Math.max(0, rVotesBase - votesToFlip);
+          }
+          const topThirdShare = totalVotesFromRow(r) > 0 ? (Math.max(0, +r.topThirdVotes || 0) / totalVotesFromRow(r)) : 0;
+          return allocateProportionalEVs(dVotesBase, rVotesBase, Math.max(0, tVotesBase), ev, topThirdShare);
+        }
+      }
+      console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
+      const breakdown = computePvAdjustedBreakdown(r, pv, nat);
+      let dVotes = Math.max(0, breakdown.dVotes);
+      let rVotes = Math.max(0, breakdown.rVotes);
+      let tVotes = Math.max(0, breakdown.totalThirdVotes);
+
       if (flipped && activeFlip && activeFlip.units) {
         const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
         if (flipUnit && flipUnit.votes_to_flip) {
           const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          
-          // Apply the exact vote flip: move votes_to_flip from winner to loser
           if (dVotes >= rVotes) {
             dVotes = Math.max(0, dVotes - votesToFlip);
             rVotes = rVotes + votesToFlip;
@@ -104,38 +114,11 @@
             dVotes = dVotes + votesToFlip;
             rVotes = Math.max(0, rVotes - votesToFlip);
           }
-          
-          // Calculate proportional allocation with exact flipped votes
-          const topThirdShare = +r.tp || 0;
-          const allocation = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
-          return allocation;
         }
       }
-      
-      // For non-flipped states, apply normal PV adjustment
-      let rmAdj = (+r.rm || 0) + pv;
-      
-      // Calculate adjusted two-party share
-      let twoD = 0.5 + rmAdj / 2;
-      twoD = Math.max(0, Math.min(1, twoD));
-      
-      // Calculate final vote shares
-      const dShare = (1 - tp) * twoD;
-      const rShare = (1 - tp) * (1 - twoD);
-      const tShare = tp;
-      
-      // Calculate vote counts
-      const dVotesAdj = total * dShare;
-      const rVotesAdj = total * rShare;
-      const tVotesAdj = total * tShare;
-      
-      // Use top third party share for allocation
-      const topThirdShare = +r.tp || 0;
-      
-      // Calculate proportional allocation
-      const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare);
-      
-      return allocation;
+
+      const topThirdShare = breakdown.topThirdShareOfTotal;
+      return allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
     } catch(e) {
       return null;
     }
@@ -199,68 +182,68 @@
       const r = rows.find(x => x.unit === keyUnit);
       if (!r) return null;
       
-      // Get base vote counts
-      let dVotes = +r.dVotes || 0;
-      let rVotes = +r.rVotes || 0;
-      let topThirdVotes = +r.topThirdVotes || 0; // Use top third party votes only
-      let total = +r.total || (dVotes + rVotes + (+r.tVotes || 0)) || 0;
-      
-      // Don't display vote info if there are no votes at all (e.g., CO 1876, FL 1868, LA 1864)
+      const total = totalVotesFromRow(r);
       if (total <= 0) return null;
-      
-      // Check if this unit has a flip scenario active
+
       const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
       const flipped = isUnitFlipped(year, keyUnit);
-      
-      // For flipped states, use exact votes from flip_details.csv
+
+      if (flipped && activeFlip && activeFlip.units) {
+        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+        if (flipUnit && flipUnit.votes_to_flip) {
+          let dVotesBase = Math.max(0, +r.dVotes || 0);
+          let rVotesBase = Math.max(0, +r.rVotes || 0);
+          const topThirdVotesBase = Math.max(0, +r.topThirdVotes || 0);
+          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          if (dVotesBase >= rVotesBase) {
+            dVotesBase = Math.max(0, dVotesBase - votesToFlip);
+            rVotesBase = rVotesBase + votesToFlip;
+          } else {
+            dVotesBase = dVotesBase + votesToFlip;
+            rVotesBase = Math.max(0, rVotesBase - votesToFlip);
+          }
+          return {
+            D: Math.round(dVotesBase),
+            R: Math.round(rVotesBase),
+            O: Math.round(topThirdVotesBase),
+            total: Math.round(dVotesBase + rVotesBase + topThirdVotesBase)
+          };
+        }
+      }
+      // Apply PV adjustment to get estimated vote tallies
+      // console.log('Calculating vote tallies for', keyUnit, 'with PV shift', pv, 'and row', r, 'nat margin', getNatMargin(year));
+      const breakdown = computePvAdjustedBreakdown(r, pv, getNatMargin(year));
+      if ((breakdown.dVotes || 0) <= EPS && (breakdown.rVotes || 0) <= EPS && (breakdown.topThirdVotes || 0) <= EPS) {
+        return null;
+      }
+
+      let dVotesAdj = Math.max(0, breakdown.dVotes);
+      let rVotesAdj = Math.max(0, breakdown.rVotes);
+      let topThirdVotesAdj = Math.max(0, breakdown.topThirdVotes);
+
       if (flipped && activeFlip && activeFlip.units) {
         const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
         if (flipUnit && flipUnit.votes_to_flip) {
           const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          
-          // Apply the exact vote flip: move votes_to_flip from winner to loser
-          if (dVotes >= rVotes) {
-            dVotes = Math.max(0, dVotes - votesToFlip);
-            rVotes = rVotes + votesToFlip;
+          if (dVotesAdj >= rVotesAdj) {
+            dVotesAdj = Math.max(0, dVotesAdj - votesToFlip);
+            rVotesAdj = rVotesAdj + votesToFlip;
           } else {
-            dVotes = dVotes + votesToFlip;
-            rVotes = Math.max(0, rVotes - votesToFlip);
+            dVotesAdj = dVotesAdj + votesToFlip;
+            rVotesAdj = Math.max(0, rVotesAdj - votesToFlip);
           }
-          
-          // Return exact flipped votes without further PV adjustment
-          return {
-            D: Math.round(dVotes),
-            R: Math.round(rVotes),
-            O: Math.round(topThirdVotes), // Third party votes unchanged by flip
-            total: Math.round(dVotes + rVotes + topThirdVotes)
-          };
         }
       }
-      
-      // For non-flipped states, apply normal PV adjustment
-      const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
-      const topThirdShare = Math.max(0, Math.min(1, (+r.tp) || 0)); // Top third party share specifically
-      let rmAdj = (+r.rm || 0) + pv;
-      
-      // Calculate adjusted two-party share
-      let twoD = 0.5 + rmAdj / 2;
-      twoD = Math.max(0, Math.min(1, twoD));
-      
-      // Calculate final vote shares
-      const dShare = (1 - topThirdShare) * twoD; // Use top third party share, not total third party
-      const rShare = (1 - topThirdShare) * (1 - twoD);
-      const topThirdShareAdj = topThirdShare; // Top third party gets its share
-      
-      // Calculate adjusted vote counts
-      const dVotesAdj = Math.round(total * dShare);
-      const rVotesAdj = Math.round(total * rShare);
-      const topThirdVotesAdj = Math.round(total * topThirdShareAdj);
-      
+
+      const dRounded = Math.round(dVotesAdj);
+      const rRounded = Math.round(rVotesAdj);
+      const oRounded = Math.round(topThirdVotesAdj);
+
       return {
-        D: dVotesAdj,
-        R: rVotesAdj,
-        O: topThirdVotesAdj, // Only top third party votes
-        total: dVotesAdj + rVotesAdj + topThirdVotesAdj
+        D: dRounded,
+        R: rRounded,
+        O: oRounded,
+        total: dRounded + rRounded + oRounded
       };
     } catch(e) {
       return null;
@@ -1196,6 +1179,73 @@
     return '#00008B';
   }
   try { window.marginToColor = marginToColor; } catch(e) {}
+
+  function clampMargin(value){
+    if (!isFinite(value)) return 0;
+    const LIMIT = 1 - 1e-9;
+    if (value > LIMIT) return LIMIT;
+    if (value < -LIMIT) return -LIMIT;
+    return value;
+  }
+
+  function totalVotesFromRow(row){
+    const direct = +row.total;
+    if (isFinite(direct) && direct > 0) return direct;
+    const fallback = (+row.dVotes || 0) + (+row.rVotes || 0) + (+row.tVotes || 0);
+    return fallback > 0 ? fallback : 0;
+  }
+
+  function computePvAdjustedBreakdown(row, pvShift = 0, natActualMargin = 0){
+    // Given a data row with dVotes, rVotes, tVotes (or total), and a desired PV shift,
+    const pv = isFinite(pvShift) ? 1 * (pvShift - natActualMargin) : 0;
+    //console.log({ pvShift, natActualMargin, pv });
+    const totalVotes = totalVotesFromRow(row);
+
+    let dVotesBase = Math.max(0, +row.dVotes || 0);
+    let rVotesBase = Math.max(0, +row.rVotes || 0);
+
+    let totalThirdVotes = +row.tVotes;
+    if (!isFinite(totalThirdVotes) || totalThirdVotes < 0) {
+      totalThirdVotes = Math.max(0, totalVotes - dVotesBase - rVotesBase);
+    }
+    if (totalVotes > 0) totalThirdVotes = Math.min(totalVotes, totalThirdVotes);
+    else totalThirdVotes = 0;
+
+    let topThirdVotes = +row.topThirdVotes;
+    if (!isFinite(topThirdVotes) || topThirdVotes < 0) topThirdVotes = totalThirdVotes;
+    topThirdVotes = Math.max(0, Math.min(totalThirdVotes, topThirdVotes));
+
+    const otherThirdVotes = Math.max(0, totalThirdVotes - topThirdVotes);
+    const twoPartyVotes = Math.max(0, totalVotes - totalThirdVotes);
+
+    const twoPartyDenom = twoPartyVotes > EPS ? twoPartyVotes : 0;
+    let baseDShareTwoParty = twoPartyDenom > 0 ? dVotesBase / twoPartyDenom : 0.5;
+    if (!isFinite(baseDShareTwoParty)) baseDShareTwoParty = 0.5;
+    baseDShareTwoParty = Math.max(0, Math.min(1, baseDShareTwoParty));
+
+    const baseMargin = clampMargin(2 * baseDShareTwoParty - 1);
+    const targetMargin = clampMargin(baseMargin + pv);
+    const targetDShareTwoParty = (targetMargin + 1) / 2;
+    const targetRShareTwoParty = 1 - targetDShareTwoParty;
+
+    const adjustedDVotes = twoPartyVotes * targetDShareTwoParty;
+    const adjustedRVotes = twoPartyVotes * targetRShareTwoParty;
+
+    return {
+      totalVotes,
+      dVotes: adjustedDVotes,
+      rVotes: adjustedRVotes,
+      twoPartyVotes,
+      totalThirdVotes,
+      topThirdVotes,
+      otherThirdVotes,
+      baseMargin,
+      targetMargin,
+      twoPartyShareOfTotal: totalVotes > EPS ? twoPartyVotes / totalVotes : 0,
+      topThirdShareOfTotal: totalVotes > EPS ? topThirdVotes / totalVotes : 0,
+      totalThirdShareOfTotal: totalVotes > EPS ? totalThirdVotes / totalVotes : 0
+    };
+  }
 
   const byYear = new Map();
   const evByUnit = new Map();

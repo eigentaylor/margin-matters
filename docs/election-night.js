@@ -92,6 +92,14 @@
     WI:'Wisconsin', WY:'Wyoming'
   };
 
+  function clampMargin(value){
+    if (!isFinite(value)) return 0;
+    const LIMIT = 1 - 1e-9;
+    if (value > LIMIT) return LIMIT;
+    if (value < -LIMIT) return -LIMIT;
+    return value;
+  }
+
   // Runtime simulation state. This object stores everything needed to
   // keep the simulation consistent across frames: whether it's prepared,
   // running, current time window, per-unit data, UI caches, and call logs.
@@ -574,55 +582,91 @@
       if (!isFinite(totalVotes) || totalVotes <= 0) return;
 
       const thirdPartyVotes = Math.max(0, Math.min(totalVotes, +row.tVotes || 0));
-      const totalThirdShare = clamp01(
+      const totalThirdShareInitial = clamp01(
         row.thirdShare != null ? +row.thirdShare : (totalVotes > 0 ? thirdPartyVotes / totalVotes : 0)
       );
-      let topThirdShare = clamp01(
-        row.topThirdShare != null ? +row.topThirdShare : (isFinite(+row.tp) ? +row.tp : totalThirdShare)
+      let topThirdShareInitial = clamp01(
+        row.topThirdShare != null ? +row.topThirdShare : (isFinite(+row.tp) ? +row.tp : totalThirdShareInitial)
       );
-      if (topThirdShare > totalThirdShare + EPS) {
-        topThirdShare = Math.min(topThirdShare, totalThirdShare);
+      if (topThirdShareInitial > totalThirdShareInitial + EPS) {
+        topThirdShareInitial = Math.min(topThirdShareInitial, totalThirdShareInitial);
       }
 
-      let adjustedMargin = (+row.rm || 0) + pvValue;
       const flipped = typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit);
-
-      // If this unit is part of an active flip scenario, prefer exact votes/margin
-      // from flip_details.csv. We don't mutate the margin here; instead we stash
-      // the flip info on the row and apply the exact votes_to_flip after the
-      // base final vote counts are computed (so all downstream values use the
-      // exact flipped votes rather than an EPS nudged margin).
       if (flipped) {
         try {
           const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
           if (activeFlip && Array.isArray(activeFlip.units)) {
             const match = activeFlip.units.find(u => u.unit === unit || u.unit === abbr || u.unit === (abbr + '-AL'));
-            if (match) {
-              // attach flip info for later application
-              row.__flipInfo = match;
-            }
+            if (match) row.__flipInfo = match;
           }
-        } catch(e) { /* ignore and fall back to existing behavior */ }
-      }
-      if (year === 1876 && abbr === 'CO') {
-        const forced = Math.abs(adjustedMargin);
-        adjustedMargin = forced > 0 ? -forced : -0.06;
+        } catch(e) { /* ignore */ }
       }
 
-      const twoPartyShare = Math.max(0, Math.min(1, 1 - totalThirdShare));
-      let dTwoPartyFinal = clamp01(0.5 + adjustedMargin / 2);
+      const baseDVotes = Math.max(0, +row.dVotes || 0);
+      const baseRVotes = Math.max(0, +row.rVotes || 0);
+      let finalOTotalVotes = thirdPartyVotes;
+      if (finalOTotalVotes <= 0 && totalVotes > 0) {
+        finalOTotalVotes = Math.max(0, totalVotes - baseDVotes - baseRVotes);
+      }
+      finalOTotalVotes = Math.min(totalVotes, finalOTotalVotes);
+
+      let baseTopThirdVotes = +row.topThirdVotes;
+      if (!isFinite(baseTopThirdVotes) || baseTopThirdVotes < 0) {
+        baseTopThirdVotes = topThirdShareInitial * totalVotes;
+      }
+      baseTopThirdVotes = Math.max(0, Math.min(finalOTotalVotes, baseTopThirdVotes));
+      let finalOTopVotes = baseTopThirdVotes;
+
+      const twoPartyVotesBase = Math.max(0, totalVotes - finalOTotalVotes);
+      const hasTwoPartyData = twoPartyVotesBase > EPS && (baseDVotes + baseRVotes > 0);
+      const baseMargin = hasTwoPartyData ? clampMargin((baseDVotes - baseRVotes) / twoPartyVotesBase) : null;
+
+      let targetMargin = clampMargin(((baseMargin != null) ? baseMargin : (+row.rm || 0)) + pvValue);
+      if (year === 1876 && abbr === 'CO') {
+        const forced = Math.abs(targetMargin);
+        targetMargin = forced > 0 ? -forced : -0.06;
+      }
+
+      const targetDTwoPartyShare = (targetMargin + 1) / 2;
+      const targetRTwoPartyShare = 1 - targetDTwoPartyShare;
+      const twoPartyVotesUsed = twoPartyVotesBase > EPS ? twoPartyVotesBase : Math.max(0, (1 - totalThirdShareInitial) * totalVotes);
+
+      let finalDVotes = twoPartyVotesUsed * targetDTwoPartyShare;
+      let finalRVotes = twoPartyVotesUsed - finalDVotes;
+
+      if (year === 1948 && abbr === 'AL') {
+        finalDVotes = 0;
+        finalRVotes = twoPartyVotesUsed;
+        finalOTopVotes = Math.max(finalOTopVotes, finalOTotalVotes);
+      }
+
+      // Apply exact flip adjustments after PV shift
+      if (row.__flipInfo && (row.__flipInfo.votes_to_flip != null)) {
+        const votesToFlip = Math.max(0, +row.__flipInfo.votes_to_flip || 0);
+        if (isFinite(votesToFlip) && votesToFlip > 0) {
+          if (finalDVotes >= finalRVotes) {
+            finalDVotes = Math.max(0, finalDVotes - votesToFlip);
+            finalRVotes = finalRVotes + votesToFlip;
+          } else {
+            finalDVotes = finalDVotes + votesToFlip;
+            finalRVotes = Math.max(0, finalRVotes - votesToFlip);
+          }
+        }
+      }
+
+      const twoPartyVotesFinal = finalDVotes + finalRVotes;
+      const twoPartyShare = totalVotes > EPS ? twoPartyVotesFinal / totalVotes : 0;
+      let dTwoPartyFinal = twoPartyVotesFinal > EPS ? finalDVotes / twoPartyVotesFinal : 0.5;
       let rTwoPartyFinal = 1 - dTwoPartyFinal;
       if (!isFinite(dTwoPartyFinal)) dTwoPartyFinal = 0.5;
       if (!isFinite(rTwoPartyFinal)) rTwoPartyFinal = 0.5;
 
-      let dShareFinal = twoPartyShare * dTwoPartyFinal;
-      let rShareFinal = twoPartyShare * rTwoPartyFinal;
-
-      if (year === 1948 && abbr === 'AL') {
-        dShareFinal = 0;
-        rShareFinal = twoPartyShare;
-        topThirdShare = Math.max(topThirdShare, totalThirdShare);
-      }
+      let dShareFinal = totalVotes > EPS ? finalDVotes / totalVotes : 0;
+      let rShareFinal = totalVotes > EPS ? finalRVotes / totalVotes : 0;
+      const totalThirdShare = totalVotes > EPS ? finalOTotalVotes / totalVotes : totalThirdShareInitial;
+      let topThirdShare = totalVotes > EPS ? finalOTopVotes / totalVotes : topThirdShareInitial;
+      let adjustedMargin = twoPartyVotesFinal > EPS ? clampMargin((finalDVotes - finalRVotes) / twoPartyVotesFinal) : targetMargin;
 
       let winner = determineWinner(dShareFinal, rShareFinal, topThirdShare);
       if (year === 1876 && abbr === 'CO') winner = 'R';
@@ -656,30 +700,8 @@
       if (isAtLarge) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
-      let finalDVotes = totalVotes * dShareFinal;
-      let finalRVotes = totalVotes * rShareFinal;
-      const finalOTopVotes = totalVotes * topThirdShare;
-      const finalOTotalVotes = totalVotes * totalThirdShare;
-      // If we attached flip info from flip_details.csv, apply the exact
-      // votes_to_flip to the computed final D/R vote counts and recompute
-      // derived shares/margins so everything (EVs, colors, leader, etc.) uses
-      // the exact flipped vote counts rather than an EPS margin.
-      if (row.__flipInfo && (row.__flipInfo.votes_to_flip != null)) {
-        const votesToFlip = Math.max(0, +row.__flipInfo.votes_to_flip || 0);
-        if (isFinite(votesToFlip) && votesToFlip > 0) {
-          if (finalDVotes >= finalRVotes) {
-            finalDVotes = Math.max(0, finalDVotes - votesToFlip);
-            finalRVotes = finalRVotes + votesToFlip;
-          } else {
-            finalDVotes = finalDVotes + votesToFlip;
-            finalRVotes = Math.max(0, finalRVotes - votesToFlip);
-          }
-          // Recompute shares after flip
-          dShareFinal = totalVotes > EPS ? finalDVotes / totalVotes : 0;
-          rShareFinal = totalVotes > EPS ? finalRVotes / totalVotes : 0;
-          console.log(`[INFO] Applied flip for ${unit} (${year}): ${votesToFlip} votes, new margin ${(dShareFinal - rShareFinal).toFixed(4)}`);
-        }
-      }
+      const finalOTopVotesOut = finalOTopVotes;
+      const finalOTotalVotesOut = finalOTotalVotes;
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
       const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1);
@@ -717,10 +739,10 @@
         topThirdShare,
         totalThirdShare,
         confidence: 1,
-        dVotesCounted: finalDVotes,
-        rVotesCounted: finalRVotes,
-        oVotesCounted: finalOTopVotes,
-        oVotesCountedTotal: finalOTotalVotes,
+    dVotesCounted: finalDVotes,
+    rVotesCounted: finalRVotes,
+    oVotesCounted: finalOTopVotesOut,
+    oVotesCountedTotal: finalOTotalVotesOut,
         countedVotes: totalVotes,
         remainingVotes: 0
       };
