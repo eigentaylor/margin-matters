@@ -21,10 +21,20 @@
     <div id="map-wrap" class="center">
       <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="U.S. map"></svg>
       <div id="mapTip" style="display:none"></div>
+      <!-- Small-state side boxes (auto-filled by tester.js) -->
+      <div id="smallStateBoxes" aria-label="Small state info boxes" style="display:none"></div>
     </div>
     <hr style="margin:12px 0" />
 <div id="tester" class="center" style="margin-top:8px">
   <div style="display:grid;gap:10px">
+    <div id="evBar" style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111">
+      <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+      <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
+      <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
+  <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
+      <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+      <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">D 0 | U 0 | R 0</div>
+    </div>
     <div style="display:flex;align-items:center;gap:8px">
       <label for="yearSlider" style="flex:0 0 auto;min-width:48px">Year:</label>
       <input id="yearSlider" type="range" min="1864" max="2024" step="4" value="2024" style="flex:1;min-width:120px;" />
@@ -38,24 +48,64 @@
       </div>
       <datalist id="pvStopsList"></datalist>
     </div>
-    <div id="evBar" style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111">
-      <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
-      <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
-      <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
-      <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
-      <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
-      <div id="evText" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">D 0 | U 0 | O 0 | R 0</div>
-    </div>
     <div id="pvTotals" class="pv-totals">
       <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span></div>
       <div class="pv-badge pv-o"><span class="label">Other</span><span id="pvOth" class="num">0</span></div>
       <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
       <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
     </div>
-    <div class="legend" style="font-size:0.95rem;margin-bottom:6px">Flip scenarios (min votes)</div>
+    <div id="electionNightCard" class="card" style="background:transparent;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px">
+      <div class="legend" style="text-align:left">Election night simulator</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <button id="enToggle" class="btn" style="min-width:96px">Start</button>
+        <button id="enReset" class="btn" style="min-width:96px">Reset</button>
+        <label for="enSpeed" class="legend" style="font-size:0.9rem">Speed</label>
+        <select id="enSpeed" class="btn" style="min-width:120px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+          <option value="0.1">0.1×</option>
+          <option value="0.25">0.25×</option>
+          <option value="0.5" selected>0.5×</option>
+          <option value="1">1×</option>
+          <option value="2">2×</option>
+          <option value="4">4×</option>
+        </select>
+        <span id="enPhase" class="legend" style="font-size:0.9rem;color:var(--muted)">Idle</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label for="enPvMode" class="legend" style="font-size:0.9rem">PV selection</label>
+        <select id="enPvMode" class="btn" style="min-width:200px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+          <option value="current" selected>Use current PV</option>
+          <option value="randomD">Random D tilt</option>
+          <option value="randomR">Random R tilt</option>
+          <option value="randomAny">Surprise me</option>
+        </select>
+        <span id="enPvDisplay" class="legend" style="font-size:0.9rem;color:var(--muted)">PV: —</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <label for="enProgress" class="legend" style="min-width:110px;font-size:0.9rem">Progress</label>
+        <input id="enProgress" type="range" min="0" max="1" step="0.001" value="0" style="flex:1" />
+        <span id="enTime" class="legend" style="font-size:0.9rem">19:00</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <label for="enConfidence" class="legend" style="min-width:110px;font-size:0.9rem">Call threshold</label>
+        <input id="enConfidence" type="range" min="0" max="1" step="0.01" value="0.3" style="flex:1" />
+        <span id="enConfidenceVal" class="legend" style="font-size:0.9rem">0.3</span>
+      </div>
+      <div class="legend" style="font-size:0.85rem;text-align:left;color:var(--muted)">Call log floats on the right so you can track updates while watching the map.</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
+      <div class="legend" style="font-size:0.95rem">Flip scenarios</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <label for="flipMetric" class="legend" style="font-size:0.9rem">Optimize by</label>
+        <select id="flipMetric" class="btn" style="min-width:160px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+          <option value="votes" selected>Min votes (default)</option>
+          <option value="margin">Min margin (% of state)</option>
+        </select>
+      </div>
+    </div>
     <div class="flip-controls">
       <button id="flipClassic" class="btn">Flip winner</button>
       <button id="flipNoMaj" class="btn">Break majority</button>
+      <button id="flipTie" class="btn">Tie</button>
       <button id="flipReset" class="btn">Reset flips</button>
     </div>
     <div class="flip-summary">
@@ -65,7 +115,7 @@
       <div class="flip-badge"><span class="label">EC</span><span id="flipEC" class="num">0 - 0</span></div>
     </div>
     <div id="flipDetailsWrap" class="card" style="margin-top:8px;display:none">
-      <div class="legend" style="text-align:left">Applied flips (winner by minimal votes to switch):</div>
+      <div class="legend" id="flipDetailsTitle" style="text-align:left">Applied flips (optimize: min votes):</div>
       <div class="table-wrap">
         <table class="flip-table">
           <thead><tr><th>State</th><th>EV</th><th>D</th><th>R</th><th>Δ votes</th></tr></thead>
@@ -105,17 +155,39 @@
     </div>
     <div id="closeStates" class="legend"></div>
     <div id="testerExplain" class="legend" style="font-size:0.95rem;text-align:left;color:var(--muted)"><a href="methods.html">See Methods</a> for metric definitions, PV stops, uniform swing, and 1968 notes.</div>
+    <!-- Relative margin delta panel -->
+    <div id="relDeltas" class="card" style="margin-top:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div id="relDeltasTitle" class="legend" style="text-align:left;margin-bottom:6px">Relative margin change</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label class="legend" for="relBaseline">Compare to</label>
+          <select id="relBaseline" class="btn" style="color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+            <option value="prev">Previous election</option>
+            <option value="2024">2024</option>
+          </select>
+        </div>
+      </div>
+      <div id="relDeltasList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
   </div>
 </div>
   </div>
   <footer>Site by eigentaylor.<br />
 Data (possibly incorrectly scraped) from Wikipedia.<br /> 
-Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-10-01 21:33 UTC</footer>
+Please report any innaccuracies to me through discord: eigentaylor · Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: 2025-10-01 06:45 UTC</footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<div id="enLogPanel" aria-live="polite" aria-label="Election night call log">
+  <div class="en-log-header">Call log</div>
+  <div id="enLog" class="en-log-body"></div>
+  <div id="enVictory" class="en-log-victory" style="display:none"></div>
+  <div id="enLogUncalled" class="en-log-uncalled"></div>
+</div>
+
 <script src="tester.js"></script>
+<script src="election-night.js"></script>
 <script>
 // Lightweight PV tools wiring (reuses tester.js globals where possible)
 (function(){
@@ -147,8 +219,8 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
         const pvPreset = document.getElementById('pvPreset');
         const pvFlip = document.getElementById('pvFlip');
         const pvClear = document.getElementById('pvClear');
-    if (pvApply) pvApply.addEventListener('click', ()=>{ const v = parsePvText(pvText && pvText.value); if (v==null) return; applyPvOverride(v); if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){} });
-    if (pvPreset) pvPreset.addEventListener('change', ()=>{ const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){} } });
+  if (pvApply) pvApply.addEventListener('click', ()=>{ const v = parsePvText(pvText && pvText.value); if (v==null) return; applyPvOverride(v); if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){} });
+  if (pvPreset) pvPreset.addEventListener('change', ()=>{ const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v>=0?`D+${(v*100).toFixed(1)}`:`R+${(Math.abs(v)*100).toFixed(1)}`); applyPvOverride(v); try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){} } });
         if (pvFlip) pvFlip.addEventListener('click', ()=>{
             let cur = 0;
             if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
@@ -159,7 +231,8 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
                 const idx = pvEl? parseInt(pvEl.value):0; const stopVal = stops[idx] || 0;
                 cur = stopVal;
             }
-            // Flip by applying numeric negation of current PV
+            // toggle flipped state
+            // Apply numeric negation of current PV override/slider value
             applyPvOverride(-cur);
             if (pvText) pvText.value = (cur<=0?`D+${(Math.abs(cur)*100).toFixed(1)}`:`R+${(Math.abs(cur)*100).toFixed(1)}`);
             try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){}
@@ -167,16 +240,16 @@ Please report any innaccuracies to me through discord: eigentaylor · Built as s
         if (pvClear) pvClear.addEventListener('click', ()=>{ window._pvOverride = null; if (pvText) pvText.value = ''; if (typeof window.updateAll === 'function') window.updateAll(); });
         // Ensure moving the PV slider cancels any override/preset so slider takes immediate effect
         const pvSlider = document.getElementById('pvSlider');
-        if (pvSlider) pvSlider.addEventListener('input', ()=>{
-            // clear any custom PV override set by presets or Apply
-            try { window._pvOverride = null; } catch(e) {}
-            // clear preset selection (so UI reflects that slider is active)
-            try { if (pvPreset) pvPreset.value = ''; } catch(e) {}
-            // moving slider should clear any numeric override so slider selection takes effect
-            try { window._pvOverride = null; } catch(e) {}
-            if (typeof window.updateAll === 'function') window.updateAll();
-            try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){}
-        });
+    if (pvSlider) pvSlider.addEventListener('input', ()=>{
+      // clear any custom PV override set by presets or Apply
+      try { window._pvOverride = null; } catch(e) {}
+      // clear preset selection (so UI reflects that slider is active)
+      try { if (pvPreset) pvPreset.value = ''; } catch(e) {}
+      // moving slider should clear any numeric override so slider selection takes effect
+      try { window._pvOverride = null; } catch(e) {}
+      if (typeof window.updateAll === 'function') window.updateAll();
+      try { if (typeof updateUrl === 'function') { const yEl=document.getElementById('yearSlider'); const y = yEl? parseInt(yEl.value):null; const pvEl=document.getElementById('pvSlider'); const pvIdx = pvEl? parseInt(pvEl.value):null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch(e){}
+    });
     });
 })();
 </script>
@@ -212,11 +285,13 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         return abbr ? `state-${abbr}` : null;
       })
       .attr("d", path)
-      /* Slightly brighter default fill for better contrast */
-      .attr("fill", "#2f2f2f")
-      /* Slightly lighter stroke so state boundaries remain visible */
-      .attr("stroke", "#5a5a5a")
-      .attr("stroke-width", 0.8)
+    /* Slightly brighter default fill for better contrast */
+    .attr("fill", "#2f2f2f")
+    /* Thin white outline on each state (coastlines/lakes) */
+    .attr("stroke", "#FFFFFF")
+    .attr("stroke-width", 0.6)
+    .attr("stroke-linejoin", "round")
+    .attr("stroke-linecap", "round")
       .attr("tabindex", 0)
       /* On hover: pick a bright blue or red depending on the current fill and restore it on mouseout */
     .on("mouseover", function(event, d) {
@@ -286,10 +361,63 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         return abbr ? abbr : "Unknown";
       });
 
+    // Overlay internal white boundaries between states for a single, crisp seam
+    try {
+      const internal = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+      g.append("path")
+        .datum(internal)
+        .attr("class", "state-boundaries")
+        .attr("fill", "none")
+        .attr("stroke", "#FFFFFF")
+        .attr("stroke-width", 1.4)
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("pointer-events", "none")
+        .attr("d", path);
+    } catch (e) { /* optional overlay */ }
+
     // Small state buttons were moved to the State Pages directory; no buttons on index
   // Notify listeners that the map has rendered
   window.dispatchEvent(new Event("mapReady"));
   });
 </script>
+
+<!-- Proportional EV Mode Toggle Footer -->
+<div class="delta-toggle-footer" id="propEvFooter">
+  <div class="toggle-group">
+    <input type="checkbox" id="propEvToggle" />
+    <label for="propEvToggle">Proportional Electoral Votes</label>
+  </div>
+  <button id="evBreakdownBtn" class="btn" style="margin-left:12px">View EV Breakdown</button>
+</div>
+
+<!-- EV Breakdown Modal -->
+<div id="evBreakdownModal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="margin:0">Electoral Vote Breakdown by State</h3>
+      <button id="evBreakdownClose" class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body" style="overflow: hidden;"></div>
+      <div class="table-wrap">
+        <table id="evBreakdownTable" class="ev-breakdown-table">
+          <thead>
+            <tr>
+              <th class="sortable" data-column="state">State</th>
+              <th class="sortable" data-column="margin">Margin (D%, R%, O%)</th>
+              <th class="sortable" data-column="d">D EVs</th>
+              <th class="sortable" data-column="r">R EVs</th>
+              <th class="sortable" data-column="o">O EVs</th>
+              <th class="sortable" data-column="total">Total EVs</th>
+            </tr>
+          </thead>
+          <tbody id="evBreakdownBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
