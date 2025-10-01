@@ -98,7 +98,7 @@
         }
       }
       console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
-      const breakdown = computePvAdjustedBreakdown(r, pv, nat);
+      const breakdown = computePvAdjustedBreakdown(r, pv, getNatMargin(year));
       let dVotes = Math.max(0, breakdown.dVotes);
       let rVotes = Math.max(0, breakdown.rVotes);
       let tVotes = Math.max(0, breakdown.totalThirdVotes);
