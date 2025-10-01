@@ -284,6 +284,8 @@ def main():
                 'two_party_relative_margin_delta': two_party_relative_delta if two_party_relative_delta is not None else 0.0,
                 'two_party_relative_margin_delta_str': utils.lean_str(two_party_relative_delta) if two_party_relative_delta is not None else '0.0',
                 
+                'top_third_party_share_str': utils.lean_str(r.get('top_third_party_share', 0.0), third_party=True),
+                
                 'third_party_share': third_party if third_party is not None else 0.0,
                 'third_party_share_str': utils.lean_str(third_party, third_party=True) if third_party is not None else '0.0',
                 'third_party_national_share': third_party_national if third_party_national is not None else 0.0,
@@ -410,6 +412,7 @@ def main():
         'pres_margin_str', 'pres_margin_delta_str',
         'national_margin_str', 'national_margin_delta_str',
         'relative_margin_str', 'relative_margin_delta_str',
+        'top_third_party_share_str',
         'third_party_share_str', 'third_party_national_share_str', 'third_party_relative_share_str',
         'two_party_margin_str', 'two_party_margin_delta_str',
         'two_party_national_margin_str', 'two_party_national_margin_delta_str',

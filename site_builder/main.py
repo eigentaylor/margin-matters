@@ -23,6 +23,27 @@ def build_site():
                 shutil.copy2(item, PLOTS_DST / item.name)
 
     rows = read_csv(CSV_PATH)
+    
+    # Add computed margin_breakdown column to each row
+    for row in rows:
+        d_share = row.get("D_share", None)
+        r_share = row.get("R_share", None)
+        third_share = row.get("top_third_party_share", None)
+        
+        if d_share is not None and r_share is not None:
+            try:
+                d_pct = float(d_share) * 100
+                r_pct = float(r_share) * 100
+                if third_share is not None:
+                    third_pct = float(third_share) * 100
+                else:
+                    third_pct = 0.0
+                row["margin_breakdown"] = f"({d_pct:.1f}%, {r_pct:.1f}%, {third_pct:.1f}%)"
+            except (ValueError, TypeError):
+                row["margin_breakdown"] = ""
+        else:
+            row["margin_breakdown"] = ""
+    
     states = build_pages(rows)
     # Build State Pages index
     try:

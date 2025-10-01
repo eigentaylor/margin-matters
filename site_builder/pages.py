@@ -5,7 +5,7 @@ import params
 from .config import OUT_DIR, STATE_DIR, UNIT_DIR, SMALL_STATES, ME_NE_STATES, LAST_UPDATED, FOOTER_TEXT, EXPLANATION_TEXT
 from .io_utils import write_text
 from .tables import split_columns_into_three, group_by_abbr, render_table, render_info_box
-from .templates import INDEX_HTML, PAGE_HTML, DELTA_TOGGLE_JS
+from .templates import INDEX_HTML, PAGE_HTML, ENHANCED_TOGGLE_JS
 from .header import make_header
 
 
@@ -293,17 +293,19 @@ def build_pages(rows: List[Dict]):
             f'</div>'
         )
         table1_section = (
-            f'<div class="card">\n'
+            f'<div class="card" data-table-type="total">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Total Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}</div>\n'
+            f'  {render_info_box(basic_cols)}\n'
             f'</div>'
         )
         table3_section = ''
         if third_cols:
             table3_section = (
-                f'<div class="card">\n'
+                f'<div class="card" data-table-type="third-party">\n'
                 f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Third-Party Data</h2>\n'
                 f'  <div class="table-wrap">{render_table(table_rows, third_cols)}</div>\n'
+                f'  {render_info_box(third_cols)}\n'
                 f'</div>'
             )
         plot3_section = (
@@ -313,9 +315,10 @@ def build_pages(rows: List[Dict]):
             f'</div>'
         )
         table2_section = (
-            f'<div class="card">\n'
+            f'<div class="card" data-table-type="two-party">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Two-Party Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}</div>\n'
+            f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide", is_inner=True)
@@ -324,14 +327,13 @@ def build_pages(rows: List[Dict]):
             .replace("%HEADER%", header_html)
             .replace("%TITLE%", f"{st} · State")
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
-            .replace("%PLOT_SECTION%", plot_section)
+            .replace("%STATE_ABBR%", st)
             .replace("%EXTRA_LINKS%", extra_links)
             .replace("%TABLE1_SECTION%", table1_section)
             .replace("%TABLE3_SECTION%", table3_section)
-            .replace("%PLOT3_SECTION%", plot3_section)
             .replace("%TABLE2_SECTION%", table2_section)
             .replace("%FOOTER_TEXT%", FOOTER_TEXT)
-            .replace("%DELTA_TOGGLE_JS%", DELTA_TOGGLE_JS)
+            .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
         )
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(STATE_DIR / f"{st[:2]}.html", page)
@@ -372,23 +374,26 @@ def build_pages(rows: List[Dict]):
             f'</div>'
         )
         table1_section = (
-            f'<div class="card">\n'
+            f'<div class="card" data-table-type="total">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Total Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}</div>\n'
+            f'  {render_info_box(basic_cols)}\n'
             f'</div>'
         )
         table3_section = ''
         if third_cols:
             table3_section = (
-                f'<div class="card">\n'
+                f'<div class="card" data-table-type="third-party">\n'
                 f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Third-Party Data</h2>\n'
                 f'  <div class="table-wrap">{render_table(table_rows, third_cols)}</div>\n'
+                f'  {render_info_box(third_cols)}\n'
                 f'</div>'
             )
         table2_section = (
-            f'<div class="card">\n'
+            f'<div class="card" data-table-type="two-party">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Two-Party Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}</div>\n'
+            f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})", is_inner=True)
@@ -397,14 +402,13 @@ def build_pages(rows: List[Dict]):
             .replace("%HEADER%", header_html)
             .replace("%TITLE%", f"{unit} · District")
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
-            .replace("%PLOT_SECTION%", plot_section)
+            .replace("%STATE_ABBR%", unit)
             .replace("%EXTRA_LINKS%", extra_links)
             .replace("%TABLE1_SECTION%", table1_section)
             .replace("%TABLE3_SECTION%", table3_section)
-            .replace("%PLOT3_SECTION%", plot3_section)
             .replace("%TABLE2_SECTION%", table2_section)
             .replace("%FOOTER_TEXT%", FOOTER_TEXT)
-            .replace("%DELTA_TOGGLE_JS%", DELTA_TOGGLE_JS)
+            .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
         )
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(UNIT_DIR / f"{unit}.html", page)
@@ -475,7 +479,7 @@ def build_pages(rows: List[Dict]):
         f'</div>'
     )
     table1_section = (
-        f'<div class="card">\n'
+        f'<div class="card" data-table-type="total">\n'
         f'  <h2 style="margin-top:0">National — Total Data</h2>\n'
         f'  <div class="table-wrap">{render_table(national_rows, nat_basic_cols)}{render_info_box(nat_basic_cols)}</div>\n'
         f'</div>'
@@ -483,13 +487,13 @@ def build_pages(rows: List[Dict]):
     table3_section = ''
     if nat_third_cols:
         table3_section = (
-            f'<div class="card">\n'
+            f'<div class="card" data-table-type="third-party">\n'
             f'  <h2 style="margin-top:0">National — Third-Party Data</h2>\n'
             f'  <div class="table-wrap">{render_table(national_rows, nat_third_cols)}{render_info_box(nat_third_cols)}</div>\n'
             f'</div>'
         )
     table2_section = (
-        f'<div class="card">\n'
+        f'<div class="card" data-table-type="two-party">\n'
         f'  <h2 style="margin-top:0">National — Two-Party Data</h2>\n'
         f'  <div class="table-wrap">{render_table(national_rows, nat_tp_cols, two_party=True)}{render_info_box(nat_tp_cols)}</div>\n'
         f'</div>'
@@ -499,14 +503,13 @@ def build_pages(rows: List[Dict]):
         .replace("%HEADER%", make_header("National (NAT)", is_inner=True))
         .replace("%TITLE%", f"NAT · National")
         .replace("%HEADING%", f"National (NAT)")
-        .replace("%PLOT_SECTION%", plot_section)
+        .replace("%STATE_ABBR%", "NAT")
         .replace("%EXTRA_LINKS%", "")
         .replace("%TABLE1_SECTION%", table1_section)
         .replace("%TABLE3_SECTION%", table3_section)
-        .replace("%PLOT3_SECTION%", plot3_section)
         .replace("%TABLE2_SECTION%", table2_section)
         .replace("%FOOTER_TEXT%", FOOTER_TEXT)
-        .replace("%DELTA_TOGGLE_JS%", DELTA_TOGGLE_JS)
+        .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(STATE_DIR / f"NAT.html", page)

@@ -53,8 +53,10 @@ def split_columns_into_three(headers: List[str]) -> Tuple[List[str], List[str], 
         basic.append('D_votes'); third.append('D_votes'); tp.append('D_votes')
     if 'R_votes' in ordered:
         basic.append('R_votes'); third.append('R_votes'); tp.append('R_votes')
+    if 'margin_breakdown' in ordered:
+        basic.append('margin_breakdown'); third.append('margin_breakdown'); tp.append('margin_breakdown')
     for c in ordered:
-        if c in ('year', 'D_votes', 'R_votes', 'electoral_votes'):
+        if c in ('year', 'D_votes', 'R_votes', 'electoral_votes', 'margin_breakdown'):
             continue
         lname = c.lower()
         if lname.endswith('_delta_str') or lname.endswith('_delta'):
@@ -64,7 +66,8 @@ def split_columns_into_three(headers: List[str]) -> Tuple[List[str], List[str], 
                 tp.append(c)
         elif 'third' in lname or '3p' in lname or c in (
             'T_votes', 'T_pct', 'third_party_share', 'third_party_relative_share',
-            'third_party_national_share', 'third_party_votes', 'top_third_party'
+            'third_party_national_share', 'third_party_votes', 'top_third_party', 
+            'top_third_party_share'
         ):
             if c not in third:
                 third.append(c)
@@ -109,10 +112,14 @@ def describe_column(col: str) -> str:
         return 'Number of votes for the Republican candidate (raw count(pct%)).'
     if k in ('t_votes',):
         return 'Number of votes for third-party (other) candidates (raw count(pct%)).'
+    if k == 'margin_breakdown':
+        return 'Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).'
     if k == 'third_party_votes':
         return 'Total votes for all third-party / other candidates combined (may exceed top candidate).'
     if k == 'top_third_party':
         return 'Name of the highest-vote third-party / other candidate in that state and year.'
+    if k == 'top_third_party_share':
+        return 'Vote share percentage of the top-performing third-party candidate.'
     if 'pct' in k:
         return 'Percentage share of the vote.'
     if 'delta' in k:
@@ -197,7 +204,10 @@ def render_table(rows: List[Dict], cols: List[str], two_party: bool = False) -> 
                 denom = d_val + r_val + (t_val if t_val is not None else 0)
 
         for c in cols:
-            if c in ("D_votes", "R_votes", "T_votes", "total_votes", "third_party_votes"):
+            if c == "margin_breakdown":
+                # Special computed column showing (D%, R%, 3rd%)
+                cell = esc(r.get("margin_breakdown", ""))
+            elif c in ("D_votes", "R_votes", "T_votes", "total_votes", "third_party_votes"):
                 if c == "D_votes": vote_val = d_val
                 elif c == "R_votes": vote_val = r_val
                 elif c == "T_votes": vote_val = t_val
