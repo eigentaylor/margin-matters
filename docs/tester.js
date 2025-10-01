@@ -1199,6 +1199,55 @@
   }
   try { window.marginToColor = marginToColor; } catch(e) {}
 
+  // New function to determine color based on actual vote counts
+  // For index.html, use vote-based coloring that matches stop_colors.csv logic
+  function votesToColor(dVotes, rVotes, tVotes, pv = 0){
+    const total = dVotes + rVotes + tVotes;
+    if (total <= 0) {
+      // No votes, use margin-based coloring
+      return marginToColor(pv);
+    }
+    
+    // Calculate adjusted vote percentages
+    const dPct = dVotes / total;
+    const rPct = rVotes / total;
+    const tPct = tVotes / total;
+    
+    // Adjust D and R by PV shift, T stays constant
+    const dPctAdj = dPct + pv / 2;
+    const rPctAdj = rPct - pv / 2;
+    const tPctAdj = tPct;
+    
+    // Convert to adjusted vote counts
+    const dVotesAdj = dPctAdj * total;
+    const rVotesAdj = rPctAdj * total;
+    const tVotesAdj = tPctAdj * total;
+    
+    // Determine winner
+    let winner;
+    if (dVotesAdj > rVotesAdj && dVotesAdj > tVotesAdj) {
+      winner = 'D';
+    } else if (rVotesAdj > dVotesAdj && rVotesAdj > tVotesAdj) {
+      winner = 'R';
+    } else if (tVotesAdj > dVotesAdj && tVotesAdj > rVotesAdj) {
+      winner = 'T';
+    } else {
+      // Tie - use margin as tiebreaker
+      const margin = dPctAdj - rPctAdj;
+      winner = margin >= 0 ? 'D' : 'R';
+    }
+    
+    // If third party wins, return yellow
+    if (winner === 'T') {
+      return '#FFD700'; // yellow
+    }
+    
+    // Otherwise calculate margin and use marginToColor
+    const margin = dPctAdj - rPctAdj;
+    return marginToColor(margin, false);
+  }
+  try { window.votesToColor = votesToColor; } catch(e) {}
+
   function clampMargin(value){
     if (!isFinite(value)) return 0;
     const LIMIT = 1 - 1e-9;
@@ -2159,29 +2208,44 @@
   }
       const st = unit.slice(0,2);
       const prev = abbrColors.get(st);
-      // Special pluralities: dynamic yellow window using third-party share (any year)
       let color;
-      const rVal = +(r.rm || 0);
-      {
+      
+      // For index.html (real elections), use vote-based coloring
+      const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
+      if (isIndexPage && !window._futureMode && year <= 2024) {
+        // Use actual vote counts for coloring
+        const dVotes = +r.dVotes || 0;
+        const rVotes = +r.rVotes || 0;
+        const tVotes = +r.tVotes || 0;
+        
+        if (dVotes > 0 || rVotes > 0 || tVotes > 0) {
+          color = votesToColor(dVotes, rVotes, tVotes, pv);
+        } else {
+          // Fallback to margin-based if no vote data
+          color = marginToColor(m);
+        }
+      } else {
+        // For future.html or future mode, use margin-based coloring
+        const rVal = +(r.rm || 0);
         const t = +r.tp || 0;
-          a = 3*t - 1;
-          if (year === 1948 && r.unit === 'AL') {
-            a = 0.0;
-            color = (pv < -rVal) ? marginToColor(m) : '#FFD700'; // Thurmond vs Dewey (no Truman here)
-          }
-          else if (a > 0) {
-            // Use same boundaries as EV counting: strict inside (nR + EPS, nD - EPS)
-            const nD = -rVal + a;
-            const nR = -rVal - a;
-            if (pv > nR + EPS && pv < nD - EPS) {
-              color = '#FFD700'; // yellow within the window
-            } else {
-              color = marginToColor(m);
-            }
+        const a = 3*t - 1;
+        
+        if (year === 1948 && r.unit === 'AL') {
+          color = (pv < -rVal) ? marginToColor(m) : '#FFD700'; // Thurmond vs Dewey (no Truman here)
+        } else if (a > 0) {
+          // Use same boundaries as EV counting: strict inside (nR + EPS, nD - EPS)
+          const nD = -rVal + a;
+          const nR = -rVal - a;
+          if (pv > nR + EPS && pv < nD - EPS) {
+            color = '#FFD700'; // yellow within the window
           } else {
             color = marginToColor(m);
           }
+        } else {
+          color = marginToColor(m);
+        }
       }
+      
   if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
   // store per-unit color and party label so district polygons can be filled individually
   unitColors.set(unit, color);
