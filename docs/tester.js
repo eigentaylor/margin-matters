@@ -103,6 +103,28 @@
       let rVotes = Math.max(0, breakdown.rVotes);
       let tVotes = Math.max(0, breakdown.totalThirdVotes);
 
+      // Historical correction: 1948 Alabama had 0 D votes. Enforce this here
+      // regardless of dataset quirks or PV adjustments. Do NOT reassign those
+      // Democratic votes to R; instead prefer raw CSV totals for R and T when
+      // available and otherwise fall back to the PV-adjusted breakdown.
+      if (year === 1948 && keyUnit === 'AL') {
+        dVotes = 0;
+        // prefer raw CSV R vote total when present
+        if (isFinite(+r.rVotes) && +r.rVotes >= 0) {
+          rVotes = Math.max(0, +r.rVotes);
+        } else {
+          rVotes = Math.max(0, rVotes);
+        }
+        // prefer explicit topThirdVotes (T_votes) from CSV if present
+        if (isFinite(+r.topThirdVotes) && +r.topThirdVotes >= 0) {
+          tVotes = Math.max(0, +r.topThirdVotes);
+        } else if (isFinite(+r.tVotes) && +r.tVotes >= 0) {
+          tVotes = Math.max(0, +r.tVotes);
+        } else {
+          tVotes = Math.max(0, tVotes);
+        }
+      }
+
       if (flipped && activeFlip && activeFlip.units) {
         const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
         if (flipUnit && flipUnit.votes_to_flip) {
@@ -218,8 +240,31 @@
       }
 
       let dVotesAdj = Math.max(0, breakdown.dVotes);
-      let rVotesAdj = Math.max(0, breakdown.rVotes);
-      let topThirdVotesAdj = Math.max(0, breakdown.topThirdVotes);
+      // prepare r/top variables for potential reassignment
+      let rVotesAdj;
+      let topThirdVotesAdj;
+      // Enforce historical correction for 1948 Alabama
+      if (year === 1948 && keyUnit === 'AL') {
+        // Remove Democratic votes entirely and DO NOT transfer them to R.
+        dVotesAdj = 0;
+        // Prefer raw CSV totals for R and top-third (T) if available; otherwise
+        // fall back to the PV-adjusted breakdown values.
+        if (isFinite(+r.rVotes) && +r.rVotes >= 0) {
+          rVotesAdj = Math.max(0, +r.rVotes);
+        } else {
+          rVotesAdj = Math.max(0, breakdown.rVotes);
+        }
+        if (isFinite(+r.topThirdVotes) && +r.topThirdVotes >= 0) {
+          topThirdVotesAdj = Math.max(0, +r.topThirdVotes);
+        } else if (isFinite(+r.tVotes) && +r.tVotes >= 0) {
+          topThirdVotesAdj = Math.max(0, +r.tVotes);
+        } else {
+          topThirdVotesAdj = Math.max(0, breakdown.topThirdVotes || 0);
+        }
+        return { D: Math.round(dVotesAdj), R: Math.round(rVotesAdj), O: Math.round(topThirdVotesAdj), total: Math.round(dVotesAdj + rVotesAdj + topThirdVotesAdj) };
+      }
+      rVotesAdj = Math.max(0, breakdown.rVotes);
+      topThirdVotesAdj = Math.max(0, breakdown.topThirdVotes);
 
       if (flipped && activeFlip && activeFlip.units) {
         const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);

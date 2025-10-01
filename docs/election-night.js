@@ -28,13 +28,11 @@
   // Visual constants for uncalled/tossup styling
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
-  // Tiny epsilon used when forcing flips to avoid exact zero margins
-  const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
   // Batch scheduling constraints used for reporting schedule generation
   const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
   const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
-  const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
-  const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
+  const MIN_BATCH_COUNT = 50; // minimum number of batches to generate for a unit
+  const MAX_BATCH_COUNT = 108; // maximum number of batches to generate for a unit
 
   // Known poll-closing times (ET) grouped by states. Used to set when
   // counting should realistically start for each state.
@@ -622,7 +620,10 @@
       const hasTwoPartyData = twoPartyVotesBase > EPS && (baseDVotes + baseRVotes > 0);
       const baseMargin = hasTwoPartyData ? clampMargin((baseDVotes - baseRVotes) / twoPartyVotesBase) : null;
 
-      let targetMargin = clampMargin(((baseMargin != null) ? baseMargin : (+row.rm || 0)) + pvValue);
+  // Compute PV shift relative to the year's natural/national margin
+  const natMargin = (typeof getNatMargin === 'function') ? getNatMargin(year) : (typeof window._getNatMargin === 'function' ? window._getNatMargin(year) : 0);
+  const pvShift = isFinite(pvValue) ? pvValue - natMargin : pvValue;
+  let targetMargin = clampMargin(((baseMargin != null) ? baseMargin : (+row.rm || 0)) + pvShift);
       if (year === 1876 && abbr === 'CO') {
         const forced = Math.abs(targetMargin);
         targetMargin = forced > 0 ? -forced : -0.06;
@@ -635,10 +636,23 @@
       let finalDVotes = twoPartyVotesUsed * targetDTwoPartyShare;
       let finalRVotes = twoPartyVotesUsed - finalDVotes;
 
-      if (year === 1948 && abbr === 'AL') {
-        finalDVotes = 0;
-        finalRVotes = twoPartyVotesUsed;
-        finalOTopVotes = Math.max(finalOTopVotes, finalOTotalVotes);
+      // If this unit is explicitly flipped and flip data provides exact vote tallies
+      // (from flip_results.csv via the active flip payload), prefer those exact
+      // final votes rather than applying the PV adjustment.
+      if (row.__flipInfo) {
+        try {
+          const f = row.__flipInfo || {};
+          const fd = (f.dVotes != null) ? Number(f.dVotes) : (f.d != null ? Number(f.d) : null);
+          const fr = (f.rVotes != null) ? Number(f.rVotes) : (f.r != null ? Number(f.r) : null);
+          const fo = (f.oTopVotes != null) ? Number(f.oTopVotes) : (f.oVotes != null ? Number(f.oVotes) : null);
+          const fTotal = (f.totalVotes != null) ? Number(f.totalVotes) : (f.total != null ? Number(f.total) : null);
+          if (isFinite(fd) && isFinite(fr)) {
+            finalDVotes = Math.max(0, fd);
+            finalRVotes = Math.max(0, fr);
+            if (isFinite(fo)) finalOTopVotes = Math.max(0, fo);
+            if (isFinite(fTotal)) finalOTotalVotes = Math.max(0, Math.min(fTotal, (fTotal - finalDVotes - finalRVotes)));
+          }
+        } catch(e) { /* ignore and proceed with adjusted votes */ }
       }
 
       // Apply exact flip adjustments - use base votes before PV adjustments for precision
@@ -662,6 +676,28 @@
           }
           // Note: finalOTotalVotes and finalOTopVotes remain unchanged from earlier calculation
         }
+      }
+      // Historical correction: force 1948 AL to have 0 D votes no matter what.
+      // Do NOT reassign those Democratic votes to R; prefer raw CSV totals
+      // for R and top-third if present, otherwise fall back to computed values.
+      if (year === 1948 && abbr === 'AL') {
+        finalDVotes = 0;
+        // prefer explicit R vote total from CSV when available
+        if (isFinite(+row.rVotes) && +row.rVotes >= 0) {
+          finalRVotes = Math.max(0, +row.rVotes);
+        } else {
+          finalRVotes = Math.max(0, finalRVotes);
+        }
+        // prefer explicit top-third (T_votes / topThirdVotes) from CSV when available
+        if (isFinite(+row.topThirdVotes) && +row.topThirdVotes >= 0) {
+          finalOTopVotes = Math.max(0, +row.topThirdVotes);
+        } else if (isFinite(+row.tVotes) && +row.tVotes >= 0) {
+          finalOTopVotes = Math.max(0, +row.tVotes);
+        } else {
+          finalOTopVotes = Math.max(0, finalOTopVotes);
+        }
+        // ensure top-third doesn't exceed its total pool
+        finalOTopVotes = Math.min(finalOTopVotes, finalOTotalVotes);
       }
 
       const twoPartyVotesFinal = finalDVotes + finalRVotes;

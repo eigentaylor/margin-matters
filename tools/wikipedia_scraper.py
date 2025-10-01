@@ -366,6 +366,9 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
 
             # third_party_votes is defined as total - D - R
             third_party_votes = max(0, total_votes - r_votes - d_votes)
+            # in 1948, AL had 0 D_votes so we calculated it from total_votes-r_votes only
+            if state_code == 'AL' and year == 1948:
+                third_party_votes = max(0, total_votes - r_votes)
 
             # If we didn't detect explicit third-party columns, record the whole block as 'Other'
             if not third_party_results and third_party_votes > 0:
