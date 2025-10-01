@@ -104,7 +104,7 @@ TABLE_COLUMNS: Optional[List] = [
     ("T_votes", "Other votes"),
     ("T_pct", "Other %"),
     ("top_third_party", "Top 3rd-Party Candidate"),
-    ("top_third_party_share", "Top 3rd-Party Share"),
+    ("top_third_party_share_str", "Top 3rd-Party Share"),
     ("third_party_votes", "Total 3rd-Party Votes"),
     ("third_party_share_str", "State 3rd-Party Share"),
     ("third_party_national_share_str", "3rd-Party Nat. Share"),
