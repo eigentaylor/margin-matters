@@ -3229,11 +3229,11 @@ function renderFlipDetails(){
       if (!showBlank) {
         // Special case: Alabama 1960 - always show proportional split
         if (year === 1960 && displayUnit === 'AL') {
-          // Check winner with PV adjustment
+          // Check winner with PV adjustment (use >= 0 to match map logic)
           const margin = +r.rm || 0;
           const pv = window._curPv || 0;
           const adjMargin = margin + pv;
-          const winner = adjMargin > 0 ? 'D' : (adjMargin < 0 ? 'R' : 'O');
+          const winner = adjMargin >= 0 ? 'D' : 'R';  // Match map's m >= 0 check
           
           if (winner !== 'R') {
             // Democrats/Third party win: 5D, 6O split
@@ -3283,15 +3283,25 @@ function renderFlipDetails(){
           rEV = alloc.R;
           oEV = alloc.O;
         } else {
-          // Winner-take-all
+          // Winner-take-all - match map logic exactly
           const margin = +r.rm || 0;
           const pv = window._curPv || 0;
           const adjMargin = margin + pv;
-          const winner = adjMargin > 0 ? 'D' : (adjMargin < 0 ? 'R' : 'O');
-
-          if (winner === 'D') dEV = ev;
-          else if (winner === 'R') rEV = ev;
-          else oEV = ev;
+          
+          // Match the map's logic from updateAll()
+          if (adjMargin > 0) {
+            dEV = ev;
+          } else if (adjMargin < 0) {
+            rEV = ev;
+          } else {
+            // Tie-breaking: match map's logic (line 2083-2085)
+            // Get national margin and stop value for tie-breaking
+            const nat = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
+            const stopVal = pv;  // Current PV is the stop value
+            const side = Math.sign((stopVal || 0) - (nat || 0));
+            if (side >= 0) dEV = ev;
+            else rEV = ev;
+          }
 
           // Get vote counts
           if (!isElectionNight) {
@@ -3299,6 +3309,17 @@ function renderFlipDetails(){
             rVotes = +r.rVotes || 0;
             oVotes = +r.tVotes || 0;
           }
+        }
+      }
+      
+      // Calculate vote percentages for margin column
+      let dPct = 0, rPct = 0, oPct = 0;
+      if (!showBlank && (dVotes > 0 || rVotes > 0 || oVotes > 0)) {
+        const totalVotes = dVotes + rVotes + oVotes;
+        if (totalVotes > 0) {
+          dPct = (dVotes / totalVotes) * 100;
+          rPct = (rVotes / totalVotes) * 100;
+          oPct = (oVotes / totalVotes) * 100;
         }
       }
       
@@ -3312,6 +3333,9 @@ function renderFlipDetails(){
         dVotes: showBlank ? null : dVotes,
         rVotes: showBlank ? null : rVotes,
         oVotes: showBlank ? null : oVotes,
+        dPct: showBlank ? null : dPct,
+        rPct: showBlank ? null : rPct,
+        oPct: showBlank ? null : oPct,
         showBlank: showBlank
       });
     });
@@ -3361,6 +3385,11 @@ function renderFlipDetails(){
         case 'state':
           aVal = a.stateName;
           bVal = b.stateName;
+          break;
+        case 'margin':
+          // Sort by Democratic percentage
+          aVal = a.dPct === null ? -1 : a.dPct;
+          bVal = b.dPct === null ? -1 : b.dPct;
           break;
         case 'd':
           aVal = a.dEV === null ? -1 : a.dEV;
@@ -3435,6 +3464,19 @@ function renderFlipDetails(){
       }
       row.appendChild(stateCell);
       
+      // Margin column (D%, R%, O%)
+      const marginCell = document.createElement('td');
+      if (alloc.showBlank) {
+        marginCell.textContent = '—';
+        marginCell.classList.add('blank-entry');
+      } else {
+        const dPct = alloc.dPct || 0;
+        const rPct = alloc.rPct || 0;
+        const oPct = alloc.oPct || 0;
+        marginCell.textContent = `${dPct.toFixed(1)}%, ${rPct.toFixed(1)}%, ${oPct.toFixed(1)}%`;
+      }
+      row.appendChild(marginCell);
+      
       // D EVs
       const dCell = document.createElement('td');
       if (alloc.showBlank) {
@@ -3491,6 +3533,12 @@ function renderFlipDetails(){
     totalLabelCell.textContent = 'Total';
     totalLabelCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalLabelCell);
+    
+    // Empty cell for margin column in total row
+    const totalMarginCell = document.createElement('td');
+    totalMarginCell.textContent = '—';
+    totalMarginCell.style.fontWeight = 'bold';
+    totalRow.appendChild(totalMarginCell);
     
     const totalDCell = document.createElement('td');
     const totalDPercent = totalAll > 0 ? ((totalD / totalAll) * 100).toFixed(1) : '0.0';
