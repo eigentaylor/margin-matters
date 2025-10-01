@@ -154,6 +154,44 @@
       if (!year || year > 2024) return null; // Only real elections
       
       const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+      
+      // During election night, use the counted votes from the snapshot
+      if (window._electionNightActive && window._electionNightSnapshot) {
+        const snapshot = window._electionNightSnapshot;
+        const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0,2) : null;
+        const candidates = [];
+        if (unit && !candidates.includes(unit)) candidates.push(unit);
+        if (keyUnit && !candidates.includes(keyUnit)) candidates.push(keyUnit);
+        if (abbr && !candidates.includes(abbr)) candidates.push(abbr);
+        
+        let snap = null;
+        for (const candidate of candidates) {
+          if (candidate && snapshot.has(candidate)) {
+            snap = snapshot.get(candidate);
+            if (snap) break;
+          }
+        }
+        
+        if (snap) {
+          // Use the counted votes from the snapshot (starts at 0, grows as batches come in)
+          const dVotes = snap.dVotes || 0;
+          const rVotes = snap.rVotes || 0;
+          const oVotes = snap.oVotes || 0; // This is the top third party votes during election night
+          
+          // Don't display if no votes have been counted yet
+          const total = dVotes + rVotes + oVotes;
+          if (total <= 0) return null;
+          
+          return {
+            D: Math.round(dVotes),
+            R: Math.round(rVotes),
+            O: Math.round(oVotes),
+            total: Math.round(total)
+          };
+        }
+      }
+      
+      // For non-election-night mode, use the normal calculation
       const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
       if (!rows || !rows.length) return null;
       
