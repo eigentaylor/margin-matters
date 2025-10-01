@@ -3434,7 +3434,8 @@ function renderFlipDetails(){
         dCell.classList.add('blank-entry');
       } else {
         const dEV = alloc.dEV || 0;
-        dCell.textContent = dEV;
+        const percent = alloc.totalEV > 0 ? Math.round((dEV / alloc.totalEV) * 100) : 0;
+        dCell.textContent = dEV > 0 ? `${dEV} (${percent}%)` : dEV;
         totalD += dEV;
       }
       row.appendChild(dCell);
@@ -3446,7 +3447,8 @@ function renderFlipDetails(){
         rCell.classList.add('blank-entry');
       } else {
         const rEV = alloc.rEV || 0;
-        rCell.textContent = rEV;
+        const percent = alloc.totalEV > 0 ? Math.round((rEV / alloc.totalEV) * 100) : 0;
+        rCell.textContent = rEV > 0 ? `${rEV} (${percent}%)` : rEV;
         totalR += rEV;
       }
       row.appendChild(rCell);
@@ -3458,7 +3460,8 @@ function renderFlipDetails(){
         oCell.classList.add('blank-entry');
       } else {
         const oEV = alloc.oEV || 0;
-        oCell.textContent = oEV;
+        const percent = alloc.totalEV > 0 ? Math.round((oEV / alloc.totalEV) * 100) : 0;
+        oCell.textContent = oEV > 0 ? `${oEV} (${percent}%)` : oEV;
         totalO += oEV;
       }
       row.appendChild(oCell);
@@ -3482,17 +3485,20 @@ function renderFlipDetails(){
     totalRow.appendChild(totalLabelCell);
     
     const totalDCell = document.createElement('td');
-    totalDCell.textContent = totalD;
+    const totalDPercent = totalAll > 0 ? Math.round((totalD / totalAll) * 100) : 0;
+    totalDCell.textContent = totalD > 0 ? `${totalD} (${totalDPercent}%)` : totalD;
     totalDCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalDCell);
     
     const totalRCell = document.createElement('td');
-    totalRCell.textContent = totalR;
+    const totalRPercent = totalAll > 0 ? Math.round((totalR / totalAll) * 100) : 0;
+    totalRCell.textContent = totalR > 0 ? `${totalR} (${totalRPercent}%)` : totalR;
     totalRCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalRCell);
     
     const totalOCell = document.createElement('td');
-    totalOCell.textContent = totalO;
+    const totalOPercent = totalAll > 0 ? Math.round((totalO / totalAll) * 100) : 0;
+    totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
     totalOCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalOCell);
     
