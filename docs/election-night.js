@@ -677,7 +677,20 @@
       let topThirdShare = totalVotes > EPS ? finalOTopVotes / totalVotes : topThirdShareInitial;
       let adjustedMargin = twoPartyVotesFinal > EPS ? clampMargin((finalDVotes - finalRVotes) / twoPartyVotesFinal) : targetMargin;
 
-      let winner = determineWinner(dShareFinal, rShareFinal, topThirdShare);
+      // Prefer actual vote totals when deciding the final winner to avoid
+      // ties due to tiny floating-point share differences. Fall back to
+      // share-based decision if vote totals are not available.
+      let winner;
+      if (isFinite(finalDVotes) || isFinite(finalRVotes) || isFinite(finalOTopVotes)) {
+        const dVotesFinal = isFinite(finalDVotes) ? finalDVotes : 0;
+        const rVotesFinal = isFinite(finalRVotes) ? finalRVotes : 0;
+        const oVotesFinal = isFinite(finalOTopVotes) ? finalOTopVotes : 0;
+        if (dVotesFinal >= rVotesFinal && dVotesFinal >= oVotesFinal) winner = 'D';
+        else if (rVotesFinal >= dVotesFinal && rVotesFinal >= oVotesFinal) winner = 'R';
+        else winner = 'O';
+      } else {
+        winner = determineWinner(dShareFinal, rShareFinal, topThirdShare);
+      }
       if (year === 1876 && abbr === 'CO') winner = 'R';
       const thirdPartyDominant = winner === 'O';
 
@@ -713,7 +726,7 @@
       const finalOTotalVotesOut = finalOTotalVotes;
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
-      const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1);
+  const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1, { dVotes: finalDVotes, rVotes: finalRVotes, oVotes: finalOTopVotes, countedVotes: twoPartyVotesFinal });
       const baselineAbbr = baselineAbbrColors.get(abbr);
       let finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
       if (!finalColor) {
@@ -727,7 +740,8 @@
       if (finalLeader === 'O') countedMarginStr = 'Other lead';
       else if (twoPartyVotes > EPS) {
         const twoPartyLean = (finalDVotes - finalRVotes) / twoPartyVotes;
-        countedMarginStr = Math.abs(twoPartyLean) < 0.0000000005 ? 'EVEN' : formatLean(twoPartyLean);
+        //countedMarginStr = Math.abs(twoPartyLean) < 0.0000000005 ? 'EVEN' : formatLean(twoPartyLean);
+        countedMarginStr = formatLean(twoPartyLean);
       } else if (totalVotes > EPS) {
         countedMarginStr = 'EVEN';
       }
@@ -1151,7 +1165,9 @@
       dShare = st.twoPartyShare * dShareBlend;
       rShare = st.twoPartyShare * rShareBlend;
       oShare = totalThirdShare;
-      leader = determineLeader(dShare, rShare, topThirdShare, reporting);
+  // prefer actual counted vote totals when available (stats computed below)
+  const statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
+  leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
       margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
       if (leader === 'O') marginStr = 'Other lead';
       else marginStr = (reporting > 0) ? formatLean(margin) : '';
@@ -1289,13 +1305,13 @@
     // - instantCall units are called as soon as their startTime is reached.
     // - otherwise: require some reporting OR that we're past the call deadline
     //   and that confidence exceeds the chosen threshold. A full-reporting
-    //   (>= 0.999) forces a call.
+    //   (>= 1.0) forces a call.
     if (st.instantCall) {
       return currentTime >= st.startTime - EPS;
     }
     if (!metrics || metrics.leader == null) return false;
     if (metrics.reporting < MIN_REPORTING_TO_CALL && currentTime < st.callDeadline - 5) return false;
-    if (metrics.reporting >= 0.999) return true;
+    if (metrics.reporting >= 1.0) return true;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
@@ -1306,7 +1322,7 @@
     // the simulator will eventually call states even if confidence is
     // borderline.
     if (!metrics || metrics.leader == null) return false;
-    if (metrics.reporting >= 0.999) {
+    if (metrics.reporting >= 1.0) {
       return metrics.leader === st.winner;
     }
     if (currentTime < st.callDeadline - EPS) return false;
@@ -1980,8 +1996,21 @@
     return top.code;
   }
 
-  function determineLeader(dShare, rShare, oShare, reporting){
+  // Determine visible leader. Prefer vote counts when available (stats object with dCounted/rCounted/oCounted/countedVotes)
+  function determineLeader(dShare, rShare, oShare, reporting, stats){
     if (reporting <= 0) return null;
+    // If stats with counted votes are provided and there are counted votes, use them
+    if (stats && isFinite(stats.countedVotes) && stats.countedVotes > EPS) {
+      const dVotes = isFinite(stats.dCounted) ? stats.dCounted : (isFinite(stats.dVotes) ? stats.dVotes : (isFinite(stats.d) ? stats.d : 0));
+      const rVotes = isFinite(stats.rCounted) ? stats.rCounted : (isFinite(stats.rVotes) ? stats.rVotes : (isFinite(stats.r) ? stats.r : 0));
+      // oCounted may be named oCounted or oTotalCounted or oVotes; prefer in that order
+      const oVotes = isFinite(stats.oCounted) ? stats.oCounted : (isFinite(stats.oTotalCounted) ? stats.oTotalCounted : (isFinite(stats.oVotes) ? stats.oVotes : 0));
+      if (dVotes >= rVotes && dVotes >= oVotes) return 'D';
+      if (rVotes >= dVotes && rVotes >= oVotes) return 'R';
+      return 'O';
+    }
+
+    // Fall back to share-based decision if no vote totals available
     if (dShare >= rShare && dShare >= oShare) return 'D';
     if (rShare >= dShare && rShare >= oShare) return 'R';
     return 'O';
@@ -1991,6 +2020,7 @@
     if (code === 'D') return 'Democrats';
     if (code === 'R') return 'Republicans';
     if (code === 'O') return 'Other';
+    console.warn('Unknown leader code', code);
     return 'No call';
   }
 
@@ -2032,7 +2062,7 @@
   }
 
   function formatLean(value){
-    if (!isFinite(value)) return 'EVEN';
+    if (!isFinite(value)) return 'ERROR';
     if (typeof window.leanStr === 'function') return window.leanStr(value);
     //if (Math.abs(value) < 0.00005) return 'EVEN';
     const pct = (Math.abs(value) * 100).toFixed(1);
