@@ -2919,9 +2919,9 @@ function isUnitFlipped(year, unit){
   // allow unit or at-large semantics
   if (unit === 'ME' || unit === 'NE') unit = unit + '-AL';
   const result = !!(f._set && f._set.has(unit));
-  if (f._set && f._set.size > 0) {
-    console.log('isUnitFlipped check', {unit, hasUnit: result, setContents: Array.from(f._set)});
-  }
+  // if (f._set && f._set.size > 0) {
+  //   console.log('isUnitFlipped check', {unit, hasUnit: result, setContents: Array.from(f._set)});
+  // }
   return result;
 }
 function clearFlips(){

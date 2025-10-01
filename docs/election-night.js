@@ -29,12 +29,12 @@
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
   // Tiny epsilon used when forcing flips to avoid exact zero margins
-  const FLIP_MARGIN_EPS = 2e-6; // small margin to represent a flipped outcome without zero
+  const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
   // Batch scheduling constraints used for reporting schedule generation
   const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
-  const BATCH_MAX_GAP = 4; // nominal maximum minutes between batches (used as cap)
-  const MIN_BATCH_COUNT = 6; // minimum number of batches to generate for a unit
-  const MAX_BATCH_COUNT = 12; // maximum number of batches to generate for a unit
+  const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
+  const MIN_BATCH_COUNT = 4; // minimum number of batches to generate for a unit
+  const MAX_BATCH_COUNT = 8; // maximum number of batches to generate for a unit
 
   // Known poll-closing times (ET) grouped by states. Used to set when
   // counting should realistically start for each state.
@@ -586,8 +586,23 @@
 
       let adjustedMargin = (+row.rm || 0) + pvValue;
       const flipped = typeof isUnitFlipped === 'function' && isUnitFlipped(year, unit);
+
+      // If this unit is part of an active flip scenario, prefer exact votes/margin
+      // from flip_details.csv. We don't mutate the margin here; instead we stash
+      // the flip info on the row and apply the exact votes_to_flip after the
+      // base final vote counts are computed (so all downstream values use the
+      // exact flipped votes rather than an EPS nudged margin).
       if (flipped) {
-        adjustedMargin = adjustedMargin >= 0 ? -FLIP_MARGIN_EPS : FLIP_MARGIN_EPS;
+        try {
+          const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
+          if (activeFlip && Array.isArray(activeFlip.units)) {
+            const match = activeFlip.units.find(u => u.unit === unit || u.unit === abbr || u.unit === (abbr + '-AL'));
+            if (match) {
+              // attach flip info for later application
+              row.__flipInfo = match;
+            }
+          }
+        } catch(e) { /* ignore and fall back to existing behavior */ }
       }
       if (year === 1876 && abbr === 'CO') {
         const forced = Math.abs(adjustedMargin);
@@ -641,10 +656,31 @@
       if (isAtLarge) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
-      const finalDVotes = totalVotes * dShareFinal;
-      const finalRVotes = totalVotes * rShareFinal;
+      let finalDVotes = totalVotes * dShareFinal;
+      let finalRVotes = totalVotes * rShareFinal;
       const finalOTopVotes = totalVotes * topThirdShare;
       const finalOTotalVotes = totalVotes * totalThirdShare;
+      // If we attached flip info from flip_details.csv, apply the exact
+      // votes_to_flip to the computed final D/R vote counts and recompute
+      // derived shares/margins so everything (EVs, colors, leader, etc.) uses
+      // the exact flipped vote counts rather than an EPS margin.
+      if (row.__flipInfo && (row.__flipInfo.votes_to_flip != null)) {
+        const votesToFlip = Math.max(0, +row.__flipInfo.votes_to_flip || 0);
+        if (isFinite(votesToFlip) && votesToFlip > 0) {
+          if (finalDVotes >= finalRVotes) {
+            finalDVotes = Math.max(0, finalDVotes - votesToFlip);
+            finalRVotes = finalRVotes + votesToFlip;
+          } else {
+            finalDVotes = finalDVotes + votesToFlip;
+            finalRVotes = Math.max(0, finalRVotes - votesToFlip);
+          }
+          // Recompute shares after flip
+          dShareFinal = totalVotes > EPS ? finalDVotes / totalVotes : 0;
+          rShareFinal = totalVotes > EPS ? finalRVotes / totalVotes : 0;
+          console.log(`[INFO] Applied flip for ${unit} (${year}): ${votesToFlip} votes, new margin ${(dShareFinal - rShareFinal).toFixed(4)}`);
+        }
+      }
+
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
       const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1);
       const baselineAbbr = baselineAbbrColors.get(abbr);
