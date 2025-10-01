@@ -89,6 +89,7 @@ TABLE_COLUMNS: Optional[List] = [
     ("D_pct", "D %"),
     ("R_votes", "R"),
     ("R_pct", "R %"),
+    ("margin_breakdown", "Margin (D%, R%, 3rd%)"),
     ("pres_margin_str", "State Margin"),
     ("national_margin_str", "Nat. Margin"),
     ("relative_margin_str", "Rel. Margin"),
