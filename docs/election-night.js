@@ -641,17 +641,26 @@
         finalOTopVotes = Math.max(finalOTopVotes, finalOTotalVotes);
       }
 
-      // Apply exact flip adjustments after PV shift
+      // Apply exact flip adjustments - use base votes before PV adjustments for precision
       if (row.__flipInfo && (row.__flipInfo.votes_to_flip != null)) {
         const votesToFlip = Math.max(0, +row.__flipInfo.votes_to_flip || 0);
         if (isFinite(votesToFlip) && votesToFlip > 0) {
-          if (finalDVotes >= finalRVotes) {
-            finalDVotes = Math.max(0, finalDVotes - votesToFlip);
-            finalRVotes = finalRVotes + votesToFlip;
+          // Start from base votes for exact flipping (ignoring PV adjustments for flip scenarios)
+          const baseD = baseDVotes;
+          const baseR = baseRVotes;
+          const baseTotal = totalVotes;
+          
+          // Determine which party to flip from (the one with more base votes)
+          if (baseD >= baseR) {
+            // Flip from D to R
+            finalDVotes = Math.max(0, baseD - votesToFlip);
+            finalRVotes = baseR + votesToFlip;
           } else {
-            finalDVotes = finalDVotes + votesToFlip;
-            finalRVotes = Math.max(0, finalRVotes - votesToFlip);
+            // Flip from R to D
+            finalDVotes = baseD + votesToFlip;
+            finalRVotes = Math.max(0, baseR - votesToFlip);
           }
+          // Note: finalOTotalVotes and finalOTopVotes remain unchanged from earlier calculation
         }
       }
 
