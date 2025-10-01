@@ -116,7 +116,7 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .flip-controls .btn{color:#fff}
 
 /* Delta toggle UI - sticky footer */
-.delta-toggle-footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px}
+.delta-toggle-footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 .delta-toggle-footer .toggle-group{display:flex;align-items:center;gap:8px}
 .delta-toggle-footer label{font-size:0.9rem;color:var(--fg);cursor:pointer}
 .delta-toggle-footer input[type="checkbox"]{width:18px;height:18px;cursor:pointer}
@@ -124,6 +124,32 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .hide-deltas .delta{display:none !important}
 /* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
 body.has-delta-toggle{padding-bottom:60px}
+
+/* Range slider styling for year controls */
+input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:#2a2a2a;border-radius:5px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer}
+input[type="range"]::-moz-range-thumb{width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;border:none}
+input[type="range"]:focus{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Dual-handle range slider */
+.dual-range-slider{position:relative;height:6px;margin:20px 0}
+.slider-track{position:absolute;width:100%;height:6px;background:#2a2a2a;border-radius:5px;top:0}
+.slider-range{position:absolute;height:6px;background:var(--accent);border-radius:5px;top:0;pointer-events:none}
+.dual-range-slider .slider-input{position:absolute;width:100%;height:6px;background:transparent;pointer-events:none;top:0;margin:0}
+.dual-range-slider .slider-input::-webkit-slider-thumb{pointer-events:auto;z-index:10}
+.dual-range-slider .slider-input::-moz-range-thumb{pointer-events:auto;z-index:10}
+.dual-range-slider #year-end{z-index:5}
+.dual-range-slider #year-start{z-index:6}
+
+/* Mobile-friendly chart controls */
+#chart-controls{display:flex;flex-direction:column;gap:12px}
+#chart-controls > div:first-child{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+@media (max-width:600px){
+  .delta-toggle-footer{flex-direction:column;gap:8px;padding:12px}
+  .delta-toggle-footer .toggle-group{justify-content:center}
+  #chart-controls label{font-size:0.85rem}
+}
+
 /* PV tools specific styling to match future.html dark look
   Ensure high contrast white text on dark backgrounds so controls
   remain readable when pages are rebuilt from templates. */
@@ -300,16 +326,351 @@ PAGE_HTML = r"""<!doctype html>
   %HEADER%
   <a class="back" href="../index.html">← Back to Map</a>
   <div class="header"><h1 style="margin:0">%HEADING%</h1></div>
-  %PLOT_SECTION%
+  
+  <!-- Interactive Chart Section -->
+  <div class="card">
+    <h2 style="margin-top:0">Interactive Chart</h2>
+    <div id="chart-container" style="min-height: 520px;">
+      <div id="chart-controls" style="margin-bottom: 16px;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px;">
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-twoparty"> Two-party margins
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-relative"> Relative margins
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-delta"> Show deltas
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-thirdparty"> Third-party share
+          </label>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="year-range-slider" style="font-size: 0.9rem;">Year Range: <span id="year-range-display">1864-2024</span></label>
+          <div class="dual-range-slider">
+            <div class="slider-track"></div>
+            <div class="slider-range" id="slider-range"></div>
+            <input type="range" id="year-start" min="1864" max="2020" value="1864" step="4" class="slider-input">
+            <input type="range" id="year-end" min="1864" max="2024" value="2024" step="4" class="slider-input">
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #888;">
+            <span id="year-range-min-label">1864</span>
+            <span id="year-range-max-label">2024</span>
+          </div>
+        </div>
+      </div>
+      <div id="interactive-chart"></div>
+      <div id="chart-notes" class="legend" style="margin-top: 8px;"></div>
+    </div>
+  </div>
+  
   %EXTRA_LINKS%
   %TABLE1_SECTION%
   %TABLE3_SECTION%
-  %PLOT3_SECTION%
   %TABLE2_SECTION%
   <footer>%FOOTER_TEXT%</footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="../utils/TrendsChart.js"></script>
 <script>
 %DELTA_TOGGLE_JS%
+
+// Interactive chart functionality
+(function() {
+  const pageStateAbbr = '%STATE_ABBR%';
+  let chart = null;
+  let chartData = null;
+  let stateYearBounds = { min: null, max: null };
+
+  const readUrlBool = (name, fallback = null) => (typeof window.__readUrlBool === 'function' ? window.__readUrlBool(name, fallback) : fallback);
+  const readUrlInt = (name, fallback = null) => (typeof window.__readUrlInt === 'function' ? window.__readUrlInt(name, fallback) : fallback);
+  const clamp = (value, min, max) => {
+    if (!Number.isFinite(value)) return min;
+    if (min != null && value < min) return min;
+    if (max != null && value > max) return max;
+    return value;
+  };
+  
+  // Load data and initialize chart
+  Promise.all([
+    d3.csv('../presidential_margins.csv')
+  ]).then(([data]) => {
+    chartData = data;
+    
+    // Create chart
+    const chartContainer = document.getElementById('interactive-chart');
+    if (chartContainer) {
+      chart = TrendsChart.create(chartContainer);
+      updateChart();
+    }
+    
+    // Set up event listeners for chart controls
+    const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty'];
+    controls.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', () => {
+          // Sync with footer toggles
+          if (id === 'chart-twoparty' && el.checked) {
+            const footerTwoParty = document.getElementById('twoPartyToggle');
+            const footerRelative = document.getElementById('relativeToggle');
+            const chartThirdParty = document.getElementById('chart-thirdparty');
+            if (footerTwoParty) footerTwoParty.checked = true;
+            if (footerRelative) footerRelative.checked = false;
+            if (chartThirdParty) chartThirdParty.checked = false;
+            const chartRelativeToggle = document.getElementById('chart-relative');
+            if (chartRelativeToggle) chartRelativeToggle.checked = false;
+            // Trigger table update
+            if (typeof window.updateTableVisibilityFromChart === 'function') {
+              window.updateTableVisibilityFromChart();
+            }
+          } else if (id === 'chart-thirdparty' && el.checked) {
+            const footerTwoParty = document.getElementById('twoPartyToggle');
+            const footerRelative = document.getElementById('relativeToggle');
+            const chartTwoParty = document.getElementById('chart-twoparty');
+            if (footerTwoParty) footerTwoParty.checked = false;
+            if (footerRelative) footerRelative.checked = true;
+            if (chartTwoParty) chartTwoParty.checked = false;
+            const chartRelativeToggle = document.getElementById('chart-relative');
+            if (chartRelativeToggle) chartRelativeToggle.checked = true;
+            // Trigger table update
+            if (typeof window.updateTableVisibilityFromChart === 'function') {
+              window.updateTableVisibilityFromChart();
+            }
+          }
+          updateChart();
+        });
+      }
+    });
+    
+  const yearStart = document.getElementById('year-start');
+  const yearEnd = document.getElementById('year-end');
+  const yearRangeDisplay = document.getElementById('year-range-display');
+  const sliderRange = document.getElementById('slider-range');
+    const minLabel = document.getElementById('year-range-min-label');
+    const maxLabel = document.getElementById('year-range-max-label');
+
+    const stateCandidates = new Set([pageStateAbbr]);
+    if (pageStateAbbr && pageStateAbbr.endsWith('-AL')) {
+      stateCandidates.add(pageStateAbbr.slice(0, 2));
+    } else if (pageStateAbbr && pageStateAbbr.length === 2) {
+      stateCandidates.add(`${pageStateAbbr}-AL`);
+    }
+    const stateRows = chartData.filter(r => stateCandidates.has(r.abbr));
+    const stateYears = stateRows
+      .map(r => parseInt(r.year, 10))
+      .filter(year => Number.isFinite(year))
+      .sort((a, b) => a - b);
+    const computedMinYear = stateYears.length ? stateYears[0] : (yearStart ? parseInt(yearStart.min || '1864', 10) : 1864);
+    const computedMaxYear = stateYears.length ? stateYears[stateYears.length - 1] : (yearEnd ? parseInt(yearEnd.max || '2024', 10) : 2024);
+    stateYearBounds = { min: computedMinYear, max: computedMaxYear };
+    window.__chartYearBounds = stateYearBounds;
+
+    if (yearStart) {
+      yearStart.min = String(computedMinYear);
+      yearStart.max = String(computedMaxYear);
+    }
+    if (yearEnd) {
+      yearEnd.min = String(computedMinYear);
+      yearEnd.max = String(computedMaxYear);
+    }
+    if (minLabel) minLabel.textContent = computedMinYear;
+    if (maxLabel) maxLabel.textContent = computedMaxYear;
+
+    const urlStart = readUrlInt('chartStart', null);
+    const urlEnd = readUrlInt('chartEnd', null);
+    const storedStartRaw = parseInt(localStorage.getItem('chartYearStart') || '', 10);
+    const storedEndRaw = parseInt(localStorage.getItem('chartYearEnd') || '', 10);
+    const storedStart = Number.isNaN(storedStartRaw) ? null : storedStartRaw;
+    const storedEnd = Number.isNaN(storedEndRaw) ? null : storedEndRaw;
+
+    let initialStart = urlStart !== null ? urlStart : storedStart;
+    let initialEnd = urlEnd !== null ? urlEnd : storedEnd;
+
+    if (initialStart == null) initialStart = computedMinYear;
+    if (initialEnd == null) initialEnd = computedMaxYear;
+
+    initialStart = clamp(initialStart, computedMinYear, computedMaxYear);
+    initialEnd = clamp(initialEnd, computedMinYear, computedMaxYear);
+    if (initialStart > initialEnd) initialStart = initialEnd;
+
+    if (yearStart) yearStart.value = String(initialStart);
+    if (yearEnd) {
+      if (initialEnd < initialStart) initialEnd = initialStart;
+      yearEnd.value = String(initialEnd);
+    }
+    
+    const updateYearDisplay = () => {
+      if (yearRangeDisplay && yearStart && yearEnd) {
+        const start = parseInt(yearStart.value);
+        const end = parseInt(yearEnd.value);
+        yearRangeDisplay.textContent = `${start}-${end}`;
+        
+        // Update the visual range indicator
+        if (sliderRange) {
+          const min = parseInt(yearStart.min, 10);
+          const max = parseInt(yearStart.max, 10);
+          const span = Math.max(1, max - min);
+          const percentStart = ((start - min) / span) * 100;
+          const percentEnd = ((end - min) / span) * 100;
+          const safeStart = Math.max(0, Math.min(100, percentStart));
+          const safeEnd = Math.max(0, Math.min(100, percentEnd));
+          sliderRange.style.left = safeStart + '%';
+          sliderRange.style.width = Math.max(0, safeEnd - safeStart) + '%';
+        }
+      }
+    };
+    
+    if (yearStart) {
+      yearStart.addEventListener('input', () => {
+        // Ensure start doesn't exceed end
+        if (parseInt(yearStart.value) > parseInt(yearEnd.value)) {
+          yearStart.value = yearEnd.value;
+        }
+        updateYearDisplay();
+        updateChart();
+      });
+    }
+    if (yearEnd) {
+      yearEnd.addEventListener('input', () => {
+        // Ensure end doesn't go below start
+        if (parseInt(yearEnd.value) < parseInt(yearStart.value)) {
+          yearEnd.value = yearStart.value;
+        }
+        updateYearDisplay();
+        updateChart();
+      });
+    }
+    
+    updateYearDisplay();
+    
+    // Restore saved chart preferences, prioritizing URL parameters
+    const chartTwoPartyEl = document.getElementById('chart-twoparty');
+    const chartRelativeEl = document.getElementById('chart-relative');
+    const chartDeltaEl = document.getElementById('chart-delta');
+    const chartThirdEl = document.getElementById('chart-thirdparty');
+
+    const savedTwoParty = localStorage.getItem('chartTwoParty') === 'true';
+    const savedRelative = localStorage.getItem('chartRelative') === 'true';
+    const savedDelta = localStorage.getItem('chartDelta') === 'true';
+    const savedThirdParty = localStorage.getItem('chartThirdParty') === 'true';
+
+    const urlChartTwo = readUrlBool('chartTwo', null);
+    const urlChartRel = readUrlBool('chartRelative', null);
+    const urlChartDelta = readUrlBool('chartDelta', null);
+    const urlChartThird = readUrlBool('chartThird', null);
+
+    let initialTwoParty = urlChartTwo !== null ? urlChartTwo : savedTwoParty;
+    let initialRelative = urlChartRel !== null ? urlChartRel : savedRelative;
+    let initialThird = urlChartThird !== null ? urlChartThird : savedThirdParty;
+    const initialDelta = urlChartDelta !== null ? urlChartDelta : savedDelta;
+
+    if (initialTwoParty) {
+      initialThird = false;
+      if (urlChartRel === null) initialRelative = false;
+    }
+    if (initialThird) {
+      initialTwoParty = false;
+      initialRelative = true;
+    }
+
+    if (chartTwoPartyEl) chartTwoPartyEl.checked = !!initialTwoParty;
+    if (chartRelativeEl) chartRelativeEl.checked = !!initialRelative;
+    if (chartDeltaEl) chartDeltaEl.checked = !!initialDelta;
+    if (chartThirdEl) chartThirdEl.checked = !!initialThird;
+
+    updateYearDisplay();
+    updateChart();
+  }).catch(err => {
+    console.error('Failed to load chart data:', err);
+    const chartContainer = document.getElementById('interactive-chart');
+    if (chartContainer) {
+      chartContainer.innerHTML = '<div class="legend" style="text-align: center; padding: 40px;">Unable to load interactive chart. Please ensure the data files are available.</div>';
+    }
+  });
+  
+  function updateChart() {
+    if (!chart || !chartData) return;
+
+    const state = pageStateAbbr;
+    const twoP = document.getElementById('chart-twoparty')?.checked || false;
+    const rel = document.getElementById('chart-relative')?.checked || false;
+    const delta = document.getElementById('chart-delta')?.checked || false;
+    const thirdParty = document.getElementById('chart-thirdparty')?.checked || false;
+
+    const yearStartInput = document.getElementById('year-start');
+    const yearEndInput = document.getElementById('year-end');
+    let yearStartVal = parseInt(yearStartInput?.value ?? '', 10);
+    let yearEndVal = parseInt(yearEndInput?.value ?? '', 10);
+
+    const minBound = stateYearBounds?.min ?? null;
+    const maxBound = stateYearBounds?.max ?? null;
+
+    if (!Number.isFinite(yearStartVal)) yearStartVal = minBound != null ? minBound : yearStartVal;
+    if (!Number.isFinite(yearEndVal)) yearEndVal = maxBound != null ? maxBound : yearEndVal;
+
+    if (minBound != null) yearStartVal = clamp(yearStartVal, minBound, maxBound);
+    if (maxBound != null) yearEndVal = clamp(yearEndVal, minBound != null ? Math.max(minBound, yearStartVal) : yearStartVal, maxBound);
+
+    if (yearStartVal > yearEndVal) {
+      yearEndVal = yearStartVal;
+    }
+
+    if (yearStartInput && parseInt(yearStartInput.value, 10) !== yearStartVal) {
+      yearStartInput.value = String(yearStartVal);
+    }
+    if (yearEndInput && parseInt(yearEndInput.value, 10) !== yearEndVal) {
+      yearEndInput.value = 2020;
+    }
+
+    const rangeDisplayEl = document.getElementById('year-range-display');
+    if (rangeDisplayEl) rangeDisplayEl.textContent = `${yearStartVal}-${yearEndVal}`;
+    const sliderRangeEl = document.getElementById('slider-range');
+    if (sliderRangeEl && yearStartInput) {
+      const min = parseInt(yearStartInput.min, 10);
+      const max = parseInt(yearStartInput.max, 10);
+      const span = Math.max(1, max - min);
+      const percentStart = ((yearStartVal - min) / span) * 100;
+      const percentEnd = ((yearEndVal - min) / span) * 100;
+      const safeStart = Math.max(0, Math.min(100, percentStart));
+      const safeEnd = Math.max(0, Math.min(100, percentEnd));
+      sliderRangeEl.style.left = `${safeStart}%`;
+      sliderRangeEl.style.width = `${Math.max(0, safeEnd - safeStart)}%`;
+    }
+
+    localStorage.setItem('chartTwoParty', twoP ? 'true' : 'false');
+    localStorage.setItem('chartRelative', rel ? 'true' : 'false');
+    localStorage.setItem('chartDelta', delta ? 'true' : 'false');
+    localStorage.setItem('chartThirdParty', thirdParty ? 'true' : 'false');
+    if (Number.isFinite(yearStartVal)) localStorage.setItem('chartYearStart', String(yearStartVal));
+    if (Number.isFinite(yearEndVal)) localStorage.setItem('chartYearEnd', String(yearEndVal));
+
+    const metric = thirdParty ? 'thirdParty' : 'margin';
+    const chartType = 'line';
+
+    chart.update({
+      data: chartData,
+      state: state,
+      metric: metric,
+      chart: chartType,
+      rel: rel,
+      delta: delta,
+      twoP: twoP,
+      yearStart: yearStartVal,
+      yearEnd: yearEndVal,
+      notesEl: document.getElementById('chart-notes')
+    });
+
+    if (!window.__suppressViewStateUrl && typeof window.updateUrl === 'function') {
+      window.updateUrl(undefined, undefined, undefined);
+    }
+  }
+  
+  // Expose updateChart globally for footer toggle sync
+  window.updateChart = updateChart;
+})();
 </script>
 </body>
 </html>
@@ -353,24 +714,69 @@ TESTER_JS = r"""
     return out;
   }
 
-  function updateUrl(year, pvIndex, flipMode) {
+  function updateUrl(year, pvIndex, flipMode, options) {
     const url = new URL(window.location);
-    if (year) url.searchParams.set('year', year);
-    else url.searchParams.delete('year');
+    const opts = options || {};
 
-    // Prefer to write an explicit pvValue when a numeric override is active (window._pvOverride)
-    if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) {
-      url.searchParams.set('pv', String(window._pvOverride));
-    } else if (pvIndex !== null && pvIndex !== undefined) {
-      url.searchParams.set('pv', pvIndex);
-    } else {
-      url.searchParams.delete('pv');
+    if (year !== undefined) {
+      if (year !== null && !Number.isNaN(Number(year))) {
+        url.searchParams.set('year', Number(year));
+      } else {
+        url.searchParams.delete('year');
+      }
     }
 
-    if (flipMode) url.searchParams.set('flip', flipMode);
-    else url.searchParams.delete('flip');
+    const hasPvArg = pvIndex !== undefined;
+    if (hasPvArg) {
+      if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) {
+        url.searchParams.set('pv', String(window._pvOverride));
+      } else if (pvIndex !== null && !Number.isNaN(Number(pvIndex))) {
+        url.searchParams.set('pv', String(pvIndex));
+      } else {
+        url.searchParams.delete('pv');
+      }
+    } else if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) {
+      url.searchParams.set('pv', String(window._pvOverride));
+    }
 
-  // No separate flipped flag; PV overrides encode sign directly
+    if (flipMode !== undefined) {
+      if (flipMode) url.searchParams.set('flip', flipMode);
+      else url.searchParams.delete('flip');
+    }
+
+    const clearViewState = !!opts.clearViewState;
+    const removeViewStateKeys = ['deltas','twoParty','relative','chartTwo','chartRelative','chartDelta','chartThird','chartStart','chartEnd'];
+    if (clearViewState) {
+      removeViewStateKeys.forEach(key => url.searchParams.delete(key));
+    } else if (typeof window.__collectViewStateForUrl === 'function') {
+      const view = window.__collectViewStateForUrl();
+      if (view) {
+        const setBool = (key, value) => {
+          if (value === null) url.searchParams.delete(key);
+          else url.searchParams.set(key, value ? '1' : '0');
+        };
+        const setInt = (key, value) => {
+          if (value == null || Number.isNaN(value)) url.searchParams.delete(key);
+          else url.searchParams.set(key, String(value));
+        };
+        setBool('deltas', view.deltas);
+        setBool('twoParty', view.twoParty);
+        setBool('relative', view.relative);
+        setBool('chartTwo', view.chartTwoParty);
+        setBool('chartRelative', view.chartRelative);
+        setBool('chartDelta', view.chartDelta);
+        setBool('chartThird', view.chartThirdParty);
+        setInt('chartStart', view.chartYearStart);
+        setInt('chartEnd', view.chartYearEnd);
+      }
+    }
+
+    if (opts.extraParams && typeof opts.extraParams === 'object') {
+      for (const [key, value] of Object.entries(opts.extraParams)) {
+        if (value === null || value === undefined) url.searchParams.delete(key);
+        else url.searchParams.set(key, String(value));
+      }
+    }
 
     window.history.replaceState({}, '', url);
   }
@@ -1473,19 +1879,74 @@ FAVICON_SVG = r'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <path d="M20 28 L28 36 L44 20" stroke="#0b0b0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>'''
 
-# JavaScript for delta toggle functionality
-DELTA_TOGGLE_JS = r"""
-// Delta toggle functionality
+# JavaScript for table and toggle functionality
+ENHANCED_TOGGLE_JS = r"""
+// URL helper utilities shared across state/unit pages
+if (typeof window.__readUrlBool !== 'function') {
+  window.__readUrlBool = function(name, fallback = null) {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has(name)) return fallback;
+    const raw = params.get(name);
+    if (raw === null || raw === undefined) return fallback;
+    if (raw === '') return true;
+    const lowered = raw.toLowerCase();
+    if (lowered === '1' || lowered === 'true' || lowered === 'yes') return true;
+    if (lowered === '0' || lowered === 'false' || lowered === 'no') return false;
+    return fallback;
+  };
+}
+if (typeof window.__readUrlInt !== 'function') {
+  window.__readUrlInt = function(name, fallback = null) {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has(name)) return fallback;
+    const value = parseInt(params.get(name), 10);
+    return Number.isNaN(value) ? fallback : value;
+  };
+}
+if (typeof window.__suppressViewStateUrl === 'undefined') {
+  window.__suppressViewStateUrl = false;
+}
+window.__collectViewStateForUrl = function() {
+  try {
+    const deltaToggle = document.getElementById('deltaToggle');
+    const twoPartyToggle = document.getElementById('twoPartyToggle');
+    const relativeToggle = document.getElementById('relativeToggle');
+    const chartTwoParty = document.getElementById('chart-twoparty');
+    const chartRelative = document.getElementById('chart-relative');
+    const chartDelta = document.getElementById('chart-delta');
+    const chartThird = document.getElementById('chart-thirdparty');
+    const yearStartInput = document.getElementById('year-start');
+    const yearEndInput = document.getElementById('year-end');
+    const toInt = (input) => {
+      if (!input) return null;
+      const v = parseInt(input.value, 10);
+      return Number.isNaN(v) ? null : v;
+    };
+    return {
+      deltas: deltaToggle ? !!deltaToggle.checked : null,
+      twoParty: twoPartyToggle ? !!twoPartyToggle.checked : null,
+      relative: relativeToggle ? !!relativeToggle.checked : null,
+      chartTwoParty: chartTwoParty ? !!chartTwoParty.checked : null,
+      chartRelative: chartRelative ? !!chartRelative.checked : null,
+      chartDelta: chartDelta ? !!chartDelta.checked : null,
+      chartThirdParty: chartThird ? !!chartThird.checked : null,
+      chartYearStart: toInt(yearStartInput),
+      chartYearEnd: toInt(yearEndInput)
+    };
+  } catch (err) {
+    console.warn('collectViewStateForUrl failed', err);
+    return null;
+  }
+};
+
+// Enhanced toggle functionality for state/unit pages
 (function() {
-  // Create and add the delta toggle footer
-  function createDeltaToggle() {
-    // Check if there are any tables with delta data
+  function createEnhancedToggle() {
     const tablesWithDeltas = document.querySelectorAll('table .delta');
     if (tablesWithDeltas.length === 0) {
-      return; // No deltas to toggle
+      return;
     }
-    
-    // Create the footer element
+
     const footer = document.createElement('div');
     footer.className = 'delta-toggle-footer';
     footer.innerHTML = `
@@ -1493,37 +1954,213 @@ DELTA_TOGGLE_JS = r"""
         <input type="checkbox" id="deltaToggle" checked>
         <label for="deltaToggle">Show deltas (Δ changes from previous election)</label>
       </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="twoPartyToggle">
+        <label for="twoPartyToggle">Two-party margin mode</label>
+      </div>
+      <div class="toggle-group">
+        <input type="checkbox" id="relativeToggle">
+        <label for="relativeToggle">Third-party view</label>
+      </div>
+      <div class="toggle-group">
+        <button type="button" id="clearUrlState" class="btn" style="padding:6px 14px;">Reset view link</button>
+      </div>
     `;
-    
-    // Add footer to body
+
     document.body.appendChild(footer);
     document.body.classList.add('has-delta-toggle');
-    
-    // Add event listener for toggle
-    const toggle = document.getElementById('deltaToggle');
-    toggle.addEventListener('change', function() {
-      if (this.checked) {
-        document.body.classList.remove('hide-deltas');
-        localStorage.setItem('showDeltas', 'true');
-      } else {
-        document.body.classList.add('hide-deltas');
-        localStorage.setItem('showDeltas', 'false');
+
+    const deltaToggle = document.getElementById('deltaToggle');
+    const twoPartyToggle = document.getElementById('twoPartyToggle');
+    const relativeToggle = document.getElementById('relativeToggle');
+    const clearButton = document.getElementById('clearUrlState');
+
+    const updateTableVisibility = () => {
+      const twoPartyMode = twoPartyToggle ? twoPartyToggle.checked : false;
+      const relativeMode = relativeToggle ? relativeToggle.checked : false;
+
+      const totalDataTable = document.querySelector('[data-table-type="total"]');
+      const thirdPartyTable = document.querySelector('[data-table-type="third-party"]');
+      const twoPartyTable = document.querySelector('[data-table-type="two-party"]');
+
+      if (totalDataTable) totalDataTable.style.display = 'none';
+      if (thirdPartyTable) thirdPartyTable.style.display = 'none';
+      if (twoPartyTable) twoPartyTable.style.display = 'none';
+
+      if (twoPartyMode && twoPartyTable) {
+        twoPartyTable.style.display = 'block';
+      } else if (relativeMode) {
+        if (thirdPartyTable) thirdPartyTable.style.display = 'block';
+        else if (totalDataTable) totalDataTable.style.display = 'block';
+      } else if (totalDataTable) {
+        totalDataTable.style.display = 'block';
       }
-    });
-    
-    // Restore saved state
-    const savedState = localStorage.getItem('showDeltas');
-    if (savedState === 'false') {
-      toggle.checked = false;
-      document.body.classList.add('hide-deltas');
+
+      localStorage.setItem('twoPartyMode', twoPartyMode ? 'true' : 'false');
+      localStorage.setItem('relativeMode', relativeMode ? 'true' : 'false');
+
+      if (!window.__suppressViewStateUrl && typeof window.updateUrl === 'function') {
+        window.updateUrl(undefined, undefined, undefined);
+      }
+    };
+
+    window.updateTableVisibilityFromChart = updateTableVisibility;
+
+    if (deltaToggle) {
+      const urlDelta = typeof window.__readUrlBool === 'function' ? window.__readUrlBool('deltas', null) : null;
+      const storedDelta = localStorage.getItem('showDeltas');
+      if (urlDelta !== null) {
+        deltaToggle.checked = urlDelta;
+        localStorage.setItem('showDeltas', urlDelta ? 'true' : 'false');
+      } else if (storedDelta === 'false') {
+        deltaToggle.checked = false;
+      }
+      if (!deltaToggle.checked) {
+        document.body.classList.add('hide-deltas');
+      }
+      deltaToggle.addEventListener('change', function() {
+        if (this.checked) {
+          document.body.classList.remove('hide-deltas');
+          localStorage.setItem('showDeltas', 'true');
+        } else {
+          document.body.classList.add('hide-deltas');
+          localStorage.setItem('showDeltas', 'false');
+        }
+        if (!window.__suppressViewStateUrl && typeof window.updateUrl === 'function') {
+          window.updateUrl(undefined, undefined, undefined);
+        }
+      });
     }
+
+    const urlTwoParty = typeof window.__readUrlBool === 'function' ? window.__readUrlBool('twoParty', null) : null;
+    const urlRelative = typeof window.__readUrlBool === 'function' ? window.__readUrlBool('relative', null) : null;
+    const storedTwoParty = localStorage.getItem('twoPartyMode') === 'true';
+    const storedRelative = localStorage.getItem('relativeMode') === 'true';
+
+    if (twoPartyToggle) {
+      if (urlTwoParty !== null) {
+        twoPartyToggle.checked = urlTwoParty;
+      } else {
+        twoPartyToggle.checked = storedTwoParty;
+      }
+    }
+
+    if (relativeToggle) {
+      if (urlRelative !== null) {
+        relativeToggle.checked = urlRelative;
+      } else {
+        relativeToggle.checked = storedRelative;
+      }
+      if (relativeToggle.checked && twoPartyToggle) {
+        twoPartyToggle.checked = false;
+      }
+    }
+
+    const syncWithChart = () => {
+      const chartTwoParty = document.getElementById('chart-twoparty');
+      const chartThirdParty = document.getElementById('chart-thirdparty');
+      if (twoPartyToggle && twoPartyToggle.checked) {
+        if (chartTwoParty) chartTwoParty.checked = true;
+        if (chartThirdParty) chartThirdParty.checked = false;
+      }
+      if (relativeToggle && relativeToggle.checked) {
+        if (chartThirdParty) chartThirdParty.checked = true;
+        if (chartTwoParty) chartTwoParty.checked = false;
+      }
+    };
+
+    if (twoPartyToggle) {
+      twoPartyToggle.addEventListener('change', function() {
+        if (this.checked && relativeToggle) {
+          relativeToggle.checked = false;
+        }
+        const chartTwoParty = document.getElementById('chart-twoparty');
+        const chartThirdParty = document.getElementById('chart-thirdparty');
+        if (this.checked) {
+          if (chartTwoParty) chartTwoParty.checked = true;
+          if (chartThirdParty) chartThirdParty.checked = false;
+        }
+        if (typeof window.updateChart === 'function') window.updateChart();
+        updateTableVisibility();
+      });
+    }
+
+    if (relativeToggle) {
+      relativeToggle.addEventListener('change', function() {
+        if (this.checked && twoPartyToggle) {
+          twoPartyToggle.checked = false;
+        }
+        const chartTwoParty = document.getElementById('chart-twoparty');
+        const chartThirdParty = document.getElementById('chart-thirdparty');
+        if (this.checked) {
+          if (chartTwoParty) chartTwoParty.checked = false;
+          if (chartThirdParty) chartThirdParty.checked = true;
+        }
+        if (typeof window.updateChart === 'function') window.updateChart();
+        updateTableVisibility();
+      });
+    }
+
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        window.__suppressViewStateUrl = true;
+        try {
+          localStorage.removeItem('showDeltas');
+          localStorage.removeItem('twoPartyMode');
+          localStorage.removeItem('relativeMode');
+          localStorage.removeItem('chartTwoParty');
+          localStorage.removeItem('chartRelative');
+          localStorage.removeItem('chartDelta');
+          localStorage.removeItem('chartThirdParty');
+          localStorage.removeItem('chartYearStart');
+          localStorage.removeItem('chartYearEnd');
+
+          if (deltaToggle) {
+            deltaToggle.checked = true;
+            document.body.classList.remove('hide-deltas');
+          }
+          if (twoPartyToggle) twoPartyToggle.checked = false;
+          if (relativeToggle) relativeToggle.checked = false;
+
+          const chartTwoParty = document.getElementById('chart-twoparty');
+          const chartRelative = document.getElementById('chart-relative');
+          const chartDelta = document.getElementById('chart-delta');
+          const chartThirdParty = document.getElementById('chart-thirdparty');
+          if (chartTwoParty) chartTwoParty.checked = false;
+          if (chartRelative) chartRelative.checked = false;
+          if (chartDelta) chartDelta.checked = false;
+          if (chartThirdParty) chartThirdParty.checked = false;
+
+          const yearStartInput = document.getElementById('year-start');
+          const yearEndInput = document.getElementById('year-end');
+          if (yearStartInput) {
+            yearStartInput.value = yearStartInput.min || yearStartInput.value;
+            yearStartInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          if (yearEndInput) {
+            yearEndInput.value = yearEndInput.max || yearEndInput.value;
+            yearEndInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+
+          updateTableVisibility();
+          if (typeof window.updateChart === 'function') window.updateChart();
+        } finally {
+          window.__suppressViewStateUrl = false;
+        }
+        if (typeof window.updateUrl === 'function') {
+          window.updateUrl(undefined, undefined, undefined, { clearViewState: true });
+        }
+      });
+    }
+
+    syncWithChart();
+    updateTableVisibility();
   }
-  
-  // Initialize when DOM is ready
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createDeltaToggle);
+    document.addEventListener('DOMContentLoaded', createEnhancedToggle);
   } else {
-    createDeltaToggle();
+    createEnhancedToggle();
   }
 })();
 """
