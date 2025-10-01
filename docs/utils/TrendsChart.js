@@ -126,28 +126,28 @@
         seriesG.append('path').datum(dataS).attr('fill','none').attr('stroke', color.state).attr('stroke-width',2).attr('d', line);
         if (dataN.length) seriesG.append('path').datum(dataN).attr('fill','none').attr('stroke', color.nat).attr('stroke-dasharray','5 5').attr('stroke-width',2).attr('d', line);
         
-        // Add interactive points (always show them like Trend Viewer)
+        // Add interactive points for state data (always show them like Trend Viewer)
         pointsG.selectAll('circle.data-point')
           .data(dataS)
           .join('circle')
           .attr('class', 'data-point')
           .attr('cx', d => x(d.year))
           .attr('cy', d => y(d.value))
-          .attr('r', 4)
+          .attr('r', 5)
           .attr('fill', d => {
             // Use color from CSV if available, otherwise use default based on value
             if (d.color) return d.color;
             return d.value >= 0 ? color.stateFillPos : color.stateFillNeg;
           })
           .attr('stroke', '#fff')
-          .attr('stroke-width', 1.5)
+          .attr('stroke-width', 2)
           .style('cursor', 'pointer')
           .on('mouseover', function(event, d) {
             d3.select(this)
               .transition()
               .duration(150)
-              .attr('r', 6)
-              .attr('stroke-width', 2);
+              .attr('r', 7)
+              .attr('stroke-width', 2.5);
             tooltip
               .style('opacity', 1)
               .html(`<strong>${d.year}</strong><br/>${d.str}`);
@@ -162,14 +162,73 @@
             d3.select(this)
               .transition()
               .duration(150)
-              .attr('r', 4)
-              .attr('stroke-width', 1.5);
+              .attr('r', 5)
+              .attr('stroke-width', 2);
             tooltip.style('opacity', 0);
           })
           .on('click', function(event, d) {
             // Copy value to clipboard
             navigator.clipboard?.writeText(`${d.year}: ${d.str}`);
           });
+        
+        // Add labels above points (if sufficient space)
+        pointsG.selectAll('text.data-label')
+          .data(dataS)
+          .join('text')
+          .attr('class', 'data-label')
+          .attr('x', d => x(d.year))
+          .attr('y', d => y(d.value) - 12)
+          .attr('text-anchor', 'middle')
+          .attr('font-size', '11px')
+          .attr('fill', '#ccc')
+          .attr('pointer-events', 'none')
+          .text(d => d.str)
+          .style('opacity', () => {
+            // Only show labels if there's enough space (not too many points)
+            return dataS.length <= 20 ? 1 : 0;
+          });
+        
+        // Add interactive points for national data (colored by PV winner)
+        if (dataN.length) {
+          pointsG.selectAll('circle.nat-point')
+            .data(dataN)
+            .join('circle')
+            .attr('class', 'nat-point')
+            .attr('cx', d => x(d.year))
+            .attr('cy', d => y(d.value))
+            .attr('r', 4)
+            .attr('fill', d => {
+              // Color national points based on PV winner (positive = Dem, negative = Rep)
+              return d.value >= 0 ? color.stateFillPos : color.stateFillNeg;
+            })
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 1.5)
+            .style('cursor', 'pointer')
+            .on('mouseover', function(event, d) {
+              d3.select(this)
+                .transition()
+                .duration(150)
+                .attr('r', 6)
+                .attr('stroke-width', 2);
+              tooltip
+                .style('opacity', 1)
+                .html(`<strong>${d.year} (National)</strong><br/>${fmt(d.value, rel, delta)}`);
+            })
+            .on('mousemove', function(event) {
+              const [mx, my] = d3.pointer(event, rootEl);
+              tooltip
+                .style('left', (mx + 15) + 'px')
+                .style('top', (my - 10) + 'px');
+            })
+            .on('mouseout', function() {
+              d3.select(this)
+                .transition()
+                .duration(150)
+                .attr('r', 4)
+                .attr('stroke-width', 1.5);
+              tooltip.style('opacity', 0);
+            });
+        }
       } else {
         const band = innerW / Math.max(1, years.length);
         const stateW = Math.max(6, Math.min(28, band * 0.6));
