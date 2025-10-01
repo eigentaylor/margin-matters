@@ -143,6 +143,7 @@
 
   // Calculate vote tallies for a specific unit (for index.html - real elections only)
   // Returns {D: number, R: number, O: number, total: number} or null if not applicable
+  // Put a star on the current leader (D, R, or O)
   function calculateUnitVoteTallies(unit) {
     try {
       // Only show vote tallies on index.html (real elections), not tester or future
@@ -481,11 +482,13 @@
         const voteParts = [];
         const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
         
-        // Only display parties with votes
-        if (voteTallies.D > 0) voteParts.push(`D: ${formatter(voteTallies.D)}`);
-        if (voteTallies.R > 0) voteParts.push(`R: ${formatter(voteTallies.R)}`);
+        // Find the party with the highest vote tally
+        const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
+        // Only display parties with votes, add star to the highest
+        if (voteTallies.D > 0) voteParts.push(`${voteTallies.D === maxVotes ? 'D*' : 'D'}: ${formatter(voteTallies.D)}`);
+        if (voteTallies.R > 0) voteParts.push(`${voteTallies.R === maxVotes ? 'R*' : 'R'}: ${formatter(voteTallies.R)}`);
         // Only display top third party if it has votes (not all third parties)
-        if (voteTallies.O > 0) voteParts.push(`O: ${formatter(voteTallies.O)}`);
+        if (voteTallies.O > 0) voteParts.push(`${voteTallies.O === maxVotes ? 'O*' : 'O'}: ${formatter(voteTallies.O)}`);
         
         // Only add vote row if we have votes to display
         if (voteParts.length) {
