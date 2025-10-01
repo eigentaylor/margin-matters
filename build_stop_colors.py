@@ -70,44 +70,19 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
         def classify_and_append(s: float, eff: float, r: Dict):
             abbr = r.get('abbr')
             rm = parse_float(r.get('relative_margin'))
-            #tp = parse_float(r.get('third_party_share'))
             nat = parse_float(r.get('national_margin'))
-            original_margins = {
-                'D': parse_float(r['D_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
-                'R': parse_float(r['R_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
-                'T': parse_float(r['T_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
-            }
-            assert np.isclose(original_margins['T'], r.get('top_third_party_share', 0.0), atol=1e-6), f"Mismatch T share {original_margins['T']} vs {r.get('top_third_party_share', 0.0)}"
-            tp = original_margins['T']
-            original_winner = max(original_margins, key=lambda k: original_margins.get(k, 0))
-            a_local = 3 * tp - 1
-            winner = None
-            # Use a tighter interior epsilon than the nudge so boundary nudges remain inside the window
-            INNER = EPS
-            if a_local > 0 and False:
-                nD_local = -rm + a_local
-                nR_local = -rm - a_local
-                nD_approximated_margins = {'D': original_margins['D'] + nD_local / 2, 'R': original_margins['R'] - nD_local / 2, 'T': original_margins['T']}
-                nR_approximated_margins = {'D': original_margins['D'] + nR_local / 2, 'R': original_margins['R'] - nR_local / 2, 'T': original_margins['T']}
-                if eff > (nR_local + INNER) and eff < (nD_local - INNER):
-                    winner = 'T'
-            else:
-                approximated_margins = {'D': original_margins['D'] + (eff - nat) / 2, 'R': original_margins['R'] - (eff - nat) / 2, 'T': original_margins['T']}
-                new_winner = max(approximated_margins.items(), key=lambda item: item[1])[0]
-                if abbr == 'AL' and year == 1948:
-                    pass
-                if new_winner == original_winner:
-                    print(f"Debug: {year} {abbr} winner unchanged at stop {s} eff {eff}: {original_winner}")
-                    if abbr == 'LA' and year == 1948:
-                        # find what the stop should be to flip T->D
-                        # want original_margins['D'] + (eff - nat) / 2 > original_margins['T']
-                        target_eff = nat + 2 * (original_margins['T'] - original_margins['D'])
-                        print(f"Debug: {year} {abbr} T->D flip eff {target_eff}, actual eff {eff}")
-                    pass
-                if a_local > 0:
-                    pass
-                winner = max(approximated_margins, key=lambda k: approximated_margins[k])
-            if winner is None:
+            
+            # Get raw vote counts
+            d_votes = parse_float(r.get('D_votes', 0))
+            r_votes = parse_float(r.get('R_votes', 0))
+            t_votes = parse_float(r.get('T_votes', 0))
+            total_votes = parse_float(r.get('total_votes', 0))
+            
+            if total_votes <= 0:
+                total_votes = d_votes + r_votes + t_votes
+            
+            if total_votes <= 0:
+                # No votes, fallback to margin-based logic
                 m = rm + eff
                 if m > 0:
                     winner = 'D'
@@ -116,13 +91,57 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 else:
                     side = 1 if (s - nat) >= 0 else -1
                     winner = 'D' if side >= 0 else 'R'
+            else:
+                # Calculate adjusted vote shares using actual votes
+                # The PV shift (eff - nat) represents a national shift that affects D and R equally
+                # Third party votes stay constant
+                tp_share = t_votes / total_votes
+                two_party_total = d_votes + r_votes
+                
+                if two_party_total > 0:
+                    # Current two-party margin
+                    current_two_party_margin = (d_votes - r_votes) / two_party_total
+                    # Adjust by PV shift (eff - nat gives the shift from original national margin)
+                    adjusted_two_party_margin = current_two_party_margin + (eff - nat)
+                    # Clamp to valid range
+                    adjusted_two_party_margin = max(-1, min(1, adjusted_two_party_margin))
+                    
+                    # Convert back to shares
+                    d_two_party_share = (adjusted_two_party_margin + 1) / 2
+                    r_two_party_share = 1 - d_two_party_share
+                    
+                    # Apply to total votes
+                    d_adjusted = total_votes * (1 - tp_share) * d_two_party_share
+                    r_adjusted = total_votes * (1 - tp_share) * r_two_party_share
+                    t_adjusted = t_votes  # Third party votes unchanged
+                else:
+                    # No two-party votes, only third party
+                    d_adjusted = 0
+                    r_adjusted = 0
+                    t_adjusted = t_votes
+                
+                # Determine winner by who has most votes
+                if d_adjusted > r_adjusted and d_adjusted > t_adjusted:
+                    winner = 'D'
+                elif r_adjusted > d_adjusted and r_adjusted > t_adjusted:
+                    winner = 'R'
+                elif t_adjusted > d_adjusted and t_adjusted > r_adjusted:
+                    winner = 'T'
+                else:
+                    # Tie or near-tie, use margin as tiebreaker
+                    m = rm + eff
+                    if m > 0:
+                        winner = 'D'
+                    elif m < 0:
+                        winner = 'R'
+                    else:
+                        winner = 'T' if t_adjusted > 0 else 'D'
 
             color_name = 'BLUE' if winner == 'D' else ('RED' if winner == 'R' else 'YELLOW')
             color_css = params.COLORS.get(winner, 'transparent')
             if color_css == 'deepskyblue':
                 color_css = 'blue' # darker blue for visibility
-            if color_name == 'YELLOW':
-                pass
+            
             out.append({
                 'year': year,
                 'stop': f"{s:.12f}",
@@ -181,6 +200,28 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             if s not in stop_to_eff:
                 print(f"Debug: {year} stop {s} missing eff, adding small nudge")
                 stop_to_eff[s] = s + EPS
+        
+        # Ensure every unit is classified at EVEN (0.0) and national margin
+        for r in lst:
+            abbr = r.get('abbr')
+            if not abbr or abbr in ('NATIONAL', 'NAT'):
+                continue
+            if parse_float(r.get('total_votes')) == 0:
+                continue
+            
+            # Classify at EVEN (0.0)
+            if 0.0 not in [s for s, u in [(s, u) for s in stops_set for u in stop_to_units.get(s, []) if u == abbr]]:
+                classify_and_append(0.0, 0.0 + EPS, r)
+            
+            # Classify at national margin
+            if nat is not None and abs(nat) <= PV_CAP:
+                nat_found = False
+                for s in stops_set:
+                    if abs(s - nat) < 1e-9 and abbr in stop_to_units.get(s, []):
+                        nat_found = True
+                        break
+                if not nat_found:
+                    classify_and_append(nat, nat, r)
 
     # No additional winner pass needed; rows appended inline above
     return out

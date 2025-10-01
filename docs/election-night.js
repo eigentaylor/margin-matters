@@ -728,11 +728,12 @@
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
   const finalLeader = determineLeader(dShareFinal, rShareFinal, topThirdShare, 1, { dVotes: finalDVotes, rVotes: finalRVotes, oVotes: finalOTopVotes, countedVotes: twoPartyVotesFinal });
-      const baselineAbbr = baselineAbbrColors.get(abbr);
-      let finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
+      // For districts, use unit-specific baseline color first to avoid all districts getting the same state color
+      const baselineUnit = baselineUnitColors.get(unit);
+      let finalColor = baselineUnit || null;
       if (!finalColor) {
-        const baselineUnit = baselineUnitColors.get(unit);
-        finalColor = baselineUnit || safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
+        const baselineAbbr = baselineAbbrColors.get(abbr);
+        finalColor = (baselineAbbr && baselineAbbr.color) ? baselineAbbr.color : safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
       }
       const finalMarginStr = finalLeader === 'O' ? 'Other lead' : formatLean(finalMarginTwoParty);
       const twoPartyVotes = finalDVotes + finalRVotes;
