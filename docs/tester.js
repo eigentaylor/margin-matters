@@ -3230,7 +3230,7 @@ function renderFlipDetails(){
         // Special case: Alabama 1960 - always show proportional split
         if (year === 1960 && displayUnit === 'AL') {
           // Check winner with PV adjustment
-          const margin = +r.margin || 0;
+          const margin = +r.rm || 0;
           const pv = window._curPv || 0;
           const adjMargin = margin + pv;
           const winner = adjMargin > 0 ? 'D' : (adjMargin < 0 ? 'R' : 'O');
@@ -3284,15 +3284,15 @@ function renderFlipDetails(){
           oEV = alloc.O;
         } else {
           // Winner-take-all
-          const margin = +r.margin || 0;
+          const margin = +r.rm || 0;
           const pv = window._curPv || 0;
           const adjMargin = margin + pv;
           const winner = adjMargin > 0 ? 'D' : (adjMargin < 0 ? 'R' : 'O');
-          
+
           if (winner === 'D') dEV = ev;
           else if (winner === 'R') rEV = ev;
           else oEV = ev;
-          
+
           // Get vote counts
           if (!isElectionNight) {
             dVotes = +r.dVotes || 0;
