@@ -2647,6 +2647,9 @@
   window._getNatMargin = getNatMargin;
   window._STOP_EPS = STOP_EPS;
   window.updateUrl = updateUrl;
+  
+  // Expose proportional EV allocation for use in modal
+  window.allocateProportionalEVs = allocateProportionalEVs;
 })();
 
 // Current metric helper and options filter
@@ -3122,6 +3125,28 @@ function renderFlipDetails(){
         });
       });
     }
+    
+    // Update table when year or PV changes (if modal is open)
+    const yearSlider = document.getElementById('yearSlider');
+    const pvSlider = document.getElementById('pvSlider');
+    
+    if (yearSlider) {
+      yearSlider.addEventListener('input', function() {
+        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
+          // Use setTimeout to ensure updateAll() has completed
+          setTimeout(() => updateEvBreakdownTable(), 50);
+        }
+      });
+    }
+    
+    if (pvSlider) {
+      pvSlider.addEventListener('input', function() {
+        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
+          // Use setTimeout to ensure updateAll() has completed
+          setTimeout(() => updateEvBreakdownTable(), 50);
+        }
+      });
+    }
   }
   
   // Get EV allocations for all states
@@ -3202,9 +3227,11 @@ function renderFlipDetails(){
       if (!showBlank) {
         // Special case: Alabama 1960 - always show proportional split
         if (year === 1960 && displayUnit === 'AL') {
-          // Check winner
+          // Check winner with PV adjustment
           const margin = +r.margin || 0;
-          const winner = margin > 0 ? 'D' : (margin < 0 ? 'R' : 'O');
+          const pv = window._curPv || 0;
+          const adjMargin = margin + pv;
+          const winner = adjMargin > 0 ? 'D' : (adjMargin < 0 ? 'R' : 'O');
           
           if (winner !== 'R') {
             // Democrats/Third party win: 5D, 6O split
@@ -3245,7 +3272,11 @@ function renderFlipDetails(){
           }
           
           // Allocate EVs proportionally
-          const alloc = allocateProportionalEVs(dVotes, rVotes, oVotes, ev, 0);
+          const allocFn = window.allocateProportionalEVs || function(d, r, o, ev) {
+            // Fallback if function not available
+            return { D: 0, R: 0, O: 0 };
+          };
+          const alloc = allocFn(dVotes, rVotes, oVotes, ev, 0);
           dEV = alloc.D;
           rEV = alloc.R;
           oEV = alloc.O;
