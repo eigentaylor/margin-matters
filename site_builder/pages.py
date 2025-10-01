@@ -296,6 +296,7 @@ def build_pages(rows: List[Dict]):
             f'<div class="card" data-table-type="total">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Total Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}</div>\n'
+            f'  {render_info_box(basic_cols)}\n'
             f'</div>'
         )
         table3_section = ''
@@ -304,6 +305,7 @@ def build_pages(rows: List[Dict]):
                 f'<div class="card" data-table-type="third-party">\n'
                 f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Third-Party Data</h2>\n'
                 f'  <div class="table-wrap">{render_table(table_rows, third_cols)}</div>\n'
+                f'  {render_info_box(third_cols)}\n'
                 f'</div>'
             )
         plot3_section = (
@@ -316,6 +318,7 @@ def build_pages(rows: List[Dict]):
             f'<div class="card" data-table-type="two-party">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Two-Party Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}</div>\n'
+            f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide", is_inner=True)
@@ -374,6 +377,7 @@ def build_pages(rows: List[Dict]):
             f'<div class="card" data-table-type="total">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Total Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, basic_cols)}</div>\n'
+            f'  {render_info_box(basic_cols)}\n'
             f'</div>'
         )
         table3_section = ''
@@ -382,12 +386,14 @@ def build_pages(rows: List[Dict]):
                 f'<div class="card" data-table-type="third-party">\n'
                 f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Third-Party Data</h2>\n'
                 f'  <div class="table-wrap">{render_table(table_rows, third_cols)}</div>\n'
+                f'  {render_info_box(third_cols)}\n'
                 f'</div>'
             )
         table2_section = (
             f'<div class="card" data-table-type="two-party">\n'
             f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(unit, unit)} ({unit}) — Two-Party Data</h2>\n'
             f'  <div class="table-wrap">{render_table(table_rows, tp_cols, two_party=True)}</div>\n'
+            f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})", is_inner=True)

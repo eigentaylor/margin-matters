@@ -116,7 +116,7 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .flip-controls .btn{color:#fff}
 
 /* Delta toggle UI - sticky footer */
-.delta-toggle-footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px}
+.delta-toggle-footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg, rgba(11,11,11,0.98), rgba(11,11,11,0.95));backdrop-filter:blur(4px);border-top:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 .delta-toggle-footer .toggle-group{display:flex;align-items:center;gap:8px}
 .delta-toggle-footer label{font-size:0.9rem;color:var(--fg);cursor:pointer}
 .delta-toggle-footer input[type="checkbox"]{width:18px;height:18px;cursor:pointer}
@@ -124,6 +124,22 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .hide-deltas .delta{display:none !important}
 /* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
 body.has-delta-toggle{padding-bottom:60px}
+
+/* Range slider styling for year controls */
+input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:#2a2a2a;border-radius:5px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer}
+input[type="range"]::-moz-range-thumb{width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;border:none}
+input[type="range"]:focus{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Mobile-friendly chart controls */
+#chart-controls{display:flex;flex-direction:column;gap:12px}
+#chart-controls > div:first-child{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+@media (max-width:600px){
+  .delta-toggle-footer{flex-direction:column;gap:8px;padding:12px}
+  .delta-toggle-footer .toggle-group{justify-content:center}
+  #chart-controls label{font-size:0.85rem}
+}
+
 /* PV tools specific styling to match future.html dark look
   Ensure high contrast white text on dark backgrounds so controls
   remain readable when pages are rebuilt from templates. */
@@ -305,24 +321,33 @@ PAGE_HTML = r"""<!doctype html>
   <div class="card">
     <h2 style="margin-top:0">Interactive Chart</h2>
     <div id="chart-container" style="min-height: 520px;">
-      <div id="chart-controls" style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-        <label style="display: flex; align-items: center; gap: 4px;">
-          <input type="checkbox" id="chart-twoparty"> Two-party margins
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px;">
-          <input type="checkbox" id="chart-relative"> Relative margins
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px;">
-          <input type="checkbox" id="chart-delta"> Show deltas
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px;">
-          <input type="checkbox" id="chart-thirdparty"> Third-party share
-        </label>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <label for="year-start">Years:</label>
-          <input type="number" id="year-start" min="1864" max="2024" placeholder="Start" style="width: 80px;">
-          <span>to</span>
-          <input type="number" id="year-end" min="1864" max="2024" placeholder="End" style="width: 80px;">
+      <div id="chart-controls" style="margin-bottom: 16px;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px;">
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-twoparty"> Two-party margins
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-relative"> Relative margins
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-delta"> Show deltas
+          </label>
+          <label style="display: flex; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-thirdparty"> Third-party share
+          </label>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="year-range" style="font-size: 0.9rem;">Year Range: <span id="year-range-display">1864-2024</span></label>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 0.85rem; min-width: 40px;">1864</span>
+            <input type="range" id="year-start" min="1864" max="2024" value="1864" step="4" style="flex: 1;">
+            <span style="font-size: 0.85rem; min-width: 40px;">2024</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 0.85rem; min-width: 40px;">1864</span>
+            <input type="range" id="year-end" min="1864" max="2024" value="2024" step="4" style="flex: 1;">
+            <span style="font-size: 0.85rem; min-width: 40px;">2024</span>
+          </div>
         </div>
       </div>
       <div id="interactive-chart"></div>
@@ -360,17 +385,65 @@ PAGE_HTML = r"""<!doctype html>
       updateChart();
     }
     
-    // Set up event listeners
+    // Set up event listeners for chart controls
     const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty'];
     controls.forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('change', updateChart);
+      if (el) {
+        el.addEventListener('change', () => {
+          // Sync with footer toggles
+          if (id === 'chart-twoparty' && el.checked) {
+            const footerTwoParty = document.getElementById('twoPartyToggle');
+            const footerRelative = document.getElementById('relativeToggle');
+            const chartThirdParty = document.getElementById('chart-thirdparty');
+            if (footerTwoParty) footerTwoParty.checked = true;
+            if (footerRelative) footerRelative.checked = false;
+            if (chartThirdParty) chartThirdParty.checked = false;
+            // Trigger table update
+            if (typeof window.updateTableVisibilityFromChart === 'function') {
+              window.updateTableVisibilityFromChart();
+            }
+          } else if (id === 'chart-thirdparty' && el.checked) {
+            const footerTwoParty = document.getElementById('twoPartyToggle');
+            const footerRelative = document.getElementById('relativeToggle');
+            const chartTwoParty = document.getElementById('chart-twoparty');
+            if (footerTwoParty) footerTwoParty.checked = false;
+            if (footerRelative) footerRelative.checked = true;
+            if (chartTwoParty) chartTwoParty.checked = false;
+            // Trigger table update
+            if (typeof window.updateTableVisibilityFromChart === 'function') {
+              window.updateTableVisibilityFromChart();
+            }
+          }
+          updateChart();
+        });
+      }
     });
     
     const yearStart = document.getElementById('year-start');
     const yearEnd = document.getElementById('year-end');
-    if (yearStart) yearStart.addEventListener('input', updateChart);
-    if (yearEnd) yearEnd.addEventListener('input', updateChart);
+    const yearRangeDisplay = document.getElementById('year-range-display');
+    
+    const updateYearDisplay = () => {
+      if (yearRangeDisplay && yearStart && yearEnd) {
+        yearRangeDisplay.textContent = `${yearStart.value}-${yearEnd.value}`;
+      }
+    };
+    
+    if (yearStart) {
+      yearStart.addEventListener('input', () => {
+        updateYearDisplay();
+        updateChart();
+      });
+    }
+    if (yearEnd) {
+      yearEnd.addEventListener('input', () => {
+        updateYearDisplay();
+        updateChart();
+      });
+    }
+    
+    updateYearDisplay();
     
     // Restore saved chart preferences
     const savedTwoParty = localStorage.getItem('chartTwoParty') === 'true';
@@ -401,8 +474,8 @@ PAGE_HTML = r"""<!doctype html>
     const delta = document.getElementById('chart-delta')?.checked || false;
     const thirdParty = document.getElementById('chart-thirdparty')?.checked || false;
     
-    const yearStart = parseInt(document.getElementById('year-start')?.value) || null;
-    const yearEnd = parseInt(document.getElementById('year-end')?.value) || null;
+    const yearStart = parseInt(document.getElementById('year-start')?.value);
+    const yearEnd = parseInt(document.getElementById('year-end')?.value);
     
     // Save preferences
     localStorage.setItem('chartTwoParty', twoP);
@@ -426,6 +499,9 @@ PAGE_HTML = r"""<!doctype html>
       notesEl: document.getElementById('chart-notes')
     });
   }
+  
+  // Expose updateChart globally for footer toggle sync
+  window.updateChart = updateChart;
 })();
 </script>
 </body>
@@ -1616,7 +1692,7 @@ ENHANCED_TOGGLE_JS = r"""
       </div>
       <div class="toggle-group">
         <input type="checkbox" id="relativeToggle">
-        <label for="relativeToggle">Relative margin mode</label>
+        <label for="relativeToggle">Third Party Info</label>
       </div>
     `;
     
@@ -1656,6 +1732,9 @@ ENHANCED_TOGGLE_JS = r"""
       localStorage.setItem('relativeMode', relativeMode);
     };
     
+    // Expose updateTableVisibility globally for chart sync
+    window.updateTableVisibilityFromChart = updateTableVisibility;
+    
     // Delta toggle functionality
     const deltaToggle = document.getElementById('deltaToggle');
     deltaToggle.addEventListener('change', function() {
@@ -1668,10 +1747,17 @@ ENHANCED_TOGGLE_JS = r"""
       }
     });
     
-    // Table mode toggle functionality
+    // Table mode toggle functionality with chart synchronization
     document.getElementById('twoPartyToggle').addEventListener('change', function() {
       if (this.checked) {
         document.getElementById('relativeToggle').checked = false;
+        // Sync with chart: check two-party, uncheck third-party
+        const chartTwoParty = document.getElementById('chart-twoparty');
+        const chartThirdParty = document.getElementById('chart-thirdparty');
+        if (chartTwoParty) chartTwoParty.checked = true;
+        if (chartThirdParty) chartThirdParty.checked = false;
+        // Trigger chart update if available
+        if (typeof window.updateChart === 'function') window.updateChart();
       }
       updateTableVisibility();
     });
@@ -1679,6 +1765,13 @@ ENHANCED_TOGGLE_JS = r"""
     document.getElementById('relativeToggle').addEventListener('change', function() {
       if (this.checked) {
         document.getElementById('twoPartyToggle').checked = false;
+        // Sync with chart: check third-party, uncheck two-party
+        const chartTwoParty = document.getElementById('chart-twoparty');
+        const chartThirdParty = document.getElementById('chart-thirdparty');
+        if (chartTwoParty) chartTwoParty.checked = false;
+        if (chartThirdParty) chartThirdParty.checked = true;
+        // Trigger chart update if available
+        if (typeof window.updateChart === 'function') window.updateChart();
       }
       updateTableVisibility();
     });
