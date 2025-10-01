@@ -1040,14 +1040,6 @@
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
-    
-    // Update EV breakdown table
-    if (typeof window.updateEvBreakdownTable === 'function') {
-      try {
-        window.updateEvBreakdownTable();
-      } catch(e) {}
-    }
-    
     if (typeof window.refreshActiveMapTip === 'function') {
       try { window.refreshActiveMapTip(); } catch(e) {}
     }

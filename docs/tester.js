@@ -3067,58 +3067,93 @@ function renderFlipDetails(){
   // State for the EV breakdown modal
   let currentSort = { column: 'state', ascending: true };
   
-  // Initialize the EV breakdown table
-  function initEvBreakdownTable() {
+  // Initialize the modal when DOM is ready
+  function initEvBreakdownModal() {
     const propEvToggle = document.getElementById('propEvToggle');
-    const table = document.getElementById('evBreakdownTable');
+    const evBreakdownBtn = document.getElementById('evBreakdownBtn');
+    const evBreakdownModal = document.getElementById('evBreakdownModal');
+    const evBreakdownClose = document.getElementById('evBreakdownClose');
     
-    if (!table) return;
+    if (!propEvToggle || !evBreakdownBtn || !evBreakdownModal) return;
     
-    // Add sorting listeners to table headers
-    const headers = table.querySelectorAll('th.sortable');
-    headers.forEach(header => {
-      header.addEventListener('click', function() {
-        const column = this.getAttribute('data-column');
-        if (currentSort.column === column) {
-          currentSort.ascending = !currentSort.ascending;
-        } else {
-          currentSort.column = column;
-          currentSort.ascending = true;
-        }
-        updateEvBreakdownTable();
-      });
-    });
+    // Always show the button (regardless of proportional mode)
+    evBreakdownBtn.style.display = 'inline-block';
     
     // Update table when proportional EV toggle changes
-    if (propEvToggle) {
-      propEvToggle.addEventListener('change', function() {
+    propEvToggle.addEventListener('change', function() {
+      // Update the table if modal is open
+      if (evBreakdownModal.style.display === 'flex') {
         updateEvBreakdownTable();
+      }
+    });
+    
+    // Open modal
+    evBreakdownBtn.addEventListener('click', function() {
+      updateEvBreakdownTable();
+      evBreakdownModal.style.display = 'flex';
+    });
+    
+    // Close modal
+    if (evBreakdownClose) {
+      evBreakdownClose.addEventListener('click', function() {
+        evBreakdownModal.style.display = 'none';
       });
     }
     
-    // Update table when year or PV changes
+    // Close on background click
+    evBreakdownModal.addEventListener('click', function(e) {
+      if (e.target === evBreakdownModal) {
+        evBreakdownModal.style.display = 'none';
+      }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && evBreakdownModal.style.display === 'flex') {
+        evBreakdownModal.style.display = 'none';
+      }
+    });
+    
+    // Add sorting listeners to table headers
+    const table = document.getElementById('evBreakdownTable');
+    if (table) {
+      const headers = table.querySelectorAll('th.sortable');
+      headers.forEach(header => {
+        header.addEventListener('click', function() {
+          const column = this.getAttribute('data-column');
+          if (currentSort.column === column) {
+            currentSort.ascending = !currentSort.ascending;
+          } else {
+            currentSort.column = column;
+            currentSort.ascending = true;
+          }
+          updateEvBreakdownTable();
+        });
+      });
+    }
+    
+    // Update table when year or PV changes (if modal is open)
     const yearSlider = document.getElementById('yearSlider');
     const pvSlider = document.getElementById('pvSlider');
     
     if (yearSlider) {
       yearSlider.addEventListener('input', function() {
-        // Use setTimeout to ensure updateAll() has completed
-        setTimeout(() => updateEvBreakdownTable(), 50);
+        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
+          // Use setTimeout to ensure updateAll() has completed
+          setTimeout(() => updateEvBreakdownTable(), 50);
+        }
       });
     }
     
     if (pvSlider) {
       pvSlider.addEventListener('input', function() {
-        // Use setTimeout to ensure updateAll() has completed
-        setTimeout(() => updateEvBreakdownTable(), 50);
+        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
+          // Use setTimeout to ensure updateAll() has completed
+          setTimeout(() => updateEvBreakdownTable(), 50);
+        }
       });
     }
-    
-    // Initial population of the table
-    setTimeout(() => updateEvBreakdownTable(), 100);
   }
-  
-  // Get state name from abbreviation
   
   // Get EV allocations for all states
   function getAllEvAllocations() {
@@ -3142,7 +3177,7 @@ function renderFlipDetails(){
     
     const allocations = [];
     
-    // Get all unique state/unit codes (excluding NATIONAL and districts)
+    // Get all unique state/unit codes (excluding NATIONAL)
     const processedStates = new Set();
     rows.forEach(r => {
       if (!r || !r.unit) return;
@@ -3151,12 +3186,8 @@ function renderFlipDetails(){
       // Skip national totals
       if (unit === 'NATIONAL' || unit === 'NAT') return;
       
-      // For Maine and Nebraska, use at-large
+      // Use the unit as-is for display (including ME-01, ME-02, NE-01, NE-02, NE-03)
       let displayUnit = unit;
-      if (unit === 'ME-AL') displayUnit = 'ME';
-      else if (unit === 'NE-AL') displayUnit = 'NE';
-      // Skip congressional districts (they're already counted in at-large)
-      else if (unit.match(/^(ME|NE)-\d+$/)) return;
       
       // Skip duplicates
       if (processedStates.has(displayUnit)) return;
@@ -3303,6 +3334,18 @@ function renderFlipDetails(){
       'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia',
       'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
     };
+    
+    // Handle ME-AL, NE-AL, ME-01, NE-02, etc.
+    if (abbr.includes('-')) {
+      const parts = abbr.split('-');
+      const state = STATE_NAMES[parts[0]] || parts[0];
+      if (parts[1] === 'AL') {
+        return `${state} At-Large`;
+      } else {
+        return `${state} CD-${parts[1]}`;
+      }
+    }
+    
     return STATE_NAMES[abbr] || abbr;
   }
   
@@ -3480,9 +3523,9 @@ function renderFlipDetails(){
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEvBreakdownTable);
+    document.addEventListener('DOMContentLoaded', initEvBreakdownModal);
   } else {
-    initEvBreakdownTable();
+    initEvBreakdownModal();
   }
 })();
 
