@@ -3278,7 +3278,8 @@ function renderFlipDetails(){
       
       // Check if we should show blank (election night mode)
       if (isElectionNight && snapshot) {
-        const stateData = snapshot.states && snapshot.states.find(s => s.unit === unit || s.abbr === displayUnit);
+        // snapshot is a Map, get the state data by unit key
+        const stateData = snapshot.get(displayUnit);
         if (stateData) {
           const called = stateData.called || false;
           const reporting = stateData.reporting || 0;
@@ -3288,9 +3289,9 @@ function renderFlipDetails(){
             showBlank = true;
           } else {
             // Use election night vote counts
-            dVotes = stateData.dTotalCounted || 0;
-            rVotes = stateData.rTotalCounted || 0;
-            oVotes = stateData.oTotalCounted || 0;
+            dVotes = stateData.dVotes || 0;
+            rVotes = stateData.rVotes || 0;
+            oVotes = stateData.oVotes || 0;
           }
         } else {
           showBlank = true;
