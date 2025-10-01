@@ -3493,19 +3493,19 @@ function renderFlipDetails(){
     totalRow.appendChild(totalLabelCell);
     
     const totalDCell = document.createElement('td');
-    const totalDPercent = totalAll > 0 ? Math.round((totalD / totalAll) * 100) : 0;
+    const totalDPercent = totalAll > 0 ? ((totalD / totalAll) * 100).toFixed(1) : '0.0';
     totalDCell.textContent = totalD > 0 ? `${totalD} (${totalDPercent}%)` : totalD;
     totalDCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalDCell);
     
     const totalRCell = document.createElement('td');
-    const totalRPercent = totalAll > 0 ? Math.round((totalR / totalAll) * 100) : 0;
+    const totalRPercent = totalAll > 0 ? ((totalR / totalAll) * 100).toFixed(1) : '0.0';
     totalRCell.textContent = totalR > 0 ? `${totalR} (${totalRPercent}%)` : totalR;
     totalRCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalRCell);
     
     const totalOCell = document.createElement('td');
-    const totalOPercent = totalAll > 0 ? Math.round((totalO / totalAll) * 100) : 0;
+    const totalOPercent = totalAll > 0 ? ((totalO / totalAll) * 100).toFixed(1) : '0.0';
     totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
     totalOCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalOCell);
