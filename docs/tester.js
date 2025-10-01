@@ -458,7 +458,13 @@
       if (basicParts.length) rows.push(basicParts.join(' · '));
       
       // Second row: EV allocation (for proportional mode)
-      const evAllocation = calculateUnitProportionalEVs(unit);
+      const evAllocation = (function(){
+        const electionNightActive = !!window._electionNightActive;
+        const reportingVal = (info && info.reporting != null) ? Number(info.reporting) : null;
+        const fullyCounted = (reportingVal != null && isFinite(reportingVal)) ? (reportingVal >= 0.999) : false;
+        if (electionNightActive && !fullyCounted) return null;
+        return calculateUnitProportionalEVs(unit);
+      })();
       if (evAllocation) {
         const evParts = [];
         if (evAllocation.D > 0) evParts.push(`D: ${evAllocation.D}`);
