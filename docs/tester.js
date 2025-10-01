@@ -467,6 +467,12 @@
         
         // Find the party with the highest vote tally
         const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
+        const frontRunner = (function(){
+          if (voteTallies.D === maxVotes) return 'D';
+          if (voteTallies.R === maxVotes) return 'R';
+          if (voteTallies.O === maxVotes) return 'O';
+          return null;
+        })();
         // Only display parties with votes, add star to the highest
         if (voteTallies.D > 0) voteParts.push(`${voteTallies.D === maxVotes ? 'D*' : 'D'}: ${formatter(voteTallies.D)}`);
         if (voteTallies.R > 0) voteParts.push(`${voteTallies.R === maxVotes ? 'R*' : 'R'}: ${formatter(voteTallies.R)}`);
@@ -487,7 +493,7 @@
         
         if (votes.length >= 2) {
           const margin = votes[0].count - votes[1].count;
-          const marginText = `${formatter(margin)} vote${margin !== 1 ? 's' : ''} separating top and runner-up`;
+          const marginText = `${frontRunner}+${formatter(margin)} vote${margin !== 1 ? 's' : ''}`;
           rows.push(marginText);
         }
       }
