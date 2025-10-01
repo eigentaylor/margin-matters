@@ -76,19 +76,44 @@
       const ev = +r.ev || 0;
       if (ev <= 0) return null;
       
-      // Calculate vote totals similar to updateAll() function
-      const total = +r.total || (+r.dVotes || 0) + (+r.rVotes || 0) + (+r.tVotes || 0) || 0;
+      // Get base vote counts
+      let dVotes = +r.dVotes || 0;
+      let rVotes = +r.rVotes || 0;
+      let tVotes = +r.tVotes || 0;
+      const total = +r.total || (dVotes + rVotes + tVotes) || 0;
       if (total <= 0) return null;
       
       // Get third-party share
       const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
       
-      // Check if unit is flipped
+      // Check if this unit has a flip scenario active
+      const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
       const flipped = isUnitFlipped(year, keyUnit);
-      let rmAdj = (+r.rm || 0) + pv;
-      if (flipped) {
-        rmAdj = (rmAdj > 0 ? -1e-6 : 1e-6);
+      
+      // For flipped states, use exact votes from flip_details.csv
+      if (flipped && activeFlip && activeFlip.units) {
+        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+        if (flipUnit && flipUnit.votes_to_flip) {
+          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          
+          // Apply the exact vote flip: move votes_to_flip from winner to loser
+          if (dVotes >= rVotes) {
+            dVotes = Math.max(0, dVotes - votesToFlip);
+            rVotes = rVotes + votesToFlip;
+          } else {
+            dVotes = dVotes + votesToFlip;
+            rVotes = Math.max(0, rVotes - votesToFlip);
+          }
+          
+          // Calculate proportional allocation with exact flipped votes
+          const topThirdShare = +r.tp || 0;
+          const allocation = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+          return allocation;
+        }
       }
+      
+      // For non-flipped states, apply normal PV adjustment
+      let rmAdj = (+r.rm || 0) + pv;
       
       // Calculate adjusted two-party share
       let twoD = 0.5 + rmAdj / 2;
@@ -144,14 +169,39 @@
       // Don't display vote info if there are no votes at all (e.g., CO 1876, FL 1868, LA 1864)
       if (total <= 0) return null;
       
-      // Adjust for PV margin change and flips
+      // Check if this unit has a flip scenario active
+      const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
+      const flipped = isUnitFlipped(year, keyUnit);
+      
+      // For flipped states, use exact votes from flip_details.csv
+      if (flipped && activeFlip && activeFlip.units) {
+        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+        if (flipUnit && flipUnit.votes_to_flip) {
+          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+          
+          // Apply the exact vote flip: move votes_to_flip from winner to loser
+          if (dVotes >= rVotes) {
+            dVotes = Math.max(0, dVotes - votesToFlip);
+            rVotes = rVotes + votesToFlip;
+          } else {
+            dVotes = dVotes + votesToFlip;
+            rVotes = Math.max(0, rVotes - votesToFlip);
+          }
+          
+          // Return exact flipped votes without further PV adjustment
+          return {
+            D: Math.round(dVotes),
+            R: Math.round(rVotes),
+            O: Math.round(topThirdVotes), // Third party votes unchanged by flip
+            total: Math.round(dVotes + rVotes + topThirdVotes)
+          };
+        }
+      }
+      
+      // For non-flipped states, apply normal PV adjustment
       const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
       const topThirdShare = Math.max(0, Math.min(1, (+r.tp) || 0)); // Top third party share specifically
-      const flipped = isUnitFlipped(year, keyUnit);
       let rmAdj = (+r.rm || 0) + pv;
-      if (flipped) {
-        rmAdj = (rmAdj > 0 ? -1e-6 : 1e-6);
-      }
       
       // Calculate adjusted two-party share
       let twoD = 0.5 + rmAdj / 2;
