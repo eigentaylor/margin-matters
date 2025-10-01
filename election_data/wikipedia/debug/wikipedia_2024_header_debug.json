@@ -22,7 +22,7 @@
     }
   ],
   "col_desc_raw": {
-    "0": "State ordistrict Alabama[486] Alaska[487]",
+    "0": "State ordistrict Alabama[489] Alaska[490]",
     "1": "Trump/VanceRepublican Votes 1,462,616 184,458",
     "2": "Trump/VanceRepublican % 64.57% 54.54%",
     "3": "Trump/VanceRepublican EV 9 3",
@@ -47,7 +47,7 @@
     "22": "Totalvotes 338,177"
   },
   "col_desc_lower": {
-    "0": "state ordistrict alabama[486] alaska[487]",
+    "0": "state ordistrict alabama[489] alaska[490]",
     "1": "trump/vancerepublican votes 1,462,616 184,458",
     "2": "trump/vancerepublican % 64.57% 54.54%",
     "3": "trump/vancerepublican ev 9 3",
