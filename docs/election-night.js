@@ -33,8 +33,8 @@
   // Batch scheduling constraints used for reporting schedule generation
   const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
   const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
-  const MIN_BATCH_COUNT = 4; // minimum number of batches to generate for a unit
-  const MAX_BATCH_COUNT = 8; // maximum number of batches to generate for a unit
+  const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
+  const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
 
   // Known poll-closing times (ET) grouped by states. Used to set when
   // counting should realistically start for each state.
