@@ -1041,13 +1041,10 @@
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
     
-    // Update EV breakdown modal if it's open
+    // Update EV breakdown table
     if (typeof window.updateEvBreakdownTable === 'function') {
       try {
-        const modal = document.getElementById('evBreakdownModal');
-        if (modal && modal.style.display === 'flex') {
-          window.updateEvBreakdownTable();
-        }
+        window.updateEvBreakdownTable();
       } catch(e) {}
     }
     

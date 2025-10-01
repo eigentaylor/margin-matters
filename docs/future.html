@@ -176,6 +176,26 @@
       </div>
       <div id="relDeltasList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
     </div>
+    
+    <!-- EV Breakdown Table -->
+    <div id="evBreakdownCard" class="card" style="margin-top:8px">
+      <div class="legend" style="text-align:left;margin-bottom:6px">Electoral Vote Breakdown by State</div>
+      <div class="table-wrap" style="max-height:400px">
+        <table id="evBreakdownTable" class="ev-breakdown-table">
+          <thead>
+            <tr>
+              <th class="sortable" data-column="state">State</th>
+              <th class="sortable" data-column="d">D EVs</th>
+              <th class="sortable" data-column="r">R EVs</th>
+              <th class="sortable" data-column="o">O EVs</th>
+              <th class="sortable" data-column="total">Total EVs</th>
+            </tr>
+          </thead>
+          <tbody id="evBreakdownBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <footer style="margin-top:16px;color:var(--muted)">
       This page generates future margins client-side from historical data. It’s experimental and NOT a forecast. No offense, just for fun!<br />
@@ -279,34 +299,6 @@
   <div class="toggle-group">
     <input type="checkbox" id="propEvToggle" />
     <label for="propEvToggle">Proportional Electoral Votes</label>
-  </div>
-  <button id="evBreakdownBtn" class="btn" style="display:none;margin-left:12px">View EV Breakdown</button>
-</div>
-
-<!-- EV Breakdown Modal -->
-<div id="evBreakdownModal" class="modal" style="display:none">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 style="margin:0">Electoral Vote Breakdown by State</h3>
-      <button id="evBreakdownClose" class="modal-close">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="table-wrap">
-        <table id="evBreakdownTable" class="ev-breakdown-table">
-          <thead>
-            <tr>
-              <th class="sortable" data-column="state">State</th>
-              <th class="sortable" data-column="d">D EVs</th>
-              <th class="sortable" data-column="r">R EVs</th>
-              <th class="sortable" data-column="o">O EVs</th>
-              <th class="sortable" data-column="total">Total EVs</th>
-            </tr>
-          </thead>
-          <tbody id="evBreakdownBody">
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
 </div>
 

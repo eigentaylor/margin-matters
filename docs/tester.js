@@ -3067,93 +3067,58 @@ function renderFlipDetails(){
   // State for the EV breakdown modal
   let currentSort = { column: 'state', ascending: true };
   
-  // Initialize the modal when DOM is ready
-  function initEvBreakdownModal() {
+  // Initialize the EV breakdown table
+  function initEvBreakdownTable() {
     const propEvToggle = document.getElementById('propEvToggle');
-    const evBreakdownBtn = document.getElementById('evBreakdownBtn');
-    const evBreakdownModal = document.getElementById('evBreakdownModal');
-    const evBreakdownClose = document.getElementById('evBreakdownClose');
+    const table = document.getElementById('evBreakdownTable');
     
-    if (!propEvToggle || !evBreakdownBtn || !evBreakdownModal) return;
-    
-    // Initialize button visibility based on current checkbox state
-    evBreakdownBtn.style.display = propEvToggle.checked ? 'inline-block' : 'none';
-    
-    // Show/hide breakdown button based on proportional EV toggle
-    propEvToggle.addEventListener('change', function() {
-      evBreakdownBtn.style.display = this.checked ? 'inline-block' : 'none';
-      if (!this.checked && evBreakdownModal.style.display === 'flex') {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
-    
-    // Open modal
-    evBreakdownBtn.addEventListener('click', function() {
-      updateEvBreakdownTable();
-      evBreakdownModal.style.display = 'flex';
-    });
-    
-    // Close modal
-    if (evBreakdownClose) {
-      evBreakdownClose.addEventListener('click', function() {
-        evBreakdownModal.style.display = 'none';
-      });
-    }
-    
-    // Close on background click
-    evBreakdownModal.addEventListener('click', function(e) {
-      if (e.target === evBreakdownModal) {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
-    
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && evBreakdownModal.style.display === 'flex') {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
+    if (!table) return;
     
     // Add sorting listeners to table headers
-    const table = document.getElementById('evBreakdownTable');
-    if (table) {
-      const headers = table.querySelectorAll('th.sortable');
-      headers.forEach(header => {
-        header.addEventListener('click', function() {
-          const column = this.getAttribute('data-column');
-          if (currentSort.column === column) {
-            currentSort.ascending = !currentSort.ascending;
-          } else {
-            currentSort.column = column;
-            currentSort.ascending = true;
-          }
-          updateEvBreakdownTable();
-        });
+    const headers = table.querySelectorAll('th.sortable');
+    headers.forEach(header => {
+      header.addEventListener('click', function() {
+        const column = this.getAttribute('data-column');
+        if (currentSort.column === column) {
+          currentSort.ascending = !currentSort.ascending;
+        } else {
+          currentSort.column = column;
+          currentSort.ascending = true;
+        }
+        updateEvBreakdownTable();
+      });
+    });
+    
+    // Update table when proportional EV toggle changes
+    if (propEvToggle) {
+      propEvToggle.addEventListener('change', function() {
+        updateEvBreakdownTable();
       });
     }
     
-    // Update table when year or PV changes (if modal is open)
+    // Update table when year or PV changes
     const yearSlider = document.getElementById('yearSlider');
     const pvSlider = document.getElementById('pvSlider');
     
     if (yearSlider) {
       yearSlider.addEventListener('input', function() {
-        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
-          // Use setTimeout to ensure updateAll() has completed
-          setTimeout(() => updateEvBreakdownTable(), 50);
-        }
+        // Use setTimeout to ensure updateAll() has completed
+        setTimeout(() => updateEvBreakdownTable(), 50);
       });
     }
     
     if (pvSlider) {
       pvSlider.addEventListener('input', function() {
-        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
-          // Use setTimeout to ensure updateAll() has completed
-          setTimeout(() => updateEvBreakdownTable(), 50);
-        }
+        // Use setTimeout to ensure updateAll() has completed
+        setTimeout(() => updateEvBreakdownTable(), 50);
       });
     }
+    
+    // Initial population of the table
+    setTimeout(() => updateEvBreakdownTable(), 100);
   }
+  
+  // Get state name from abbreviation
   
   // Get EV allocations for all states
   function getAllEvAllocations() {
@@ -3515,9 +3480,9 @@ function renderFlipDetails(){
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEvBreakdownModal);
+    document.addEventListener('DOMContentLoaded', initEvBreakdownTable);
   } else {
-    initEvBreakdownModal();
+    initEvBreakdownTable();
   }
 })();
 
