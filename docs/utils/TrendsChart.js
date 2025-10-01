@@ -7,6 +7,9 @@
     axis: '#888'
   };
 
+  const LABEL_GAP_PX = 28;
+  const MAX_LABEL_COUNT = 40;
+
   function create(rootEl){
     const margin = {top: 24, right: 24, bottom: 36, left: 56};
     const H = 520;
@@ -43,6 +46,20 @@
       return rel ? 'NAT' : 'EVEN';
     }
 
+    function winnerColor(value, fallbackColor){
+      if (fallbackColor) return fallbackColor;
+      if (value == null || isNaN(value)) return color.stateFillNeg;
+      return value >= 0 ? color.stateFillPos : color.stateFillNeg;
+    }
+
+    function hasLabelRoom(data, index){
+      if (!data.length || data.length > MAX_LABEL_COUNT) return false;
+      const xPos = x(data[index].year);
+      const left = index > 0 ? Math.abs(xPos - x(data[index - 1].year)) : Infinity;
+      const right = index < data.length - 1 ? Math.abs(x(data[index + 1].year) - xPos) : Infinity;
+      return Math.min(left, right) >= LABEL_GAP_PX;
+    }
+
     function update(props){
       const { data, state, metric, chart, rel, delta, twoP, yearStart, yearEnd, notesEl } = props;
       if (!data) return;
@@ -67,7 +84,7 @@
         if (delta && !rel) {
           yCol = base + '_delta';
           yNatCol = baseNat + '_delta';
-          desc = 'Change in margins (0 for first year).';
+          desc = 'Change in margins from prior election.';
           strCol = base + '_delta_str';
         } else if (rel && !delta) {
           yCol = twoP ? 'two_party_relative_margin' : 'relative_margin';
@@ -98,9 +115,16 @@
         year:+r.year, 
         value: parseNum(r[yCol]),
         str: r[strCol] || fmt(parseNum(r[yCol]), rel, delta),
-        color: r.color || null
+        color: r.color || null,
+        baseMargin: parseNum(r.pres_margin)
       })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
-      const dataN = yNatCol ? natRows.map(r=>({year:+r.year, value: parseNum(r[yNatCol])})).filter(d=>d.value!=null && d.year>=start && d.year<=end) : [];
+      const dataN = yNatCol ? natRows.map(r=>({
+        year:+r.year,
+        value: parseNum(r[yNatCol]),
+        str: fmt(parseNum(r[yNatCol]), rel, delta),
+        baseMargin: parseNum(r.pres_margin),
+        color: winnerColor(parseNum(r.pres_margin), r.color)
+      })).filter(d=>d.value!=null && d.year>=start && d.year<=end) : [];
       dataS.sort((a,b)=>a.year-b.year);
       dataN.sort((a,b)=>a.year-b.year);
       const years = Array.from(new Set([...dataS.map(d=>d.year), ...dataN.map(d=>d.year)])).sort((a,b)=>a-b);
@@ -128,8 +152,12 @@
         
         // Add interactive points for state data (always show them like Trend Viewer)
         pointsG.selectAll('circle.data-point')
-          .data(dataS)
-          .join('circle')
+          .data(dataS, d => d.year)
+          .join(
+            enter => enter.append('circle').attr('class', 'data-point'),
+            update => update,
+            exit => exit.remove()
+          )
           .attr('class', 'data-point')
           .attr('cx', d => x(d.year))
           .attr('cy', d => y(d.value))
@@ -172,9 +200,14 @@
           });
         
         // Add labels above points (if sufficient space)
+        const labelsData = dataS.filter((_, idx) => hasLabelRoom(dataS, idx));
         pointsG.selectAll('text.data-label')
-          .data(dataS)
-          .join('text')
+          .data(labelsData, d => d.year)
+          .join(
+            enter => enter.append('text').attr('class', 'data-label'),
+            update => update,
+            exit => exit.remove()
+          )
           .attr('class', 'data-label')
           .attr('x', d => x(d.year))
           .attr('y', d => y(d.value) - 12)
@@ -182,25 +215,22 @@
           .attr('font-size', '11px')
           .attr('fill', '#ccc')
           .attr('pointer-events', 'none')
-          .text(d => d.str)
-          .style('opacity', () => {
-            // Only show labels if there's enough space (not too many points)
-            return dataS.length <= 20 ? 1 : 0;
-          });
+          .text(d => d.str);
         
         // Add interactive points for national data (colored by PV winner)
         if (dataN.length) {
           pointsG.selectAll('circle.nat-point')
-            .data(dataN)
-            .join('circle')
+            .data(dataN, d => d.year)
+            .join(
+              enter => enter.append('circle').attr('class', 'nat-point'),
+              update => update,
+              exit => exit.remove()
+            )
             .attr('class', 'nat-point')
             .attr('cx', d => x(d.year))
             .attr('cy', d => y(d.value))
             .attr('r', 4)
-            .attr('fill', d => {
-              // Color national points based on PV winner (positive = Dem, negative = Rep)
-              return d.value >= 0 ? color.stateFillPos : color.stateFillNeg;
-            })
+            .attr('fill', d => winnerColor(d.baseMargin, d.color))
             .attr('stroke', '#fff')
             .attr('stroke-width', 1.5)
             .style('cursor', 'pointer')
