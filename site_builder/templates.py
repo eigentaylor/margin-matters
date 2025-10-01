@@ -1960,7 +1960,7 @@ window.__collectViewStateForUrl = function() {
       </div>
       <div class="toggle-group">
         <input type="checkbox" id="relativeToggle">
-        <label for="relativeToggle">Third-party &amp; relative view</label>
+        <label for="relativeToggle">Third-party view</label>
       </div>
       <div class="toggle-group">
         <button type="button" id="clearUrlState" class="btn" style="padding:6px 14px;">Reset view link</button>
