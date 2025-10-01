@@ -3252,36 +3252,53 @@ function renderFlipDetails(){
           }
         } else if (isProportional) {
           // Use proportional allocation
-          if (!isElectionNight) {
-            // Get base vote counts
-            dVotes = +r.dVotes || 0;
-            rVotes = +r.rVotes || 0;
-            oVotes = +r.tVotes || 0;
-            
-            // Apply PV adjustment
-            const pv = window._curPv || 0;
-            const total = +r.total || (dVotes + rVotes + oVotes) || 0;
-            if (total > 0) {
-              const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
-              const twoPartyBase = total * (1 - tp);
-              const baseDShare = twoPartyBase > 0 ? (dVotes - oVotes * (dVotes / (dVotes + rVotes))) / twoPartyBase : 0.5;
-              const adjDShare = Math.max(0, Math.min(1, baseDShare + pv));
-              const adjRShare = 1 - adjDShare;
-              
-              dVotes = adjDShare * twoPartyBase + oVotes * (adjDShare > adjRShare ? 1 : 0);
-              rVotes = adjRShare * twoPartyBase + oVotes * (adjRShare > adjDShare ? 1 : 0);
-            }
-          }
+          // Get base vote counts for BOTH EV allocation AND margin display
+          const baseD = +r.dVotes || 0;
+          const baseR = +r.rVotes || 0;
+          const baseO = +r.tVotes || 0;
           
-          // Allocate EVs proportionally
-          const allocFn = window.allocateProportionalEVs || function(d, r, o, ev) {
-            // Fallback if function not available
-            return { D: 0, R: 0, O: 0 };
-          };
-          const alloc = allocFn(dVotes, rVotes, oVotes, ev, 0);
-          dEV = alloc.D;
-          rEV = alloc.R;
-          oEV = alloc.O;
+          // Store the original votes for margin display (before PV adjustment)
+          dVotes = baseD;
+          rVotes = baseR;
+          oVotes = baseO;
+          
+          if (!isElectionNight) {
+            // Apply PV adjustment ONLY for EV allocation calculation
+            const pv = window._curPv || 0;
+            const total = +r.total || (baseD + baseR + baseO) || 0;
+            let dVotesAdj = baseD;
+            let rVotesAdj = baseR;
+            let oVotesAdj = baseO;
+            
+            if (total > 0 && pv !== 0) {
+              // Apply uniform swing adjustment for EV allocation
+              const rm = +r.rm || 0;
+              const adjMargin = rm + pv;
+              const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
+              
+              // Calculate adjusted two-party share
+              let twoD = 0.5 + adjMargin / 2;
+              twoD = Math.max(0, Math.min(1, twoD));
+              
+              const dShare = (1 - tp) * twoD;
+              const rShare = (1 - tp) * (1 - twoD);
+              const oShare = tp;
+              
+              dVotesAdj = total * dShare;
+              rVotesAdj = total * rShare;
+              oVotesAdj = total * oShare;
+            }
+            
+            // Allocate EVs proportionally using adjusted votes
+            const allocFn = window.allocateProportionalEVs || function(d, r, o, ev) {
+              // Fallback if function not available
+              return { D: 0, R: 0, O: 0 };
+            };
+            const alloc = allocFn(dVotesAdj, rVotesAdj, oVotesAdj, ev, +r.tp || 0);
+            dEV = alloc.D;
+            rEV = alloc.R;
+            oEV = alloc.O;
+          }
         } else {
           // Winner-take-all - match map logic exactly
           const margin = +r.rm || 0;
