@@ -19,7 +19,10 @@
     let hasMultipleThirdParties = false;
     
     if (thirdPartyResults && typeof thirdPartyResults === 'object') {
-      const thirdPartyEntries = Object.entries(thirdPartyResults);
+      const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
+        // Filter out "Other" and "Unpledged Electors"
+        return name !== 'Other' && name !== 'Unpledged Electors';
+      });
       if (thirdPartyEntries.length > 0) {
         hasMultipleThirdParties = thirdPartyEntries.length > 1;
         
@@ -3530,8 +3533,8 @@ function renderFlipDetails(){
       
       // Calculate allocations if not blank
       if (!showBlank) {
-        // Special case: Alabama 1960 - always show proportional split
-        if (year === 1960 && displayUnit === 'AL') {
+        // Special case: Alabama 1960 and Mississippi 1960 - always use fixed allocation
+        if (year === 1960 && (displayUnit === 'AL' || displayUnit === 'MS')) {
           // Check winner with PV adjustment (use >= 0 to match map logic)
           const margin = +r.rm || 0;
           const pv = window._curPv || 0;
@@ -3539,15 +3542,20 @@ function renderFlipDetails(){
           const winner = adjMargin >= 0 ? 'D' : 'R';  // Match map's m >= 0 check
           
           if (winner !== 'R') {
-            // Democrats/Third party win: 5D, 6O split
-            dEV = Math.min(ev, 5);
-            oEV = Math.max(0, ev - dEV);
+            // Democrats/Third party win: use the special fixed split
+            if (displayUnit === 'AL') {
+              dEV = 5;  // Alabama: 5D, 6O
+              oEV = 6;
+            } else {
+              dEV = 0;  // Mississippi: 0D, 8O
+              oEV = 8;
+            }
           } else {
             // Republicans win: normal winner-take-all
             rEV = ev;
           }
           
-          // Get vote counts for Alabama 1960
+          // Get vote counts
           if (!isElectionNight) {
             dVotes = +r.dVotes || 0;
             rVotes = +r.rVotes || 0;
@@ -3652,6 +3660,7 @@ function renderFlipDetails(){
         rEV: showBlank ? null : rEV,
         oEV: showBlank ? null : oEV,
         thirdPartyEVs: showBlank ? {} : thirdPartyEVs, // Include third party EVs
+        thirdPartyVotes: showBlank ? {} : (r.thirdPartyResults || {}), // Include third party votes for tooltips
         totalEV: ev,
         dVotes: showBlank ? null : dVotes,
         rVotes: showBlank ? null : rVotes,
@@ -3733,7 +3742,14 @@ function renderFlipDetails(){
           bVal = b.totalEV;
           break;
         default:
-          return 0;
+          // Handle third party columns (tp-NAME format)
+          if (column && column.startsWith('tp-')) {
+            const tpName = column.substring(3);
+            aVal = (a.thirdPartyEVs && a.thirdPartyEVs[tpName]) || 0;
+            bVal = (b.thirdPartyEVs && b.thirdPartyEVs[tpName]) || 0;
+          } else {
+            return 0;
+          }
       }
       
       if (typeof aVal === 'string' && typeof bVal === 'string') {
@@ -3747,6 +3763,7 @@ function renderFlipDetails(){
   }
   
   // Update the table with current data
+  // Update the table with current data
   function updateEvBreakdownTable() {
     const tbody = document.getElementById('evBreakdownBody');
     const table = document.getElementById('evBreakdownTable');
@@ -3756,25 +3773,45 @@ function renderFlipDetails(){
     const allocations = getAllEvAllocations();
     const sorted = sortAllocations(allocations);
     
+    // Check if proportional mode is enabled
+    const isProportional = (() => {
+      try {
+        const toggle = document.getElementById('propEvToggle');
+        return toggle && toggle.checked;
+      } catch(e) {
+        return false;
+      }
+    })();
+    
     // Determine if we need third party columns and get candidate names
     let dCandidate = '';
     let rCandidate = '';
     const thirdPartyNames = new Set();
+    let hasAnyThirdPartyEVs = false;
     
     sorted.forEach(alloc => {
       if (!dCandidate && alloc.dCandidate) dCandidate = alloc.dCandidate;
       if (!rCandidate && alloc.rCandidate) rCandidate = alloc.rCandidate;
+      
+      // Check for third party EVs
       if (alloc.thirdPartyEVs && typeof alloc.thirdPartyEVs === 'object') {
         Object.keys(alloc.thirdPartyEVs).forEach(name => {
           if (alloc.thirdPartyEVs[name] > 0) {
             thirdPartyNames.add(name);
+            hasAnyThirdPartyEVs = true;
           }
         });
       }
+      if (alloc.oEV > 0) {
+        hasAnyThirdPartyEVs = true;
+      }
     });
     
-    const hasThirdParties = thirdPartyNames.size > 0;
+    const hasDetailedThirdParties = thirdPartyNames.size > 0;
     const thirdPartyList = Array.from(thirdPartyNames).sort();
+    
+    // Show O EVs column only if: proportional mode is on, OR any third party got EVs
+    const showOColumn = isProportional || hasAnyThirdPartyEVs;
     
     // Helper to get last name
     const getLastName = (fullName) => {
@@ -3797,37 +3834,39 @@ function renderFlipDetails(){
         stateHeader.textContent = 'State';
         headerRow.appendChild(stateHeader);
         
-        // Margin column
+        // Margin column (now just D% and R%)
         const marginHeader = document.createElement('th');
         marginHeader.className = 'sortable';
         marginHeader.setAttribute('data-column', 'margin');
-        marginHeader.textContent = 'Margin (D%, R%, O%)';
+        marginHeader.textContent = 'Margin (D%, R%)';
         headerRow.appendChild(marginHeader);
         
-        // D EVs column with candidate name
+        // D EVs column with candidate name in format "Obama (D) EVs"
         const dHeader = document.createElement('th');
         dHeader.className = 'sortable';
         dHeader.setAttribute('data-column', 'd');
-        dHeader.innerHTML = dCandidate ? `D EVs<br><span style="font-weight:normal;font-size:0.9em">${dCandidate}</span>` : 'D EVs';
+        const dLastName = getLastName(dCandidate);
+        dHeader.textContent = dLastName ? `${dLastName} (D) EVs` : 'D EVs';
         headerRow.appendChild(dHeader);
         
-        // R EVs column with candidate name
+        // R EVs column with candidate name in format "Romney (R) EVs"
         const rHeader = document.createElement('th');
         rHeader.className = 'sortable';
         rHeader.setAttribute('data-column', 'r');
-        rHeader.innerHTML = rCandidate ? `R EVs<br><span style="font-weight:normal;font-size:0.9em">${rCandidate}</span>` : 'R EVs';
+        const rLastName = getLastName(rCandidate);
+        rHeader.textContent = rLastName ? `${rLastName} (R) EVs` : 'R EVs';
         headerRow.appendChild(rHeader);
         
-        // Third party columns (if any have EVs in proportional mode)
-        if (hasThirdParties) {
+        // Third party columns (if any have EVs in proportional mode or detailed third parties)
+        if (hasDetailedThirdParties) {
           thirdPartyList.forEach(name => {
             const tpHeader = document.createElement('th');
             tpHeader.className = 'sortable';
             tpHeader.setAttribute('data-column', `tp-${name}`);
-            tpHeader.innerHTML = `${name}<br><span style="font-weight:normal;font-size:0.9em">EVs</span>`;
+            tpHeader.textContent = `${name} EVs`;
             headerRow.appendChild(tpHeader);
           });
-        } else {
+        } else if (showOColumn) {
           // O EVs column (traditional third party aggregate)
           const oHeader = document.createElement('th');
           oHeader.className = 'sortable';
@@ -3845,13 +3884,28 @@ function renderFlipDetails(){
       }
     }
     
-    // Update sort indicators in headers
+    // Re-add click handlers to new headers
     const headers = table.querySelectorAll('th.sortable');
     headers.forEach(header => {
       const column = header.getAttribute('data-column');
-      header.classList.remove('sorted-asc', 'sorted-desc');
+      // Remove old listeners by cloning
+      const newHeader = header.cloneNode(true);
+      header.parentNode.replaceChild(newHeader, header);
+      
+      newHeader.addEventListener('click', function() {
+        if (currentSort.column === column) {
+          currentSort.ascending = !currentSort.ascending;
+        } else {
+          currentSort.column = column;
+          currentSort.ascending = true;
+        }
+        updateEvBreakdownTable();
+      });
+      
+      // Update sort indicators
+      newHeader.classList.remove('sorted-asc', 'sorted-desc');
       if (column === currentSort.column) {
-        header.classList.add(currentSort.ascending ? 'sorted-asc' : 'sorted-desc');
+        newHeader.classList.add(currentSort.ascending ? 'sorted-asc' : 'sorted-desc');
       }
     });
     
@@ -3886,7 +3940,7 @@ function renderFlipDetails(){
       }
       row.appendChild(stateCell);
       
-      // Margin column (D%, R%, O%)
+      // Margin column (D% and R% only)
       const marginCell = document.createElement('td');
       if (alloc.showBlank) {
         marginCell.textContent = '—';
@@ -3894,8 +3948,7 @@ function renderFlipDetails(){
       } else {
         const dPct = alloc.dPct || 0;
         const rPct = alloc.rPct || 0;
-        const oPct = alloc.oPct || 0;
-        marginCell.textContent = `${dPct.toFixed(1)}%, ${rPct.toFixed(1)}%, ${oPct.toFixed(1)}%`;
+        marginCell.textContent = `${dPct.toFixed(1)}%, ${rPct.toFixed(1)}%`;
       }
       row.appendChild(marginCell);
       
@@ -3926,8 +3979,8 @@ function renderFlipDetails(){
       row.appendChild(rCell);
       
       // Third party EVs (either individual columns or aggregate O column)
-      if (hasThirdParties) {
-        // Show individual third party columns
+      if (hasDetailedThirdParties) {
+        // Show individual third party columns with tooltips
         thirdPartyList.forEach(name => {
           const tpCell = document.createElement('td');
           if (alloc.showBlank) {
@@ -3938,11 +3991,20 @@ function renderFlipDetails(){
             const percent = alloc.totalEV > 0 ? Math.round((tpEV / alloc.totalEV) * 100) : 0;
             tpCell.textContent = tpEV > 0 ? `${tpEV} (${percent}%)` : tpEV;
             totalThirdParties[name] = (totalThirdParties[name] || 0) + tpEV;
+            
+            // Add tooltip with vote information
+            if (alloc.thirdPartyVotes && alloc.thirdPartyVotes[name]) {
+              const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+              const votes = alloc.thirdPartyVotes[name];
+              const totalVotes = alloc.dVotes + alloc.rVotes + alloc.oVotes;
+              const votePct = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(1) : '0.0';
+              tpCell.title = `${formatter(votes)} votes (${votePct}%)`;
+            }
           }
           row.appendChild(tpCell);
         });
-      } else {
-        // Show traditional O EVs column
+      } else if (showOColumn) {
+        // Show traditional O EVs column with tooltip
         const oCell = document.createElement('td');
         if (alloc.showBlank) {
           oCell.textContent = '—';
@@ -3952,6 +4014,14 @@ function renderFlipDetails(){
           const percent = alloc.totalEV > 0 ? Math.round((oEV / alloc.totalEV) * 100) : 0;
           oCell.textContent = oEV > 0 ? `${oEV} (${percent}%)` : oEV;
           totalO += oEV;
+          
+          // Add tooltip with vote information
+          if (alloc.oVotes > 0) {
+            const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
+            const totalVotes = alloc.dVotes + alloc.rVotes + alloc.oVotes;
+            const votePct = totalVotes > 0 ? ((alloc.oVotes / totalVotes) * 100).toFixed(1) : '0.0';
+            oCell.title = `${formatter(alloc.oVotes)} votes (${votePct}%)`;
+          }
         }
         row.appendChild(oCell);
       }
@@ -3993,7 +4063,7 @@ function renderFlipDetails(){
     totalRow.appendChild(totalRCell);
     
     // Third party totals (either individual columns or aggregate O column)
-    if (hasThirdParties) {
+    if (hasDetailedThirdParties) {
       thirdPartyList.forEach(name => {
         const tpTotalCell = document.createElement('td');
         const tpTotal = totalThirdParties[name] || 0;
@@ -4002,7 +4072,7 @@ function renderFlipDetails(){
         tpTotalCell.style.fontWeight = 'bold';
         totalRow.appendChild(tpTotalCell);
       });
-    } else {
+    } else if (showOColumn) {
       const totalOCell = document.createElement('td');
       const totalOPercent = totalAll > 0 ? ((totalO / totalAll) * 100).toFixed(1) : '0.0';
       totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
