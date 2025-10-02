@@ -1009,8 +1009,8 @@ year,metric,mode,abbr,ev,votes_to_flip,pct_of_state_votes
 1964,margin,tie,NE-AL,5,15231,2.607
 1964,margin,tie,FL,14,21300,1.149
 1964,margin,tie,ID,4,2682,0.917
-1968,votes,classic,NH,4,12158,4.089
-1968,votes,classic,TN,11,23901,1.914
+1968,votes,classic,WI,12,30597,1.809
+1968,votes,classic,VT,3,7444,4.612
 1968,votes,classic,NV,3,6296,4.083
 1968,votes,classic,NJ,17,30631,1.065
 1968,votes,classic,OH,26,45215,1.142
@@ -1021,8 +1021,9 @@ year,metric,mode,abbr,ev,votes_to_flip,pct_of_state_votes
 1968,votes,no_majority,DE,3,3761,1.754
 1968,votes,no_majority,MO,12,10245,0.566
 1968,votes,no_majority,AK,3,1095,1.319
+1968,votes,tie,WY,3,12878,10.124
 1968,votes,tie,VT,3,7444,4.612
-1968,votes,tie,TN,11,23901,1.914
+1968,votes,tie,SC,8,19317,2.896
 1968,votes,tie,NV,3,6296,4.083
 1968,votes,tie,NJ,17,30631,1.065
 1968,votes,tie,OH,26,45215,1.142

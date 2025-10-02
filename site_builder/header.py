@@ -11,7 +11,10 @@ def make_header(title: str, is_inner: bool = False) -> str:
     prefix = ".." if is_inner else "."
     return (
         f'<div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">'
-        f'<div class="small-links">'
+        f'<button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false">'
+        f'<span></span><span></span><span></span>'
+        f'</button>'
+        f'<div class="small-links" id="headerNav">'
         f'<a class="btn" href="{prefix}/index.html">Home</a>'
         f'<a class="btn" href="{prefix}/state-pages.html">State Pages</a>'
         #f'<a class="btn" href="{prefix}/trends.html">Trends</a>'
@@ -23,6 +26,19 @@ def make_header(title: str, is_inner: bool = False) -> str:
         f'<a class="btn" href="{prefix}/presidential_margins.html">Data (CSV)</a>'
         f'</div>'
         f'<div class="legend">{title}</div>'
+        f'<script>'
+        f'(function(){{'
+        f'const toggle = document.getElementById("headerToggle");'
+        f'const nav = document.getElementById("headerNav");'
+        f'if (toggle && nav) {{'
+        f'toggle.addEventListener("click", function() {{'
+        f'const isExpanded = nav.classList.toggle("expanded");'
+        f'toggle.setAttribute("aria-expanded", isExpanded);'
+        f'toggle.classList.toggle("active");'
+        f'}});'
+        f'}}'
+        f'}})()'
+        f'</script>'
         f'</div>'
     )
 
