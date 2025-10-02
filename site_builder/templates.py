@@ -197,7 +197,7 @@ body.has-delta-toggle{padding-bottom:60px}
 /* Increase padding on mobile to ensure sticky footer doesn't cover actual footer */
 @media (max-width: 768px) {
   body.has-delta-toggle, body.has-prop-ev-toggle {
-    padding-bottom: 100px;
+    padding-bottom: 120px;
   }
 }
 
