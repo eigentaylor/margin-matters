@@ -2159,33 +2159,65 @@
   }
       const st = unit.slice(0,2);
       const prev = abbrColors.get(st);
-      // Special pluralities: dynamic yellow window using third-party share (any year)
-      let color;
-      const rVal = +(r.rm || 0);
-      {
-        const t = +r.tp || 0;
-          a = 3*t - 1;
-          if (year === 1948 && r.unit === 'AL') {
-            a = 0.0;
-            color = (pv < -rVal) ? marginToColor(m) : '#FFD700'; // Thurmond vs Dewey (no Truman here)
-          }
-          else if (a > 0) {
-            // Use same boundaries as EV counting: strict inside (nR + EPS, nD - EPS)
-            const nD = -rVal + a;
-            const nR = -rVal - a;
-            if (pv > nR + EPS && pv < nD - EPS) {
-              color = '#FFD700'; // yellow within the window
-            } else {
-              color = marginToColor(m);
-            }
+
+      const tallies = calculateUnitVoteTallies(unit);
+      let votesColor = null;
+      let votesMargin = null;
+      if (tallies && isFinite(tallies.total) && tallies.total > 0) {
+        const breakdown = [
+          { code: 'D', votes: Math.max(0, tallies.D || 0) },
+          { code: 'R', votes: Math.max(0, tallies.R || 0) },
+          { code: 'O', votes: Math.max(0, tallies.O || 0) }
+        ].filter(p => p.votes > 0);
+        breakdown.sort((a, b) => b.votes - a.votes);
+        const leader = breakdown[0] || null;
+        const runner = breakdown[1] || null;
+        if (leader && leader.votes > 0) {
+          if (leader.code === 'O') {
+            votesColor = '#FFD700';
+            votesMargin = 0;
           } else {
-            color = marginToColor(m);
+            const runnerVotes = runner ? runner.votes : 0;
+            const totalVotes = Math.max(leader.votes + runnerVotes, tallies.total);
+            let mv = (leader.votes - runnerVotes) / Math.max(EPS, totalVotes);
+            if (!isFinite(mv)) mv = 0;
+            mv = clampMargin(mv);
+            if (leader.code === 'R') mv = -mv;
+            votesMargin = mv;
+            votesColor = marginToColor(mv);
           }
+        }
       }
-  if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
-  // store per-unit color and party label so district polygons can be filled individually
-  unitColors.set(unit, color);
-  unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
+
+      // Special pluralities / fallback logic when vote tallies are unavailable
+      const rVal = +(r.rm || 0);
+      const tShare = +r.tp || 0;
+      const thirdWindow = 3 * tShare - 1;
+      let fallbackColor;
+      if (year === 1948 && r.unit === 'AL') {
+        fallbackColor = (pv < -rVal) ? marginToColor(m) : '#FFD700';
+      } else if (thirdWindow > 0) {
+        const nD = -rVal + thirdWindow;
+        const nR = -rVal - thirdWindow;
+        if (pv > nR + EPS && pv < nD - EPS) {
+          fallbackColor = '#FFD700';
+        } else {
+          fallbackColor = marginToColor(m);
+        }
+      } else {
+        fallbackColor = marginToColor(m);
+      }
+
+  const color = votesColor || fallbackColor;
+  const marginForState = (votesMargin != null) ? votesMargin : m;
+  const isStateAggregate = unit.length === 2 || unit.endsWith('-AL');
+  const shouldOverrideStateColor = !prev || isStateAggregate || Math.abs(marginForState) > Math.abs(prev.m);
+      if (shouldOverrideStateColor) {
+        abbrColors.set(st, { m: marginForState, color });
+      }
+      // store per-unit color and party label so district polygons can be filled individually
+      unitColors.set(unit, color);
+      unitParties.set(unit, (marginForState > EPS) ? 'Blue' : ((marginForState < -EPS) ? 'Red' : 'Even'));
     });
 
     // After per-unit colors are computed, adjust ME-AL/NE-AL statewide color to account for district flips
