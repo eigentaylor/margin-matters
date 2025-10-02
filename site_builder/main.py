@@ -99,20 +99,20 @@ def build_site():
             year_range = f"{min_year}-{max_year}"
             print(f"Debug: index.html year range {year_range} from data")
 
-            hdr_full = make_header(f"U.S. Presidential Election State Results {year_range}", is_inner=False)
-            # Extract small-links inner HTML
-            nav_inner = ''
-            m = re.search(r'<div class="small-links">([\s\S]*?)</div>', hdr_full)
-            if m:
-                nav_inner = m.group(1)
-            if nav_inner:
-                txt = re.sub(r'(<div class="small-links">)([\s\S]*?)(</div>)', r'\1' + nav_inner + r'\3', txt, count=1)
+            # hdr_full = make_header(f"U.S. Presidential Election State Results {year_range}", is_inner=False)
+            # # Extract small-links inner HTML
+            # nav_inner = ''
+            # m = re.search(r'<div class="small-links">([\s\S]*?)</div>', hdr_full)
+            # if m:
+            #     nav_inner = m.group(1)
+            # if nav_inner:
+            #     txt = re.sub(r'(<div class="small-links">)([\s\S]*?)(</div>)', r'\1' + nav_inner + r'\3', txt, count=1)
             # Replace the header legend text content (keep surrounding markup)
             txt = re.sub(r'(<div class="legend">)U\.S\. Presidential Election State Results[\s\S]*?(</div>)', rf'\1U.S. Presidential Election State Results {year_range}\2', txt, count=1)
             # Replace the main H1 to match year range
             txt = re.sub(r'(<h1>)U\.S\. Presidential Election State Results[\s\S]*?(</h1>)', rf'\1U.S. Presidential Election State Results {year_range}\2', txt, count=1)
             # Ensure footer includes updated Last updated timestamp
-            txt = re.sub(r'(Last updated:\s*)([0-9\-:\sA-Z]+)', rf'\g<1>{LAST_UPDATED}', txt, count=1)
+            #txt = re.sub(r'(Last updated:\s*)([0-9\-:\sA-Z]+)', rf'\g<1>{LAST_UPDATED}', txt, count=1)
             # set the correct min year on the year slider
             # <input id="yearSlider" type="range" min="1912" max="2024" step="4" value="2024" style="flex:1;min-width:120px;" />
             txt = re.sub(r'(<input id="yearSlider" type="range" min=")([0-9]+)(" max="2024")', rf'\g<1>{min_year}\3', txt, count=1)
@@ -170,33 +170,50 @@ def build_site():
                 # Replace legend text if present
                 txt = re.sub(r'<div class="legend">([\s\S]*?)</div>', f'<div class="legend">{title}</div>', txt, count=1)
             
-            # Replace any visible "Last updated:" text with a dynamic loader that the
-            # client-side last-updated.js will populate. This converts hardcoded
-            # timestamps or ellipses into a span with data-last-updated.
-            txt = re.sub(r'Last updated:\s*(?:[0-9\-:\sA-Z]+|\.{3})', '<span data-last-updated>Last updated: ...</span>', txt)
+            # Strip existing Back to Map blocks and any hardcoded last updated text so we can insert canonical snippets
+            txt = re.sub(r'\s*<div[^>]*>\s*<a[^>]*>[^<]*Back to Map[^<]*</a>[\s\S]*?\s*</div\s*>(?:\s*</div\s*>)?', '', txt, flags=re.IGNORECASE)
+            txt = re.sub(r'\s*<(?:div|span)[^>]*data-last-updated[^>]*>[\s\S]*?</(?:div|span)>', '', txt, flags=re.IGNORECASE)
+            txt = re.sub(r'Last updated:\s*(?:\.{3}|[0-9:\-\sA-Z]+)', '', txt)
 
-            # If there's no "← Back to Map" link, add one with a dynamic timestamp span
-            if '← Back to Map' not in txt and '&larr; Back to Map' not in txt:
-                back_link = f'\n    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">\n      <a class="back" href="{script_prefix}index.html">← Back to Map</a>\n      <div class="legend" style="font-size:0.85rem"><span data-last-updated>Last updated: ...</span></div>\n    </div>'
-                pattern = r'(<div class="card site-header"[^>]*>[\s\S]*?<script[^>]*header-toggle\.js[^>]*></script>\s*</div>)'
-                if re.search(pattern, txt):
-                    txt = re.sub(pattern, r'\1' + back_link, txt, count=1)
+            # Insert canonical Back to Map + timestamp placeholder block directly after the site header
+            meta_block = (
+                "\n    <div style=\"margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center\">\n"
+                f"      <a class=\"back\" href=\"{script_prefix}index.html\">← Back to Map</a>\n"
+                "      <div class=\"legend\" style=\"font-size:0.85rem\" data-last-updated>Last updated: ...</div>\n"
+                "    </div>"
+            )
+            header_pattern = r'(<div class="card site-header"[^>]*>[\s\S]*?header-toggle\.js[^>]*></script>\s*</div>)'
+            txt, inserted_meta = re.subn(header_pattern, r'\1' + meta_block, txt, count=1, flags=re.IGNORECASE)
+            if inserted_meta == 0:
+                txt = meta_block + txt
+            else:
+                # Remove any stray container closing immediately following the injected meta block
+                txt = re.sub(r'(</div>)\s*</div>(\s*<div)', r'\1\2', txt, count=1, flags=re.IGNORECASE)
 
-            # Update footer to include canonical attribution and a dynamic timestamp
+            # Preserve any existing footer note about CSV builds
+            extra_footer_note = ""
+            if "Built as static HTML from CSV" in txt:
+                extra_footer_note = "Built as static HTML from CSV."
+            elif "Built from CSV" in txt:
+                extra_footer_note = "Built from CSV."
+
             footer_body = (
                 "Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />\n"
                 "Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).<br />\n"
-                "<span data-last-updated>Last updated: ...</span>"
             )
+            if extra_footer_note:
+                footer_body += extra_footer_note + "<br />\n"
+            footer_body += '<span data-last-updated>Last updated: ...</span>'
             footer_html = f"<footer>{footer_body}</footer>"
-            replaced_footer, n_footer = re.subn(r'<footer>[\s\S]*?</footer>', footer_html, txt, count=1)
+            txt, n_footer = re.subn(r'<footer>[\s\S]*?</footer>', footer_html, txt, count=1, flags=re.IGNORECASE)
             if n_footer == 0:
-                replaced_footer = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1)
-            txt = replaced_footer
+                txt = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1, flags=re.IGNORECASE)
 
-            # Ensure last-updated.js is included once before </body>
-            if 'last-updated.js' not in txt:
-                txt = re.sub(r'(</body>)', f'<script src="{script_prefix}last-updated.js"></script>\n\\1', txt, count=1)
+            # Ensure the shared last-updated loader script is present exactly once using the computed prefix
+            txt = re.sub(r'\s*<script[^>]*last-updated\.js[^>]*></script>\s*', '\n', txt, flags=re.IGNORECASE)
+            txt, script_added = re.subn(r'(</body>)', f'<script src="{script_prefix}last-updated.js"></script>\n\\1', txt, count=1, flags=re.IGNORECASE)
+            if script_added == 0:
+                txt += f'\n<script src="{script_prefix}last-updated.js"></script>'
             
             # Replace any inline toggle script blocks with an external include using the computed prefix
             try:

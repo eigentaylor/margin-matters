@@ -547,7 +547,8 @@ def make_data_page(rows: List[Dict]):
         <body>
           <div class='container'>
             {header_html}
-            <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class='back' href='./index.html'>← Back to Map</a><div class='legend' style='font-size:0.85rem'>Last updated: {LAST_UPDATED}</div></div>
+            <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class="back" href="./index.html">← Back to Map</a>
+      <span data-last-updated>Last updated: ...</span></div></div>
                     <h1 style='margin-top:0'>presidential_margins.csv</h1>
                     <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
                     <div class='card table-wrap'>
