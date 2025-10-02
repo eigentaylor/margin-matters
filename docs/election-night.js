@@ -668,6 +668,18 @@
       const closeness = 1 - Math.min(1, Math.abs(adjustedMargin) / 0.12);
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
       let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
+      
+      // Extend duration for extremely close races to accommodate the slowdown
+      // This ensures the slowdown actually adds real time rather than just manipulating display
+      if (Math.abs(adjustedMargin) <= CLOSE_RACE_THRESHOLD) {
+        // Calculate how much extra time is needed based on the slowdown
+        // The slowdown starts at CLOSE_RACE_SLOWDOWN_START (85%) and affects the final 15%
+        // With CLOSE_RACE_SLOWDOWN_FACTOR of 0.3, the final 15% takes ~3.3x longer
+        const slowdownMultiplier = Math.pow(1 / CLOSE_RACE_SLOWDOWN_FACTOR, 0.5);
+        const affectedPortion = (1 - CLOSE_RACE_SLOWDOWN_START);
+        duration = duration * (1 + affectedPortion * (slowdownMultiplier - 1));
+      }
+      
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
