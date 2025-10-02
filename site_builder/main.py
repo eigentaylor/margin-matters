@@ -15,6 +15,10 @@ def build_site():
     ensure_dirs()
     #write_text(OUT_DIR / "styles.css", BASE_CSS) # we now edit styles.css directly
     write_text(OUT_DIR / "favicon.svg", FAVICON_SVG)
+    
+    # Generate last-updated.json file with current timestamp
+    last_updated_data = {"lastUpdated": LAST_UPDATED}
+    write_text(OUT_DIR / "last-updated.json", json.dumps(last_updated_data, indent=2))
 
     if PLOTS_SRC.exists() and PLOTS_SRC.is_dir():
         PLOTS_DST.mkdir(parents=True, exist_ok=True)
@@ -146,14 +150,15 @@ def build_site():
                 script_prefix = './'
             # Build canonical header HTML (includes hamburger toggle and now expects external toggle script)
             hdr = make_header(title, is_inner=False)
-            # Replace any site-header blocks that are missing the headerToggle with the canonical header.
-            def _replace_missing_toggle(match):
-                block = match.group(0)
-                if 'headerToggle' in block:
-                    return block
-                return hdr
-
-            txt, n = re.subn(r'<div class="card site-header"[\s\S]*?</div>', _replace_missing_toggle, txt)
+            # Always replace site-header blocks with the canonical header to ensure nav links are up-to-date
+            # The site-header structure includes nested divs, so we need to match the full closing tag
+            # Match: <div class="card site-header"...>...(everything including nested divs and script tag)...</div>
+            # We need to account for the structure: site-header -> button+small-links+legend+script -> close
+            pattern = r'<div class="card site-header"[^>]*>(?:<button[^>]*>.*?</button>)?<div class="small-links"[^>]*>.*?</div><div class="legend">.*?</div><script[^>]*></script></div>'
+            txt, n = re.subn(pattern, hdr, txt, count=1, flags=re.DOTALL)
+            if n == 0:
+                # Fallback: try a simpler pattern
+                txt, n = re.subn(r'<div class="card site-header"[\s\S]*?<script[^>]*header-toggle\.js[^>]*></script>\s*</div>', hdr, txt, count=1)
             if n == 0:
                 # Fallback: extract small-links inner HTML from canonical header and replace the small-links block
                 nav_inner = ''
@@ -164,9 +169,70 @@ def build_site():
                     txt = re.sub(r'(<div class="small-links">)([\s\S]*?)(</div>)', r'\1' + nav_inner + r'\3', txt, count=1)
                 # Replace legend text if present
                 txt = re.sub(r'<div class="legend">([\s\S]*?)</div>', f'<div class="legend">{title}</div>', txt, count=1)
-            # Ensure footer includes Last updated timestamp
-            if 'Last updated:' not in txt:
-                txt = re.sub(r'(</footer>)', f' <span class="legend">Last updated: {LAST_UPDATED}</span>\\1', txt, count=1)
+            
+            # Replace hardcoded timestamps with data attribute and dynamic loading
+            # Use a careful two-step process: first replace timestamps, then add attributes
+            
+            # Step 1: Replace all timestamp values with placeholder
+            # Replace in styled divs (back-link area)
+            txt = re.sub(
+                r'(>)Last updated:\s*[0-9\-:\sA-Z]+(</div>)',
+                r'\1Last updated: ...\2',
+                txt
+            )
+            
+            # Step 2: Add data-last-updated attribute to elements that have the placeholder but don't have the attribute yet
+            # For styled divs
+            txt = re.sub(
+                r'<div([^>]*style="[^"]*font-size:0\.85rem[^"]*"[^>]*)>Last updated: \.\.\.',
+                lambda m: f'<div{m.group(1)} data-last-updated>Last updated: ...' if 'data-last-updated' not in m.group(1) else m.group(0),
+                txt
+            )
+            
+            # For legend divs
+            txt = re.sub(
+                r'<div(class="legend"[^>]*)>Last updated: \.\.\.',
+                lambda m: f'<div {m.group(1)} data-last-updated>Last updated: ...' if 'data-last-updated' not in m.group(1) else m.group(0),
+                txt
+            )
+            
+            # For any remaining standalone timestamps, wrap in span
+            txt = re.sub(
+                r'(?<!>)(?<!\.)(Last updated:)\s*[0-9\-:\sA-Z]+(?!<)',
+                r'<span data-last-updated>\1 ...</span>',
+                txt
+            )
+            
+            # If there's no "← Back to Map" link, add one with timestamp placeholder after the site-header
+            if '← Back to Map' not in txt and '&larr; Back to Map' not in txt:
+                back_link = f'\n    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">\n      <a class="back" href="{script_prefix}index.html">← Back to Map</a>\n      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>\n    </div>'
+                # Insert after the site-header div closes
+                # The site-header ends with </script></div>, so match that explicitly
+                pattern = r'(<div class="card site-header"[^>]*>[\s\S]*?<script[^>]*header-toggle\.js[^>]*></script>\s*</div>)'
+                if re.search(pattern, txt):
+                    txt = re.sub(pattern, r'\1' + back_link, txt, count=1)
+                else:
+                    # If the above pattern doesn't match, try without the script tag requirement
+                    # This handles cases where the header might have a different structure
+                    pass
+            
+            # Update footer with dynamic timestamp loading
+            footer_body = (
+                "Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />\n"
+                "Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).<br />\n"
+                '<span data-last-updated>Last updated: ...</span>'
+            )
+            footer_html = f"<footer>{footer_body}</footer>"
+            replaced_footer, n_footer = re.subn(r'<footer>[\s\S]*?</footer>', footer_html, txt, count=1)
+            if n_footer == 0:
+                # If no footer exists, append one at the end of the body but before </body>
+                replaced_footer = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1)
+            txt = replaced_footer
+            
+            # Add last-updated.js script before </body> if not already present
+            if 'last-updated.js' not in txt:
+                txt = re.sub(r'(</body>)', f'<script src="{script_prefix}last-updated.js"></script>\n\\1', txt, count=1)
+            
             # Replace any inline toggle script blocks with an external include using the computed prefix
             try:
                 txt = re.sub(r'<script>\s*\(function\(\)\{[\s\S]*?document.getElementById\("headerToggle"\);[\s\S]*?\}\)\(\)\s*<\/script>', f'<script src="{script_prefix}header-toggle.js"></script>', txt, flags=re.M)
@@ -192,18 +258,20 @@ def build_site():
                 except Exception:
                     pass
 
-            root = OUT_DIR
-            _update_static(root / 'trend-viewer.html', 'Trend Viewer')
-            _update_static(root / 'trends.html', 'Trends')
-            _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
-            _update_static(root / 'future.html', '"Future" Elections (2028–2048)')
-            _update_static(root / 'paths2028.html', '2028 Paths to Victory')
-            _update_static(root / 'methods.html', 'Methods and Data Sources')
-            # Also update other static docs that are managed outside the main generator
-            _update_static(root / 'explorer.html', 'Explorer')
-            _update_static(root / 'possibilities.html', 'Enumerated Possibilities')
-            _update_static(root / 'presidential_margins.html', 'Presidential margins CSV')
-            _update_static(root / 'probabilities.html', '2028 Interactive Probabilities')
+        root = OUT_DIR
+        _update_static(root / 'index.html', 'U.S. Presidential Election State Results 1864-2024')
+        _update_static(root / 'trend-viewer.html', 'Trend Viewer')
+        _update_static(root / 'trends.html', 'Trends')
+        _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
+        _update_static(root / 'future.html', '"Future" Elections (2028–2048)')
+        _update_static(root / 'paths2028.html', '2028 Paths to Victory')
+        _update_static(root / 'methods.html', 'Methods and Data Sources')
+        _update_static(root / 'attributions.html', 'Data Sources & Attribution')
+        # Also update other static docs that are managed outside the main generator
+        _update_static(root / 'explorer.html', 'Explorer')
+        _update_static(root / 'possibilities.html', 'Enumerated Possibilities')
+        _update_static(root / 'presidential_margins.html', 'Presidential margins CSV')
+        _update_static(root / 'probabilities.html', '2028 Interactive Probabilities')
     except Exception as e:
         print(f"Warning: couldn't sync static page headers: {e}")
 
