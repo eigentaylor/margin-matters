@@ -80,6 +80,75 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
   color:var(--accent);
 }
 
+/* Header toggle button (hamburger menu) - hidden on desktop */
+.header-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1101;
+}
+.header-toggle span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.header-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+.header-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+.header-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile header collapsible menu */
+@media (max-width: 768px) {
+  .header-toggle {
+    display: flex;
+  }
+  .site-header .small-links {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 16px;
+    z-index: 1100;
+  }
+  .site-header .small-links.expanded {
+    max-height: 500px;
+    padding: 16px;
+  }
+  .site-header .small-links .btn {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+  }
+  .card.site-header {
+    flex-wrap: wrap;
+  }
+  .card.site-header .legend {
+    order: -1;
+    flex: 1;
+    text-align: center;
+  }
+}
+
 /* PV slider value and totals: keep spacing stable and make numbers pop */
 #pvVal{display:inline-block;min-width:140px;text-align:left;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.2px;color:#fff;background:rgba(0,0,0,0.35);padding:3px 8px;border-radius:8px}
 .pv-totals{display:flex;gap:10px;align-items:stretch;justify-content:center;margin-top:10px;flex-wrap:wrap}
@@ -124,6 +193,13 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
 .hide-deltas .delta{display:none !important}
 /* Add padding to body when delta toggle is visible to prevent content being hidden behind it */
 body.has-delta-toggle{padding-bottom:60px}
+
+/* Increase padding on mobile to ensure sticky footer doesn't cover actual footer */
+@media (max-width: 768px) {
+  body.has-delta-toggle, body.has-prop-ev-toggle {
+    padding-bottom: 100px;
+  }
+}
 
 /* Range slider styling for year controls */
 input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:#2a2a2a;border-radius:5px;outline:none}

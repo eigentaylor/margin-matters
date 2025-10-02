@@ -111,13 +111,21 @@
 
       const parseNum = v => v===''||v==null? null: +v;
       // Enhanced data structure with str and color fields
-      const dataS = rows.map(r=>({
-        year:+r.year, 
-        value: parseNum(r[yCol]),
-        str: r[strCol] || fmt(parseNum(r[yCol]), rel, delta),
-        color: r.color || null,
-        baseMargin: parseNum(r.pres_margin)
-      })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
+      const dataS = rows.map(r=>{
+        const totalVotes = parseNum(r.total_votes);
+        let value = parseNum(r[yCol]);
+        // If total_votes = 1, treat margin as 0 instead of 100%
+        if (totalVotes === 1 && value !== null && Math.abs(value) >= 0.99) {
+          value = 0;
+        }
+        return {
+          year:+r.year, 
+          value: value,
+          str: r[strCol] || fmt(value, rel, delta),
+          color: r.color || null,
+          baseMargin: parseNum(r.pres_margin)
+        };
+      }).filter(d=>d.value!=null && d.year>=start && d.year<=end);
       const dataN = yNatCol ? natRows.map(r=>({
         year:+r.year,
         value: parseNum(r[yNatCol]),
