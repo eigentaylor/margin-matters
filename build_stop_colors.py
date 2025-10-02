@@ -69,60 +69,56 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
         # helper to classify and append an output row for a single unit/stop
         def classify_and_append(s: float, eff: float, r: Dict):
             abbr = r.get('abbr')
-            rm = parse_float(r.get('relative_margin'))
-            #tp = parse_float(r.get('third_party_share'))
             nat = parse_float(r.get('national_margin'))
-            original_margins = {
-                'D': parse_float(r['D_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
-                'R': parse_float(r['R_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
-                'T': parse_float(r['T_votes']) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0,
-            }
-            assert np.isclose(original_margins['T'], r.get('top_third_party_share', 0.0), atol=1e-6), f"Mismatch T share {original_margins['T']} vs {r.get('top_third_party_share', 0.0)}"
-            tp = original_margins['T']
-            original_winner = max(original_margins, key=lambda k: original_margins.get(k, 0))
-            a_local = 3 * tp - 1
-            winner = None
-            # Use a tighter interior epsilon than the nudge so boundary nudges remain inside the window
-            INNER = EPS
-            if a_local > 0 and False:
-                nD_local = -rm + a_local
-                nR_local = -rm - a_local
-                nD_approximated_margins = {'D': original_margins['D'] + nD_local / 2, 'R': original_margins['R'] - nD_local / 2, 'T': original_margins['T']}
-                nR_approximated_margins = {'D': original_margins['D'] + nR_local / 2, 'R': original_margins['R'] - nR_local / 2, 'T': original_margins['T']}
-                if eff > (nR_local + INNER) and eff < (nD_local - INNER):
-                    winner = 'T'
+            total_votes = parse_float(r.get('total_votes'))
+            third_party_total = parse_float(r.get('third_party_votes'))
+            if total_votes <= 0:
+                return
+            
+            # Get base vote counts
+            d_votes_base = parse_float(r.get('D_votes'))
+            r_votes_base = parse_float(r.get('R_votes'))
+            o_votes_base = parse_float(r.get('T_votes'))  # Top third party votes (stays constant)
+            
+            # Calculate two-party votes the same way as JavaScript: total - all_third_party
+            two_party_votes = total_votes - third_party_total
+            if two_party_votes <= 0:
+                return
+            
+            # Calculate adjusted votes at the effective PV
+            # PV shift is relative to national margin
+            pv_shift = eff - nat
+            
+            # Base two-party margin
+            base_d_share = d_votes_base / two_party_votes
+            base_margin = 2 * base_d_share - 1
+            
+            # Target two-party margin after PV shift
+            target_margin = base_margin + pv_shift
+            target_d_share = (target_margin + 1) / 2
+            
+            # Calculate adjusted raw votes
+            d_votes = two_party_votes * target_d_share
+            r_votes = two_party_votes * (1 - target_d_share)
+            o_votes = o_votes_base  # Third party votes stay constant
+            
+            # Determine current leader
+            if d_votes > r_votes and d_votes > o_votes:
+                winner = 'D'
+            elif r_votes > d_votes and r_votes > o_votes:
+                winner = 'R'
+            elif o_votes > d_votes and o_votes > r_votes:
+                winner = 'T'
             else:
-                approximated_margins = {'D': original_margins['D'] + (eff - nat) / 2, 'R': original_margins['R'] - (eff - nat) / 2, 'T': original_margins['T']}
-                new_winner = max(approximated_margins.items(), key=lambda item: item[1])[0]
-                if abbr == 'AL' and year == 1948:
-                    pass
-                if new_winner == original_winner:
-                    print(f"Debug: {year} {abbr} winner unchanged at stop {s} eff {eff}: {original_winner}")
-                    if abbr == 'LA' and year == 1948:
-                        # find what the stop should be to flip T->D
-                        # want original_margins['D'] + (eff - nat) / 2 > original_margins['T']
-                        target_eff = nat + 2 * (original_margins['T'] - original_margins['D'])
-                        print(f"Debug: {year} {abbr} T->D flip eff {target_eff}, actual eff {eff}")
-                    pass
-                if a_local > 0:
-                    pass
-                winner = max(approximated_margins, key=lambda k: approximated_margins[k])
-            if winner is None:
-                m = rm + eff
-                if m > 0:
-                    winner = 'D'
-                elif m < 0:
-                    winner = 'R'
-                else:
-                    side = 1 if (s - nat) >= 0 else -1
-                    winner = 'D' if side >= 0 else 'R'
+                # Tie or very close - use the side of the stop relative to national
+                side = 1 if (s - nat) >= 0 else -1
+                winner = 'D' if side >= 0 else 'R'
 
             color_name = 'BLUE' if winner == 'D' else ('RED' if winner == 'R' else 'YELLOW')
             color_css = params.COLORS.get(winner, 'transparent')
             if color_css == 'deepskyblue':
                 color_css = 'blue' # darker blue for visibility
-            if color_name == 'YELLOW':
-                pass
+            
             out.append({
                 'year': year,
                 'stop': f"{s:.12f}",
@@ -138,43 +134,96 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             abbr = r.get('abbr')
             if not abbr or abbr in ('NATIONAL', 'NAT'):
                 continue
-            rm = parse_float(r.get('relative_margin'))
-            if parse_float(r.get('total_votes')) == 0:
+            
+            total_votes = parse_float(r.get('total_votes'))
+            third_party_total = parse_float(r.get('third_party_votes'))
+            if total_votes == 0:
                 # skip zero-vote states
                 continue
-            t = parse_float(r.get('T_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
-            d = parse_float(r.get('D_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
-            r_ = parse_float(r.get('R_votes')) / parse_float(r.get('total_votes')) if r.get('total_votes') else 0.0
-            a = 3 * t - 1
+            
+            # Get base vote counts
+            d_votes_base = parse_float(r.get('D_votes'))
+            r_votes_base = parse_float(r.get('R_votes'))
+            o_votes_base = parse_float(r.get('T_votes'))  # Top third party votes (stays constant)
+            
+            # Use the same calculation as JavaScript: two_party = total - all_third_party
+            two_party_votes = total_votes - third_party_total
+            if two_party_votes <= 0:
+                continue
+            
             nat = parse_float(r.get('national_margin'))
-            if abbr == 'AL' and year == 1948:
-                a = 0.0
-            if a > 0:# and not (year == 1948 and abbr == 'AL'):
-                #nD = -rm + a
-                nD = nat + 2 * (t - d)
-                #nR = -rm - a
-                nR = nat + 2 * (r_ - t)
-                if abs(nD) <= PV_CAP:
-                    stops_set.add(nD)
-                    stop_to_units[nD].append(abbr)
-                    # nudge inside the yellow window
-                    sgn = 1.0 if (nD - nat) > 0 else (-1.0 if (nD - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(nD, nD + sgn * EPS)
-                    classify_and_append(nD, eff, r)
-                if abs(nR) <= PV_CAP:
-                    stops_set.add(nR)
-                    stop_to_units[nR].append(abbr)
-                    sgn = 1.0 if (nR - nat) > 0 else (-1.0 if (nR - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(nR, nR + sgn * EPS)
-                    classify_and_append(nR, eff, r)
-            else:
-                val = -rm
-                if abs(val) <= PV_CAP:
-                    stops_set.add(val)
-                    stop_to_units[val].append(abbr)
-                    sgn = 1.0 if (val - nat) > 0 else (-1.0 if (val - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(val, val + sgn * EPS)
-                    classify_and_append(val, eff, r)
+            
+            # Calculate base two-party margin
+            base_d_share = d_votes_base / two_party_votes
+            base_margin = 2 * base_d_share - 1
+            
+            # Helper function to determine winner at a given PV margin
+            def get_winner_at_pv(pv_margin):
+                pv_shift = pv_margin - nat
+                target_margin = base_margin + pv_shift
+                d = two_party_votes * (target_margin + 1) / 2
+                r = two_party_votes * (1 - (target_margin + 1) / 2)
+                o = o_votes_base
+                
+                if d > r and d > o:
+                    return 'D'
+                elif r > d and r > o:
+                    return 'R'
+                elif o > d and o > r:
+                    return 'T'
+                else:
+                    # Tie - use side relative to national
+                    return 'D' if (pv_margin - nat) >= 0 else 'R'
+            
+            # Helper to check if a stop changes the winner
+            def stop_changes_winner(stop):
+                # Check winner just before and just after the stop
+                before = get_winner_at_pv(stop - 0.0001)
+                after = get_winner_at_pv(stop + 0.0001)
+                return before != after
+            
+            # Generate stops for ALL pairwise transitions between D, R, and O
+            # We need to find PV margins where any two become equal
+            
+            # Stop 1: D = R (two-party flip)
+            target_margin_dr = 0
+            pv_shift_dr = target_margin_dr - base_margin
+            stop_dr = nat + pv_shift_dr
+            
+            if abs(stop_dr) <= PV_CAP and stop_changes_winner(stop_dr):
+                stops_set.add(stop_dr)
+                stop_to_units[stop_dr].append(abbr)
+                sgn = 1.0 if (stop_dr - nat) > 0 else (-1.0 if (stop_dr - nat) < 0 else 1.0)
+                eff = stop_to_eff.setdefault(stop_dr, stop_dr + sgn * EPS)
+                classify_and_append(stop_dr, eff, r)
+            
+            # Stop 2: D = O (D reaches third party)
+            if o_votes_base > 0:
+                # D = two_party * (target_margin + 1) / 2 = o_votes_base
+                target_margin_do = 2 * o_votes_base / two_party_votes - 1
+                pv_shift_do = target_margin_do - base_margin
+                stop_do = nat + pv_shift_do
+                
+                if abs(stop_do) <= PV_CAP and stop_changes_winner(stop_do):
+                    stops_set.add(stop_do)
+                    stop_to_units[stop_do].append(abbr)
+                    sgn = 1.0 if (stop_do - nat) > 0 else (-1.0 if (stop_do - nat) < 0 else 1.0)
+                    eff = stop_to_eff.setdefault(stop_do, stop_do + sgn * EPS)
+                    classify_and_append(stop_do, eff, r)
+            
+            # Stop 3: R = O (R reaches third party)
+            if o_votes_base > 0:
+                # R = two_party * (1 - (target_margin + 1) / 2) = o_votes_base
+                target_margin_ro = 2 * (1 - o_votes_base / two_party_votes) - 1
+                pv_shift_ro = target_margin_ro - base_margin
+                stop_ro = nat + pv_shift_ro
+                
+                if abs(stop_ro) <= PV_CAP and stop_changes_winner(stop_ro):
+                    stops_set.add(stop_ro)
+                    stop_to_units[stop_ro].append(abbr)
+                    sgn = 1.0 if (stop_ro - nat) > 0 else (-1.0 if (stop_ro - nat) < 0 else 1.0)
+                    eff = stop_to_eff.setdefault(stop_ro, stop_ro + sgn * EPS)
+                    classify_and_append(stop_ro, eff, r)
 
         # Ensure any stop without eff gets a small nudge toward D side
         for s in list(stops_set):
