@@ -1,20 +1,48 @@
 // Load and inject the last updated timestamp from last-updated.json
 (function() {
-  // Determine the correct path based on current location
-  const pathParts = window.location.pathname.split('/').filter(p => p);
-  const depth = pathParts.length - pathParts.indexOf('docs') - 1;
-  const prefix = depth > 0 ? '../'.repeat(depth) : './';
-  
-  fetch(prefix + 'last-updated.json')
-    .then(response => response.json())
-    .then(data => {
-      const timestamp = data.lastUpdated;
-      // Find all elements with data-last-updated attribute and update them
-      document.querySelectorAll('[data-last-updated]').forEach(el => {
-        el.textContent = 'Last updated: ' + timestamp;
-      });
-    })
-    .catch(err => {
-      console.warn('Could not load last-updated.json:', err);
+  // Try a set of likely relative prefixes and accept only valid JSON responses.
+  const candidates = [
+    './', '../', '../../', '../../../', '../../../../',
+    '/docs/', '/' // try absolute roots as last resort
+  ];
+
+  async function tryFetch(prefix) {
+    try {
+      const res = await fetch(prefix + 'last-updated.json', { cache: 'no-store' });
+      if (!res.ok) return null;
+      const text = await res.text();
+      // quick reject obvious HTML payloads (starts with '<')
+      if (text.trim().startsWith('<')) return null;
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  (async function load() {
+    let data = null;
+    for (let i = 0; i < candidates.length; i++) {
+      const p = candidates[i];
+      data = await tryFetch(p);
+      if (data && data.lastUpdated) {
+        break;
+      }
+    }
+
+    if (!data || !data.lastUpdated) {
+      console.warn('Could not load last-updated.json: no valid JSON found at tried prefixes');
+      return;
+    }
+
+    const timestamp = data.lastUpdated;
+    // Find all elements with data-last-updated attribute and update them
+    document.querySelectorAll('[data-last-updated]').forEach(el => {
+      el.textContent = 'Last updated: ' + timestamp;
     });
+  })();
+
 })();
