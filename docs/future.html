@@ -25,8 +25,8 @@
 </head>
 <body>
   <div class="container">
-    <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false"><span></span><span></span><span></span></button><div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a></div><div class="legend">"Future" Elections (2028–2048)</div><script src="./header-toggle.js"></script></div>
-    </div>
+    <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false"><span></span><span></span><span></span></button><div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a><a class="btn" href="./attributions.html">Attributions</a></div><div class="legend">"Future" Elections (2028–2048)</div><script src="./header-toggle.js"></script></div>
+    <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back" href="./index.html">← Back to Map</a><div class="legend" style="font-size:0.85rem" data-last-updated><span data-last-updated><span data-last-updated><span data-last-updated>Last updated: ...</span></span>...</span>...</div></div>
 
     <div class="card">
       <div class="legend" style="margin-bottom:8px">Possible Election Map</div>
@@ -176,10 +176,9 @@
       <div id="relDeltasList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
     </div>
 
-    <footer style="margin-top:16px;color:var(--muted)">
-      This page generates future margins client-side from historical data. It’s experimental and NOT a forecast. No offense, just for fun!<br />
-      Site by eigentaylor.<br />
-     <span class="legend">Last updated: 2025-09-23 05:16 UTC</span></footer>
+  <footer>Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />
+Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).<br />
+<span data-last-updated>Last updated: ...</span></footer>
   </div>
 
   <div class="tooltip" id="tooltip"></div>
@@ -310,5 +309,6 @@
   </div>
 </div>
 
+<script src="./last-updated.js"></script>
 </body>
 </html>
