@@ -307,8 +307,8 @@ def main():
                 'electoral_votes': electoral_votes,
                 'third_party_results': r.get('third_party_results', ''),
                 
-                'D_candidate': get_candidate_names(year)[0],
-                'R_candidate': get_candidate_names(year)[1],
+                'D_candidate': get_candidate_names(year)[1],
+                'R_candidate': get_candidate_names(year)[0],
                 # top_third_party will be filled in below after parsing third_party_results
                 'top_third_party': '',
                 'top_third_party_share': r.get('top_third_party_share', 0.0),
