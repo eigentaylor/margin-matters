@@ -254,8 +254,6 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         if year == 1960 and r['abbr'] == 'AL':
             # Alabama 1960 is split 5 D + 6 O if won by D or T, so cannot be flipped as a unit
             continue
-        if year == 1968 and r['abbr'] == 'TN':
-            continue
 
         if r['party_win'] == runner_party:
             continue
