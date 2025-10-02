@@ -2234,14 +2234,14 @@
       let fallbackColor;
       if (year === 1948 && r.unit === 'AL') {
         fallbackColor = (pv < -rVal) ? marginToColor(m) : '#FFD700';
-      } else if (thirdWindow > 0) {
-        const nD = -rVal + thirdWindow;
-        const nR = -rVal - thirdWindow;
-        if (pv > nR + EPS && pv < nD - EPS) {
-          fallbackColor = '#FFD700';
-        } else {
-          fallbackColor = marginToColor(m);
-        }
+      // } else if (thirdWindow > 0) {
+      //   const nD = -rVal + thirdWindow;
+      //   const nR = -rVal - thirdWindow;
+      //   if (pv > nR + EPS && pv < nD - EPS) {
+      //     fallbackColor = '#FFD700';
+      //   } else {
+      //     fallbackColor = marginToColor(m);
+      //   }
       } else {
         fallbackColor = marginToColor(m);
       }

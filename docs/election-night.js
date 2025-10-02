@@ -30,6 +30,11 @@
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
   // Tiny epsilon used when forcing flips to avoid exact zero margins
   const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
+  // Display update and close race constants
+  const DISPLAY_UPDATE_INTERVAL = 2; // minutes between display updates (counting is continuous)
+  const CLOSE_RACE_THRESHOLD = 0.005; // margin threshold (0.5%) to consider a race "extremely close"
+  const CLOSE_RACE_SLOWDOWN_START = 0.85; // start slowing down at 85% reporting for close races
+  const CLOSE_RACE_SLOWDOWN_FACTOR = 0.3; // slow down to 30% of normal speed for close races
   // Batch scheduling constraints used for reporting schedule generation
   const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
   const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
@@ -136,7 +141,8 @@
     confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
     pvRandomCache: null,
     pvRandomCacheMode: null,
-    pvRandomSeed: null
+    pvRandomSeed: null,
+    lastDisplayUpdate: 0 // Track last time display was updated for throttling
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -485,6 +491,7 @@
   window._electionNightActive = false;
     state.currentTime = 0;
     state.lastTimestamp = null;
+    state.lastDisplayUpdate = 0;
     state.lastLogKey = '';
     state.lastUncalledKey = '';
     state.year = null;
@@ -546,6 +553,7 @@
     if (!state.prepared || state.running) return;
     state.running = true;
     state.lastTimestamp = null;
+    state.lastDisplayUpdate = state.currentTime; // Initialize to current time
     state.rafId = requestAnimationFrame(tick);
     updateToggleLabel();
   }
@@ -570,7 +578,18 @@
     state.lastTimestamp = timestamp;
     const deltaMinutes = (deltaMs / 1000) * state.speedMultiplier * state.minutesPerSecond;
     state.currentTime = Math.min(state.currentTime + deltaMinutes, state.simEnd);
-    renderAt(state.currentTime);
+    
+    // Check if we should update the display (throttled updates)
+    const timeSinceLastDisplay = state.currentTime - state.lastDisplayUpdate;
+    const shouldUpdateDisplay = timeSinceLastDisplay >= DISPLAY_UPDATE_INTERVAL || 
+                                state.currentTime >= state.simEnd - EPS ||
+                                state.lastDisplayUpdate === 0;
+    
+    if (shouldUpdateDisplay) {
+      state.lastDisplayUpdate = state.currentTime;
+      renderAt(state.currentTime);
+    }
+    
     if (state.currentTime >= state.simEnd - EPS) {
       pauseSimulation();
     } else {
@@ -649,6 +668,18 @@
       const closeness = 1 - Math.min(1, Math.abs(adjustedMargin) / 0.12);
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
       let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
+      
+      // Extend duration for extremely close races to accommodate the slowdown
+      // This ensures the slowdown actually adds real time rather than just manipulating display
+      if (Math.abs(adjustedMargin) <= CLOSE_RACE_THRESHOLD) {
+        // Calculate how much extra time is needed based on the slowdown
+        // The slowdown starts at CLOSE_RACE_SLOWDOWN_START (85%) and affects the final 15%
+        // With CLOSE_RACE_SLOWDOWN_FACTOR of 0.3, the final 15% takes ~3.3x longer
+        const slowdownMultiplier = Math.pow(1 / CLOSE_RACE_SLOWDOWN_FACTOR, 0.5);
+        const affectedPortion = (1 - CLOSE_RACE_SLOWDOWN_START);
+        duration = duration * (1 + affectedPortion * (slowdownMultiplier - 1));
+      }
+      
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
@@ -743,7 +774,8 @@
         misCallLogged: false,
         thirdPartyDominant,
         reportingSchedule,
-        rngSeed
+        rngSeed,
+        finalMargin: finalMarginTwoParty // Store final margin for slowdown logic
       });
     });
 
@@ -834,23 +866,32 @@
       return [{ time: isFinite(startTime) ? startTime : 0, reporting: 1 }];
     }
 
-    let batchCount = Math.round(duration / (mailHeavy ? 18 : 14));
-    batchCount = Math.max(MIN_BATCH_COUNT, Math.min(MAX_BATCH_COUNT, batchCount));
+    // Generate many more interpolation points for smooth continuous counting
+    // This allows counting to appear continuous while display updates happen less frequently
+    const pointsPerHour = 30; // generate a point every 2 minutes on average
+    const totalPoints = Math.max(60, Math.round((duration / 60) * pointsPerHour));
+    
     const schedule = [];
     const timeWeights = [];
     const reportWeights = [];
     let timeWeightSum = 0;
     let reportWeightSum = 0;
 
-    for (let i = 0; i < batchCount; i++) {
-      const phaseBias = mailHeavy ? (i + 1) : (batchCount - i);
-      const timeWeight = Math.max(0.05, phaseBias + rng());
+    // Generate weights for smooth distribution across the schedule
+    for (let i = 0; i < totalPoints; i++) {
+      const progress = i / Math.max(1, totalPoints - 1);
+      
+      // Time weights: mail-heavy states count slower early, faster late
+      // Regular states count faster early, slower late
+      const phaseBias = mailHeavy ? (progress * 2 + 0.5) : (2 - progress * 1.5);
+      const timeWeight = Math.max(0.05, phaseBias + rng() * 0.3);
       timeWeights.push(timeWeight);
       timeWeightSum += timeWeight;
 
-      let reportBias = 0.6 + closeness * 0.8 + rng() * 0.9;
-      if (!mailHeavy && i === 0) reportBias *= 0.5;
-      if (mailHeavy && i < batchCount / 2) reportBias *= 0.6;
+      // Report weights: consider closeness for smaller increments
+      let reportBias = 0.5 + closeness * 0.6 + rng() * 0.5;
+      if (!mailHeavy && i < totalPoints * 0.15) reportBias *= 0.5; // slow start for non-mail states
+      if (mailHeavy && i < totalPoints * 0.4) reportBias *= 0.6; // slower early phase for mail states
       reportBias = Math.max(0.05, reportBias);
       reportWeights.push(reportBias);
       reportWeightSum += reportBias;
@@ -858,16 +899,19 @@
 
     let currentTime = startTime;
     let currentReporting = 0;
-    for (let i = 0; i < batchCount; i++) {
+    
+    for (let i = 0; i < totalPoints; i++) {
+      // Distribute time proportionally
       let interval = duration * (timeWeights[i] / timeWeightSum);
-      interval = Math.max(BATCH_MIN_GAP, Math.min(BATCH_MAX_GAP * 3, interval));
+      interval = Math.max(0.1, interval); // very small minimum gap for smooth counting
       const remainingTime = (startTime + duration) - currentTime;
       if (interval > remainingTime) interval = remainingTime;
       currentTime = Math.min(startTime + duration, currentTime + interval);
 
+      // Distribute reporting percentage
       let increment = (reportWeights[i] / reportWeightSum) * (1 - currentReporting);
-      increment = Math.max(0.03, increment);
-      if (i === batchCount - 1) {
+      increment = Math.max(0.005, increment); // smaller increments for smooth progression
+      if (i === totalPoints - 1) {
         currentReporting = 1;
       } else {
         currentReporting = Math.min(1, currentReporting + increment);
@@ -1915,6 +1959,19 @@
         reporting = Math.max(0, Math.min(1, nextReporting));
       }
       if (timeMinutes >= st.startTime + st.duration - EPS) reporting = 1;
+      
+      // Apply slowdown for extremely close races near the end
+      // This creates more tension by slowing down the final counts
+      if (isFinite(st.finalMargin) && Math.abs(st.finalMargin) <= CLOSE_RACE_THRESHOLD) {
+        if (reporting >= CLOSE_RACE_SLOWDOWN_START && reporting < 1) {
+          // Slow down the effective reporting percentage
+          // Map the range [CLOSE_RACE_SLOWDOWN_START, 1] to a slower progression
+          const remainingProgress = (reporting - CLOSE_RACE_SLOWDOWN_START) / (1 - CLOSE_RACE_SLOWDOWN_START);
+          const slowedProgress = Math.pow(remainingProgress, 1 / CLOSE_RACE_SLOWDOWN_FACTOR);
+          reporting = CLOSE_RACE_SLOWDOWN_START + slowedProgress * (1 - CLOSE_RACE_SLOWDOWN_START);
+        }
+      }
+      
       return reporting;
     }
 
