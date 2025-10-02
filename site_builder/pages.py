@@ -240,6 +240,7 @@ def make_state_pages(states_sorted: List[str]):
             <link rel="icon" href="favicon.svg" />
         </head>
         <body>
+            <script src="./maintenance-check.js"></script>
             <div class='container'>
                 {header_html}
                 <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back" href="./index.html">← Back to Map</a><div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div></div>
@@ -545,6 +546,7 @@ def make_data_page(rows: List[Dict]):
                 <link rel="icon" href="favicon.svg" />
             </head>
         <body>
+          <script src="./maintenance-check.js"></script>
           <div class='container'>
             {header_html}
             <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class="back" href="./index.html">← Back to Map</a>
@@ -586,6 +588,7 @@ def make_methods_page():
         <link rel="icon" href="favicon.svg" />
         </head>
         <body>
+            <script src="./maintenance-check.js"></script>
             <div class='container'>
                 {header_html}
                 <div class='card'>

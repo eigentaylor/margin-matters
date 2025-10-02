@@ -3,18 +3,24 @@ import shutil
 import re
 from pathlib import Path
 
-from .config import CSV_PATH, OUT_DIR, STATE_DIR, UNIT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
+from .config import CSV_PATH, OUT_DIR, STATE_DIR, UNIT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED, MAINTENANCE_MODE, MAINTENANCE_PASSWORD
 from .io_utils import ensure_dirs, write_text, read_csv
 from .pages import build_pages, make_data_page, make_methods_page, make_state_pages, make_index
 from .templates import BASE_CSS, FAVICON_SVG, TESTER_JS
 from .ranker import build_ranker_page
 from .header import make_header
+from .maintenance_page import make_maintenance_page
+from .maintenance_check import make_maintenance_check_js
 
 
 def build_site():
     ensure_dirs()
     #write_text(OUT_DIR / "styles.css", BASE_CSS) # we now edit styles.css directly
     write_text(OUT_DIR / "favicon.svg", FAVICON_SVG)
+    
+    # Generate maintenance mode files
+    write_text(OUT_DIR / "maintenance.html", make_maintenance_page(MAINTENANCE_PASSWORD))
+    write_text(OUT_DIR / "maintenance-check.js", make_maintenance_check_js(MAINTENANCE_MODE, MAINTENANCE_PASSWORD))
     
     # Generate last-updated.json file with current timestamp
     last_updated_data = {"lastUpdated": LAST_UPDATED}
@@ -214,6 +220,13 @@ def build_site():
             txt, script_added = re.subn(r'(</body>)', f'<script src="{script_prefix}last-updated.js"></script>\n\\1', txt, count=1, flags=re.IGNORECASE)
             if script_added == 0:
                 txt += f'\n<script src="{script_prefix}last-updated.js"></script>'
+            
+            # Ensure maintenance check script is included at the start of the body
+            txt = re.sub(r'\s*<script[^>]*maintenance-check\.js[^>]*></script>\s*', '\n', txt, flags=re.IGNORECASE)
+            txt, maint_added = re.subn(r'(<body[^>]*>)', r'\1\n<script src="' + script_prefix + 'maintenance-check.js"></script>', txt, count=1, flags=re.IGNORECASE)
+            if maint_added == 0:
+                # If no body tag found, add after head closing
+                txt, maint_added = re.subn(r'(</head>)', r'\1\n<script src="' + script_prefix + 'maintenance-check.js"></script>', txt, count=1, flags=re.IGNORECASE)
             
             # Replace any inline toggle script blocks with an external include using the computed prefix
             try:

@@ -251,6 +251,7 @@ INDEX_HTML = r"""<!doctype html>
 <link rel="icon" href="favicon.svg" />
 </head>
 <body>
+<script src="./maintenance-check.js"></script>
 <div class="container" style="text-align: center;">
   %HEADER%
   <div class="card">
@@ -398,6 +399,7 @@ PAGE_HTML = r"""<!doctype html>
 <link rel="icon" href="../favicon.svg" />
 </head>
 <body>
+<script src="../maintenance-check.js"></script>
 <div class="container">
   %HEADER%
   <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
