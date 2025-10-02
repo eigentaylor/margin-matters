@@ -242,7 +242,7 @@ def make_state_pages(states_sorted: List[str]):
         <body>
             <div class='container'>
                 {header_html}
-                <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back" href="./index.html">← Back to Map</a><div class="legend" style="font-size:0.85rem">Last updated: {LAST_UPDATED}</div></div>
+                <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back" href="./index.html">← Back to Map</a><div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div></div>
                 <div class='card'>
                     <h1 style='margin-top:0'>State Pages</h1>
                     <p class='legend'>All statewide pages. District pages are linked from Maine and Nebraska.</p>
@@ -251,8 +251,9 @@ def make_state_pages(states_sorted: List[str]):
                     </div>
                     {state_links_html}
                 </div>
-                <footer>{FOOTER_TEXT} Built as static HTML from CSV. Last updated: {LAST_UPDATED}</footer>
+                <footer>{FOOTER_TEXT} Built as static HTML from CSV. <span data-last-updated>Last updated: ...</span></footer>
             </div>
+            <script src="./last-updated.js"></script>
         </body>
         </html>"""
     write_text(OUT_DIR / "state-pages.html", html)

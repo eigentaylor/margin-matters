@@ -267,6 +267,7 @@ def build_site():
         _update_static(root / 'paths2028.html', '2028 Paths to Victory')
         _update_static(root / 'methods.html', 'Methods and Data Sources')
         _update_static(root / 'attributions.html', 'Data Sources & Attribution')
+        _update_static(root / 'state-pages.html', 'State Pages Directory')
         # Also update other static docs that are managed outside the main generator
         _update_static(root / 'explorer.html', 'Explorer')
         _update_static(root / 'possibilities.html', 'Enumerated Possibilities')
