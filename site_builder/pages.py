@@ -242,7 +242,10 @@ def make_state_pages(states_sorted: List[str]):
         <body>
             <div class='container'>
                 {header_html}
-                <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back" href="./index.html">← Back to Map</a><div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div></div>
+                <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+                    <a class="back" href="./index.html">← Back to Map</a>
+                    <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
+                </div>
                 <div class='card'>
                     <h1 style='margin-top:0'>State Pages</h1>
                     <p class='legend'>All statewide pages. District pages are linked from Maine and Nebraska.</p>
