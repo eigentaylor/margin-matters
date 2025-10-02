@@ -259,6 +259,7 @@ def build_site():
                     pass
 
         root = OUT_DIR
+        _update_static(root / 'index.html', 'U.S. Presidential Election State Results 1864-2024')
         _update_static(root / 'trend-viewer.html', 'Trend Viewer')
         _update_static(root / 'trends.html', 'Trends')
         _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
