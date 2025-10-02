@@ -62,10 +62,10 @@ def build_site():
         pass
 
     # Build methods page
-    try:
-        make_methods_page()
-    except Exception as e:
-        print(f"Warning: couldn't build methods page: {e}")
+    # try:
+    #     make_methods_page()
+    # except Exception as e:
+    #     print(f"Warning: couldn't build methods page: {e}")
 
     # Update existing docs/index.html header/footer instead of rebuilding full file
     try:
@@ -134,32 +134,61 @@ def build_site():
                 txt = path.read_text(encoding='utf-8')
             except Exception:
                 return
-            # Build canonical header pieces
+            # Build canonical header HTML (includes hamburger toggle and inline toggle script)
             hdr = make_header(title, is_inner=False)
-            # Extract small-links inner HTML
-            nav_inner = ''
-            m = re.search(r'<div class="small-links">([\s\S]*?)</div>', hdr)
-            if m:
-                nav_inner = m.group(1)
-            # Replace existing small-links block
-            if nav_inner:
-                txt = re.sub(r'(<div class="small-links">)([\s\S]*?)(</div>)', r'\1' + nav_inner + r'\3', txt, count=1)
-            # Replace legend text
-            txt = re.sub(r'<div class="legend">([\s\S]*?)</div>', f'<div class="legend">{title}</div>', txt, count=1)
+            # Replace any site-header blocks that are missing the headerToggle with the canonical header.
+            def _replace_missing_toggle(match):
+                block = match.group(0)
+                if 'headerToggle' in block:
+                    return block
+                return hdr
+
+            txt, n = re.subn(r'<div class="card site-header"[\s\S]*?</div>', _replace_missing_toggle, txt)
+            if n == 0:
+                # Fallback: extract small-links inner HTML from canonical header and replace the small-links block
+                nav_inner = ''
+                m = re.search(r'<div class="small-links">([\s\S]*?)</div>', hdr)
+                if m:
+                    nav_inner = m.group(1)
+                if nav_inner:
+                    txt = re.sub(r'(<div class="small-links">)([\s\S]*?)(</div>)', r'\1' + nav_inner + r'\3', txt, count=1)
+                # Replace legend text if present
+                txt = re.sub(r'<div class="legend">([\s\S]*?)</div>', f'<div class="legend">{title}</div>', txt, count=1)
             # Ensure footer includes Last updated timestamp
             if 'Last updated:' not in txt:
                 txt = re.sub(r'(</footer>)', f' <span class="legend">Last updated: {LAST_UPDATED}</span>\\1', txt, count=1)
             try:
                 path.write_text(txt, encoding='utf-8')
+                print(f"Updated header/footer in {path.name}")
             except Exception:
                 pass
 
-        root = OUT_DIR
-        _update_static(root / 'trend-viewer.html', 'Trend Viewer')
-        _update_static(root / 'trends.html', 'Trends')
-        _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
-        _update_static(root / 'future.html', '"Future" Elections (2028–2048)')
-        _update_static(root / 'paths2028.html', '2028 Paths to Victory')
+            # If the page still doesn't include the hamburger toggle, try a targeted injection
+            if 'headerToggle' not in txt:
+                try:
+                    # Inject id on first small-links and prepend the header toggle button
+                    if '<div class="small-links"' in txt:
+                        txt = txt.replace('<div class="small-links"', '<button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false"><span></span><span></span><span></span></button>\n<div class="small-links" id="headerNav"', 1)
+                    # Append inline toggle script after the first legend div (likely the header title)
+                    script = '(function(){const toggle = document.getElementById("headerToggle");const nav = document.getElementById("headerNav");if (toggle && nav) {toggle.addEventListener("click", function() {const isExpanded = nav.classList.toggle("expanded");toggle.setAttribute("aria-expanded", isExpanded);toggle.classList.toggle("active");});}})()'
+                    txt = re.sub(r'(<div class="legend">[\s\S]*?</div>)', r"\1<script>" + script + r"</script>", txt, count=1)
+                    path.write_text(txt, encoding='utf-8')
+                    print(f"Injected header toggle into {path.name}")
+                except Exception:
+                    pass
+
+            root = OUT_DIR
+            _update_static(root / 'trend-viewer.html', 'Trend Viewer')
+            _update_static(root / 'trends.html', 'Trends')
+            _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
+            _update_static(root / 'future.html', '"Future" Elections (2028–2048)')
+            _update_static(root / 'paths2028.html', '2028 Paths to Victory')
+            _update_static(root / 'methods.html', 'Methods and Data Sources')
+            # Also update other static docs that are managed outside the main generator
+            _update_static(root / 'explorer.html', 'Explorer')
+            _update_static(root / 'possibilities.html', 'Enumerated Possibilities')
+            _update_static(root / 'presidential_margins.html', 'Presidential margins CSV')
+            _update_static(root / 'probabilities.html', '2028 Interactive Probabilities')
     except Exception as e:
         print(f"Warning: couldn't sync static page headers: {e}")
 
