@@ -385,20 +385,56 @@ body.has-prop-ev-toggle{padding-bottom:60px}
 
 @media (max-width: 1200px){
   #enLogPanel{
-    position:static;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    top:auto;
     width:100%;
-    max-width:600px;
-    margin:16px auto;
-    max-height:none;
+    max-width:100%;
+    margin:0;
+    border-radius:16px 16px 0 0;
+    border-bottom:none;
+    max-height:70vh;
+    transition:transform 0.3s ease;
+    z-index:2200;
   }
-  .en-log-body{max-height:320px}
+  #enLogPanel.collapsed{
+    transform:translateY(calc(100% - 50px));
+  }
+  #enLogPanel.collapsed .en-log-body,
+  #enLogPanel.collapsed .en-log-uncalled{
+    display:none;
+  }
+  .en-log-header{
+    cursor:pointer;
+    user-select:none;
+    position:relative;
+    padding-right:30px;
+  }
+  .en-log-header::after{
+    content:'';
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%) rotate(180deg);
+    width:0;
+    height:0;
+    border-left:6px solid transparent;
+    border-right:6px solid transparent;
+    border-bottom:8px solid var(--accent);
+    transition:transform 0.3s ease;
+  }
+  #enLogPanel.collapsed .en-log-header::after{
+    transform:translateY(-50%) rotate(0deg);
+  }
+  .en-log-body{max-height:calc(70vh - 100px)}
 }
 
 @media (max-width: 720px){
   #enLogPanel{
     padding:12px;
-    border-radius:12px;
-    box-shadow:0 10px 24px rgba(0,0,0,0.4);
+    box-shadow:0 -4px 24px rgba(0,0,0,0.5);
   }
 }
 
