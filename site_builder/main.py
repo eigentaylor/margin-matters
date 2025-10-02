@@ -131,7 +131,7 @@ def build_site():
 
     # Post-process static pages that aren't generated to keep header/footer in sync
     try:
-        def _update_static(path: Path, title: str):
+        def _update_static(path: Path, title: str, *, insert_meta: bool = True):
             if not path.exists():
                 return
             try:
@@ -170,25 +170,34 @@ def build_site():
                 # Replace legend text if present
                 txt = re.sub(r'<div class="legend">([\s\S]*?)</div>', f'<div class="legend">{title}</div>', txt, count=1)
             
-            # Strip existing Back to Map blocks and any hardcoded last updated text so we can insert canonical snippets
-            txt = re.sub(r'\s*<div[^>]*>\s*<a[^>]*>[^<]*Back to Map[^<]*</a>[\s\S]*?\s*</div\s*>(?:\s*</div\s*>)?', '', txt, flags=re.IGNORECASE)
+            # Strip any existing Back to Map blocks and hardcoded last-updated text
+            txt = re.sub(
+                r'\s*<div[^>]*>\s*<a[^>]*>[^<]*Back to Map[^<]*</a>[\s\S]*?</div>\s*',
+                '',
+                txt,
+                flags=re.IGNORECASE
+            )
             txt = re.sub(r'\s*<(?:div|span)[^>]*data-last-updated[^>]*>[\s\S]*?</(?:div|span)>', '', txt, flags=re.IGNORECASE)
             txt = re.sub(r'Last updated:\s*(?:\.{3}|[0-9:\-\sA-Z]+)', '', txt)
 
-            # Insert canonical Back to Map + timestamp placeholder block directly after the site header
-            meta_block = (
-                "\n    <div style=\"margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center\">\n"
-                f"      <a class=\"back\" href=\"{script_prefix}index.html\">← Back to Map</a>\n"
-                "      <div class=\"legend\" style=\"font-size:0.85rem\" data-last-updated>Last updated: ...</div>\n"
-                "    </div>"
-            )
-            header_pattern = r'(<div class="card site-header"[^>]*>[\s\S]*?header-toggle\.js[^>]*></script>\s*</div>)'
-            txt, inserted_meta = re.subn(header_pattern, r'\1' + meta_block, txt, count=1, flags=re.IGNORECASE)
-            if inserted_meta == 0:
-                txt = meta_block + txt
-            else:
-                # Remove any stray container closing immediately following the injected meta block
-                txt = re.sub(r'(</div>)\s*</div>(\s*<div)', r'\1\2', txt, count=1, flags=re.IGNORECASE)
+            if insert_meta:
+                # Insert canonical Back to Map + timestamp placeholder block directly after the site header
+                meta_block = (
+                    "\n    <div style=\"margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center\">\n"
+                    f"      <a class=\"back\" href=\"{script_prefix}index.html\">\u2190 Back to Map</a>\n"
+                    "      <div class=\"legend\" style=\"font-size:0.85rem\" data-last-updated>Last updated: ...</div>\n"
+                    "    </div>\n"
+                )
+                header_pattern = r'(<div class="card site-header"[^>]*>[\s\S]*?header-toggle\.js[^>]*></script>\s*</div>)'
+                txt, inserted_meta = re.subn(header_pattern, r'\1' + meta_block, txt, count=1, flags=re.IGNORECASE)
+                if inserted_meta == 0:
+                    txt = meta_block + txt
+                # Remove any stray closing divs that may trail the meta block from previous builds
+                meta_cleanup_pattern = re.compile(
+                    r'(data-last-updated>\s*Last updated:\s*\.\.\.\s*</div>\s*</div>)(\s*</div>\s*)+',
+                    re.IGNORECASE
+                )
+                txt = meta_cleanup_pattern.sub(r'\1', txt, count=1)
 
             # Preserve any existing footer note about CSV builds
             extra_footer_note = ""
@@ -197,23 +206,83 @@ def build_site():
             elif "Built from CSV" in txt:
                 extra_footer_note = "Built from CSV."
 
-            footer_body = (
-                "Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />\n"
-                "Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).<br />\n"
+            footer_html = (
+                "<footer>\n"
+                "  Site by eigentaylor.<br />\n"
+                "  Please report any inaccuracies to me through discord: eigentaylor.<br />\n"
+                "  Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>.<br />\n"
+                "  Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0). "
             )
             if extra_footer_note:
-                footer_body += extra_footer_note + "<br />\n"
-            footer_body += '<span data-last-updated>Last updated: ...</span>'
-            footer_html = f"<footer>{footer_body}</footer>"
-            txt, n_footer = re.subn(r'<footer>[\s\S]*?</footer>', footer_html, txt, count=1, flags=re.IGNORECASE)
-            if n_footer == 0:
-                txt = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1, flags=re.IGNORECASE)
+                footer_html += extra_footer_note + " "
+            footer_html += "<span data-last-updated>Last updated: ...</span>\n</footer>"
+
+            container_close_idx = None
+            try:
+                container_match = re.search(r'<div[^>]*class=["\"][^>]*container[^>]*>', txt, flags=re.IGNORECASE)
+                if container_match:
+                    depth = 1
+                    lower_txt = txt.lower()
+                    scan_pos = container_match.end()
+                    while depth > 0 and scan_pos < len(txt):
+                        next_open = lower_txt.find('<div', scan_pos)
+                        next_close = lower_txt.find('</div>', scan_pos)
+                        if next_close == -1:
+                            break
+                        if next_open != -1 and next_open < next_close:
+                            depth += 1
+                            scan_pos = next_open + 4
+                        else:
+                            depth -= 1
+                            if depth == 0:
+                                container_close_idx = next_close
+                                break
+                            scan_pos = next_close + 6
+            except Exception:
+                print("Warning: error finding container div")
+                container_close_idx = None
+
+            footer_pattern = re.compile(r'<footer>[\s\S]*?</footer>', re.IGNORECASE)
+            if footer_pattern.search(txt):
+                txt = footer_pattern.sub(footer_html, txt, count=1)
+                txt = footer_pattern.sub('', txt)
+            else:
+                inserted = False
+                if container_close_idx is not None:
+                    txt = txt[:container_close_idx] + footer_html + "\n" + txt[container_close_idx:]
+                    inserted = True
+                if not inserted:
+                    # Prefer inserting before the closing container div if we can spot it ahead of the shared script include
+                    container_with_script = re.compile(r'(</div>\s*)(<script[^>]*last-updated\.js[^>]*></script>)', re.IGNORECASE)
+                    txt, did_insert = container_with_script.subn(footer_html + '\n\\1\\2', txt, count=1)
+                    inserted = inserted or (did_insert > 0)
+                if not inserted:
+                    container_before_body = re.compile(r'(</div>\s*)(</body>)', re.IGNORECASE)
+                    txt, did_insert = container_before_body.subn(footer_html + '\n\\1\\2', txt, count=1)
+                    inserted = inserted or (did_insert > 0)
+                if not inserted:
+                    txt = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1, flags=re.IGNORECASE)
+
+            if container_close_idx is None:
+                # If we couldn't find a closing container div earlier, make sure one exists now
+                container_close_regex = re.compile(r'(</footer>)(\s*)(</body>)', re.IGNORECASE)
+                if container_close_regex.search(txt):
+                    txt = container_close_regex.sub(r'\1\2</div>\n\3', txt, count=1)
+
+            body_close_regex = re.compile(r'</body\s*>', re.IGNORECASE)
+            if not body_close_regex.search(txt):
+                txt = txt.rstrip() + '\n</body>'
 
             # Ensure the shared last-updated loader script is present exactly once using the computed prefix
             txt = re.sub(r'\s*<script[^>]*last-updated\.js[^>]*></script>\s*', '\n', txt, flags=re.IGNORECASE)
             txt, script_added = re.subn(r'(</body>)', f'<script src="{script_prefix}last-updated.js"></script>\n\\1', txt, count=1, flags=re.IGNORECASE)
             if script_added == 0:
-                txt += f'\n<script src="{script_prefix}last-updated.js"></script>'
+                txt = txt.rstrip() + f'\n<script src="{script_prefix}last-updated.js"></script>'
+
+            if not re.search(r'</body\s*>', txt, flags=re.IGNORECASE):
+                txt = txt.rstrip() + '\n</body>'
+            if not re.search(r'</html\s*>', txt, flags=re.IGNORECASE):
+                txt = txt.rstrip() + '\n</html>'
             
             # Replace any inline toggle script blocks with an external include using the computed prefix
             try:
@@ -241,7 +310,7 @@ def build_site():
                     pass
 
         root = OUT_DIR
-        _update_static(root / 'index.html', 'U.S. Presidential Election State Results 1864-2024')
+        _update_static(root / 'index.html', 'U.S. Presidential Election State Results 1864-2024', insert_meta=False)
         _update_static(root / 'trend-viewer.html', 'Trend Viewer')
         _update_static(root / 'trends.html', 'Trends')
         _update_static(root / 'ranker.html', 'U.S. Presidential Election State Results Ranker')
@@ -249,7 +318,6 @@ def build_site():
         _update_static(root / 'paths2028.html', '2028 Paths to Victory')
         _update_static(root / 'methods.html', 'Methods and Data Sources')
         _update_static(root / 'attributions.html', 'Data Sources & Attribution')
-        _update_static(root / 'state-pages.html', 'State Pages Directory')
         _update_static(root / 'presidential_margins.html', 'Presidential margins CSV')
         # Also update other static docs that are managed outside the main generator
         _update_static(root / 'explorer.html', 'Explorer')
