@@ -9,16 +9,77 @@
   const SMALL_STATES = new Set(["MA","RI","CT","NJ","DE","MD","DC","NH","VT"]);
 
   // Proportional EV allocation function using largest remainder method
-  function allocateProportionalEVs(dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare) {
+  // Now supports multiple third parties via thirdPartyResults object
+  function allocateProportionalEVs(dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults) {
     const total = dVotes + rVotes + oVotes;
-    if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0 };
+    if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0, thirdParties: {} };
     
-    // Calculate exact proportional shares
+    // When thirdPartyResults is provided and has multiple parties, split third party votes proportionally
+    const thirdParties = {};
+    let hasMultipleThirdParties = false;
+    
+    if (thirdPartyResults && typeof thirdPartyResults === 'object') {
+      const thirdPartyEntries = Object.entries(thirdPartyResults);
+      if (thirdPartyEntries.length > 0) {
+        hasMultipleThirdParties = thirdPartyEntries.length > 1;
+        
+        // Calculate quotas for each party including third parties
+        const parties = [
+          { name: 'D', votes: dVotes },
+          { name: 'R', votes: rVotes }
+        ];
+        
+        // Add each third party
+        thirdPartyEntries.forEach(([name, votes]) => {
+          parties.push({ name: name, votes: +votes || 0, isThirdParty: true });
+        });
+        
+        // Calculate quotas using largest remainder method
+        const allocated = {};
+        let totalAllocated = 0;
+        const remainders = [];
+        
+        parties.forEach(p => {
+          const share = p.votes / total;
+          const quota = Math.floor(share * totalEVs);
+          const remainder = (share * totalEVs) - quota;
+          
+          if (p.isThirdParty) {
+            thirdParties[p.name] = quota;
+          } else {
+            allocated[p.name] = quota;
+          }
+          totalAllocated += quota;
+          remainders.push({ name: p.name, remainder, isThirdParty: p.isThirdParty });
+        });
+        
+        // Allocate remaining EVs
+        let remaining = totalEVs - totalAllocated;
+        remainders.sort((a, b) => b.remainder - a.remainder);
+        
+        for (let i = 0; i < remaining && i < remainders.length; i++) {
+          const r = remainders[i];
+          if (r.isThirdParty) {
+            thirdParties[r.name] = (thirdParties[r.name] || 0) + 1;
+          } else {
+            allocated[r.name] = (allocated[r.name] || 0) + 1;
+          }
+        }
+        
+        return {
+          D: allocated.D || 0,
+          R: allocated.R || 0,
+          O: 0, // Not used when we have detailed third parties
+          thirdParties: thirdParties
+        };
+      }
+    }
+    
+    // Fallback to simple D/R/O allocation when no detailed third party data
     const dShare = dVotes / total;
     const rShare = rVotes / total;
     const oShare = oVotes / total;
     
-    // Calculate integer portions (quotas)
     const dQuota = Math.floor(dShare * totalEVs);
     const rQuota = Math.floor(rShare * totalEVs);
     const oQuota = Math.floor(oShare * totalEVs);
@@ -26,7 +87,6 @@
     let allocated = { D: dQuota, R: rQuota, O: oQuota };
     let remaining = totalEVs - (dQuota + rQuota + oQuota);
     
-    // Allocate remaining EVs using largest remainder method
     if (remaining > 0) {
       const remainders = [
         { party: 'D', remainder: (dShare * totalEVs) - dQuota },
@@ -34,16 +94,14 @@
         { party: 'O', remainder: (oShare * totalEVs) - oQuota }
       ];
       
-      // Sort by remainder descending
       remainders.sort((a, b) => b.remainder - a.remainder);
       
-      // Allocate remaining EVs to parties with largest remainders
       for (let i = 0; i < remaining; i++) {
         allocated[remainders[i].party]++;
       }
     }
     
-    return allocated;
+    return { ...allocated, thirdParties: {} };
   }
 
   // Check if proportional EV mode is enabled
@@ -57,7 +115,7 @@
   }
 
   // Calculate proportional EV allocation for a specific unit
-  // Returns {D: number, R: number, O: number} or null if proportional mode is off
+  // Returns {D: number, R: number, O: number, thirdParties: {}} or null if proportional mode is off
   function calculateUnitProportionalEVs(unit) {
     try {
       if (!isProportionalEvMode()) return null;
@@ -94,7 +152,7 @@
             rVotesBase = Math.max(0, rVotesBase - votesToFlip);
           }
           const topThirdShare = totalVotesFromRow(r) > 0 ? (Math.max(0, +r.topThirdVotes || 0) / totalVotesFromRow(r)) : 0;
-          return allocateProportionalEVs(dVotesBase, rVotesBase, Math.max(0, tVotesBase), ev, topThirdShare);
+          return allocateProportionalEVs(dVotesBase, rVotesBase, Math.max(0, tVotesBase), ev, topThirdShare, r.thirdPartyResults);
         }
       }
       // console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
@@ -118,7 +176,7 @@
       }
 
       const topThirdShare = breakdown.topThirdShareOfTotal;
-      return allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare);
+      return allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare, r.thirdPartyResults);
     } catch(e) {
       return null;
     }
@@ -1384,7 +1442,27 @@
         : (totalVotes > 0 ? tVotes / totalVotes : 0);
       const topThirdShare = clampShare(topThirdShareRaw);
       const thirdShare = clampShare(totalThirdShareRaw);
-      const row = { year, unit, rm, nm, ev, tp: topThirdShare, thirdShare, dVotes, rVotes, tVotes, total: totalVotes, topThirdVotes };
+      
+      // Capture candidate names
+      const dCandidate = r.D_candidate || '';
+      const rCandidate = r.R_candidate || '';
+      const specialCaseNotes = r.special_case_notes || '';
+      
+      // Parse third_party_results JSON field
+      let thirdPartyResults = {};
+      try {
+        if (r.third_party_results) {
+          thirdPartyResults = JSON.parse(r.third_party_results);
+        }
+      } catch(e) {
+        // If parsing fails, leave as empty object
+      }
+      
+      const row = { 
+        year, unit, rm, nm, ev, tp: topThirdShare, thirdShare, 
+        dVotes, rVotes, tVotes, total: totalVotes, topThirdVotes,
+        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes
+      };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
       if (ev > 0) evByUnit.set(`${year}:${unit}`, ev);
@@ -2050,6 +2128,40 @@
       }
     }, 100);
   }
+  }
+
+  function updateCandidateInfo(year) {
+    const candidateNamesEl = document.getElementById('candidateNames');
+    const specialNotesEl = document.getElementById('specialNotes');
+    if (!candidateNamesEl || !specialNotesEl) return;
+    
+    // Get candidate names from national row for this year
+    const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+    if (!rows || !rows.length) {
+      candidateNamesEl.textContent = '';
+      specialNotesEl.textContent = '';
+      return;
+    }
+    
+    const nationalRow = rows.find(r => r.unit === 'NATIONAL' || r.unit === 'NAT');
+    if (!nationalRow) {
+      candidateNamesEl.textContent = '';
+      specialNotesEl.textContent = '';
+      return;
+    }
+    
+    // Update candidate names
+    const dCandidate = nationalRow.dCandidate || '';
+    const rCandidate = nationalRow.rCandidate || '';
+    if (dCandidate || rCandidate) {
+      candidateNamesEl.textContent = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
+    } else {
+      candidateNamesEl.textContent = '';
+    }
+    
+    // Update special notes
+    const specialNotes = nationalRow.specialCaseNotes || '';
+    specialNotesEl.textContent = specialNotes;
   }
 
   function updateAll(){
@@ -2821,6 +2933,8 @@
   } catch(e) {}
 
   dbg('updateAll: ending successfully');
+  // Update candidate names and special notes
+  try { updateCandidateInfo(year); } catch(e) {}
   // Update on-map labels last so they sit on top and have current EV totals
   try { updateStateLabels(year); } catch(e) {}
   try { raiseStateLabelsLayer(); } catch(e) {}
@@ -3384,6 +3498,7 @@ function renderFlipDetails(){
       
       // Initialize allocation
       let dEV = 0, rEV = 0, oEV = 0;
+      let thirdPartyEVs = {}; // Store individual third party EVs
       let showBlank = false;
       let dVotes = 0, rVotes = 0, oVotes = 0;
       
@@ -3476,12 +3591,14 @@ function renderFlipDetails(){
             // Allocate EVs proportionally using adjusted votes
             const allocFn = window.allocateProportionalEVs || function(d, r, o, ev) {
               // Fallback if function not available
-              return { D: 0, R: 0, O: 0 };
+              return { D: 0, R: 0, O: 0, thirdParties: {} };
             };
-            const alloc = allocFn(dVotesAdj, rVotesAdj, oVotesAdj, ev, +r.tp || 0);
+            const alloc = allocFn(dVotesAdj, rVotesAdj, oVotesAdj, ev, +r.tp || 0, r.thirdPartyResults);
             dEV = alloc.D;
             rEV = alloc.R;
             oEV = alloc.O;
+            // Store third party allocations if they exist
+            thirdPartyEVs = alloc.thirdParties || {};
           }
         } else {
           // Winner-take-all - match map logic exactly
@@ -3530,6 +3647,7 @@ function renderFlipDetails(){
         dEV: showBlank ? null : dEV,
         rEV: showBlank ? null : rEV,
         oEV: showBlank ? null : oEV,
+        thirdPartyEVs: showBlank ? {} : thirdPartyEVs, // Include third party EVs
         totalEV: ev,
         dVotes: showBlank ? null : dVotes,
         rVotes: showBlank ? null : rVotes,
@@ -3537,6 +3655,8 @@ function renderFlipDetails(){
         dPct: showBlank ? null : dPct,
         rPct: showBlank ? null : rPct,
         oPct: showBlank ? null : oPct,
+        dCandidate: r.dCandidate || '', // Add candidate names
+        rCandidate: r.rCandidate || '',
         showBlank: showBlank
       });
     });
@@ -3628,6 +3748,99 @@ function renderFlipDetails(){
     const table = document.getElementById('evBreakdownTable');
     if (!tbody || !table) return;
     
+    // Get and sort allocations
+    const allocations = getAllEvAllocations();
+    const sorted = sortAllocations(allocations);
+    
+    // Determine if we need third party columns and get candidate names
+    let dCandidate = '';
+    let rCandidate = '';
+    const thirdPartyNames = new Set();
+    
+    sorted.forEach(alloc => {
+      if (!dCandidate && alloc.dCandidate) dCandidate = alloc.dCandidate;
+      if (!rCandidate && alloc.rCandidate) rCandidate = alloc.rCandidate;
+      if (alloc.thirdPartyEVs && typeof alloc.thirdPartyEVs === 'object') {
+        Object.keys(alloc.thirdPartyEVs).forEach(name => {
+          if (alloc.thirdPartyEVs[name] > 0) {
+            thirdPartyNames.add(name);
+          }
+        });
+      }
+    });
+    
+    const hasThirdParties = thirdPartyNames.size > 0;
+    const thirdPartyList = Array.from(thirdPartyNames).sort();
+    
+    // Helper to get last name
+    const getLastName = (fullName) => {
+      if (!fullName) return '';
+      const parts = fullName.trim().split(/\s+/);
+      return parts[parts.length - 1];
+    };
+    
+    // Update table headers
+    const thead = table.querySelector('thead');
+    if (thead) {
+      const headerRow = thead.querySelector('tr');
+      if (headerRow) {
+        headerRow.innerHTML = '';
+        
+        // State column
+        const stateHeader = document.createElement('th');
+        stateHeader.className = 'sortable';
+        stateHeader.setAttribute('data-column', 'state');
+        stateHeader.textContent = 'State';
+        headerRow.appendChild(stateHeader);
+        
+        // Margin column
+        const marginHeader = document.createElement('th');
+        marginHeader.className = 'sortable';
+        marginHeader.setAttribute('data-column', 'margin');
+        marginHeader.textContent = 'Margin (D%, R%, O%)';
+        headerRow.appendChild(marginHeader);
+        
+        // D EVs column with candidate name
+        const dHeader = document.createElement('th');
+        dHeader.className = 'sortable';
+        dHeader.setAttribute('data-column', 'd');
+        dHeader.innerHTML = dCandidate ? `D EVs<br><span style="font-weight:normal;font-size:0.9em">${dCandidate}</span>` : 'D EVs';
+        headerRow.appendChild(dHeader);
+        
+        // R EVs column with candidate name
+        const rHeader = document.createElement('th');
+        rHeader.className = 'sortable';
+        rHeader.setAttribute('data-column', 'r');
+        rHeader.innerHTML = rCandidate ? `R EVs<br><span style="font-weight:normal;font-size:0.9em">${rCandidate}</span>` : 'R EVs';
+        headerRow.appendChild(rHeader);
+        
+        // Third party columns (if any have EVs in proportional mode)
+        if (hasThirdParties) {
+          thirdPartyList.forEach(name => {
+            const tpHeader = document.createElement('th');
+            tpHeader.className = 'sortable';
+            tpHeader.setAttribute('data-column', `tp-${name}`);
+            tpHeader.innerHTML = `${name}<br><span style="font-weight:normal;font-size:0.9em">EVs</span>`;
+            headerRow.appendChild(tpHeader);
+          });
+        } else {
+          // O EVs column (traditional third party aggregate)
+          const oHeader = document.createElement('th');
+          oHeader.className = 'sortable';
+          oHeader.setAttribute('data-column', 'o');
+          oHeader.textContent = 'O EVs';
+          headerRow.appendChild(oHeader);
+        }
+        
+        // Total EVs column
+        const totalHeader = document.createElement('th');
+        totalHeader.className = 'sortable';
+        totalHeader.setAttribute('data-column', 'total');
+        totalHeader.textContent = 'Total EVs';
+        headerRow.appendChild(totalHeader);
+      }
+    }
+    
     // Update sort indicators in headers
     const headers = table.querySelectorAll('th.sortable');
     headers.forEach(header => {
@@ -3638,28 +3851,32 @@ function renderFlipDetails(){
       }
     });
     
-    // Get and sort allocations
-    const allocations = getAllEvAllocations();
-    const sorted = sortAllocations(allocations);
-    
     // Build table rows
     tbody.innerHTML = '';
     
     // Calculate totals
     let totalD = 0, totalR = 0, totalO = 0, totalAll = 0;
+    const totalThirdParties = {};
+    thirdPartyList.forEach(name => totalThirdParties[name] = 0);
     
     sorted.forEach(alloc => {
       const row = document.createElement('tr');
       row.setAttribute('data-state', alloc.state);
       
-      // State name cell (with hover tooltip)
+      // State name cell (with hover tooltip showing last names)
       const stateCell = document.createElement('td');
       stateCell.textContent = alloc.stateName;
       if (!alloc.showBlank && alloc.dVotes !== null) {
         const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
         const voteInfo = [];
-        if (alloc.dVotes > 0) voteInfo.push(`D: ${formatter(alloc.dVotes)}`);
-        if (alloc.rVotes > 0) voteInfo.push(`R: ${formatter(alloc.rVotes)}`);
+        if (alloc.dVotes > 0) {
+          const dLastName = getLastName(alloc.dCandidate);
+          voteInfo.push(`D${dLastName ? ' (' + dLastName + ')' : ''}: ${formatter(alloc.dVotes)}`);
+        }
+        if (alloc.rVotes > 0) {
+          const rLastName = getLastName(alloc.rCandidate);
+          voteInfo.push(`R${rLastName ? ' (' + rLastName + ')' : ''}: ${formatter(alloc.rVotes)}`);
+        }
         if (alloc.oVotes > 0) voteInfo.push(`O: ${formatter(alloc.oVotes)}`);
         stateCell.title = voteInfo.join(' | ');
       }
@@ -3704,18 +3921,36 @@ function renderFlipDetails(){
       }
       row.appendChild(rCell);
       
-      // O EVs
-      const oCell = document.createElement('td');
-      if (alloc.showBlank) {
-        oCell.textContent = '—';
-        oCell.classList.add('blank-entry');
+      // Third party EVs (either individual columns or aggregate O column)
+      if (hasThirdParties) {
+        // Show individual third party columns
+        thirdPartyList.forEach(name => {
+          const tpCell = document.createElement('td');
+          if (alloc.showBlank) {
+            tpCell.textContent = '—';
+            tpCell.classList.add('blank-entry');
+          } else {
+            const tpEV = (alloc.thirdPartyEVs && alloc.thirdPartyEVs[name]) || 0;
+            const percent = alloc.totalEV > 0 ? Math.round((tpEV / alloc.totalEV) * 100) : 0;
+            tpCell.textContent = tpEV > 0 ? `${tpEV} (${percent}%)` : tpEV;
+            totalThirdParties[name] = (totalThirdParties[name] || 0) + tpEV;
+          }
+          row.appendChild(tpCell);
+        });
       } else {
-        const oEV = alloc.oEV || 0;
-        const percent = alloc.totalEV > 0 ? Math.round((oEV / alloc.totalEV) * 100) : 0;
-        oCell.textContent = oEV > 0 ? `${oEV} (${percent}%)` : oEV;
-        totalO += oEV;
+        // Show traditional O EVs column
+        const oCell = document.createElement('td');
+        if (alloc.showBlank) {
+          oCell.textContent = '—';
+          oCell.classList.add('blank-entry');
+        } else {
+          const oEV = alloc.oEV || 0;
+          const percent = alloc.totalEV > 0 ? Math.round((oEV / alloc.totalEV) * 100) : 0;
+          oCell.textContent = oEV > 0 ? `${oEV} (${percent}%)` : oEV;
+          totalO += oEV;
+        }
+        row.appendChild(oCell);
       }
-      row.appendChild(oCell);
       
       // Total EVs (always shown)
       const totalCell = document.createElement('td');
@@ -3753,11 +3988,23 @@ function renderFlipDetails(){
     totalRCell.style.fontWeight = 'bold';
     totalRow.appendChild(totalRCell);
     
-    const totalOCell = document.createElement('td');
-    const totalOPercent = totalAll > 0 ? ((totalO / totalAll) * 100).toFixed(1) : '0.0';
-    totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
-    totalOCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalOCell);
+    // Third party totals (either individual columns or aggregate O column)
+    if (hasThirdParties) {
+      thirdPartyList.forEach(name => {
+        const tpTotalCell = document.createElement('td');
+        const tpTotal = totalThirdParties[name] || 0;
+        const tpPercent = totalAll > 0 ? ((tpTotal / totalAll) * 100).toFixed(1) : '0.0';
+        tpTotalCell.textContent = tpTotal > 0 ? `${tpTotal} (${tpPercent}%)` : tpTotal;
+        tpTotalCell.style.fontWeight = 'bold';
+        totalRow.appendChild(tpTotalCell);
+      });
+    } else {
+      const totalOCell = document.createElement('td');
+      const totalOPercent = totalAll > 0 ? ((totalO / totalAll) * 100).toFixed(1) : '0.0';
+      totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
+      totalOCell.style.fontWeight = 'bold';
+      totalRow.appendChild(totalOCell);
+    }
     
     const totalAllCell = document.createElement('td');
     totalAllCell.textContent = totalAll;
