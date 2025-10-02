@@ -557,13 +557,11 @@ def make_data_page(rows: List[Dict]):
                     <div class='card table-wrap'>
                         <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
                     </div>
-                    <footer>{FOOTER_TEXT}<br />Last updated: {LAST_UPDATED}</footer>
-                </div>
-                <script>
-                    {ENHANCED_TOGGLE_JS}
-                </script>
-            </body>
-            </html>"""
+                <footer>{FOOTER_TEXT} Built as static HTML from CSV. <span data-last-updated>Last updated: ...</span></footer>
+            </div>
+            <script src="./last-updated.js"></script>
+        </body>
+        </html>"""
         write_text(OUT_DIR / "presidential_margins.html", html)
 
 
