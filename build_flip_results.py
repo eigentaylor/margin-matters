@@ -11,8 +11,8 @@ Outputs:
 
 Notes:
 - We treat units as states plus ME/NE districts (use abbr as-is, including ME-01, etc.).
-- For a unit won by party P in the original results, votes_to_flip = floor((winner_votes - runner_up_votes)/2) + 1.
-- We solve a 0/1 knapsack minimizing votes flipped to reach target EVs.
+- When we need to award a unit to a specific party (e.g., the national EV runner-up), we move enough votes to give that party a popular-vote plurality: floor((winner_votes - target_votes)/2) + 1.
+- We solve a 0/1 knapsack minimizing votes flipped (or total margin) to reach target EVs.
 """
 
 from __future__ import annotations
@@ -76,7 +76,7 @@ def group_by_year(rows):
 
 def compute_knapsack(units, target_ev, cost_func=None):
     """
-    units: list of dicts with keys {abbr, ev, votes_to_flip, total_votes}
+    units: list of dicts with keys {abbr, ev, votes_needed, total_votes}
     target_ev: minimal electoral votes to accumulate from flipped units
 
     Returns (chosen_units, min_votes, achieved_ev)
@@ -90,10 +90,16 @@ def compute_knapsack(units, target_ev, cost_func=None):
 
     # Default cost by votes; allow alternate cost via cost_func (e.g., margin percentage)
     if cost_func is None:
-        cost_func = lambda u: int(u['votes_to_flip'])
+        cost_func = lambda u: int(u['votes_needed'])
 
-    # Sort by efficiency for deterministic results (use votes_to_flip per EV as tie-breaker)
-    units_sorted = sorted(units, key=lambda u: ( (u['votes_to_flip'] / max(1, u['ev'])), u['abbr']))
+    # Precompute costs for deterministic ordering and DP
+    unit_costs = {id(u): int(cost_func(u)) for u in units}
+
+    # Sort by efficiency for deterministic results (use cost per EV as tie-breaker)
+    units_sorted = sorted(
+        units,
+        key=lambda u: ((unit_costs[id(u)] / max(1, u['ev'])), u['abbr'])
+    )
     
     # Use 2D DP: dp[i][v] = min votes to get exactly v EVs using first i items
     INF = 10**18
@@ -107,7 +113,7 @@ def compute_knapsack(units, target_ev, cost_func=None):
     for i in range(1, n + 1):
         u = units_sorted[i - 1]
         ev = u['ev']
-        votes = cost_func(u)
+        votes = unit_costs[id(u)]
         
         for v in range(max_ev + 1):
             # Don't take item i
@@ -160,10 +166,15 @@ def compute_knapsack_exact(units, target_ev, cost_func=None):
 
     # Default cost
     if cost_func is None:
-        cost_func = lambda u: int(u['votes_to_flip'])
+        cost_func = lambda u: int(u['votes_needed'])
+
+    unit_costs = {id(u): int(cost_func(u)) for u in units}
 
     # Sort for deterministic behaviour
-    units_sorted = sorted(units, key=lambda u: ((u['votes_to_flip'] / max(1, u['ev'])), u['abbr']))
+    units_sorted = sorted(
+        units,
+        key=lambda u: ((unit_costs[id(u)] / max(1, u['ev'])), u['abbr'])
+    )
 
     dp = [[INF] * (max_ev + 1) for _ in range(n + 1)]
     dp[0][0] = 0
@@ -171,7 +182,7 @@ def compute_knapsack_exact(units, target_ev, cost_func=None):
     for i in range(1, n + 1):
         u = units_sorted[i - 1]
         ev = u['ev']
-        votes = cost_func(u)
+        votes = unit_costs[id(u)]
         for v in range(max_ev + 1):
             dp[i][v] = dp[i - 1][v]
             if v >= ev and dp[i - 1][v - ev] != INF:
@@ -260,16 +271,29 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         ev = int(r['electoral_votes'] or 0)
         if ev <= 0:
             continue
-        # minimal popular votes to change unit winner to runner_party
-        margin = int(r['winner_votes'] - r['runner_up_votes'])
-        votes_to_flip = margin // 2 + 1
+        party_votes = {
+            'D': r['D_votes'],
+            'R': r['R_votes'],
+            'T': r['T_votes'],
+        }
+        winner_votes = r['winner_votes']
+        runner_votes = party_votes.get(runner_party, 0)
+        margin_to_runner = winner_votes - runner_votes
+        votes_to_runner = max(0, margin_to_runner // 2 + 1)
+
+        other_parties = [p for p in party_votes if p != r['party_win']]
+        best_other_votes = max(party_votes[p] for p in other_parties) if other_parties else 0
+        margin_to_best_other = winner_votes - best_other_votes
+        votes_to_best_other = max(0, margin_to_best_other // 2 + 1)
+
         units.append({
             'year': r['year'],
             'abbr': r['abbr'],
             'ev': ev,
-            'votes_to_flip': votes_to_flip,
             'total_votes': int(r['total_votes'] or 0),
             'from_party': r['party_win'],
+            'votes_to_runner': votes_to_runner,
+            'votes_to_best_other': votes_to_best_other,
         })
 
     # Define cost function by metric
@@ -279,20 +303,44 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         def cost_func(u):
             tv = max(1, int(u['total_votes'] or 0))
             # thousandths of a percent units: round(1000 * pct) == round(100000 * fraction)
-            return int(round(100000 * (int(u['votes_to_flip']) / tv)))
+            return int(round(100000 * (int(u['votes_needed']) / tv)))
     else:
         def cost_func(u):
-            return int(u['votes_to_flip'])
+            return int(u['votes_needed'])
 
     # Mode classic: make runner reach need
     target_ev_classic = max(0, need - runner_ev)
-    chosen_c, cost_c, ev_c = compute_knapsack(units, target_ev_classic, cost_func)
+    units_classic = [
+        {
+            'year': u['year'],
+            'abbr': u['abbr'],
+            'ev': u['ev'],
+            'total_votes': u['total_votes'],
+            'from_party': u['from_party'],
+            'votes_needed': max(0, int(u['votes_to_runner'])),
+            'target_party': runner_party,
+        }
+        for u in units
+    ]
+    chosen_c, cost_c, ev_c = compute_knapsack(units_classic, target_ev_classic, cost_func)
 
     # Mode no_majority: reduce winner below need by flipping from the winner regardless of runner gains
     # Equivalent to flipping at least winner_ev - (need - 1) EV away from winner
     target_away = max(0, winner_ev - (need - 1))
     # restrict to units currently held by winner_party (those flips reduce winner's EV)
-    units_from_winner = [u for u in units if u['from_party'] == winner_party]
+    units_from_winner = [
+        {
+            'year': u['year'],
+            'abbr': u['abbr'],
+            'ev': u['ev'],
+            'total_votes': u['total_votes'],
+            'from_party': u['from_party'],
+            'votes_needed': max(0, int(u['votes_to_best_other'])),
+            'target_party': 'any',
+        }
+        for u in units
+        if u['from_party'] == winner_party
+    ]
     chosen_n, cost_n, ev_n = compute_knapsack(units_from_winner, target_away, cost_func)
 
     # Mode tie: look for an exact set of EVs to give runner exactly total_ev/2 (tie).
@@ -302,7 +350,18 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         target_ev_tie = total_ev // 2 - runner_ev
         if target_ev_tie > 0:
             # units available to flip to runner are those not currently won by runner
-            units_for_tie = [u for u in units]
+            units_for_tie = [
+                {
+                    'year': u['year'],
+                    'abbr': u['abbr'],
+                    'ev': u['ev'],
+                    'total_votes': u['total_votes'],
+                    'from_party': u['from_party'],
+                    'votes_needed': max(0, int(u['votes_to_runner'])),
+                    'target_party': runner_party,
+                }
+                for u in units
+            ]
             tie_result = compute_knapsack_exact(units_for_tie, target_ev_tie, cost_func)
     chosen_t, cost_t, ev_t = tie_result
 
@@ -364,8 +423,8 @@ def main():
                         'mode': mode,
                         'abbr': u['abbr'],
                         'ev': u['ev'],
-                        'votes_to_flip': u['votes_to_flip'],
-                        'pct_of_state_votes': round(100.0 * (u['votes_to_flip'] / u['total_votes']) if u['total_votes'] else 0.0, 3),
+                        'votes_to_flip': u['votes_needed'],
+                        'pct_of_state_votes': round(100.0 * (u['votes_needed'] / u['total_votes']) if u['total_votes'] else 0.0, 3),
                     })
 
     # write CSVs
