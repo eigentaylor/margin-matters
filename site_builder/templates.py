@@ -400,6 +400,7 @@ PAGE_HTML = r"""<!doctype html>
 <body>
 <div class="container">
   %HEADER%
+  <div class="legend" style="margin-top:12px">%LEGEND%</div>
   <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
     <a class="back" href="../index.html">← Back to Map</a>
     <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>

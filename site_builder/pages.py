@@ -6,7 +6,7 @@ from .config import OUT_DIR, STATE_DIR, UNIT_DIR, SMALL_STATES, ME_NE_STATES, LA
 from .io_utils import write_text
 from .tables import split_columns_into_three, group_by_abbr, render_table, render_info_box
 from .templates import INDEX_HTML, PAGE_HTML, ENHANCED_TOGGLE_JS
-from .header import make_header
+from .header import make_header, make_legend
 
 
 def make_index(states_sorted: List[str], rows: List[Dict] | None = None, start_year: int = 1912):
@@ -230,6 +230,7 @@ def make_state_pages(states_sorted: List[str]):
     )
 
     header_html = make_header("State Pages")
+    legend_html = make_legend("State Pages")
     html = f"""<!doctype html>
         <html lang='en'>
         <head>
@@ -242,6 +243,7 @@ def make_state_pages(states_sorted: List[str]):
         <body>
             <div class='container'>
                 {header_html}
+                {legend_html}
                 <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
                     <a class="back" href="./index.html">← Back to Map</a>
                     <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
@@ -327,9 +329,11 @@ def build_pages(rows: List[Dict]):
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide", is_inner=True)
+        legend_text = f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide"
         page = (
             PAGE_HTML
             .replace("%HEADER%", header_html)
+            .replace("%LEGEND%", legend_text)
             .replace("%TITLE%", f"{st} · State")
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
             .replace("%STATE_ABBR%", st)
@@ -402,9 +406,11 @@ def build_pages(rows: List[Dict]):
             f'</div>'
         )
         header_html = make_header(f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})", is_inner=True)
+        legend_text = f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})"
         page = (
             PAGE_HTML
             .replace("%HEADER%", header_html)
+            .replace("%LEGEND%", legend_text)
             .replace("%TITLE%", f"{unit} · District")
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
             .replace("%STATE_ABBR%", unit)
@@ -506,6 +512,7 @@ def build_pages(rows: List[Dict]):
     page = (
         PAGE_HTML
         .replace("%HEADER%", make_header("National (NAT)", is_inner=True))
+        .replace("%LEGEND%", "National (NAT)")
         .replace("%TITLE%", f"NAT · National")
         .replace("%HEADING%", f"National (NAT)")
         .replace("%STATE_ABBR%", "NAT")
@@ -536,33 +543,35 @@ def make_data_page(rows: List[Dict]):
         cells = "".join(f"<td>{esc(r.get(h,''))}</td>" for h in headers)
         body_rows.append(f"<tr>{cells}</tr>")
 
-        header_html = make_header("Presidential margins CSV")
-        # Build the page HTML matching the manual edits: container + header, table, canonical footer, and the delta toggle JS
-        html = f"""<!doctype html>
-            <html lang='en'>
-            <head>
-                <meta charset='utf-8'/>
-                <meta name='viewport' content='width=device-width,initial-scale=1'/>
-                <title>Presidential margins CSV</title>
-                <link rel='stylesheet' href='styles.css'/>
-                <link rel="icon" href="favicon.svg" />
-            </head>
-        <body>
-          <div class='container'>
-            {header_html}
-            <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class="back" href="./index.html">← Back to Map</a>
-      <span data-last-updated>Last updated: ...</span></div></div>
-                    <h1 style='margin-top:0'>presidential_margins.csv</h1>
-                    <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
-                    <div class='card table-wrap'>
-                        <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
-                    </div>
-                <footer>{FOOTER_TEXT} Built as static HTML from CSV. <span data-last-updated>Last updated: ...</span></footer>
-            </div>
-            <script src="./last-updated.js"></script>
-        </body>
-        </html>"""
-        write_text(OUT_DIR / "presidential_margins.html", html)
+    header_html = make_header("Presidential margins CSV")
+    legend_html = make_legend("Presidential margins CSV")
+    # Build the page HTML matching the manual edits: container + header, table, canonical footer, and the delta toggle JS
+    html = f"""<!doctype html>
+        <html lang='en'>
+        <head>
+            <meta charset='utf-8'/>
+            <meta name='viewport' content='width=device-width,initial-scale=1'/>
+            <title>Presidential margins CSV</title>
+            <link rel='stylesheet' href='styles.css'/>
+            <link rel="icon" href="favicon.svg" />
+        </head>
+    <body>
+      <div class='container'>
+        {header_html}
+        {legend_html}
+        <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class="back" href="./index.html">← Back to Map</a>
+  <span data-last-updated>Last updated: ...</span></div>
+                <h1 style='margin-top:0'>presidential_margins.csv</h1>
+                <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
+                <div class='card table-wrap'>
+                    <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
+                </div>
+            <footer>{FOOTER_TEXT} Built as static HTML from CSV. <span data-last-updated>Last updated: ...</span></footer>
+        </div>
+        <script src="./last-updated.js"></script>
+    </body>
+    </html>"""
+    write_text(OUT_DIR / "presidential_margins.html", html)
 
 
 def make_methods_page():
