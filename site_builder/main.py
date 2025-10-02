@@ -184,12 +184,17 @@ def build_site():
                     # This handles cases where the header might have a different structure
                     pass
             
-            # Ensure footer includes Last updated timestamp
-            if 'Last updated:' not in txt:
-                txt = re.sub(r'(</footer>)', f' <span class="legend">Last updated: {LAST_UPDATED}</span>\\1', txt, count=1)
-            else:
-                # Update the footer timestamp as well
-                txt = re.sub(r'(Last updated:\s*)([0-9\-:\sA-Z]+)', rf'\g<1>{LAST_UPDATED}', txt)
+            footer_body = (
+                "Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />\n"
+                "Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).<br />\n"
+                f"Last updated: {LAST_UPDATED}"
+            )
+            footer_html = f"<footer>{footer_body}</footer>"
+            replaced_footer, n_footer = re.subn(r'<footer>[\s\S]*?</footer>', footer_html, txt, count=1)
+            if n_footer == 0:
+                # If no footer exists, append one at the end of the body but before </body>
+                replaced_footer = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1)
+            txt = replaced_footer
             
             # Replace any inline toggle script blocks with an external include using the computed prefix
             try:

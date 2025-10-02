@@ -25,6 +25,7 @@ def make_header(title: str, is_inner: bool = False) -> str:
         f'<a class="btn" href="{prefix}/methods.html">Methods</a>'
         f'<a class="btn" href="{prefix}/attributions.html">Attributions</a>'
         f'<a class="btn" href="{prefix}/presidential_margins.html">Data (CSV)</a>'
+        f'<a class="btn" href="{prefix}/attributions.html">Attributions</a>'
         f'</div>'
         f'<div class="legend">{title}</div>'
     # Use an external shared script so the toggle logic is centralized.

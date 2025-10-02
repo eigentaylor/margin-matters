@@ -532,31 +532,33 @@ def make_data_page(rows: List[Dict]):
         body_rows.append(f"<tr>{cells}</tr>")
 
         header_html = make_header("Presidential margins CSV")
+        # Build the page HTML matching the manual edits: container + header, table, canonical footer, and the delta toggle JS
         html = f"""<!doctype html>
-        <html lang='en'>
-        <head>
-            <meta charset='utf-8'/>
-            <meta name='viewport' content='width=device-width,initial-scale=1'/>
-            <title>Presidential margins CSV</title>
-            <link rel='stylesheet' href='styles.css'/>
-            <link rel="icon" href="favicon.svg" />
-        </head>
+            <html lang='en'>
+            <head>
+                <meta charset='utf-8'/>
+                <meta name='viewport' content='width=device-width,initial-scale=1'/>
+                <title>Presidential margins CSV</title>
+                <link rel='stylesheet' href='styles.css'/>
+                <link rel="icon" href="favicon.svg" />
+            </head>
         <body>
-            <div class='container'>
-                {header_html}
-                <h1 style='margin-top:0'>presidential_margins.csv</h1>
-                <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
-                <div class='card table-wrap'>
-                    <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
+          <div class='container'>
+            {header_html}
+            <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class='back' href='./index.html'>← Back to Map</a><div class='legend' style='font-size:0.85rem'>Last updated: {LAST_UPDATED}</div></div>
+                    <h1 style='margin-top:0'>presidential_margins.csv</h1>
+                    <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
+                    <div class='card table-wrap'>
+                        <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
+                    </div>
+                    <footer>{FOOTER_TEXT}<br />Last updated: {LAST_UPDATED}</footer>
                 </div>
-                <footer>{FOOTER_TEXT} Built from CSV. Last updated: {LAST_UPDATED}</footer>
-            </div>
-            <script>
-                {DELTA_TOGGLE_JS}
-            </script>
-        </body>
-        </html>"""
-    write_text(OUT_DIR / "presidential_margins.html", html)
+                <script>
+                    {ENHANCED_TOGGLE_JS}
+                </script>
+            </body>
+            </html>"""
+        write_text(OUT_DIR / "presidential_margins.html", html)
 
 
 def make_methods_page():
