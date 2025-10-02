@@ -2340,10 +2340,14 @@
       const rVotesAdj = total * rShare;
       const tVotesAdj = total * tShare;
       const topThirdShare = +r.tp || 0;
-      const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare);
+      const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare, r.thirdPartyResults);
       dEV += allocation.D;
       rEV += allocation.R;
       oEV += allocation.O;
+      // Also add any third party EVs
+      if (allocation.thirdParties) {
+        Object.values(allocation.thirdParties).forEach(tpEV => oEV += tpEV);
+      }
       counted = true;
     } else {
       if (voteLeader && voteLeader.votes > 0) {
