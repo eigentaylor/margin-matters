@@ -79,6 +79,75 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0}
   color:var(--accent);
 }
 
+/* Header toggle button (hamburger menu) - hidden on desktop */
+.header-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1101;
+}
+.header-toggle span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.header-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+.header-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+.header-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile header collapsible menu */
+@media (max-width: 768px) {
+  .header-toggle {
+    display: flex;
+  }
+  .site-header .small-links {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 16px;
+    z-index: 1100;
+  }
+  .site-header .small-links.expanded {
+    max-height: 500px;
+    padding: 16px;
+  }
+  .site-header .small-links .btn {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+  }
+  .card.site-header {
+    flex-wrap: wrap;
+  }
+  .card.site-header .legend {
+    order: -1;
+    flex: 1;
+    text-align: center;
+  }
+}
+
 /* PV slider value and totals: keep spacing stable and make numbers pop */
 #pvVal{display:inline-block;min-width:140px;text-align:left;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.2px;color:#fff;background:rgba(0,0,0,0.35);padding:3px 8px;border-radius:8px}
 .pv-totals{display:flex;gap:10px;align-items:stretch;justify-content:center;margin-top:10px;flex-wrap:wrap}
@@ -167,6 +236,13 @@ body.has-delta-toggle{padding-bottom:60px}
 
 /* Add padding to body when proportional EV toggle is visible */
 body.has-prop-ev-toggle{padding-bottom:60px}
+
+/* Increase padding on mobile to ensure sticky footer doesn't cover actual footer */
+@media (max-width: 768px) {
+  body.has-delta-toggle, body.has-prop-ev-toggle {
+    padding-bottom: 100px;
+  }
+}
 /* PV tools specific styling to match future.html dark look
   Ensure high contrast white text on dark backgrounds so controls
   remain readable when pages are rebuilt from templates. */
@@ -309,20 +385,56 @@ body.has-prop-ev-toggle{padding-bottom:60px}
 
 @media (max-width: 1200px){
   #enLogPanel{
-    position:static;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    top:auto;
     width:100%;
-    max-width:600px;
-    margin:16px auto;
-    max-height:none;
+    max-width:100%;
+    margin:0;
+    border-radius:16px 16px 0 0;
+    border-bottom:none;
+    max-height:70vh;
+    transition:transform 0.3s ease;
+    z-index:2200;
   }
-  .en-log-body{max-height:320px}
+  #enLogPanel.collapsed{
+    transform:translateY(calc(100% - 50px));
+  }
+  #enLogPanel.collapsed .en-log-body,
+  #enLogPanel.collapsed .en-log-uncalled{
+    display:none;
+  }
+  .en-log-header{
+    cursor:pointer;
+    user-select:none;
+    position:relative;
+    padding-right:30px;
+  }
+  .en-log-header::after{
+    content:'';
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%) rotate(180deg);
+    width:0;
+    height:0;
+    border-left:6px solid transparent;
+    border-right:6px solid transparent;
+    border-bottom:8px solid var(--accent);
+    transition:transform 0.3s ease;
+  }
+  #enLogPanel.collapsed .en-log-header::after{
+    transform:translateY(-50%) rotate(0deg);
+  }
+  .en-log-body{max-height:calc(70vh - 100px)}
 }
 
 @media (max-width: 720px){
   #enLogPanel{
     padding:12px;
-    border-radius:12px;
-    box-shadow:0 10px 24px rgba(0,0,0,0.4);
+    box-shadow:0 -4px 24px rgba(0,0,0,0.5);
   }
 }
 

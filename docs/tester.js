@@ -124,6 +124,81 @@
     }
   }
 
+  function getUnitFinalVoteTotals(unit, opts){
+    try {
+      if (!unit) return null;
+      const options = opts || {};
+      let year = (options.year != null && isFinite(options.year)) ? Number(options.year) : null;
+      if (!isFinite(year) || year <= 0) {
+        if (typeof window._curYear === 'number' && isFinite(window._curYear)) {
+          year = window._curYear;
+        } else {
+          const yearEl = document.getElementById('yearSlider');
+          year = yearEl ? parseInt(yearEl.value, 10) : null;
+        }
+      }
+      if (!isFinite(year) || year <= 0) return null;
+
+      let pv = (options.pv != null && isFinite(options.pv)) ? Number(options.pv) : null;
+      if (!isFinite(pv)) pv = (typeof window._curPv === 'number' && isFinite(window._curPv)) ? window._curPv : 0;
+
+      const useActiveFlip = options.useActiveFlip !== false;
+      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+      if (!keyUnit) return null;
+
+      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+      if (!rows || !rows.length) return null;
+
+      const row = rows.find(x => x.unit === keyUnit);
+      if (!row) return null;
+
+      const totalVotesRaw = totalVotesFromRow(row);
+      if (!isFinite(totalVotesRaw) || totalVotesRaw <= 0) return null;
+
+      const natMargin = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
+      const breakdown = computePvAdjustedBreakdown(row, pv, natMargin);
+
+      let dVotes = Math.max(0, breakdown.dVotes);
+      let rVotes = Math.max(0, breakdown.rVotes);
+      let totalThirdVotes = Math.max(0, breakdown.totalThirdVotes);
+      let topThirdVotes = Math.max(0, breakdown.topThirdVotes);
+      let totalVotes = Math.max(0, breakdown.totalVotes || totalVotesRaw);
+
+      if (totalThirdVotes < topThirdVotes) totalThirdVotes = topThirdVotes;
+
+      if (useActiveFlip) {
+        const flipped = (typeof isUnitFlipped === 'function') ? isUnitFlipped(year, keyUnit) : false;
+        const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
+        if (flipped && activeFlip && Array.isArray(activeFlip.units)) {
+          const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
+          if (flipUnit && flipUnit.votes_to_flip) {
+            const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
+            if (votesToFlip > 0) {
+              if (dVotes >= rVotes) {
+                dVotes = Math.max(0, dVotes - votesToFlip);
+                rVotes = rVotes + votesToFlip;
+              } else {
+                dVotes = dVotes + votesToFlip;
+                rVotes = Math.max(0, rVotes - votesToFlip);
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        dVotes,
+        rVotes,
+        topThirdVotes,
+        totalThirdVotes,
+        totalVotes
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+  try { window.getUnitFinalVoteTotals = getUnitFinalVoteTotals; } catch(e) {}
+
   // Calculate vote tallies for a specific unit (for index.html - real elections only)
   // Returns {D: number, R: number, O: number, total: number} or null if not applicable
   // Put a star on the current leader (D, R, or O)
@@ -133,7 +208,11 @@
       const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
       if (!isIndexPage) return null;
       
-      const year = window._curYear;
+      let year = (typeof window._curYear === 'number' && isFinite(window._curYear)) ? window._curYear : null;
+      if (!isFinite(year)) {
+        const yearEl = document.getElementById('yearSlider');
+        year = yearEl ? parseInt(yearEl.value, 10) : null;
+      }
       const pv = window._curPv || 0;
       if (!year || year > 2024) return null; // Only real elections
       
@@ -175,69 +254,12 @@
         }
       }
       
-      // For non-election-night mode, use the normal calculation
-      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-      if (!rows || !rows.length) return null;
-      
-      const r = rows.find(x => x.unit === keyUnit);
-      if (!r) return null;
-      
-      const total = totalVotesFromRow(r);
-      if (total <= 0) return null;
+      const totals = getUnitFinalVoteTotals(unit, { year, pv });
+      if (!totals) return null;
 
-      const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
-      const flipped = isUnitFlipped(year, keyUnit);
-
-      if (flipped && activeFlip && activeFlip.units) {
-        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-        if (flipUnit && flipUnit.votes_to_flip) {
-          let dVotesBase = Math.max(0, +r.dVotes || 0);
-          let rVotesBase = Math.max(0, +r.rVotes || 0);
-          const topThirdVotesBase = Math.max(0, +r.topThirdVotes || 0);
-          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotesBase >= rVotesBase) {
-            dVotesBase = Math.max(0, dVotesBase - votesToFlip);
-            rVotesBase = rVotesBase + votesToFlip;
-          } else {
-            dVotesBase = dVotesBase + votesToFlip;
-            rVotesBase = Math.max(0, rVotesBase - votesToFlip);
-          }
-          return {
-            D: Math.round(dVotesBase),
-            R: Math.round(rVotesBase),
-            O: Math.round(topThirdVotesBase),
-            total: Math.round(dVotesBase + rVotesBase + topThirdVotesBase)
-          };
-        }
-      }
-      // Apply PV adjustment to get estimated vote tallies
-      // console.log('Calculating vote tallies for', keyUnit, 'with PV shift', pv, 'and row', r, 'nat margin', getNatMargin(year));
-      const breakdown = computePvAdjustedBreakdown(r, pv, getNatMargin(year));
-      if ((breakdown.dVotes || 0) <= EPS && (breakdown.rVotes || 0) <= EPS && (breakdown.topThirdVotes || 0) <= EPS) {
-        return null;
-      }
-
-      let dVotesAdj = Math.max(0, breakdown.dVotes);
-      let rVotesAdj = Math.max(0, breakdown.rVotes);
-      let topThirdVotesAdj = Math.max(0, breakdown.topThirdVotes);
-
-      if (flipped && activeFlip && activeFlip.units) {
-        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-        if (flipUnit && flipUnit.votes_to_flip) {
-          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotesAdj >= rVotesAdj) {
-            dVotesAdj = Math.max(0, dVotesAdj - votesToFlip);
-            rVotesAdj = rVotesAdj + votesToFlip;
-          } else {
-            dVotesAdj = dVotesAdj + votesToFlip;
-            rVotesAdj = Math.max(0, rVotesAdj - votesToFlip);
-          }
-        }
-      }
-
-      const dRounded = Math.round(dVotesAdj);
-      const rRounded = Math.round(rVotesAdj);
-      const oRounded = Math.round(topThirdVotesAdj);
+      const dRounded = Math.round(Math.max(0, totals.dVotes || 0));
+      const rRounded = Math.round(Math.max(0, totals.rVotes || 0));
+      const oRounded = Math.round(Math.max(0, totals.topThirdVotes || 0));
 
       return {
         D: dRounded,
@@ -2060,7 +2082,7 @@
   const arr = byYear.get(year) || [];
   const abbrColors = new Map();
   const unitColors = new Map();
-  const unitParties = new Map(); // unit -> 'Blue'|'Red'|'Even'
+  const unitParties = new Map(); // unit -> 'Blue'|'Red'|'Even'|'Other'
   let dEV = 0, rEV = 0, oEV = 0;
   // Build a quick lookup of votes_to_flip for active scenario
   const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
@@ -2095,13 +2117,49 @@
         ev = (+r.ev);
         if (!isFinite(ev)) ev = 0;
       }
+
+      const tallies = calculateUnitVoteTallies(unit);
+      let voteLeader = null;
+      let voteRunner = null;
+      let votesColor = null;
+      let votesMargin = null;
+      if (tallies && isFinite(tallies.total) && tallies.total > 0) {
+        const breakdown = [
+          { code: 'D', votes: Math.max(0, tallies.D || 0) },
+          { code: 'R', votes: Math.max(0, tallies.R || 0) },
+          { code: 'O', votes: Math.max(0, tallies.O || 0) }
+        ].filter(p => p.votes > 0);
+        breakdown.sort((a, b) => b.votes - a.votes);
+        voteLeader = breakdown[0] || null;
+        voteRunner = breakdown[1] || null;
+        if (voteLeader && voteLeader.votes > 0) {
+          if (voteLeader.code === 'O') {
+            votesColor = '#FFD700';
+            votesMargin = 0;
+          } else {
+            const runnerVotes = voteRunner ? voteRunner.votes : 0;
+            const totalVotes = Math.max(voteLeader.votes + runnerVotes, tallies.total);
+            let mv = (voteLeader.votes - runnerVotes) / Math.max(EPS, totalVotes);
+            if (!isFinite(mv)) mv = 0;
+            mv = clampMargin(mv);
+            if (voteLeader.code === 'R') mv = -mv;
+            votesMargin = mv;
+            votesColor = marginToColor(mv);
+          }
+        }
+      }
   // Special case for Alabama 1960: if AL is not colored red (R wins), give 5 D EVs and 6 O EVs
   let counted = false;
-  if (year === 1960 && unit === 'AL' && m >= 0) {
-    // Alabama in 1960: if not Republican (m >= 0), split EVs as 5 D and 6 O
-    dEV += 5;
-    oEV += 6;
-    counted = true;
+  if (!counted && year === 1960 && unit === 'AL') {
+    if (voteLeader && voteLeader.code !== 'R') {
+      dEV += 5;
+      oEV += 6;
+      counted = true;
+    } else if (!voteLeader && m >= 0) {
+      dEV += 5;
+      oEV += 6;
+      counted = true;
+    }
   }
   
   // Count EVs, ensuring the tipping-point state is included (no black sliver)
@@ -2132,16 +2190,25 @@
       oEV += allocation.O;
       counted = true;
     } else {
-      // Original winner-take-all logic
-      const t = +r.tp || 0;
-      const a = 3*t - 1;
-      if (a > 0) {
-        const rVal = +(r.rm || 0);
-        const nD = -rVal + a;
-        const nR = -rVal - a;
-        if (pv > nR + EPS && pv < nD - EPS) {
-          if (!isNaN(ev)) oEV += ev; // Other wins here
-          counted = true;
+      if (voteLeader && voteLeader.votes > 0) {
+        if (!isNaN(ev)) {
+          if (voteLeader.code === 'D') dEV += ev;
+          else if (voteLeader.code === 'R') rEV += ev;
+          else oEV += ev;
+        }
+        counted = true;
+      } else {
+        // Original winner-take-all fallback using PV margins
+        const t = +r.tp || 0;
+        const a = 3*t - 1;
+        if (a > 0) {
+          const rVal = +(r.rm || 0);
+          const nD = -rVal + a;
+          const nR = -rVal - a;
+          if (pv > nR + EPS && pv < nD - EPS) {
+            if (!isNaN(ev)) oEV += ev; // Other wins here
+            counted = true;
+          }
         }
       }
     }
@@ -2159,33 +2226,41 @@
   }
       const st = unit.slice(0,2);
       const prev = abbrColors.get(st);
-      // Special pluralities: dynamic yellow window using third-party share (any year)
-      let color;
+
+      // Special pluralities / fallback logic when vote tallies are unavailable
       const rVal = +(r.rm || 0);
-      {
-        const t = +r.tp || 0;
-          a = 3*t - 1;
-          if (year === 1948 && r.unit === 'AL') {
-            a = 0.0;
-            color = (pv < -rVal) ? marginToColor(m) : '#FFD700'; // Thurmond vs Dewey (no Truman here)
-          }
-          else if (a > 0) {
-            // Use same boundaries as EV counting: strict inside (nR + EPS, nD - EPS)
-            const nD = -rVal + a;
-            const nR = -rVal - a;
-            if (pv > nR + EPS && pv < nD - EPS) {
-              color = '#FFD700'; // yellow within the window
-            } else {
-              color = marginToColor(m);
-            }
-          } else {
-            color = marginToColor(m);
-          }
+      const tShare = +r.tp || 0;
+      const thirdWindow = 3 * tShare - 1;
+      let fallbackColor;
+      if (year === 1948 && r.unit === 'AL') {
+        fallbackColor = (pv < -rVal) ? marginToColor(m) : '#FFD700';
+      } else if (thirdWindow > 0) {
+        const nD = -rVal + thirdWindow;
+        const nR = -rVal - thirdWindow;
+        if (pv > nR + EPS && pv < nD - EPS) {
+          fallbackColor = '#FFD700';
+        } else {
+          fallbackColor = marginToColor(m);
+        }
+      } else {
+        fallbackColor = marginToColor(m);
       }
-  if (!prev || Math.abs(m) > Math.abs(prev.m)) abbrColors.set(st, { m, color });
-  // store per-unit color and party label so district polygons can be filled individually
-  unitColors.set(unit, color);
-  unitParties.set(unit, (m > EPS) ? 'Blue' : ((m < -EPS) ? 'Red' : 'Even'));
+
+  const color = votesColor || fallbackColor;
+  const marginForState = (votesMargin != null) ? votesMargin : m;
+      const isStateAggregate = unit.length === 2 || unit.endsWith('-AL');
+      const isThirdPartyColor = color === '#FFD700';
+      const shouldOverrideStateColor = !prev || isStateAggregate || isThirdPartyColor || Math.abs(marginForState) > Math.abs(prev.m);
+      if (shouldOverrideStateColor) {
+        abbrColors.set(st, { m: marginForState, color });
+      }
+      // store per-unit color and party label so district polygons can be filled individually
+      unitColors.set(unit, color);
+      if (voteLeader && voteLeader.code === 'O') {
+        unitParties.set(unit, 'Other');
+      } else {
+        unitParties.set(unit, (marginForState > EPS) ? 'Blue' : ((marginForState < -EPS) ? 'Red' : 'Even'));
+      }
     });
 
     // After per-unit colors are computed, adjust ME-AL/NE-AL statewide color to account for district flips
