@@ -170,66 +170,31 @@ def build_site():
                 # Replace legend text if present
                 txt = re.sub(r'<div class="legend">([\s\S]*?)</div>', f'<div class="legend">{title}</div>', txt, count=1)
             
-            # Replace hardcoded timestamps with data attribute and dynamic loading
-            # Use a careful two-step process: first replace timestamps, then add attributes
-            
-            # Step 1: Replace all timestamp values with placeholder
-            # Replace in styled divs (back-link area)
-            txt = re.sub(
-                r'(>)Last updated:\s*[0-9\-:\sA-Z]+(</div>)',
-                r'\1Last updated: ...\2',
-                txt
-            )
-            
-            # Step 2: Add data-last-updated attribute to elements that have the placeholder but don't have the attribute yet
-            # For styled divs
-            txt = re.sub(
-                r'<div([^>]*style="[^"]*font-size:0\.85rem[^"]*"[^>]*)>Last updated: \.\.\.',
-                lambda m: f'<div{m.group(1)} data-last-updated>Last updated: ...' if 'data-last-updated' not in m.group(1) else m.group(0),
-                txt
-            )
-            
-            # For legend divs
-            txt = re.sub(
-                r'<div(class="legend"[^>]*)>Last updated: \.\.\.',
-                lambda m: f'<div {m.group(1)} data-last-updated>Last updated: ...' if 'data-last-updated' not in m.group(1) else m.group(0),
-                txt
-            )
-            
-            # For any remaining standalone timestamps, wrap in span
-            txt = re.sub(
-                r'(?<!>)(?<!\.)(Last updated:)\s*[0-9\-:\sA-Z]+(?!<)',
-                r'<span data-last-updated>\1 ...</span>',
-                txt
-            )
-            
-            # If there's no "← Back to Map" link, add one with timestamp placeholder after the site-header
+            # Replace any visible "Last updated:" text with a dynamic loader that the
+            # client-side last-updated.js will populate. This converts hardcoded
+            # timestamps or ellipses into a span with data-last-updated.
+            txt = re.sub(r'Last updated:\s*(?:[0-9\-:\sA-Z]+|\.{3})', '<span data-last-updated>Last updated: ...</span>', txt)
+
+            # If there's no "← Back to Map" link, add one with a dynamic timestamp span
             if '← Back to Map' not in txt and '&larr; Back to Map' not in txt:
-                back_link = f'\n    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">\n      <a class="back" href="{script_prefix}index.html">← Back to Map</a>\n      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>\n    </div>'
-                # Insert after the site-header div closes
-                # The site-header ends with </script></div>, so match that explicitly
+                back_link = f'\n    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">\n      <a class="back" href="{script_prefix}index.html">← Back to Map</a>\n      <div class="legend" style="font-size:0.85rem"><span data-last-updated>Last updated: ...</span></div>\n    </div>'
                 pattern = r'(<div class="card site-header"[^>]*>[\s\S]*?<script[^>]*header-toggle\.js[^>]*></script>\s*</div>)'
                 if re.search(pattern, txt):
                     txt = re.sub(pattern, r'\1' + back_link, txt, count=1)
-                else:
-                    # If the above pattern doesn't match, try without the script tag requirement
-                    # This handles cases where the header might have a different structure
-                    pass
-            
-            # Update footer with dynamic timestamp loading
+
+            # Update footer to include canonical attribution and a dynamic timestamp
             footer_body = (
                 "Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />\n"
                 "Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).<br />\n"
-                '<span data-last-updated>Last updated: ...</span>'
+                "<span data-last-updated>Last updated: ...</span>"
             )
             footer_html = f"<footer>{footer_body}</footer>"
             replaced_footer, n_footer = re.subn(r'<footer>[\s\S]*?</footer>', footer_html, txt, count=1)
             if n_footer == 0:
-                # If no footer exists, append one at the end of the body but before </body>
                 replaced_footer = re.sub(r'(</body>)', footer_html + '\n\\1', txt, count=1)
             txt = replaced_footer
-            
-            # Add last-updated.js script before </body> if not already present
+
+            # Ensure last-updated.js is included once before </body>
             if 'last-updated.js' not in txt:
                 txt = re.sub(r'(</body>)', f'<script src="{script_prefix}last-updated.js"></script>\n\\1', txt, count=1)
             
