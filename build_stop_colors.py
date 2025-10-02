@@ -157,6 +157,31 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             base_d_share = d_votes_base / two_party_votes
             base_margin = 2 * base_d_share - 1
             
+            # Helper function to determine winner at a given PV margin
+            def get_winner_at_pv(pv_margin):
+                pv_shift = pv_margin - nat
+                target_margin = base_margin + pv_shift
+                d = two_party_votes * (target_margin + 1) / 2
+                r = two_party_votes * (1 - (target_margin + 1) / 2)
+                o = o_votes_base
+                
+                if d > r and d > o:
+                    return 'D'
+                elif r > d and r > o:
+                    return 'R'
+                elif o > d and o > r:
+                    return 'T'
+                else:
+                    # Tie - use side relative to national
+                    return 'D' if (pv_margin - nat) >= 0 else 'R'
+            
+            # Helper to check if a stop changes the winner
+            def stop_changes_winner(stop):
+                # Check winner just before and just after the stop
+                before = get_winner_at_pv(stop - 0.0001)
+                after = get_winner_at_pv(stop + 0.0001)
+                return before != after
+            
             # Generate stops for ALL pairwise transitions between D, R, and O
             # We need to find PV margins where any two become equal
             
@@ -165,7 +190,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             pv_shift_dr = target_margin_dr - base_margin
             stop_dr = nat + pv_shift_dr
             
-            if abs(stop_dr) <= PV_CAP:
+            if abs(stop_dr) <= PV_CAP and stop_changes_winner(stop_dr):
                 stops_set.add(stop_dr)
                 stop_to_units[stop_dr].append(abbr)
                 sgn = 1.0 if (stop_dr - nat) > 0 else (-1.0 if (stop_dr - nat) < 0 else 1.0)
@@ -179,7 +204,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 pv_shift_do = target_margin_do - base_margin
                 stop_do = nat + pv_shift_do
                 
-                if abs(stop_do) <= PV_CAP:
+                if abs(stop_do) <= PV_CAP and stop_changes_winner(stop_do):
                     stops_set.add(stop_do)
                     stop_to_units[stop_do].append(abbr)
                     sgn = 1.0 if (stop_do - nat) > 0 else (-1.0 if (stop_do - nat) < 0 else 1.0)
@@ -193,7 +218,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 pv_shift_ro = target_margin_ro - base_margin
                 stop_ro = nat + pv_shift_ro
                 
-                if abs(stop_ro) <= PV_CAP:
+                if abs(stop_ro) <= PV_CAP and stop_changes_winner(stop_ro):
                     stops_set.add(stop_ro)
                     stop_to_units[stop_ro].append(abbr)
                     sgn = 1.0 if (stop_ro - nat) > 0 else (-1.0 if (stop_ro - nat) < 0 else 1.0)
