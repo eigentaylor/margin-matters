@@ -134,7 +134,17 @@ def build_site():
                 txt = path.read_text(encoding='utf-8')
             except Exception:
                 return
-            # Build canonical header HTML (includes hamburger toggle and inline toggle script)
+            # Compute relative prefix for header-toggle.js depending on file depth.
+            try:
+                rel = path.relative_to(OUT_DIR)
+                parts = rel.parts
+                if len(parts) <= 1:
+                    script_prefix = './'
+                else:
+                    script_prefix = '../' * (len(parts) - 1)
+            except Exception:
+                script_prefix = './'
+            # Build canonical header HTML (includes hamburger toggle and now expects external toggle script)
             hdr = make_header(title, is_inner=False)
             # Replace any site-header blocks that are missing the headerToggle with the canonical header.
             def _replace_missing_toggle(match):
@@ -157,6 +167,11 @@ def build_site():
             # Ensure footer includes Last updated timestamp
             if 'Last updated:' not in txt:
                 txt = re.sub(r'(</footer>)', f' <span class="legend">Last updated: {LAST_UPDATED}</span>\\1', txt, count=1)
+            # Replace any inline toggle script blocks with an external include using the computed prefix
+            try:
+                txt = re.sub(r'<script>\s*\(function\(\)\{[\s\S]*?document.getElementById\("headerToggle"\);[\s\S]*?\}\)\(\)\s*<\/script>', f'<script src="{script_prefix}header-toggle.js"></script>', txt, flags=re.M)
+            except Exception:
+                pass
             try:
                 path.write_text(txt, encoding='utf-8')
                 print(f"Updated header/footer in {path.name}")
@@ -169,9 +184,9 @@ def build_site():
                     # Inject id on first small-links and prepend the header toggle button
                     if '<div class="small-links"' in txt:
                         txt = txt.replace('<div class="small-links"', '<button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false"><span></span><span></span><span></span></button>\n<div class="small-links" id="headerNav"', 1)
-                    # Append inline toggle script after the first legend div (likely the header title)
-                    script = '(function(){const toggle = document.getElementById("headerToggle");const nav = document.getElementById("headerNav");if (toggle && nav) {toggle.addEventListener("click", function() {const isExpanded = nav.classList.toggle("expanded");toggle.setAttribute("aria-expanded", isExpanded);toggle.classList.toggle("active");});}})()'
-                    txt = re.sub(r'(<div class="legend">[\s\S]*?</div>)', r"\1<script>" + script + r"</script>", txt, count=1)
+                    # Append external shared script after the first legend div (likely the header title)
+                    script_tag = f'<script src="{script_prefix}header-toggle.js"></script>'
+                    txt = re.sub(r'(<div class="legend">[\s\S]*?</div>)', r"\1" + script_tag, txt, count=1)
                     path.write_text(txt, encoding='utf-8')
                     print(f"Injected header toggle into {path.name}")
                 except Exception:

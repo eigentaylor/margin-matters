@@ -26,19 +26,8 @@ def make_header(title: str, is_inner: bool = False) -> str:
         f'<a class="btn" href="{prefix}/presidential_margins.html">Data (CSV)</a>'
         f'</div>'
         f'<div class="legend">{title}</div>'
-        f'<script>'
-        f'(function(){{'
-        f'const toggle = document.getElementById("headerToggle");'
-        f'const nav = document.getElementById("headerNav");'
-        f'if (toggle && nav) {{'
-        f'toggle.addEventListener("click", function() {{'
-        f'const isExpanded = nav.classList.toggle("expanded");'
-        f'toggle.setAttribute("aria-expanded", isExpanded);'
-        f'toggle.classList.toggle("active");'
-        f'}});'
-        f'}}'
-        f'}})()'
-        f'</script>'
+    # Use an external shared script so the toggle logic is centralized.
+    f'<script src="{prefix}/header-toggle.js"></script>'
         f'</div>'
     )
 
