@@ -18,8 +18,10 @@ LAST_UPDATED = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M UTC"
 
 FOOTER_TEXT = (
     "Site by eigentaylor.<br />\n"
-    "Data (possibly incorrectly scraped) from Wikipedia.<br /> \n"
-    "Please report any innaccuracies to me through discord: eigentaylor ·"
+    "Please report any inaccuracies to me through discord: eigentaylor ·"
+    "Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>.<br />\n"
+    "Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0)."
+    
 )
 
 EXPLANATION_TEXT = (
