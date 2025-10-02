@@ -17,6 +17,64 @@ THIRD_PARTY_WINS = {
     1968: ['AL', 'AR', 'GA', 'LA', 'MS'],
 }
 
+def get_candidate_names(year):
+
+    names_by_year = {
+        2024: ('Donald Trump', 'Kamala Harris'),
+        2020: ('Donald Trump', 'Joe Biden'),
+        2016: ('Donald Trump', 'Hillary Clinton'),
+        2012: ('Mitt Romney', 'Barack Obama'),
+        2008: ('John McCain', 'Barack Obama'),
+        2004: ('George W. Bush', 'John Kerry'),
+        2000: ('George W. Bush', 'Al Gore'),
+        1996: ('Bob Dole', 'Bill Clinton'),
+        1992: ('George H.W. Bush', 'Bill Clinton'),
+        1988: ('George H.W. Bush', 'Michael Dukakis'),
+        1984: ('Ronald Reagan', 'Walter Mondale'),
+        1980: ('Ronald Reagan', 'Jimmy Carter'),
+        1976: ('Gerald Ford', 'Jimmy Carter'),
+        1972: ('Richard Nixon', 'George McGovern'),
+        1968: ('Richard Nixon', 'Hubert Humphrey'),
+        1964: ('Barry Goldwater', 'Lyndon B. Johnson'),
+        1960: ('Richard Nixon', 'John F. Kennedy'),
+        1956: ('Dwight D. Eisenhower', 'Adlai Stevenson'),
+        1952: ('Dwight D. Eisenhower', 'Adlai Stevenson'),
+        1948: ('Thomas E. Dewey', 'Harry S. Truman'),
+        1944: ('Thomas E. Dewey', 'Franklin D. Roosevelt'),
+        1940: ('Wendell Willkie', 'Franklin D. Roosevelt'),
+        1936: ('Alf Landon', 'Franklin D. Roosevelt'),
+        1932: ('Herbert Hoover', 'Franklin D. Roosevelt'),
+        1928: ('Herbert Hoover', 'Al Smith'),
+        1924: ('Calvin Coolidge', 'John W. Davis'),
+        1920: ('Warren G. Harding', 'James M. Cox'),
+        1916: ('Charles Evans Hughes', 'Woodrow Wilson'),
+        1912: ('Theodore Roosevelt', 'Woodrow Wilson'), # Bull Moose Roosevelt was the main opponent
+        1908: ('William Howard Taft', 'William Jennings Bryan'),
+        1904: ('Theodore Roosevelt', 'Alton B. Parker'),
+        1900: ('William McKinley', 'William Jennings Bryan'),
+        1896: ('William McKinley', 'William Jennings Bryan'),
+        1892: ('Benjamin Harrison', 'Grover Cleveland'),
+        1888: ('Benjamin Harrison', 'Grover Cleveland'),
+        1884: ('James G. Blaine', 'Grover Cleveland'),
+        1880: ('James A. Garfield', 'Winfield Scott Hancock'),
+        1876: ('Rutherford B. Hayes', 'Samuel J. Tilden'),
+        1872: ('Ulysses S. Grant', 'Horace Greeley'),
+        1868: ('Ulysses S. Grant', 'Horatio Seymour'),
+        1864: ('Abraham Lincoln', 'George B. McClellan'),
+    }
+    return names_by_year.get(year, ('Republican', 'Democratic'))
+
+NOTES = {
+    # special notes for certain years/states
+    (1876, 'CO'): "In 1876, Colorado's 3 electoral votes were awarded to Hayes (R) as there was no popular election for president in the state; the state legislature appointed electors who voted for Hayes.",
+    (1868, 'FL'): "In 1868, Florida's 3 electoral votes were awarded to Grant (R) as there was no popular election for president in the state; the state legislature appointed electors who voted for Grant.",
+    (1864, 'LA'): "In 1864, Louisiana's 7 electoral votes were awarded to Lincoln (R) as there was no popular election for president in the state; the state legislature appointed electors who voted for Lincoln.",
+    (1912, None): "In 1912, the main opposition to Wilson (D) was Theodore Roosevelt of the Progressive Party (Bull Moose), who we consider the de facto Republican candidate for margin purposes, with Taft as a third-party candidate.",
+    (1948, 'AL'): "In 1948, Truman was not on the ballot in Alabama; the Democratic column represents a Dixiecrat slate. We copy the third-party votes to the D_votes column to reflect that this still indicates a Democratic-leaning outcome.",
+    (1960, 'MS'): "In 1960, the Democratic column in Mississippi represents unpledged electors; the main Democratic Party did not field electors in the state.",
+    (1960, 'AL'): "Voters in Alabama voted for electors individually, with 5 pledged to Kennedy (D) and 6 unpledged; we count D_votes and T_votes based on the highest vote-getting elector in each category, as Wikipedia does.",
+}
+
 def safe_int(x):
     try:
         return int(x)
@@ -248,6 +306,9 @@ def main():
                 'total_votes': r['total_votes'],
                 'electoral_votes': electoral_votes,
                 'third_party_results': r.get('third_party_results', ''),
+                
+                'D_candidate': get_candidate_names(year)[0],
+                'R_candidate': get_candidate_names(year)[1],
                 # top_third_party will be filled in below after parsing third_party_results
                 'top_third_party': '',
                 'top_third_party_share': r.get('top_third_party_share', 0.0),
@@ -294,6 +355,7 @@ def main():
                 'third_party_relative_share_str': utils.lean_str(third_party_relative, third_party=True) if third_party_relative is not None else '0.0',
                 # color will be assigned below based on the winner
                 'color': None,
+                'special_case_notes': NOTES.get((year, abbr), '') or NOTES.get((year, None), ''),
             }
             # Determine winner and color
             try:
@@ -399,6 +461,7 @@ def main():
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'electoral_votes', 'T_votes',
         'D_share', 'R_share', 
+        'D_candidate', 'R_candidate',
         'top_third_party_share', 'top_third_party', 'third_party_votes', 'total_votes', 'third_party_results',
         'D_delta', 'R_delta', 'total_delta',
         'pres_margin', 'pres_margin_delta',
@@ -417,6 +480,7 @@ def main():
         'two_party_margin_str', 'two_party_margin_delta_str',
         'two_party_national_margin_str', 'two_party_national_margin_delta_str',
         'two_party_relative_margin_str', 'two_party_relative_margin_delta_str',
+        'special_case_notes'
     ]
 
     with open(outfile, 'w', newline='', encoding='utf-8') as f:
