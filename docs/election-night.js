@@ -179,6 +179,29 @@
     elements.logPanel = document.getElementById('enLogPanel');
     // Hide the call log panel by default until the election-night simulation is active
     try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
+    
+    // Mobile collapse/expand functionality for call log
+    if (elements.logHeader && elements.logPanel) {
+      // Start collapsed on mobile
+      if (window.innerWidth <= 1200) {
+        elements.logPanel.classList.add('collapsed');
+      }
+      
+      elements.logHeader.addEventListener('click', () => {
+        if (window.innerWidth <= 1200) {
+          elements.logPanel.classList.toggle('collapsed');
+        }
+      });
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 1200) {
+          elements.logPanel.classList.remove('collapsed');
+        } else if (!elements.logPanel.classList.contains('collapsed')) {
+          // Keep expanded state on mobile if user already expanded it
+        }
+      });
+    }
   elements.confidence = document.getElementById('enConfidence');
   elements.confidenceVal = document.getElementById('enConfidenceVal');
   elements.victory = document.getElementById('enVictory');
