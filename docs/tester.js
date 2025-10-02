@@ -244,13 +244,26 @@
           // Don't display if no votes have been counted yet
           const total = dVotes + rVotes + oVotes;
           if (total <= 0) return null;
-          
-          return {
-            D: Math.round(dVotes),
-            R: Math.round(rVotes),
-            O: Math.round(oVotes),
-            total: Math.round(total)
-          };
+            // Special-case: 1948 AL stores Dixiecrat/Thurmond in the D column in the CSV;
+            // for display we zero out the D_col so it is not shown as a Democratic two-party total.
+            try {
+              const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0,2) : null;
+              if (year === 1948 && abbr === 'AL') {
+                return {
+                  D: 0,
+                  R: Math.round(rVotes),
+                  O: Math.round(oVotes),
+                  total: Math.round(rVotes + oVotes)
+                };
+              }
+            } catch(e) {}
+
+            return {
+              D: Math.round(dVotes),
+              R: Math.round(rVotes),
+              O: Math.round(oVotes),
+              total: Math.round(total)
+            };
         }
       }
       
@@ -260,6 +273,37 @@
       const dRounded = Math.round(Math.max(0, totals.dVotes || 0));
       const rRounded = Math.round(Math.max(0, totals.rVotes || 0));
       const oRounded = Math.round(Math.max(0, totals.topThirdVotes || 0));
+
+      // For historical special cases (1948 AL) the CSV intentionally copies
+      // the Dixiecrat/Thurmond total into the D_votes column. For tooltip
+      // clarity we do not display that copied D_votes as Democratic votes.
+      try {
+        const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+        const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0,2) : null;
+        if (year === 1948 && abbr === 'AL') {
+          // Use raw CSV R_votes and T_votes for display so the copied D_votes doesn't
+          // push adjusted two-party math to R=0. Prefer topThirdVotes from the row if present.
+          try {
+            const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+            const row = (rows && rows.length) ? rows.find(x => x.unit === (keyUnit || unit)) : null;
+            let rawR = rRounded;
+            let rawO = oRounded;
+            if (row) {
+              rawR = Math.round(Math.max(0, +row.rVotes || 0));
+              // prefer a dedicated topThirdVotes or T_votes if present, else fall back to totals
+              rawO = Math.round(Math.max(0, (+row.topThirdVotes || +row.tVotes || oRounded || 0)));
+            }
+            return {
+              D: 0,
+              R: rawR,
+              O: rawO,
+              total: rawR + rawO
+            };
+          } catch(e) {
+            return { D: 0, R: rRounded, O: oRounded, total: rRounded + oRounded };
+          }
+        }
+      } catch(e) {}
 
       return {
         D: dRounded,
