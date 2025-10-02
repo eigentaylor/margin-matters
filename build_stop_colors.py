@@ -71,6 +71,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             abbr = r.get('abbr')
             nat = parse_float(r.get('national_margin'))
             total_votes = parse_float(r.get('total_votes'))
+            third_party_total = parse_float(r.get('third_party_votes'))
             if total_votes <= 0:
                 return
             
@@ -79,8 +80,8 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             r_votes_base = parse_float(r.get('R_votes'))
             o_votes_base = parse_float(r.get('T_votes'))  # Top third party votes (stays constant)
             
-            # Calculate two-party votes and apply PV adjustment
-            two_party_votes = d_votes_base + r_votes_base
+            # Calculate two-party votes the same way as JavaScript: total - all_third_party
+            two_party_votes = total_votes - third_party_total
             if two_party_votes <= 0:
                 return
             
@@ -135,6 +136,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 continue
             
             total_votes = parse_float(r.get('total_votes'))
+            third_party_total = parse_float(r.get('third_party_votes'))
             if total_votes == 0:
                 # skip zero-vote states
                 continue
@@ -144,7 +146,8 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             r_votes_base = parse_float(r.get('R_votes'))
             o_votes_base = parse_float(r.get('T_votes'))  # Top third party votes (stays constant)
             
-            two_party_votes = d_votes_base + r_votes_base
+            # Use the same calculation as JavaScript: two_party = total - all_third_party
+            two_party_votes = total_votes - third_party_total
             if two_party_votes <= 0:
                 continue
             
@@ -154,103 +157,48 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             base_d_share = d_votes_base / two_party_votes
             base_margin = 2 * base_d_share - 1
             
-            # Sort parties by vote count to determine current winner and runner-up
-            parties = [
-                ('D', d_votes_base),
-                ('R', r_votes_base),
-                ('O', o_votes_base)
-            ]
-            parties.sort(key=lambda x: x[1], reverse=True)
+            # Generate stops for ALL pairwise transitions between D, R, and O
+            # We need to find PV margins where any two become equal
             
-            current_leader = parties[0][0]
-            current_leader_votes = parties[0][1]
-            second_place = parties[1][0]
-            second_place_votes = parties[1][1]
-            third_place = parties[2][0]
-            third_place_votes = parties[2][1]
+            # Stop 1: D = R (two-party flip)
+            target_margin_dr = 0
+            pv_shift_dr = target_margin_dr - base_margin
+            stop_dr = nat + pv_shift_dr
             
-            # Calculate stops for different transitions:
-            # 1. When current leader loses to second place (two-party flip or leader to third party)
-            # 2. When second place overtakes third place
+            if abs(stop_dr) <= PV_CAP:
+                stops_set.add(stop_dr)
+                stop_to_units[stop_dr].append(abbr)
+                sgn = 1.0 if (stop_dr - nat) > 0 else (-1.0 if (stop_dr - nat) < 0 else 1.0)
+                eff = stop_to_eff.setdefault(stop_dr, stop_dr + sgn * EPS)
+                classify_and_append(stop_dr, eff, r)
             
-            # Transition 1: Calculate PV where current leader ties with second place
-            if current_leader != second_place:
-                if second_place == 'O':
-                    # Leader (D or R) loses to third party O
-                    # We need adjusted_leader_votes = o_votes_base
-                    if current_leader == 'D':
-                        # D is leader, we want D to drop to O
-                        # D = two_party * (target_margin + 1) / 2 = o_votes_base
-                        # target_margin = 2 * o_votes_base / two_party - 1
-                        target_margin = 2 * o_votes_base / two_party_votes - 1
-                    else:
-                        # R is leader, we want R to drop to O
-                        # R = two_party * (1 - (target_margin + 1) / 2) = o_votes_base
-                        # 1 - (target_margin + 1) / 2 = o_votes_base / two_party
-                        # (target_margin + 1) / 2 = 1 - o_votes_base / two_party
-                        # target_margin = 2 * (1 - o_votes_base / two_party) - 1
-                        target_margin = 2 * (1 - o_votes_base / two_party_votes) - 1
-                    
-                    pv_shift = target_margin - base_margin
-                    stop = nat + pv_shift
-                    
-                    if abs(stop) <= PV_CAP:
-                        stops_set.add(stop)
-                        stop_to_units[stop].append(abbr)
-                        sgn = 1.0 if (stop - nat) > 0 else (-1.0 if (stop - nat) < 0 else 1.0)
-                        eff = stop_to_eff.setdefault(stop, stop + sgn * EPS)
-                        classify_and_append(stop, eff, r)
-                        
-                elif current_leader in ('D', 'R') and second_place in ('D', 'R'):
-                    # Two-party flip: D and R swap
-                    # At the flip point: D_votes = R_votes
-                    # two_party * (target_margin + 1) / 2 = two_party * (1 - (target_margin + 1) / 2)
-                    # This means target_margin = 0
-                    target_margin = 0
-                    pv_shift = target_margin - base_margin
-                    stop = nat + pv_shift
-                    
-                    if abs(stop) <= PV_CAP:
-                        stops_set.add(stop)
-                        stop_to_units[stop].append(abbr)
-                        sgn = 1.0 if (stop - nat) > 0 else (-1.0 if (stop - nat) < 0 else 1.0)
-                        eff = stop_to_eff.setdefault(stop, stop + sgn * EPS)
-                        classify_and_append(stop, eff, r)
-            
-            # Transition 2: Check if third place can catch up to second place
-            if third_place == 'O' and o_votes_base > 0 and second_place in ('D', 'R'):
-                # Second place (D or R) could drop to meet O
-                # At the flip: adjusted_second_place = o_votes_base
-                target_margin = 2 * o_votes_base / two_party_votes - 1
+            # Stop 2: D = O (D reaches third party)
+            if o_votes_base > 0:
+                # D = two_party * (target_margin + 1) / 2 = o_votes_base
+                target_margin_do = 2 * o_votes_base / two_party_votes - 1
+                pv_shift_do = target_margin_do - base_margin
+                stop_do = nat + pv_shift_do
                 
-                # But we need to check which direction: is second place D or R?
-                if second_place == 'D':
-                    # D is second place, so current leader is R
-                    # As we shift toward D (increase margin), D goes up
-                    # We want D = o_votes_base
-                    # This is the same formula
-                    pass
-                else:
-                    # R is second place, so current leader is D
-                    # As we shift toward R (decrease margin), R goes up
-                    # We want R = o_votes_base
-                    # R = two_party * (1 - (target_margin + 1) / 2) = o_votes_base
-                    # 1 - (target_margin + 1) / 2 = o_votes_base / two_party
-                    # (target_margin + 1) / 2 = 1 - o_votes_base / two_party
-                    # target_margin = 2 * (1 - o_votes_base / two_party) - 1
-                    target_margin = 2 * (1 - o_votes_base / two_party_votes) - 1
+                if abs(stop_do) <= PV_CAP:
+                    stops_set.add(stop_do)
+                    stop_to_units[stop_do].append(abbr)
+                    sgn = 1.0 if (stop_do - nat) > 0 else (-1.0 if (stop_do - nat) < 0 else 1.0)
+                    eff = stop_to_eff.setdefault(stop_do, stop_do + sgn * EPS)
+                    classify_and_append(stop_do, eff, r)
+            
+            # Stop 3: R = O (R reaches third party)
+            if o_votes_base > 0:
+                # R = two_party * (1 - (target_margin + 1) / 2) = o_votes_base
+                target_margin_ro = 2 * (1 - o_votes_base / two_party_votes) - 1
+                pv_shift_ro = target_margin_ro - base_margin
+                stop_ro = nat + pv_shift_ro
                 
-                pv_shift = target_margin - base_margin
-                stop = nat + pv_shift
-                
-                # Only add this stop if it's different from the leader-second transition
-                # and if second place can realistically reach third place
-                if abs(stop) <= PV_CAP and abs(second_place_votes - o_votes_base) < current_leader_votes:
-                    stops_set.add(stop)
-                    stop_to_units[stop].append(abbr)
-                    sgn = 1.0 if (stop - nat) > 0 else (-1.0 if (stop - nat) < 0 else 1.0)
-                    eff = stop_to_eff.setdefault(stop, stop + sgn * EPS)
-                    classify_and_append(stop, eff, r)
+                if abs(stop_ro) <= PV_CAP:
+                    stops_set.add(stop_ro)
+                    stop_to_units[stop_ro].append(abbr)
+                    sgn = 1.0 if (stop_ro - nat) > 0 else (-1.0 if (stop_ro - nat) < 0 else 1.0)
+                    eff = stop_to_eff.setdefault(stop_ro, stop_ro + sgn * EPS)
+                    classify_and_append(stop_ro, eff, r)
 
         # Ensure any stop without eff gets a small nudge toward D side
         for s in list(stops_set):
