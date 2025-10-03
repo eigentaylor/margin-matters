@@ -2171,7 +2171,13 @@
 
       // Attempt to enumerate third parties that received EVs for this year.
       try {
-        const allocations = (typeof getAllEvAllocations === 'function') ? getAllEvAllocations() : null;
+        let allocations = null;
+        try {
+          if (typeof getAllEvAllocations === 'function') allocations = getAllEvAllocations();
+        } catch(e) {}
+        if (!allocations) {
+          try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch(e) {}
+        }
         const thirdNames = new Set();
         let totalOtherEV = 0;
         if (allocations && Array.isArray(allocations)) {
@@ -3884,6 +3890,21 @@ function renderFlipDetails(){
     
     const hasDetailedThirdParties = thirdPartyNames.size > 0;
     const thirdPartyList = Array.from(thirdPartyNames).sort();
+
+    // Also inject third-party names into candidate display area so they appear under D vs R
+    try {
+      const candidateNamesEl = document.getElementById('candidateNames');
+      if (candidateNamesEl) {
+        const base = (dCandidate || rCandidate) ? `${(window._curYear||'')} : ${dCandidate} (D) vs ${rCandidate} (R)` : '';
+        let extra = '';
+        if (thirdPartyList.length > 0) {
+          extra = '<br>' + thirdPartyList.join(', ');
+        } else if (hasAnyThirdPartyEVs && thirdPartyList.length === 0) {
+          extra = '<br>Other';
+        }
+        if (base || extra) candidateNamesEl.innerHTML = (base || '') + extra;
+      }
+    } catch(e) {}
     
     // Show O EVs column only if: proportional mode is on, OR any third party got EVs
     const showOColumn = isProportional || hasAnyThirdPartyEVs;
@@ -4173,4 +4194,6 @@ function renderFlipDetails(){
     initEvBreakdownModal();
   }
 })();
+  // Expose helper to global scope so other UI bits can call it
+  try { if (typeof getAllEvAllocations === 'function') window.getAllEvAllocations = getAllEvAllocations; } catch(e) {}
 
