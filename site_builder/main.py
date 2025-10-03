@@ -5,11 +5,8 @@ from pathlib import Path
 
 from .config import CSV_PATH, OUT_DIR, STATE_DIR, UNIT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
 from .io_utils import ensure_dirs, write_text, read_csv
-from .pages import build_pages, make_data_page, make_methods_page, make_state_pages, make_index
-from .templates import BASE_CSS, FAVICON_SVG, TESTER_JS
-from .ranker import build_ranker_page
-from .header import make_header
-
+from .pages import build_pages, make_data_page
+from .templates import FAVICON_SVG
 
 def build_site():
     ensure_dirs()
@@ -49,11 +46,11 @@ def build_site():
             row["margin_breakdown"] = ""
     
     states = build_pages(rows)
-    # Build State Pages index
-    try:
-        make_state_pages(states)
-    except Exception as e:
-        print(f"Warning: couldn't build state-pages.html: {e}")
+    # # Build State Pages index
+    # try:
+    #     make_state_pages(states)
+    # except Exception as e:
+    #     print(f"Warning: couldn't build state-pages.html: {e}")
 
     try:
         shutil.copy2(CSV_PATH, OUT_DIR / "presidential_margins.csv")
@@ -87,4 +84,4 @@ def build_site():
 
     # Removed building tester.js from pipeline; edit docs/tester.js directly when needed.
 
-    print(f"Done. Built index, state/unit pages, data, methods, and state-pages. Ranker is managed separately.")
+    print(f"Done. Updated site. Output in {OUT_DIR}")
