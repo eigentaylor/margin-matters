@@ -3988,27 +3988,33 @@ function renderFlipDetails(){
       }
     })();
     
-    // Determine if we need third party columns and get candidate names
+    // Determine if we need third party columns and get candidate names + totals
     let dCandidate = '';
     let rCandidate = '';
     const thirdPartyNames = new Set();
     let hasAnyThirdPartyEVs = false;
-    
+    const thirdPartyTotals = {}; // name -> EV total across states
+    let totalOtherEV_ForHeader = 0; // aggregate O EVs when no detailed breakdown
+
     sorted.forEach(alloc => {
       if (!dCandidate && alloc.dCandidate) dCandidate = alloc.dCandidate;
       if (!rCandidate && alloc.rCandidate) rCandidate = alloc.rCandidate;
-      
-      // Check for third party EVs
+
+      // Check for detailed third party EVs and accumulate totals
       if (alloc.thirdPartyEVs && typeof alloc.thirdPartyEVs === 'object') {
         Object.keys(alloc.thirdPartyEVs).forEach(name => {
-          if (alloc.thirdPartyEVs[name] > 0) {
+          const v = alloc.thirdPartyEVs[name] || 0;
+          if (v > 0) {
             thirdPartyNames.add(name);
             hasAnyThirdPartyEVs = true;
+            thirdPartyTotals[name] = (thirdPartyTotals[name] || 0) + v;
           }
         });
       }
+      // Aggregate generic Other EVs
       if (alloc.oEV > 0) {
         hasAnyThirdPartyEVs = true;
+        totalOtherEV_ForHeader += alloc.oEV;
       }
     });
     
@@ -4022,9 +4028,14 @@ function renderFlipDetails(){
         const base = (dCandidate || rCandidate) ? `${(window._curYear||'')} : ${dCandidate} (D) vs ${rCandidate} (R)` : '';
         let extra = '';
         if (thirdPartyList.length > 0) {
-          extra = '<br>' + thirdPartyList.join(', ');
+          // Include EV counts for each third party when available
+          extra = '<br>' + thirdPartyList.map(name => {
+            const cnt = thirdPartyTotals[name] || 0;
+            return cnt > 0 ? `${name} (${cnt} ${cnt === 1 ? 'EV' : 'EVs'})` : name;
+          }).join(', ');
         } else if (hasAnyThirdPartyEVs && thirdPartyList.length === 0) {
-          extra = '<br>Other';
+          // Generic Other with aggregate EVs if present
+          extra = '<br>Other' + (totalOtherEV_ForHeader > 0 ? ` (${totalOtherEV_ForHeader} EVs)` : '');
         }
         if (base || extra) candidateNamesEl.innerHTML = (base || '') + extra;
       }
