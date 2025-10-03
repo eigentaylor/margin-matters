@@ -1456,6 +1456,7 @@
       const dCandidate = r.D_candidate || '';
       const rCandidate = r.R_candidate || '';
       const specialCaseNotes = r.special_case_notes || '';
+      const color = r.color || ''; // Capture color to identify third party winners
       
       // Parse third_party_results JSON field
       let thirdPartyResults = {};
@@ -1470,7 +1471,7 @@
       const row = { 
         year, unit, rm, nm, ev, tp: topThirdShare, thirdShare, 
         dVotes, rVotes, tVotes, total: totalVotes, topThirdVotes,
-        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes
+        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes, color
       };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
@@ -3729,19 +3730,28 @@ function renderFlipDetails(){
           const pv = window._curPv || 0;
           const adjMargin = margin + pv;
           
-          // Match the map's logic from updateAll()
-          if (adjMargin > 0) {
-            dEV = ev;
-          } else if (adjMargin < 0) {
-            rEV = ev;
+          // Check if this is a third party winner (color = 'yellow')
+          const isThirdPartyWinner = (r.color === 'yellow' || r.color === '#C9A400');
+          
+          if (isThirdPartyWinner) {
+            // Third party won - allocate all EVs to O
+            oEV = ev;
           } else {
-            // Tie-breaking: match map's logic (line 2083-2085)
-            // Get national margin and stop value for tie-breaking
-            const nat = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
-            const stopVal = pv;  // Current PV is the stop value
-            const side = Math.sign((stopVal || 0) - (nat || 0));
-            if (side >= 0) dEV = ev;
-            else rEV = ev;
+            // Normal two-party winner-take-all
+            // Match the map's logic from updateAll()
+            if (adjMargin > 0) {
+              dEV = ev;
+            } else if (adjMargin < 0) {
+              rEV = ev;
+            } else {
+              // Tie-breaking: match map's logic (line 2083-2085)
+              // Get national margin and stop value for tie-breaking
+              const nat = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
+              const stopVal = pv;  // Current PV is the stop value
+              const side = Math.sign((stopVal || 0) - (nat || 0));
+              if (side >= 0) dEV = ev;
+              else rEV = ev;
+            }
           }
 
           // Get vote counts
