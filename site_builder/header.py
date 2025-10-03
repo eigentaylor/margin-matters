@@ -5,8 +5,10 @@ from .config import LAST_UPDATED, FOOTER_TEXT
 def make_header(title: str, is_inner: bool = False) -> str:
     """Return a consistent header HTML snippet used across pages.
 
-    - title: short heading text displayed in the header legend
+    - title: short heading text displayed in the header legend (now returned separately for placement below header)
     - is_inner: True when the header is used on inner pages (adjusts link paths)
+    
+    Note: This now returns just the nav links without the legend. Use make_legend() for the legend element.
     """
     prefix = ".." if is_inner else "."
     return (
@@ -27,11 +29,18 @@ def make_header(title: str, is_inner: bool = False) -> str:
         f'<a class="btn" href="{prefix}/presidential_margins.html">Data (CSV)</a>'
         f'<a class="btn" href="{prefix}/attributions.html">Attributions</a>'
         f'</div>'
-        f'<div class="legend">{title}</div>'
     # Use an external shared script so the toggle logic is centralized.
     f'<script src="{prefix}/header-toggle.js"></script>'
         f'</div>'
     )
+
+
+def make_legend(title: str) -> str:
+    """Return a legend div with the given title.
+    
+    This is placed below the header but above the back-to-map row.
+    """
+    return f'<div class="legend" style="margin-top:12px">{title}</div>'
 
 
 def make_footer_note(extra: Optional[str] = None) -> str:

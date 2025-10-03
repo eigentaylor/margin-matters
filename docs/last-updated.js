@@ -1,5 +1,5 @@
 // Load and inject the last updated timestamp from last-updated.json
-(function() {
+(function () {
   // Try a set of likely relative prefixes and accept only valid JSON responses.
   const candidates = [
     './', '../', '../../', '../../../', '../../../../',

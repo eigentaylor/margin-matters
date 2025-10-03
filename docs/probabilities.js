@@ -1,5 +1,5 @@
-(function(){
-	const STATUS_SEQUENCE = ['tossup','dem','rep'];
+(function () {
+	const STATUS_SEQUENCE = ['tossup', 'dem', 'rep'];
 	const COLORS = {
 		demSafe: '#4169E1',
 		demLean: '#87CEFA',
@@ -9,13 +9,13 @@
 	};
 
 	const STATE_NAMES = {
-		AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California', CO:'Colorado', CT:'Connecticut',
-		DE:'Delaware', FL:'Florida', GA:'Georgia', HI:'Hawaii', ID:'Idaho', IL:'Illinois', IN:'Indiana', IA:'Iowa',
-		KS:'Kansas', KY:'Kentucky', LA:'Louisiana', ME:'Maine', MD:'Maryland', MA:'Massachusetts', MI:'Michigan',
-		MN:'Minnesota', MS:'Mississippi', MO:'Missouri', MT:'Montana', NE:'Nebraska', NV:'Nevada', NH:'New Hampshire',
-		NJ:'New Jersey', NM:'New Mexico', NY:'New York', NC:'North Carolina', ND:'North Dakota', OH:'Ohio', OK:'Oklahoma',
-		OR:'Oregon', PA:'Pennsylvania', RI:'Rhode Island', SC:'South Carolina', SD:'South Dakota', TN:'Tennessee', TX:'Texas',
-		UT:'Utah', VT:'Vermont', VA:'Virginia', WA:'Washington', WV:'West Virginia', WI:'Wisconsin', WY:'Wyoming', DC:'District of Columbia'
+		AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut',
+		DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
+		KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan',
+		MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire',
+		NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma',
+		OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas',
+		UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming', DC: 'District of Columbia'
 	};
 
 	const DEFAULT_THRESHOLD = 0.06;
@@ -64,7 +64,7 @@
 		postSigma: null
 	};
 
-	function aVectorFor(id){
+	function aVectorFor(id) {
 		const n = BAYES.baseMu.length;
 		const a = new Array(n).fill(0);
 		if (!BAYES.ready) return a;
@@ -74,20 +74,20 @@
 		return a;
 	}
 
-	function quadForm(a, mu, Sigma){
+	function quadForm(a, mu, Sigma) {
 		// returns {mean, var}
 		let mean = 0;
-		for (let i=0;i<a.length;i++) mean += a[i] * (mu[i] || 0);
+		for (let i = 0; i < a.length; i++) mean += a[i] * (mu[i] || 0);
 		let v = 0;
-		for (let i=0;i<a.length;i++){
+		for (let i = 0; i < a.length; i++) {
 			let rowDot = 0;
-			for (let j=0;j<a.length;j++) rowDot += (Sigma[i] && Sigma[i][j] ? Sigma[i][j] : 0) * a[j];
+			for (let j = 0; j < a.length; j++) rowDot += (Sigma[i] && Sigma[i][j] ? Sigma[i][j] : 0) * a[j];
 			v += a[i] * rowDot;
 		}
 		return { mean, var: v };
 	}
 
-	function topCorrelationsWith(id, count){
+	function topCorrelationsWith(id, count) {
 		count = count || 12;
 		if (!BAYES.ready) return [];
 		const names = BAYES.VAR_UNITS.slice();
@@ -95,20 +95,20 @@
 		const baseSigma = BAYES.baseSigma;
 		const idxI = BAYES.IDX.get(id);
 		if (idxI == null) return [];
-		for (let k=0;k<names.length;k++){
+		for (let k = 0; k < names.length; k++) {
 			const jIdx = BAYES.IDX.get(names[k]);
 			if (jIdx == null) continue;
 			const cov = baseSigma[idxI][jIdx] || 0;
 			const varI = baseSigma[idxI][idxI] || 0;
 			const varJ = baseSigma[jIdx][jIdx] || 0;
-			const corr = (varI>0 && varJ>0) ? cov / Math.sqrt(varI * varJ) : 0;
+			const corr = (varI > 0 && varJ > 0) ? cov / Math.sqrt(varI * varJ) : 0;
 			results.push({ abbr: names[k], corr, cov, varI, varJ });
 		}
-		results.sort((a,b)=>Math.abs(b.corr) - Math.abs(a.corr));
+		results.sort((a, b) => Math.abs(b.corr) - Math.abs(a.corr));
 		return results.slice(0, count);
 	}
 
-	function buildDiagPanel(){
+	function buildDiagPanel() {
 		if (document.getElementById('diagPanel')) return;
 		const panel = document.createElement('div');
 		panel.id = 'diagPanel';
@@ -148,10 +148,10 @@
 		const sortWrap = document.createElement('div'); sortWrap.style.marginTop = '8px';
 		const sortLabel = document.createElement('label'); sortLabel.textContent = 'Battleground sort:'; sortLabel.style.marginRight = '6px';
 		const sortSelect = document.createElement('select'); sortSelect.id = 'probSortSelect';
-		['tossup','pdesc','evimpact'].forEach(opt => { const e = document.createElement('option'); e.value = opt; e.text = opt === 'tossup' ? 'Tossup-first' : (opt === 'pdesc' ? 'P(D) descending' : 'EV impact'); sortSelect.appendChild(e); });
+		['tossup', 'pdesc', 'evimpact'].forEach(opt => { const e = document.createElement('option'); e.value = opt; e.text = opt === 'tossup' ? 'Tossup-first' : (opt === 'pdesc' ? 'P(D) descending' : 'EV impact'); sortSelect.appendChild(e); });
 		sortWrap.appendChild(sortLabel); sortWrap.appendChild(sortSelect);
-		const limitInput = document.createElement('input'); limitInput.type='number'; limitInput.id='probTableLimit'; limitInput.value='15'; limitInput.min='5'; limitInput.max='200'; limitInput.style.width='64px'; limitInput.style.marginLeft='8px';
-		const limitLabel = document.createElement('span'); limitLabel.textContent='rows'; limitLabel.style.marginLeft='6px';
+		const limitInput = document.createElement('input'); limitInput.type = 'number'; limitInput.id = 'probTableLimit'; limitInput.value = '15'; limitInput.min = '5'; limitInput.max = '200'; limitInput.style.width = '64px'; limitInput.style.marginLeft = '8px';
+		const limitLabel = document.createElement('span'); limitLabel.textContent = 'rows'; limitLabel.style.marginLeft = '6px';
 		sortWrap.appendChild(limitInput); sortWrap.appendChild(limitLabel);
 		panel.appendChild(sortWrap);
 
@@ -159,7 +159,7 @@
 		const outWrap = document.createElement('div'); outWrap.style.marginTop = '8px';
 		const outCheckbox = document.createElement('input'); outCheckbox.type = 'checkbox'; outCheckbox.id = 'diagOutlierToggle'; outCheckbox.checked = true;
 		const outLabel = document.createElement('label'); outLabel.htmlFor = 'diagOutlierToggle'; outLabel.style.marginLeft = '6px'; outLabel.textContent = 'Remove outliers when building prior';
-		const outState = document.createElement('div'); outState.id = 'diagOutlierState'; outState.style.fontSize='11px'; outState.style.color='#9aa'; outState.style.marginTop='4px'; outState.textContent = outCheckbox.checked ? 'Outlier removal: ON' : 'Outlier removal: OFF';
+		const outState = document.createElement('div'); outState.id = 'diagOutlierState'; outState.style.fontSize = '11px'; outState.style.color = '#9aa'; outState.style.marginTop = '4px'; outState.textContent = outCheckbox.checked ? 'Outlier removal: ON' : 'Outlier removal: OFF';
 		outWrap.appendChild(outCheckbox); outWrap.appendChild(outLabel);
 		panel.appendChild(outWrap);
 		panel.appendChild(outState);
@@ -182,113 +182,113 @@
 		document.body.appendChild(panel);
 	}
 
-	function formatNum(x, prec=3){ if (!isFinite(x)) return 'NA'; return (Math.round(x * Math.pow(10,prec)) / Math.pow(10,prec)).toString(); }
+	function formatNum(x, prec = 3) { if (!isFinite(x)) return 'NA'; return (Math.round(x * Math.pow(10, prec)) / Math.pow(10, prec)).toString(); }
 
-	function runDiagnostics(id){
-		if (!BAYES.ready){ document.getElementById('diagOut').textContent = 'Bayes not ready'; return; }
+	function runDiagnostics(id) {
+		if (!BAYES.ready) { document.getElementById('diagOut').textContent = 'Bayes not ready'; return; }
 		const outEl = document.getElementById('diagOut');
 		let out = '';
 		// prior nat
-		const priorNat = quadForm(new Array(BAYES.baseMu.length).fill(0).map((_,i)=> i===0?1:0), BAYES.baseMu, BAYES.baseSigma);
-		out += `Prior national mean: ${formatNum(priorNat.mean,4)} sd:${formatNum(Math.sqrt(priorNat.var),4)}\n`;
+		const priorNat = quadForm(new Array(BAYES.baseMu.length).fill(0).map((_, i) => i === 0 ? 1 : 0), BAYES.baseMu, BAYES.baseSigma);
+		out += `Prior national mean: ${formatNum(priorNat.mean, 4)} sd:${formatNum(Math.sqrt(priorNat.var), 4)}\n`;
 		// posterior nat
-		const postNat = quadForm(new Array(BAYES.mu.length).fill(0).map((_,i)=> i===0?1:0), BAYES.mu, BAYES.Sigma);
-		out += `Posterior national mean: ${formatNum(postNat.mean,4)} sd:${formatNum(Math.sqrt(postNat.var),4)}\n\n`;
+		const postNat = quadForm(new Array(BAYES.mu.length).fill(0).map((_, i) => i === 0 ? 1 : 0), BAYES.mu, BAYES.Sigma);
+		out += `Posterior national mean: ${formatNum(postNat.mean, 4)} sd:${formatNum(Math.sqrt(postNat.var), 4)}\n\n`;
 		// selected id
-		if (id){
+		if (id) {
 			const a = aVectorFor(id);
 			const priorMarg = quadForm(a, BAYES.baseMu, BAYES.baseSigma);
 			const postMarg = quadForm(a, BAYES.mu, BAYES.Sigma);
 			const base = BAYES.r2024.get(id) || 0;
-			out += `Unit: ${id} base: ${formatNum(base,4)}\n`;
-			out += ` Prior mean raw: ${formatNum(priorMarg.mean + base,4)} sd:${formatNum(Math.sqrt(priorMarg.var),4)}\n`;
-			out += ` Post mean raw: ${formatNum(postMarg.mean + base,4)} sd:${formatNum(Math.sqrt(postMarg.var),4)}\n`;
-			out += ` Posterior P(D): ${formatNum(bayesProbDem(id),4)}\n\n`;
+			out += `Unit: ${id} base: ${formatNum(base, 4)}\n`;
+			out += ` Prior mean raw: ${formatNum(priorMarg.mean + base, 4)} sd:${formatNum(Math.sqrt(priorMarg.var), 4)}\n`;
+			out += ` Post mean raw: ${formatNum(postMarg.mean + base, 4)} sd:${formatNum(Math.sqrt(postMarg.var), 4)}\n`;
+			out += ` Posterior P(D): ${formatNum(bayesProbDem(id), 4)}\n\n`;
 			const tops = topCorrelationsWith(id, 12);
 			out += 'Top correlations (abs) with ' + id + ':\n';
-			tops.forEach(t => out += ` ${t.abbr}: corr=${formatNum(t.corr,4)} cov=${formatNum(t.cov,6)}\n`);
+			tops.forEach(t => out += ` ${t.abbr}: corr=${formatNum(t.corr, 4)} cov=${formatNum(t.cov, 6)}\n`);
 		}
 		outEl.textContent = out;
 	}
 
-	function consoleDiagnostics(id){
+	function consoleDiagnostics(id) {
 		console.log('[diag] BAYES ready', BAYES.ready);
 		if (!BAYES.ready) return;
 		console.log('[diag] baseMu', BAYES.baseMu);
 		console.log('[diag] baseSigma', BAYES.baseSigma);
 		console.log('[diag] mu', BAYES.mu);
 		console.log('[diag] Sigma', BAYES.Sigma);
-		if (id){
+		if (id) {
 			console.log('[diag] selected', id);
 			console.log('[diag] prior/posterior marginals', quadForm(aVectorFor(id), BAYES.baseMu, BAYES.baseSigma), quadForm(aVectorFor(id), BAYES.mu, BAYES.Sigma));
 			console.log('[diag] bayesProbDem', bayesProbDem(id));
-			console.log('[diag] top corrs', topCorrelationsWith(id,30));
+			console.log('[diag] top corrs', topCorrelationsWith(id, 30));
 		}
 	}
 
-	function formatNumber(x){
+	function formatNumber(x) {
 		if (x == null || !isFinite(x)) return '0';
 		return Math.round(x).toLocaleString('en-US');
 	}
 
-	function formatPercent(x){
+	function formatPercent(x) {
 		if (!isFinite(x)) return '0%';
 		return (x * 100).toFixed(1) + '%';
 	}
 
-	function formatMargin(x){
+	function formatMargin(x) {
 		if (!isFinite(x)) return '—';
 		if (Math.abs(x) < 1e-4) return 'EVEN';
 		const pct = (Math.abs(x) * 100).toFixed(1);
 		return (x > 0 ? 'D+' : 'R+') + pct;
 	}
 
-	function setText(id, value){
+	function setText(id, value) {
 		const el = document.getElementById(id);
 		if (el) el.textContent = value;
 	}
 
-	function colorForState(state){
+	function colorForState(state) {
 		if (!state) return '#2f2f2f';
 		if (state.status === 'tossup') return COLORS.tossup;
 		if (state.status === 'dem') return state.strength === 'safe' ? COLORS.demSafe : COLORS.demLean;
 		return state.strength === 'safe' ? COLORS.repSafe : COLORS.repLean;
 	}
 
-	function updateStateColor(code){
+	function updateStateColor(code) {
 		const state = stateStore.get(code);
 		if (state && window.ElectionMap) {
 			window.ElectionMap.setStateFill(code, colorForState(state));
 			// apply locked styling class if needed
 			try {
 				const sel = window.ElectionMap.statePaths && window.ElectionMap.statePaths.get(code);
-				if (sel && sel.node){
+				if (sel && sel.node) {
 					if (state.locked) sel.classed('locked', true); else sel.classed('locked', false);
 				}
-			} catch(e){}
+			} catch (e) { }
 		}
 	}
 
-	function updateUnitColor(unit){
+	function updateUnitColor(unit) {
 		const u = unitStore.get(unit);
 		if (!u || !window.ElectionMap) return;
 		window.ElectionMap.setDistrictFill(unit, colorForState(u));
 	}
 
-	function updateAllColors(){
+	function updateAllColors() {
 		stateStore.forEach((_, code) => updateStateColor(code));
 		unitStore.forEach((_, unit) => updateUnitColor(unit));
 	}
 
-	function cycleState(obj){
+	function cycleState(obj) {
 		// If object is locked (extreme posterior probability), do not change
 		if (obj && obj.locked) return;
 		const ring = [
-			{ status:'dem', strength:'lean' },
-			{ status:'dem', strength:'safe' },
-			{ status:'rep', strength:'safe' },
-			{ status:'rep', strength:'lean' },
-			{ status:'tossup', strength:'tossup' }
+			{ status: 'dem', strength: 'lean' },
+			{ status: 'dem', strength: 'safe' },
+			{ status: 'rep', strength: 'safe' },
+			{ status: 'rep', strength: 'lean' },
+			{ status: 'tossup', strength: 'tossup' }
 		];
 		let idx = ring.findIndex(r => r.status === obj.status && r.strength === obj.strength);
 		if (idx === -1) idx = ring.length - 1;
@@ -297,27 +297,27 @@
 		obj.strength = next.strength;
 	}
 
-	function classifyMargin(margin){
-		if (!isFinite(margin)) return { status:'tossup', strength:'tossup' };
+	function classifyMargin(margin) {
+		if (!isFinite(margin)) return { status: 'tossup', strength: 'tossup' };
 		const abs = Math.abs(margin);
-		if (abs < tossupBand) return { status:'tossup', strength:'tossup' };
+		if (abs < tossupBand) return { status: 'tossup', strength: 'tossup' };
 		const status = margin >= 0 ? 'dem' : 'rep';
 		const strength = abs >= DEFAULT_THRESHOLD ? 'safe' : 'lean';
 		return { status, strength };
 	}
 
-	function categorizeProbability(pDem){
-		if (!isFinite(pDem)) return { status:'tossup', strength:'tossup' };
+	function categorizeProbability(pDem) {
+		if (!isFinite(pDem)) return { status: 'tossup', strength: 'tossup' };
 		const lean = autoLeanThreshold;
 		const safe = Math.min(0.95, lean + 0.18);
-		if (pDem >= safe) return { status:'dem', strength:'safe' };
-		if (pDem >= lean) return { status:'dem', strength:'lean' };
-		if (pDem <= 1 - safe) return { status:'rep', strength:'safe' };
-		if (pDem <= 1 - lean) return { status:'rep', strength:'lean' };
-		return { status:'tossup', strength:'tossup' };
+		if (pDem >= safe) return { status: 'dem', strength: 'safe' };
+		if (pDem >= lean) return { status: 'dem', strength: 'lean' };
+		if (pDem <= 1 - safe) return { status: 'rep', strength: 'safe' };
+		if (pDem <= 1 - lean) return { status: 'rep', strength: 'lean' };
+		return { status: 'tossup', strength: 'tossup' };
 	}
 
-	function buildStateData(rows2024){
+	function buildStateData(rows2024) {
 		stateStore.clear();
 		unitStore.clear();
 		MODEL_UNITS.length = 0;
@@ -328,7 +328,7 @@
 		const districtStates = new Set();
 		(rows2024 || []).forEach(row => {
 			if (!row || !row.abbr) return;
-			if (row.abbr.includes('-')) districtStates.add(row.abbr.slice(0,2));
+			if (row.abbr.includes('-')) districtStates.add(row.abbr.slice(0, 2));
 		});
 
 		const byState = new Map();
@@ -367,7 +367,7 @@
 			const totalEv = entry.evTotal || 0;
 			TOTAL_EV += totalEv;
 			const margin = totalEv > 0 ? (entry.weightedMargin / totalEv) : 0;
-			entry.units.sort((a,b)=>a.unit.localeCompare(b.unit));
+			entry.units.sort((a, b) => a.unit.localeCompare(b.unit));
 			stateStore.set(entry.state, {
 				state: entry.state,
 				ev: totalEv,
@@ -384,7 +384,7 @@
 		MODEL_UNITS.push(...Array.from(unitStore.keys()).sort());
 	}
 
-	function applyBaselineClassification(){
+	function applyBaselineClassification() {
 		stateStore.forEach(state => {
 			const cls = classifyMargin(state.margin);
 			state.status = cls.status;
@@ -405,11 +405,11 @@
 		});
 	}
 
-	function handleStateClick(code, event){
+	function handleStateClick(code, event) {
 		const state = stateStore.get(code);
 		if (!state) return;
 		if (state.locked) return; // ignore clicks on locked states
-		if (event && event.shiftKey){
+		if (event && event.shiftKey) {
 			state.status = 'tossup';
 			state.strength = 'tossup';
 			state.manual = false;
@@ -429,11 +429,11 @@
 		recomputePosterior();
 	}
 
-	function handleDistrictClick(unitKey, event){
+	function handleDistrictClick(unitKey, event) {
 		const unit = unitStore.get(unitKey);
 		if (!unit) return;
 		if (unit.locked) return; // locked units ignore clicks
-		if (event && event.shiftKey){
+		if (event && event.shiftKey) {
 			unit.status = 'tossup';
 			unit.strength = 'tossup';
 			unit.manual = false;
@@ -443,7 +443,7 @@
 		}
 		updateUnitColor(unitKey);
 		const state = stateStore.get(unit.state);
-		if (state){
+		if (state) {
 			const units = state.units || [];
 			state.manual = units.some(u => {
 				const uu = unitStore.get(u.unit);
@@ -453,7 +453,7 @@
 		recomputePosterior();
 	}
 
-	function describeStatus(state){
+	function describeStatus(state) {
 		if (!state) return '';
 		if (state.status === 'tossup') return 'Toss-up';
 		const label = state.strength === 'safe' ? 'Safe' : 'Lean';
@@ -461,10 +461,10 @@
 		return `${label} ${party}`;
 	}
 
-	function mapWrap(){ return document.getElementById('map-wrap'); }
-	function mapTip(){ return document.getElementById('mapTip'); }
+	function mapWrap() { return document.getElementById('map-wrap'); }
+	function mapTip() { return document.getElementById('mapTip'); }
 
-	function positionTip(evt){
+	function positionTip(evt) {
 		const tip = mapTip(); if (!tip) return;
 		const wrap = mapWrap(); if (!wrap) return;
 		const wrapRect = wrap.getBoundingClientRect();
@@ -480,17 +480,27 @@
 		tip.style.top = `${y}px`;
 	}
 
-	function handleStateHover(evt, code){
+	function handleStateHover(evt, code) {
 		const state = stateStore.get(code);
 		if (!state) return;
 		const tip = mapTip(); if (!tip) return;
 		const name = STATE_NAMES[state.state] || state.state;
-		tip.textContent = `${name} · ${state.ev} EV · ${formatMargin(state.margin)} · ${describeStatus(state)}` + (state.manual ? ' · manual' : '');
+		// Include aggregate Other EVs if present on the state object (oEV or thirdPartyEVs)
+		let extraO = '';
+		try {
+			let others = 0;
+			if (state.oEV != null && isFinite(state.oEV)) others += Number(state.oEV) || 0;
+			if (state.thirdPartyEVs && typeof state.thirdPartyEVs === 'object') {
+				Object.values(state.thirdPartyEVs).forEach(v => { if (isFinite(v)) others += Number(v) || 0; });
+			}
+			if (others > 0) extraO = ` · O: ${others}`;
+		} catch (e) { /* ignore */ }
+		tip.textContent = `${name} · ${state.ev} EV · ${formatMargin(state.margin)} · ${describeStatus(state)}` + (state.manual ? ' · manual' : '') + extraO;
 		tip.style.display = 'block';
 		positionTip(evt);
 	}
 
-	function handleDistrictHover(evt, unitKey){
+	function handleDistrictHover(evt, unitKey) {
 		const unit = unitStore.get(unitKey);
 		if (!unit) return;
 		const tip = mapTip(); if (!tip) return;
@@ -501,19 +511,19 @@
 		positionTip(evt);
 	}
 
-	function hideTip(){ const tip = mapTip(); if (tip) tip.style.display = 'none'; }
+	function hideTip() { const tip = mapTip(); if (tip) tip.style.display = 'none'; }
 
-	function updateBuckets(){
-		const totals = { safeD:0, leanD:0, toss:0, leanR:0, safeR:0 };
-		const counts = { safeD:0, leanD:0, toss:0, leanR:0, safeR:0 };
+	function updateBuckets() {
+		const totals = { safeD: 0, leanD: 0, toss: 0, leanR: 0, safeR: 0 };
+		const counts = { safeD: 0, leanD: 0, toss: 0, leanR: 0, safeR: 0 };
 		MODEL_UNITS.forEach(id => {
 			const obj = unitStore.get(id) || stateStore.get(id);
 			if (!obj) return;
 			const ev = obj.ev || 0;
-			if (obj.status === 'dem' && obj.strength === 'safe'){ totals.safeD += ev; counts.safeD++; }
-			else if (obj.status === 'dem' && obj.strength === 'lean'){ totals.leanD += ev; counts.leanD++; }
-			else if (obj.status === 'rep' && obj.strength === 'safe'){ totals.safeR += ev; counts.safeR++; }
-			else if (obj.status === 'rep' && obj.strength === 'lean'){ totals.leanR += ev; counts.leanR++; }
+			if (obj.status === 'dem' && obj.strength === 'safe') { totals.safeD += ev; counts.safeD++; }
+			else if (obj.status === 'dem' && obj.strength === 'lean') { totals.leanD += ev; counts.leanD++; }
+			else if (obj.status === 'rep' && obj.strength === 'safe') { totals.safeR += ev; counts.safeR++; }
+			else if (obj.status === 'rep' && obj.strength === 'lean') { totals.leanR += ev; counts.leanR++; }
 			else { totals.toss += ev; counts.toss++; }
 		});
 		setText('bucketSafeD', formatNumber(totals.safeD));
@@ -528,7 +538,7 @@
 		setText('bucketSafeRCount', counts.safeR.toString());
 	}
 
-	function renderProbabilityTable(){
+	function renderProbabilityTable() {
 		const tbody = document.getElementById('probTableBody');
 		if (!tbody) return;
 		const records = [];
@@ -569,14 +579,14 @@
 		// Sorting mode from diagnostics panel
 		const sortModeEl = document.getElementById('probSortSelect');
 		const sortMode = sortModeEl ? sortModeEl.value : 'tossup';
-		if (sortMode === 'pdesc'){
-			filtered.sort((a,b) => b.prob - a.prob || b.ev - a.ev);
-		} else if (sortMode === 'evimpact'){
+		if (sortMode === 'pdesc') {
+			filtered.sort((a, b) => b.prob - a.prob || b.ev - a.ev);
+		} else if (sortMode === 'evimpact') {
 			// EV impact: sort by distance from 0.5 weighted by EV
-			filtered.sort((a,b) => (Math.abs(b.prob-0.5)*b.ev) - (Math.abs(a.prob-0.5)*a.ev));
+			filtered.sort((a, b) => (Math.abs(b.prob - 0.5) * b.ev) - (Math.abs(a.prob - 0.5) * a.ev));
 		} else {
 			// default: tossup-first (closest to 0.5), tie-break on EV
-			filtered.sort((a,b) => {
+			filtered.sort((a, b) => {
 				const da = Math.abs(a.prob - 0.5);
 				const db = Math.abs(b.prob - 0.5);
 				if (da !== db) return da - db;
@@ -585,7 +595,7 @@
 		}
 		const limitEl = document.getElementById('probTableLimit');
 		let limit = 15;
-		if (limitEl) try { limit = Math.max(5, Math.min(200, parseInt(limitEl.value,10) || 15)); } catch(e){}
+		if (limitEl) try { limit = Math.max(5, Math.min(200, parseInt(limitEl.value, 10) || 15)); } catch (e) { }
 		tbody.innerHTML = '';
 		filtered.slice(0, limit).forEach(rec => {
 			const tr = document.createElement('tr');
@@ -608,7 +618,7 @@
 		});
 	}
 
-	Math.erf = Math.erf || function(x){
+	Math.erf = Math.erf || function (x) {
 		const sign = x >= 0 ? 1 : -1;
 		x = Math.abs(x);
 		const a1 = 0.254829592;
@@ -622,51 +632,51 @@
 		return sign * y;
 	};
 
-	function phiStd(x){
+	function phiStd(x) {
 		return 0.5 * (1 + Math.erf(x / Math.SQRT2));
 	}
 
-	function kalmanUpdate(mu, Sigma, a, measurement, sigma){
+	function kalmanUpdate(mu, Sigma, a, measurement, sigma) {
 		const n = mu.length;
 		// compute a^T * Sigma * a
 		let Sa = 0;
-		for (let i=0;i<n;i++){
+		for (let i = 0; i < n; i++) {
 			let rowDot = 0;
-			for (let j=0;j<n;j++) rowDot += Sigma[i][j] * a[j];
+			for (let j = 0; j < n; j++) rowDot += Sigma[i][j] * a[j];
 			Sa += a[i] * rowDot;
 		}
 		const S = Sa + sigma * sigma; // innovation covariance
 		// K = Sigma * a / S
 		const K = new Array(n).fill(0);
-		for (let i=0;i<n;i++){
+		for (let i = 0; i < n; i++) {
 			let dot = 0;
-			for (let j=0;j<n;j++) dot += Sigma[i][j] * a[j];
+			for (let j = 0; j < n; j++) dot += Sigma[i][j] * a[j];
 			K[i] = dot / S;
 		}
 		// a^T * mu
 		let aTmu = 0;
-		for (let i=0;i<n;i++) aTmu += a[i] * mu[i];
+		for (let i = 0; i < n; i++) aTmu += a[i] * mu[i];
 		const innov = measurement - aTmu;
 		const muNew = mu.slice();
-		for (let i=0;i<n;i++) muNew[i] += K[i] * innov;
+		for (let i = 0; i < n; i++) muNew[i] += K[i] * innov;
 
 		// Correct covariance update: Sigma_new = Sigma - K * (a^T * Sigma)
 		const SigmaNew = Sigma.map(r => r.slice());
 		// compute a^T * Sigma as a row vector (length n): aTSigma[j] = sum_k a[k] * Sigma[k][j]
 		const aTSigma = new Array(n).fill(0);
-		for (let j=0;j<n;j++){
+		for (let j = 0; j < n; j++) {
 			let sum = 0;
-			for (let k=0;k<n;k++) sum += a[k] * Sigma[k][j];
+			for (let k = 0; k < n; k++) sum += a[k] * Sigma[k][j];
 			aTSigma[j] = sum;
 		}
-		for (let i=0;i<n;i++){
-			for (let j=0;j<n;j++){
+		for (let i = 0; i < n; i++) {
+			for (let j = 0; j < n; j++) {
 				SigmaNew[i][j] -= K[i] * aTSigma[j];
 			}
 		}
 		// enforce symmetry / numerical floor
-		for (let i=0;i<n;i++){
-			for (let j=i+1;j<n;j++){
+		for (let i = 0; i < n; i++) {
+			for (let j = i + 1; j < n; j++) {
 				const v = 0.5 * (SigmaNew[i][j] + SigmaNew[j][i]);
 				SigmaNew[i][j] = SigmaNew[j][i] = v;
 			}
@@ -676,16 +686,16 @@
 		return { mu: muNew, Sigma: SigmaNew };
 	}
 
-	function buildBayesPrior(tsById){
+	function buildBayesPrior(tsById) {
 		const VAR_UNITS = MODEL_UNITS.slice();
 		const deltasById = new Map();
 		let cycles = null;
 		VAR_UNITS.forEach(id => {
 			const arr = tsById.get(id) || [];
 			const deltas = [];
-			for (let i=1;i<arr.length;i++){
+			for (let i = 1; i < arr.length; i++) {
 				const curr = arr[i];
-				const prev = arr[i-1];
+				const prev = arr[i - 1];
 				if (isFinite(curr) && isFinite(prev)) deltas.push(curr - prev);
 			}
 			deltasById.set(id, deltas);
@@ -694,17 +704,17 @@
 
 		// Outlier removal: use MAD-based filter per-unit to remove extreme swings (e.g., Utah 2012/2016)
 		if (window.PROB_REMOVE_OUTLIERS === undefined) window.PROB_REMOVE_OUTLIERS = true;
-		if (window.PROB_REMOVE_OUTLIERS){
+		if (window.PROB_REMOVE_OUTLIERS) {
 			const OUTLIER_MAD_MULT = 3; // multiplier for MAD to decide outliers
 			const MIN_CUTOFF = 0.05; // minimum cutoff in raw margin (5 percentage points)
 			VAR_UNITS.forEach(id => {
 				const deltas = deltasById.get(id) || [];
 				if (!deltas || deltas.length === 0) return;
-				const sorted = deltas.slice().sort((a,b)=>a-b);
+				const sorted = deltas.slice().sort((a, b) => a - b);
 				const mid = sorted.length >> 1;
-				const med = (sorted.length % 2) ? sorted[mid] : 0.5 * (sorted[mid-1] + sorted[mid]);
-				const absDev = sorted.map(v => Math.abs(v - med)).sort((a,b)=>a-b);
-				const mad = (absDev.length % 2) ? absDev[absDev.length >> 1] : (absDev.length ? 0.5 * (absDev[absDev.length/2 - 1] + absDev[absDev.length/2]) : 0);
+				const med = (sorted.length % 2) ? sorted[mid] : 0.5 * (sorted[mid - 1] + sorted[mid]);
+				const absDev = sorted.map(v => Math.abs(v - med)).sort((a, b) => a - b);
+				const mad = (absDev.length % 2) ? absDev[absDev.length >> 1] : (absDev.length ? 0.5 * (absDev[absDev.length / 2 - 1] + absDev[absDev.length / 2]) : 0);
 				const madScaled = mad * 1.4826; // consistent estimator to approximate std
 				const cutoff = Math.max(OUTLIER_MAD_MULT * madScaled, MIN_CUTOFF);
 				const cleaned = deltas.filter(v => Math.abs(v - med) <= cutoff);
@@ -718,28 +728,28 @@
 		VAR_UNITS.forEach(id => { const arr = deltasById.get(id) || []; if (cycles === null || arr.length < cycles) cycles = arr.length; });
 		if (!cycles || cycles < 1) cycles = 1;
 		const natSwing = new Array(cycles).fill(0);
-		for (let t=0;t<cycles;t++){
+		for (let t = 0; t < cycles; t++) {
 			const vals = [];
 			VAR_UNITS.forEach(id => {
 				const arr = deltasById.get(id);
 				if (arr && isFinite(arr[t])) vals.push(arr[t]);
 			});
-			if (vals.length){
-				vals.sort((a,b)=>a-b);
+			if (vals.length) {
+				vals.sort((a, b) => a - b);
 				const mid = vals.length >> 1;
-				natSwing[t] = vals.length % 2 ? vals[mid] : 0.5 * (vals[mid-1] + vals[mid]);
+				natSwing[t] = vals.length % 2 ? vals[mid] : 0.5 * (vals[mid - 1] + vals[mid]);
 			}
 		}
-		const meanNat = natSwing.reduce((a,b)=>a+b,0) / natSwing.length;
-		const varNat = natSwing.reduce((a,b)=>a + (b - meanNat) * (b - meanNat), 0) / Math.max(1, natSwing.length - 1);
+		const meanNat = natSwing.reduce((a, b) => a + b, 0) / natSwing.length;
+		const varNat = natSwing.reduce((a, b) => a + (b - meanNat) * (b - meanNat), 0) / Math.max(1, natSwing.length - 1);
 		const sigmaNat = Math.sqrt(Math.max(1e-5, varNat || 0.0004));
 		const sigmaState = new Map();
 		VAR_UNITS.forEach(id => {
 			const deltas = deltasById.get(id) || [];
 			let sum = 0, count = 0;
-			for (let t=0;t<Math.min(cycles, deltas.length);t++){
+			for (let t = 0; t < Math.min(cycles, deltas.length); t++) {
 				const resid = deltas[t] - natSwing[t];
-				if (isFinite(resid)){
+				if (isFinite(resid)) {
 					sum += resid * resid;
 					count++;
 				}
@@ -748,14 +758,14 @@
 			sigmaState.set(id, Math.sqrt(Math.max(0.0001, varResid)));
 		});
 		const D = 1 + VAR_UNITS.length;
-		const Sigma = Array.from({length:D}, () => Array(D).fill(0));
+		const Sigma = Array.from({ length: D }, () => Array(D).fill(0));
 		Sigma[0][0] = sigmaNat * sigmaNat;
-		for (let i=0;i<VAR_UNITS.length;i++){
+		for (let i = 0; i < VAR_UNITS.length; i++) {
 			const idxI = 1 + i;
 			const sigmaI = sigmaState.get(VAR_UNITS[i]) || 0.02;
 			Sigma[0][idxI] = Sigma[idxI][0] = sigmaNat * sigmaNat;
 			Sigma[idxI][idxI] = sigmaNat * sigmaNat + sigmaI * sigmaI;
-			for (let j=i+1;j<VAR_UNITS.length;j++){
+			for (let j = i + 1; j < VAR_UNITS.length; j++) {
 				const idxJ = 1 + j;
 				Sigma[idxI][idxJ] = Sigma[idxJ][idxI] = sigmaNat * sigmaNat;
 			}
@@ -765,7 +775,7 @@
 		BAYES.VAR_UNITS = VAR_UNITS;
 		const idxMap = new Map();
 		idxMap.set('NAT', 0);
-		VAR_UNITS.forEach((id,i)=> idxMap.set(id, 1 + i));
+		VAR_UNITS.forEach((id, i) => idxMap.set(id, 1 + i));
 		BAYES.IDX = idxMap;
 		BAYES.mu = mu.slice();
 		BAYES.Sigma = Sigma.map(r => r.slice());
@@ -775,14 +785,14 @@
 		BAYES.salt = 0;
 	}
 
-	function bayesResetPosterior(){
+	function bayesResetPosterior() {
 		if (!BAYES.ready) return;
 		BAYES.mu = BAYES.baseMu.slice();
 		BAYES.Sigma = BAYES.baseSigma.map(r => r.slice());
 		BAYES.salt = 0;
 	}
 
-	function bayesObservePick(id, status, strength){
+	function bayesObservePick(id, status, strength) {
 		if (!BAYES.ready) return;
 		if (strength === 'tossup') return;
 		const idx = BAYES.IDX.get(id);
@@ -800,7 +810,7 @@
 		BAYES.salt += strength === 'safe' ? 0.12 : 0.05;
 	}
 
-	function bayesProbDem(id){
+	function bayesProbDem(id) {
 		if (!BAYES.ready) return 0.5;
 		const idx = BAYES.IDX.get(id);
 		if (idx == null) return 0.5;
@@ -808,11 +818,11 @@
 		a[0] = 1;
 		a[idx] = 1;
 		let mean = 0;
-		for (let i=0;i<a.length;i++) mean += a[i] * BAYES.mu[i];
+		for (let i = 0; i < a.length; i++) mean += a[i] * BAYES.mu[i];
 		let varv = 0;
-		for (let i=0;i<a.length;i++){
+		for (let i = 0; i < a.length; i++) {
 			let rowDot = 0;
-			for (let j=0;j<a.length;j++) rowDot += BAYES.Sigma[i][j] * a[j];
+			for (let j = 0; j < a.length; j++) rowDot += BAYES.Sigma[i][j] * a[j];
 			varv += a[i] * rowDot;
 		}
 		const base = BAYES.r2024.get(id) || 0;
@@ -820,21 +830,21 @@
 		return phiStd(z);
 	}
 
-	function drawZ(){
+	function drawZ() {
 		let u = 0, v = 0;
 		while (u === 0) u = Math.random();
 		while (v === 0) v = Math.random();
 		return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 	}
 
-	function choleskyDecomposition(matrix){
+	function choleskyDecomposition(matrix) {
 		const n = matrix.length;
-		const L = Array.from({length:n}, () => Array(n).fill(0));
-		for (let i=0;i<n;i++){
-			for (let j=0;j<=i;j++){
+		const L = Array.from({ length: n }, () => Array(n).fill(0));
+		for (let i = 0; i < n; i++) {
+			for (let j = 0; j <= i; j++) {
 				let sum = matrix[i][j];
-				for (let k=0;k<j;k++) sum -= L[i][k] * L[j][k];
-				if (i === j){
+				for (let k = 0; k < j; k++) sum -= L[i][k] * L[j][k];
+				if (i === j) {
 					if (sum <= 1e-12) return null;
 					L[i][j] = Math.sqrt(sum);
 				} else {
@@ -845,10 +855,10 @@
 		return L;
 	}
 
-	function choleskyWithJitter(matrix){
+	function choleskyWithJitter(matrix) {
 		let jitter = 1e-6;
-		for (let attempt=0; attempt<5; attempt++){
-			const adjusted = matrix.map((row,i)=> row.map((val,j)=> i===j ? val + jitter : val));
+		for (let attempt = 0; attempt < 5; attempt++) {
+			const adjusted = matrix.map((row, i) => row.map((val, j) => i === j ? val + jitter : val));
 			const L = choleskyDecomposition(adjusted);
 			if (L) return L;
 			jitter *= 10;
@@ -856,7 +866,7 @@
 		return null;
 	}
 
-	function runPosteriorSimulation(samples){
+	function runPosteriorSimulation(samples) {
 		if (!BAYES.ready) return null;
 		const L = choleskyWithJitter(BAYES.Sigma);
 		if (!L) return null;
@@ -866,12 +876,12 @@
 		let natSqSum = 0;
 		let demWins = 0, repWins = 0, ties = 0;
 		const perUnit = new Map();
-		for (let s=0; s<samples; s++){
-			const z = new Array(dim).fill(0).map(()=>drawZ());
+		for (let s = 0; s < samples; s++) {
+			const z = new Array(dim).fill(0).map(() => drawZ());
 			const draw = new Array(dim).fill(0);
-			for (let i=0;i<dim;i++){
+			for (let i = 0; i < dim; i++) {
 				let sum = 0;
-				for (let k=0;k<=i;k++) sum += L[i][k] * z[k];
+				for (let k = 0; k <= i; k++) sum += L[i][k] * z[k];
 				draw[i] = BAYES.mu[i] + sum;
 			}
 			const nat = draw[0];
@@ -885,7 +895,7 @@
 				const ev = BAYES.EV.get(id) || 0;
 				const raw = base + nat + delta;
 				const demWinsUnit = raw >= 0;
-				if (!perUnit.has(id)) perUnit.set(id, { dem:0, total:0 });
+				if (!perUnit.has(id)) perUnit.set(id, { dem: 0, total: 0 });
 				const entry = perUnit.get(id);
 				if (demWinsUnit) demEV += ev;
 				if (demWinsUnit) entry.dem++;
@@ -915,16 +925,16 @@
 		};
 	}
 
-	function applyProbabilitiesFromSimulation(sim){
+	function applyProbabilitiesFromSimulation(sim) {
 		if (!sim) return;
 		sim.perUnit.forEach((counts, id) => {
 			const pDem = counts.total ? counts.dem / counts.total : 0.5;
 			const unit = unitStore.get(id);
-			if (unit){
+			if (unit) {
 				unit.lastProb = pDem;
 				// Determine (un)lock status: extreme probabilities lock against opposite party manual changes
-				unit.locked = (pDem >= LOCK_PROB_THRESHOLD && unit.status === 'rep') || (pDem <= (1-LOCK_PROB_THRESHOLD) && unit.status === 'dem');
-				if (!unit.manual){
+				unit.locked = (pDem >= LOCK_PROB_THRESHOLD && unit.status === 'rep') || (pDem <= (1 - LOCK_PROB_THRESHOLD) && unit.status === 'dem');
+				if (!unit.manual) {
 					const cat = categorizeProbability(pDem);
 					unit.status = cat.status;
 					unit.strength = cat.strength;
@@ -935,7 +945,7 @@
 		stateStore.forEach(state => {
 			let p = 0.5;
 			let evTotal = 0;
-			if (state.units && state.units.length){
+			if (state.units && state.units.length) {
 				let weighted = 0;
 				state.units.forEach(ref => {
 					const unit = unitStore.get(ref.unit);
@@ -949,8 +959,8 @@
 				if (entry && entry.total) p = entry.dem / entry.total;
 			}
 			state.lastProb = p;
-			state.locked = (p >= LOCK_PROB_THRESHOLD && state.status === 'rep') || (p <= (1-LOCK_PROB_THRESHOLD) && state.status === 'dem');
-			if (!state.manual){
+			state.locked = (p >= LOCK_PROB_THRESHOLD && state.status === 'rep') || (p <= (1 - LOCK_PROB_THRESHOLD) && state.status === 'dem');
+			if (!state.manual) {
 				const cat = categorizeProbability(p);
 				state.status = cat.status;
 				state.strength = cat.strength;
@@ -961,7 +971,7 @@
 	}
 
 	// Build color maps & label/EV updates using shared ElectionMap.refreshDecorations API
-	function refreshDecorations(){
+	function refreshDecorations() {
 		if (!window.ElectionMap) return;
 		const evLookup = abbr => {
 			if (unitStore.has(abbr)) return unitStore.get(abbr).ev;
@@ -976,10 +986,10 @@
 		unitStore.forEach(u => {
 			unitColors.set(u.unit, colorForState(u));
 		});
-		try { window.ElectionMap.refreshDecorations(2028, evLookup, abbrColors, unitColors); } catch(e){}
+		try { window.ElectionMap.refreshDecorations(2028, evLookup, abbrColors, unitColors); } catch (e) { }
 	}
 
-	function updateSummaries(sim){
+	function updateSummaries(sim) {
 		if (!sim) return;
 		setText('expDemEV', formatNumber(sim.demEVMean));
 		setText('expGopEV', formatNumber(sim.repEVMean));
@@ -998,16 +1008,16 @@
 		setText('natRange95', `${formatMargin(range95Low)} – ${formatMargin(range95High)}`);
 	}
 
-	function recomputePosterior(){
+	function recomputePosterior() {
 		if (!BAYES.ready) return;
 		bayesResetPosterior();
 		stateStore.forEach(state => {
-			if (state.manual && state.strength !== 'tossup'){
+			if (state.manual && state.strength !== 'tossup') {
 				bayesObservePick(state.state, state.status, state.strength);
 			}
 		});
 		unitStore.forEach(unit => {
-			if (unit.manual && unit.strength !== 'tossup'){
+			if (unit.manual && unit.strength !== 'tossup') {
 				bayesObservePick(unit.unit, unit.status, unit.strength);
 			}
 		});
@@ -1019,7 +1029,7 @@
 		refreshDecorations();
 	}
 
-	async function buildMap(){
+	async function buildMap() {
 		statePaths.clear();
 		if (!window.ElectionMap) return;
 		await window.ElectionMap.build({
@@ -1039,13 +1049,13 @@
 				mouseleave: () => { hideTip(); }
 			}
 		});
-		if (window.ElectionMap && window.ElectionMap.statePaths){
+		if (window.ElectionMap && window.ElectionMap.statePaths) {
 			window.ElectionMap.statePaths.forEach((sel, abbr) => statePaths.set(abbr, sel));
 		}
 		refreshDecorations();
 	}
 
-	function initControls(){
+	function initControls() {
 		const resetBtn = document.getElementById('resetStates');
 		if (resetBtn) resetBtn.addEventListener('click', () => {
 			applyBaselineClassification();
@@ -1060,7 +1070,7 @@
 		});
 		const thresholdSlider = document.getElementById('autoThreshold');
 		const thresholdValue = document.getElementById('autoThresholdValue');
-		if (thresholdSlider && thresholdValue){
+		if (thresholdSlider && thresholdValue) {
 			thresholdSlider.addEventListener('input', () => {
 				const val = parseInt(thresholdSlider.value, 10);
 				autoLeanThreshold = Math.max(0.5, Math.min(0.9, val / 100));
@@ -1071,7 +1081,7 @@
 		}
 	}
 
-	async function loadHistoricalAndBuildPrior(){
+	async function loadHistoricalAndBuildPrior() {
 		const needed = new Set(MODEL_UNITS);
 		const rows = await d3.csv('presidential_margins.csv', row => {
 			const year = +row.year;
@@ -1091,13 +1101,13 @@
 		});
 		const aligned = new Map();
 		tsById.forEach((arr, id) => {
-			arr.sort((a,b)=>a.year - b.year);
+			arr.sort((a, b) => a.year - b.year);
 			aligned.set(id, arr.map(x => x.rel));
 		});
 		buildBayesPrior(aligned);
 	}
 
-	async function init(){
+	async function init() {
 		initControls();
 		try {
 			const rows2024 = await d3.csv('presidential_margins.csv', row => {
@@ -1113,12 +1123,12 @@
 			applyBaselineClassification();
 			// create diagnostics panel and populate select
 			buildDiagPanel();
-			const sel = document.getElementById('diagSelect'); if (sel){ sel.innerHTML = ''; Array.from(MODEL_UNITS).sort().forEach(o=>{ const el = document.createElement('option'); el.value=o; el.text=o; sel.appendChild(el); }); }
+			const sel = document.getElementById('diagSelect'); if (sel) { sel.innerHTML = ''; Array.from(MODEL_UNITS).sort().forEach(o => { const el = document.createElement('option'); el.value = o; el.text = o; sel.appendChild(el); }); }
 			await loadHistoricalAndBuildPrior();
 			await buildMap();
 			updateAllColors();
 			recomputePosterior();
-		} catch (err){
+		} catch (err) {
 			console.error('[probabilities] failed to initialise', err);
 		}
 	}

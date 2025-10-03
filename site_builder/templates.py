@@ -253,7 +253,8 @@ INDEX_HTML = r"""<!doctype html>
 <body>
 <script src="./maintenance-check.js"></script>
 <div class="container" style="text-align: center;">
-  %HEADER%
+  <div id="header-placeholder"></div>
+  <div class="legend" style="margin-top:12px;text-align:left">U.S. Presidential Election State Results %YEAR_RANGE%</div>
   <div class="card">
     <div class="legend" style="text-align:left">Browse all state pages on the <a href="./state-pages.html">State Pages</a> directory. Maine and Nebraska link to district pages from their statewide pages.</div>
   </div>
@@ -268,7 +269,7 @@ INDEX_HTML = r"""<!doctype html>
     </div>
     %TESTER_UI%
   </div>
-  <footer>%FOOTER_TEXT% Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs.<br /> Last updated: %LAST_UPDATED%</footer>
+  <div id="footer-placeholder" data-extra-note="Built as static HTML from CSV. D3 + us-atlas map is loaded from CDNs."></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -383,8 +384,25 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
     // Small state buttons were moved to the State Pages directory; no buttons on index
   // Notify listeners that the map has rendered
   window.dispatchEvent(new Event("mapReady"));
+  // Draw a white boundary mesh on top of state fills so boundaries remain crisp
+  try {
+    const mesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+    g.append('path')
+      .datum(mesh)
+      .attr('fill', 'none')
+      .attr('stroke', '#ffffff')
+      .attr('stroke-width', 1.0)
+      .attr('stroke-linejoin', 'round')
+      .attr('stroke-linecap', 'round')
+      .attr('pointer-events', 'none')
+      .attr('class', 'state-boundaries')
+      .attr('d', path);
+  } catch (e) {}
   });
 </script>
+<script src="./header.js"></script>
+<script src="./footer.js"></script>
+<script src="./last-updated.js"></script>
 </body>
 </html>
 """
@@ -401,11 +419,9 @@ PAGE_HTML = r"""<!doctype html>
 <body>
 <script src="../maintenance-check.js"></script>
 <div class="container">
-  %HEADER%
-  <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-    <a class="back" href="../index.html">← Back to Map</a>
-    <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-  </div>
+  <div id="header-placeholder" data-is-inner="true"></div>
+  <div class="legend" style="margin-top:12px">%LEGEND%</div>
+  <div id="back-to-map-placeholder" data-is-inner="true"></div>
   <div class="header"><h1 style="margin:0">%HEADING%</h1></div>
   
   <!-- Interactive Chart Section -->
@@ -753,6 +769,10 @@ PAGE_HTML = r"""<!doctype html>
   window.updateChart = updateChart;
 })();
 </script>
+<div id="footer-placeholder"></div>
+<script src="../header.js"></script>
+<script src="../back-to-map.js"></script>
+<script src="../footer.js"></script>
 <script src="../last-updated.js"></script>
 </body>
 </html>

@@ -1,48 +1,48 @@
 year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1908,AL,74391,25561,2073,5200,"{""Eugene Chafin"": 690, ""Eugene V. Debs"": 1450, ""Thomas"": 2073}",105152
-1908,AR,87015,56624,5842,8183,"{""Eugene Chafin"": 1026, ""Eugene V. Debs"": 5842, ""Thomas"": 1315}",151822
-1908,CA,127492,214398,28659,44707,"{""Eugene Chafin"": 11770, ""Eugene V. Debs"": 28659, ""Thomas"": 4278}",386597
+1908,AL,74391,25561,1576,5200,"{""Eugene Chafin"": 690, ""Eugene V. Debs"": 1450, ""Thomas Hisgen"": 497, ""Thomas Watson"": 1576}",105152
+1908,AR,87015,56624,5842,8183,"{""Eugene Chafin"": 1026, ""Eugene V. Debs"": 5842, ""Thomas Hisgen"": 289, ""Thomas Watson"": 1026}",151822
+1908,CA,127492,214398,28659,44707,"{""Eugene Chafin"": 11770, ""Eugene V. Debs"": 28659, ""Thomas Hisgen"": 4278}",386597
 1908,CO,126644,123693,7960,13521,"{""Eugene Chafin"": 5559, ""Eugene V. Debs"": 7960}",263858
-1908,CT,68255,112915,5113,8833,"{""August Gillhaus"": 608, ""Eugene Chafin"": 2380, ""Eugene V. Debs"": 5113, ""Thomas"": 728}",190003
-1908,DE,22055,25014,670,938,"{""Eugene Chafin"": 670, ""Eugene V. Debs"": 239, ""Thomas"": 29}",48007
-1908,FL,31104,10654,3747,7602,"{""Eugene Chafin"": 1356, ""Eugene V. Debs"": 3747, ""Thomas"": 2499}",49360
-1908,GA,72350,41355,16763,18799,"{""Eugene Chafin"": 1452, ""Eugene V. Debs"": 584, ""Thomas"": 16763}",132504
-1908,ID,36162,52621,6400,8510,"{""Eugene Chafin"": 1986, ""Eugene V. Debs"": 6400, ""Thomas"": 124}",97293
-1908,IL,450810,629932,34711,74512,"{""August Gillhaus"": 1680, ""Eugene Chafin"": 29364, ""Eugene V. Debs"": 34711, ""Thomas"": 8357}",1155254
-1908,IN,338262,348993,18045,33871,"{""August Gillhaus"": 643, ""Eugene Chafin"": 18045, ""Eugene V. Debs"": 13476, ""Thomas"": 1707}",721126
-1908,IA,200771,275209,9837,18789,"{""Eugene Chafin"": 9837, ""Eugene V. Debs"": 8287, ""Thomas"": 665}",494769
-1908,KS,161209,197216,12420,17521,"{""Eugene Chafin"": 5033, ""Eugene V. Debs"": 12420, ""Thomas"": 68}",375946
-1908,KY,244092,235711,5885,10916,"{""August Gillhaus"": 405, ""Eugene Chafin"": 5885, ""Eugene V. Debs"": 4093, ""Thomas"": 533}",490719
-1908,LA,63568,8958,2514,2591,"{""Eugene V. Debs"": 2514, ""Thomas"": 77}",75117
-1908,ME-AL,35403,66987,1758,3946,"{""Eugene Chafin"": 1487, ""Eugene V. Debs"": 1758, ""Thomas"": 701}",106336
-1908,MD,115908,116513,3302,6110,"{""Eugene Chafin"": 3302, ""Eugene V. Debs"": 2323, ""Thomas"": 485}",238531
-1908,MA,155543,265966,19237,35410,"{""August Gillhaus"": 1011, ""Eugene Chafin"": 4374, ""Eugene V. Debs"": 10779, ""Thomas"": 19237}",456919
-1908,MI,175771,335580,16974,30479,"{""August Gillhaus"": 1096, ""Eugene Chafin"": 16974, ""Eugene V. Debs"": 11586, ""Thomas"": 760}",541830
-1908,MN,109401,195843,14527,26060,"{""Eugene Chafin"": 11107, ""Eugene V. Debs"": 14527, ""Thomas"": 426}",331304
-1908,MS,60287,4363,1276,2254,"{""Eugene V. Debs"": 978, ""Thomas"": 1276}",66904
-1908,MO,346574,347203,15431,22150,"{""August Gillhaus"": 868, ""Eugene Chafin"": 4284, ""Eugene V. Debs"": 15431, ""Thomas"": 1567}",715927
-1908,MT,29326,32333,5855,7163,"{""Eugene Chafin"": 827, ""Eugene V. Debs"": 5855, ""Thomas"": 481}",68822
+1908,CT,68255,112915,5113,8833,"{""August Gillhaus"": 608, ""Eugene Chafin"": 2380, ""Eugene V. Debs"": 5113, ""Thomas Hisgen"": 728}",190003
+1908,DE,22055,25014,670,938,"{""Eugene Chafin"": 670, ""Eugene V. Debs"": 239, ""Thomas Hisgen"": 29}",48007
+1908,FL,31104,10654,3747,7602,"{""Eugene Chafin"": 1356, ""Eugene V. Debs"": 3747, ""Thomas Hisgen"": 553, ""Thomas Watson"": 1946}",49360
+1908,GA,72350,41355,16687,18799,"{""Eugene Chafin"": 1452, ""Eugene V. Debs"": 584, ""Thomas Hisgen"": 76, ""Thomas Watson"": 16687}",132504
+1908,ID,36162,52621,6400,8510,"{""Eugene Chafin"": 1986, ""Eugene V. Debs"": 6400, ""Thomas Hisgen"": 124}",97293
+1908,IL,450810,629932,34711,74512,"{""August Gillhaus"": 1680, ""Eugene Chafin"": 29364, ""Eugene V. Debs"": 34711, ""Thomas Hisgen"": 7724, ""Thomas Watson"": 633}",1155254
+1908,IN,338262,348993,18045,33871,"{""August Gillhaus"": 643, ""Eugene Chafin"": 18045, ""Eugene V. Debs"": 13476, ""Thomas Hisgen"": 514, ""Thomas Watson"": 1193}",721126
+1908,IA,200771,275209,9837,18789,"{""Eugene Chafin"": 9837, ""Eugene V. Debs"": 8287, ""Thomas Hisgen"": 404, ""Thomas Watson"": 261}",494769
+1908,KS,161209,197216,12420,17521,"{""Eugene Chafin"": 5033, ""Eugene V. Debs"": 12420, ""Thomas Hisgen"": 68}",375946
+1908,KY,244092,235711,5885,10916,"{""August Gillhaus"": 405, ""Eugene Chafin"": 5885, ""Eugene V. Debs"": 4093, ""Thomas Hisgen"": 200, ""Thomas Watson"": 333}",490719
+1908,LA,63568,8958,2514,2591,"{""Eugene V. Debs"": 2514, ""Thomas Hisgen"": 77}",75117
+1908,ME-AL,35403,66987,1758,3946,"{""Eugene Chafin"": 1487, ""Eugene V. Debs"": 1758, ""Thomas Hisgen"": 700, ""Thomas Watson"": 1}",106336
+1908,MD,115908,116513,3302,6110,"{""Eugene Chafin"": 3302, ""Eugene V. Debs"": 2323, ""Thomas Hisgen"": 485}",238531
+1908,MA,155543,265966,19237,35410,"{""August Gillhaus"": 1011, ""Eugene Chafin"": 4374, ""Eugene V. Debs"": 10779, ""Thomas Hisgen"": 19237}",456919
+1908,MI,175771,335580,16974,30479,"{""August Gillhaus"": 1096, ""Eugene Chafin"": 16974, ""Eugene V. Debs"": 11586, ""Thomas Hisgen"": 760}",541830
+1908,MN,109401,195843,14527,26060,"{""Eugene Chafin"": 11107, ""Eugene V. Debs"": 14527, ""Thomas Hisgen"": 426}",331304
+1908,MS,60287,4363,1276,2254,"{""Eugene V. Debs"": 978, ""Thomas Watson"": 1276}",66904
+1908,MO,346574,347203,15431,22150,"{""August Gillhaus"": 868, ""Eugene Chafin"": 4284, ""Eugene V. Debs"": 15431, ""Thomas Hisgen"": 402, ""Thomas Watson"": 1165}",715927
+1908,MT,29326,32333,5855,7163,"{""Eugene Chafin"": 827, ""Eugene V. Debs"": 5855, ""Thomas Hisgen"": 481}",68822
 1908,NE-AL,131099,126997,5179,8703,"{""Eugene Chafin"": 5179, ""Eugene V. Debs"": 3524}",266799
-1908,NV,11212,10775,2103,2539,"{""Eugene V. Debs"": 2103, ""Thomas"": 436}",24526
-1908,NH,33655,53149,1299,2796,"{""Eugene Chafin"": 905, ""Eugene V. Debs"": 1299, ""Thomas"": 584}",89600
-1908,NJ,182522,265298,10249,19291,"{""August Gillhaus"": 1196, ""Eugene Chafin"": 4930, ""Eugene V. Debs"": 10249, ""Thomas"": 2916}",467111
-1908,NY,667468,870070,38451,100812,"{""August Gillhaus"": 3877, ""Eugene Chafin"": 22667, ""Eugene V. Debs"": 38451, ""Thomas"": 35817}",1638350
+1908,NV,11212,10775,2103,2539,"{""Eugene V. Debs"": 2103, ""Thomas Hisgen"": 436}",24526
+1908,NH,33655,53149,1299,2796,"{""Eugene Chafin"": 905, ""Eugene V. Debs"": 1299, ""Thomas Hisgen"": 584}",89600
+1908,NJ,182522,265298,10249,19291,"{""August Gillhaus"": 1196, ""Eugene Chafin"": 4930, ""Eugene V. Debs"": 10249, ""Thomas Hisgen"": 2916}",467111
+1908,NY,667468,870070,38451,100812,"{""August Gillhaus"": 3877, ""Eugene Chafin"": 22667, ""Eugene V. Debs"": 38451, ""Thomas Hisgen"": 35817}",1638350
 1908,NC,136928,114887,372,739,"{""Eugene Chafin"": 354, ""Eugene V. Debs"": 372}",252554
-1908,ND,32885,57680,2421,3960,"{""Eugene Chafin"": 1496, ""Eugene V. Debs"": 2421, ""Thomas"": 43}",94525
-1908,OH,502721,572312,33795,46519,"{""August Gillhaus"": 721, ""Eugene Chafin"": 11402, ""Eugene V. Debs"": 33795, ""Thomas"": 601}",1121552
-1908,OK,123907,110550,21752,22460,"{""Eugene V. Debs"": 21752, ""Thomas"": 686}",256917
-1908,OR,38049,62530,7339,10310,"{""August Gillhaus"": 274, ""Eugene Chafin"": 2682, ""Eugene V. Debs"": 7339, ""Thomas"": 289}",110889
-1908,PA,448782,745779,36694,72889,"{""August Gillhaus"": 1224, ""Eugene Chafin"": 36694, ""Eugene V. Debs"": 33914, ""Thomas"": 1057}",1267450
-1908,RI,24706,43942,1365,3669,"{""August Gillhaus"": 183, ""Eugene Chafin"": 1016, ""Eugene V. Debs"": 1365, ""Thomas"": 1105}",72317
-1908,SC,62288,3945,100,146,"{""Eugene V. Debs"": 100, ""Thomas"": 46}",66379
-1908,SD,40266,67536,4039,6973,"{""Eugene Chafin"": 4039, ""Eugene V. Debs"": 2846, ""Thomas"": 88}",114775
-1908,TN,135608,117977,1870,3595,"{""Eugene Chafin"": 301, ""Eugene V. Debs"": 1870, ""Thomas"": 1424}",257180
-1908,TX,217302,65666,7870,10789,"{""August Gillhaus"": 176, ""Eugene Chafin"": 1634, ""Eugene V. Debs"": 7870, ""Thomas"": 1109}",293757
-1908,UT,42601,61028,4895,4984,"{""Eugene V. Debs"": 4895, ""Thomas"": 87}",108613
-1908,VT,11496,39552,804,1632,"{""Eugene Chafin"": 799, ""Thomas"": 804}",52680
-1908,VA,82946,52572,1111,1547,"{""August Gillhaus"": 25, ""Eugene Chafin"": 1111, ""Eugene V. Debs"": 255, ""Thomas"": 156}",137065
-1908,WA,58691,106062,14177,19126,"{""Eugene Chafin"": 4700, ""Eugene V. Debs"": 14177, ""Thomas"": 249}",183879
+1908,ND,32885,57680,2421,3960,"{""Eugene Chafin"": 1496, ""Eugene V. Debs"": 2421, ""Thomas Hisgen"": 43}",94525
+1908,OH,502721,572312,33795,46519,"{""August Gillhaus"": 721, ""Eugene Chafin"": 11402, ""Eugene V. Debs"": 33795, ""Thomas Hisgen"": 439, ""Thomas Watson"": 162}",1121552
+1908,OK,123907,110550,21752,22460,"{""Eugene V. Debs"": 21752, ""Thomas Hisgen"": 274, ""Thomas Watson"": 412}",256917
+1908,OR,38049,62530,7339,10310,"{""August Gillhaus"": 274, ""Eugene Chafin"": 2682, ""Eugene V. Debs"": 7339, ""Thomas Hisgen"": 289}",110889
+1908,PA,448782,745779,36694,72889,"{""August Gillhaus"": 1224, ""Eugene Chafin"": 36694, ""Eugene V. Debs"": 33914, ""Thomas Hisgen"": 1057}",1267450
+1908,RI,24706,43942,1365,3669,"{""August Gillhaus"": 183, ""Eugene Chafin"": 1016, ""Eugene V. Debs"": 1365, ""Thomas Hisgen"": 1105}",72317
+1908,SC,62288,3945,100,146,"{""Eugene V. Debs"": 100, ""Thomas Hisgen"": 46}",66379
+1908,SD,40266,67536,4039,6973,"{""Eugene Chafin"": 4039, ""Eugene V. Debs"": 2846, ""Thomas Hisgen"": 88}",114775
+1908,TN,135608,117977,1870,3595,"{""Eugene Chafin"": 301, ""Eugene V. Debs"": 1870, ""Thomas Hisgen"": 332, ""Thomas Watson"": 1092}",257180
+1908,TX,217302,65666,7870,10789,"{""August Gillhaus"": 176, ""Eugene Chafin"": 1634, ""Eugene V. Debs"": 7870, ""Thomas Hisgen"": 115, ""Thomas Watson"": 994}",293757
+1908,UT,42601,61028,4895,4984,"{""Eugene V. Debs"": 4895, ""Thomas Hisgen"": 87}",108613
+1908,VT,11496,39552,804,1632,"{""Eugene Chafin"": 799, ""Thomas Hisgen"": 804}",52680
+1908,VA,82946,52572,1111,1547,"{""August Gillhaus"": 25, ""Eugene Chafin"": 1111, ""Eugene V. Debs"": 255, ""Thomas Hisgen"": 51, ""Thomas Watson"": 105}",137065
+1908,WA,58691,106062,14177,19126,"{""Eugene Chafin"": 4700, ""Eugene V. Debs"": 14177, ""Thomas Hisgen"": 249}",183879
 1908,WV,111418,137869,5139,8818,"{""Eugene Chafin"": 5139, ""Eugene V. Debs"": 3679}",258105
 1908,WI,166662,247747,28147,40032,"{""August Gillhaus"": 318, ""Eugene Chafin"": 11565, ""Eugene V. Debs"": 28147}",454441
-1908,WY,14918,20846,1715,1845,"{""Eugene Chafin"": 66, ""Eugene V. Debs"": 1715, ""Thomas"": 64}",37609
-1908,NATIONAL,6408979,7678335,420852,801925,"{""August Gillhaus"": 14031, ""Eugene Chafin"": 254087, ""Eugene V. Debs"": 420852, ""Thomas"": 111436}",14889239
+1908,WY,14918,20846,1715,1845,"{""Eugene Chafin"": 66, ""Eugene V. Debs"": 1715, ""Thomas Hisgen"": 64}",37609
+1908,NATIONAL,6408979,7678335,420852,801925,"{""August Gillhaus"": 14031, ""Eugene Chafin"": 254087, ""Eugene V. Debs"": 420852, ""Thomas Hisgen"": 82574, ""Thomas Watson"": 28862}",14889239

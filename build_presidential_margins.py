@@ -71,7 +71,6 @@ NOTES = {
     (1864, 'LA'): "In 1864, Louisiana's 7 electoral votes were awarded to Lincoln (R) as there was no popular election for president in the state; the state legislature appointed electors who voted for Lincoln.",
     (1912, None): "In 1912, the main opposition to Wilson (D) was Theodore Roosevelt of the Progressive Party (Bull Moose), who we consider the de facto Republican candidate for margin purposes, with Taft as a third-party candidate.",
     (1948, 'AL'): "In 1948, Truman was not on the ballot in Alabama; the Democratic column represents a Dixiecrat slate. We copy the third-party votes to the D_votes column to reflect that this still indicates a Democratic-leaning outcome.",
-    (1960, 'MS'): "In 1960, the Democratic column in Mississippi represents unpledged electors; the main Democratic Party did not field electors in the state.",
     (1960, 'AL'): "Voters in Alabama voted for electors individually, with 5 pledged to Kennedy (D) and 6 unpledged; we count D_votes and T_votes based on the highest vote-getting elector in each category, as Wikipedia does.",
 }
 
