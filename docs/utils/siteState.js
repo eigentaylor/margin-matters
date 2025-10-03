@@ -1,7 +1,7 @@
 // Shared site state helpers for query strings, sharing, and formatting
 (function(global){
   const DEFAULTS = {
-    yearStart: 1968,
+    yearStart: 1864,
     yearEnd: new Date().getFullYear(),
     metric: 'relative', // margin|relative|delta|twoparty|thirdparty
     chart: 'line',
