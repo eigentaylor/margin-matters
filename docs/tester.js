@@ -2245,6 +2245,23 @@
         }
 
         if (candidateHtml) {
+          // Compute major-party EV totals (if allocations are available)
+          let totalDEv = 0, totalREv = 0;
+          try {
+            if (allocations && Array.isArray(allocations)) {
+              totalDEv = allocations.reduce((s, a) => s + (a.dEV || 0), 0);
+              totalREv = allocations.reduce((s, a) => s + (a.rEV || 0), 0);
+            }
+          } catch(e) {}
+
+          // If we have EV totals, render first line with fixed-space layout so names don't jump
+          if ((totalDEv > 0 || totalREv > 0) && (dCandidate || rCandidate)) {
+            // left and right columns use inline-blocks with a min-width so changing names don't reflow
+            const left = `${dCandidate} (D) <span style="font-variant-numeric:tabular-nums">(${totalDEv} ${totalDEv===1?'EV':'EVs'})</span>`;
+            const right = `<span style="font-variant-numeric:tabular-nums">(${totalREv} ${totalREv===1?'EV':'EVs'})</span> ${rCandidate} (R)`;
+            candidateHtml = `${year}: <span style="display:inline-block;min-width:260px;white-space:nowrap">${left}</span><span style="display:inline-block;width:48px;text-align:center">vs</span><span style="display:inline-block;min-width:260px;white-space:nowrap;text-align:right">${right}</span>`;
+          }
+
           if (thirdPartiesWithEVs.size > 0) {
             // Format: "Candidate Name (X EVs)"
             const thirdPartyLines = Array.from(thirdPartiesWithEVs.entries())
