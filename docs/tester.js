@@ -655,7 +655,7 @@
         const onlyThirdParty = false; // if true, show only third-party name for O, not generic 'O' but still show D and R (not names)
         const candidateNames = (function(){
           if (!displayNames) return {D: 'D', R: 'R', O: 'O'};
-          try { console.log('info for', unit, info); } catch(e){}
+          //try { console.log('info for', unit, info); } catch(e){}
 
           // Helper: return a sensible "last name" from a full name string
           const lastNameFrom = (full) => {
@@ -689,7 +689,7 @@
               // For O, prefer an explicit O candidate entry
               if (candObj.O && candObj.O.name) {
                 const ln = lastNameFrom(candObj.O.name);
-                console.log('extracted O from candidates.O.name', ln);
+                //console.log('extracted O from candidates.O.name', ln);
                 if (ln) names.O = ln;
 
               }
@@ -724,7 +724,7 @@
 
           return names;
         })();
-        console.log('candidateNames', candidateNames);
+        //console.log('candidateNames', candidateNames);
         // Only display parties with votes, add star to the highest
         if (voteTallies.D > 0) {
           const dLabel = candidateNames && candidateNames.D ? candidateNames.D : 'D';
