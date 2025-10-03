@@ -2293,20 +2293,31 @@
       // Update special notes: aggregate any specialCaseNotes present on any row for this year
       try {
         const rowsForYear = rows || [];
-        const notes = [];
+        // Map from note text -> Set of units that have that note
+        const noteMap = new Map();
         rowsForYear.forEach(rr => {
           if (!rr) return;
-          const note = (rr.specialCaseNotes || '').toString().trim();
-          if (note) {
-            // include unit so it's clear where the note applies
-            const u = rr.unit || '';
-            notes.push(u ? `${u}: ${note}` : note);
+          const raw = (rr.specialCaseNotes || '').toString().trim();
+          if (!raw) return;
+          const u = rr.unit || '';
+          if (!noteMap.has(raw)) noteMap.set(raw, new Set());
+          if (u) noteMap.get(raw).add(u);
+        });
+
+        // Build display lines. If a note applies to a single unit, prefix with unit. If it applies to multiple units (including all), show the note once without repeating.
+        const lines = [];
+        noteMap.forEach((unitsSet, noteText) => {
+          const units = Array.from(unitsSet || []);
+          if (units.length === 1) {
+            lines.push(`${units[0]}: ${noteText}`);
+          } else {
+            // Show the note once; don't repeat across many states
+            lines.push(noteText);
           }
         });
-        // Remove duplicates while preserving order
-        const uniq = Array.from(new Set(notes));
-        if (uniq.length > 0) {
-          specialNotesEl.innerHTML = uniq.join('<br>');
+
+        if (lines.length > 0) {
+          specialNotesEl.innerHTML = lines.join('<br>');
         } else {
           specialNotesEl.textContent = '';
         }
