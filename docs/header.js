@@ -34,8 +34,7 @@
     }
     
     // Determine if this is an inner page (in a subdirectory)
-    const pathParts = window.location.pathname.split('/');
-    const isInner = pathParts.length > 2 && pathParts[pathParts.length - 2] !== '';
+    const isInner = placeholder.getAttribute('data-is-inner') === 'true';
     
     // Inject the header
     placeholder.innerHTML = createHeader(isInner);
@@ -43,7 +42,7 @@
     // Load the header toggle script
     const script = document.createElement('script');
     script.src = isInner ? '../header-toggle.js' : './header-toggle.js';
-    document.head.appendChild(script);
+    placeholder.appendChild(script);
   }
   
   // Wait for DOM to be ready

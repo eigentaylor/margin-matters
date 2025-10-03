@@ -22,8 +22,7 @@
     }
     
     // Determine if this is an inner page (in a subdirectory)
-    const pathParts = window.location.pathname.split('/');
-    const isInner = pathParts.length > 2 && pathParts[pathParts.length - 2] !== '';
+    const isInner = placeholder.getAttribute('data-is-inner') === 'true';
     
     // Inject the back to map element
     placeholder.innerHTML = createBackToMap(isInner);

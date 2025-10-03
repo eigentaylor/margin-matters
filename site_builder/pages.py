@@ -32,11 +32,8 @@ def make_index(states_sorted: List[str], rows: List[Dict] | None = None, start_y
     year_range = f"{min_year}-{max_year}"
 
     # Compose page
-    header_html = make_header(f"U.S. Presidential Election State Results {year_range}")
-    html = INDEX_HTML.replace("%HEADER%", header_html)
+    html = INDEX_HTML
     html = html.replace("%SMALL_STATES_JSON%", str(SMALL_STATES))
-    html = html.replace("%LAST_UPDATED%", LAST_UPDATED)
-    html = html.replace("%FOOTER_TEXT%", FOOTER_TEXT)
     html = html.replace("%YEAR_RANGE%", year_range)
 
     # Optional interactive tester
@@ -229,8 +226,6 @@ def make_state_pages(states_sorted: List[str]):
         "</ul>"
     )
 
-    header_html = make_header("State Pages")
-    legend_html = make_legend("State Pages")
     html = f"""<!doctype html>
         <html lang='en'>
         <head>
@@ -242,12 +237,9 @@ def make_state_pages(states_sorted: List[str]):
         </head>
         <body>
             <div class='container'>
-                {header_html}
-                {legend_html}
-                <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-                    <a class="back" href="./index.html">← Back to Map</a>
-                    <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-                </div>
+                <div id="header-placeholder"></div>
+                <div class="legend" style="margin-top:12px">State Pages</div>
+                <div id="back-to-map-placeholder"></div>
                 <div class='card'>
                     <h1 style='margin-top:0'>State Pages</h1>
                     <p class='legend'>All statewide pages. District pages are linked from Maine and Nebraska.</p>
@@ -256,8 +248,11 @@ def make_state_pages(states_sorted: List[str]):
                     </div>
                     {state_links_html}
                 </div>
-                <footer>{FOOTER_TEXT} Built as static HTML from CSV. <span data-last-updated>Last updated: ...</span></footer>
+                <div id="footer-placeholder" data-extra-note="Built as static HTML from CSV."></div>
             </div>
+            <script src="./header.js"></script>
+            <script src="./back-to-map.js"></script>
+            <script src="./footer.js"></script>
             <script src="./last-updated.js"></script>
         </body>
         </html>"""
@@ -328,11 +323,9 @@ def build_pages(rows: List[Dict]):
             f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
-        header_html = make_header(f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide", is_inner=True)
         legend_text = f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide"
         page = (
             PAGE_HTML
-            .replace("%HEADER%", header_html)
             .replace("%LEGEND%", legend_text)
             .replace("%TITLE%", f"{st} · State")
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
@@ -405,11 +398,9 @@ def build_pages(rows: List[Dict]):
             f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
-        header_html = make_header(f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})", is_inner=True)
         legend_text = f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})"
         page = (
             PAGE_HTML
-            .replace("%HEADER%", header_html)
             .replace("%LEGEND%", legend_text)
             .replace("%TITLE%", f"{unit} · District")
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
@@ -511,7 +502,6 @@ def build_pages(rows: List[Dict]):
     )
     page = (
         PAGE_HTML
-        .replace("%HEADER%", make_header("National (NAT)", is_inner=True))
         .replace("%LEGEND%", "National (NAT)")
         .replace("%TITLE%", f"NAT · National")
         .replace("%HEADING%", f"National (NAT)")
@@ -543,8 +533,6 @@ def make_data_page(rows: List[Dict]):
         cells = "".join(f"<td>{esc(r.get(h,''))}</td>" for h in headers)
         body_rows.append(f"<tr>{cells}</tr>")
 
-    header_html = make_header("Presidential margins CSV")
-    legend_html = make_legend("Presidential margins CSV")
     # Build the page HTML matching the manual edits: container + header, table, canonical footer, and the delta toggle JS
     html = f"""<!doctype html>
         <html lang='en'>
@@ -557,17 +545,19 @@ def make_data_page(rows: List[Dict]):
         </head>
     <body>
       <div class='container'>
-        {header_html}
-        {legend_html}
-        <div class='flex items-center justify-between mb-4' style='margin-top:12px;margin-bottom:12px'><a class="back" href="./index.html">← Back to Map</a>
-  <span data-last-updated>Last updated: ...</span></div>
+        <div id="header-placeholder"></div>
+        <div class="legend" style="margin-top:12px">Presidential margins CSV</div>
+        <div id="back-to-map-placeholder"></div>
                 <h1 style='margin-top:0'>presidential_margins.csv</h1>
                 <p class='legend'>This page renders the primary CSV used to build the site. Download the raw data via the Data (CSV) navbar or <a href='presidential_margins.csv'>direct link</a>.</p>
                 <div class='card table-wrap'>
                     <table class="presidential-margins-table"><thead><tr>{thead}</tr></thead><tbody>{''.join(body_rows)}</tbody></table>
                 </div>
-            <footer>{FOOTER_TEXT} Built as static HTML from CSV. <span data-last-updated>Last updated: ...</span></footer>
+            <div id="footer-placeholder" data-extra-note="Built as static HTML from CSV."></div>
         </div>
+        <script src="./header.js"></script>
+        <script src="./back-to-map.js"></script>
+        <script src="./footer.js"></script>
         <script src="./last-updated.js"></script>
     </body>
     </html>"""
