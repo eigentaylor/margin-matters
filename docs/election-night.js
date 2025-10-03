@@ -6,11 +6,10 @@
   // vote counts and calls might unfold on election night. It is used
   // by the site to animate the map, small boxes, EV bar, and call log.
 
-  // Small epsilon for numeric comparisons
-  const EPS = 1e-6;
-  // Default colors (neutral and third-party)
-  const NEUTRAL_COLOR = '#2f2f2f';
-  const THIRD_PARTY_COLOR = '#C9A400';
+  // Use shared constants if available, otherwise define locally
+  const EPS = (window.ElectionConstants && window.ElectionConstants.EPS) || 1e-6;
+  const NEUTRAL_COLOR = (window.ElectionConstants && window.ElectionConstants.NEUTRAL_COLOR) || '#2f2f2f';
+  const THIRD_PARTY_COLOR = (window.ElectionConstants && window.ElectionConstants.THIRD_PARTY_COLOR) || '#C9A400';
   // Simulation timing and pacing constants
   // BASE_MINUTES_PER_SECOND: how many simulated minutes pass per real second
   const BASE_MINUTES_PER_SECOND = 6;
@@ -86,7 +85,7 @@
 
   // Mapping of two-letter state abbreviations to their full names used
   // when formatting labels for the UI and call log.
-  const STATE_NAMES = {
+  const STATE_NAMES = (window.ElectionConstants && window.ElectionConstants.STATE_NAMES) || {
     AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut',
     DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois',
     IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts',
@@ -98,6 +97,9 @@
   };
 
   function clampMargin(value) {
+    if (window.FormattingUtils && window.FormattingUtils.clampMargin) {
+      return window.FormattingUtils.clampMargin(value);
+    }
     if (!isFinite(value)) return 0;
     const LIMIT = 1 - 1e-9;
     if (value > LIMIT) return LIMIT;
@@ -2121,6 +2123,9 @@
   }
 
   function formatLean(value) {
+    if (window.FormattingUtils && window.FormattingUtils.leanStr) {
+      return window.FormattingUtils.leanStr(value);
+    }
     if (!isFinite(value)) return 'ERROR';
     if (typeof window.leanStr === 'function') return window.leanStr(value);
     //if (Math.abs(value) < 0.00005) return 'EVEN';
@@ -2129,6 +2134,9 @@
   }
 
   function formatUnitLabel(unit) {
+    if (window.FormattingUtils && window.FormattingUtils.formatUnitLabel) {
+      return window.FormattingUtils.formatUnitLabel(unit);
+    }
     if (/^[A-Z]{2}$/.test(unit)) return STATE_NAMES[unit] || unit;
     if (/-AL$/.test(unit)) {
       const abbr = unit.slice(0, 2);
@@ -2241,15 +2249,24 @@
   }
 
   function clamp01(x) {
+    if (window.FormattingUtils && window.FormattingUtils.clamp01) {
+      return window.FormattingUtils.clamp01(x);
+    }
     if (!isFinite(x)) return 0;
     return Math.max(0, Math.min(1, x));
   }
 
   function clampByte(v) {
+    if (window.ColorUtils && window.ColorUtils.clampByte) {
+      return window.ColorUtils.clampByte(v);
+    }
     return Math.max(0, Math.min(255, v | 0));
   }
 
   function hexToRgb(hex) {
+    if (window.ColorUtils && window.ColorUtils.hexToRgb) {
+      return window.ColorUtils.hexToRgb(hex);
+    }
     if (!hex) return [47, 47, 47];
     let cleaned = hex.replace('#', '');
     if (cleaned.length === 8) cleaned = cleaned.slice(0, 6);
@@ -2260,10 +2277,16 @@
   }
 
   function rgbToHex(r, g, b) {
+    if (window.ColorUtils && window.ColorUtils.rgbToHex) {
+      return window.ColorUtils.rgbToHex(r, g, b);
+    }
     return '#' + [r, g, b].map(v => clampByte(v).toString(16).padStart(2, '0')).join('');
   }
 
   function blendColors(a, b, t) {
+    if (window.ColorUtils && window.ColorUtils.blendColors) {
+      return window.ColorUtils.blendColors(a, b, t);
+    }
     const rgbA = hexToRgb(a);
     const rgbB = hexToRgb(b);
     const blended = [
@@ -2275,6 +2298,9 @@
   }
 
   function safeMarginToColor(margin, isThird) {
+    if (window.ColorUtils && window.ColorUtils.safeMarginToColor) {
+      return window.ColorUtils.safeMarginToColor(margin, isThird);
+    }
     if (isThird) return THIRD_PARTY_COLOR;
     if (typeof window.marginToColor === 'function') return window.marginToColor(margin, false);
     if (margin <= -0.20) return '#8B0000';

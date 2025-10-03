@@ -1,16 +1,19 @@
 (function () {
-  const PV_CAP = 0.5;
-  const EPS = 1e-8;
+  // Use shared constants and utilities from modules if available
+  const PV_CAP = (window.ElectionConstants && window.ElectionConstants.PV_CAP) || 0.5;
+  const EPS = (window.ElectionConstants && window.ElectionConstants.EPS) || 1e-8;
   const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
-  // FIPS -> USPS state abbreviation map (contiguous plus AK, HI, DC)
-  const ID_TO_ABBR = { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
-  // Very small states to skip labeling on the map
-  const SMALL_STATES = new Set(["MA", "RI", "CT", "NJ", "DE", "MD", "DC", "NH", "VT"]);
+  
+  // Use constants from shared module if available
+  const ID_TO_ABBR = (window.ElectionConstants && window.ElectionConstants.ID_TO_ABBR) || 
+    { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
+  const SMALL_STATES = (window.ElectionConstants && window.ElectionConstants.SMALL_STATES) || 
+    new Set(["MA", "RI", "CT", "NJ", "DE", "MD", "DC", "NH", "VT"]);
 
-  // Proportional EV allocation function using largest remainder method
-  // Now supports multiple third parties via thirdPartyResults object
-  function allocateProportionalEVs(dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults) {
+  // Use shared EV allocation function if available, otherwise define locally
+  const allocateProportionalEVs = (window.EvCalculations && window.EvCalculations.allocateProportionalEVs) || 
+  function (dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults) {
     const total = dVotes + rVotes + oVotes;
     if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0, thirdParties: {} };
 
@@ -105,7 +108,7 @@
     }
 
     return { ...allocated, thirdParties: {} };
-  }
+  };
 
   // Check if proportional EV mode is enabled
   function isProportionalEvMode() {
@@ -1478,7 +1481,11 @@
     window.history.replaceState({}, '', url);
   }
 
+  // Use shared formatting and color utilities if available, otherwise define locally
   function leanStr(x) {
+    if (window.FormattingUtils && window.FormattingUtils.leanStr) {
+      return window.FormattingUtils.leanStr(x);
+    }
     if (!isFinite(x)) return '';
     if (Math.abs(x) < 0.000005) return 'EVEN';
     const s = (Math.abs(x) * 100).toFixed(1);
@@ -1487,6 +1494,9 @@
   try { window.leanStr = leanStr; } catch (e) { }
 
   function marginToColor(m, isThirdParty = false) {
+    if (window.ColorUtils && window.ColorUtils.marginToColor) {
+      return window.ColorUtils.marginToColor(m, isThirdParty);
+    }
     if (isThirdParty) return '#C9A400'; // Yellow for third-party
     if (m <= -0.20) return '#8B0000';
     if (m <= -0.10) return '#B22222';
@@ -1502,6 +1512,9 @@
   try { window.marginToColor = marginToColor; } catch (e) { }
 
   function clampMargin(value) {
+    if (window.FormattingUtils && window.FormattingUtils.clampMargin) {
+      return window.FormattingUtils.clampMargin(value);
+    }
     if (!isFinite(value)) return 0;
     const LIMIT = 1 - 1e-9;
     if (value > LIMIT) return LIMIT;
@@ -1510,6 +1523,9 @@
   }
 
   function totalVotesFromRow(row) {
+    if (window.VoteCalculations && window.VoteCalculations.totalVotesFromRow) {
+      return window.VoteCalculations.totalVotesFromRow(row);
+    }
     const direct = +row.total;
     if (isFinite(direct) && direct > 0) return direct;
     const fallback = (+row.dVotes || 0) + (+row.rVotes || 0) + (+row.tVotes || 0);
