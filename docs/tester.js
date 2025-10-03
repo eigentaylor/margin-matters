@@ -20,7 +20,7 @@
     
     if (thirdPartyResults && typeof thirdPartyResults === 'object') {
       const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
-        // Filter out "Other(s)" and "Unpledged Electors" and any with 'No Candidate'
+        // Filter out "Other(s)"
         return name !== 'Other' && name !== 'Others';
       });
       if (thirdPartyEntries.length > 0) {
@@ -179,7 +179,16 @@
       }
 
       const topThirdShare = breakdown.topThirdShareOfTotal;
-      return allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare, r.thirdPartyResults);
+      // Capture allocation result so we can log it for 1960 (compare with map/election-night)
+      const allocResult = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare, r.thirdPartyResults);
+
+      try {
+        if (year === 1960) {
+          console.log('[EV-TRACE] calculateUnitProportionalEVs', { year, keyUnit, ev, dVotes, rVotes, tVotes, thirdPartyResults: r.thirdPartyResults, allocResult });
+        }
+      } catch(e) {}
+
+      return allocResult;
     } catch(e) {
       return null;
     }
@@ -574,7 +583,14 @@
         const reportingVal = (info && info.reporting != null) ? Number(info.reporting) : null;
         const fullyCounted = (reportingVal != null && isFinite(reportingVal)) ? (reportingVal >= 0.999) : false;
         if (electionNightActive && !fullyCounted) return null;
-        return calculateUnitProportionalEVs(unit);
+        const alloc = calculateUnitProportionalEVs(unit);
+        try {
+          // Log why calculateUnitProportionalEVs may have returned null or what it returned
+          if ((window._curYear === 1960) || (alloc && (alloc.D || alloc.R || alloc.O))) {
+            console.log('[EV-TRACE] tooltip evAllocation computed', { unit, electionNightActive, reportingVal, fullyCounted, alloc });
+          }
+        } catch(e) {}
+        return alloc;
       })();
       if (evAllocation) {
         const evParts = [];
@@ -586,6 +602,11 @@
         try {
           Object.values(detailed).forEach(v => { if (isFinite(v)) othersTotal += Number(v) || 0; });
         } catch(e) { /* ignore */ }
+        try {
+          if (window._curYear === 1960) {
+            console.log('[EV-TRACE] tooltip evParts O aggregation', { unit, ev, evAllocation, detailed, othersTotal });
+          }
+        } catch(e) {}
         if (othersTotal > 0) evParts.push(`O: ${othersTotal}`);
         if (evParts.length) {
           rows.push(evParts.join(' | '));
@@ -1752,10 +1773,10 @@
     const nat = (window._futureMode && year > 2024) ? 0 : getNatMargin(year);
 
     try {
-      console.log('[stops] buildPvStops start', { year, hasStopColors: !!byYearStops, stopColorKeys: byYearStops ? byYearStops.size : 0, hasEff: !!effByYearStops });
+      //console.log('[stops] buildPvStops start', { year, hasStopColors: !!byYearStops, stopColorKeys: byYearStops ? byYearStops.size : 0, hasEff: !!effByYearStops });
       if (byYearStops) {
         const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
-        console.log('[stops] raw stop keys (sample)', sampleKeys);
+        //console.log('[stops] raw stop keys (sample)', sampleKeys);
       }
     } catch(e) {}
 
@@ -1770,7 +1791,7 @@
     // If CSV has entries, collect all distinct stop keys and map to numeric and effective
     if (byYearStops && effByYearStops && byYearStops.size > 0) {
       // stop_key strings -> parse to number for ordering
-    try { console.log('[stops] preliminary sorted stops', stops); } catch(e) {}
+    //try { console.log('[stops] preliminary sorted stops', stops); } catch(e) {}
       const keys = Array.from(byYearStops.keys());
       for (const k of keys) {
         const v = parseFloat(k);
@@ -1832,7 +1853,7 @@
   const allStops = stops.slice();
     try {
       const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s)||[]).length }));
-      console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
+      //console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
     } catch(e) {}
     // Ensure every base stop has an effective value (keep any precomputed ones).
     for (let i=0;i<allStops.length;i++){
@@ -1906,7 +1927,7 @@
             if (!isNaN(val)) {
               try { window._pvOverride = val; window._pvPresetName = el.getAttribute('data-name') || null; } catch(e) {}
               try { updateAll(); } catch(e) {}
-              try { console.log('[stops] preset chip click -> set PV override', { year, val }); } catch(e) {}
+              //try { console.log('[stops] preset chip click -> set PV override', { year, val }); } catch(e) {}
             }
           } else {
             // Regular stop chip: set slider index
@@ -2175,7 +2196,7 @@
         let allocations = null;
         try {
           if (typeof getAllEvAllocations === 'function') allocations = getAllEvAllocations();
-          console.log('allocations:', allocations);
+          //console.log('allocations:', allocations);
         } catch(e) {}
         if (!allocations) {
           try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch(e) {}
@@ -2184,11 +2205,11 @@
         let totalOtherEV = 0;
         if (allocations && Array.isArray(allocations)) {
           allocations.forEach(a => {
-            console.log('a:', a);
+            //console.log('a:', a);
             totalOtherEV += (a.oEV || 0);
             // add any detailed third-party allocations
             if (a.thirdPartyEVs && typeof a.thirdPartyEVs === 'object') {
-              console.log('detailed third party EVs', a.thirdPartyEVs, 'a:', a);
+              //console.log('detailed third party EVs', a.thirdPartyEVs, 'a:', a);
               Object.keys(a.thirdPartyEVs).forEach(name => {
                 const v = a.thirdPartyEVs[name] || 0;
                 if (v > 0) {
@@ -2307,7 +2328,7 @@
   window._curYear = year;
   const pvIndex = +pvEl.value;
   const stops = stopsByYear.get(year) || [0];
-  try { console.log('[stops] updateAll current stops set', { year, count: stops.length, sample: stops.slice(0,25) }); } catch(e) {}
+  //try { console.log('[stops] updateAll current stops set', { year, count: stops.length, sample: stops.slice(0,25) }); } catch(e) {}
   const stopVal = (stops && stops.length > 0 && stops[pvIndex] !== undefined) ? stops[pvIndex] : 0;
   // Allow a custom PV override (e.g., user-entered PV) to take precedence over stops
   const override = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
@@ -2419,18 +2440,30 @@
           }
         }
       }
-  // Special case for Alabama 1960: if AL is not colored red (R wins), give 5 D EVs and 6 O EVs
+  // Special case: Alabama 1960 and Mississippi 1960 - always use fixed allocation when not R
   let counted = false;
-  if (!counted && year === 1960 && unit === 'AL') {
-    if (voteLeader && voteLeader.code !== 'R') {
-      dEV += 5;
-      oEV += 6;
-      counted = true;
-    } else if (!voteLeader && m >= 0) {
-      dEV += 5;
-      oEV += 6;
-      counted = true;
+  if (!counted && year === 1960 && (unit === 'AL' || unit === 'MS')) {
+    // Determine winner using PV-adjusted margin to match other code paths
+    const margin = +r.rm || 0;
+    const pv = window._curPv || 0;
+    const adjMargin = margin + pv;
+    const winner = adjMargin >= 0 ? 'D' : 'R';
+
+    if (winner !== 'R') {
+      if (unit === 'AL') {
+        // Alabama: 5 D, 6 O
+        dEV += 5;
+        oEV += 6;
+      } else {
+        // Mississippi: 0 D, all O
+        dEV += 0;
+        oEV += ev;
+      }
+    } else {
+      // Republicans win: normal winner-take-all
+      rEV += ev;
     }
+    counted = true;
   }
   
   // Count EVs, ensuring the tipping-point state is included (no black sliver)
@@ -2456,6 +2489,11 @@
       const tVotesAdj = total * tShare;
       const topThirdShare = +r.tp || 0;
       const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare, r.thirdPartyResults);
+      try {
+        if (year === 1960) {
+          console.log('[EV-TRACE] evBar proportional allocation', { year, unit, ev, dVotesAdj, rVotesAdj, tVotesAdj, thirdPartyResults: r.thirdPartyResults, allocation });
+        }
+      } catch(e) {}
       dEV += allocation.D;
       rEV += allocation.R;
       oEV += allocation.O;
