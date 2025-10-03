@@ -2178,7 +2178,7 @@
         if (!allocations) {
           try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch(e) {}
         }
-        const thirdNames = new Set();
+        const thirdPartiesWithEVs = new Map(); // Map of name -> total EV count
         let totalOtherEV = 0;
         if (allocations && Array.isArray(allocations)) {
           allocations.forEach(a => {
@@ -2187,27 +2187,35 @@
             if (a.thirdPartyEVs && typeof a.thirdPartyEVs === 'object') {
               Object.keys(a.thirdPartyEVs).forEach(name => {
                 const v = a.thirdPartyEVs[name] || 0;
-                if (v > 0) thirdNames.add(name);
+                if (v > 0) {
+                  thirdPartiesWithEVs.set(name, (thirdPartiesWithEVs.get(name) || 0) + v);
+                }
               });
             }
           });
         }
 
-        // If there are Other EVs but no detailed names, fall back to generic marker
-        if (totalOtherEV > 0 && thirdNames.size === 0) {
-          thirdNames.add('Other');
+        // If there are Other EVs but no detailed names, track as generic "Other"
+        if (totalOtherEV > 0 && thirdPartiesWithEVs.size === 0) {
+          thirdPartiesWithEVs.set('Other', totalOtherEV);
         }
 
         if (candidateHtml) {
-          if (thirdNames.size > 0) {
-            const list = Array.from(thirdNames).sort();
-            candidateHtml += '<br>' + list.join(', ');
+          if (thirdPartiesWithEVs.size > 0) {
+            // Format: "Candidate Name (X EVs)"
+            const thirdPartyLines = Array.from(thirdPartiesWithEVs.entries())
+              .sort((a, b) => b[1] - a[1]) // Sort by EV count descending
+              .map(([name, evCount]) => `${name} (${evCount} ${evCount === 1 ? 'EV' : 'EVs'})`);
+            candidateHtml += '<br>' + thirdPartyLines.join(', ');
           }
           candidateNamesEl.innerHTML = candidateHtml;
         } else {
           // No major-party names available, but maybe show third parties only
-          if (thirdNames.size > 0) {
-            candidateNamesEl.innerHTML = `${year}: ` + Array.from(thirdNames).sort().join(', ');
+          if (thirdPartiesWithEVs.size > 0) {
+            const thirdPartyLines = Array.from(thirdPartiesWithEVs.entries())
+              .sort((a, b) => b[1] - a[1])
+              .map(([name, evCount]) => `${name} (${evCount} ${evCount === 1 ? 'EV' : 'EVs'})`);
+            candidateNamesEl.innerHTML = `${year}: ` + thirdPartyLines.join(', ');
           } else {
             candidateNamesEl.textContent = '';
           }

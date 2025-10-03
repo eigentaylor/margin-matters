@@ -783,7 +783,7 @@
   }
 
   function buildEvAllocations(year, abbr, unit, ev, winner, dVotes, rVotes, oVotes, topThirdShare){
-    const allocations = { D: 0, R: 0, O: 0 };
+    const allocations = { D: 0, R: 0, O: 0, thirdParties: {} };
     if (!isFinite(ev) || ev <= 0) return allocations;
 
     // Check if proportional EV mode is enabled
@@ -796,16 +796,63 @@
       }
     })();
 
+    // Special case: Alabama 1960 and Mississippi 1960 - always use fixed allocation
+    if (year === 1960 && (abbr === 'AL' || abbr === 'MS')) {
+      const margin = 0; // Doesn't matter for fixed allocation
+      const pv = window._curPv || 0;
+      const adjMargin = margin + pv;
+      const stateWinner = adjMargin >= 0 ? 'D' : 'R';
+      
+      if (stateWinner !== 'R') {
+        if (abbr === 'AL') {
+          allocations.D = 5;
+          allocations.O = 6;
+        } else { // MS
+          allocations.D = 0;
+          allocations.O = 8;
+        }
+      } else {
+        // Republicans win: normal winner-take-all
+        allocations.R = ev;
+      }
+      return allocations;
+    }
+
     if (isProportional && dVotes != null && rVotes != null && oVotes != null) {
-      // Use proportional allocation
+      // Try to use the global allocateProportionalEVs function with full third party support
+      if (typeof window.allocateProportionalEVs === 'function') {
+        try {
+          // Get thirdPartyResults from the row data
+          const rows = (window._byYearMap && window._byYearMap.get(year)) || [];
+          const row = rows.find(r => r && r.unit === unit);
+          const thirdPartyResults = (row && row.thirdPartyResults) || null;
+          
+          const result = window.allocateProportionalEVs(dVotes, rVotes, oVotes, ev, topThirdShare, thirdPartyResults);
+          allocations.D = result.D || 0;
+          allocations.R = result.R || 0;
+          allocations.O = result.O || 0;
+          allocations.thirdParties = result.thirdParties || {};
+          
+          // Sum up all third party EVs into O for backwards compatibility with display
+          if (allocations.thirdParties && typeof allocations.thirdParties === 'object') {
+            let totalThirdEVs = 0;
+            Object.values(allocations.thirdParties).forEach(ev => totalThirdEVs += ev);
+            allocations.O += totalThirdEVs;
+          }
+          
+          return allocations;
+        } catch(e) {
+          console.warn('Failed to use advanced proportional allocation, falling back:', e);
+        }
+      }
+      
+      // Fallback proportional allocation (simple)
       const total = dVotes + rVotes + oVotes;
       if (total > 0) {
-        // Calculate exact proportional shares
         const dShare = dVotes / total;
         const rShare = rVotes / total;
         const oShare = oVotes / total;
         
-        // Calculate integer portions (quotas)
         const dQuota = Math.floor(dShare * ev);
         const rQuota = Math.floor(rShare * ev);
         const oQuota = Math.floor(oShare * ev);
@@ -816,7 +863,6 @@
         
         let remaining = ev - (dQuota + rQuota + oQuota);
         
-        // Allocate remaining EVs using largest remainder method
         if (remaining > 0) {
           const remainders = [
             { party: 'D', remainder: (dShare * ev) - dQuota },
@@ -824,10 +870,8 @@
             { party: 'O', remainder: (oShare * ev) - oQuota }
           ];
           
-          // Sort by remainder descending
           remainders.sort((a, b) => b.remainder - a.remainder);
           
-          // Allocate remaining EVs to parties with largest remainders
           for (let i = 0; i < remaining; i++) {
             allocations[remainders[i].party]++;
           }
