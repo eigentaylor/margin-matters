@@ -3,12 +3,10 @@ import shutil
 import re
 from pathlib import Path
 
-from .config import CSV_PATH, OUT_DIR, STATE_DIR, UNIT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
+from .config import CSV_PATH, OUT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
 from .io_utils import ensure_dirs, write_text, read_csv
-from .pages import build_pages, make_data_page, make_methods_page, make_state_pages, make_index
-from .templates import BASE_CSS, FAVICON_SVG, TESTER_JS
-from .ranker import build_ranker_page
-from .header import make_header
+from .pages import build_pages, make_data_page, make_state_pages
+from .templates import FAVICON_SVG
 
 
 def build_site():
