@@ -49,11 +49,11 @@ def build_site():
             row["margin_breakdown"] = ""
     
     states = build_pages(rows)
-    # Build State Pages index
-    try:
-        make_state_pages(states)
-    except Exception as e:
-        print(f"Warning: couldn't build state-pages.html: {e}")
+    # # Build State Pages index
+    # try:
+    #     make_state_pages(states)
+    # except Exception as e:
+    #     print(f"Warning: couldn't build state-pages.html: {e}")
 
     try:
         shutil.copy2(CSV_PATH, OUT_DIR / "presidential_margins.csv")
@@ -87,4 +87,4 @@ def build_site():
 
     # Removed building tester.js from pipeline; edit docs/tester.js directly when needed.
 
-    print(f"Done. Built index, state/unit pages, data, methods, and state-pages. Ranker is managed separately.")
+    print(f"Done. Updated site. Output in {OUT_DIR}")
