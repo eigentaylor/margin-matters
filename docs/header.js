@@ -21,8 +21,13 @@
         </div>
       </div>
     `;
-    
-    return headerHTML;
+    const title_div_HTML = `
+      <div style="text-align:center;margin-top:16px;margin-bottom:8px">
+        <h1 style="margin:0;font-size:1.5em">Margin Matters</h1>
+      </div>
+    `;
+
+    return headerHTML + title_div_HTML;
   }
   
   function injectHeader() {
