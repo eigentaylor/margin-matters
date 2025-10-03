@@ -2177,8 +2177,7 @@
           console.log('allocations:', allocations);
         } catch(e) {}
         if (!allocations) {
-          console.log('Trying window.getAllEvAllocations()');
-          try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); console.log('allocations:', allocations); } catch(e) {}
+          try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch(e) {}
         }
         const thirdPartiesWithEVs = new Map(); // Map of name -> total EV count
         let totalOtherEV = 0;
@@ -2197,6 +2196,25 @@
               });
             }
           });
+        }
+
+        // Fallback: if allocations weren't available or yielded nothing, scan rows for any
+        // per-row thirdPartyResults (votes) to discover third-party names. This allows
+        // candidate area to show names even if the allocation helper isn't ready yet.
+        if ((thirdPartiesWithEVs.size === 0) && (!allocations || !Array.isArray(allocations) || allocations.length === 0)) {
+          try {
+            rows.forEach(r => {
+              if (!r) return;
+              // r.thirdPartyResults holds per-row third-party vote counts (if present)
+              if (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') {
+                Object.keys(r.thirdPartyResults).forEach(name => {
+                  const v = r.thirdPartyResults[name] || 0;
+                  // We don't know EVs here, but presence of votes indicates the party existed in this unit
+                  if (v > 0) thirdPartiesWithEVs.set(name, (thirdPartiesWithEVs.get(name) || 0));
+                });
+              }
+            });
+          } catch(e) { /* ignore fallback failures */ }
         }
 
         // If there are Other EVs but no detailed names, track as generic "Other"
@@ -4198,6 +4216,9 @@ function renderFlipDetails(){
   
   // Expose update function globally so it can be called during election night
   window.updateEvBreakdownTable = updateEvBreakdownTable;
+
+  // Also expose the allocations helper so other UI code can call it directly
+  try { if (typeof getAllEvAllocations === 'function') window.getAllEvAllocations = getAllEvAllocations; } catch(e) {}
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
