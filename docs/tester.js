@@ -20,8 +20,8 @@
     
     if (thirdPartyResults && typeof thirdPartyResults === 'object') {
       const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
-        // Filter out "Other" and "Unpledged Electors"
-        return name !== 'Other' && name !== 'Unpledged Electors';
+        // Filter out "Other(s)" and "Unpledged Electors"
+        return name !== 'Other' && name !== 'Others' && name !== 'Unpledged Electors';
       });
       if (thirdPartyEntries.length > 0) {
         hasMultipleThirdParties = thirdPartyEntries.length > 1;
@@ -580,7 +580,13 @@
         const evParts = [];
         if (evAllocation.D > 0) evParts.push(`D: ${evAllocation.D}`);
         if (evAllocation.R > 0) evParts.push(`R: ${evAllocation.R}`);
-        if (evAllocation.O > 0) evParts.push(`O: ${evAllocation.O}`);
+        // Aggregate any "Other" EVs: include traditional O plus any detailed thirdParty allocations
+        const detailed = evAllocation.thirdParties || {};
+        let othersTotal = (evAllocation.O || 0);
+        try {
+          Object.values(detailed).forEach(v => { if (isFinite(v)) othersTotal += Number(v) || 0; });
+        } catch(e) { /* ignore */ }
+        if (othersTotal > 0) evParts.push(`O: ${othersTotal}`);
         if (evParts.length) {
           rows.push(evParts.join(' | '));
         }

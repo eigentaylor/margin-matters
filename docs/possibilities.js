@@ -664,7 +664,17 @@
 		const tip = mapTip(); if (!tip) return;
 		const name = STATE_NAMES[state.state] || state.state;
 		const statusLabel = describeStatus(state);
-		tip.textContent = `${name} · ${state.ev} EV · ${formatMargin(state.margin)} · ${statusLabel}` + (state.manual ? ' · manual' : '');
+		// Include aggregate Other EVs if present on the state object (oEV or thirdPartyEVs)
+		let extraO = '';
+		try {
+			let others = 0;
+			if (state.oEV != null && isFinite(state.oEV)) others += Number(state.oEV) || 0;
+			if (state.thirdPartyEVs && typeof state.thirdPartyEVs === 'object') {
+				Object.values(state.thirdPartyEVs).forEach(v => { if (isFinite(v)) others += Number(v) || 0; });
+			}
+			if (others > 0) extraO = ` · O: ${others}`;
+		} catch(e) { /* ignore */ }
+		tip.textContent = `${name} · ${state.ev} EV · ${formatMargin(state.margin)} · ${statusLabel}` + (state.manual ? ' · manual' : '') + extraO;
 		tip.style.display = 'block';
 		positionTip(evt);
 	}
