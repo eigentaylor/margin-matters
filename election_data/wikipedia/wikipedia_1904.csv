@@ -1,47 +1,47 @@
 year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1904,AL,79797,22472,5051,6516,"{""Eugene V. Debs"": 853, ""Silas Swallow"": 612, ""Thomas"": 5051}",108785
-1904,AR,64434,46860,2318,5127,"{""Eugene V. Debs"": 1816, ""Silas Swallow"": 993, ""Thomas"": 2318}",116421
-1904,CA,89404,205226,29535,37248,"{""Eugene V. Debs"": 29535, ""Silas Swallow"": 7380, ""Thomas"": 2}",331878
-1904,CO,100105,134661,4304,8901,"{""Charles Corregan"": 335, ""Eugene V. Debs"": 4304, ""Silas Swallow"": 3438, ""Thomas"": 824}",243667
-1904,CT,72909,111089,4543,7130,"{""Charles Corregan"": 575, ""Eugene V. Debs"": 4543, ""Silas Swallow"": 1506, ""Thomas"": 495}",191128
-1904,DE,19347,23705,607,804,"{""Eugene V. Debs"": 146, ""Silas Swallow"": 607, ""Thomas"": 51}",43856
-1904,FL,26449,8314,2337,3942,"{""Eugene V. Debs"": 2337, ""Thomas"": 1605}",38705
-1904,GA,83466,24004,22635,23516,"{""Eugene V. Debs"": 196, ""Silas Swallow"": 685, ""Thomas"": 22635}",130986
-1904,ID,18480,47783,4949,6315,"{""Eugene V. Debs"": 4949, ""Silas Swallow"": 1013, ""Thomas"": 353}",72578
-1904,IL,327606,632645,69225,116248,"{""Charles Corregan"": 4698, ""Eugene V. Debs"": 69225, ""Silas Swallow"": 34770, ""Thomas"": 6725}",1076499
-1904,IN,274345,368289,23496,39551,"{""Charles Corregan"": 1598, ""Eugene V. Debs"": 12013, ""Silas Swallow"": 23496, ""Thomas"": 2444}",682185
-1904,IA,149276,308158,14849,28659,"{""Eugene V. Debs"": 14849, ""Silas Swallow"": 11603, ""Thomas"": 2207}",486093
-1904,KS,86174,212955,15869,29432,"{""Eugene V. Debs"": 15869, ""Silas Swallow"": 7306, ""Thomas"": 6257}",328561
-1904,KY,217170,205457,6603,13319,"{""Charles Corregan"": 596, ""Eugene V. Debs"": 3599, ""Silas Swallow"": 6603, ""Thomas"": 2521}",435946
+1904,AL,79797,22472,5051,6516,"{""Eugene V. Debs"": 853, ""Silas Swallow"": 612, ""Thomas Watson"": 5051}",108785
+1904,AR,64434,46860,2318,5127,"{""Eugene V. Debs"": 1816, ""Silas Swallow"": 993, ""Thomas Watson"": 2318}",116421
+1904,CA,89404,205226,29535,37248,"{""Eugene V. Debs"": 29535, ""Silas Swallow"": 7380, ""Thomas Watson"": 2}",331878
+1904,CO,100105,134661,4304,8901,"{""Charles Corregan"": 335, ""Eugene V. Debs"": 4304, ""Silas Swallow"": 3438, ""Thomas Watson"": 824}",243667
+1904,CT,72909,111089,4543,7130,"{""Charles Corregan"": 575, ""Eugene V. Debs"": 4543, ""Silas Swallow"": 1506, ""Thomas Watson"": 495}",191128
+1904,DE,19347,23705,607,804,"{""Eugene V. Debs"": 146, ""Silas Swallow"": 607, ""Thomas Watson"": 51}",43856
+1904,FL,26449,8314,2337,3942,"{""Eugene V. Debs"": 2337, ""Thomas Watson"": 1605}",38705
+1904,GA,83466,24004,22635,23516,"{""Eugene V. Debs"": 196, ""Silas Swallow"": 685, ""Thomas Watson"": 22635}",130986
+1904,ID,18480,47783,4949,6315,"{""Eugene V. Debs"": 4949, ""Silas Swallow"": 1013, ""Thomas Watson"": 353}",72578
+1904,IL,327606,632645,69225,116248,"{""Charles Corregan"": 4698, ""Eugene V. Debs"": 69225, ""Silas Swallow"": 34770, ""Thomas Watson"": 6725}",1076499
+1904,IN,274345,368289,23496,39551,"{""Charles Corregan"": 1598, ""Eugene V. Debs"": 12013, ""Silas Swallow"": 23496, ""Thomas Watson"": 2444}",682185
+1904,IA,149276,308158,14849,28659,"{""Eugene V. Debs"": 14849, ""Silas Swallow"": 11603, ""Thomas Watson"": 2207}",486093
+1904,KS,86174,212955,15869,29432,"{""Eugene V. Debs"": 15869, ""Silas Swallow"": 7306, ""Thomas Watson"": 6257}",328561
+1904,KY,217170,205457,6603,13319,"{""Charles Corregan"": 596, ""Eugene V. Debs"": 3599, ""Silas Swallow"": 6603, ""Thomas Watson"": 2521}",435946
 1904,LA,47708,5205,995,995,"{""Eugene V. Debs"": 995}",53908
-1904,ME-AL,27642,65432,2102,3949,"{""Eugene V. Debs"": 2102, ""Silas Swallow"": 1510, ""Thomas"": 337}",97023
-1904,MD,109446,109497,3034,5286,"{""Eugene V. Debs"": 2247, ""Silas Swallow"": 3034, ""Thomas"": 1}",224229
-1904,MA,165746,257822,13604,21541,"{""Charles Corregan"": 2359, ""Eugene V. Debs"": 13604, ""Silas Swallow"": 4279, ""Thomas"": 1294}",445109
-1904,MI,135392,364957,13441,24678,"{""Charles Corregan"": 1036, ""Eugene V. Debs"": 9042, ""Silas Swallow"": 13441, ""Thomas"": 1159}",525027
-1904,MN,55187,216651,11692,21022,"{""Charles Corregan"": 974, ""Eugene V. Debs"": 11692, ""Silas Swallow"": 6253, ""Thomas"": 2103}",292860
-1904,MS,53480,3280,1499,1961,"{""Eugene V. Debs"": 462, ""Thomas"": 1499}",58721
-1904,MO,296312,321449,13009,26100,"{""Charles Corregan"": 1674, ""Eugene V. Debs"": 13009, ""Silas Swallow"": 7191, ""Thomas"": 4226}",643861
-1904,MT,21773,34932,5676,7739,"{""Charles Corregan"": 208, ""Eugene V. Debs"": 5676, ""Silas Swallow"": 335, ""Thomas"": 1520}",64444
-1904,NE-AL,52921,138558,20518,34253,"{""Eugene V. Debs"": 7412, ""Silas Swallow"": 6323, ""Thomas"": 20518}",225732
-1904,NV,3982,6864,925,1269,"{""Eugene V. Debs"": 925, ""Thomas"": 344}",12115
-1904,NH,34074,54163,1090,1924,"{""Eugene V. Debs"": 1090, ""Silas Swallow"": 750, ""Thomas"": 83}",90161
-1904,NJ,164566,245164,9587,22817,"{""Charles Corregan"": 2680, ""Eugene V. Debs"": 9587, ""Silas Swallow"": 6845, ""Thomas"": 3705}",432547
-1904,NY,683981,859533,36883,74256,"{""Charles Corregan"": 9127, ""Eugene V. Debs"": 36883, ""Silas Swallow"": 20787, ""Thomas"": 7459}",1617770
-1904,NC,124091,82442,819,1285,"{""Eugene V. Debs"": 124, ""Silas Swallow"": 342, ""Thomas"": 819}",207818
+1904,ME-AL,27642,65432,2102,3949,"{""Eugene V. Debs"": 2102, ""Silas Swallow"": 1510, ""Thomas Watson"": 337}",97023
+1904,MD,109446,109497,3034,5286,"{""Eugene V. Debs"": 2247, ""Silas Swallow"": 3034, ""Thomas Watson"": 1}",224229
+1904,MA,165746,257822,13604,21541,"{""Charles Corregan"": 2359, ""Eugene V. Debs"": 13604, ""Silas Swallow"": 4279, ""Thomas Watson"": 1294}",445109
+1904,MI,135392,364957,13441,24678,"{""Charles Corregan"": 1036, ""Eugene V. Debs"": 9042, ""Silas Swallow"": 13441, ""Thomas Watson"": 1159}",525027
+1904,MN,55187,216651,11692,21022,"{""Charles Corregan"": 974, ""Eugene V. Debs"": 11692, ""Silas Swallow"": 6253, ""Thomas Watson"": 2103}",292860
+1904,MS,53480,3280,1499,1961,"{""Eugene V. Debs"": 462, ""Thomas Watson"": 1499}",58721
+1904,MO,296312,321449,13009,26100,"{""Charles Corregan"": 1674, ""Eugene V. Debs"": 13009, ""Silas Swallow"": 7191, ""Thomas Watson"": 4226}",643861
+1904,MT,21773,34932,5676,7739,"{""Charles Corregan"": 208, ""Eugene V. Debs"": 5676, ""Silas Swallow"": 335, ""Thomas Watson"": 1520}",64444
+1904,NE-AL,52921,138558,20518,34253,"{""Eugene V. Debs"": 7412, ""Silas Swallow"": 6323, ""Thomas Watson"": 20518}",225732
+1904,NV,3982,6864,925,1269,"{""Eugene V. Debs"": 925, ""Thomas Watson"": 344}",12115
+1904,NH,34074,54163,1090,1924,"{""Eugene V. Debs"": 1090, ""Silas Swallow"": 750, ""Thomas Watson"": 83}",90161
+1904,NJ,164566,245164,9587,22817,"{""Charles Corregan"": 2680, ""Eugene V. Debs"": 9587, ""Silas Swallow"": 6845, ""Thomas Watson"": 3705}",432547
+1904,NY,683981,859533,36883,74256,"{""Charles Corregan"": 9127, ""Eugene V. Debs"": 36883, ""Silas Swallow"": 20787, ""Thomas Watson"": 7459}",1617770
+1904,NC,124091,82442,819,1285,"{""Eugene V. Debs"": 124, ""Silas Swallow"": 342, ""Thomas Watson"": 819}",207818
 1904,ND,14273,52595,2009,3146,"{""Eugene V. Debs"": 2009, ""Silas Swallow"": 1137}",70014
-1904,OH,344674,600095,36260,59624,"{""Charles Corregan"": 2633, ""Eugene V. Debs"": 36260, ""Silas Swallow"": 19339, ""Thomas"": 1392}",1004393
-1904,OR,17521,60455,7619,12178,"{""Eugene V. Debs"": 7619, ""Silas Swallow"": 3806, ""Thomas"": 753}",90154
+1904,OH,344674,600095,36260,59624,"{""Charles Corregan"": 2633, ""Eugene V. Debs"": 36260, ""Silas Swallow"": 19339, ""Thomas Watson"": 1392}",1004393
+1904,OR,17521,60455,7619,12178,"{""Eugene V. Debs"": 7619, ""Silas Swallow"": 3806, ""Thomas Watson"": 753}",90154
 1904,PA,337998,840949,33717,57791,"{""Charles Corregan"": 2211, ""Eugene V. Debs"": 21863, ""Silas Swallow"": 33717}",1236738
 1904,RI,24839,41605,956,2212,"{""Charles Corregan"": 488, ""Eugene V. Debs"": 956, ""Silas Swallow"": 768}",68656
-1904,SC,52563,2554,1,1,"{""Thomas"": 1}",55118
-1904,SD,21969,72083,3138,7343,"{""Eugene V. Debs"": 3138, ""Silas Swallow"": 2965, ""Thomas"": 1240}",101395
-1904,TN,131653,105363,2491,5734,"{""Eugene V. Debs"": 1354, ""Silas Swallow"": 1889, ""Thomas"": 2491}",242750
-1904,TX,167200,51242,8062,15566,"{""Charles Corregan"": 421, ""Eugene V. Debs"": 2791, ""Silas Swallow"": 4292, ""Thomas"": 8062}",234008
+1904,SC,52563,2554,1,1,"{""Thomas Watson"": 1}",55118
+1904,SD,21969,72083,3138,7343,"{""Eugene V. Debs"": 3138, ""Silas Swallow"": 2965, ""Thomas Watson"": 1240}",101395
+1904,TN,131653,105363,2491,5734,"{""Eugene V. Debs"": 1354, ""Silas Swallow"": 1889, ""Thomas Watson"": 2491}",242750
+1904,TX,167200,51242,8062,15566,"{""Charles Corregan"": 421, ""Eugene V. Debs"": 2791, ""Silas Swallow"": 4292, ""Thomas Watson"": 8062}",234008
 1904,UT,33413,62446,5767,5813,"{""Eugene V. Debs"": 5767}",101672
 1904,VT,9777,40459,859,1652,"{""Eugene V. Debs"": 859, ""Silas Swallow"": 792}",51888
 1904,VA,80649,48180,1379,1581,"{""Eugene V. Debs"": 202, ""Silas Swallow"": 1379}",130410
-1904,WA,28098,101540,10023,15513,"{""Charles Corregan"": 1592, ""Eugene V. Debs"": 10023, ""Silas Swallow"": 3229, ""Thomas"": 669}",145151
-1904,WV,100855,132620,4599,6511,"{""Eugene V. Debs"": 1573, ""Silas Swallow"": 4599, ""Thomas"": 339}",239986
-1904,WI,124205,280315,28240,38921,"{""Charles Corregan"": 249, ""Eugene V. Debs"": 28240, ""Silas Swallow"": 9872, ""Thomas"": 560}",443441
+1904,WA,28098,101540,10023,15513,"{""Charles Corregan"": 1592, ""Eugene V. Debs"": 10023, ""Silas Swallow"": 3229, ""Thomas Watson"": 669}",145151
+1904,WV,100855,132620,4599,6511,"{""Eugene V. Debs"": 1573, ""Silas Swallow"": 4599, ""Thomas Watson"": 339}",239986
+1904,WI,124205,280315,28240,38921,"{""Charles Corregan"": 249, ""Eugene V. Debs"": 28240, ""Silas Swallow"": 9872, ""Thomas Watson"": 560}",443441
 1904,WY,8930,20489,1072,1289,"{""Eugene V. Debs"": 1072, ""Silas Swallow"": 217}",30708
-1904,NATIONAL,5083880,7630557,402810,810658,"{""Charles Corregan"": 33454, ""Eugene V. Debs"": 402810, ""Silas Swallow"": 259103, ""Thomas"": 114062}",13525095
+1904,NATIONAL,5083880,7630557,402810,810658,"{""Charles Corregan"": 33454, ""Eugene V. Debs"": 402810, ""Silas Swallow"": 259103, ""Thomas Watson"": 114062}",13525095
