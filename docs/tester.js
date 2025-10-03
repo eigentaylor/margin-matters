@@ -2160,17 +2160,86 @@
     }
     
     // Update candidate names
-    const dCandidate = nationalRow.dCandidate || '';
-    const rCandidate = nationalRow.rCandidate || '';
-    if (dCandidate || rCandidate) {
-      candidateNamesEl.textContent = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
-    } else {
-      candidateNamesEl.textContent = '';
-    }
-    
-    // Update special notes
-    const specialNotes = nationalRow.specialCaseNotes || '';
-    specialNotesEl.textContent = specialNotes;
+      const dCandidate = nationalRow.dCandidate || '';
+      const rCandidate = nationalRow.rCandidate || '';
+
+      // Build base candidate line
+      let candidateHtml = '';
+      if (dCandidate || rCandidate) {
+        candidateHtml = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
+      }
+
+      // Attempt to enumerate third parties that received EVs for this year.
+      try {
+        const allocations = (typeof getAllEvAllocations === 'function') ? getAllEvAllocations() : null;
+        const thirdNames = new Set();
+        let totalOtherEV = 0;
+        if (allocations && Array.isArray(allocations)) {
+          allocations.forEach(a => {
+            totalOtherEV += (a.oEV || 0);
+            // add any detailed third-party allocations
+            if (a.thirdPartyEVs && typeof a.thirdPartyEVs === 'object') {
+              Object.keys(a.thirdPartyEVs).forEach(name => {
+                const v = a.thirdPartyEVs[name] || 0;
+                if (v > 0) thirdNames.add(name);
+              });
+            }
+          });
+        }
+
+        // If there are Other EVs but no detailed names, fall back to generic marker
+        if (totalOtherEV > 0 && thirdNames.size === 0) {
+          thirdNames.add('Other');
+        }
+
+        if (candidateHtml) {
+          if (thirdNames.size > 0) {
+            const list = Array.from(thirdNames).sort();
+            candidateHtml += '<br>' + list.join(', ');
+          }
+          candidateNamesEl.innerHTML = candidateHtml;
+        } else {
+          // No major-party names available, but maybe show third parties only
+          if (thirdNames.size > 0) {
+            candidateNamesEl.innerHTML = `${year}: ` + Array.from(thirdNames).sort().join(', ');
+          } else {
+            candidateNamesEl.textContent = '';
+          }
+        }
+      } catch (e) {
+        // Fallback to original simple text when something goes wrong
+        if (dCandidate || rCandidate) {
+          candidateNamesEl.textContent = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
+        } else {
+          candidateNamesEl.textContent = '';
+        }
+      }
+
+      // Update special notes: aggregate any specialCaseNotes present on any row for this year
+      try {
+        const rowsForYear = rows || [];
+        const notes = [];
+        rowsForYear.forEach(rr => {
+          if (!rr) return;
+          const note = (rr.specialCaseNotes || '').toString().trim();
+          if (note) {
+            // include unit so it's clear where the note applies
+            const u = rr.unit || '';
+            notes.push(u ? `${u}: ${note}` : note);
+          }
+        });
+        // Remove duplicates while preserving order
+        const uniq = Array.from(new Set(notes));
+        if (uniq.length > 0) {
+          specialNotesEl.innerHTML = uniq.join('<br>');
+        } else {
+          specialNotesEl.textContent = '';
+        }
+      } catch (e) {
+        // fallback to national row note
+        const specialNotes = nationalRow.specialCaseNotes || '';
+        specialNotesEl.textContent = specialNotes;
+      }
   }
 
   function updateAll(){
