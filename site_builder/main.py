@@ -5,9 +5,8 @@ from pathlib import Path
 
 from .config import CSV_PATH, OUT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
 from .io_utils import ensure_dirs, write_text, read_csv
-from .pages import build_pages, make_data_page, make_state_pages
+from .pages import build_pages, make_data_page
 from .templates import FAVICON_SVG
-
 
 def build_site():
     ensure_dirs()
