@@ -2174,17 +2174,21 @@
         let allocations = null;
         try {
           if (typeof getAllEvAllocations === 'function') allocations = getAllEvAllocations();
+          console.log('allocations:', allocations);
         } catch(e) {}
         if (!allocations) {
-          try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch(e) {}
+          console.log('Trying window.getAllEvAllocations()');
+          try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); console.log('allocations:', allocations); } catch(e) {}
         }
         const thirdPartiesWithEVs = new Map(); // Map of name -> total EV count
         let totalOtherEV = 0;
         if (allocations && Array.isArray(allocations)) {
           allocations.forEach(a => {
+            console.log('a:', a);
             totalOtherEV += (a.oEV || 0);
             // add any detailed third-party allocations
             if (a.thirdPartyEVs && typeof a.thirdPartyEVs === 'object') {
+              console.log('detailed third party EVs', a.thirdPartyEVs, 'a:', a);
               Object.keys(a.thirdPartyEVs).forEach(name => {
                 const v = a.thirdPartyEVs[name] || 0;
                 if (v > 0) {
