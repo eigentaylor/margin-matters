@@ -652,7 +652,7 @@
           return null;
         })();
         const displayNames = true; // if true, show candidate last names in tooltip (if available)
-        const onlyThirdParty = true; // if true, show only third-party name for O, not generic 'O' but still show D and R (not names)
+        const onlyThirdParty = false; // if true, show only third-party name for O, not generic 'O' but still show D and R (not names)
         const candidateNames = (function(){
           if (!displayNames) return {D: 'D', R: 'R', O: 'O'};
           try { console.log('info for', unit, info); } catch(e){}
