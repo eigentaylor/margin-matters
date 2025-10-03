@@ -264,8 +264,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
-  <!-- Flag future mode before loading tester.js to adjust stops/labels and default PV behavior -->
+  <!-- Flag future mode before loading any scripts -->
   <script>window._futureMode = true;</script>
+  <!-- Shared utility modules -->
+  <script src="utils/constants.js"></script>
+  <script src="utils/colorUtils.js"></script>
+  <script src="utils/formatting.js"></script>
+  <script src="utils/evCalculations.js"></script>
+  <script src="utils/voteCalculations.js"></script>
+  <script src="utils/electionMap.js"></script>
   <!-- Reuse the same map logic and PV stops/EV bar from tester.js -->
   <script src="./tester.js"></script>
   <script src="./election-night.js"></script>
