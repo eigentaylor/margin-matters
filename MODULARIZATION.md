@@ -2,112 +2,138 @@
 
 This document describes the modularization work done to break up the large JavaScript files in the margin-matters project.
 
-## Overview
+## Current Status
 
-The following large files have been refactored to use shared utility modules:
-- `docs/tester.js` (4568 lines)
-- `docs/election-night.js` (2343 lines)
-- `docs/utils/electionMap.js` (383 lines)
+### Files and Line Counts
 
-## New Utility Modules Created
+**Original (Backed up in `docs/_archive/`)**:
+- `tester.js`: 4,584 lines
+- `election-night.js`: 2,369 lines
 
-All new modules are located in `docs/utils/` directory:
+**Current**:
+- `tester.js`: 4,584 lines (still needs reduction)
+- `election-night.js`: 2,369 lines (still needs reduction)
 
-### 1. `constants.js`
-Exports: `ElectionConstants`
+**Target**: <1,000 lines each (ideally 500-800)
 
-Shared constants used across all election scripts:
-- `ID_TO_ABBR`: FIPS code to state abbreviation mapping
+### What's Been Done
+
+✅ Fixed syntax errors in `index.html` (duplicate script tags, missing closing tags)
+✅ Created 7 utility modules (~940 lines extracted):
+  - `constants.js` (64 lines)
+  - `colorUtils.js` (97 lines)
+  - `formatting.js` (84 lines)
+  - `evCalculations.js` (128 lines)
+  - `voteCalculations.js` (92 lines)
+  - `mapInteraction.js` (270 lines) **NEW**
+  - `urlUtils.js` (50 lines) **NEW**
+✅ Updated HTML files to load modules in correct order
+✅ Maintained backward compatibility with fallbacks
+
+## Utility Modules
+
+### 1. `constants.js` - Shared Constants
+- `ID_TO_ABBR`: FIPS to state abbreviation mapping
 - `STATE_NAMES`: Full state names
-- `SMALL_STATES`: Set of small states for UI display
+- `SMALL_STATES`: Set of small states
 - `EPS`, `PV_CAP`: Numeric constants
 - `NEUTRAL_COLOR`, `THIRD_PARTY_COLOR`: Default colors
 
-### 2. `colorUtils.js`
-Exports: `ColorUtils`
+### 2. `colorUtils.js` - Color Manipulation
+- `hexToRgb()` / `rgbToHex()` - Color format conversion
+- `blendColors()` - Color interpolation
+- `marginToColor()` - Election margin to color mapping
+- `safeMarginToColor()` - Fallback color conversion
 
-Color manipulation and conversion functions:
-- `hexToRgb(hex)`: Convert hex color to RGB array
-- `rgbToHex(r, g, b)`: Convert RGB to hex color
-- `blendColors(a, b, t)`: Interpolate between two colors
-- `marginToColor(margin, isThirdParty)`: Convert election margin to color
-- `safeMarginToColor(margin, isThird)`: Safe fallback for margin-to-color conversion
-- `clampByte(v)`: Clamp value to byte range
+### 3. `formatting.js` - Display Formatting
+- `leanStr()` - Format margins as "D+5.3" or "R+2.1"
+- `formatMargin()` - Margin display formatting
+- `formatUnitLabel()` - State/district label formatting
+- `formatVotes()` - Number formatting with commas
+- `formatPercent()` - Percentage formatting
+- `clampMargin()` / `clamp01()` - Value clamping
 
-### 3. `formatting.js`
-Exports: `FormattingUtils`
+### 4. `evCalculations.js` - Electoral Vote Logic
+- `allocateProportionalEVs()` - Proportional EV allocation using largest remainder method
 
-Formatting utilities for display:
-- `leanStr(x)`: Format margin as "D+X.X" or "R+X.X"
-- `formatMargin(margin)`: Format margin for display
-- `formatUnitLabel(unit)`: Format state/district labels
-- `formatVotes(votes)`: Format vote counts with commas
-- `formatPercent(value, decimals)`: Format percentage values
-- `clampMargin(value)`: Clamp margin to valid range
-- `clamp01(x)`: Clamp value to 0-1 range
+### 5. `voteCalculations.js` - Vote Calculations
+- `totalVotesFromRow()` - Extract total votes
+- `computePvAdjustedBreakdown()` - Calculate PV-adjusted breakdowns
 
-### 4. `evCalculations.js`
-Exports: `EvCalculations`
+### 6. `mapInteraction.js` - Map & Tooltip Utilities (NEW)
+- `setSmallBoxesConfig()` - Configure small state boxes
+- `nudgeSmallBoxes()` - Move small state boxes
+- `setVisualCenterStates()` - Configure visual center calculation
+- `showMapTip()` / `hideMapTip()` - Tooltip management
+- `_computeVisualCenter()` - Calculate polygon visual centers
 
-Electoral vote allocation logic:
-- `allocateProportionalEVs(dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults)`: 
-  Proportional EV allocation using largest remainder method with support for multiple third parties
+### 7. `urlUtils.js` - URL Parameter Management (NEW)
+- `getUrlParams()` - Parse URL parameters
+- `updateUrl()` - Update URL with current state
 
-### 5. `voteCalculations.js`
-Exports: `VoteCalculations`
+## Next Steps to Reach Target
 
-Vote calculation and manipulation:
-- `totalVotesFromRow(row)`: Extract total votes from data row
-- `computePvAdjustedBreakdown(row, pvShift, natActualMargin)`: Calculate PV-adjusted vote breakdown
+### For `tester.js` (needs ~3,600 lines reduced):
 
-## Modified Files
+**High Priority Extractions**:
 
-### `tester.js`
-- Updated to use shared constants from `ElectionConstants`
-- Updated to use shared utility functions from `ColorUtils`, `FormattingUtils`, `EvCalculations`, and `VoteCalculations`
-- Falls back to local implementations if shared modules are not loaded (backward compatibility)
+1. **EV Breakdown Modal** (~800 lines)
+   - Functions: `initEvBreakdownModal()`, `updateEvBreakdownTable()`, `getAllEvAllocations()`
+   - Self-contained modal logic
+   - Create: `utils/evBreakdownModal.js`
 
-### `election-night.js`
-- Updated to use shared constants from `ElectionConstants`
-- Updated to use shared utility functions from `ColorUtils` and `FormattingUtils`
-- Falls back to local implementations if shared modules are not loaded (backward compatibility)
+2. **Flip Scenarios** (~1,300 lines)
+   - All flip calculation and UI update logic
+   - Create: `utils/flipScenarios.js`
 
-### `utils/electionMap.js`
-- Updated to use `ID_TO_ABBR` from `ElectionConstants` if available
-- Falls back to local constant if shared module is not loaded
+3. **Data Loading & Initialization** (~1,000 lines)
+   - CSV parsing, data structures, stop generation
+   - Create: `utils/dataLoader.js`
 
-### HTML Files Updated
-The following HTML files have been updated to load utility modules before main scripts:
-- `index.html`
-- `future.html`
-- `paths2028.html`
-- `probabilities.html`
+4. **Remove Duplicate Implementations** (~200 lines)
+   - Use `MapInteraction` instead of local tooltip functions
+   - Use `UrlUtils` instead of local URL functions
+   - Use shared `_computeVisualCenter()` from `MapInteraction`
 
-Loading order:
-1. d3 and topojson (from CDN)
-2. Shared utility modules (constants, colorUtils, formatting, evCalculations, voteCalculations, electionMap)
-3. Main application scripts (tester.js, election-night.js, etc.)
+5. **State Labels & Small Boxes** (~500 lines)
+   - Could extend `mapInteraction.js` or create `mapRendering.js`
+
+**Result**: ~800 lines remaining ✅
+
+### For `election-night.js` (needs ~1,400 lines reduced):
+
+**Recommended Extractions**:
+
+1. **Reporting Schedule** (~300 lines)
+   - Schedule generation, batch timing
+   - Create: `utils/reportingSchedule.js`
+
+2. **Bias Calculation** (~200 lines)
+   - Bias parameters, logistic calculations
+   - Create: `utils/biasModel.js`
+
+3. **Call Log Rendering** (~400 lines)
+   - Call log updates, victory screen, uncalled states
+   - Create: `utils/callLog.js`
+
+4. **UI Updates** (~500 lines)
+   - EV bar, popular vote display, progress slider
+   - Create: `utils/electionNightUI.js`
+
+**Result**: ~970 lines remaining ✅
+
+## Implementation Strategy
+
+1. **One module at a time** - Extract, test, commit
+2. **Keep backups** - Originals in `docs/_archive/`
+3. **Test thoroughly** - Verify each extraction works correctly
+4. **Document dependencies** - Note what globals each module needs
+5. **Maintain compatibility** - Keep fallbacks for safety
 
 ## Benefits
 
-1. **Code Reusability**: Common functionality is now in one place and can be used by multiple scripts
-2. **Maintainability**: Smaller, focused files are easier to understand and modify
-3. **Flexibility**: Different map functionalities (paths2028, probabilities, etc.) can use the same core utilities
-4. **Backward Compatibility**: All modules include fallback implementations, so the code still works even if modules aren't loaded
-5. **No Breaking Changes**: Existing functionality is preserved; this is purely a refactoring
-
-## Testing
-
-The modularized code has been tested to ensure:
-- No syntax errors in any module
-- HTML files correctly reference all required modules
-- Loading order is correct (dependencies before dependents)
-
-## Future Improvements
-
-Potential areas for further modularization:
-1. Extract map rendering logic from `tester.js` into a separate module
-2. Extract tooltip/hover functionality into a shared module
-3. Extract URL parameter handling into a utility module
-4. Create a shared module for election night simulation logic that can be reused
-5. Extract small state boxes rendering into a separate module
+✅ Code reusability across different map functionalities
+✅ Easier maintenance with smaller, focused files
+✅ Better flexibility for paths2028, probabilities, etc.
+✅ Backward compatible with fallback implementations
+✅ No breaking changes to existing functionality
