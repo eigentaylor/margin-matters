@@ -834,11 +834,11 @@
           allocations.thirdParties = result.thirdParties || {};
 
           // Debug log: show where proportional allocations come from for 1960
-          try {
-            if (year === 1960) {
-              console.log('[EV-TRACE] buildEvAllocations', { year, abbr, unit, ev, dVotes, rVotes, oVotes, thirdPartyResults, result });
-            }
-          } catch(e) {}
+          // try {
+          //   if (year === 1960) {
+          //     console.log('[EV-TRACE] buildEvAllocations', { year, abbr, unit, ev, dVotes, rVotes, oVotes, thirdPartyResults, result });
+          //   }
+          // } catch(e) {}
           
           // Sum up all third party EVs into O for backwards compatibility with display
           if (allocations.thirdParties && typeof allocations.thirdParties === 'object') {

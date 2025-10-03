@@ -182,11 +182,11 @@
       // Capture allocation result so we can log it for 1960 (compare with map/election-night)
       const allocResult = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare, r.thirdPartyResults);
 
-      try {
-        if (year === 1960) {
-          console.log('[EV-TRACE] calculateUnitProportionalEVs', { year, keyUnit, ev, dVotes, rVotes, tVotes, thirdPartyResults: r.thirdPartyResults, allocResult });
-        }
-      } catch(e) {}
+      // try {
+      //   if (year === 1960) {
+      //     console.log('[EV-TRACE] calculateUnitProportionalEVs', { year, keyUnit, ev, dVotes, rVotes, tVotes, thirdPartyResults: r.thirdPartyResults, allocResult });
+      //   }
+      // } catch(e) {}
 
       return allocResult;
     } catch(e) {
@@ -584,12 +584,12 @@
         const fullyCounted = (reportingVal != null && isFinite(reportingVal)) ? (reportingVal >= 0.999) : false;
         if (electionNightActive && !fullyCounted) return null;
         const alloc = calculateUnitProportionalEVs(unit);
-        try {
-          // Log why calculateUnitProportionalEVs may have returned null or what it returned
-          if ((window._curYear === 1960) || (alloc && (alloc.D || alloc.R || alloc.O))) {
-            console.log('[EV-TRACE] tooltip evAllocation computed', { unit, electionNightActive, reportingVal, fullyCounted, alloc });
-          }
-        } catch(e) {}
+        // try {
+        //   // Log why calculateUnitProportionalEVs may have returned null or what it returned
+        //   if ((window._curYear === 1960) || (alloc && (alloc.D || alloc.R || alloc.O))) {
+        //     console.log('[EV-TRACE] tooltip evAllocation computed', { unit, electionNightActive, reportingVal, fullyCounted, alloc });
+        //   }
+        // } catch(e) {}
         return alloc;
       })();
       if (evAllocation) {
@@ -602,11 +602,11 @@
         try {
           Object.values(detailed).forEach(v => { if (isFinite(v)) othersTotal += Number(v) || 0; });
         } catch(e) { /* ignore */ }
-        try {
-          if (window._curYear === 1960) {
-            console.log('[EV-TRACE] tooltip evParts O aggregation', { unit, ev, evAllocation, detailed, othersTotal });
-          }
-        } catch(e) {}
+        // try {
+        //   if (window._curYear === 1960) {
+        //     console.log('[EV-TRACE] tooltip evParts O aggregation', { unit, ev, evAllocation, detailed, othersTotal });
+        //   }
+        // } catch(e) {}
         if (othersTotal > 0) {
           // Try to display the top third-party's last name instead of a generic 'O'
           let topThirdLabel = null;
@@ -2665,11 +2665,11 @@
       const tVotesAdj = total * tShare;
       const topThirdShare = +r.tp || 0;
       const allocation = allocateProportionalEVs(dVotesAdj, rVotesAdj, tVotesAdj, ev, topThirdShare, r.thirdPartyResults);
-      try {
-        if (year === 1960) {
-          console.log('[EV-TRACE] evBar proportional allocation', { year, unit, ev, dVotesAdj, rVotesAdj, tVotesAdj, thirdPartyResults: r.thirdPartyResults, allocation });
-        }
-      } catch(e) {}
+      // try {
+      //   if (year === 1960) {
+      //     console.log('[EV-TRACE] evBar proportional allocation', { year, unit, ev, dVotesAdj, rVotesAdj, tVotesAdj, thirdPartyResults: r.thirdPartyResults, allocation });
+      //   }
+      // } catch(e) {}
       dEV += allocation.D;
       rEV += allocation.R;
       oEV += allocation.O;
