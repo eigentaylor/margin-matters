@@ -1,14 +1,3 @@
-// Redirect shim: load the new script filename so old pages referencing
-// possibilities.js still get the proper code.
-(function(){
-  var s = document.createElement('script');
-  s.src = 'paths2028.js';
-  s.async = false;
-  s.onload = function(){ /* loaded */ };
-  s.onerror = function(){ console.warn('paths2028.js failed to load from shim'); };
-  var ref = document.currentScript || document.getElementsByTagName('script')[0];
-  ref.parentNode.insertBefore(s, ref.nextSibling);
-})();
 (function(){
 	const STATUS_SEQUENCE = ['dem','tossup','rep'];
 	const COLORS = {
@@ -45,6 +34,17 @@
 	const ENUMERATION_LIMIT = 16; // max tossup units to fully enumerate (2^16 = 65,536)
 	const HARD_ENUMERATION_CAP = 18; // absolute hard cap (2^18=262k) for on-page attempt
 	let lastEnumerated = { key:null, data:null }; // memoization
+
+	// Probabilistic mode configuration (experimental)
+	let probabilisticMode = false;
+	let probApplying = false; // guard to avoid recursive scheduling while applying prob-derived coloring
+	let probCacheKey = null;
+	let lastProbResult = null;
+	const PROB_MAX_SIMS = 20000; // total simulation attempts upper bound
+	const PROB_TARGET_ACCEPT = 4000; // aim for this many accepted conditional sims
+	const PV_STD = 0.03; // 3 percentage points national swing std dev (relative margin units)
+	const STATE_STD = 0.04; // 4pp idiosyncratic state noise
+	const SALT_CAP = 8; // cap salt score for display
 
 	function encodeScenario(){
 		// Encode threshold (percentage integer) + unit statuses.
@@ -291,16 +291,8 @@
 		const demNeed = Math.max(0, 270 - demEV);
 		const repNeed = Math.max(0, 270 - repEV);
 
-		// Show safe EV and a parenthetical including lean EVs (safe + lean) for decided blocks
-		const safeDEv = (buckets.safeD || []).reduce((acc, s) => acc + (s.ev || 0), 0);
-		const leanDEv = (buckets.leanD || []).reduce((acc, s) => acc + (s.ev || 0), 0);
-		if (leanDEv > 0) setText('demEV', `${formatNumber(safeDEv)} EV (${formatNumber(safeDEv + leanDEv)} EV lean)`);
-		else setText('demEV', `${formatNumber(safeDEv)} EV`);
-
-		const safeREv = (buckets.safeR || []).reduce((acc, s) => acc + (s.ev || 0), 0);
-		const leanREv = (buckets.leanR || []).reduce((acc, s) => acc + (s.ev || 0), 0);
-		if (leanREv > 0) setText('repEV', `${formatNumber(safeREv)} EV (${formatNumber(safeREv + leanREv)} EV lean)`);
-		else setText('repEV', `${formatNumber(safeREv)} EV`);
+		setText('demEV', formatNumber(demEV));
+		setText('repEV', formatNumber(repEV));
 	setText('contestableEV', formatNumber(contestableEV)); // renamed UI slot
 		setText('demNeed', formatNumber(demNeed));
 		setText('repNeed', formatNumber(repNeed));
@@ -346,6 +338,7 @@
 		enumeratePaths(demEV, repEV, contestables);
 		refreshDecorations();
 		refreshURL();
+		if (probabilisticMode && !probApplying) scheduleProbUpdate();
 	}
 
 	function cycleState(state){
@@ -475,46 +468,8 @@
 		const tieList = document.getElementById('tiePathsList');
 		if (!noteEl || !demList || !repList || !tieList) return;
 		const n = tossupUnits.length;
-		// Include status/strength/manual in cache key so that changing a lean selection forces re-enumeration & resort.
-		const key = `${demBaseEV}|${repBaseEV}|`+tossupUnits.map(t=>`${t.unit}:${t.ev}:${t.status}:${t.strength}:${t.manual?1:0}`).join(',');
-		if (lastEnumerated.key === key) {
-			// Even if combination set unchanged, we still need to re-sort if lean / manual flags changed.
-			// Fall through to re-render using lastEnumerated.data if exists.
-			if (lastEnumerated.data){
-				const { dem, rep, ties } = lastEnumerated.data;
-				demList.innerHTML=''; repList.innerHTML=''; tieList.innerHTML='';
-				const render = (listEl, arr) => {
-					const anyManualLean = arr.some(p=>p.manualLeanMismatch!==undefined); // heuristic
-					arr.slice(0,512).sort((a,b)=> {
-						if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) return a.manualLeanMismatch - b.manualLeanMismatch;
-						const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0);
-						if (evMatchDiff !== 0) return evMatchDiff;
-						if (a.dem !== b.dem) return a.dem - b.dem;
-						return a.rep - b.rep;
-					}).forEach(obj => {
-						const li = document.createElement('li');
-						const card = document.createElement('div'); card.className='path-card';
-						const row = document.createElement('div'); row.className='row';
-						const assigns = obj.path.split(/\s+/).filter(Boolean);
-						const dStates = assigns.filter(p=>p.endsWith('=D')).map(p=>p.split('=')[0]);
-						const rStates = assigns.filter(p=>p.endsWith('=R')).map(p=>p.split('=')[0]);
-						const dDiv = document.createElement('div'); dDiv.className='dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ')||'—');
-						const rDiv = document.createElement('div'); rDiv.className='rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ')||'—');
-						const evDiv = document.createElement('div'); evDiv.className='evs'; evDiv.textContent = `${obj.dem}D – ${obj.rep}R`;
-						if (anyManualLean && obj.manualLeanMismatch>0){
-							const warn = document.createElement('div'); warn.className='mismatch-note'; warn.textContent = `⚠ ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch>1?'es':''}`;
-							row.appendChild(warn);
-						}
-						row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv);
-						card.appendChild(row); li.appendChild(card); listEl.appendChild(li);
-					});
-				};
-				render(demList, dem);
-				render(repList, rep);
-				render(tieList, ties);
-				return;
-			}
-		}
+		const key = `${demBaseEV}|${repBaseEV}|`+tossupUnits.map(t=>`${t.unit}:${t.ev}`).join(',');
+		if (lastEnumerated.key === key) return; // already enumerated this lineup & bases
 		lastEnumerated.key = key;
 		// clear existing
 		demList.innerHTML = '';
@@ -529,12 +484,6 @@
 		// Build arrays for fast iteration
 		const evs = tossupUnits.map(t=>t.ev||0);
 		const names = tossupUnits.map(t=>t.unit);
-		// Precompute lean targets & manual lean targets so we can prioritize scenarios that respect user explicit lean picks.
-		// leanTargets[i] = 'D' | 'R' for any unit currently classified as (status, strength)=='(party, lean)'; else null.
-		// manualLeanTargets[i] similar but only when user manually overrode (manual && lean).
-		const leanTargets = tossupUnits.map(u => (u.strength==='lean' ? (u.status==='dem' ? 'D':'R') : null));
-		const manualLeanTargets = tossupUnits.map(u => (u.manual && u.strength==='lean' ? (u.status==='dem' ? 'D':'R') : null));
-		const anyManualLean = manualLeanTargets.some(v => v !== null);
 		const tossupTotal = evs.reduce((a,b)=>a+b,0);
 		const sampleLimit = 256;
 		for (let mask=0; mask<fullCount; mask++){
@@ -545,7 +494,6 @@
 			const repTotal = repBaseEV + (tossupTotal - demAdd);
 			const assignList = [];
 			let leanMatchEv = 0; // EV-weighted score for matching current lean direction
-			let manualLeanMismatch = 0; // count of manual lean units whose assignment differs from user selection
 			for (let i=0;i<n;i++){
 				const assignedToDem = !!(mask & (1<<i));
 				assignList.push(`${names[i]}=${ assignedToDem ? 'D' : 'R' }`);
@@ -558,34 +506,24 @@
 						leanMatchEv += (evs[i] || 0);
 					}
 				}
-				// manual lean mismatch tracking (stronger priority than aggregate lean EV)
-				if (manualLeanTargets[i] !== null){
-					const desired = manualLeanTargets[i] === 'D';
-					if (desired !== assignedToDem) manualLeanMismatch++;
-				}
 			}
 			const pathStr = assignList.join(' ');
-			const payload = { path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv, manualLeanMismatch };
-			if (demTotal>=270 && repTotal<270) demPaths.push(payload);
-			else if (repTotal>=270 && demTotal<270) repPaths.push(payload);
-			else if (demTotal===269 && repTotal===269) tiePaths.push(payload);
+			if (demTotal>=270 && repTotal<270) demPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
+			else if (repTotal>=270 && demTotal<270) repPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
+			else if (demTotal===269 && repTotal===269) tiePaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
 			else {
-				if (demTotal>repTotal) demPaths.push(payload);
-				else if (repTotal>demTotal) repPaths.push(payload);
-				else tiePaths.push(payload);
+				if (demTotal>repTotal) demPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
+				else if (repTotal>demTotal) repPaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
+				else tiePaths.push({ path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv });
 			}
 		}
 		// Helper to render
 		const render = (listEl, arr) => {
 			arr.slice(0,512).sort((a,b)=> {
-				// 1. Prioritize honoring manual lean picks: fewer mismatches first
-				if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) {
-					return a.manualLeanMismatch - b.manualLeanMismatch; // 0 mismatches before 1, etc.
-				}
-				// 2. Prefer scenarios that match (any) lean directions by cumulative EV
-				const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0);
-				if (evMatchDiff !== 0) return evMatchDiff;
-				// 3. Fallback: closer overall EV margin ordering (lower winning EV first for variety)
+				// Prefer scenarios that match current lean directions (higher leanMatchEv first)
+				const la = (b.leanMatchEv || 0) - (a.leanMatchEv || 0);
+				if (la !== 0) return la;
+				// fallback to dem total then rep total ordering
 				if (a.dem !== b.dem) return a.dem - b.dem;
 				return a.rep - b.rep;
 			}).forEach(obj => {
@@ -599,13 +537,6 @@
 				const dDiv = document.createElement('div'); dDiv.className='dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ')||'—');
 				const rDiv = document.createElement('div'); rDiv.className='rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ')||'—');
 				const evDiv = document.createElement('div'); evDiv.className='evs'; evDiv.textContent = `${obj.dem}D – ${obj.rep}R`;
-				if (anyManualLean && obj.manualLeanMismatch>0){
-					// subtle indicator that scenario violates some manual lean picks
-					const warn = document.createElement('div');
-					warn.className = 'mismatch-note';
-					warn.textContent = `⚠ ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch>1?'es':''}`;
-					row.appendChild(warn);
-				}
 				row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv);
 				card.appendChild(row);
 				li.appendChild(card);
@@ -640,6 +571,79 @@
 			const url = buildShareURL();
 			navigator.clipboard.writeText(url);
 		} catch(e) { /* ignore */ }
+	}
+
+	function scheduleProbUpdate(){
+		// debounce style simple scheduling
+		clearTimeout(scheduleProbUpdate._t);
+		scheduleProbUpdate._t = setTimeout(runProbabilisticMode, 60);
+	}
+
+	function runProbabilisticMode(){
+		if (!probabilisticMode) return;
+		applyBayesFromManualPicks();
+		bayesRenderProbs();
+	}
+
+	function applyProbResults(res){
+		if (!res) return; const { accepted, tried, demWins, repWins, ties, perState, runtime } = res;
+		const accRate = tried ? accepted / tried : 0;
+		setText('probAccepted', accepted.toString());
+		setText('probTotalTried', tried.toString());
+		setText('probAcceptRate', (accRate*100).toFixed(1)+'%');
+		setText('probDemWin', accepted? (demWins/accepted*100).toFixed(1)+'%' : '—');
+		setText('probRepWin', accepted? (repWins/accepted*100).toFixed(1)+'%' : '—');
+		setText('probTie', accepted? (ties/accepted*100).toFixed(2)+'%' : '—');
+		setText('probRuntime', Math.round(runtime)+'ms');
+		// Salt meter: -log10(acceptance rate)
+		let salt = accRate>0 ? -Math.log10(accRate) : SALT_CAP;
+		if (salt > SALT_CAP) salt = SALT_CAP;
+		setText('saltScore', salt.toFixed(2));
+		const fill = document.getElementById('saltBarFill'); if (fill) fill.style.width = Math.min(100, salt / SALT_CAP * 100)+'%';
+		const list = document.getElementById('probPerState');
+		if (list){
+			list.innerHTML = '';
+			// Ensure uniqueness by ID (defensive, though perState already unique)
+			const sorted = [...perState].sort((a,b)=> b.pDem - a.pDem);
+			sorted.forEach(ps => {
+				const li = document.createElement('li');
+				li.textContent = `${ps.id}: ${(ps.pDem*100).toFixed(1)}% Dem (n=${ps.sims})`;
+				list.appendChild(li);
+			});
+		}
+		// Auto-color contestables based on probability thresholds if mode active
+		if (probabilisticMode && accepted > 0){
+			probApplying = true;
+			try {
+				perState.forEach(ps => {
+					const id = ps.id;
+					const obj = unitStore.get(id) || stateStore.get(id);
+					if (!obj) return;
+					// Skip if base safe and untouched manual? we only recolor non-safe base categories
+					if (obj.baseStrength === 'safe' && !obj.manual) return;
+					let newStatus='tossup', newStrength='tossup';
+					if (ps.pDem >= 0.55){ newStatus='dem'; newStrength='lean'; }
+					else if (ps.pDem <= 0.45){ newStatus='rep'; newStrength='lean'; }
+					// Only update if changed from current prob-driven classification (avoid thrash)
+					if (obj.status !== newStatus || obj.strength !== newStrength){
+						obj.status = newStatus; obj.strength = newStrength;
+						// Mark as probabilistic (not strictly user manual). Keep manual false so reset works cleanly.
+						obj.probAuto = true;
+						if (unitStore.has(id)) updateUnitColor(id); else if (stateStore.has(id)) updateStateColor(id);
+					}
+				});
+				// After recoloring update summary without triggering another immediate probability run
+				updateSummary();
+			} finally { probApplying = false; }
+		}
+		const statusEl = document.getElementById('probModeStatus');
+		if (statusEl) statusEl.textContent = `Conditional simulations complete. Acceptance ${ (accRate*100).toFixed(1) }%.`;
+	}
+
+	function randNormal(mean, std){
+		let u=0, v=0; while(u===0) u=Math.random(); while(v===0) v=Math.random();
+		const mag = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2*Math.PI*v);
+		return mean + std * mag;
 	}
 
 	function positionTip(evt){
@@ -831,9 +835,305 @@
 		if (dlBtn) dlBtn.addEventListener('click', downloadAllPaths);
 		const copyBtn = document.getElementById('copyShareURL');
 		if (copyBtn) copyBtn.addEventListener('click', copyShareURL);
+		const probCheckbox = document.getElementById('enableProbMode');
+		if (probCheckbox){
+			probCheckbox.addEventListener('change', () => {
+				probabilisticMode = probCheckbox.checked;
+				const statusEl = document.getElementById('probModeStatus');
+				const resultsWrap = document.getElementById('probResults');
+				if (probabilisticMode){
+					if (statusEl) statusEl.textContent = 'Enabled. Running initial simulations…';
+					if (resultsWrap) resultsWrap.style.display = 'block';
+					scheduleProbUpdate();
+				} else {
+					if (statusEl) statusEl.textContent = 'Disabled. Check the box to generate approximate win probabilities.';
+					if (resultsWrap) resultsWrap.style.display = 'none';
+				}
+			});
+		}
 	}
 
-	async function init(){
+	// ==========================
+// BAYESIAN ENGINE (Gaussian)
+// ==========================
+
+let BAYES = {
+  ready: false,
+  VAR_UNITS: [],
+  IDX: new Map(),
+  r2024: new Map(),
+  EV: new Map(),
+  mu: null,
+  Sigma: null,
+  mu0: null,
+  Sigma0: null,
+  sigmaObs: 0.010,   // 1.0pp
+  kappaBlue: 0.008,  // +0.8pp slack
+  kappaRed: -0.008,  // -0.8pp slack
+  salt: 0
+};
+
+// Custom implementation of the error function (erf)
+Math.erf = Math.erf || function(x) {
+	const sign = x >= 0 ? 1 : -1;
+	x = Math.abs(x);
+	const a1 =  0.254829592;
+	const a2 = -0.284496736;
+	const a3 =  1.421413741;
+	const a4 = -1.453152027;
+	const a5 =  1.061405429;
+	const p  =  0.3275911;
+
+	const t = 1 / (1 + p * x);
+	const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+	return sign * y;
+};
+
+function phiStd(x){ return 0.5 * (1 + Math.erf(x / Math.SQRT2)); }
+
+function kalmanUpdate(mu, Sigma, a, bPlusKappa, sigma){
+  const n = mu.length;
+  // S = aᵀ Σ a + σ²
+  let Sa = 0;
+  for (let i=0;i<n;i++){
+    let rowDot = 0;
+    for (let j=0;j<n;j++) rowDot += Sigma[i][j] * a[j];
+    Sa += a[i]*rowDot;
+  }
+  const S = Sa + sigma*sigma;
+  // K = Σ a / S
+  const K = new Array(n).fill(0);
+  for (let i=0;i<n;i++){
+    let dot = 0;
+    for (let j=0;j<n;j++) dot += Sigma[i][j]*a[j];
+    K[i] = dot / S;
+  }
+  // innovation
+  let aTmu = 0; for (let i=0;i<n;i++) aTmu += a[i]*mu[i];
+  const innov = bPlusKappa - aTmu;
+  // mu' = mu + K*innov
+  const muNew = mu.slice();
+  for (let i=0;i<n;i++) muNew[i] += K[i]*innov;
+  // Σ' = Σ - K (aᵀ Σ)
+  const SigmaNew = Sigma.map(r=>r.slice());
+  for (let i=0;i<n;i++){
+    let aTSigmaRow = 0;
+    for (let j=0;j<n;j++) aTSigmaRow += a[j]*Sigma[j][i];
+    for (let j=0;j<n;j++){
+      SigmaNew[i][j] -= K[i]*(aTSigmaRow||0);
+    }
+  }
+  return { mu: muNew, Sigma: SigmaNew };
+}
+
+function buildBayesPrior(tsById, evById, r2024ById){
+  const ids = [...tsById.keys()];
+  const deltasById = new Map();
+  let cycles = null;
+  ids.forEach(id=>{
+    const arr = tsById.get(id)||[];
+    const del = [];
+    for (let t=1;t<arr.length;t++){
+      const a = parseFloat(arr[t]), b = parseFloat(arr[t-1]);
+      del.push((isFinite(a)&&isFinite(b)) ? (a-b) : 0);
+    }
+    deltasById.set(id, del);
+    if (cycles===null) cycles = del.length;
+  });
+  // national swing = median delta across ids
+  const natSwing = new Array(cycles).fill(0);
+  for (let t=0;t<cycles;t++){
+    const vals = ids.map(id=>deltasById.get(id)[t]).filter(Number.isFinite).sort((a,b)=>a-b);
+    natSwing[t] = vals.length? vals[(vals.length>>1)] : 0;
+  }
+  const meanNS = natSwing.reduce((a,b)=>a+b,0)/(natSwing.length||1);
+  const varNS = natSwing.reduce((a,b)=>a+(b-meanNS)*(b-meanNS),0)/Math.max(1, natSwing.length-1);
+  const sigmaG = Math.sqrt(Math.max(1e-6, varNS));
+  // residual sd per id
+  const sigmaEps = new Map();
+  ids.forEach(id=>{
+    const del = deltasById.get(id)||[];
+    let s2=0,n=0;
+    for (let t=0;t<del.length;t++){
+      const res = del[t] - natSwing[t];
+      if (isFinite(res)){ s2+=res*res; n++; }
+    }
+    sigmaEps.set(id, Math.sqrt(n>1? s2/(n-1) : 0.0001));
+  });
+  const sigmaPV = 0.025; // 2.5pp
+  const sigmaPV_resid = Math.max(1e-6, Math.sqrt(Math.max(0, sigmaPV*sigmaPV - sigmaG*sigmaG)));
+  // variable order
+  const VAR_UNITS = ids.slice().sort();
+  const D = 1 + VAR_UNITS.length;
+  const IDX = new Map([['PV',0]]);
+  VAR_UNITS.forEach((id,i)=>IDX.set(id,1+i));
+  // Σ
+  const Sigma = Array.from({length:D},()=>Array(D).fill(0));
+  Sigma[0][0] = sigmaG*sigmaG + sigmaPV_resid*sigmaPV_resid;
+  for (let i=0;i<VAR_UNITS.length;i++){
+    const id = VAR_UNITS[i]; const si = 1+i;
+    const se = sigmaEps.get(id)||0.01;
+    Sigma[0][si] = Sigma[si][0] = sigmaG*sigmaG;
+    Sigma[si][si] = sigmaG*sigmaG + se*se;
+    for (let j=i+1;j<VAR_UNITS.length;j++){
+      const sj = 1+j;
+      Sigma[si][sj] = Sigma[sj][si] = sigmaG*sigmaG;
+    }
+  }
+  const mu = new Array(D).fill(0);
+  BAYES.ready = true;
+  BAYES.VAR_UNITS = VAR_UNITS;
+  BAYES.IDX = IDX;
+  BAYES.mu = mu.slice(); BAYES.Sigma = Sigma.map(r=>r.slice());
+  BAYES.mu0 = mu.slice(); BAYES.Sigma0 = Sigma.map(r=>r.slice());
+  BAYES.EV = evById;
+  BAYES.r2024 = r2024ById;
+  BAYES.salt = 0;
+}
+
+function bayesResetPosterior(){
+  if (!BAYES.ready) return;
+  BAYES.mu = BAYES.mu0.slice();
+  BAYES.Sigma = BAYES.Sigma0.map(r=>r.slice());
+  BAYES.salt = 0;
+}
+
+function bayesObservePick(id, color){
+  if (!BAYES.ready) return;
+  const idx = BAYES.IDX.get(id);
+  if (idx==null) return;
+  const a = new Array(BAYES.mu.length).fill(0);
+  a[0]=1; a[idx]=1; // PV + Δ_id
+  const r = BAYES.r2024.get(id)||0;
+  const b = -r;
+  const kappa = (color==='dem') ? BAYES.kappaBlue : BAYES.kappaRed;
+  const out = kalmanUpdate(BAYES.mu, BAYES.Sigma, a, b+kappa, BAYES.sigmaObs);
+  BAYES.mu = out.mu; BAYES.Sigma = out.Sigma;
+  BAYES.salt += 0.05;
+}
+
+function bayesProbDem(id){
+  if (!BAYES.ready) return 0.5;
+  const idx = BAYES.IDX.get(id);
+  if (idx==null) { const r = BAYES.r2024.get(id)||0; return r>0 ? 0.99 : 0.01; }
+  const a = new Array(BAYES.mu.length).fill(0); a[0]=1; a[idx]=1;
+  let mean=0; for (let i=0;i<a.length;i++) mean += a[i]*BAYES.mu[i];
+  let varv=0;
+  for (let i=0;i<a.length;i++){
+    let rowDot=0; for (let j=0;j<a.length;j++) rowDot += BAYES.Sigma[i][j]*a[j];
+    varv += a[i]*rowDot;
+  }
+  const r = BAYES.r2024.get(id)||0;
+  const z = (mean + r) / Math.sqrt(Math.max(1e-9, varv));
+  return phiStd(z);
+}
+
+async function loadHistoryAndBuildPrior(){
+  const rows = await d3.csv('presidential_margins.csv', row => {
+    const yr = +row.year;
+    if (!row.abbr) return null;
+    if (!isFinite(yr) || yr < 2000) return null;
+    return {
+      year: yr,
+      id: row.abbr,
+      rel: parseFloat(row.relative_margin),
+      ev: parseInt(row.electoral_votes || row.electoral_Votes || row.ev, 10)
+    };
+  });
+  const byId = new Map();
+  const evById = new Map();
+  rows.forEach(r=>{
+    if (!byId.has(r.id)) byId.set(r.id, []);
+    byId.get(r.id).push([r.year, r.rel]);
+    if (isFinite(r.ev) && !evById.has(r.id)) evById.set(r.id, r.ev);
+  });
+  byId.forEach(arr=>arr.sort((a,b)=>a[0]-b[0]));
+  const tsById = new Map();
+  byId.forEach((arr,id)=> tsById.set(id, arr.map(x=> (isFinite(x[1])? x[1] : 0))));
+  // r2024 from stores (built by buildStateData)
+  const r2024ById = new Map();
+  stateStore.forEach(st=> r2024ById.set(st.state, st.margin));
+  unitStore.forEach(u => r2024ById.set(u.unit, u.margin));
+  buildBayesPrior(tsById, evById, r2024ById);
+}
+
+function bayesCurrentContestables(){
+  const ids = []; const seen = new Set();
+  stateStore.forEach(st=>{
+    if (st.units && st.units.length>1) return;
+    if (st.status==='tossup' || st.strength!=='safe'){
+      if (!seen.has(st.state)){ ids.push(st.state); seen.add(st.state); }
+    }
+  });
+  unitStore.forEach(u=>{
+    if (u.status==='tossup' || u.strength!=='safe'){
+      if (!seen.has(u.unit)){ ids.push(u.unit); seen.add(u.unit); }
+    }
+  });
+  return ids.sort();
+}
+
+function applyBayesFromManualPicks(){
+  if (!BAYES.ready) return;
+  bayesResetPosterior();
+  const addObs = (id, status, strength) => {
+    if (strength==='tossup') return;
+    const color = (status==='dem') ? 'dem' : (status==='rep' ? 'rep' : null);
+    if (color) bayesObservePick(id, color);
+  };
+  stateStore.forEach(st=>{
+    const hasUnits = st.units && st.units.length>1;
+    if (!hasUnits) addObs(st.state, st.status, st.strength);
+  });
+  unitStore.forEach(u=> addObs(u.unit, u.status, u.strength));
+}
+
+function bayesRenderProbs(){
+  const statusEl = document.getElementById('probModeStatus');
+  const resultsWrap = document.getElementById('probResults');
+  if (!statusEl || !resultsWrap) return;
+  statusEl.textContent = 'Bayesian mode active (fast updates).';
+  resultsWrap.style.display = 'block';
+  const ids = bayesCurrentContestables();
+  const per = ids.map(id => ({ id, pDem: bayesProbDem(id) }));
+  const list = document.getElementById('probPerState');
+  if (list){
+    list.innerHTML='';
+    per.sort((a,b)=>b.pDem-a.pDem).forEach(ps=>{
+      const li = document.createElement('li');
+      li.textContent = `${ps.id}: ${(ps.pDem*100).toFixed(1)}% Dem`;
+      list.appendChild(li);
+    });
+  }
+  // recolor leans for contestables (do not override untouched safe)
+  probApplying = true;
+  try{
+    per.forEach(ps=>{
+      const obj = unitStore.get(ps.id) || stateStore.get(ps.id);
+      if (!obj) return;
+      if (obj.baseStrength==='safe' && !obj.manual) return;
+      let newStatus='tossup', newStrength='tossup';
+      if (ps.pDem >= 0.55){ newStatus='dem'; newStrength='lean'; }
+      else if (ps.pDem <= 0.45){ newStatus='rep'; newStrength='lean'; }
+      if (obj.status!==newStatus || obj.strength!==newStrength){
+        obj.status=newStatus; obj.strength=newStrength; obj.probAuto=true;
+        if (unitStore.has(ps.id)) updateUnitColor(ps.id); else if (stateStore.has(ps.id)) updateStateColor(ps.id);
+      }
+    });
+    updateSummary();
+  } finally { probApplying=false; }
+  // Stats panel
+  setText('probAccepted','—'); setText('probTotalTried','—');
+  setText('probAcceptRate','—'); setText('probDemWin','—');
+  setText('probRepWin','—'); setText('probTie','—'); setText('probRuntime','≈0ms');
+  const SALT_CAP = 5;
+  const fill = document.getElementById('saltBarFill');
+  const salt = Math.min(SALT_CAP, BAYES.salt);
+  setText('saltScore', salt.toFixed(2));
+  if (fill) fill.style.width = Math.min(100, salt/SALT_CAP*100)+'%';
+}
+
+async function init(){
 		initControls();
 		try {
 			const rows2024 = await d3.csv('presidential_margins.csv', row => {
@@ -848,6 +1148,7 @@
 				});
 
 			buildStateData(rows2024);
+			await loadHistoryAndBuildPrior();
 			await buildMap();
 			applyClassification(currentThreshold, { resetManual: true });
 			// Initial paint for districts that exist
