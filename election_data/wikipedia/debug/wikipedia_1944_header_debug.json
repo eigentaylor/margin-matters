@@ -5,6 +5,10 @@
   "total_col": 19,
   "third_party_cols": [
     {
+      "index": 8,
+      "name": "No Candidate (Southern Democrat)"
+    },
+    {
       "index": 11,
       "name": "Norman Thomas"
     },
