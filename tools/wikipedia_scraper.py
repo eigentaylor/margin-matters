@@ -549,63 +549,45 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords, year=None):
         def looks_like_name(n: str) -> bool:
             bl = ['Republican', 'Democratic', 'Independent', 'Green', 'Libertarian', 'Constitution', 'Reform', 'Prohibition', 'Progressive', 'Socialist', 'American', 'States', 'Unpledged', 'National']
             return not any(w in n for w in bl)
+        def check_matches(n: str, raw_text: str):
+            possible_names = {
+                'Robert La': ['Robert La Follette'],
+                'Parley': ['Parley Christensen'],
+                'William': ['William Lemke', 'William Foster', 'William H. Taft', 'William Jennings Bryan'],
+                'Roger': ['Roger MacBride'],
+                'Lenora': ['Lenora Fulani'],
+                'John': ['John Hagelin', 'John Phelps', 'John Anderson', 'Johnson/Weld', 'Johnson/Gray', 'John Schmitz', 'John Hospers', "John O'Neill", 'John Palmer', 'John Woolley', 'John Bidwell', 'John St. John'],
+                'Finn': ['McMullin/Finn'],
+                'James': ['James Ferguson', 'James Weaver', 'James Hanley', 'James Cox', 'James Hanly'],
+                'Strom': ['Strom Thurmond'],
+                'Thomas': ['Norman Thomas', 'Thomas/Maurer', 'Thomas Hisgen', 'Thomas Watson'],
+                'Eugene': ['Eugene Debs', 'Eugene McCarthy', 'Eugene V. Debs', 'Eugene Chafin'],
+                'Alson': ['Alson Streeter'],
+                'Smith': ['Green Smith'],
+            }
+            possible_looks_like_name = n.strip() if looks_like_name(n) else None
+            for key in possible_names:
+                if key in n:
+                    for full_name in possible_names[key]:
+                        if full_name in raw_text:
+                            return full_name
+                    print(f"    Warning: raw_text={raw_text}, name={n}, possible_looks_like_name={possible_looks_like_name}, possible_names={possible_names[key]}")
+                    raise ValueError(f"Ambiguous {key} name from {n}. raw_text={raw_text}, possible_looks_like_name={possible_looks_like_name}")
+            if n in possible_names:
+                for full_name in possible_names[n]:
+                    if full_name in raw_text:
+                        return full_name
+                raise ValueError(f"Ambiguous {n} name")
+            print(f"    None found: raw_text={raw_text}, name={n}, possible_looks_like_name={possible_looks_like_name}")
+
         for n in name_matches:
-            if 'Robert La' in n:
-                return "Robert La Follette"
-            if 'Arthur Reimer' in n:
-                return "Arthur Reimer"
-            if 'Parley' in n:
-                if 'Parley Christensen' in raw_text:
-                    return 'Parley Christensen'
-                else:
-                    raise ValueError("Ambiguous Parley name")
             if ' Labor' in n:
                 return n.split(' Labor')[0].strip()
-            if 'Strom' in n:
-                if 'Strom Thurmond' in raw_text:
-                    return "Strom Thurmond"
-                else:
-                    raise ValueError("Ambiguous Strom name")
-            if n == 'William':
-                if 'William Lemke' in raw_text:
-                    return 'William Lemke'
-                elif 'William Foster' in raw_text:
-                    return 'William Foster'
-                elif 'William H. TaftRepublican # 9,807' in raw_text:
-                    return 'William H. Taft'
-                else:
-                    raise ValueError("Ambiguous William name")
-            if n == 'Roger':
-                if 'Roger MacBride' in raw_text:
-                    return 'Roger MacBride'
-                else:
-                    raise ValueError("Ambiguous Roger name")
-            if n == 'Lenora':
-                if 'Lenora Fulani' in raw_text:
-                    return 'Lenora Fulani'
-                else:
-                    raise ValueError("Ambiguous Lenora name")
             if n == 'Overall':
                 pass
-            if n == 'John':
-                if 'John Hagelin' in raw_text:
-                    return 'John Hagelin'
-                elif 'John Phelps' in raw_text:
-                    return 'John Phelps'
-                else:
-                    raise ValueError("Ambiguous John name")
-            if n == 'Finn':
-                if 'McMullin/Finn' in raw_text:
-                    return 'McMullin/Finn'
-                else:
-                    raise ValueError("Ambiguous Finn name")
-            if n == 'James':
-                if 'James Ferguson' in raw_text:
-                    return 'James Ferguson'
-                elif 'James Weaver' in raw_text:
-                    return 'James Weaver'
-                else: 
-                    raise ValueError("Ambiguous James name")
+            match = check_matches(n, raw_text)
+            if match:
+                return match.strip()
             if looks_like_name(n):
                 return n.strip()
 
