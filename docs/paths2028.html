@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,16 +8,19 @@
 	<link rel="stylesheet" href="styles.css" />
 	<link rel="icon" href="favicon.svg" />
 </head>
+
 <body>
 	<div class="container">
-		
-                <div id="header-placeholder"></div>
-    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-      <a class="back" href="./index.html">← Back to Map</a>
-      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-    </div><div class="header">
+
+		<div id="header-placeholder"></div>
+		<div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+			<a class="back" href="./index.html">← Back to Map</a>
+			<div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
+		</div>
+		<div class="header">
 			<h1>2028 Paths</h1>
-			<span class="legend">Use the margin-based defaults below, then click states to cycle Dem • Tossup • GOP. The path counts update instantly.</span>
+			<span class="legend">Use the margin-based defaults below, then click states to cycle Dem • Tossup • GOP. The
+				path counts update instantly.</span>
 		</div>
 
 		<div class="card">
@@ -27,7 +31,8 @@
 		</div>
 
 		<div class="card possibilities-controls">
-			<div class="legend" style="margin-bottom:10px">Initial classifications use 2024 relative presidential margins. Adjust the lean cutoff to reshape the default safe / lean / tossup buckets.</div>
+			<div class="legend" style="margin-bottom:10px">Initial classifications use 2024 relative presidential
+				margins. Adjust the lean cutoff to reshape the default safe / lean / tossup buckets.</div>
 			<div class="control-row">
 				<label for="thresholdSlider">Lean cutoff (|margin|)</label>
 				<input id="thresholdSlider" type="range" min="2" max="15" step="1" value="5" />
@@ -42,7 +47,8 @@
 		</div>
 
 		<div class="card possibilities-totals">
-			<div class="legend" style="margin-bottom:12px">Decided totals reflect the current map (safe only). Contestable (lean + tossup) units remain open for path counting.</div>
+			<div class="legend" style="margin-bottom:12px">Decided totals reflect the current map (safe only).
+				Contestable (lean + tossup) units remain open for path counting.</div>
 			<div class="summary-grid">
 				<div class="summary-card">
 					<div class="label">Decided Democrats</div>
@@ -56,8 +62,8 @@
 				</div>
 				<div class="summary-card">
 					<div class="label">Remaining Contestable EV</div>
-						<div class="value"><span id="contestableEV">0</span> EV</div>
-						<div class="note"><span id="contestableCount">0</span> contestable units</div>
+					<div class="value"><span id="contestableEV">0</span> EV</div>
+					<div class="note"><span id="contestableCount">0</span> contestable units</div>
 				</div>
 			</div>
 		</div>
@@ -79,11 +85,12 @@
 				</div>
 				<div class="summary-card">
 					<div class="label">Contestable</div>
-						<div class="value"><span id="cat-contestable-ev">0</span> EV</div>
-						<div class="note"><span id="cat-contestable-count">0</span> units</div>
+					<div class="value"><span id="cat-contestable-ev">0</span> EV</div>
+					<div class="note"><span id="cat-contestable-count">0</span> units</div>
 					<div class="names tossup-list">
 						<div class="category-abbrs"><span id="cat-contestable-list">&nbsp;</span>
-						</div></div>
+						</div>
+					</div>
 				</div>
 				<div class="summary-card">
 					<div class="label">Lean R</div>
@@ -119,9 +126,12 @@
 					<div class="pct">Automatic House decision</div>
 				</div>
 			</div>
-			<div class="legend" style="margin-top:12px">Based on <span id="pathTotal">0</span> combinations across current contestables.</div>
-			<div class="tossup-list" style="margin-top:6px"><strong>Contestable lineup:</strong> <span id="contestableLineup">&nbsp;</span></div>
-			<div class="legend" style="margin-top:10px">Shareable URL auto-updates as you edit. Copy from the address bar to share this exact scenario.</div>
+			<div class="legend" style="margin-top:12px">Based on <span id="pathTotal">0</span> combinations across
+				current contestables.</div>
+			<div class="tossup-list" style="margin-top:6px"><strong>Contestable lineup:</strong> <span
+					id="contestableLineup">&nbsp;</span></div>
+			<div class="legend" style="margin-top:10px">Shareable URL auto-updates as you edit. Copy from the address
+				bar to share this exact scenario.</div>
 		</div>
 
 		<div class="card possibilities-enumeration">
@@ -130,34 +140,39 @@
 			<div class="enum-flex" style="display:flex;gap:16px;flex-wrap:wrap">
 				<div class="enum-col" style="flex:1;min-width:250px">
 					<h3 style="margin:4px 0">Dem Wins</h3>
-					<ol id="demPathsList" class="enum-list" style="max-height:260px;overflow:auto;margin:0;padding-left:18px;font-size:0.85rem"></ol>
+					<ol id="demPathsList" class="enum-list"
+						style="max-height:260px;overflow:auto;margin:0;padding-left:18px;font-size:0.85rem"></ol>
 				</div>
 				<div class="enum-col" style="flex:1;min-width:250px">
 					<h3 style="margin:4px 0">GOP Wins</h3>
-					<ol id="repPathsList" class="enum-list" style="max-height:260px;overflow:auto;margin:0;padding-left:18px;font-size:0.85rem"></ol>
+					<ol id="repPathsList" class="enum-list"
+						style="max-height:260px;overflow:auto;margin:0;padding-left:18px;font-size:0.85rem"></ol>
 				</div>
 				<div class="enum-col" style="flex:1;min-width:250px">
 					<h3 style="margin:4px 0">Ties (269 — 269)</h3>
-					<ol id="tiePathsList" class="enum-list" style="max-height:260px;overflow:auto;margin:0;padding-left:18px;font-size:0.85rem"></ol>
+					<ol id="tiePathsList" class="enum-list"
+						style="max-height:260px;overflow:auto;margin:0;padding-left:18px;font-size:0.85rem"></ol>
 				</div>
 			</div>
-			<div class="legend" style="margin-top:10px">Tip: If contestable count exceeds limit we sample / suppress full listing to keep the page fast. Use the download button below for the full set when available.</div>
+			<div class="legend" style="margin-top:10px">Tip: If contestable count exceeds limit we sample / suppress
+				full listing to keep the page fast. Use the download button below for the full set when available.</div>
 			<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
 				<button id="downloadPaths" class="btn">Download Full Paths (CSV)</button>
 				<button id="copyShareURL" class="btn">Copy Share URL</button>
 			</div>
 		</div>
 
-	<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-	<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
-	<script src="utils/electionMap.js"></script>
-	<script src="paths2028.js"></script>                
-	<div id="footer-placeholder" data-extra-note="Built as static HTML from CSV.">
-</div>
-            </div>
-            <script src="./header.js"></script>
-            <script src="./back-to-map.js"></script>
-            <script src="./footer.js"></script>
-            <script src="./last-updated.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+		<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+		<script src="utils/electionMap.js"></script>
+		<script src="paths2028.js"></script>
+		<div id="footer-placeholder" data-extra-note="Built as static HTML from CSV.">
+		</div>
+	</div>
+	<script src="./header.js"></script>
+	<script src="./back-to-map.js"></script>
+	<script src="./footer.js"></script>
+	<script src="./last-updated.js"></script>
 </body>
+
 </html>

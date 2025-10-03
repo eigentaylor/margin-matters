@@ -201,7 +201,7 @@
 
 	function handleStateHover(evt, code) { const state = stateStore.get(code); if (!state) return; const tip = mapTip(); if (!tip) return; const name = STATE_NAMES[state.state] || state.state; const statusLabel = describeStatus(state); tip.textContent = `${name} • ${state.ev} EV • ${formatMargin(state.margin)} • ${statusLabel}` + (state.manual ? ' • manual' : ''); tip.style.display = 'block'; positionTip(evt); }
 
-        function handleDistrictHover(evt, unit) { const u = unitStore.get(unit); if (!u) return; const tip = mapTip(); if (!tip) return; const name = `${STATE_NAMES[u.state] || u.state} ${unit.endsWith('-AL') ? 'AL' : unit.split('-')[1]}`; const statusLabel = describeStatus(u); tip.textContent = `${unit} • ${u.ev} EV • ${formatMargin(u.margin)} • ${statusLabel}` + (u.manual ? ' • manual' : ''); tip.style.display = 'block'; positionTip(evt); }
+	function handleDistrictHover(evt, unit) { const u = unitStore.get(unit); if (!u) return; const tip = mapTip(); if (!tip) return; const name = `${STATE_NAMES[u.state] || u.state} ${unit.endsWith('-AL') ? 'AL' : unit.split('-')[1]}`; const statusLabel = describeStatus(u); tip.textContent = `${unit} • ${u.ev} EV • ${formatMargin(u.margin)} • ${statusLabel}` + (u.manual ? ' • manual' : ''); tip.style.display = 'block'; positionTip(evt); }
 
 	function hideTip() { const tip = mapTip(); if (tip) tip.style.display = 'none'; }
 
