@@ -539,6 +539,8 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords, year=None):
         # Remove common non-name words
         if 'no candidateprogressive' in lower_text:
             return "No Candidate (Bull Moose)"
+        if 'no candidatesouthern' in lower_text:
+            return "No Candidate (Southern Democrat)"
         cleaned_raw = re.sub(r"\((?:[^)]*)\)", " ", raw_text)
         cleaned_raw = re.sub(r"(?i)popular\s+vote|votes?|total|percentage|percent|electoral\s+votes?|electoral|results|by\s+state|state|candidate|party|ticket|running\s+mate", " ", cleaned_raw)
         # Find proper-name like sequences (e.g., 'Jill Stein', 'Gary E. Johnson', 'Stein/Honkala')
@@ -629,7 +631,7 @@ def analyze_table_header(header_rows, rep_keywords, dem_keywords, year=None):
         if is_votes_col(desc):
             cand_name = extract_candidate_name(col_desc_raw[i], desc)
             # Avoid misclassifying if the header clearly says Republican/Democratic
-            if (any(k in desc for k in rep_keys) or any(k in desc for k in dem_keys) or 'margin' in desc) and cand_name != 'Unpledged Electors' and (cand_name != 'William H. Taft'):
+            if (any(k in desc for k in rep_keys) or any(k in desc for k in dem_keys) or 'margin' in desc) and cand_name != 'Unpledged Electors' and (cand_name != 'William H. Taft') and (cand_name != 'No Candidate (Southern Democrat)'):
                 continue
             third_party_cols.append({'index': i, 'name': cand_name})
 

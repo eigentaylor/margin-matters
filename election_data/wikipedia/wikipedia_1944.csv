@@ -36,10 +36,10 @@ year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_vo
 1944,OR,248635,225365,3785,6147,"{""Norman Thomas"": 3785, ""Other"": 2362}",480147
 1944,PA,1940479,1835054,11721,19260,"{""Norman Thomas"": 11721, ""Other"": 7539}",3794793
 1944,RI,175356,123487,0,433,"{""Other"": 433}",299276
-1944,SC,90601,4610,0,8164,"{""Other"": 365}",103375
+1944,SC,90601,4610,7799,8164,"{""No Candidate (Southern Democrat)"": 7799, ""Other"": 365}",103375
 1944,SD,96711,135365,0,0,{},232076
 1944,TN,308707,200311,792,1674,"{""Norman Thomas"": 792, ""Other"": 882}",510692
-1944,TX,821605,191425,594,137301,"{""Norman Thomas"": 594, ""Other"": 1268}",1150331
+1944,TX,821605,191425,135439,137301,"{""No Candidate (Southern Democrat)"": 135439, ""Norman Thomas"": 594, ""Other"": 1268}",1150331
 1944,UT,150088,97891,340,340,"{""Norman Thomas"": 340}",248319
 1944,VT,53820,71527,0,14,"{""Other"": 14}",125361
 1944,VA,242276,145243,417,966,"{""Norman Thomas"": 417, ""Other"": 549}",388485
@@ -47,4 +47,4 @@ year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_vo
 1944,WV,392777,322819,0,0,{},715596
 1944,WI,650413,674532,13205,14207,"{""Norman Thomas"": 13205, ""Other"": 1002}",1339152
 1944,WY,49419,51921,0,0,{},101340
-1944,NATIONAL,25612916,22017929,79017,346218,"{""Norman Thomas"": 79017, ""Other"": 123963}",47977063
+1944,NATIONAL,25612916,22017929,143238,346218,"{""No Candidate (Southern Democrat)"": 143238, ""Norman Thomas"": 79017, ""Other"": 123963}",47977063
