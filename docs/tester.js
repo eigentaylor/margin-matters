@@ -21,7 +21,7 @@
     if (thirdPartyResults && typeof thirdPartyResults === 'object') {
       const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
         // Filter out "Other(s)" and "Unpledged Electors" and any with 'No Candidate'
-        return name !== 'Other' && name !== 'Others' && name !== 'Unpledged Electors' && !name.includes('No Candidate');
+        return name !== 'Other' && name !== 'Others';
       });
       if (thirdPartyEntries.length > 0) {
         hasMultipleThirdParties = thirdPartyEntries.length > 1;
