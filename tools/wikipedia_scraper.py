@@ -372,7 +372,9 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                 third_party_votes = max(0, total_votes - r_votes - d_votes)
 
             # If we didn't detect explicit third-party columns, record the whole block as 'Other'
-            if not third_party_results and third_party_votes > 0:
+            if year == 1960 and state_code == 'AR':
+                third_party_results['Orval Faubus'] = third_party_votes # he didn't show up in the table
+            elif not third_party_results and third_party_votes > 0:
                 third_party_results['Other'] = third_party_votes
 
             # T_votes is the maximum single third-party candidate total (not including 'Other' rollup)
