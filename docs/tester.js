@@ -607,7 +607,31 @@
             console.log('[EV-TRACE] tooltip evParts O aggregation', { unit, ev, evAllocation, detailed, othersTotal });
           }
         } catch(e) {}
-        if (othersTotal > 0) evParts.push(`O: ${othersTotal}`);
+        if (othersTotal > 0) {
+          // Try to display the top third-party's last name instead of a generic 'O'
+          let topThirdLabel = null;
+          try {
+            const lastNameFrom = (full) => {
+              try {
+                if (!full || typeof full !== 'string') return null;
+                const s = full.trim(); if (!s) return null;
+                if (s.indexOf(',') !== -1) return s.split(',')[0].trim();
+                const parts = s.split(/\s+/).filter(Boolean);
+                return parts.length ? parts[parts.length - 1] : s;
+              } catch(e) { return null; }
+            };
+            if (info && info.thirdPartyResults && typeof info.thirdPartyResults === 'object') {
+              const entries = Object.entries(info.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+              if (entries.length) {
+                entries.sort((a,b) => b.votes - a.votes);
+                const top = entries[0];
+                if (top && top.name) topThirdLabel = lastNameFrom(String(top.name)) || String(top.name);
+              }
+            }
+          } catch(e) {}
+          if (topThirdLabel) evParts.push(`${topThirdLabel}: ${othersTotal}`);
+          else evParts.push(`O: ${othersTotal}`);
+        }
         if (evParts.length) {
           rows.push(evParts.join(' | '));
         }
@@ -627,11 +651,94 @@
           if (voteTallies.O === maxVotes) return 'O';
           return null;
         })();
+        const displayNames = true; // if true, show candidate last names in tooltip (if available)
+        const onlyThirdParty = true; // if true, show only third-party name for O, not generic 'O' but still show D and R (not names)
+        const candidateNames = (function(){
+          if (!displayNames) return {D: 'D', R: 'R', O: 'O'};
+          try { console.log('info for', unit, info); } catch(e){}
+
+          // Helper: return a sensible "last name" from a full name string
+          const lastNameFrom = (full) => {
+            try {
+              if (!full || typeof full !== 'string') return null;
+              const s = full.trim();
+              if (!s) return null;
+              // If name is in "Last, First" format, take the part before comma
+              if (s.indexOf(',') !== -1) return s.split(',')[0].trim();
+              // Otherwise take last token
+              const parts = s.split(/\s+/).filter(Boolean);
+              return parts.length ? parts[parts.length - 1] : s;
+            } catch(e) { return null; }
+          };
+
+          const names = { D: 'D', R: 'R', O: 'Top O' };
+
+          // Prefer explicit per-party candidate entries when present
+          try {
+            if (info && info.candidates && typeof info.candidates === 'object') {
+              const candObj = info.candidates;
+              console.log('candidates object', candObj);
+              if (candObj.D && candObj.D.name && !onlyThirdParty) {
+                const ln = lastNameFrom(candObj.D.name);
+                if (ln) names.D = ln;
+              }
+              if (candObj.R && candObj.R.name && !onlyThirdParty) {
+                const ln = lastNameFrom(candObj.R.name);
+                if (ln) names.R = ln;
+              }
+              // For O, prefer an explicit O candidate entry
+              if (candObj.O && candObj.O.name) {
+                const ln = lastNameFrom(candObj.O.name);
+                console.log('extracted O from candidates.O.name', ln);
+                if (ln) names.O = ln;
+
+              }
+            } else {
+              // Fallback: some data rows expose dCandidate/rCandidate as simple strings
+              console.log('candidates object not found, checking dCandidate/rCandidate', info);
+              if (info && info.dCandidate && !names.D) {
+                const ln = lastNameFrom(String(info.dCandidate)); if (ln) names.D = ln;
+                console.log('extracted D from dCandidate', ln);
+              }
+              if (info && info.rCandidate && !names.R) {
+                const ln = lastNameFrom(String(info.rCandidate)); if (ln) names.R = ln;
+                console.log('extracted R from rCandidate', ln);
+              }
+            }
+          } catch(e) {}
+
+          // If we still don't have a top third-party name for O, try to infer from thirdPartyResults
+          try {
+            if ((!names.O || names.O === 'O') && info && info.thirdPartyResults && typeof info.thirdPartyResults === 'object') {
+              const entries = Object.entries(info.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+              if (entries.length) {
+                entries.sort((a,b) => b.votes - a.votes);
+                const top = entries[0];
+                if (top && top.name) {
+                  const ln = lastNameFrom(String(top.name));
+                  if (ln) names.O = ln;
+                }
+              }
+            }
+          } catch(e) {}
+
+          return names;
+        })();
+        console.log('candidateNames', candidateNames);
         // Only display parties with votes, add star to the highest
-        if (voteTallies.D > 0) voteParts.push(`${voteTallies.D === maxVotes ? 'D*' : 'D'}: ${formatter(voteTallies.D)}`);
-        if (voteTallies.R > 0) voteParts.push(`${voteTallies.R === maxVotes ? 'R*' : 'R'}: ${formatter(voteTallies.R)}`);
+        if (voteTallies.D > 0) {
+          const dLabel = candidateNames && candidateNames.D ? candidateNames.D : 'D';
+          voteParts.push(`${voteTallies.D === maxVotes ? dLabel + '*' : dLabel}: ${formatter(voteTallies.D)}`);
+        }
+        if (voteTallies.R > 0) {
+          const rLabel = candidateNames && candidateNames.R ? candidateNames.R : 'R';
+          voteParts.push(`${voteTallies.R === maxVotes ? rLabel + '*' : rLabel}: ${formatter(voteTallies.R)}`);
+        }
         // Only display top third party if it has votes (not all third parties)
-        if (voteTallies.O > 0) voteParts.push(`${voteTallies.O === maxVotes ? 'O*' : 'O'}: ${formatter(voteTallies.O)}`);
+        if (voteTallies.O > 0) {
+          const oLabel = candidateNames && candidateNames.O ? candidateNames.O : 'O';
+          voteParts.push(`${voteTallies.O === maxVotes ? oLabel + '*' : oLabel}: ${formatter(voteTallies.O)}`);
+        }
         
         // Only add vote row if we have votes to display
         if (voteParts.length) {
@@ -680,6 +787,47 @@
       
       return rows.join('\n');
     } catch(e) { return unit; }
+  }
+
+  // Expose helper to get candidate last names for a unit (D, R, top third-party O)
+  function getUnitCandidateLastNames(unit, opts){
+    try {
+      const options = opts || {};
+      let year = (options.year != null && isFinite(options.year)) ? Number(options.year) : (typeof window._curYear === 'number' ? window._curYear : null);
+      if (!isFinite(year)) year = null;
+      if (!unit) return { D: 'D', R: 'R', O: 'O' };
+      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+      const row = (rows && rows.length) ? rows.find(x => x.unit === keyUnit) : null;
+      // last name extractor
+      const lastNameFrom = (full) => {
+        try {
+          if (!full || typeof full !== 'string') return null;
+          const s = full.trim(); if (!s) return null;
+          if (s.indexOf(',') !== -1) return s.split(',')[0].trim();
+          const parts = s.split(/\s+/).filter(Boolean); return parts.length ? parts[parts.length-1] : s;
+        } catch(e) { return null; }
+      };
+      const names = { D: 'D', R: 'R', O: 'O' };
+      if (row) {
+        try {
+          if (row.dCandidate) {
+            const ln = lastNameFrom(String(row.dCandidate)); if (ln) names.D = ln;
+          }
+          if (row.rCandidate) {
+            const ln = lastNameFrom(String(row.rCandidate)); if (ln) names.R = ln;
+          }
+          if (row.thirdPartyResults && typeof row.thirdPartyResults === 'object') {
+            const entries = Object.entries(row.thirdPartyResults).map(([nm,v]) => ({ name: nm, votes: Number(v)||0 }));
+            if (entries.length) {
+              entries.sort((a,b)=>b.votes - a.votes);
+              const top = entries[0]; if (top && top.name) { const ln = lastNameFrom(String(top.name)); if (ln) names.O = ln; }
+            }
+          }
+        } catch(e) {}
+      }
+      return names;
+    } catch(e) { return { D: 'D', R: 'R', O: 'O' }; }
   }
 
   // Compute a "visual center" for a GeoJSON Polygon/MultiPolygon feature using
@@ -3219,13 +3367,45 @@ window.getAdjustedInfo = function(unit){
           const calledVal = !!snap.called;
           const reportingVal = (snap.reporting != null && isFinite(snap.reporting)) ? Math.max(0, Math.min(1, snap.reporting)) : 0;
           const confidenceVal = (snap.confidence != null && isFinite(snap.confidence)) ? Math.max(0, Math.min(1, snap.confidence)) : 0;
+          // Normalize candidate info: prefer a candidates object with D/R/O entries when possible,
+          // but also expose dCandidate/rCandidate and thirdPartyResults for backward compatibility.
+          const outCandidates = {};
+          try {
+            if (snap.candidates && Array.isArray(snap.candidates)) {
+              // Try to map array into D/R/O keys if elements include party/id hints
+              snap.candidates.forEach(c => {
+                try {
+                  if (!c) return;
+                  // party id may be at c.party, c.id, or c.abbr
+                  const pid = (c.party || c.id || c.abbr || '').toString();
+                  if (pid === 'D' || pid === 'Dem' || /D/i.test(pid)) outCandidates.D = c;
+                  else if (pid === 'R' || pid === 'GOP' || /R/i.test(pid)) outCandidates.R = c;
+                  else {
+                    // fallback: register as a third-party candidate under O if not set
+                    if (!outCandidates.O) outCandidates.O = c;
+                  }
+                } catch(e) {}
+              });
+            } else if (snap.candidates && typeof snap.candidates === 'object') {
+              // If already an object, copy over
+              Object.assign(outCandidates, snap.candidates);
+            }
+          } catch(e) {}
+          // Expose simple name fields if present on snap
+          const dCand = (snap.dCandidate || snap.D_candidate || (outCandidates.D && outCandidates.D.name) || null);
+          const rCand = (snap.rCandidate || snap.R_candidate || (outCandidates.R && outCandidates.R.name) || null);
+          const thirdPartyResults = (snap.thirdPartyResults || snap.third_party_results || null);
           return {
             ev: evVal,
             margin: marginVal,
             marginStr: marginStrVal,
             called: calledVal,
             reporting: reportingVal,
-            confidence: confidenceVal
+            confidence: confidenceVal,
+            candidates: (Object.keys(outCandidates).length ? outCandidates : (Array.isArray(snap.candidates) ? snap.candidates.slice() : [])),
+            dCandidate: dCand,
+            rCandidate: rCand,
+            thirdPartyResults: thirdPartyResults
           };
       }
     }
@@ -3301,6 +3481,24 @@ window.getAdjustedInfo = function(unit){
       m = (m > 0 ? -0.000001 : 0.000001); // Use small epsilon like in updateAll
       console.log('getAdjustedInfo: unit flipped', {unit, keyUnit, originalMargin: (+r.rm || 0) + (pv || 0), flippedMargin: m});
     }
+    // Build candidate info from the CSV row for tooltip consumers
+    const candMap = {};
+    try {
+      if (r.dCandidate) candMap.D = { name: String(r.dCandidate) };
+      if (r.rCandidate) candMap.R = { name: String(r.rCandidate) };
+      // derive top third-party candidate name if present in parsed thirdPartyResults
+      if (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') {
+        const entries = Object.entries(r.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+        if (entries.length) {
+          entries.sort((a,b) => b.votes - a.votes);
+          candMap.O = { name: String(entries[0].name) };
+        }
+      } else if (r.thirdPartyResults && typeof r.thirdPartyResults === 'string') {
+        // if still serialized string, leave as-is and parsing elsewhere will handle it
+      }
+
+    } catch(e) {}
+
     return {
       ev,
       margin: m,
@@ -3334,9 +3532,14 @@ window.getAdjustedInfo = function(unit){
       const s = (Math.abs(m) * 100).toFixed(1);
       return (m > 0 ? 'D+' : 'R+') + s;
     })(),
-    called: false,
+  called: false,
     reporting: 0,
-    confidence: 0
+    confidence: 0,
+    // attach candidate metadata for tooltips and other UI consumers
+    candidates: (Object.keys(candMap).length ? candMap : undefined),
+    dCandidate: r.dCandidate || null,
+    rCandidate: r.rCandidate || null,
+    thirdPartyResults: r.thirdPartyResults || null
   };
   } catch(e) { return null; }
 }
