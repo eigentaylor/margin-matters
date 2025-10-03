@@ -383,6 +383,20 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
     // Small state buttons were moved to the State Pages directory; no buttons on index
   // Notify listeners that the map has rendered
   window.dispatchEvent(new Event("mapReady"));
+  // Draw a white boundary mesh on top of state fills so boundaries remain crisp
+  try {
+    const mesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+    g.append('path')
+      .datum(mesh)
+      .attr('fill', 'none')
+      .attr('stroke', '#ffffff')
+      .attr('stroke-width', 1.0)
+      .attr('stroke-linejoin', 'round')
+      .attr('stroke-linecap', 'round')
+      .attr('pointer-events', 'none')
+      .attr('class', 'state-boundaries')
+      .attr('d', path);
+  } catch (e) {}
   });
 </script>
 <script src="./header.js"></script>

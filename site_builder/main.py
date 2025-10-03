@@ -72,10 +72,10 @@ def build_site():
     #     print(f"Warning: couldn't build methods page: {e}")
 
     # Build or update index.html
-    try:
-        make_index(states, rows, start_year=1912)
-    except Exception as e:
-        print(f"Warning: couldn't build index.html: {e}")
+    # try:
+    #     make_index(states, rows, start_year=1912)
+    # except Exception as e:
+    #     print(f"Warning: couldn't build index.html: {e}")
 
     # Post-process static pages that aren't generated to keep header/footer in sync
     # NOTE: This section is now deprecated since we're using dynamic JS loading for header/footer/back-to-map

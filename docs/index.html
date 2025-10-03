@@ -215,11 +215,11 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         return abbr ? `state-${abbr}` : null;
       })
       .attr("d", path)
-      /* Slightly brighter default fill for better contrast */
       .attr("fill", "#2f2f2f")
-      /* Slightly lighter stroke so state boundaries remain visible */
-      .attr("stroke", "#5a5a5a")
-      .attr("stroke-width", 0.8)
+      .attr("stroke", "#FFFFFF")
+      .attr("stroke-width", 0.6)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
       .attr("tabindex", 0)
       /* On hover: pick a bright blue or red depending on the current fill and restore it on mouseout */
     .on("mouseover", function(event, d) {
@@ -288,6 +288,21 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
         const abbr = FIPS_TO_ABBR[String(d.id).padStart(2,"0")];
         return abbr ? abbr : "Unknown";
       });
+
+    // Draw a white boundary mesh on top of state fills so boundaries remain crisp
+    try {
+      const mesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+      g.append('path')
+        .datum(mesh)
+        .attr('fill', 'none')
+        .attr('stroke', '#ffffff')
+        .attr('stroke-width', 1.0)
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-linecap', 'round')
+        .attr('pointer-events', 'none')
+        .attr('class', 'state-boundaries')
+        .attr('d', path);
+    } catch (e) {}
 
     // Small state buttons were moved to the State Pages directory; no buttons on index
   // Notify listeners that the map has rendered
