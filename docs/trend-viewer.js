@@ -5,7 +5,7 @@ Interactive Explorer for state-trends
 - Keeps to plain D3 for portability (no bundler)
 */
 
-(function(){
+(function () {
   const csvPath = './presidential_margins.csv';
   const el = {
     state: document.getElementById('stateSel'),
@@ -15,7 +15,7 @@ Interactive Explorer for state-trends
     rel: document.getElementById('relativeChk'),
     delta: document.getElementById('deltaChk'),
     twoP: document.getElementById('twoPartyChk'),
-  presetSel: document.getElementById('presetSel'),
+    presetSel: document.getElementById('presetSel'),
     nat: document.getElementById('natOverlay'),
     points: document.getElementById('pointsToggle'),
     notes: document.getElementById('notes'),
@@ -51,28 +51,28 @@ Interactive Explorer for state-trends
     stateFillPos: 'deepskyblue',
     stateFillNeg: 'red',
     stateSpecial: 'yellow',
-  nat: '#f472b6',
-  natFillPos: '#80d4ff', // lighter blue for national positive
-  natFillNeg: '#ff8b8b', // lighter red for national negative
+    nat: '#f472b6',
+    natFillPos: '#80d4ff', // lighter blue for national positive
+    natFillNeg: '#ff8b8b', // lighter red for national negative
     axis: '#888'
   };
 
-  const SPECIAL_1968 = new Set(['GA','AL','LA','MS','AR']);
+  const SPECIAL_1968 = new Set(['GA', 'AL', 'LA', 'MS', 'AR']);
 
-  const margin = {top: 24, right: 24, bottom: 40, left: 56};
+  const margin = { top: 24, right: 24, bottom: 40, left: 56 };
   let width = 1100, height = 520;
 
   const svg = d3.select(el.root)
     .append('svg')
     .attr('width', '100%')
     .attr('height', height)
-    .style('display','block');
+    .style('display', 'block');
 
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-  const legendG = svg.append('g').attr('class','legend-svg').attr('transform', `translate(${margin.left},8)`);
-  const xAxisG = g.append('g').attr('class','x-axis');
-  const yAxisG = g.append('g').attr('class','y-axis');
-  const zeroLineG = g.append('g').attr('class','zero');
+  const legendG = svg.append('g').attr('class', 'legend-svg').attr('transform', `translate(${margin.left},8)`);
+  const xAxisG = g.append('g').attr('class', 'x-axis');
+  const yAxisG = g.append('g').attr('class', 'y-axis');
+  const zeroLineG = g.append('g').attr('class', 'zero');
   const seriesG = g.append('g');
   const natG = g.append('g');
 
@@ -87,32 +87,32 @@ Interactive Explorer for state-trends
 
   const tip = d3.select(el.tip);
 
-  function leanFmt(v, rel, delta){
+  function leanFmt(v, rel, delta) {
     if (v == null || isNaN(v)) return '';
     const sign = v > 0 ? 'D' : v < 0 ? 'R' : '';
-    const pct = Math.abs(v*100).toFixed(1) + '%';
+    const pct = Math.abs(v * 100).toFixed(1) + '%';
     if (sign) return `${sign}+${pct}`;
     // when relative mode is on, show NAT for exact zero, otherwise EVEN
     if (rel && delta) return 'NAT Δ';
     return rel ? 'NAT' : 'EVEN';
   }
-  function percentFmt(v){
+  function percentFmt(v) {
     if (v == null || isNaN(v)) return '';
-    return (v*100).toFixed(1)+ '%';
+    return (v * 100).toFixed(1) + '%';
   }
-  function percentFmtSigned(v){
+  function percentFmtSigned(v) {
     if (v == null || isNaN(v)) return '';
-    const s = v>0?'+':''; return s + (v*100).toFixed(1)+ '%';
+    const s = v > 0 ? '+' : ''; return s + (v * 100).toFixed(1) + '%';
   }
 
-  function fmtForCurrent(metric, rel, delta, twoP){
+  function fmtForCurrent(metric, rel, delta, twoP) {
     if (metric === METRIC.THIRD) return rel ? percentFmtSigned : percentFmt;
     // return a wrapper that calls leanFmt with rel context
     return v => leanFmt(v, rel, delta);
   }
 
-  function buildMeasure(meta){
-    const {metric, rel, delta, twoP} = meta;
+  function buildMeasure(meta) {
+    const { metric, rel, delta, twoP } = meta;
     // Determine kind and column names
     const isThird = metric === METRIC.THIRD;
     const kindDefault = (delta || rel) ? 'bar' : (isThird ? 'line' : 'line');
@@ -162,9 +162,9 @@ Interactive Explorer for state-trends
     return { kind, yCol, yNatCol, desc };
   }
 
-  function initControls(states){
-    const stateOpts = ['NATIONAL', ...states.filter(s=>s!=='NATIONAL').sort()];
-    el.state.innerHTML = stateOpts.map(s=>`<option value="${s}">${s}</option>`).join('');
+  function initControls(states) {
+    const stateOpts = ['NATIONAL', ...states.filter(s => s !== 'NATIONAL').sort()];
+    el.state.innerHTML = stateOpts.map(s => `<option value="${s}">${s}</option>`).join('');
 
     // Defaults
     el.state.value = 'AL';
@@ -175,31 +175,31 @@ Interactive Explorer for state-trends
     readFromUrl();
 
     [el.state, el.metric, el.chart, el.rel, el.delta, el.twoP, el.nat, el.points].forEach(inp =>
-      inp.addEventListener('change', ()=>{ writeToUrl(); render(); }));
+      inp.addEventListener('change', () => { writeToUrl(); render(); }));
 
     // Start/end year defaults derived from data extents (filled later when data loaded)
-    el.addStateBtn.addEventListener('click', ()=>{ addState(el.state.value); });
+    el.addStateBtn.addEventListener('click', () => { addState(el.state.value); });
     if (el.presetSel) {
       el.presetSel.addEventListener('change', (e) => {
         const v = e.target.value;
         if (!v) return;
-        if (v === 'preset1') setPreset(['WI','MI','PA']);
-        else if (v === 'preset2') setPreset(['AZ','NV','NC','GA','WI','MI','PA']);
-        else if (v === 'preset3') setPreset(['ME-AL','ME-01','ME-02']);
-        else if (v === 'preset4') setPreset(['NE-AL','NE-01','NE-02','NE-03']);
+        if (v === 'preset1') setPreset(['WI', 'MI', 'PA']);
+        else if (v === 'preset2') setPreset(['AZ', 'NV', 'NC', 'GA', 'WI', 'MI', 'PA']);
+        else if (v === 'preset3') setPreset(['ME-AL', 'ME-01', 'ME-02']);
+        else if (v === 'preset4') setPreset(['NE-AL', 'NE-01', 'NE-02', 'NE-03']);
         // reset the select back to placeholder so user can pick again
         e.target.value = '';
       });
     }
-  const resetBtn = document.getElementById('resetBtn');
-  if (resetBtn) resetBtn.addEventListener('click', resetAll);
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) resetBtn.addEventListener('click', resetAll);
 
     // year change handlers
-    el.startYear.addEventListener('change', ()=>{ writeToUrl(); render(); });
-    el.endYear.addEventListener('change', ()=>{ writeToUrl(); render(); });
+    el.startYear.addEventListener('change', () => { writeToUrl(); render(); });
+    el.endYear.addEventListener('change', () => { writeToUrl(); render(); });
   }
 
-  function resetAll(){
+  function resetAll() {
     // Clear multi-state selections and reset controls to sensible defaults
     selectedStates = [];
     renderStateChips();
@@ -217,14 +217,14 @@ Interactive Explorer for state-trends
       const all = window.__data || [];
       let minYear = 1916, maxYear = 2024;
       if (all.length) {
-        minYear = all.reduce((m,r)=> Math.min(m, +r.year||m), Infinity);
-        maxYear = all.reduce((m,r)=> Math.max(m, +r.year||m), -Infinity);
-        if (!isFinite(minYear) || minYear>2100) minYear = 1916;
-        if (!isFinite(maxYear) || maxYear<1800) maxYear = 2024;
+        minYear = all.reduce((m, r) => Math.min(m, +r.year || m), Infinity);
+        maxYear = all.reduce((m, r) => Math.max(m, +r.year || m), -Infinity);
+        if (!isFinite(minYear) || minYear > 2100) minYear = 1916;
+        if (!isFinite(maxYear) || maxYear < 1800) maxYear = 2024;
       }
       el.startYear.value = String(minYear);
       el.endYear.value = String(maxYear);
-    } catch(e) {
+    } catch (e) {
       el.startYear.value = '1916';
       el.endYear.value = '2024';
     }
@@ -232,7 +232,7 @@ Interactive Explorer for state-trends
     render();
   }
 
-  function setPreset(list){
+  function setPreset(list) {
     selectedStates = Array.from(new Set(list));
     renderStateChips();
     // force line plot for multi-state
@@ -240,7 +240,7 @@ Interactive Explorer for state-trends
     writeToUrl(); render();
   }
 
-  function addState(s){
+  function addState(s) {
     if (!s) return;
     if (!selectedStates.includes(s)) selectedStates.push(s);
     renderStateChips();
@@ -248,15 +248,15 @@ Interactive Explorer for state-trends
     writeToUrl(); render();
   }
 
-  function removeState(s){
-    selectedStates = selectedStates.filter(x=>x!==s);
+  function removeState(s) {
+    selectedStates = selectedStates.filter(x => x !== s);
     renderStateChips();
     writeToUrl(); render();
   }
 
-  function renderStateChips(){
+  function renderStateChips() {
     el.stateChips.innerHTML = '';
-    selectedStates.forEach(s =>{
+    selectedStates.forEach(s => {
       const chip = document.createElement('div');
       chip.style.display = 'inline-flex';
       chip.style.padding = '6px 8px';
@@ -266,12 +266,12 @@ Interactive Explorer for state-trends
       chip.style.color = 'var(--muted)';
       chip.style.gap = '8px';
       chip.innerHTML = `${s} <button data-abbr="${s}" style="margin-left:8px">✕</button>`;
-      chip.querySelector('button').addEventListener('click', ()=> removeState(s));
+      chip.querySelector('button').addEventListener('click', () => removeState(s));
       el.stateChips.appendChild(chip);
     });
   }
 
-  function getStateParams(){
+  function getStateParams() {
     return {
       state: el.state.value,
       metric: el.metric.value,
@@ -284,7 +284,7 @@ Interactive Explorer for state-trends
     };
   }
 
-  function writeToUrl(){
+  function writeToUrl() {
     const p = getStateParams();
     const q = new URLSearchParams();
     // legacy short params
@@ -320,7 +320,7 @@ Interactive Explorer for state-trends
     history.replaceState(null, '', url);
   }
 
-  function readFromUrl(){
+  function readFromUrl() {
     const q = new URLSearchParams(location.search);
     // prefer legacy keys if present, else fall back to canonical
     const getBool = (keyShort, keyLong, truthyVal) => {
@@ -331,15 +331,15 @@ Interactive Explorer for state-trends
       return v === '1' || v === 'true' || v === 'yes';
     };
     const getStr = (keyShort, keyLong) => q.get(keyShort) || q.get(keyLong);
-    const getList = (keyShort, keyLong) => (getStr(keyShort, keyLong)||'').split(',').filter(Boolean);
+    const getList = (keyShort, keyLong) => (getStr(keyShort, keyLong) || '').split(',').filter(Boolean);
 
-  const metric = (getStr('m','metric') || 'margin').toLowerCase();
-    const chart = getStr('c','chart') || 'auto';
-    const denom = getStr('tp','denom');
-    const overlay = getStr('nat','overlay');
-    const points = getBool('pts','points');
+    const metric = (getStr('m', 'metric') || 'margin').toLowerCase();
+    const chart = getStr('c', 'chart') || 'auto';
+    const denom = getStr('tp', 'denom');
+    const overlay = getStr('nat', 'overlay');
+    const points = getBool('pts', 'points');
 
-    if (getStr('s','state')) el.state.value = getStr('s','state');
+    if (getStr('s', 'state')) el.state.value = getStr('s', 'state');
     // map canonical metric to UI controls
     if (metric === 'thirdparty' || metric === 'third_party' || metric === 'third') {
       el.metric.value = 'thirdParty';
@@ -350,23 +350,23 @@ Interactive Explorer for state-trends
     }
     el.chart.value = chart;
     // legacy/explicit flags override canonical inference
-    if (getBool('rel','relative')) el.rel.checked = true;
-    if (getBool('d','delta')) el.delta.checked = true;
+    if (getBool('rel', 'relative')) el.rel.checked = true;
+    if (getBool('d', 'delta')) el.delta.checked = true;
     el.twoP.checked = denom ? (denom === 'twoParty' || denom === 'tp' || denom === '1' || denom === 'true') : q.has('tp');
     el.nat.checked = overlay ? (overlay === 'nat') : q.has('nat');
     el.points.checked = points ? true : el.points.checked;
 
-    const multi = getList('multi','states');
-    if (multi.length){
+    const multi = getList('multi', 'states');
+    if (multi.length) {
       selectedStates = multi;
       renderStateChips();
       if (selectedStates.length > 1) el.chart.value = 'line';
     }
-    el.startYear.value = getStr('start','yearStart') || '';
-    el.endYear.value = getStr('end','yearEnd') || '';
+    el.startYear.value = getStr('start', 'yearStart') || '';
+    el.endYear.value = getStr('end', 'yearEnd') || '';
   }
 
-  function resize(){
+  function resize() {
     const rect = el.root.getBoundingClientRect();
     width = rect.width || 1100;
     const innerW = width - margin.left - margin.right;
@@ -377,15 +377,15 @@ Interactive Explorer for state-trends
     render();
   }
 
-  function pickChartKind(kindDefault){
+  function pickChartKind(kindDefault) {
     return (el.chart.value === 'auto') ? kindDefault : el.chart.value;
   }
 
-  function withNotes(desc){
+  function withNotes(desc) {
     el.notes.textContent = desc + (el.nat.checked && !el.rel.checked ? ' (Nat overlay if available).' : '');
   }
 
-  function colorForBar(d, stateAbbr, meta, rowLookup){
+  function colorForBar(d, stateAbbr, meta, rowLookup) {
     // Special 1968 yellow for Wallace states in 1968
     if (d.year === 1968 && SPECIAL_1968.has(stateAbbr)) return color.stateSpecial;
     // For relative (non-delta) we color by winner (pres_margin sign), not relative sign
@@ -398,7 +398,7 @@ Interactive Explorer for state-trends
     return d.value >= 0 ? color.stateFillPos : color.stateFillNeg;
   }
 
-  function render(){
+  function render() {
     if (!window.__data) return;
     const all = window.__data;
     const p = getStateParams();
@@ -413,20 +413,20 @@ Interactive Explorer for state-trends
     const statesToPlot = selectedStates.length ? selectedStates : [p.state];
     const rows = all.filter(r => r.abbr === statesToPlot[0]);
     const natRows = all.filter(r => r.abbr === 'NATIONAL');
-    const parseNum = v => v===''||v==null? null: +v;
-    const data = rows.map(r => ({year:+r.year, value: parseNum(r[yCol])})).filter(d=>d.value!=null);
-    const nat = (p.nat && yNatCol) ? natRows.map(r => ({year:+r.year, value: parseNum(r[yNatCol])})).filter(d=>d.value!=null) : [];
+    const parseNum = v => v === '' || v == null ? null : +v;
+    const data = rows.map(r => ({ year: +r.year, value: parseNum(r[yCol]) })).filter(d => d.value != null);
+    const nat = (p.nat && yNatCol) ? natRows.map(r => ({ year: +r.year, value: parseNum(r[yNatCol]) })).filter(d => d.value != null) : [];
 
     // Lookup by year for color rules
     const rowLookup = new Map(rows.map(r => [+r.year, r]));
 
     // Sort by year
-    data.sort((a,b)=>a.year-b.year);
-    nat.sort((a,b)=>a.year-b.year);
+    data.sort((a, b) => a.year - b.year);
+    nat.sort((a, b) => a.year - b.year);
 
     // Year range handling - compute start/end bounds before filtering
-    const minYear = d3.min(all, d=>+d.year);
-    const maxYear = d3.max(all, d=>+d.year);
+    const minYear = d3.min(all, d => +d.year);
+    const maxYear = d3.max(all, d => +d.year);
     let start = el.startYear.value ? +el.startYear.value : minYear;
     let end = el.endYear.value ? +el.endYear.value : maxYear;
     // If delta is enabled, omit the first available year (advance one 4-year cycle)
@@ -436,37 +436,37 @@ Interactive Explorer for state-trends
     let dataByState = {};
     statesToPlot.forEach(s => {
       const rowsS = all.filter(r => r.abbr === s);
-      const dS = rowsS.map(r => ({year:+r.year, value: parseNum(r[yCol])})).filter(d=>d.value!=null && d.year >= start && d.year <= end);
-      dS.sort((a,b)=>a.year-b.year);
+      const dS = rowsS.map(r => ({ year: +r.year, value: parseNum(r[yCol]) })).filter(d => d.value != null && d.year >= start && d.year <= end);
+      dS.sort((a, b) => a.year - b.year);
       dataByState[s] = dS;
     });
-    const years = Array.from(new Set([].concat(...Object.values(dataByState).map(arr => arr.map(d=>d.year))))).sort((a,b)=>a-b);
-    const innerW = (el.root.getBoundingClientRect().width||1100) - margin.left - margin.right;
+    const years = Array.from(new Set([].concat(...Object.values(dataByState).map(arr => arr.map(d => d.year))))).sort((a, b) => a - b);
+    const innerW = (el.root.getBoundingClientRect().width || 1100) - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
-  x.domain(years).range([0, innerW]);
-  // Align point/tick scale so ticks land at the center of each band
-  const band = x.bandwidth();
-  const tickStart = years.length ? (x(years[0]) + band / 2) : 0;
-  const tickEnd = years.length ? (x(years[years.length - 1]) + band / 2) : innerW;
-  xLine.domain(years).range([tickStart, tickEnd]);
+    x.domain(years).range([0, innerW]);
+    // Align point/tick scale so ticks land at the center of each band
+    const band = x.bandwidth();
+    const tickStart = years.length ? (x(years[0]) + band / 2) : 0;
+    const tickEnd = years.length ? (x(years[years.length - 1]) + band / 2) : innerW;
+    xLine.domain(years).range([tickStart, tickEnd]);
 
-  // compute filtered series for single and multi-state rendering
-  const dataFiltered = data.filter(d => d.year >= start && d.year <= end);
-  const natFiltered = nat.filter(d => d.year >= start && d.year <= end);
+    // compute filtered series for single and multi-state rendering
+    const dataFiltered = data.filter(d => d.year >= start && d.year <= end);
+    const natFiltered = nat.filter(d => d.year >= start && d.year <= end);
 
-  // Determine y domain from all visible series: all states being compared and national overlay
-  let visibleValues = [];
-  // include per-state values
-  Object.values(dataByState).forEach(arr => arr.forEach(d => visibleValues.push(d.value)));
-  // include national values if present
-  if (p.nat && yNatCol) natFiltered.forEach(d => visibleValues.push(d.value));
-  // fallback if nothing visible (avoid undefined domain)
-  if (!visibleValues.length) {
-    visibleValues = dataFiltered.length ? dataFiltered.map(d=>d.value) : (natFiltered.length ? natFiltered.map(d=>d.value) : [0]);
-  }
-  const yMin = d3.min(visibleValues);
-  const yMax = d3.max(visibleValues);
+    // Determine y domain from all visible series: all states being compared and national overlay
+    let visibleValues = [];
+    // include per-state values
+    Object.values(dataByState).forEach(arr => arr.forEach(d => visibleValues.push(d.value)));
+    // include national values if present
+    if (p.nat && yNatCol) natFiltered.forEach(d => visibleValues.push(d.value));
+    // fallback if nothing visible (avoid undefined domain)
+    if (!visibleValues.length) {
+      visibleValues = dataFiltered.length ? dataFiltered.map(d => d.value) : (natFiltered.length ? natFiltered.map(d => d.value) : [0]);
+    }
+    const yMin = d3.min(visibleValues);
+    const yMax = d3.max(visibleValues);
     let pad = (yMax - yMin) || 0.1;
     pad *= 0.15;
     y.domain([yMin - pad, yMax + pad]).nice().range([innerH, 0]);
@@ -499,12 +499,12 @@ Interactive Explorer for state-trends
       if (p.nat && yNatCol) legendItems.push('NATIONAL');
       const itemW = 120;
       legendG.attr('transform', `translate(${margin.left},8)`);
-      legendG.selectAll('g.leg').data(legendItems).join('g').attr('class','leg').each(function(d,i){
+      legendG.selectAll('g.leg').data(legendItems).join('g').attr('class', 'leg').each(function (d, i) {
         const gx = d3.select(this);
-        gx.attr('transform', `translate(${i*itemW},0)`);
+        gx.attr('transform', `translate(${i * itemW},0)`);
         gx.selectAll('*').remove();
-        gx.append('rect').attr('width',14).attr('height',10).attr('rx',2).attr('fill', d === 'NATIONAL' ? color.nat : d3.schemeTableau10[i % d3.schemeTableau10.length]);
-        gx.append('text').attr('x',18).attr('y',9).attr('fill', color.axis).attr('font-size',11).text(d);
+        gx.append('rect').attr('width', 14).attr('height', 10).attr('rx', 2).attr('fill', d === 'NATIONAL' ? color.nat : d3.schemeTableau10[i % d3.schemeTableau10.length]);
+        gx.append('text').attr('x', 18).attr('y', 9).attr('fill', color.axis).attr('font-size', 11).text(d);
       });
       statesToPlot.forEach((s, idx) => {
         const sd = dataByState[s];
@@ -514,7 +514,7 @@ Interactive Explorer for state-trends
         // draw line
         seriesG.append('path')
           .datum(sd)
-          .attr('fill','none')
+          .attr('fill', 'none')
           .attr('stroke', palette[idx % palette.length])
           .attr('stroke-width', 2)
           .attr('d', line);
@@ -523,10 +523,10 @@ Interactive Explorer for state-trends
           seriesG.selectAll(`circle.state-${s}`)
             .data(sd)
             .join('circle')
-            .attr('class',`state-${s}`)
+            .attr('class', `state-${s}`)
             .attr('r', 3.5)
-            .attr('cx', d=>xLine(d.year))
-            .attr('cy', d=>y(d.value))
+            .attr('cx', d => xLine(d.year))
+            .attr('cy', d => y(d.value))
             // color points by winner/special rule rather than the palette
             .attr('fill', d => {
               // Prefer explicit color from CSV row if present
@@ -534,16 +534,16 @@ Interactive Explorer for state-trends
               if (row && row.color) return row.color;
               return colorForBar(d, s, meta, rowLookupS);
             })
-            .on('mouseenter', (evt,d)=>showTip(evt, `${s} ${d.year}: ${fmt(d.value)}`))
+            .on('mouseenter', (evt, d) => showTip(evt, `${s} ${d.year}: ${fmt(d.value)}`))
             .on('mouseleave', hideTip);
         }
       });
 
-  // draw national if requested (single nat series overlay)
-  if (p.nat && yNatCol && natFiltered.length) {
+      // draw national if requested (single nat series overlay)
+      if (p.nat && yNatCol && natFiltered.length) {
         natG.append('path')
           .datum(natFiltered)
-          .attr('fill','none')
+          .attr('fill', 'none')
           .attr('stroke', color.nat)
           .attr('stroke-dasharray', '5 5')
           .attr('stroke-width', 2)
@@ -558,60 +558,60 @@ Interactive Explorer for state-trends
       legendG.selectAll('*').remove();
       const items = [p.state];
       if (p.nat && yNatCol) items.push('NATIONAL');
-      legendG.selectAll('g.leg').data(items).join('g').attr('class','leg').each(function(d,i){
+      legendG.selectAll('g.leg').data(items).join('g').attr('class', 'leg').each(function (d, i) {
         const gx = d3.select(this);
-        gx.attr('transform', `translate(${i*140},0)`);
+        gx.attr('transform', `translate(${i * 140},0)`);
         gx.selectAll('*').remove();
         const fill = d === 'NATIONAL' ? color.nat : color.state;
-        gx.append('rect').attr('width',14).attr('height',10).attr('rx',2).attr('fill', fill);
-        gx.append('text').attr('x',18).attr('y',9).attr('fill', color.axis).attr('font-size',11).text(d);
+        gx.append('rect').attr('width', 14).attr('height', 10).attr('rx', 2).attr('fill', fill);
+        gx.append('text').attr('x', 18).attr('y', 9).attr('fill', color.axis).attr('font-size', 11).text(d);
       });
       // State line
       seriesG.append('path')
         .datum(dataFiltered)
-        .attr('fill','none')
+        .attr('fill', 'none')
         .attr('stroke', color.state)
         .attr('stroke-width', 2)
         .attr('d', line);
 
-        if (el.points.checked) {
+      if (el.points.checked) {
         seriesG.selectAll('circle.state')
           .data(dataFiltered)
           .join('circle')
-          .attr('class','state')
+          .attr('class', 'state')
           .attr('r', 4)
-          .attr('cx', d=>xLine(d.year))
-          .attr('cy', d=>y(d.value))
+          .attr('cx', d => xLine(d.year))
+          .attr('cy', d => y(d.value))
           .attr('fill', d => {
             // Use CSV color if available (single-state line mode)
             const row = rowLookup.get(+d.year);
             if (row && row.color) return row.color;
-            return (d.year===1968 && SPECIAL_1968.has(p.state)) ? color.stateSpecial : (d.value >= 0 ? color.stateFillPos : color.stateFillNeg);
+            return (d.year === 1968 && SPECIAL_1968.has(p.state)) ? color.stateSpecial : (d.value >= 0 ? color.stateFillPos : color.stateFillNeg);
           })
-          .on('mouseenter', (evt,d)=>showTip(evt, `${d.year}: ${fmt(d.value)}`))
+          .on('mouseenter', (evt, d) => showTip(evt, `${d.year}: ${fmt(d.value)}`))
           .on('mouseleave', hideTip);
       }
 
       // National overlay
-      if (p.nat && yNatCol && natFiltered.length){
+      if (p.nat && yNatCol && natFiltered.length) {
         natG.append('path')
           .datum(natFiltered)
-          .attr('fill','none')
+          .attr('fill', 'none')
           .attr('stroke', color.nat)
           .attr('stroke-dasharray', '5 5')
           .attr('stroke-width', 2)
           .attr('d', line);
 
-          if (el.points.checked) {
+        if (el.points.checked) {
           natG.selectAll('circle.nat')
             .data(natFiltered)
             .join('circle')
-            .attr('class','nat')
+            .attr('class', 'nat')
             .attr('r', 3.5)
-            .attr('cx', d=>xLine(d.year))
-            .attr('cy', d=>y(d.value))
+            .attr('cx', d => xLine(d.year))
+            .attr('cy', d => y(d.value))
             .attr('fill', d => meta.delta ? (d.value >= 0 ? color.natFillPos : color.natFillNeg) : color.nat)
-            .on('mouseenter', (evt,d)=>showTip(evt, `Nat ${d.year}: ${fmt(d.value)}`))
+            .on('mouseenter', (evt, d) => showTip(evt, `Nat ${d.year}: ${fmt(d.value)}`))
             .on('mouseleave', hideTip);
         }
       }
@@ -623,78 +623,78 @@ Interactive Explorer for state-trends
       const stateW = Math.max(6, Math.min(28, bandWidth * 0.6));
       const natW = Math.max(6, Math.min(20, bandWidth * 0.35));
 
-  // If nat not present, center the state bar in the band. If nat present,
-  // center the state bar and draw a narrower national bar on top that
-  // slightly overlaps the state bar (nat drawn last so it appears above).
-  const centerStateX = d => x(d.year) + (bandWidth - stateW) / 2;
-  const centerNatX = d => x(d.year) + (bandWidth - natW) / 2;
-  // overlap shift moves the nat bar toward the state bar center so they overlap
-  // Small fixed overlap to match prior subtle overlap behaviour
-    const overlapShift = 3; // subtle overlap shift for national bar overlay
-  const stateX = d => !(p.nat && yNatCol && nat.length) ? centerStateX(d) : centerStateX(d);
-  const natX = d => centerNatX(d) - overlapShift;
+      // If nat not present, center the state bar in the band. If nat present,
+      // center the state bar and draw a narrower national bar on top that
+      // slightly overlaps the state bar (nat drawn last so it appears above).
+      const centerStateX = d => x(d.year) + (bandWidth - stateW) / 2;
+      const centerNatX = d => x(d.year) + (bandWidth - natW) / 2;
+      // overlap shift moves the nat bar toward the state bar center so they overlap
+      // Small fixed overlap to match prior subtle overlap behaviour
+      const overlapShift = 3; // subtle overlap shift for national bar overlay
+      const stateX = d => !(p.nat && yNatCol && nat.length) ? centerStateX(d) : centerStateX(d);
+      const natX = d => centerNatX(d) - overlapShift;
 
       seriesG.selectAll('rect.state')
         .data(data)
         .join('rect')
-        .attr('class','state')
-        .attr('x', d=> stateX(d))
+        .attr('class', 'state')
+        .attr('x', d => stateX(d))
         .attr('width', stateW)
-        .attr('y', d=>Math.min(y(0), y(d.value)))
-        .attr('height', d=>Math.abs(y(d.value) - y(0)))
-        .attr('fill', d=> {
+        .attr('y', d => Math.min(y(0), y(d.value)))
+        .attr('height', d => Math.abs(y(d.value) - y(0)))
+        .attr('fill', d => {
           // For bar charts, use CSV color if present for that year/row
           const row = rowLookup.get(+d.year);
           if (row && row.color) return row.color;
           return colorForBar(d, p.state, meta, rowLookup);
         })
-        .on('mouseenter', (evt,d)=>showTip(evt, `${d.year}: ${fmt(d.value)}`))
+        .on('mouseenter', (evt, d) => showTip(evt, `${d.year}: ${fmt(d.value)}`))
         .on('mouseleave', hideTip);
 
-      if (p.nat && yNatCol && natFiltered.length){
+      if (p.nat && yNatCol && natFiltered.length) {
         natG.selectAll('rect.nat')
           .data(natFiltered)
           .join('rect')
-          .attr('class','nat')
-          .attr('x', d=> natX(d))
+          .attr('class', 'nat')
+          .attr('x', d => natX(d))
           .attr('width', natW)
-          .attr('y', d=>Math.min(y(0), y(d.value)))
-          .attr('height', d=>Math.abs(y(d.value) - y(0)))
-          .attr('fill', d=> {
+          .attr('y', d => Math.min(y(0), y(d.value)))
+          .attr('height', d => Math.abs(y(d.value) - y(0)))
+          .attr('fill', d => {
             // For national delta bars, color by sign but in lighter nat shades
             if (meta.delta) return d.value >= 0 ? color.natFillPos : color.natFillNeg;
             return color.nat;
           })
           .attr('opacity', 0.9)
-          .on('mouseenter', (evt,d)=>showTip(evt, `Nat ${d.year}: ${fmt(d.value)}`))
+          .on('mouseenter', (evt, d) => showTip(evt, `Nat ${d.year}: ${fmt(d.value)}`))
           .on('mouseleave', hideTip);
       }
     }
   }
 
-  function showTip(evt, html){
-    tip.style('opacity', 1).style('transform','translateY(0)')
-       .html(html)
-       .style('left', (evt.clientX + 12) + 'px')
-       .style('top', (evt.clientY + 12) + 'px');
+  function showTip(evt, html) {
+    tip.style('opacity', 1).style('transform', 'translateY(0)')
+      .html(html)
+      .style('left', (evt.clientX + 12) + 'px')
+      .style('top', (evt.clientY + 12) + 'px');
   }
-  function hideTip(){
-    tip.style('opacity', 0).style('transform','translateY(-6px)');
+  function hideTip() {
+    tip.style('opacity', 0).style('transform', 'translateY(-6px)');
   }
 
   // Load data
   d3.csv(csvPath, d3.autoType).then(rows => {
     window.__data = rows;
-    const states = Array.from(new Set(rows.map(r=>r.abbr)));
+    const states = Array.from(new Set(rows.map(r => r.abbr)));
     initControls(states);
     // Initialize year inputs to full available range
     try {
-      const years = rows.map(r=>+r.year).filter(Boolean);
+      const years = rows.map(r => +r.year).filter(Boolean);
       const minYear = Math.min(...years);
       const maxYear = Math.max(...years);
       if (!el.startYear.value) el.startYear.value = String(minYear);
       if (!el.endYear.value) el.endYear.value = String(maxYear);
-    } catch(e) {}
+    } catch (e) { }
     resize();
     render();
   }).catch(err => {

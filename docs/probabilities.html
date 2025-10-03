@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,156 +8,176 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.svg" />
 </head>
+
 <body>
     <div class="container">
-        <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px"><button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false"><span></span><span></span><span></span></button><div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn" href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a><a class="btn" href="./attributions.html">Attributions</a></div><div class="legend">2028 Interactive Probabilities</div><script src="./header-toggle.js"></script></div>
-    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-      <a class="back" href="./index.html">← Back to Map</a>
-      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-    </div><div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back" href="./index.html">← Back to Map...</span>...</div>
-            <div class="legend">2028 Interactive Probabilities</div>
+        <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
+            <button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu"
+                aria-expanded="false"><span></span><span></span><span></span></button>
+            <div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn"
+                    href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a
+                    class="btn" href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend
+                    Viewer</a><a class="btn" href="./future.html">"""Future"""</a><a class="btn"
+                    href="./methods.html">Methods</a><a class="btn" href="./presidential_margins.html">Data (CSV)</a><a
+                    class="btn" href="./attributions.html">Attributions</a></div>
             <script src="./header-toggle.js"></script>
-        
-
-
-<footer>
-  Site by eigentaylor.<br />
-  Please report any inaccuracies to me through discord: eigentaylor.<br />
-  Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>.<br />
-  Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0). <span data-last-updated>Last updated: ...</span>
-</footer>
-</div>
-
-        <div class="header">
-            <h1>2028 Election Probabilities</h1>
-            <span class="legend">Click states to set safe/lean/toss-up priors. The Bayesian engine updates national swing, state probabilities, and EV odds instantly.</span>
         </div>
+        <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+            <a class="back" href="./index.html">← Back to Map</a>
+            <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
+        </div>
+        <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back"
+                href="./index.html">← Back to Map...</span>...</div>
+        <div class="legend">2028 Interactive Probabilities</div>
+        <script src="./header-toggle.js"></script>
 
-        <div class="card">
-            <div id="map-wrap" class="center">
-                <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="2028 interactive probability map"></svg>
-                <div id="mapTip" style="display:none"></div>
+
+
+
+    </div>
+
+    <div class="header">
+        <h1>2028 Election Probabilities</h1>
+        <span class="legend">Click states to set safe/lean/toss-up priors. The Bayesian engine updates national swing,
+            state probabilities, and EV odds instantly.</span>
+    </div>
+
+    <div class="card">
+        <div id="map-wrap" class="center">
+            <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="2028 interactive probability map"></svg>
+            <div id="mapTip" style="display:none"></div>
+        </div>
+        <div class="legend" style="margin-top:10px">Click to cycle lean→safe for each party; shift-click to reset to
+            tossup. ME &amp; NE districts are clickable.</div>
+    </div>
+
+    <div class="card possibilities-controls">
+        <div class="legend" style="margin-bottom:10px">Start from a generous tossup baseline. Your picks act as priors
+            that shift the national swing and correlated state deltas.</div>
+        <div class="control-row" style="flex-wrap:wrap;gap:12px">
+            <button id="resetStates" class="btn">Reset to baseline</button>
+            <button id="clearManualStates" class="btn">Clear manual picks</button>
+            <label class="legend" style="display:flex;align-items:center;gap:8px">Auto threshold
+                <input id="autoThreshold" type="range" min="50" max="90" value="70" step="2" />
+                <span id="autoThresholdValue" style="font-weight:700">70%</span>
+            </label>
+            <span class="legend">States with Dem probability above this threshold become lean blue (and similarly for
+                GOP).</span>
+        </div>
+    </div>
+
+    <div class="card probabilities-summary">
+        <div class="legend" style="margin-bottom:12px">Posterior summary after applying your inputs:</div>
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="label">Expected Dem EV</div>
+                <div class="value"><span id="expDemEV">0</span></div>
+                <div class="note">Across posterior draws</div>
             </div>
-            <div class="legend" style="margin-top:10px">Click to cycle lean→safe for each party; shift-click to reset to tossup. ME &amp; NE districts are clickable.</div>
-        </div>
-
-        <div class="card possibilities-controls">
-            <div class="legend" style="margin-bottom:10px">Start from a generous tossup baseline. Your picks act as priors that shift the national swing and correlated state deltas.</div>
-            <div class="control-row" style="flex-wrap:wrap;gap:12px">
-                <button id="resetStates" class="btn">Reset to baseline</button>
-                <button id="clearManualStates" class="btn">Clear manual picks</button>
-                <label class="legend" style="display:flex;align-items:center;gap:8px">Auto threshold
-                    <input id="autoThreshold" type="range" min="50" max="90" value="70" step="2" />
-                    <span id="autoThresholdValue" style="font-weight:700">70%</span>
-                </label>
-                <span class="legend">States with Dem probability above this threshold become lean blue (and similarly for GOP).</span>
+            <div class="summary-card">
+                <div class="label">Expected GOP EV</div>
+                <div class="value"><span id="expGopEV">0</span></div>
+                <div class="note">Across posterior draws</div>
             </div>
-        </div>
-
-        <div class="card probabilities-summary">
-            <div class="legend" style="margin-bottom:12px">Posterior summary after applying your inputs:</div>
-            <div class="summary-grid">
-                <div class="summary-card">
-                    <div class="label">Expected Dem EV</div>
-                    <div class="value"><span id="expDemEV">0</span></div>
-                    <div class="note">Across posterior draws</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Expected GOP EV</div>
-                    <div class="value"><span id="expGopEV">0</span></div>
-                    <div class="note">Across posterior draws</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Dem win chance</div>
-                    <div class="value"><span id="probDemWin">0%</span></div>
-                    <div class="note">Pr(EV ≥ 270)</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">GOP win chance</div>
-                    <div class="value"><span id="probGopWin">0%</span></div>
-                    <div class="note">Pr(EV ≥ 270)</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">269-269 tie</div>
-                    <div class="value"><span id="probTie">0%</span></div>
-                    <div class="note">Posterior probability</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Nat PV mean</div>
-                    <div class="value"><span id="natMean">0%</span></div>
-                    <div class="note">Relative margin</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Nat PV (68%)</div>
-                    <div class="value"><span id="natRange68">0% – 0%</span></div>
-                    <div class="note">Credible interval</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Nat PV (95%)</div>
-                    <div class="value"><span id="natRange95">0% – 0%</span></div>
-                    <div class="note">Credible interval</div>
-                </div>
+            <div class="summary-card">
+                <div class="label">Dem win chance</div>
+                <div class="value"><span id="probDemWin">0%</span></div>
+                <div class="note">Pr(EV ≥ 270)</div>
             </div>
-            <div class="legend" style="margin-top:12px">Posterior generated from 4,096 correlated draws of state deltas + a national swing.</div>
-        </div>
-
-        <div class="card possibilities-summary">
-            <div class="legend" style="margin-bottom:10px">Auto-classified buckets (manual picks are locked to your selections):</div>
-            <div class="summary-grid">
-                <div class="summary-card">
-                    <div class="label">Safe D</div>
-                    <div class="value"><span id="bucketSafeD">0</span> EV</div>
-                    <div class="note"><span id="bucketSafeDCount">0</span> units</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Lean D</div>
-                    <div class="value"><span id="bucketLeanD">0</span> EV</div>
-                    <div class="note"><span id="bucketLeanDCount">0</span> units</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Toss-up</div>
-                    <div class="value"><span id="bucketToss">0</span> EV</div>
-                    <div class="note"><span id="bucketTossCount">0</span> units</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Lean R</div>
-                    <div class="value"><span id="bucketLeanR">0</span> EV</div>
-                    <div class="note"><span id="bucketLeanRCount">0</span> units</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Safe R</div>
-                    <div class="value"><span id="bucketSafeR">0</span> EV</div>
-                    <div class="note"><span id="bucketSafeRCount">0</span> units</div>
-                </div>
+            <div class="summary-card">
+                <div class="label">GOP win chance</div>
+                <div class="value"><span id="probGopWin">0%</span></div>
+                <div class="note">Pr(EV ≥ 270)</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">269-269 tie</div>
+                <div class="value"><span id="probTie">0%</span></div>
+                <div class="note">Posterior probability</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Nat PV mean</div>
+                <div class="value"><span id="natMean">0%</span></div>
+                <div class="note">Relative margin</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Nat PV (68%)</div>
+                <div class="value"><span id="natRange68">0% – 0%</span></div>
+                <div class="note">Credible interval</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Nat PV (95%)</div>
+                <div class="value"><span id="natRange95">0% – 0%</span></div>
+                <div class="note">Credible interval</div>
             </div>
         </div>
+        <div class="legend" style="margin-top:12px">Posterior generated from 4,096 correlated draws of state deltas + a
+            national swing.</div>
+    </div>
 
-        <div class="card">
-            <h2 style="margin-top:0">Key Battlegrounds</h2>
-            <div class="legend">Closest units by posterior probability (EV-weighted). Manual picks remain highlighted with "★".</div>
-            <table class="prob-table">
-                <thead>
-                    <tr>
-                        <th>Unit</th>
-                        <th>EV</th>
-                        <th>2024 margin</th>
-                        <th>Dem prob</th>
-                        <th>Manual?</th>
-                    </tr>
-                </thead>
-                <tbody id="probTableBody"></tbody>
-            </table>
+    <div class="card possibilities-summary">
+        <div class="legend" style="margin-bottom:10px">Auto-classified buckets (manual picks are locked to your
+            selections):</div>
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="label">Safe D</div>
+                <div class="value"><span id="bucketSafeD">0</span> EV</div>
+                <div class="note"><span id="bucketSafeDCount">0</span> units</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Lean D</div>
+                <div class="value"><span id="bucketLeanD">0</span> EV</div>
+                <div class="note"><span id="bucketLeanDCount">0</span> units</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Toss-up</div>
+                <div class="value"><span id="bucketToss">0</span> EV</div>
+                <div class="note"><span id="bucketTossCount">0</span> units</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Lean R</div>
+                <div class="value"><span id="bucketLeanR">0</span> EV</div>
+                <div class="note"><span id="bucketLeanRCount">0</span> units</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Safe R</div>
+                <div class="value"><span id="bucketSafeR">0</span> EV</div>
+                <div class="note"><span id="bucketSafeRCount">0</span> units</div>
+            </div>
         </div>
+    </div>
 
+    <div class="card">
+        <h2 style="margin-top:0">Key Battlegrounds</h2>
+        <div class="legend">Closest units by posterior probability (EV-weighted). Manual picks remain highlighted with
+            "★".</div>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>EV</th>
+                    <th>2024 margin</th>
+                    <th>Dem prob</th>
+                    <th>Manual?</th>
+                </tr>
+            </thead>
+            <tbody id="probTableBody"></tbody>
+        </table>
+    </div>
+
+    <footer>Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />
+        Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank'
+            rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License
+        (CC BY-SA 4.0).
+
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+        <script src="utils/electionMap.js"></script>
+        <script src="probabilities.js"></script>
         <footer>Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />
-Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).
-
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
-    <script src="utils/electionMap.js"></script>
-    <script src="probabilities.js"></script>
-<footer>Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />
-Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0).
-<script src="./last-updated.js"></script>
+            Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank'
+                rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike
+            License (CC BY-SA 4.0).
+            <script src="./last-updated.js"></script>
 </body>
+
 </html>

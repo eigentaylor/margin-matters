@@ -1,5 +1,5 @@
-(function(){
-	const STATUS_SEQUENCE = ['dem','tossup','rep'];
+(function () {
+	const STATUS_SEQUENCE = ['dem', 'tossup', 'rep'];
 	const COLORS = {
 		demSafe: '#4169E1',
 		demLean: '#87CEFA',
@@ -9,17 +9,17 @@
 	};
 
 	const STATE_NAMES = {
-		AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California', CO:'Colorado', CT:'Connecticut',
-		DE:'Delaware', FL:'Florida', GA:'Georgia', HI:'Hawaii', ID:'Idaho', IL:'Illinois', IN:'Indiana', IA:'Iowa',
-		KS:'Kansas', KY:'Kentucky', LA:'Louisiana', ME:'Maine', MD:'Maryland', MA:'Massachusetts', MI:'Michigan',
-		MN:'Minnesota', MS:'Mississippi', MO:'Missouri', MT:'Montana', NE:'Nebraska', NV:'Nevada', NH:'New Hampshire',
-		NJ:'New Jersey', NM:'New Mexico', NY:'New York', NC:'North Carolina', ND:'North Dakota', OH:'Ohio', OK:'Oklahoma',
-		OR:'Oregon', PA:'Pennsylvania', RI:'Rhode Island', SC:'South Carolina', SD:'South Dakota', TN:'Tennessee', TX:'Texas',
-		UT:'Utah', VT:'Vermont', VA:'Virginia', WA:'Washington', WV:'West Virginia', WI:'Wisconsin', WY:'Wyoming', DC:'District of Columbia'
+		AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut',
+		DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
+		KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan',
+		MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire',
+		NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma',
+		OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas',
+		UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming', DC: 'District of Columbia'
 	};
 
 	const FIPS_TO_ABBR = {
-		'01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT','10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL','18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD','25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE','32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND','39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD','47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV','55':'WI','56':'WY'
+		'01': 'AL', '02': 'AK', '04': 'AZ', '05': 'AR', '06': 'CA', '08': 'CO', '09': 'CT', '10': 'DE', '11': 'DC', '12': 'FL', '13': 'GA', '15': 'HI', '16': 'ID', '17': 'IL', '18': 'IN', '19': 'IA', '20': 'KS', '21': 'KY', '22': 'LA', '23': 'ME', '24': 'MD', '25': 'MA', '26': 'MI', '27': 'MN', '28': 'MS', '29': 'MO', '30': 'MT', '31': 'NE', '32': 'NV', '33': 'NH', '34': 'NJ', '35': 'NM', '36': 'NY', '37': 'NC', '38': 'ND', '39': 'OH', '40': 'OK', '41': 'OR', '42': 'PA', '44': 'RI', '45': 'SC', '46': 'SD', '47': 'TN', '48': 'TX', '49': 'UT', '50': 'VT', '51': 'VA', '53': 'WA', '54': 'WV', '55': 'WI', '56': 'WY'
 	};
 
 	// State-level store (for labels, summaries) and unit-level store for ME/NE districts
@@ -33,9 +33,9 @@
 	// Enumeration guardrails
 	const ENUMERATION_LIMIT = 16; // max tossup units to fully enumerate (2^16 = 65,536)
 	const HARD_ENUMERATION_CAP = 18; // absolute hard cap (2^18=262k) for on-page attempt
-	let lastEnumerated = { key:null, data:null }; // memoization
+	let lastEnumerated = { key: null, data: null }; // memoization
 
-	function encodeScenario(){
+	function encodeScenario() {
 		try {
 			const pieces = [];
 			const used = new Set();
@@ -49,88 +49,88 @@
 			});
 			pieces.sort();
 			const raw = pieces.join('|');
-			const b64 = btoa(unescape(encodeURIComponent(raw))).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
-			const th = Math.round(currentThreshold*100);
+			const b64 = btoa(unescape(encodeURIComponent(raw))).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+			const th = Math.round(currentThreshold * 100);
 			const sp = new URLSearchParams(location.search);
 			sp.set('th', th.toString());
 			sp.set('m', b64);
 			const newUrl = `${location.pathname}?${sp.toString()}`;
 			return newUrl;
-		} catch(e) { }
+		} catch (e) { }
 		return location.href;
 	}
 
-	function statusSymbol(obj){
+	function statusSymbol(obj) {
 		if (obj.status === 'tossup') return 'T';
 		if (obj.status === 'dem') return obj.strength === 'safe' ? 'DS' : 'DL';
 		if (obj.status === 'rep') return obj.strength === 'safe' ? 'RS' : 'RL';
 		return 'T';
 	}
 
-	function applySymbol(target, symbol){
+	function applySymbol(target, symbol) {
 		if (!target) return;
-		if (symbol === 'T'){ target.status='tossup'; target.strength='tossup'; target.manual=true; return; }
+		if (symbol === 'T') { target.status = 'tossup'; target.strength = 'tossup'; target.manual = true; return; }
 		const party = symbol[0];
 		const strengthCode = symbol[1];
-		if (party === 'D'){ target.status='dem'; target.strength = (strengthCode==='S')? 'safe':'lean'; }
-		else if (party === 'R'){ target.status='rep'; target.strength = (strengthCode==='S')? 'safe':'lean'; }
+		if (party === 'D') { target.status = 'dem'; target.strength = (strengthCode === 'S') ? 'safe' : 'lean'; }
+		else if (party === 'R') { target.status = 'rep'; target.strength = (strengthCode === 'S') ? 'safe' : 'lean'; }
 		try {
 			if (target.baseStatus != null && target.baseStrength != null) {
 				target.manual = (target.status !== target.baseStatus) || (target.strength !== target.baseStrength);
 			} else {
 				target.manual = true;
 			}
-		} catch(e){ target.manual = true; }
+		} catch (e) { target.manual = true; }
 	}
 
-	function decodeScenarioFromURL(){
+	function decodeScenarioFromURL() {
 		try {
 			const sp = new URLSearchParams(location.search);
 			const thStr = sp.get('th');
-			if (thStr){ const val = parseInt(thStr,10); if (isFinite(val)) currentThreshold = val/100; }
+			if (thStr) { const val = parseInt(thStr, 10); if (isFinite(val)) currentThreshold = val / 100; }
 			const enc = sp.get('m');
 			if (!enc) return;
-			let raw = enc.replace(/-/g,'+').replace(/_/g,'/');
-			while (raw.length %4) raw += '=';
+			let raw = enc.replace(/-/g, '+').replace(/_/g, '/');
+			while (raw.length % 4) raw += '=';
 			const decoded = decodeURIComponent(escape(atob(raw)));
 			const parts = decoded.split('|');
 			parts.forEach(p => {
-				const [id,sym] = p.split(':');
+				const [id, sym] = p.split(':');
 				if (!id || !sym) return;
 				if (unitStore.has(id)) applySymbol(unitStore.get(id), sym);
 				else if (stateStore.has(id)) applySymbol(stateStore.get(id), sym);
 			});
-		} catch(e){ }
+		} catch (e) { }
 	}
 
-	function buildShareURL(){
+	function buildShareURL() {
 		try { return encodeScenario(); }
-		catch(e){ return location.href; }
+		catch (e) { return location.href; }
 	}
 
-	function refreshURL(){ }
+	function refreshURL() { }
 
 	const mapWrap = () => document.getElementById('map-wrap');
 	const mapTip = () => document.getElementById('mapTip');
 
-	function formatNumber(x){ if (x == null || !isFinite(x)) return '0'; return Math.round(x).toLocaleString('en-US'); }
-	function formatPercent(x){ if (!isFinite(x)) return '0%'; return (x * 100).toFixed(1) + '%'; }
-	function formatMargin(x){ if (!isFinite(x)) return ''; if (Math.abs(x) < 1e-4) return 'EVEN'; const pct = (Math.abs(x) * 100).toFixed(1); return (x > 0 ? 'D+' : 'R+') + pct; }
+	function formatNumber(x) { if (x == null || !isFinite(x)) return '0'; return Math.round(x).toLocaleString('en-US'); }
+	function formatPercent(x) { if (!isFinite(x)) return '0%'; return (x * 100).toFixed(1) + '%'; }
+	function formatMargin(x) { if (!isFinite(x)) return ''; if (Math.abs(x) < 1e-4) return 'EVEN'; const pct = (Math.abs(x) * 100).toFixed(1); return (x > 0 ? 'D+' : 'R+') + pct; }
 
-	function describeStatus(state){ if (!state) return ''; if (state.status === 'tossup') return 'Toss-up'; const label = state.strength === 'safe' ? 'Safe' : 'Lean'; const party = state.status === 'dem' ? 'D' : 'R'; return `${label} ${party}`; }
+	function describeStatus(state) { if (!state) return ''; if (state.status === 'tossup') return 'Toss-up'; const label = state.strength === 'safe' ? 'Safe' : 'Lean'; const party = state.status === 'dem' ? 'D' : 'R'; return `${label} ${party}`; }
 
-	function colorForState(state){ if (!state) return '#2f2f2f'; if (state.status === 'tossup') return COLORS.tossup; if (state.status === 'dem') return state.strength === 'safe' ? COLORS.demSafe : COLORS.demLean; return state.strength === 'safe' ? COLORS.repSafe : COLORS.repLean; }
+	function colorForState(state) { if (!state) return '#2f2f2f'; if (state.status === 'tossup') return COLORS.tossup; if (state.status === 'dem') return state.strength === 'safe' ? COLORS.demSafe : COLORS.demLean; return state.strength === 'safe' ? COLORS.repSafe : COLORS.repLean; }
 
-	function setText(id, value){ const el = document.getElementById(id); if (el) el.textContent = value; }
+	function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
 
-	function classifyMargin(margin, threshold){ if (!isFinite(margin)) return { status:'tossup', strength:'tossup' }; const abs = Math.abs(margin); if (abs < tossupBand) return { status:'tossup', strength:'tossup' }; const status = margin >= 0 ? 'dem' : 'rep'; const strength = abs >= threshold ? 'safe' : 'lean'; return { status, strength }; }
+	function classifyMargin(margin, threshold) { if (!isFinite(margin)) return { status: 'tossup', strength: 'tossup' }; const abs = Math.abs(margin); if (abs < tossupBand) return { status: 'tossup', strength: 'tossup' }; const status = margin >= 0 ? 'dem' : 'rep'; const strength = abs >= threshold ? 'safe' : 'lean'; return { status, strength }; }
 
-	function updateStateColor(code){ const state = stateStore.get(code); if (state && window.ElectionMap) { window.ElectionMap.setStateFill(code, colorForState(state)); } }
-	function updateUnitColor(unit){ const u = unitStore.get(unit); if (!u || !window.ElectionMap) return; window.ElectionMap.setDistrictFill(unit, colorForState(u)); }
-	function updateAllStateColors(){ stateStore.forEach((_, code) => updateStateColor(code)); }
+	function updateStateColor(code) { const state = stateStore.get(code); if (state && window.ElectionMap) { window.ElectionMap.setStateFill(code, colorForState(state)); } }
+	function updateUnitColor(unit) { const u = unitStore.get(unit); if (!u || !window.ElectionMap) return; window.ElectionMap.setDistrictFill(unit, colorForState(u)); }
+	function updateAllStateColors() { stateStore.forEach((_, code) => updateStateColor(code)); }
 
-	function computePathCounts(demEV, repEV, tossups){
-		if (!Array.isArray(tossups) || tossups.length === 0){
+	function computePathCounts(demEV, repEV, tossups) {
+		if (!Array.isArray(tossups) || tossups.length === 0) {
 			return { demWins: demEV >= 270 ? 1 : 0, repWins: repEV >= 270 ? 1 : 0, ties: (demEV === 269 && repEV === 269) ? 1 : 0, total: 1, demPct: demEV >= 270 ? 1 : 0, repPct: repEV >= 270 ? 1 : 0 };
 		}
 		let dp = new Map(); dp.set(0, 1);
@@ -140,78 +140,82 @@
 		dp.forEach((count, sum) => {
 			const demTotal = demEV + sum;
 			const repTotal = repEV + (tossupTotal - sum);
-			if (demTotal >= 270 && repTotal < 270){ demWins += count; }
-			else if (repTotal >= 270 && demTotal < 270){ repWins += count; }
-			else if (demTotal === 269 && repTotal === 269){ ties += count; }
-			else if (demTotal >= 270 && repTotal >= 270){ if (demTotal > repTotal) demWins += count; else if (repTotal > demTotal) repWins += count; else ties += count; }
+			if (demTotal >= 270 && repTotal < 270) { demWins += count; }
+			else if (repTotal >= 270 && demTotal < 270) { repWins += count; }
+			else if (demTotal === 269 && repTotal === 269) { ties += count; }
+			else if (demTotal >= 270 && repTotal >= 270) { if (demTotal > repTotal) demWins += count; else if (repTotal > demTotal) repWins += count; else ties += count; }
 			else { if (demTotal > repTotal) demWins += count; else if (repTotal > demTotal) repWins += count; else ties += count; }
 		});
 		const totalCombos = Math.pow(2, tossups.length);
 		return { demWins, repWins, ties, total: totalCombos, demPct: totalCombos ? (demWins / totalCombos) : 0, repPct: totalCombos ? (repWins / totalCombos) : 0 };
 	}
 
-	function updateSummary(){
-		let demEV = 0, repEV = 0, contestableEV = 0; const contestables = []; const statesWithUnits = new Set(); unitStore.forEach(u => statesWithUnits.add(u.state)); const buckets = { safeD:[], leanD:[], tossup:[], leanR:[], safeR:[] };
+	function updateSummary() {
+		let demEV = 0, repEV = 0, contestableEV = 0; const contestables = []; const statesWithUnits = new Set(); unitStore.forEach(u => statesWithUnits.add(u.state)); const buckets = { safeD: [], leanD: [], tossup: [], leanR: [], safeR: [] };
 		stateStore.forEach(state => {
-			if (statesWithUnits.has(state.state)) { (state.units||[]).forEach(u => { const uu = unitStore.get(u.unit); if(!uu) return; if (uu.status==='dem' && uu.strength==='safe') { demEV += uu.ev; buckets.safeD.push(uu); } else if (uu.status==='rep' && uu.strength==='safe') { repEV += uu.ev; buckets.safeR.push(uu); } else if (uu.status==='dem' && uu.strength!=='safe') { contestableEV += uu.ev; buckets.leanD.push(uu); contestables.push(uu); } else if (uu.status==='rep' && uu.strength!=='safe') { contestableEV += uu.ev; buckets.leanR.push(uu); contestables.push(uu); } else { contestableEV += uu.ev; buckets.tossup.push(uu); contestables.push(uu); } }); }
-			else { if (state.status==='dem' && state.strength==='safe') { demEV += state.ev; buckets.safeD.push(state); } else if (state.status==='rep' && state.strength==='safe') { repEV += state.ev; buckets.safeR.push(state); } else if (state.status==='dem' && state.strength!=='safe') { const norm=Object.assign({unit:state.state}, state); contestableEV += state.ev; buckets.leanD.push(state); contestables.push(norm); } else if (state.status==='rep' && state.strength!=='safe') { const norm=Object.assign({unit:state.state}, state); contestableEV += state.ev; buckets.leanR.push(state); contestables.push(norm); } else { const norm=Object.assign({unit:state.state}, state); contestableEV += state.ev; buckets.tossup.push(state); contestables.push(norm); } }
+			if (statesWithUnits.has(state.state)) { (state.units || []).forEach(u => { const uu = unitStore.get(u.unit); if (!uu) return; if (uu.status === 'dem' && uu.strength === 'safe') { demEV += uu.ev; buckets.safeD.push(uu); } else if (uu.status === 'rep' && uu.strength === 'safe') { repEV += uu.ev; buckets.safeR.push(uu); } else if (uu.status === 'dem' && uu.strength !== 'safe') { contestableEV += uu.ev; buckets.leanD.push(uu); contestables.push(uu); } else if (uu.status === 'rep' && uu.strength !== 'safe') { contestableEV += uu.ev; buckets.leanR.push(uu); contestables.push(uu); } else { contestableEV += uu.ev; buckets.tossup.push(uu); contestables.push(uu); } }); }
+			else { if (state.status === 'dem' && state.strength === 'safe') { demEV += state.ev; buckets.safeD.push(state); } else if (state.status === 'rep' && state.strength === 'safe') { repEV += state.ev; buckets.safeR.push(state); } else if (state.status === 'dem' && state.strength !== 'safe') { const norm = Object.assign({ unit: state.state }, state); contestableEV += state.ev; buckets.leanD.push(state); contestables.push(norm); } else if (state.status === 'rep' && state.strength !== 'safe') { const norm = Object.assign({ unit: state.state }, state); contestableEV += state.ev; buckets.leanR.push(state); contestables.push(norm); } else { const norm = Object.assign({ unit: state.state }, state); contestableEV += state.ev; buckets.tossup.push(state); contestables.push(norm); } }
 		});
-		try { console.debug('[paths2028] contestables:', contestables.map(c=>({id:c.unit||c.state, ev:c.ev, status:c.status, strength:c.strength}))); } catch(e){}
+		try { console.debug('[paths2028] contestables:', contestables.map(c => ({ id: c.unit || c.state, ev: c.ev, status: c.status, strength: c.strength }))); } catch (e) { }
 		const demNeed = Math.max(0, 270 - demEV); const repNeed = Math.max(0, 270 - repEV);
 		const safeDEv = (buckets.safeD || []).reduce((acc, s) => acc + (s.ev || 0), 0); const leanDEv = (buckets.leanD || []).reduce((acc, s) => acc + (s.ev || 0), 0); if (leanDEv > 0) setText('demEV', `${formatNumber(safeDEv)} EV (${formatNumber(safeDEv + leanDEv)} EV lean)`); else setText('demEV', `${formatNumber(safeDEv)} EV`);
 		const safeREv = (buckets.safeR || []).reduce((acc, s) => acc + (s.ev || 0), 0); const leanREv = (buckets.leanR || []).reduce((acc, s) => acc + (s.ev || 0), 0); if (leanREv > 0) setText('repEV', `${formatNumber(safeREv)} EV (${formatNumber(safeREv + leanREv)} EV lean)`); else setText('repEV', `${formatNumber(safeREv)} EV`);
 		setText('contestableEV', formatNumber(contestableEV)); setText('demNeed', formatNumber(demNeed)); setText('repNeed', formatNumber(repNeed)); setText('contestableCount', contestables.length.toString());
-		const categoryConfig = [ { key:'safeD', evId:'cat-safeD-ev', countId:'cat-safeD-count', listId:'cat-safeD-list' }, { key:'leanD', evId:'cat-leanD-ev', countId:'cat-leanD-count', listId:'cat-leanD-list' }, { key:'tossup', evId:'cat-contestable-ev', countId:'cat-contestable-count', listId:'cat-contestable-list' }, { key:'leanR', evId:'cat-leanR-ev', countId:'cat-leanR-count', listId:'cat-leanR-list' }, { key:'safeR', evId:'cat-safeR-ev', countId:'cat-safeR-count', listId:'cat-safeR-list' } ];
-		categoryConfig.forEach(cfg => { const list = buckets[cfg.key] || []; const sum = list.reduce((acc, st) => acc + (st.ev || 0), 0); setText(cfg.evId, formatNumber(sum)); setText(cfg.countId, list.length.toString()); if (cfg.listId){ const el = document.getElementById(cfg.listId); if (el) { const abbrs = list.map(item => (item.unit ? item.unit : item.state)).sort(); el.textContent = abbrs.join(', ') || ' '; } } });
-		const lineup = Array.from(new Map(contestables.map(c=>[c.unit, c])).values()).sort((a,b)=>Math.abs(a.margin)-Math.abs(b.margin)).map(c=>`${c.unit} (${c.ev} EV)`).join(', ');
+		const categoryConfig = [{ key: 'safeD', evId: 'cat-safeD-ev', countId: 'cat-safeD-count', listId: 'cat-safeD-list' }, { key: 'leanD', evId: 'cat-leanD-ev', countId: 'cat-leanD-count', listId: 'cat-leanD-list' }, { key: 'tossup', evId: 'cat-contestable-ev', countId: 'cat-contestable-count', listId: 'cat-contestable-list' }, { key: 'leanR', evId: 'cat-leanR-ev', countId: 'cat-leanR-count', listId: 'cat-leanR-list' }, { key: 'safeR', evId: 'cat-safeR-ev', countId: 'cat-safeR-count', listId: 'cat-safeR-list' }];
+		categoryConfig.forEach(cfg => { const list = buckets[cfg.key] || []; const sum = list.reduce((acc, st) => acc + (st.ev || 0), 0); setText(cfg.evId, formatNumber(sum)); setText(cfg.countId, list.length.toString()); if (cfg.listId) { const el = document.getElementById(cfg.listId); if (el) { const abbrs = list.map(item => (item.unit ? item.unit : item.state)).sort(); el.textContent = abbrs.join(', ') || ' '; } } });
+		const lineup = Array.from(new Map(contestables.map(c => [c.unit, c])).values()).sort((a, b) => Math.abs(a.margin) - Math.abs(b.margin)).map(c => `${c.unit} (${c.ev} EV)`).join(', ');
 		setText('contestableNames', lineup || ' '); setText('contestableLineup', lineup || ' ');
 		const paths = computePathCounts(demEV, repEV, contestables);
 		setText('pathDem', formatNumber(paths.demWins)); setText('pathRep', formatNumber(paths.repWins)); setText('pathTie', formatNumber(paths.ties)); setText('pathTotal', formatNumber(paths.total)); setText('pathDemPct', formatPercent(paths.demPct)); setText('pathRepPct', formatPercent(paths.repPct)); enumeratePaths(demEV, repEV, contestables); refreshDecorations(); refreshURL();
 	}
 
-	function cycleState(state){ if (!state) return; if (state.baseStrength === 'safe' && !state.manual) return; if (state.cycleReverse === undefined){ if (state.status === 'rep' && state.strength === 'lean') state.cycleReverse = true; else state.cycleReverse = false; }
-		const forward = [ {status:'dem', strength:'lean'}, {status:'dem', strength:'safe'}, {status:'rep', strength:'safe'}, {status:'rep', strength:'lean'}, {status:'tossup', strength:'tossup'} ];
-		const reverse = [ {status:'rep', strength:'lean'}, {status:'rep', strength:'safe'}, {status:'dem', strength:'safe'}, {status:'dem', strength:'lean'}, {status:'tossup', strength:'tossup'} ];
-		const ring = state.cycleReverse ? reverse : forward; let idx = ring.findIndex(r => r.status === state.status && r.strength === state.strength); if (idx === -1){ idx = ring.findIndex(r => r.status === 'tossup'); }
+	function cycleState(state) {
+		if (!state) return; if (state.baseStrength === 'safe' && !state.manual) return; if (state.cycleReverse === undefined) { if (state.status === 'rep' && state.strength === 'lean') state.cycleReverse = true; else state.cycleReverse = false; }
+		const forward = [{ status: 'dem', strength: 'lean' }, { status: 'dem', strength: 'safe' }, { status: 'rep', strength: 'safe' }, { status: 'rep', strength: 'lean' }, { status: 'tossup', strength: 'tossup' }];
+		const reverse = [{ status: 'rep', strength: 'lean' }, { status: 'rep', strength: 'safe' }, { status: 'dem', strength: 'safe' }, { status: 'dem', strength: 'lean' }, { status: 'tossup', strength: 'tossup' }];
+		const ring = state.cycleReverse ? reverse : forward; let idx = ring.findIndex(r => r.status === state.status && r.strength === state.strength); if (idx === -1) { idx = ring.findIndex(r => r.status === 'tossup'); }
 		const next = ring[(idx + 1) % ring.length]; state.status = next.status; state.strength = next.strength; state.manual = (state.status !== state.baseStatus) || (state.strength !== state.baseStrength);
 	}
 
-	function handleStateClick(code, event){ const state = stateStore.get(code); if (!state) return; if (state.baseStrength === 'safe' && !state.manual) return; if (event && event.shiftKey){ state.status = 'tossup'; state.strength = 'tossup'; state.manual = state.baseStatus !== 'tossup' || state.baseStrength !== 'tossup'; } else { cycleState(state); }
-		(state.units || []).forEach(u => { const unit = unitStore.get(u.unit); if (!unit) return; unit.status = state.status; if (state.strength === 'safe') { unit.strength = 'safe'; } else if (state.strength === 'tossup') { unit.strength = 'tossup'; } else { unit.strength = (unit.baseStatus === unit.status && unit.baseStrength !== 'tossup') ? unit.baseStrength : 'lean'; } unit.manual = (unit.status !== unit.baseStatus) || (unit.strength !== unit.baseStrength); updateUnitColor(u.unit); }); updateStateColor(code); updateSummary(); }
-
-	function handleDistrictClick(unit, event){ const u = unitStore.get(unit); if (!u) return; const stObj = stateStore.get(u.state); if (u.baseStrength === 'safe' && !u.manual) return; if (event && event.shiftKey){ u.status = 'tossup'; u.strength = 'tossup'; u.manual = u.baseStatus !== 'tossup' || u.baseStrength !== 'tossup'; } else { cycleState(u); } updateUnitColor(unit); const st = u.state; const state = stateStore.get(st); if (state) { const units = state.units || []; let demEv=0, repEv=0, tossEv=0; units.forEach(x => { const uu = unitStore.get(x.unit); if (!uu) return; if (uu.status==='dem') demEv+=uu.ev; else if (uu.status==='rep') repEv+=uu.ev; else tossEv+=uu.ev; }); if (tossEv>0) { state.status='tossup'; state.strength='tossup'; } else if (demEv>repEv) { state.status='dem'; state.strength='lean'; } else if (repEv>demEv) { state.status='rep'; state.strength='lean'; } state.manual = true; updateStateColor(st); } updateSummary(); }
-
-	function refreshDecorations(){ if (!window.ElectionMap) return; const evLookup = (abbr) => { if (unitStore.has(abbr)) return unitStore.get(abbr).ev; if (stateStore.has(abbr)) return stateStore.get(abbr).ev; if (abbr){ const st = stateStore.get(abbr); return st? st.ev : null; } return null; }; const abbrColors = new Map(); stateStore.forEach(st => { abbrColors.set(st.state, { color: colorForState(st) }); }); const unitColors = new Map(); unitStore.forEach(u => { unitColors.set(u.unit, colorForState(u)); }); window.ElectionMap.refreshDecorations(2028, evLookup, abbrColors, unitColors); }
-
-	function enumeratePaths(demBaseEV, repBaseEV, tossupUnits){ const noteEl = document.getElementById('pathEnumerationNote'); const demList = document.getElementById('demPathsList'); const repList = document.getElementById('repPathsList'); const tieList = document.getElementById('tiePathsList'); if (!noteEl || !demList || !repList || !tieList) return; const n = tossupUnits.length; const key = `${demBaseEV}|${repBaseEV}|`+tossupUnits.map(t=>`${t.unit}:${t.ev}:${t.status}:${t.strength}:${t.manual?1:0}`).join(','); if (lastEnumerated.key === key) { if (lastEnumerated.data){ const { dem, rep, ties } = lastEnumerated.data; demList.innerHTML=''; repList.innerHTML=''; tieList.innerHTML=''; const render = (listEl, arr) => { const anyManualLean = arr.some(p=>p.manualLeanMismatch!==undefined); arr.slice(0,512).sort((a,b)=> { if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) return a.manualLeanMismatch - b.manualLeanMismatch; const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0); if (evMatchDiff !== 0) return evMatchDiff; if (a.dem !== b.dem) return a.dem - b.dem; return a.rep - b.rep; }).forEach(obj => { const li = document.createElement('li'); const card = document.createElement('div'); card.className='path-card'; const row = document.createElement('div'); row.className='row'; const assigns = obj.path.split(/\s+/).filter(Boolean); const dStates = assigns.filter(p=>p.endsWith('=D')).map(p=>p.split('=')[0]); const rStates = assigns.filter(p=>p.endsWith('=R')).map(p=>p.split('=')[0]); const dDiv = document.createElement('div'); dDiv.className='dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ')||' '); const rDiv = document.createElement('div'); rDiv.className='rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ')||' '); const evDiv = document.createElement('div'); evDiv.className='evs'; evDiv.textContent = `${obj.dem}D  ${obj.rep}R`; if (anyManualLean && obj.manualLeanMismatch>0){ const warn = document.createElement('div'); warn.className='mismatch-note'; warn.textContent = ` ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch>1?'es':''}`; row.appendChild(warn); } row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv); card.appendChild(row); li.appendChild(card); listEl.appendChild(li); }); }; render(demList, dem); render(repList, rep); render(tieList, ties); return; } }
-		lastEnumerated.key = key; demList.innerHTML = ''; repList.innerHTML = ''; tieList.innerHTML = ''; if (n===0){ noteEl.textContent = 'No contestables to enumerate.'; lastEnumerated.data = { dem:[], rep:[], ties:[] }; return; } if (n > HARD_ENUMERATION_CAP){ noteEl.textContent = `Too many contestables (${n}) to enumerate (cap ${HARD_ENUMERATION_CAP}). Reduce contestables or download counts only.`; lastEnumerated.data=null; return; } const fullCount = 1<<n; if (n > ENUMERATION_LIMIT){ noteEl.textContent = `Contestables: ${n}. Full combinations: ${fullCount.toLocaleString()}. Showing a random sample of 256.`; } else { noteEl.textContent = `Enumerating ${fullCount.toLocaleString()} combinations across contestables.`; } const demPaths = []; const repPaths = []; const tiePaths = []; const evs = tossupUnits.map(t=>t.ev||0); const names = tossupUnits.map(t=>t.unit); const leanTargets = tossupUnits.map(u => (u.strength==='lean' ? (u.status==='dem' ? 'D':'R') : null)); const manualLeanTargets = tossupUnits.map(u => (u.manual && u.strength==='lean' ? (u.status==='dem' ? 'D':'R') : null)); const anyManualLean = manualLeanTargets.some(v => v !== null); const tossupTotal = evs.reduce((a,b)=>a+b,0); const sampleLimit = 256; for (let mask=0; mask<fullCount; mask++){ if (n>ENUMERATION_LIMIT && demPaths.length+repPaths.length+tiePaths.length >= sampleLimit) break; let demAdd=0; for (let i=0;i<n;i++){ if (mask & (1<<i)) demAdd += evs[i]; } const demTotal = demBaseEV + demAdd; const repTotal = repBaseEV + (tossupTotal - demAdd); const assignList = []; let leanMatchEv = 0; let manualLeanMismatch = 0; for (let i=0;i<n;i++){ const assignedToDem = !!(mask & (1<<i)); assignList.push(`${names[i]}=${ assignedToDem ? 'D' : 'R' }`); const unitObj = tossupUnits[i]; if (unitObj && unitObj.strength === 'lean'){ const leanIsDem = unitObj.status === 'dem'; if ((leanIsDem && assignedToDem) || (!leanIsDem && !assignedToDem)) { leanMatchEv += (evs[i] || 0); } } if (manualLeanTargets[i] !== null){ const desired = manualLeanTargets[i] === 'D'; if (desired !== assignedToDem) manualLeanMismatch++; } } const pathStr = assignList.join(' '); const payload = { path:pathStr, dem:demTotal, rep:repTotal, leanMatchEv, manualLeanMismatch }; if (demTotal>=270 && repTotal<270) demPaths.push(payload); else if (repTotal>=270 && demTotal<270) repPaths.push(payload); else if (demTotal===269 && repTotal===269) tiePaths.push(payload); else { if (demTotal>repTotal) demPaths.push(payload); else if (repTotal>demTotal) repPaths.push(payload); else tiePaths.push(payload); } }
-		const render = (listEl, arr) => { arr.slice(0,512).sort((a,b)=> { if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) { return a.manualLeanMismatch - b.manualLeanMismatch; } const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0); if (evMatchDiff !== 0) return evMatchDiff; if (a.dem !== b.dem) return a.dem - b.dem; return a.rep - b.rep; }).forEach(obj => { const li = document.createElement('li'); const card = document.createElement('div'); card.className = 'path-card'; const row = document.createElement('div'); row.className='row'; const assigns = obj.path.split(/\s+/).filter(Boolean); const dStates = assigns.filter(p=>p.endsWith('=D')).map(p=>p.split('=')[0]); const rStates = assigns.filter(p=>p.endsWith('=R')).map(p=>p.split('=')[0]); const dDiv = document.createElement('div'); dDiv.className='dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ')||' '); const rDiv = document.createElement('div'); rDiv.className='rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ')||' '); const evDiv = document.createElement('div'); evDiv.className='evs'; evDiv.textContent = `${obj.dem}D  ${obj.rep}R`; if (anyManualLean && obj.manualLeanMismatch>0){ const warn = document.createElement('div'); warn.className = 'mismatch-note'; warn.textContent = ` ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch>1?'es':''}`; row.appendChild(warn); } row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv); card.appendChild(row); li.appendChild(card); listEl.appendChild(li); }); };
-		render(demList, demPaths); render(repList, repPaths); render(tieList, tiePaths); lastEnumerated.data = { dem:demPaths, rep:repPaths, ties:tiePaths, sampled:(n>ENUMERATION_LIMIT) };
+	function handleStateClick(code, event) {
+		const state = stateStore.get(code); if (!state) return; if (state.baseStrength === 'safe' && !state.manual) return; if (event && event.shiftKey) { state.status = 'tossup'; state.strength = 'tossup'; state.manual = state.baseStatus !== 'tossup' || state.baseStrength !== 'tossup'; } else { cycleState(state); }
+		(state.units || []).forEach(u => { const unit = unitStore.get(u.unit); if (!unit) return; unit.status = state.status; if (state.strength === 'safe') { unit.strength = 'safe'; } else if (state.strength === 'tossup') { unit.strength = 'tossup'; } else { unit.strength = (unit.baseStatus === unit.status && unit.baseStrength !== 'tossup') ? unit.baseStrength : 'lean'; } unit.manual = (unit.status !== unit.baseStatus) || (unit.strength !== unit.baseStrength); updateUnitColor(u.unit); }); updateStateColor(code); updateSummary();
 	}
 
-	function downloadAllPaths(){ if (!lastEnumerated.data){ alert('Nothing enumerated yet.'); return; } const rows = ['winner,path,dem_total,rep_total']; ['dem','rep','ties'].forEach(cat => { const label = cat==='ties'? 'tie': cat; (lastEnumerated.data[cat]||[]).forEach(p => { rows.push(`${label},"${p.path}",${p.dem},${p.rep}`); }); }); const blob = new Blob([rows.join('\n')], { type:'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'paths_enumerated.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 5000); }
+	function handleDistrictClick(unit, event) { const u = unitStore.get(unit); if (!u) return; const stObj = stateStore.get(u.state); if (u.baseStrength === 'safe' && !u.manual) return; if (event && event.shiftKey) { u.status = 'tossup'; u.strength = 'tossup'; u.manual = u.baseStatus !== 'tossup' || u.baseStrength !== 'tossup'; } else { cycleState(u); } updateUnitColor(unit); const st = u.state; const state = stateStore.get(st); if (state) { const units = state.units || []; let demEv = 0, repEv = 0, tossEv = 0; units.forEach(x => { const uu = unitStore.get(x.unit); if (!uu) return; if (uu.status === 'dem') demEv += uu.ev; else if (uu.status === 'rep') repEv += uu.ev; else tossEv += uu.ev; }); if (tossEv > 0) { state.status = 'tossup'; state.strength = 'tossup'; } else if (demEv > repEv) { state.status = 'dem'; state.strength = 'lean'; } else if (repEv > demEv) { state.status = 'rep'; state.strength = 'lean'; } state.manual = true; updateStateColor(st); } updateSummary(); }
 
-	function copyShareURL(){ try { const url = buildShareURL(); navigator.clipboard.writeText(url); } catch(e) { } }
+	function refreshDecorations() { if (!window.ElectionMap) return; const evLookup = (abbr) => { if (unitStore.has(abbr)) return unitStore.get(abbr).ev; if (stateStore.has(abbr)) return stateStore.get(abbr).ev; if (abbr) { const st = stateStore.get(abbr); return st ? st.ev : null; } return null; }; const abbrColors = new Map(); stateStore.forEach(st => { abbrColors.set(st.state, { color: colorForState(st) }); }); const unitColors = new Map(); unitStore.forEach(u => { unitColors.set(u.unit, colorForState(u)); }); window.ElectionMap.refreshDecorations(2028, evLookup, abbrColors, unitColors); }
 
-	function positionTip(evt){ const tip = mapTip(); if (!tip) return; const wrap = mapWrap(); if (!wrap) return; const wrapRect = wrap.getBoundingClientRect(); const offsetX = 12, offsetY = 12; let x = evt.clientX - wrapRect.left + offsetX; let y = evt.clientY - wrapRect.top + offsetY; tip.style.display = 'block'; const tipRect = tip.getBoundingClientRect(); const pad = 6; x = Math.max(pad, Math.min(wrapRect.width - pad - tipRect.width, x)); y = Math.max(pad, Math.min(wrapRect.height - pad - tipRect.height, y)); tip.style.left = `${x}px`; tip.style.top = `${y}px`; }
+	function enumeratePaths(demBaseEV, repBaseEV, tossupUnits) {
+		const noteEl = document.getElementById('pathEnumerationNote'); const demList = document.getElementById('demPathsList'); const repList = document.getElementById('repPathsList'); const tieList = document.getElementById('tiePathsList'); if (!noteEl || !demList || !repList || !tieList) return; const n = tossupUnits.length; const key = `${demBaseEV}|${repBaseEV}|` + tossupUnits.map(t => `${t.unit}:${t.ev}:${t.status}:${t.strength}:${t.manual ? 1 : 0}`).join(','); if (lastEnumerated.key === key) { if (lastEnumerated.data) { const { dem, rep, ties } = lastEnumerated.data; demList.innerHTML = ''; repList.innerHTML = ''; tieList.innerHTML = ''; const render = (listEl, arr) => { const anyManualLean = arr.some(p => p.manualLeanMismatch !== undefined); arr.slice(0, 512).sort((a, b) => { if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) return a.manualLeanMismatch - b.manualLeanMismatch; const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0); if (evMatchDiff !== 0) return evMatchDiff; if (a.dem !== b.dem) return a.dem - b.dem; return a.rep - b.rep; }).forEach(obj => { const li = document.createElement('li'); const card = document.createElement('div'); card.className = 'path-card'; const row = document.createElement('div'); row.className = 'row'; const assigns = obj.path.split(/\s+/).filter(Boolean); const dStates = assigns.filter(p => p.endsWith('=D')).map(p => p.split('=')[0]); const rStates = assigns.filter(p => p.endsWith('=R')).map(p => p.split('=')[0]); const dDiv = document.createElement('div'); dDiv.className = 'dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ') || ' '); const rDiv = document.createElement('div'); rDiv.className = 'rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ') || ' '); const evDiv = document.createElement('div'); evDiv.className = 'evs'; evDiv.textContent = `${obj.dem}D  ${obj.rep}R`; if (anyManualLean && obj.manualLeanMismatch > 0) { const warn = document.createElement('div'); warn.className = 'mismatch-note'; warn.textContent = ` ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch > 1 ? 'es' : ''}`; row.appendChild(warn); } row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv); card.appendChild(row); li.appendChild(card); listEl.appendChild(li); }); }; render(demList, dem); render(repList, rep); render(tieList, ties); return; } }
+		lastEnumerated.key = key; demList.innerHTML = ''; repList.innerHTML = ''; tieList.innerHTML = ''; if (n === 0) { noteEl.textContent = 'No contestables to enumerate.'; lastEnumerated.data = { dem: [], rep: [], ties: [] }; return; } if (n > HARD_ENUMERATION_CAP) { noteEl.textContent = `Too many contestables (${n}) to enumerate (cap ${HARD_ENUMERATION_CAP}). Reduce contestables or download counts only.`; lastEnumerated.data = null; return; } const fullCount = 1 << n; if (n > ENUMERATION_LIMIT) { noteEl.textContent = `Contestables: ${n}. Full combinations: ${fullCount.toLocaleString()}. Showing a random sample of 256.`; } else { noteEl.textContent = `Enumerating ${fullCount.toLocaleString()} combinations across contestables.`; } const demPaths = []; const repPaths = []; const tiePaths = []; const evs = tossupUnits.map(t => t.ev || 0); const names = tossupUnits.map(t => t.unit); const leanTargets = tossupUnits.map(u => (u.strength === 'lean' ? (u.status === 'dem' ? 'D' : 'R') : null)); const manualLeanTargets = tossupUnits.map(u => (u.manual && u.strength === 'lean' ? (u.status === 'dem' ? 'D' : 'R') : null)); const anyManualLean = manualLeanTargets.some(v => v !== null); const tossupTotal = evs.reduce((a, b) => a + b, 0); const sampleLimit = 256; for (let mask = 0; mask < fullCount; mask++) { if (n > ENUMERATION_LIMIT && demPaths.length + repPaths.length + tiePaths.length >= sampleLimit) break; let demAdd = 0; for (let i = 0; i < n; i++) { if (mask & (1 << i)) demAdd += evs[i]; } const demTotal = demBaseEV + demAdd; const repTotal = repBaseEV + (tossupTotal - demAdd); const assignList = []; let leanMatchEv = 0; let manualLeanMismatch = 0; for (let i = 0; i < n; i++) { const assignedToDem = !!(mask & (1 << i)); assignList.push(`${names[i]}=${assignedToDem ? 'D' : 'R'}`); const unitObj = tossupUnits[i]; if (unitObj && unitObj.strength === 'lean') { const leanIsDem = unitObj.status === 'dem'; if ((leanIsDem && assignedToDem) || (!leanIsDem && !assignedToDem)) { leanMatchEv += (evs[i] || 0); } } if (manualLeanTargets[i] !== null) { const desired = manualLeanTargets[i] === 'D'; if (desired !== assignedToDem) manualLeanMismatch++; } } const pathStr = assignList.join(' '); const payload = { path: pathStr, dem: demTotal, rep: repTotal, leanMatchEv, manualLeanMismatch }; if (demTotal >= 270 && repTotal < 270) demPaths.push(payload); else if (repTotal >= 270 && demTotal < 270) repPaths.push(payload); else if (demTotal === 269 && repTotal === 269) tiePaths.push(payload); else { if (demTotal > repTotal) demPaths.push(payload); else if (repTotal > demTotal) repPaths.push(payload); else tiePaths.push(payload); } }
+		const render = (listEl, arr) => { arr.slice(0, 512).sort((a, b) => { if (anyManualLean && a.manualLeanMismatch !== b.manualLeanMismatch) { return a.manualLeanMismatch - b.manualLeanMismatch; } const evMatchDiff = (b.leanMatchEv || 0) - (a.leanMatchEv || 0); if (evMatchDiff !== 0) return evMatchDiff; if (a.dem !== b.dem) return a.dem - b.dem; return a.rep - b.rep; }).forEach(obj => { const li = document.createElement('li'); const card = document.createElement('div'); card.className = 'path-card'; const row = document.createElement('div'); row.className = 'row'; const assigns = obj.path.split(/\s+/).filter(Boolean); const dStates = assigns.filter(p => p.endsWith('=D')).map(p => p.split('=')[0]); const rStates = assigns.filter(p => p.endsWith('=R')).map(p => p.split('=')[0]); const dDiv = document.createElement('div'); dDiv.className = 'dlist'; dDiv.textContent = 'D: ' + (dStates.join(' ') || ' '); const rDiv = document.createElement('div'); rDiv.className = 'rlist'; rDiv.textContent = 'R: ' + (rStates.join(' ') || ' '); const evDiv = document.createElement('div'); evDiv.className = 'evs'; evDiv.textContent = `${obj.dem}D  ${obj.rep}R`; if (anyManualLean && obj.manualLeanMismatch > 0) { const warn = document.createElement('div'); warn.className = 'mismatch-note'; warn.textContent = ` ${obj.manualLeanMismatch} manual lean mismatch${obj.manualLeanMismatch > 1 ? 'es' : ''}`; row.appendChild(warn); } row.appendChild(dDiv); row.appendChild(rDiv); row.appendChild(evDiv); card.appendChild(row); li.appendChild(card); listEl.appendChild(li); }); };
+		render(demList, demPaths); render(repList, repPaths); render(tieList, tiePaths); lastEnumerated.data = { dem: demPaths, rep: repPaths, ties: tiePaths, sampled: (n > ENUMERATION_LIMIT) };
+	}
 
-	function handleStateHover(evt, code){ const state = stateStore.get(code); if (!state) return; const tip = mapTip(); if (!tip) return; const name = STATE_NAMES[state.state] || state.state; const statusLabel = describeStatus(state); tip.textContent = `${name}   ${state.ev} EV   ${formatMargin(state.margin)}   ${statusLabel}` + (state.manual ? '   manual' : ''); tip.style.display = 'block'; positionTip(evt); }
+	function downloadAllPaths() { if (!lastEnumerated.data) { alert('Nothing enumerated yet.'); return; } const rows = ['winner,path,dem_total,rep_total'];['dem', 'rep', 'ties'].forEach(cat => { const label = cat === 'ties' ? 'tie' : cat; (lastEnumerated.data[cat] || []).forEach(p => { rows.push(`${label},"${p.path}",${p.dem},${p.rep}`); }); }); const blob = new Blob([rows.join('\n')], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'paths_enumerated.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000); }
 
-	function handleDistrictHover(evt, unit){ const u = unitStore.get(unit); if (!u) return; const tip = mapTip(); if (!tip) return; const name = `${STATE_NAMES[u.state] || u.state} ${unit.endsWith('-AL')? 'AL' : unit.split('-')[1]}`; const statusLabel = describeStatus(u); tip.textContent = `${unit}   ${u.ev} EV   ${formatMargin(u.margin)}   ${statusLabel}` + (u.manual ? '   manual' : ''); tip.style.display = 'block'; positionTip(evt); }
+	function copyShareURL() { try { const url = buildShareURL(); navigator.clipboard.writeText(url); } catch (e) { } }
 
-	function hideTip(){ const tip = mapTip(); if (tip) tip.style.display = 'none'; }
+	function positionTip(evt) { const tip = mapTip(); if (!tip) return; const wrap = mapWrap(); if (!wrap) return; const wrapRect = wrap.getBoundingClientRect(); const offsetX = 12, offsetY = 12; let x = evt.clientX - wrapRect.left + offsetX; let y = evt.clientY - wrapRect.top + offsetY; tip.style.display = 'block'; const tipRect = tip.getBoundingClientRect(); const pad = 6; x = Math.max(pad, Math.min(wrapRect.width - pad - tipRect.width, x)); y = Math.max(pad, Math.min(wrapRect.height - pad - tipRect.height, y)); tip.style.left = `${x}px`; tip.style.top = `${y}px`; }
 
-	function resetToBase(){ currentThreshold = DEFAULT_THRESHOLD; applyClassification(DEFAULT_THRESHOLD, { resetManual: true }); const slider = document.getElementById('thresholdSlider'); const valueEl = document.getElementById('thresholdValue'); if (slider) slider.value = Math.round(DEFAULT_THRESHOLD * 100).toString(); if (valueEl) valueEl.textContent = `${Math.round(DEFAULT_THRESHOLD * 100)}%`; try { history.replaceState(null, '', location.pathname); } catch(e) { } }
+	function handleStateHover(evt, code) { const state = stateStore.get(code); if (!state) return; const tip = mapTip(); if (!tip) return; const name = STATE_NAMES[state.state] || state.state; const statusLabel = describeStatus(state); tip.textContent = `${name}   ${state.ev} EV   ${formatMargin(state.margin)}   ${statusLabel}` + (state.manual ? '   manual' : ''); tip.style.display = 'block'; positionTip(evt); }
 
-	function applyClassification(threshold, opts){ currentThreshold = threshold; tossupBand = Math.min(currentThreshold / 2, 0.025); stateStore.forEach(state => { const cls = classifyMargin(state.margin, currentThreshold); state.baseStatus = cls.status; state.baseStrength = cls.strength; if (!opts || opts.resetManual){ state.status = cls.status; state.strength = cls.strength; state.manual = false; } else if (!state.manual){ state.status = cls.status; state.strength = cls.strength; } (state.units || []).forEach(u => { const uu = unitStore.get(u.unit); if (!uu) return; const ucls = classifyMargin(uu.margin, currentThreshold); uu.baseStatus = ucls.status; uu.baseStrength = ucls.strength; if (!opts || opts.resetManual){ uu.status = ucls.status; uu.strength = ucls.strength; uu.manual = false; } else if (!uu.manual){ uu.status = ucls.status; uu.strength = ucls.strength; } updateUnitColor(uu.unit); }); }); updateAllStateColors(); updateSummary(); }
+	function handleDistrictHover(evt, unit) { const u = unitStore.get(unit); if (!u) return; const tip = mapTip(); if (!tip) return; const name = `${STATE_NAMES[u.state] || u.state} ${unit.endsWith('-AL') ? 'AL' : unit.split('-')[1]}`; const statusLabel = describeStatus(u); tip.textContent = `${unit}   ${u.ev} EV   ${formatMargin(u.margin)}   ${statusLabel}` + (u.manual ? '   manual' : ''); tip.style.display = 'block'; positionTip(evt); }
 
-	function buildStateData(rows2024){ stateStore.clear(); unitStore.clear(); const byState = new Map(); (rows2024 || []).forEach(row => { if (!row || !row.abbr || row.abbr === 'NATIONAL') return; const unit = row.abbr; const stateCode = unit.includes('-') ? unit.slice(0, 2) : unit; const ev = +row.ev || +row.electoral_votes; if (!isFinite(ev) || ev <= 0) return; const margin = parseFloat(row.margin != null ? row.margin : row.relative_margin); if (!byState.has(stateCode)) byState.set(stateCode, { state: stateCode, units: [], evTotal: 0, weightedMargin: 0 }); const entry = byState.get(stateCode); entry.units.push({ unit, ev, margin }); entry.evTotal += ev; if (isFinite(margin)) entry.weightedMargin += margin * ev; unitStore.set(unit, { unit, state: stateCode, ev, margin, status: 'tossup', strength: 'tossup', baseStatus: 'tossup', baseStrength: 'tossup', manual: false }); }); byState.forEach(entry => { const totalEv = entry.evTotal || 0; const margin = totalEv > 0 ? (entry.weightedMargin / totalEv) : 0; stateStore.set(entry.state, { state: entry.state, ev: totalEv, margin, units: entry.units, status: 'tossup', strength: 'tossup', baseStatus: 'tossup', baseStrength: 'tossup', manual: false }); }); try { const totalEv = Array.from(stateStore.values()).reduce((sum, st) => sum + (st.ev || 0), 0); console.log(`[paths2028] loaded ${stateStore.size} states covering ${totalEv} EV`); } catch (e){} }
+	function hideTip() { const tip = mapTip(); if (tip) tip.style.display = 'none'; }
 
-	async function buildMap(){ statePaths.clear(); if (!window.ElectionMap) return; await window.ElectionMap.build({ svgSelector: '#map', topoUrl: 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json', districtGeoUrl: 'me_ne_districts.geojson', stateHandlers: { click: (evt, abbr) => { if (!abbr || !stateStore.has(abbr)) return; handleStateClick(abbr, evt); }, mouseenter: (evt, abbr) => { if (!abbr) return; handleStateHover(evt, abbr); }, mousemove: (evt) => { positionTip(evt); }, mouseleave: () => { hideTip(); } }, districtHandlers: { click: (evt, unit) => { if (!unitStore.has(unit)) return; handleDistrictClick(unit, evt); }, mouseenter: (evt, unit) => { if (!unitStore.has(unit)) return; handleDistrictHover(evt, unit); }, mousemove: (evt) => { positionTip(evt); }, mouseleave: () => { hideTip(); } } }); if (window.ElectionMap && window.ElectionMap.statePaths) { window.ElectionMap.statePaths.forEach((sel, abbr) => statePaths.set(abbr, sel)); } }
+	function resetToBase() { currentThreshold = DEFAULT_THRESHOLD; applyClassification(DEFAULT_THRESHOLD, { resetManual: true }); const slider = document.getElementById('thresholdSlider'); const valueEl = document.getElementById('thresholdValue'); if (slider) slider.value = Math.round(DEFAULT_THRESHOLD * 100).toString(); if (valueEl) valueEl.textContent = `${Math.round(DEFAULT_THRESHOLD * 100)}%`; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
 
-	function initControls(){ const slider = document.getElementById('thresholdSlider'); const valueEl = document.getElementById('thresholdValue'); if (slider && valueEl){ slider.value = Math.round(currentThreshold * 100).toString(); valueEl.textContent = `${slider.value}%`; slider.addEventListener('input', () => { valueEl.textContent = `${slider.value}%`; }); } const applyBtn = document.getElementById('applyThreshold'); if (applyBtn && slider){ applyBtn.addEventListener('click', () => { const val = parseFloat(slider.value); if (!isNaN(val)) applyClassification(val / 100, { resetManual: true }); }); } const resetBtn = document.getElementById('resetStates'); if (resetBtn) resetBtn.addEventListener('click', resetToBase); const dlBtn = document.getElementById('downloadPaths'); if (dlBtn) dlBtn.addEventListener('click', downloadAllPaths); const copyBtn = document.getElementById('copyShareURL'); if (copyBtn) copyBtn.addEventListener('click', copyShareURL); }
+	function applyClassification(threshold, opts) { currentThreshold = threshold; tossupBand = Math.min(currentThreshold / 2, 0.025); stateStore.forEach(state => { const cls = classifyMargin(state.margin, currentThreshold); state.baseStatus = cls.status; state.baseStrength = cls.strength; if (!opts || opts.resetManual) { state.status = cls.status; state.strength = cls.strength; state.manual = false; } else if (!state.manual) { state.status = cls.status; state.strength = cls.strength; } (state.units || []).forEach(u => { const uu = unitStore.get(u.unit); if (!uu) return; const ucls = classifyMargin(uu.margin, currentThreshold); uu.baseStatus = ucls.status; uu.baseStrength = ucls.strength; if (!opts || opts.resetManual) { uu.status = ucls.status; uu.strength = ucls.strength; uu.manual = false; } else if (!uu.manual) { uu.status = ucls.status; uu.strength = ucls.strength; } updateUnitColor(uu.unit); }); }); updateAllStateColors(); updateSummary(); }
 
-	async function init(){ initControls(); try { const rows2024 = await d3.csv('presidential_margins.csv', row => { if (+row.year !== 2024) return null; if (!row.abbr || row.abbr === 'NATIONAL') return null; const ev = parseInt(row.electoral_votes || row.electoral_Votes || row.ev, 10); if (!isFinite(ev) || ev <= 0) return null; const margin = parseFloat(row.relative_margin); return { abbr: row.abbr, ev, margin }; }); buildStateData(rows2024); await buildMap(); applyClassification(currentThreshold, { resetManual: true }); unitStore.forEach(u => updateUnitColor(u.unit)); decodeScenarioFromURL(); updateAllStateColors(); unitStore.forEach(u=>updateUnitColor(u.unit)); updateSummary(); } catch (err){ console.error('[paths2028] failed to initialise', err); } }
+	function buildStateData(rows2024) { stateStore.clear(); unitStore.clear(); const byState = new Map(); (rows2024 || []).forEach(row => { if (!row || !row.abbr || row.abbr === 'NATIONAL') return; const unit = row.abbr; const stateCode = unit.includes('-') ? unit.slice(0, 2) : unit; const ev = +row.ev || +row.electoral_votes; if (!isFinite(ev) || ev <= 0) return; const margin = parseFloat(row.margin != null ? row.margin : row.relative_margin); if (!byState.has(stateCode)) byState.set(stateCode, { state: stateCode, units: [], evTotal: 0, weightedMargin: 0 }); const entry = byState.get(stateCode); entry.units.push({ unit, ev, margin }); entry.evTotal += ev; if (isFinite(margin)) entry.weightedMargin += margin * ev; unitStore.set(unit, { unit, state: stateCode, ev, margin, status: 'tossup', strength: 'tossup', baseStatus: 'tossup', baseStrength: 'tossup', manual: false }); }); byState.forEach(entry => { const totalEv = entry.evTotal || 0; const margin = totalEv > 0 ? (entry.weightedMargin / totalEv) : 0; stateStore.set(entry.state, { state: entry.state, ev: totalEv, margin, units: entry.units, status: 'tossup', strength: 'tossup', baseStatus: 'tossup', baseStrength: 'tossup', manual: false }); }); try { const totalEv = Array.from(stateStore.values()).reduce((sum, st) => sum + (st.ev || 0), 0); console.log(`[paths2028] loaded ${stateStore.size} states covering ${totalEv} EV`); } catch (e) { } }
+
+	async function buildMap() { statePaths.clear(); if (!window.ElectionMap) return; await window.ElectionMap.build({ svgSelector: '#map', topoUrl: 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json', districtGeoUrl: 'me_ne_districts.geojson', stateHandlers: { click: (evt, abbr) => { if (!abbr || !stateStore.has(abbr)) return; handleStateClick(abbr, evt); }, mouseenter: (evt, abbr) => { if (!abbr) return; handleStateHover(evt, abbr); }, mousemove: (evt) => { positionTip(evt); }, mouseleave: () => { hideTip(); } }, districtHandlers: { click: (evt, unit) => { if (!unitStore.has(unit)) return; handleDistrictClick(unit, evt); }, mouseenter: (evt, unit) => { if (!unitStore.has(unit)) return; handleDistrictHover(evt, unit); }, mousemove: (evt) => { positionTip(evt); }, mouseleave: () => { hideTip(); } } }); if (window.ElectionMap && window.ElectionMap.statePaths) { window.ElectionMap.statePaths.forEach((sel, abbr) => statePaths.set(abbr, sel)); } }
+
+	function initControls() { const slider = document.getElementById('thresholdSlider'); const valueEl = document.getElementById('thresholdValue'); if (slider && valueEl) { slider.value = Math.round(currentThreshold * 100).toString(); valueEl.textContent = `${slider.value}%`; slider.addEventListener('input', () => { valueEl.textContent = `${slider.value}%`; }); } const applyBtn = document.getElementById('applyThreshold'); if (applyBtn && slider) { applyBtn.addEventListener('click', () => { const val = parseFloat(slider.value); if (!isNaN(val)) applyClassification(val / 100, { resetManual: true }); }); } const resetBtn = document.getElementById('resetStates'); if (resetBtn) resetBtn.addEventListener('click', resetToBase); const dlBtn = document.getElementById('downloadPaths'); if (dlBtn) dlBtn.addEventListener('click', downloadAllPaths); const copyBtn = document.getElementById('copyShareURL'); if (copyBtn) copyBtn.addEventListener('click', copyShareURL); }
+
+	async function init() { initControls(); try { const rows2024 = await d3.csv('presidential_margins.csv', row => { if (+row.year !== 2024) return null; if (!row.abbr || row.abbr === 'NATIONAL') return null; const ev = parseInt(row.electoral_votes || row.electoral_Votes || row.ev, 10); if (!isFinite(ev) || ev <= 0) return null; const margin = parseFloat(row.relative_margin); return { abbr: row.abbr, ev, margin }; }); buildStateData(rows2024); await buildMap(); applyClassification(currentThreshold, { resetManual: true }); unitStore.forEach(u => updateUnitColor(u.unit)); decodeScenarioFromURL(); updateAllStateColors(); unitStore.forEach(u => updateUnitColor(u.unit)); updateSummary(); } catch (err) { console.error('[paths2028] failed to initialise', err); } }
 
 	document.addEventListener('DOMContentLoaded', init);
 })();
