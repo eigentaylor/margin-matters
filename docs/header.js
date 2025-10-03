@@ -1,8 +1,8 @@
 // Dynamically load and inject the site header
-(function() {
+(function () {
   function createHeader(isInner = false) {
     const prefix = isInner ? '..' : '.';
-    
+
     const headerHTML = `
       <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
         <button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu" aria-expanded="false">
@@ -29,7 +29,7 @@
 
     return headerHTML + title_div_HTML;
   }
-  
+
   function injectHeader() {
     // Find the placeholder element
     const placeholder = document.getElementById('header-placeholder');
@@ -37,19 +37,19 @@
       console.warn('Header placeholder not found');
       return;
     }
-    
+
     // Determine if this is an inner page (in a subdirectory)
     const isInner = placeholder.getAttribute('data-is-inner') === 'true';
-    
+
     // Inject the header
     placeholder.innerHTML = createHeader(isInner);
-    
+
     // Load the header toggle script
     const script = document.createElement('script');
     script.src = isInner ? '../header-toggle.js' : './header-toggle.js';
     placeholder.appendChild(script);
   }
-  
+
   // Wait for DOM to be ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', injectHeader);

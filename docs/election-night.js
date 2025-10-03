@@ -1,4 +1,4 @@
-(function(){
+(function () {
   'use strict';
 
   // election-night simulator
@@ -44,15 +44,15 @@
   // Known poll-closing times (ET) grouped by states. Used to set when
   // counting should realistically start for each state.
   const POLL_CLOSINGS = {
-    '15:00': ['KY','IN','PR'],
-    '16:00': ['VT','VA','SC','GA'],
-    '16:30': ['NC','OH','WV'],
-    '17:00': ['AL','CT','DC','DE','FL','IL','KS','ME','MD','MA','MS','MO','NH','NJ','OK','PA','RI','TN','TX'],
+    '15:00': ['KY', 'IN', 'PR'],
+    '16:00': ['VT', 'VA', 'SC', 'GA'],
+    '16:30': ['NC', 'OH', 'WV'],
+    '17:00': ['AL', 'CT', 'DC', 'DE', 'FL', 'IL', 'KS', 'ME', 'MD', 'MA', 'MS', 'MO', 'NH', 'NJ', 'OK', 'PA', 'RI', 'TN', 'TX'],
     '17:30': ['AR'],
-    '18:00': ['AZ','CO','LA','MI','MN','NE','NM','NY','SD','WI','WY'],
-    '19:00': ['IA','MT','NV','UT'],
-    '20:00': ['CA','OR','WA','ID','ND'],
-    '22:00': ['AK','HI']
+    '18:00': ['AZ', 'CO', 'LA', 'MI', 'MN', 'NE', 'NM', 'NY', 'SD', 'WI', 'WY'],
+    '19:00': ['IA', 'MT', 'NV', 'UT'],
+    '20:00': ['CA', 'OR', 'WA', 'ID', 'ND'],
+    '22:00': ['AK', 'HI']
   };
 
   // Relative counting speeds by state. Values >1 count faster than
@@ -71,7 +71,7 @@
   // States where mail/absentee ballots are common and reporting tends to
   // be delayed or front-loaded differently. Affects reporting schedule
   // shapes when generating batches.
-  const MAIL_HEAVY_STATES = new Set(['AZ','CA','CO','HI','NV','NJ','NY','OR','UT','VT','WA','MI','PA','WI','MN']);
+  const MAIL_HEAVY_STATES = new Set(['AZ', 'CA', 'CO', 'HI', 'NV', 'NJ', 'NY', 'OR', 'UT', 'VT', 'WA', 'MI', 'PA', 'WI', 'MN']);
 
   // Named phases of election night used to tune heuristics such as the
   // phase dampener in the bias model. Times are converted to minutes
@@ -87,17 +87,17 @@
   // Mapping of two-letter state abbreviations to their full names used
   // when formatting labels for the UI and call log.
   const STATE_NAMES = {
-    AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California', CO:'Colorado', CT:'Connecticut',
-    DE:'Delaware', DC:'District of Columbia', FL:'Florida', GA:'Georgia', HI:'Hawaii', ID:'Idaho', IL:'Illinois',
-    IN:'Indiana', IA:'Iowa', KS:'Kansas', KY:'Kentucky', LA:'Louisiana', ME:'Maine', MD:'Maryland', MA:'Massachusetts',
-    MI:'Michigan', MN:'Minnesota', MS:'Mississippi', MO:'Missouri', MT:'Montana', NE:'Nebraska', NV:'Nevada',
-    NH:'New Hampshire', NJ:'New Jersey', NM:'New Mexico', NY:'New York', NC:'North Carolina', ND:'North Dakota',
-    OH:'Ohio', OK:'Oklahoma', OR:'Oregon', PA:'Pennsylvania', RI:'Rhode Island', SC:'South Carolina', SD:'South Dakota',
-    TN:'Tennessee', TX:'Texas', UT:'Utah', VT:'Vermont', VA:'Virginia', WA:'Washington', WV:'West Virginia',
-    WI:'Wisconsin', WY:'Wyoming'
+    AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut',
+    DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois',
+    IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts',
+    MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada',
+    NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota',
+    OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota',
+    TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia',
+    WI: 'Wisconsin', WY: 'Wyoming'
   };
 
-  function clampMargin(value){
+  function clampMargin(value) {
     if (!isFinite(value)) return 0;
     const LIMIT = 1 - 1e-9;
     if (value > LIMIT) return LIMIT;
@@ -170,7 +170,7 @@
    * reset, speed, PV mode, progress slider), and initialize labels.
    * This function runs on DOMContentLoaded.
    */
-  function init(){
+  function init() {
     elements.toggle = document.getElementById('enToggle');
     elements.reset = document.getElementById('enReset');
     elements.speed = document.getElementById('enSpeed');
@@ -184,21 +184,21 @@
     elements.logUncalled = document.getElementById('enLogUncalled');
     elements.logPanel = document.getElementById('enLogPanel');
     // Hide the call log panel by default until the election-night simulation is active
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
-    
+    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
+
     // Mobile collapse/expand functionality for call log
     if (elements.logHeader && elements.logPanel) {
       // Start collapsed on mobile
       if (window.innerWidth <= 1200) {
         elements.logPanel.classList.add('collapsed');
       }
-      
+
       elements.logHeader.addEventListener('click', () => {
         if (window.innerWidth <= 1200) {
           elements.logPanel.classList.toggle('collapsed');
         }
       });
-      
+
       // Handle window resize
       window.addEventListener('resize', () => {
         if (window.innerWidth > 1200) {
@@ -208,9 +208,9 @@
         }
       });
     }
-  elements.confidence = document.getElementById('enConfidence');
-  elements.confidenceVal = document.getElementById('enConfidenceVal');
-  elements.victory = document.getElementById('enVictory');
+    elements.confidence = document.getElementById('enConfidence');
+    elements.confidenceVal = document.getElementById('enConfidenceVal');
+    elements.victory = document.getElementById('enVictory');
 
     if (elements.toggle) {
       elements.toggle.addEventListener('click', () => {
@@ -311,7 +311,7 @@
    * This builds per-unit state objects, computes simStart/simEnd, and
    * resets call logs and cached colors. It does not start the RAF loop.
    */
-  function prepareSimulation(){
+  function prepareSimulation() {
     const year = getSelectedYear();
     if (!year) return;
 
@@ -322,8 +322,8 @@
     const pvValue = resolvePvValue();
     state.pvValue = pvValue;
     state.targetPvLabel = formatLean(pvValue);
-  state.confidenceThreshold = getConfidenceSliderValue();
-  updateConfidenceLabel(state.confidenceThreshold);
+    state.confidenceThreshold = getConfidenceSliderValue();
+    updateConfidenceLabel(state.confidenceThreshold);
 
     if (typeof window.updateAll === 'function') window.updateAll();
 
@@ -342,8 +342,8 @@
     state.year = year;
 
     window._electionNightActive = true;
-  // Show the call log panel when the election-night simulation is prepared
-  try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) {}
+    // Show the call log panel when the election-night simulation is prepared
+    try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) { }
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
@@ -402,20 +402,20 @@
     updateToggleLabel();
   }
 
-  function progressToTime(progress){
+  function progressToTime(progress) {
     const clamped = Math.max(0, Math.min(1, isFinite(progress) ? progress : 0));
     const span = state.simEnd - state.simStart;
     if (!isFinite(span) || Math.abs(span) < EPS) return state.simStart;
     return state.simStart + clamped * span;
   }
 
-  function timeToProgress(timeMinutes){
+  function timeToProgress(timeMinutes) {
     const span = state.simEnd - state.simStart;
     if (!isFinite(timeMinutes) || !isFinite(span) || Math.abs(span) < EPS) return 0;
     return Math.max(0, Math.min(1, (timeMinutes - state.simStart) / span));
   }
 
-  function advanceDeterministic(targetTime){
+  function advanceDeterministic(targetTime) {
     if (!state.prepared) return;
     const clamped = Math.max(state.simStart, Math.min(state.simEnd, isFinite(targetTime) ? targetTime : state.simEnd));
     const delta = clamped - state.currentTime;
@@ -448,7 +448,7 @@
     }
   }
 
-  function seekToProgress(progress){
+  function seekToProgress(progress) {
     if (!state.prepared) return;
     const targetTime = progressToTime(progress);
     if (targetTime < state.currentTime - EPS) {
@@ -480,7 +480,7 @@
     advanceDeterministic(targetTime);
   }
 
-  function resetSimulation(restorePv){
+  function resetSimulation(restorePv) {
     if (state.rafId) cancelAnimationFrame(state.rafId);
     state.rafId = null;
     state.running = false;
@@ -488,7 +488,7 @@
     state.stateData = [];
     state.snapshot = new Map();
     window._electionNightSnapshot = null;
-  window._electionNightActive = false;
+    window._electionNightActive = false;
     state.currentTime = 0;
     state.lastTimestamp = null;
     state.lastDisplayUpdate = 0;
@@ -520,9 +520,9 @@
       elements.victory.style.display = 'none';
     }
 
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) {}
+    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
     if (typeof window.hideMapTip === 'function') {
-      try { window.hideMapTip(); } catch(e) {}
+      try { window.hideMapTip(); } catch (e) { }
     }
 
     if (restorePv) {
@@ -533,7 +533,7 @@
     }
 
     if (typeof window.updateAll === 'function') {
-      try { window.updateAll(); } catch(e) {}
+      try { window.updateAll(); } catch (e) { }
     }
 
     if (state.prevUnitColors) {
@@ -544,12 +544,12 @@
     }
     if (typeof window.renderSmallStateBoxes === 'function' && window._lastUnitColors && window._lastAbbrColors && state.prevUnitColors) {
       const year = getSelectedYear();
-      try { window.renderSmallStateBoxes(year, window._lastAbbrColors, window._lastUnitColors); } catch(e) {}
+      try { window.renderSmallStateBoxes(year, window._lastAbbrColors, window._lastUnitColors); } catch (e) { }
     }
     updateToggleLabel();
   }
 
-  function startSimulation(){
+  function startSimulation() {
     if (!state.prepared || state.running) return;
     state.running = true;
     state.lastTimestamp = null;
@@ -558,7 +558,7 @@
     updateToggleLabel();
   }
 
-  function pauseSimulation(){
+  function pauseSimulation() {
     state.running = false;
     if (state.rafId) cancelAnimationFrame(state.rafId);
     state.rafId = null;
@@ -571,25 +571,25 @@
    * advances state.currentTime, renders a frame, and enqueues the next
    * tick while the simulation remains running.
    */
-  function tick(timestamp){
+  function tick(timestamp) {
     if (!state.running) return;
     if (!state.lastTimestamp) state.lastTimestamp = timestamp;
     const deltaMs = timestamp - state.lastTimestamp;
     state.lastTimestamp = timestamp;
     const deltaMinutes = (deltaMs / 1000) * state.speedMultiplier * state.minutesPerSecond;
     state.currentTime = Math.min(state.currentTime + deltaMinutes, state.simEnd);
-    
+
     // Check if we should update the display (throttled updates)
     const timeSinceLastDisplay = state.currentTime - state.lastDisplayUpdate;
-    const shouldUpdateDisplay = timeSinceLastDisplay >= DISPLAY_UPDATE_INTERVAL || 
-                                state.currentTime >= state.simEnd - EPS ||
-                                state.lastDisplayUpdate === 0;
-    
+    const shouldUpdateDisplay = timeSinceLastDisplay >= DISPLAY_UPDATE_INTERVAL ||
+      state.currentTime >= state.simEnd - EPS ||
+      state.lastDisplayUpdate === 0;
+
     if (shouldUpdateDisplay) {
       state.lastDisplayUpdate = state.currentTime;
       renderAt(state.currentTime);
     }
-    
+
     if (state.currentTime >= state.simEnd - EPS) {
       pauseSimulation();
     } else {
@@ -604,7 +604,7 @@
    * The returned array is stored in state.stateData and consumed by
    * renderAt/computeMetrics.
    */
-  function buildStateData(year, pvValue){
+  function buildStateData(year, pvValue) {
     const rows = (window._byYearMap && window._byYearMap.get(year)) || [];
     if (!rows.length) return [];
     const baselineUnitColors = state.prevUnitColors ? new Map(state.prevUnitColors) : new Map();
@@ -668,7 +668,7 @@
       const closeness = 1 - Math.min(1, Math.abs(adjustedMargin) / 0.12);
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
       let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
-      
+
       // Extend duration for extremely close races to accommodate the slowdown
       // This ensures the slowdown actually adds real time rather than just manipulating display
       if (Math.abs(adjustedMargin) <= CLOSE_RACE_THRESHOLD) {
@@ -679,7 +679,7 @@
         const affectedPortion = (1 - CLOSE_RACE_SLOWDOWN_START);
         duration = duration * (1 + affectedPortion * (slowdownMultiplier - 1));
       }
-      
+
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
@@ -782,7 +782,7 @@
     return out;
   }
 
-  function buildEvAllocations(year, abbr, unit, ev, winner, dVotes, rVotes, oVotes, topThirdShare){
+  function buildEvAllocations(year, abbr, unit, ev, winner, dVotes, rVotes, oVotes, topThirdShare) {
     const allocations = { D: 0, R: 0, O: 0, thirdParties: {} };
     if (!isFinite(ev) || ev <= 0) return allocations;
 
@@ -791,7 +791,7 @@
       try {
         const toggle = document.getElementById('propEvToggle');
         return toggle && toggle.checked;
-      } catch(e) {
+      } catch (e) {
         return false;
       }
     })();
@@ -802,7 +802,7 @@
       const pv = window._curPv || 0;
       const adjMargin = margin + pv;
       const stateWinner = adjMargin >= 0 ? 'D' : 'R';
-      
+
       if (stateWinner !== 'R') {
         if (abbr === 'AL') {
           allocations.D = 5;
@@ -826,7 +826,7 @@
           const rows = (window._byYearMap && window._byYearMap.get(year)) || [];
           const row = rows.find(r => r && r.unit === unit);
           const thirdPartyResults = (row && row.thirdPartyResults) || null;
-          
+
           const result = window.allocateProportionalEVs(dVotes, rVotes, oVotes, ev, topThirdShare, thirdPartyResults);
           allocations.D = result.D || 0;
           allocations.R = result.R || 0;
@@ -839,51 +839,51 @@
           //     console.log('[EV-TRACE] buildEvAllocations', { year, abbr, unit, ev, dVotes, rVotes, oVotes, thirdPartyResults, result });
           //   }
           // } catch(e) {}
-          
+
           // Sum up all third party EVs into O for backwards compatibility with display
           if (allocations.thirdParties && typeof allocations.thirdParties === 'object') {
             let totalThirdEVs = 0;
             Object.values(allocations.thirdParties).forEach(ev => totalThirdEVs += ev);
             allocations.O += totalThirdEVs;
           }
-          
+
           return allocations;
-        } catch(e) {
+        } catch (e) {
           console.warn('Failed to use advanced proportional allocation, falling back:', e);
         }
       }
-      
+
       // Fallback proportional allocation (simple)
       const total = dVotes + rVotes + oVotes;
       if (total > 0) {
         const dShare = dVotes / total;
         const rShare = rVotes / total;
         const oShare = oVotes / total;
-        
+
         const dQuota = Math.floor(dShare * ev);
         const rQuota = Math.floor(rShare * ev);
         const oQuota = Math.floor(oShare * ev);
-        
+
         allocations.D = dQuota;
         allocations.R = rQuota;
         allocations.O = oQuota;
-        
+
         let remaining = ev - (dQuota + rQuota + oQuota);
-        
+
         if (remaining > 0) {
           const remainders = [
             { party: 'D', remainder: (dShare * ev) - dQuota },
             { party: 'R', remainder: (rShare * ev) - rQuota },
             { party: 'O', remainder: (oShare * ev) - oQuota }
           ];
-          
+
           remainders.sort((a, b) => b.remainder - a.remainder);
-          
+
           for (let i = 0; i < remaining; i++) {
             allocations[remainders[i].party]++;
           }
         }
-        
+
         return allocations;
       }
     }
@@ -902,7 +902,7 @@
     return allocations;
   }
 
-  function buildCallAllocation(st, leader){
+  function buildCallAllocation(st, leader) {
     const allocation = { D: 0, R: 0, O: 0 };
     const totalEv = isFinite(st.ev) ? st.ev : 0;
     if (!leader || totalEv <= 0) return allocation;
@@ -912,7 +912,7 @@
     return allocation;
   }
 
-  function generateReportingSchedule(startTime, duration, closeness, mailHeavy, rng){
+  function generateReportingSchedule(startTime, duration, closeness, mailHeavy, rng) {
     if (!isFinite(startTime) || !isFinite(duration) || duration <= 0) {
       return [{ time: isFinite(startTime) ? startTime : 0, reporting: 1 }];
     }
@@ -921,7 +921,7 @@
     // This allows counting to appear continuous while display updates happen less frequently
     const pointsPerHour = 30; // generate a point every 2 minutes on average
     const totalPoints = Math.max(60, Math.round((duration / 60) * pointsPerHour));
-    
+
     const schedule = [];
     const timeWeights = [];
     const reportWeights = [];
@@ -931,7 +931,7 @@
     // Generate weights for smooth distribution across the schedule
     for (let i = 0; i < totalPoints; i++) {
       const progress = i / Math.max(1, totalPoints - 1);
-      
+
       // Time weights: mail-heavy states count slower early, faster late
       // Regular states count faster early, slower late
       const phaseBias = mailHeavy ? (progress * 2 + 0.5) : (2 - progress * 1.5);
@@ -950,7 +950,7 @@
 
     let currentTime = startTime;
     let currentReporting = 0;
-    
+
     for (let i = 0; i < totalPoints; i++) {
       // Distribute time proportionally
       let interval = duration * (timeWeights[i] / timeWeightSum);
@@ -980,7 +980,7 @@
     return refineReportingScheduleTail(schedule, startTime, duration, closeness);
   }
 
-  function refineReportingScheduleTail(schedule, startTime, duration, closeness){
+  function refineReportingScheduleTail(schedule, startTime, duration, closeness) {
     if (!Array.isArray(schedule) || schedule.length < 2) return schedule;
     const endTime = startTime + duration;
     const trigger = 0.75 + (1 - Math.max(0, Math.min(1, closeness || 0))) * 0.12;
@@ -1061,7 +1061,7 @@
    * tallies, and then updates UI widgets (EV bar, PV display, progress
    * slider, and the call log).
    */
-  function renderAt(timeMinutes){
+  function renderAt(timeMinutes) {
     if (!state.stateData.length) return;
 
     const phase = getPhase(timeMinutes);
@@ -1156,7 +1156,7 @@
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
-    
+
     // Update EV breakdown table during election night if modal is open
     if (typeof window.updateEvBreakdownTable === 'function') {
       try {
@@ -1164,15 +1164,15 @@
         if (modal && modal.style.display !== 'none') {
           window.updateEvBreakdownTable();
         }
-      } catch(e) {}
+      } catch (e) { }
     }
-    
+
     if (typeof window.refreshActiveMapTip === 'function') {
-      try { window.refreshActiveMapTip(); } catch(e) {}
+      try { window.refreshActiveMapTip(); } catch (e) { }
     }
   }
 
-  function computeMetrics(st, timeMinutes, phaseName){
+  function computeMetrics(st, timeMinutes, phaseName) {
     // Compute the current reporting fraction for this unit
     const reporting = computeReportingFraction(st, timeMinutes);
     const thirdPartyDominant = !!st.thirdPartyDominant;
@@ -1187,10 +1187,10 @@
     let marginStr = '';
     let color;
 
-  // If a third party dominates the unit, we don't run the two-party
-  // bias model and instead show the final shares directly until reporting
-  // occurs.
-  if (thirdPartyDominant) {
+    // If a third party dominates the unit, we don't run the two-party
+    // bias model and instead show the final shares directly until reporting
+    // occurs.
+    if (thirdPartyDominant) {
       dShare = st.dShareFinal;
       rShare = st.rShareFinal;
       oShare = totalThirdShare;
@@ -1198,7 +1198,7 @@
       margin = 0;
       marginStr = leader ? 'Other lead' : '';
       color = st.targetMetrics && st.targetMetrics.color ? st.targetMetrics.color : THIRD_PARTY_COLOR;
-  } else {
+    } else {
       const bias = logisticBias(st.biasParams, reporting, phaseName);
       const rawD = st.dTwoPartyFinal * Math.max(0.15, bias);
       const rawR = Math.max(EPS, st.rTwoPartyFinal);
@@ -1211,9 +1211,9 @@
       dShare = st.twoPartyShare * dShareBlend;
       rShare = st.twoPartyShare * rShareBlend;
       oShare = totalThirdShare;
-  // prefer actual counted vote totals when available (stats computed below)
-  const statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
-  leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
+      // prefer actual counted vote totals when available (stats computed below)
+      const statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
+      leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
       margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
       if (leader === 'O') marginStr = 'Other lead';
       else marginStr = (reporting > 0) ? formatLean(margin) : '';
@@ -1224,18 +1224,18 @@
       color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
     }
 
-  // Given the current shares and reporting fraction compute vote totals
-  // and how many votes remain.
-  const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
+    // Given the current shares and reporting fraction compute vote totals
+    // and how many votes remain.
+    const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
       if (leader === 'O') countedMarginStr = 'Other lead';
       else countedMarginStr = formatLean(countedMargin);
     }
-  // Compute a simple confidence metric based on the counted votes and
-  // remaining ballots.
-  const confidence = calculateConfidence(st, stats);
+    // Compute a simple confidence metric based on the counted votes and
+    // remaining ballots.
+    const confidence = calculateConfidence(st, stats);
 
     let result = {
       reporting,
@@ -1266,7 +1266,7 @@
     return result;
   }
 
-  function computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare){
+  function computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare) {
     // Return numerical totals for counted votes given a reporting fraction
     const countedVotes = st.totalVotes * Math.max(0, Math.min(1, reporting));
     const dCounted = countedVotes * Math.max(0, Math.min(1, dShare));
@@ -1286,7 +1286,7 @@
     };
   }
 
-  function calculateConfidence(st, stats){
+  function calculateConfidence(st, stats) {
     // Heuristic confidence calculation:
     // - If there are no counted votes => 0 confidence.
     // - If no remaining votes => 1 if leader > runner, else 0.
@@ -1315,7 +1315,7 @@
     return Math.min(1, Math.max(0, voteGap / Math.max(EPS, remainingVotes)));
   }
 
-  function maybeEmitMiscall(st, metrics, currentTime){
+  function maybeEmitMiscall(st, metrics, currentTime) {
     if (!st || !st.callRecord || st.misCallLogged) return;
     if (st.callRecord.kind !== 'call') return;
     const calledLeader = st.callRecord.leader;
@@ -1346,7 +1346,7 @@
     state.lastLogKey = '';
   }
 
-  function shouldCallState(st, metrics, currentTime){
+  function shouldCallState(st, metrics, currentTime) {
     // Decide whether the simulator should call the unit now.
     // - instantCall units are called as soon as their startTime is reached.
     // - otherwise: require some reporting OR that we're past the call deadline
@@ -1362,7 +1362,7 @@
     return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
 
-  function shouldForceCall(st, metrics, currentTime){
+  function shouldForceCall(st, metrics, currentTime) {
     // Force a call at or after the callDeadline if reporting is sufficient
     // and the visible leader matches the final winner. This helps ensure
     // the simulator will eventually call states even if confidence is
@@ -1378,7 +1378,7 @@
     return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
 
-  function registerCall(st, metrics, currentTime){
+  function registerCall(st, metrics, currentTime) {
     // Record a call for `st` at callTime and create a callRecord object
     // that will later be rendered in the call log. The call record stores
     // a snapshot of the observed metrics and the EV allocation used.
@@ -1423,17 +1423,17 @@
     triggerTipRefresh();
   }
 
-  function flushSmallBoxes(){
+  function flushSmallBoxes() {
     if (!state.boxesDirty || !state.unitColorMap || !state.abbrColorMap || !state.year) return;
     state.boxesDirty = false;
     if (typeof window.renderSmallStateBoxes === 'function') {
       window._lastUnitColors = state.unitColorMap;
       window._lastAbbrColors = state.abbrColorMap;
-      try { window.renderSmallStateBoxes(state.year, state.abbrColorMap, state.unitColorMap); } catch(e) {}
+      try { window.renderSmallStateBoxes(state.year, state.abbrColorMap, state.unitColorMap); } catch (e) { }
     }
   }
 
-  function updateSmallBoxes(st, color, metrics){
+  function updateSmallBoxes(st, color, metrics) {
     if (!st || !state.unitColorMap || !state.abbrColorMap) return;
     state.unitColorMap.set(st.unitKey, color);
     if (st.type !== 'district') {
@@ -1459,7 +1459,7 @@
     state.boxesDirty = true;
   }
 
-  function updateEvDisplay(dEV, rEV, oEV){
+  function updateEvDisplay(dEV, rEV, oEV) {
     const totalPool = Math.max(1, state.totalEvPool || 538);
     const called = Math.max(0, dEV + rEV + oEV);
     const uEV = Math.max(0, totalPool - called);
@@ -1496,18 +1496,18 @@
       seg.el.style.borderRadius = '0';
       if (!visible) {
         // hide immediately (no transition) to avoid flicker when value is zero
-        try { seg.el.style.transition = 'none'; seg.el.style.willChange = 'auto'; } catch(e) {}
+        try { seg.el.style.transition = 'none'; seg.el.style.willChange = 'auto'; } catch (e) { }
         seg.el.style.width = '0%';
         seg.el.style.display = 'none';
         return;
       }
 
       // ensure element is visible before animating
-      try { seg.el.style.display = ''; } catch(e) {}
+      try { seg.el.style.display = ''; } catch (e) { }
       try {
         seg.el.style.transition = `left ${TRANS_MS}ms ${TRANS_EASE}, right ${TRANS_MS}ms ${TRANS_EASE}, width ${TRANS_MS}ms ${TRANS_EASE}`;
         seg.el.style.willChange = 'left, right, width';
-      } catch(e) {}
+      } catch (e) { }
 
       const anchor = (seg.el.dataset && seg.el.dataset.anchor) || '';
       const widthPct = `${seg.pct.toFixed(3)}%`;
@@ -1555,7 +1555,7 @@
     }
   }
 
-  function updatePopularVoteDisplay(dVotes, rVotes, oVotes, counted){
+  function updatePopularVoteDisplay(dVotes, rVotes, oVotes, counted) {
     if (!state.prepared) return;
     const fmt = x => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
     const pvDem = document.getElementById('pvDem');
@@ -1584,7 +1584,7 @@
     }
   }
 
-  function updateProgressSlider(timeMinutes){
+  function updateProgressSlider(timeMinutes) {
     if (!elements.progress) return;
     const value = (timeMinutes - state.simStart) / (state.simEnd - state.simStart);
     state.suppressProgressEvent = true;
@@ -1592,21 +1592,21 @@
     state.suppressProgressEvent = false;
   }
 
-  function getConfidenceSliderValue(){
+  function getConfidenceSliderValue() {
     if (!elements.confidence) return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     const raw = parseFloat(elements.confidence.value);
     if (!isFinite(raw)) return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     return Math.max(0, Math.min(1, raw));
   }
 
-  function updateConfidenceLabel(val){
+  function updateConfidenceLabel(val) {
     const target = Math.max(0, Math.min(1, isFinite(val) ? val : getConfidenceSliderValue()));
     if (elements.confidenceVal) {
       elements.confidenceVal.textContent = target.toFixed(2);
     }
   }
 
-  function updateCallLog(currentTime){
+  function updateCallLog(currentTime) {
     const timeLabel = formatTimeLabel(currentTime);
     if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
     if (!elements.log && !elements.logUncalled && !elements.victory) return;
@@ -1643,7 +1643,7 @@
         return (b.reporting || 0) - (a.reporting || 0);
       });
 
-  const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
+    const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
     const callLines = [];
     const signatureParts = [];
     const totalPool = state.totalEvPool || 538;
@@ -1668,10 +1668,10 @@
         if (live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
         if (live.evAllocations) record.finalAllocations = { ...live.evAllocations };
       }
-  const tallyWinner = record.actualWinner || record.leader;
-  if (tallyWinner === 'D') dRunning += record.ev || 0;
-  else if (tallyWinner === 'R') rRunning += record.ev || 0;
-  else oRunning += record.ev || 0;
+      const tallyWinner = record.actualWinner || record.leader;
+      if (tallyWinner === 'D') dRunning += record.ev || 0;
+      else if (tallyWinner === 'R') rRunning += record.ev || 0;
+      else oRunning += record.ev || 0;
       if (!outcome) {
         if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
         else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
@@ -1684,8 +1684,8 @@
       const infoParts = [reportingText, marginText, confidenceText];
       if (evText) infoParts.push(evText);
       const infoJoined = infoParts.filter(Boolean).join(', ');
-      const evSigCall = record.evAllocations ? `${record.evAllocations.D||0}-${record.evAllocations.R||0}-${record.evAllocations.O||0}` : 'na';
-      const evSigFinal = record.finalAllocations ? `${record.finalAllocations.D||0}-${record.finalAllocations.R||0}-${record.finalAllocations.O||0}` : 'na';
+      const evSigCall = record.evAllocations ? `${record.evAllocations.D || 0}-${record.evAllocations.R || 0}-${record.evAllocations.O || 0}` : 'na';
+      const evSigFinal = record.finalAllocations ? `${record.finalAllocations.D || 0}-${record.finalAllocations.R || 0}-${record.finalAllocations.O || 0}` : 'na';
       const callLine = {
         kind: 'call',
         time: record.time,
@@ -1858,10 +1858,10 @@
     }
   }
 
-  function triggerTipRefresh(){
+  function triggerTipRefresh() {
     if (typeof window === 'undefined' || typeof window.refreshActiveMapTip !== 'function') return;
     const runner = () => {
-      try { window.refreshActiveMapTip(); } catch(e) {}
+      try { window.refreshActiveMapTip(); } catch (e) { }
     };
     try {
       if (typeof window.requestAnimationFrame === 'function') {
@@ -1871,12 +1871,12 @@
       } else {
         runner();
       }
-    } catch(e) {
+    } catch (e) {
       runner();
     }
   }
 
-  function resolvePvValue(){
+  function resolvePvValue() {
     const mode = state.pvMode || 'current';
     const current = getCurrentPv();
     if (mode === 'current') {
@@ -1912,16 +1912,16 @@
     return sample;
   }
 
-  function applyColor(st, color, metrics){
+  function applyColor(st, color, metrics) {
     st.pathSelections.forEach(sel => {
       if (!sel) return;
       try { sel.attr('fill', color); }
-      catch(e){ try { sel.style('fill', color); } catch(err){} }
+      catch (e) { try { sel.style('fill', color); } catch (err) { } }
     });
     updateSmallBoxes(st, color, metrics);
   }
 
-  function collectPathSelections(unit, abbr){
+  function collectPathSelections(unit, abbr) {
     const selections = [];
     const statePath = selectStatePath(abbr);
     if (/-AL$/.test(unit) || /^[A-Z]{2}$/.test(unit) || unit === 'DC') {
@@ -1934,22 +1934,22 @@
     return selections;
   }
 
-  function selectStatePath(abbr){
+  function selectStatePath(abbr) {
     if (!window.d3) return null;
     const sel = d3.select(`#state-${abbr}`);
     return sel && !sel.empty() ? sel : null;
   }
 
-  function selectDistrictPath(unit){
+  function selectDistrictPath(unit) {
     if (window._districtPaths && typeof window._districtPaths.get === 'function') {
       return window._districtPaths.get(unit) || null;
     }
     return null;
   }
 
-  function createBiasParams(unit, margin, closeness, rng){
+  function createBiasParams(unit, margin, closeness, rng) {
     const rand = rng || Math.random;
-    const mailHeavy = MAIL_HEAVY_STATES.has(unit.slice(0,2));
+    const mailHeavy = MAIL_HEAVY_STATES.has(unit.slice(0, 2));
     const finalWinner = margin > EPS ? 'D' : margin < -EPS ? 'R' : null;
     let favored;
     if (!finalWinner) {
@@ -1967,7 +1967,7 @@
     return { favored, midpoint, steepness, strength, linger };
   }
 
-  function logisticBias(params, reporting, phaseName){
+  function logisticBias(params, reporting, phaseName) {
     if (!params) return 1;
     const midpoint = params.midpoint;
     const steepness = params.steepness;
@@ -1990,7 +1990,7 @@
     return 1 + (base - 1) * damp;
   }
 
-  function computeReportingFraction(st, timeMinutes){
+  function computeReportingFraction(st, timeMinutes) {
     if (st.instantCall) {
       if (timeMinutes <= st.startTime) return 0;
       return 1;
@@ -2010,7 +2010,7 @@
         reporting = Math.max(0, Math.min(1, nextReporting));
       }
       if (timeMinutes >= st.startTime + st.duration - EPS) reporting = 1;
-      
+
       // Apply slowdown for extremely close races near the end
       // This creates more tension by slowing down the final counts
       if (isFinite(st.finalMargin) && Math.abs(st.finalMargin) <= CLOSE_RACE_THRESHOLD) {
@@ -2022,7 +2022,7 @@
           reporting = CLOSE_RACE_SLOWDOWN_START + slowedProgress * (1 - CLOSE_RACE_SLOWDOWN_START);
         }
       }
-      
+
       return reporting;
     }
 
@@ -2032,7 +2032,7 @@
     return clamp01(eased);
   }
 
-  function updateToggleLabel(){
+  function updateToggleLabel() {
     if (!elements.toggle) return;
     if (state.running) elements.toggle.textContent = 'Pause';
     else if (!state.prepared) elements.toggle.textContent = 'Start';
@@ -2040,7 +2040,7 @@
     else elements.toggle.textContent = 'Resume';
   }
 
-  function determineWinner(dShare, rShare, oShare){
+  function determineWinner(dShare, rShare, oShare) {
     const shares = [
       { code: 'D', value: isFinite(dShare) ? dShare : 0 },
       { code: 'R', value: isFinite(rShare) ? rShare : 0 },
@@ -2056,7 +2056,7 @@
   }
 
   // Determine visible leader. Prefer vote counts when available (stats object with dCounted/rCounted/oCounted/countedVotes)
-  function determineLeader(dShare, rShare, oShare, reporting, stats){
+  function determineLeader(dShare, rShare, oShare, reporting, stats) {
     if (reporting <= 0) return null;
     // If stats with counted votes are provided and there are counted votes, use them
     if (stats && isFinite(stats.countedVotes) && stats.countedVotes > EPS) {
@@ -2075,7 +2075,7 @@
     return 'O';
   }
 
-  function formatLeader(code){
+  function formatLeader(code) {
     if (code === 'D') return 'Democrats';
     if (code === 'R') return 'Republicans';
     if (code === 'O') return 'Other';
@@ -2083,23 +2083,23 @@
     return 'No call';
   }
 
-  function formatMarginText(marginStr, leader){
+  function formatMarginText(marginStr, leader) {
     if (marginStr === 'None') return 'None';
     if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';
     return marginStr;
   }
 
-  function formatReportingText(reporting){
+  function formatReportingText(reporting) {
     if (reporting == null || reporting <= 0) return '0% reporting';
     return `${(reporting * 100).toFixed(1)}% reporting`;
   }
 
-  function formatConfidenceText(confidence){
+  function formatConfidenceText(confidence) {
     if (!isFinite(confidence)) return 'Confidence —';
     return `Confidence ${(confidence * 100).toFixed(0)}%`;
   }
 
-  function formatEvAllocationsForLog(callAlloc, finalAlloc){
+  function formatEvAllocationsForLog(callAlloc, finalAlloc) {
     const toParts = alloc => {
       if (!alloc) return [];
       const parts = [];
@@ -2120,7 +2120,7 @@
     return text ? `EV ${text}` : '';
   }
 
-  function formatLean(value){
+  function formatLean(value) {
     if (!isFinite(value)) return 'ERROR';
     if (typeof window.leanStr === 'function') return window.leanStr(value);
     //if (Math.abs(value) < 0.00005) return 'EVEN';
@@ -2128,43 +2128,43 @@
     return `${value > 0 ? 'D' : 'R'}+${pct}`;
   }
 
-  function formatUnitLabel(unit){
+  function formatUnitLabel(unit) {
     if (/^[A-Z]{2}$/.test(unit)) return STATE_NAMES[unit] || unit;
     if (/-AL$/.test(unit)) {
-      const abbr = unit.slice(0,2);
+      const abbr = unit.slice(0, 2);
       return `${STATE_NAMES[abbr] || abbr} at-large`;
     }
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
-      const abbr = unit.slice(0,2);
+      const abbr = unit.slice(0, 2);
       const district = unit.slice(3);
       return `${STATE_NAMES[abbr] || abbr} ${district}`;
     }
     return unit;
   }
 
-  function getCurrentPv(){
+  function getCurrentPv() {
     if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) return window._pvOverride;
     return (typeof window._curPv === 'number' && isFinite(window._curPv)) ? window._curPv : 0;
   }
 
-  function getSelectedYear(){
+  function getSelectedYear() {
     const slider = document.getElementById('yearSlider');
     return slider ? parseInt(slider.value, 10) : 2024;
   }
 
-  function getPvSliderValue(){
+  function getPvSliderValue() {
     const slider = document.getElementById('pvSlider');
     return slider ? slider.value : null;
   }
 
-  function getStateStartTime(abbr){
+  function getStateStartTime(abbr) {
     for (const [timeStr, arr] of Object.entries(POLL_CLOSINGS)) {
       if (arr.includes(abbr)) return toMinutesWithOffset(timeStr);
     }
     return toMinutesWithOffset('19:00');
   }
 
-  function getPhase(minutes){
+  function getPhase(minutes) {
     if (!PHASES.length) return null;
     if (minutes < PHASES[0].start) return PHASES[0];
     for (const phase of PHASES) {
@@ -2173,16 +2173,16 @@
     return PHASES[PHASES.length - 1];
   }
 
-  function toMinutes(timeStr){
+  function toMinutes(timeStr) {
     const [h, m] = timeStr.split(':').map(Number);
     return h * 60 + m;
   }
 
-  function toMinutesWithOffset(timeStr){
+  function toMinutesWithOffset(timeStr) {
     return toMinutes(timeStr) + TIME_OFFSET_MIN;
   }
 
-  function formatTimeLabel(minutes){
+  function formatTimeLabel(minutes) {
     const dayMinutes = 24 * 60;
     const minuteOfDay = ((minutes % dayMinutes) + dayMinutes) % dayMinutes;
     const hours = Math.floor(minuteOfDay / 60);
@@ -2192,7 +2192,7 @@
     return `${h12}:${mins.toString().padStart(2, '0')} ${ampm}`;
   }
 
-  function getEv(year, unit){
+  function getEv(year, unit) {
     if (typeof window.getEvFor === 'function') {
       const ev = window.getEvFor(year, unit);
       if (isFinite(ev)) return ev;
@@ -2204,7 +2204,7 @@
     return 0;
   }
 
-  function determineEvPool(year, data){
+  function determineEvPool(year, data) {
     const fromGlobal = window._totalEvByYear && window._totalEvByYear.get(year);
     if (isFinite(fromGlobal) && fromGlobal > 0) return fromGlobal;
     if (!Array.isArray(data) || !data.length) return 538;
@@ -2233,23 +2233,23 @@
     return total > 0 ? total : 538;
   }
 
-  function totalFromRow(row){
+  function totalFromRow(row) {
     const direct = +row.total;
     if (isFinite(direct) && direct > 0) return direct;
     const sum = (+row.dVotes || 0) + (+row.rVotes || 0) + (+row.tVotes || 0);
     return sum > 0 ? sum : 1;
   }
 
-  function clamp01(x){
+  function clamp01(x) {
     if (!isFinite(x)) return 0;
     return Math.max(0, Math.min(1, x));
   }
 
-  function clampByte(v){
+  function clampByte(v) {
     return Math.max(0, Math.min(255, v | 0));
   }
 
-  function hexToRgb(hex){
+  function hexToRgb(hex) {
     if (!hex) return [47, 47, 47];
     let cleaned = hex.replace('#', '');
     if (cleaned.length === 8) cleaned = cleaned.slice(0, 6);
@@ -2259,11 +2259,11 @@
     return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
   }
 
-  function rgbToHex(r, g, b){
+  function rgbToHex(r, g, b) {
     return '#' + [r, g, b].map(v => clampByte(v).toString(16).padStart(2, '0')).join('');
   }
 
-  function blendColors(a, b, t){
+  function blendColors(a, b, t) {
     const rgbA = hexToRgb(a);
     const rgbB = hexToRgb(b);
     const blended = [
@@ -2274,7 +2274,7 @@
     return rgbToHex(blended[0], blended[1], blended[2]);
   }
 
-  function safeMarginToColor(margin, isThird){
+  function safeMarginToColor(margin, isThird) {
     if (isThird) return THIRD_PARTY_COLOR;
     if (typeof window.marginToColor === 'function') return window.marginToColor(margin, false);
     if (margin <= -0.20) return '#8B0000';
@@ -2287,7 +2287,7 @@
     return '#00008B';
   }
 
-  function hashCode(str){
+  function hashCode(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) {
       h = Math.imul(31, h) + str.charCodeAt(i) | 0;
@@ -2295,8 +2295,8 @@
     return h >>> 0;
   }
 
-  function mulberry32(a){
-    return function(){
+  function mulberry32(a) {
+    return function () {
       let t = a += 0x6D2B79F5;
       t = Math.imul(t ^ (t >>> 15), t | 1);
       t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
@@ -2304,14 +2304,14 @@
     };
   }
 
-  function randn(rng){
+  function randn(rng) {
     let u = 0, v = 0;
     while (u === 0) u = rng();
     while (v === 0) v = rng();
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   }
 
-  function randStudentT4(rng){
+  function randStudentT4(rng) {
     const z = randn(rng);
     let v = 0;
     for (let i = 0; i < 4; i++) {
@@ -2321,15 +2321,15 @@
     return z / Math.sqrt(v / 4);
   }
 
-  window.resetElectionNightSimulation = function(restorePv = true){
+  window.resetElectionNightSimulation = function (restorePv = true) {
     resetSimulation(restorePv);
   };
 
-  window.prepareElectionNightSimulation = function(){
+  window.prepareElectionNightSimulation = function () {
     if (!state.prepared) prepareSimulation();
   };
 
-  window.seekElectionNightProgress = function(progress){
+  window.seekElectionNightProgress = function (progress) {
     const clamped = Math.max(0, Math.min(1, isFinite(progress) ? progress : 0));
     if (!state.prepared) prepareSimulation();
     if (state.prepared) seekToProgress(clamped);
