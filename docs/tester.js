@@ -4,111 +4,111 @@
   const EPS = (window.ElectionConstants && window.ElectionConstants.EPS) || 1e-8;
   const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
   const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
-  
+
   // Use constants from shared module if available
-  const ID_TO_ABBR = (window.ElectionConstants && window.ElectionConstants.ID_TO_ABBR) || 
+  const ID_TO_ABBR = (window.ElectionConstants && window.ElectionConstants.ID_TO_ABBR) ||
     { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
-  const SMALL_STATES = (window.ElectionConstants && window.ElectionConstants.SMALL_STATES) || 
+  const SMALL_STATES = (window.ElectionConstants && window.ElectionConstants.SMALL_STATES) ||
     new Set(["MA", "RI", "CT", "NJ", "DE", "MD", "DC", "NH", "VT"]);
 
   // Use shared EV allocation function if available, otherwise define locally
-  const allocateProportionalEVs = (window.EvCalculations && window.EvCalculations.allocateProportionalEVs) || 
-  function (dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults) {
-    const total = dVotes + rVotes + oVotes;
-    if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0, thirdParties: {} };
+  const allocateProportionalEVs = (window.EvCalculations && window.EvCalculations.allocateProportionalEVs) ||
+    function (dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults) {
+      const total = dVotes + rVotes + oVotes;
+      if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0, thirdParties: {} };
 
-    // When thirdPartyResults is provided and has multiple parties, split third party votes proportionally
-    const thirdParties = {};
-    let hasMultipleThirdParties = false;
+      // When thirdPartyResults is provided and has multiple parties, split third party votes proportionally
+      const thirdParties = {};
+      let hasMultipleThirdParties = false;
 
-    if (thirdPartyResults && typeof thirdPartyResults === 'object') {
-      const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
-        // Filter out "Other(s)"
-        return name !== 'Other' && name !== 'Others';
-      });
-      if (thirdPartyEntries.length > 0) {
-        hasMultipleThirdParties = thirdPartyEntries.length > 1;
+      if (thirdPartyResults && typeof thirdPartyResults === 'object') {
+        const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
+          // Filter out "Other(s)"
+          return name !== 'Other' && name !== 'Others';
+        });
+        if (thirdPartyEntries.length > 0) {
+          hasMultipleThirdParties = thirdPartyEntries.length > 1;
 
-        // Calculate quotas for each party including third parties
-        const parties = [
-          { name: 'D', votes: dVotes },
-          { name: 'R', votes: rVotes }
+          // Calculate quotas for each party including third parties
+          const parties = [
+            { name: 'D', votes: dVotes },
+            { name: 'R', votes: rVotes }
+          ];
+
+          // Add each third party
+          thirdPartyEntries.forEach(([name, votes]) => {
+            parties.push({ name: name, votes: +votes || 0, isThirdParty: true });
+          });
+
+          // Calculate quotas using largest remainder method
+          const allocated = {};
+          let totalAllocated = 0;
+          const remainders = [];
+
+          parties.forEach(p => {
+            const share = p.votes / total;
+            const quota = Math.floor(share * totalEVs);
+            const remainder = (share * totalEVs) - quota;
+
+            if (p.isThirdParty) {
+              thirdParties[p.name] = quota;
+            } else {
+              allocated[p.name] = quota;
+            }
+            totalAllocated += quota;
+            remainders.push({ name: p.name, remainder, isThirdParty: p.isThirdParty });
+          });
+
+          // Allocate remaining EVs
+          let remaining = totalEVs - totalAllocated;
+          remainders.sort((a, b) => b.remainder - a.remainder);
+
+          for (let i = 0; i < remaining && i < remainders.length; i++) {
+            const r = remainders[i];
+            if (r.isThirdParty) {
+              thirdParties[r.name] = (thirdParties[r.name] || 0) + 1;
+            } else {
+              allocated[r.name] = (allocated[r.name] || 0) + 1;
+            }
+          }
+
+          return {
+            D: allocated.D || 0,
+            R: allocated.R || 0,
+            O: 0, // Not used when we have detailed third parties
+            thirdParties: thirdParties
+          };
+        }
+      }
+
+      // Fallback to simple D/R/O allocation when no detailed third party data
+      const dShare = dVotes / total;
+      const rShare = rVotes / total;
+      const oShare = oVotes / total;
+
+      const dQuota = Math.floor(dShare * totalEVs);
+      const rQuota = Math.floor(rShare * totalEVs);
+      const oQuota = Math.floor(oShare * totalEVs);
+
+      let allocated = { D: dQuota, R: rQuota, O: oQuota };
+      let remaining = totalEVs - (dQuota + rQuota + oQuota);
+
+      if (remaining > 0) {
+        const remainders = [
+          { party: 'D', remainder: (dShare * totalEVs) - dQuota },
+          { party: 'R', remainder: (rShare * totalEVs) - rQuota },
+          { party: 'O', remainder: (oShare * totalEVs) - oQuota }
         ];
 
-        // Add each third party
-        thirdPartyEntries.forEach(([name, votes]) => {
-          parties.push({ name: name, votes: +votes || 0, isThirdParty: true });
-        });
-
-        // Calculate quotas using largest remainder method
-        const allocated = {};
-        let totalAllocated = 0;
-        const remainders = [];
-
-        parties.forEach(p => {
-          const share = p.votes / total;
-          const quota = Math.floor(share * totalEVs);
-          const remainder = (share * totalEVs) - quota;
-
-          if (p.isThirdParty) {
-            thirdParties[p.name] = quota;
-          } else {
-            allocated[p.name] = quota;
-          }
-          totalAllocated += quota;
-          remainders.push({ name: p.name, remainder, isThirdParty: p.isThirdParty });
-        });
-
-        // Allocate remaining EVs
-        let remaining = totalEVs - totalAllocated;
         remainders.sort((a, b) => b.remainder - a.remainder);
 
-        for (let i = 0; i < remaining && i < remainders.length; i++) {
-          const r = remainders[i];
-          if (r.isThirdParty) {
-            thirdParties[r.name] = (thirdParties[r.name] || 0) + 1;
-          } else {
-            allocated[r.name] = (allocated[r.name] || 0) + 1;
-          }
+        for (let i = 0; i < remaining; i++) {
+          allocated[remainders[i].party]++;
         }
-
-        return {
-          D: allocated.D || 0,
-          R: allocated.R || 0,
-          O: 0, // Not used when we have detailed third parties
-          thirdParties: thirdParties
-        };
       }
-    }
 
-    // Fallback to simple D/R/O allocation when no detailed third party data
-    const dShare = dVotes / total;
-    const rShare = rVotes / total;
-    const oShare = oVotes / total;
-
-    const dQuota = Math.floor(dShare * totalEVs);
-    const rQuota = Math.floor(rShare * totalEVs);
-    const oQuota = Math.floor(oShare * totalEVs);
-
-    let allocated = { D: dQuota, R: rQuota, O: oQuota };
-    let remaining = totalEVs - (dQuota + rQuota + oQuota);
-
-    if (remaining > 0) {
-      const remainders = [
-        { party: 'D', remainder: (dShare * totalEVs) - dQuota },
-        { party: 'R', remainder: (rShare * totalEVs) - rQuota },
-        { party: 'O', remainder: (oShare * totalEVs) - oQuota }
-      ];
-
-      remainders.sort((a, b) => b.remainder - a.remainder);
-
-      for (let i = 0; i < remaining; i++) {
-        allocated[remainders[i].party]++;
-      }
-    }
-
-    return { ...allocated, thirdParties: {} };
-  };
+      return { ...allocated, thirdParties: {} };
+    };
 
   // Check if proportional EV mode is enabled
   function isProportionalEvMode() {
