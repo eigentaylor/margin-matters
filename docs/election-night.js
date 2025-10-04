@@ -621,6 +621,10 @@
       const isDistrict = /-(0[1-9])$/.test(unit);
       const isState = /^[A-Z]{2}$/.test(unit) || unit === 'DC';
       if (!isState && !isAtLarge && !isDistrict) return;
+      
+      // Skip ME-AL and NE-AL - they should not be separate units in the simulation
+      // Their values will be computed dynamically from the districts
+      if (isAtLarge && (abbr === 'ME' || abbr === 'NE')) return;
 
       let totals = null;
       if (typeof window.getUnitFinalVoteTotals === 'function') {
@@ -1057,6 +1061,143 @@
   }
 
   /**
+   * Compute ME-AL and NE-AL aggregates dynamically from their districts.
+   * These aggregates are used for small boxes and EV calculations but don't
+   * appear as separate units in stateData.
+   */
+  function computeDistrictAggregates(stateAbbrs, timeMinutes) {
+    stateAbbrs.forEach(abbr => {
+      const districts = state.stateData.filter(st => {
+        const m = st.unitKey.match(/^([A-Z]{2})-(0[1-9])$/);
+        return m && m[1] === abbr;
+      });
+      
+      if (!districts.length) return;
+      
+      // Sum up votes and EVs from all districts
+      let totalDVotes = 0, totalRVotes = 0, totalOVotes = 0, totalOVotesTotal = 0;
+      let totalCountedVotes = 0, totalVotes = 0;
+      let totalEV = 0;
+      let dEV = 0, rEV = 0, oEV = 0;
+      let minReporting = 1, maxReporting = 0;
+      let allCalled = true;
+      
+      districts.forEach(dist => {
+        const metrics = dist.latestMetrics || dist.targetMetrics;
+        if (!metrics) return;
+        
+        totalDVotes += metrics.dVotesCounted || 0;
+        totalRVotes += metrics.rVotesCounted || 0;
+        totalOVotes += metrics.oVotesCounted || 0;
+        totalOVotesTotal += metrics.oVotesCountedTotal || 0;
+        totalCountedVotes += metrics.countedVotes || 0;
+        totalVotes += dist.totalVotes || 0;
+        totalEV += dist.ev || 0;
+        
+        if (metrics.reporting < minReporting) minReporting = metrics.reporting;
+        if (metrics.reporting > maxReporting) maxReporting = metrics.reporting;
+        
+        const isCalled = dist.calledAt != null && timeMinutes >= dist.calledAt - EPS;
+        if (!isCalled) allCalled = false;
+        
+        // Sum called EVs
+        const evAlloc = dist.evCalledAllocations || (metrics.reporting >= 1 - EPS ? dist.evAllocations : null);
+        if (evAlloc) {
+          dEV += evAlloc.D || 0;
+          rEV += evAlloc.R || 0;
+          oEV += evAlloc.O || 0;
+        }
+      });
+      
+      // Compute aggregate reporting percentage (average of min and max)
+      const aggregateReporting = (minReporting + maxReporting) / 2;
+      
+      // Compute leader and margin
+      const twoPartyVotes = totalDVotes + totalRVotes;
+      const leader = totalDVotes > totalRVotes && totalDVotes > totalOVotes ? 'D' :
+                     totalRVotes > totalDVotes && totalRVotes > totalOVotes ? 'R' : 'O';
+      const margin = twoPartyVotes > 0 ? (totalDVotes - totalRVotes) / twoPartyVotes : 0;
+      const marginStr = leader === 'O' ? 'Other lead' : formatLean(margin);
+      
+      // Compute color
+      const marginToColor = window.ColorUtils && window.ColorUtils.marginToColor;
+      let color = NEUTRAL_COLOR;
+      if (totalCountedVotes > 0) {
+        if (typeof marginToColor === 'function') {
+          color = marginToColor(margin, leader === 'O');
+        } else {
+          color = safeMarginToColor(margin, leader === 'O');
+        }
+      }
+      
+      // Get candidate names from the first district's row (they're the same for all districts)
+      const rows = (window._byYearMap && window._byYearMap.get(state.year)) || [];
+      const firstDistrictRow = districts.length > 0 ? rows.find(r => r && r.unit === districts[0].unitKey) : null;
+      const dCandidate = firstDistrictRow ? (firstDistrictRow.dCandidate || null) : null;
+      const rCandidate = firstDistrictRow ? (firstDistrictRow.rCandidate || null) : null;
+      const thirdPartyResults = firstDistrictRow ? (firstDistrictRow.thirdPartyResults || null) : null;
+      
+      // Create snapshot for ME-AL or NE-AL
+      const atLargeUnit = `${abbr}-AL`;
+      const snapshot = {
+        ev: totalEV,
+        evAllocations: { D: dEV, R: rEV, O: oEV, thirdParties: {} },
+        evCalledAllocations: allCalled ? { D: dEV, R: rEV, O: oEV, thirdParties: {} } : null,
+        margin: twoPartyVotes > 0 ? (totalDVotes - totalRVotes) / totalCountedVotes : 0,
+        marginStr,
+        reporting: aggregateReporting,
+        called: allCalled,
+        leader,
+        confidence: allCalled ? 1 : 0,
+        dVotes: totalDVotes,
+        rVotes: totalRVotes,
+        oVotes: totalOVotes,
+        oVotesTotal: totalOVotesTotal,
+        countedVotes: totalCountedVotes,
+        remainingVotes: Math.max(0, totalVotes - totalCountedVotes),
+        topThirdShare: totalCountedVotes > 0 ? totalOVotes / totalCountedVotes : 0,
+        totalThirdShare: totalCountedVotes > 0 ? totalOVotesTotal / totalCountedVotes : 0,
+        // Add candidate names for tooltips
+        dCandidate,
+        rCandidate,
+        thirdPartyResults
+      };
+      
+      state.snapshot.set(atLargeUnit, snapshot);
+      state.snapshot.set(abbr, snapshot);
+      
+      // Update small box for -AL
+      updateSmallBoxAggregate(abbr, atLargeUnit, color, snapshot);
+    });
+  }
+  
+  function updateSmallBoxAggregate(abbr, unit, color, snapshot) {
+    if (!state.unitColorMap || !state.abbrColorMap) return;
+    
+    // Update the color maps
+    state.unitColorMap.set(unit, color);
+    state.abbrColorMap.set(abbr, {
+      color,
+      reporting: snapshot.reporting,
+      margin: snapshot.margin,
+      marginStr: snapshot.marginStr,
+      leader: snapshot.leader,
+      confidence: snapshot.confidence,
+      called: snapshot.called,
+      dVotes: snapshot.dVotes,
+      rVotes: snapshot.rVotes,
+      oVotes: snapshot.oVotes,
+      oVotesTotal: snapshot.oVotesTotal,
+      countedVotes: snapshot.countedVotes,
+      remainingVotes: snapshot.remainingVotes,
+      topThirdShare: snapshot.topThirdShare,
+      totalThirdShare: snapshot.totalThirdShare
+    });
+    
+    state.boxesDirty = true;
+  }
+
+  /**
    * Render the simulation at a specific time (minutes). This iterates
    * over every unit, computes its current metrics, potentially registers
    * calls, updates map colors and small-box summaries, accumulates EV
@@ -1126,6 +1267,13 @@
         countedVotes += counted;
       }
 
+      // Get candidate names from row data for tooltip use
+      const rows = (window._byYearMap && window._byYearMap.get(state.year)) || [];
+      const row = rows.find(r => r && r.unit === st.unitKey);
+      const dCandidate = row ? (row.dCandidate || null) : null;
+      const rCandidate = row ? (row.rCandidate || null) : null;
+      const thirdPartyResults = row ? (row.thirdPartyResults || null) : null;
+
       const snapshot = {
         ev: st.ev,
         evAllocations: st.evAllocations ? { ...st.evAllocations } : null,
@@ -1143,12 +1291,19 @@
         countedVotes: metrics.countedVotes,
         remainingVotes: metrics.remainingVotes,
         topThirdShare: metrics.topThirdShare,
-        totalThirdShare: metrics.totalThirdShare
+        totalThirdShare: metrics.totalThirdShare,
+        // Add candidate names for tooltips
+        dCandidate,
+        rCandidate,
+        thirdPartyResults
       };
       st.aliases.forEach(alias => state.snapshot.set(alias, snapshot));
       state.snapshot.set(st.unitKey, snapshot);
       maybeEmitMiscall(st, metrics, timeMinutes);
     });
+
+    // Compute ME-AL and NE-AL dynamically from districts
+    computeDistrictAggregates(['ME', 'NE'], timeMinutes);
 
     flushSmallBoxes();
 
@@ -1927,16 +2082,9 @@
     const selections = [];
     const statePath = selectStatePath(abbr);
     
-    // For ME/NE states:
-    // - Don't select state path for -AL units (aggregate)
-    // - Don't select state path for bare ME/NE codes (if they exist)
-    // - Only districts (ME-01, NE-02, etc.) should color the map
-    const isMeNe = (abbr === 'ME' || abbr === 'NE');
-    const isMeNeAtLarge = /-AL$/.test(unit) && isMeNe;
-    const isMeNeState = (unit === 'ME' || unit === 'NE'); // bare state code
-    
-    // Select state path for regular states and non-ME/NE -AL units, but not ME/NE aggregates
-    if (!isMeNeAtLarge && !isMeNeState && (/-AL$/.test(unit) || /^[A-Z]{2}$/.test(unit) || unit === 'DC')) {
+    // For regular states and DC, select the state path
+    // Districts select their district path below
+    if (/^[A-Z]{2}$/.test(unit) || unit === 'DC') {
       if (statePath) selections.push(statePath);
     }
     
