@@ -1926,7 +1926,10 @@
   function collectPathSelections(unit, abbr) {
     const selections = [];
     const statePath = selectStatePath(abbr);
-    if (/-AL$/.test(unit) || /^[A-Z]{2}$/.test(unit) || unit === 'DC') {
+    // For ME/NE, don't color the state shape for -AL units
+    // The districts (ME-01, ME-02, etc.) will handle their own coloring
+    const isMeNeAtLarge = /-AL$/.test(unit) && (abbr === 'ME' || abbr === 'NE');
+    if (!isMeNeAtLarge && (/-AL$/.test(unit) || /^[A-Z]{2}$/.test(unit) || unit === 'DC')) {
       if (statePath) selections.push(statePath);
     }
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
