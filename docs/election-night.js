@@ -1130,6 +1130,11 @@
         }
       }
       
+      // Apply uncalled brightening if not all districts are called
+      if (!allCalled && color !== NEUTRAL_COLOR) {
+        color = blendColors(color, '#cccccc', UNCALLED_BRIGHTEN);
+      }
+      
       // Get candidate names from the first district's row (they're the same for all districts)
       const rows = (window._byYearMap && window._byYearMap.get(state.year)) || [];
       const firstDistrictRow = districts.length > 0 ? rows.find(r => r && r.unit === districts[0].unitKey) : null;
