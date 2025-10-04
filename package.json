@@ -1,0 +1,20 @@
+{
+  "devDependencies": {
+    "depcruise": "^1.0.0",
+    "madge": "^8.0.0",
+    "jest": "^29.7.0",
+    "@playwright/test": "^1.36.0",
+    "playwright": "^1.36.0"
+  },
+  "scripts": {
+    "test:unit": "jest --config=jest.config.cjs",
+    "test:ui": "npx playwright test",
+    "test": "npm run test:unit",
+    "critical": "powershell.exe -ExecutionPolicy Bypass -File ./scripts/run_critical.ps1",
+    "playwright:install": "npx playwright install",
+    "madge:tester": "madge --warning --image docs/madge-tester.png docs/tester.js",
+    "madge:election-night": "madge --warning --image docs/madge-election-night.png docs/election-night.js",
+    "depcruise:tester": "depcruise --exclude node_modules --output-type dot docs/tester.js > docs/depcruise-tester.dot",
+    "depcruise:election-night": "depcruise --exclude node_modules --output-type dot docs/election-night.js > docs/depcruise-election-night.dot"
+  }
+}
