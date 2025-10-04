@@ -1066,6 +1066,7 @@
    * appear as separate units in stateData.
    */
   function computeDistrictAggregates(stateAbbrs, timeMinutes) {
+    let aggDE = 0, aggRE = 0, aggOE = 0;
     stateAbbrs.forEach(abbr => {
       const districts = state.stateData.filter(st => {
         const m = st.unitKey.match(/^([A-Z]{2})-(0[1-9])$/);
@@ -1170,16 +1171,28 @@
       
       state.snapshot.set(atLargeUnit, snapshot);
       state.snapshot.set(abbr, snapshot);
-      
+
       // Update small box for -AL
       updateSmallBoxAggregate(abbr, atLargeUnit, color, snapshot);
+
+      // Accumulate aggregated EV allocations for return
+      aggDE += dEV;
+      aggRE += rEV;
+      aggOE += oEV;
     });
+
+    return { dEV: aggDE, rEV: aggRE, oEV: aggOE };
   }
   
   function updateSmallBoxAggregate(abbr, unit, color, snapshot) {
     if (!state.unitColorMap || !state.abbrColorMap) return;
     
     // Update the color maps
+    // Read previous values for helpful debug logging
+    const prevUnitColor = state.unitColorMap.get(unit);
+    const prevAbbrInfo = state.abbrColorMap.get(abbr) || {};
+    const prevAbbrColor = prevAbbrInfo.color;
+
     state.unitColorMap.set(unit, color);
     state.abbrColorMap.set(abbr, {
       color,
@@ -1198,6 +1211,34 @@
       topThirdShare: snapshot.topThirdShare,
       totalThirdShare: snapshot.totalThirdShare
     });
+
+    // Debug: log when aggregate (-AL) color or counting summary changes
+    try {
+      const timeStr = typeof formatTimeLabel === 'function' ? formatTimeLabel(state.currentTime || 0) : String(state.currentTime || 0);
+      if (prevUnitColor !== color || prevAbbrColor !== color) {
+        console.log('[EN] updateSmallBoxAggregate color/update', {
+          time: timeStr,
+          abbr,
+          unit,
+          prevUnitColor: prevUnitColor || null,
+          newUnitColor: color,
+          prevAbbrColor: prevAbbrColor || null,
+          newAbbrColor: color,
+          snapshot: {
+            reporting: snapshot.reporting,
+            leader: snapshot.leader,
+            called: snapshot.called,
+            dVotes: snapshot.dVotes,
+            rVotes: snapshot.rVotes,
+            oVotes: snapshot.oVotes,
+            countedVotes: snapshot.countedVotes,
+            remainingVotes: snapshot.remainingVotes
+          }
+        });
+      }
+    } catch (e) {
+      // swallow logging errors to avoid breaking the simulation
+    }
     
     state.boxesDirty = true;
   }
@@ -1222,7 +1263,7 @@
 
     state.snapshot.clear();
 
-    state.stateData.forEach(st => {
+  state.stateData.forEach(st => {
       const metrics = computeMetrics(st, timeMinutes, phaseName);
       st.latestMetrics = metrics;
 
@@ -1258,10 +1299,14 @@
       applyColor(st, displayColor, metrics);
 
       const evAllocation = st.evCalledAllocations || (metrics.reporting >= 1 - EPS ? st.evAllocations : null);
+      // For states with districts (ME and NE) avoid counting district EVs here.
+      // Their EVs will be aggregated and added once by computeDistrictAggregates below
       if (evAllocation) {
-        dEV += evAllocation.D || 0;
-        rEV += evAllocation.R || 0;
-        oEV += evAllocation.O || 0;
+        if (!(st.abbr === 'ME' || st.abbr === 'NE') || st.type !== 'district') {
+          dEV += evAllocation.D || 0;
+          rEV += evAllocation.R || 0;
+          oEV += evAllocation.O || 0;
+        }
       }
 
       if (st.pvWeight) {
@@ -1307,8 +1352,11 @@
       maybeEmitMiscall(st, metrics, timeMinutes);
     });
 
-    // Compute ME-AL and NE-AL dynamically from districts
-    computeDistrictAggregates(['ME', 'NE'], timeMinutes);
+  // Compute ME-AL and NE-AL dynamically from districts and add their EVs
+  const agg = computeDistrictAggregates(['ME', 'NE'], timeMinutes) || { dEV: 0, rEV: 0, oEV: 0 };
+  dEV += agg.dEV || 0;
+  rEV += agg.rEV || 0;
+  oEV += agg.oEV || 0;
 
     flushSmallBoxes();
 
@@ -1597,7 +1645,41 @@
 
   function updateSmallBoxes(st, color, metrics) {
     if (!st || !state.unitColorMap || !state.abbrColorMap) return;
+    // Capture previous values for debugging
+    const prevUnitColor = state.unitColorMap.get(st.unitKey);
+    const prevAbbrEntry = state.abbrColorMap.get(st.abbr) || {};
+    const prevAbbrColor = prevAbbrEntry.color;
+
     state.unitColorMap.set(st.unitKey, color);
+
+    // Debug: log district-level color changes and counting updates
+    try {
+      if (st.type === 'district') {
+        const timeStr = typeof formatTimeLabel === 'function' ? formatTimeLabel(state.currentTime || 0) : String(state.currentTime || 0);
+        const prev = prevUnitColor || null;
+        const now = color;
+        // metrics may be undefined for some calls; guard access
+        const m = metrics || {};
+        const reported = isFinite(m.reporting) ? m.reporting : null;
+        const dVotes = isFinite(m.dVotesCounted) ? m.dVotesCounted : null;
+        const rVotes = isFinite(m.rVotesCounted) ? m.rVotesCounted : null;
+        const counted = isFinite(m.countedVotes) ? m.countedVotes : null;
+        if (prev !== now) {
+          console.log('[EN] updateSmallBoxes district update', {
+            time: timeStr,
+            unitKey: st.unitKey,
+            abbr: st.abbr,
+            prevUnitColor: prev,
+            newUnitColor: now,
+            reporting: reported,
+            dVotes,
+            rVotes,
+            counted
+          });
+        }
+      }
+    } catch (e) { }
+
     if (st.type !== 'district') {
       const info = metrics ? {
         color,
@@ -1617,6 +1699,35 @@
         totalThirdShare: metrics.totalThirdShare
       } : { color };
       state.abbrColorMap.set(st.abbr, info);
+      // Debug: log when a non-district small box (abbr) updates color or counts
+      try {
+        const timeStr = typeof formatTimeLabel === 'function' ? formatTimeLabel(state.currentTime || 0) : String(state.currentTime || 0);
+        const abbrChanged = prevAbbrColor !== info.color;
+        const countsChanged = prevAbbrEntry.dVotes !== info.dVotes || prevAbbrEntry.rVotes !== info.rVotes || prevAbbrEntry.countedVotes !== info.countedVotes;
+        if (abbrChanged || countsChanged || prevUnitColor !== color) {
+          console.log('[EN] updateSmallBoxes abbr update', {
+            time: timeStr,
+            unitKey: st.unitKey,
+            abbr: st.abbr,
+            type: st.type,
+            prevUnitColor: prevUnitColor || null,
+            newUnitColor: color,
+            prevAbbrColor: prevAbbrColor || null,
+            newAbbrColor: info.color,
+            prevAbbrEntry,
+            newInfo: {
+              reporting: info.reporting,
+              leader: info.leader,
+              called: info.called,
+              dVotes: info.dVotes,
+              rVotes: info.rVotes,
+              countedVotes: info.countedVotes
+            }
+          });
+        }
+      } catch (e) {
+        // avoid throwing from logging
+      }
     }
     state.boxesDirty = true;
   }
