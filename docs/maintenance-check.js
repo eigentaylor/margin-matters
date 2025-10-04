@@ -17,10 +17,15 @@
   // Determine the correct path to maintenance.html based on current location
   function getMaintenancePath() {
     const path = window.location.pathname;
-    // Count slashes excluding the filename itself
     const pathParts = path.split('/').filter(p => p);
-    const depth = pathParts.length - 1; // -1 because we don't count the filename
-    return depth > 0 ? '../'.repeat(depth) + 'maintenance.html' : 'maintenance.html';
+    // If we're at the site root ("/" or "/index.html"), point to root maintenance.html
+    if (pathParts.length === 0) return '/maintenance.html';
+    if (pathParts.length === 1 && pathParts[0].includes('.')) return '/maintenance.html';
+    // Otherwise assume the first path segment is the project base (e.g. /margin-matters/...) and
+    // build an absolute path to the maintenance page within that project so the redirect stays
+    // on the project's GitHub Pages site instead of jumping to the user root site.
+    const projectBase = '/' + pathParts[0] + '/';
+    return projectBase + 'maintenance.html';
   }
   
   // Check if we're already on the maintenance page
