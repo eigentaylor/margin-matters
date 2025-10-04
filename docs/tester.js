@@ -34,11 +34,12 @@
       lines.slice(1).forEach(line => {
         const parts = line.split(',');
         if (parts.length < 4) return;
-        
+
+        console.log('parts:', parts);
         const year = +parts[0];
         const unit = parts[1];
-        const margin = parseFloat(parts[2]);
-        const ev = +parts[3];
+        const margin = parseFloat(parts[21]);
+        const ev = +parts[4];
         
         if (!isFinite(year) || !unit || !isFinite(margin)) return;
         
