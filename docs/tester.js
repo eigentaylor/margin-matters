@@ -4048,46 +4048,66 @@ function renderFlipDetails() {
         }
       }
 
-      // If winner-take-all resulted in Other EVs but we don't have a detailed
-      // thirdPartyEVs mapping (this happens outside proportional mode), try to
-      // infer a breakdown of those O EVs from the per-row thirdPartyResults
-      // (vote counts) so the UI can list the actual third-party names that
-      // received EVs. If no detailed vote info exists, fall back to a generic
-      // "Other" entry carrying the aggregate O EVs.
+      // If there are Other EVs but we don't have a detailed thirdPartyEVs
+      // mapping, infer a breakdown. However, when NOT in proportional mode
+      // (winner-take-all), don't proportionally split O EVs across multiple
+      // third-party names — instead give the entire O block to the single
+      // top third-party candidate (by votes). Proportional splitting only
+      // applies when proportional mode is active.
       if (!showBlank && oEV > 0 && Object.keys(thirdPartyEVs || {}).length === 0) {
         try {
           const tpVotes = (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') ? r.thirdPartyResults : {};
           const tpNames = Object.keys(tpVotes).filter(n => (tpVotes[n] || 0) > 0);
-          if (tpNames.length > 0) {
-            const totalTpVotes = tpNames.reduce((s, n) => s + (+tpVotes[n] || 0), 0);
-            if (totalTpVotes > 0) {
-              // Proportionally assign integer EVs using floor+largest-fractions method
-              const floats = tpNames.map(name => {
-                const raw = (oEV * (+tpVotes[name] || 0)) / totalTpVotes;
-                return { name, raw, frac: raw - Math.floor(raw), assigned: Math.floor(raw) };
-              });
-              let assignedSum = floats.reduce((s, f) => s + f.assigned, 0);
-              let remaining = oEV - assignedSum;
-              // Sort by fractional part descending to distribute remainders fairly
-              floats.sort((a, b) => b.frac - a.frac);
-              let idx = 0;
-              while (remaining > 0 && floats.length > 0) {
-                floats[idx % floats.length].assigned += 1;
-                remaining -= 1;
-                idx += 1;
+
+          // If we're in proportional mode, keep the existing floor+largest-fractions
+          // behavior to split O EVs among third parties.
+          if (typeof isProportional !== 'undefined' && isProportional) {
+            if (tpNames.length > 0) {
+              const totalTpVotes = tpNames.reduce((s, n) => s + (+tpVotes[n] || 0), 0);
+              if (totalTpVotes > 0) {
+                // Proportionally assign integer EVs using floor+largest-fractions method
+                const floats = tpNames.map(name => {
+                  const raw = (oEV * (+tpVotes[name] || 0)) / totalTpVotes;
+                  return { name, raw, frac: raw - Math.floor(raw), assigned: Math.floor(raw) };
+                });
+                let assignedSum = floats.reduce((s, f) => s + f.assigned, 0);
+                let remaining = oEV - assignedSum;
+                // Sort by fractional part descending to distribute remainders fairly
+                floats.sort((a, b) => b.frac - a.frac);
+                let idx = 0;
+                while (remaining > 0 && floats.length > 0) {
+                  floats[idx % floats.length].assigned += 1;
+                  remaining -= 1;
+                  idx += 1;
+                }
+                const allocMap = {};
+                floats.forEach(f => { if (f.assigned > 0) allocMap[f.name] = f.assigned; });
+                // If rounding produced no assignments (shouldn't), fall back to Other
+                thirdPartyEVs = Object.keys(allocMap).length ? allocMap : { Other: oEV };
+              } else {
+                // No vote totals for third parties, but names exist: give the whole
+                // O EV block to the first listed third party to at least surface a name
+                const map = {}; map[tpNames[0]] = oEV; thirdPartyEVs = map;
               }
-              const allocMap = {};
-              floats.forEach(f => { if (f.assigned > 0) allocMap[f.name] = f.assigned; });
-              // If rounding produced no assignments (shouldn't), fall back to Other
-              thirdPartyEVs = Object.keys(allocMap).length ? allocMap : { Other: oEV };
             } else {
-              // No vote totals for third parties, but names exist: give the whole
-              // O EV block to the first listed third party to at least surface a name
-              const map = {}; map[tpNames[0]] = oEV; thirdPartyEVs = map;
+              // No per-row third-party vote info available: fall back to generic
+              thirdPartyEVs = { Other: oEV };
             }
           } else {
-            // No per-row third-party vote info available: fall back to generic
-            thirdPartyEVs = { Other: oEV };
+            // Winner-take-all: give all O EVs to the top third-party candidate (if any)
+            if (tpNames.length > 0) {
+              // Find the third-party with the maximum votes
+              let topName = tpNames[0];
+              for (let i = 1; i < tpNames.length; i++) {
+                const n = tpNames[i];
+                if ((+tpVotes[n] || 0) > (+tpVotes[topName] || 0)) topName = n;
+              }
+              const map = {};
+              map[topName] = oEV;
+              thirdPartyEVs = map;
+            } else {
+              thirdPartyEVs = { Other: oEV };
+            }
           }
         } catch (e) {
           thirdPartyEVs = { Other: oEV };
