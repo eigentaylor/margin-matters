@@ -1197,6 +1197,32 @@ body.has-prop-ev-toggle {
     padding: 12px;
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
   }
+
+  /* Stack candidate info on mobile */
+  #candidateInfo {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px;
+  }
+
+  #candidateNames .candidate-left,
+  #candidateNames .candidate-vs,
+  #candidateNames .candidate-right {
+    display: block !important;
+    min-width: auto !important;
+    width: 100% !important;
+    text-align: left !important;
+    white-space: normal !important;
+  }
+
+  #candidateNames .candidate-vs {
+    text-align: center !important;
+    margin: 4px 0;
+  }
+
+  #specialNotes {
+    text-align: left !important;
+  }
 }
 
 /* Category abbreviation list styling */

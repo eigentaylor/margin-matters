@@ -2423,7 +2423,7 @@
           // left and right columns use inline-blocks with a min-width so changing names don't reflow
           const left = `${dCandidate} (D) <span style="font-variant-numeric:tabular-nums">(${totalDEv} ${totalDEv === 1 ? 'EV' : 'EVs'})</span>`;
           const right = `<span style="font-variant-numeric:tabular-nums">(${totalREv} ${totalREv === 1 ? 'EV' : 'EVs'})</span> ${rCandidate} (R)`;
-          candidateHtml = `${year}: <span style="display:inline-block;min-width:260px;white-space:nowrap">${left}</span><span style="display:inline-block;width:48px;text-align:center">vs</span><span style="display:inline-block;min-width:260px;white-space:nowrap;text-align:right">${right}</span>`;
+          candidateHtml = `${year}: <span class="candidate-left" style="display:inline-block;min-width:260px;white-space:nowrap">${left}</span><span class="candidate-vs" style="display:inline-block;width:48px;text-align:center">vs</span><span class="candidate-right" style="display:inline-block;min-width:260px;white-space:nowrap;text-align:right">${right}</span>`;
         }
 
         if (thirdPartiesWithEVs.size > 0) {

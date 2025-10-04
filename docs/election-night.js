@@ -1926,16 +1926,26 @@
   function collectPathSelections(unit, abbr) {
     const selections = [];
     const statePath = selectStatePath(abbr);
-    // For ME/NE, don't color the state shape for -AL units
-    // The districts (ME-01, ME-02, etc.) will handle their own coloring
-    const isMeNeAtLarge = /-AL$/.test(unit) && (abbr === 'ME' || abbr === 'NE');
-    if (!isMeNeAtLarge && (/-AL$/.test(unit) || /^[A-Z]{2}$/.test(unit) || unit === 'DC')) {
+    
+    // For ME/NE states:
+    // - Don't select state path for -AL units (aggregate)
+    // - Don't select state path for bare ME/NE codes (if they exist)
+    // - Only districts (ME-01, NE-02, etc.) should color the map
+    const isMeNe = (abbr === 'ME' || abbr === 'NE');
+    const isMeNeAtLarge = /-AL$/.test(unit) && isMeNe;
+    const isMeNeState = (unit === 'ME' || unit === 'NE'); // bare state code
+    
+    // Select state path for regular states and non-ME/NE -AL units, but not ME/NE aggregates
+    if (!isMeNeAtLarge && !isMeNeState && (/-AL$/.test(unit) || /^[A-Z]{2}$/.test(unit) || unit === 'DC')) {
       if (statePath) selections.push(statePath);
     }
+    
+    // Districts always select their district path
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
       const districtPath = selectDistrictPath(unit);
       if (districtPath) selections.push(districtPath);
     }
+    
     return selections;
   }
 
