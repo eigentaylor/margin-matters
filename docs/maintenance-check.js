@@ -2,7 +2,7 @@
 // This script checks if maintenance mode is enabled and redirects to maintenance page if needed
 (function() {
   const MAINTENANCE_ENABLED = false;
-  const MAINTENANCE_PASSWORD_HASH = '573157533';
+  const MAINTENANCE_PASSWORD_HASH = '-1634889951';
   
   function simpleHash(str) {
     let hash = 0;
