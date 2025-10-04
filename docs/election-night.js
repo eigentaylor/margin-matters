@@ -42,15 +42,25 @@
     state.pvValue = window._curPv || 0;
     state.stateData = [];
 
+    const natMargin = typeof window._getNatMargin === 'function'
+      ? window._getNatMargin(year)
+      : 0;
+
     // Build simplified state data
     rows.forEach(row => {
       if (!row || !row.unit || row.unit === 'NATIONAL') return;
       
       const unit = row.unit;
-      const margin = isFinite(row.margin) ? +row.margin : 0;
-      const ev = isFinite(row.ev) ? +row.ev : 0;
+      const baseMargin = isFinite(row.margin) ? Number(row.margin) : 0;
+      const info = (typeof window.getAdjustedInfo === 'function')
+        ? window.getAdjustedInfo(year, unit, state.pvValue)
+        : null;
+      const ev = info?.ev ?? (isFinite(row.ev) ? Number(row.ev) : 0);
       
       if (ev <= 0) return;
+
+      const adjustedMargin = info?.margin ?? (baseMargin + (state.pvValue - natMargin));
+      const finalColor = info?.color ?? marginToColor(adjustedMargin, false);
 
       // Simple reporting schedule: all states report over 4 hours
       const startTime = 180 + Math.random() * 60; // 7-8pm ET
@@ -58,8 +68,10 @@
       
       state.stateData.push({
         unit,
-        margin: margin + state.pvValue,
+        margin: adjustedMargin,
+        marginStr: info?.marginStr ?? formatLean(adjustedMargin),
         ev,
+        finalColor,
         startTime,
         endTime: startTime + duration,
         duration,
@@ -121,8 +133,10 @@
         unit: st.unit,
         reporting: progress,
         margin: st.margin,
+        marginStr: st.marginStr,
         called: st.called,
-        ev: st.ev
+        ev: st.ev,
+        color: st.finalColor
       });
 
       // Update EV totals
@@ -136,11 +150,11 @@
       // Update map color
       if (window.ElectionMap) {
         let color = NEUTRAL_COLOR;
+        const finalColor = st.finalColor || marginToColor(st.margin, false);
         if (st.called) {
-          color = marginToColor(st.margin, false);
+          color = finalColor;
         } else if (progress > 0) {
           // Blend from neutral to final color
-          const finalColor = marginToColor(st.margin, false);
           color = blendColors(NEUTRAL_COLOR, finalColor, progress * 0.5);
         }
 
