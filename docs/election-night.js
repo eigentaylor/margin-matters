@@ -853,6 +853,11 @@
             allocations.O += totalThirdEVs;
           }
 
+          // Debug: log proportional allocation source
+          try {
+            console.log('[EN] buildEvAllocations proportional', { year, abbr, unit, ev, winner, dVotes, rVotes, oVotes, topThirdShare, allocations });
+          } catch (e) { }
+
           return allocations;
         } catch (e) {
           console.warn('Failed to use advanced proportional allocation, falling back:', e);
@@ -905,6 +910,8 @@
     if (winner === 'D') allocations.D = ev;
     else if (winner === 'R') allocations.R = ev;
     else allocations.O = ev;
+    // Debug: log winner-take-all allocation
+    try { console.log('[EN] buildEvAllocations wta', { year, abbr, unit, ev, winner, allocations }); } catch (e) { }
     return allocations;
   }
 
@@ -1179,6 +1186,18 @@
       aggDE += dEV;
       aggRE += rEV;
       aggOE += oEV;
+      // Debug: log per-district aggregation step
+      try {
+        console.log('[EN] computeDistrictAggregates step', {
+          abbr,
+          atLargeUnit,
+          districtCount: districts.length,
+          dEV_for_atlarge: dEV,
+          rEV_for_atlarge: rEV,
+          oEV_for_atlarge: oEV,
+          snapshot
+        });
+      } catch (e) { }
     });
 
     return { dEV: aggDE, rEV: aggRE, oEV: aggOE };
@@ -1353,10 +1372,13 @@
     });
 
   // Compute ME-AL and NE-AL dynamically from districts and add their EVs
-  const agg = computeDistrictAggregates(['ME', 'NE'], timeMinutes) || { dEV: 0, rEV: 0, oEV: 0 };
-  dEV += agg.dEV || 0;
-  rEV += agg.rEV || 0;
-  oEV += agg.oEV || 0;
+    const agg = computeDistrictAggregates(['ME', 'NE'], timeMinutes) || { dEV: 0, rEV: 0, oEV: 0 };
+    try {
+      console.log('[EN] renderAt adding aggregated ME/NE EVs', { time: formatTimeLabel(timeMinutes), agg });
+    } catch (e) { }
+    dEV += agg.dEV || 0;
+    rEV += agg.rEV || 0;
+    oEV += agg.oEV || 0;
 
     flushSmallBoxes();
 
@@ -1630,6 +1652,17 @@
       totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
+    // Debug: log call allocation and metrics when a call is registered
+    try {
+      console.log('[EN] registerCall', {
+        time: formatTimeLabel(callTime),
+        unit: st.unitKey,
+        calledLeader,
+        ev: st.ev,
+        evCalledAllocations: st.evCalledAllocations,
+        metrics: st.calledMetrics || metrics
+      });
+    } catch (e) { }
     triggerTipRefresh();
   }
 
@@ -1736,6 +1769,15 @@
     const totalPool = Math.max(1, state.totalEvPool || 538);
     const called = Math.max(0, dEV + rEV + oEV);
     const uEV = Math.max(0, totalPool - called);
+
+    // Debug: warn if EV accounting doesn't match the pool (missing or extra EVs)
+    try {
+      const sumCalled = (dEV || 0) + (rEV || 0) + (oEV || 0);
+      const diff = Math.round((totalPool - sumCalled) * 100) / 100;
+      if (Math.abs(diff) > 0.001) {
+        console.warn('[EN] EV accounting mismatch', { time: (typeof formatTimeLabel === 'function' ? formatTimeLabel(state.currentTime || 0) : state.currentTime), totalPool, dEV, rEV, oEV, diff });
+      }
+    } catch (e) { }
 
     const dPct = (dEV / totalPool) * 100;
     const uPct = (uEV / totalPool) * 100;
