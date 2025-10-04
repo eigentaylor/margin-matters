@@ -16,7 +16,7 @@ ME_NE_STATES = {"ME-AL", "NE-AL"}
 # Maintenance mode configuration
 # Set MAINTENANCE_MODE to True to enable maintenance mode
 # When enabled, users will be redirected to maintenance.html unless they enter the correct password
-MAINTENANCE_MODE = True
+MAINTENANCE_MODE = False
 MAINTENANCE_PASSWORD = "ericadams2028"  # GSD: Get Stuff Done! Oh no! Don't tell anyone!
 
 # timestamp used in footers (UTC at build time)
