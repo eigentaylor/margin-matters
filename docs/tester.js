@@ -4032,16 +4032,19 @@ function renderFlipDetails() {
         }
       }
 
-      // If winner-take-all resulted in Other EVs but we don't have a detailed
-      // thirdPartyEVs mapping (this happens outside proportional mode), try to
-      // infer a breakdown of those O EVs from the per-row thirdPartyResults
-      // (vote counts) so the UI can list the actual third-party names that
-      // received EVs. If no detailed vote info exists, fall back to a generic
-      // "Other" entry carrying the aggregate O EVs.
+      // If there are Other EVs but we don't have a detailed thirdPartyEVs
+      // mapping, infer a breakdown. However, when NOT in proportional mode
+      // (winner-take-all), don't proportionally split O EVs across multiple
+      // third-party names — instead give the entire O block to the single
+      // top third-party candidate (by votes). Proportional splitting only
+      // applies when proportional mode is active.
       if (!showBlank && oEV > 0 && Object.keys(thirdPartyEVs || {}).length === 0) {
         try {
           const tpVotes = (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') ? r.thirdPartyResults : {};
           const tpNames = Object.keys(tpVotes).filter(n => (tpVotes[n] || 0) > 0);
+          // If we're in proportional mode, keep the existing floor+largest-fractions
+          // behavior to split O EVs among third parties.
+          if (typeof isProportional !== 'undefined' && isProportional) {
           if (tpNames.length > 0) {
             const totalTpVotes = tpNames.reduce((s, n) => s + (+tpVotes[n] || 0), 0);
             if (totalTpVotes > 0) {
@@ -4072,6 +4075,22 @@ function renderFlipDetails() {
           } else {
             // No per-row third-party vote info available: fall back to generic
             thirdPartyEVs = { Other: oEV };
+          }
+          } else {
+            // Winner-take-all: give all O EVs to the top third-party candidate (if any)
+            if (tpNames.length > 0) {
+              // Find the third-party with the maximum votes
+              let topName = tpNames[0];
+              for (let i = 1; i < tpNames.length; i++) {
+                const n = tpNames[i];
+                if ((+tpVotes[n] || 0) > (+tpVotes[topName] || 0)) topName = n;
+              }
+              const map = {};
+              map[topName] = oEV;
+              thirdPartyEVs = map;
+            } else {
+              thirdPartyEVs = { Other: oEV };
+            }
           }
         } catch (e) {
           thirdPartyEVs = { Other: oEV };
