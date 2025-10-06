@@ -59,7 +59,7 @@ PAGE_HTML = r"""<!doctype html>
   %TABLE1_SECTION%
   %TABLE3_SECTION%
   %TABLE2_SECTION%
-  <footer>%FOOTER_TEXT%</footer>
+  <div id="footer-placeholder"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
