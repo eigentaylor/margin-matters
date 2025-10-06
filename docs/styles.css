@@ -799,6 +799,98 @@ body.has-prop-ev-toggle {
   accent-color: var(--accent)
 }
 
+/* Dual-range year slider used on state pages and trend viewer */
+.dual-range-slider {
+  position: relative;
+  height: 28px;
+  display: block;
+}
+
+.dual-range-slider .slider-track {
+  position: absolute;
+  inset: 0 0 0 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  background: #0f0f0f;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  pointer-events: none; /* important: track should not catch clicks */
+}
+
+.dual-range-slider .slider-range {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.9), rgba(244, 114, 182, 0.9));
+  border-radius: 6px;
+  left: 0;
+  width: 0;
+  pointer-events: none; /* important: decorative only */
+  z-index: 1;
+}
+
+.dual-range-slider .slider-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Put max on top by default so right-side clicks hit the max thumb */
+.slider-input--min { z-index: 2; }
+.slider-input--max { z-index: 3; }
+
+.dual-range-slider .slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #222;
+}
+
+.dual-range-slider .slider-input::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #222;
+}
+
+/* Hide native thumbs but keep inputs for value/storage; we'll use custom thumbs */
+.dual-range-slider .slider-input::-webkit-slider-thumb { opacity: 0; width: 0; height: 0; }
+.dual-range-slider .slider-input::-moz-range-thumb { opacity: 0; width: 0; height: 0; }
+.dual-range-slider .slider-input { pointer-events: none; }
+
+/* Custom thumb visuals */
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  z-index: 10;
+  cursor: grab;
+}
+.slider-thumb:active { cursor: grabbing; }
+.slider-thumb.thumb-start { background: linear-gradient(180deg,#fff,#e6f7ff); }
+.slider-thumb.thumb-end { background: linear-gradient(180deg,#fff,#ffe6f0); }
+
+/* While a slider thumb is being dragged we add a body class (`slider-dragging`).
+   Force a grabbing cursor for the whole document during that interaction to
+   avoid flicker when the pointer briefly leaves the thumb element. */
+body.slider-dragging,
+body.slider-dragging * {
+  cursor: grabbing !important;
+}
+
 .pv-tools label {
   color: var(--muted)
 }

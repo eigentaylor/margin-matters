@@ -525,6 +525,107 @@ window.__collectViewStateForUrl = function() {
     }
     
     updateYearDisplay();
+
+    // Create custom thumbs for the year range so the full-width native range
+    // inputs do not steal pointer events. Custom thumbs forward value updates
+    // to the underlying inputs (which remain the source of truth).
+    (function(){
+      try {
+        const yearStartEl = document.getElementById('year-start');
+        const yearEndEl = document.getElementById('year-end');
+        const container = yearStartEl && yearStartEl.closest && yearStartEl.closest('.dual-range-slider');
+        if (!yearStartEl || !yearEndEl || !container) return;
+
+        // Make native inputs non-interactive (visual only). We still programmatically
+        // update their values and dispatch events so existing handlers run.
+        yearStartEl.style.pointerEvents = 'none';
+        yearEndEl.style.pointerEvents = 'none';
+
+        const makeThumb = (cls) => {
+          const t = document.createElement('div');
+          t.className = 'slider-thumb ' + cls;
+          container.appendChild(t);
+          return t;
+        };
+        const thumbStart = makeThumb('thumb-start');
+        const thumbEnd = makeThumb('thumb-end');
+
+        const minY = () => parseInt(yearStartEl.min, 10);
+        const maxY = () => parseInt(yearStartEl.max, 10);
+
+        const updateThumbs = () => {
+          const mi = minY(); const ma = maxY();
+          const s = Math.max(mi, Math.min(ma, parseInt(yearStartEl.value, 10) || mi));
+          const e = Math.max(mi, Math.min(ma, parseInt(yearEndEl.value, 10) || ma));
+          const span = Math.max(1, ma - mi);
+          const pctS = ((s - mi) / span) * 100;
+          const pctE = ((e - mi) / span) * 100;
+          thumbStart.style.left = pctS + '%';
+          thumbEnd.style.left = pctE + '%';
+        };
+
+        yearStartEl.addEventListener('input', updateThumbs);
+        yearEndEl.addEventListener('input', updateThumbs);
+        updateThumbs();
+
+        // Drag support for custom thumbs
+        let active = null;
+        const onPointerMove = (ev) => {
+          if (!active) return;
+          const rect = container.getBoundingClientRect();
+          const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+          const mi = minY(); const ma = maxY();
+          const yr = Math.round(mi + pct * (ma - mi));
+          active.input.value = String(yr);
+          active.input.dispatchEvent(new Event('input', { bubbles: true }));
+        };
+        const onPointerUp = (ev) => {
+          if (!active) return;
+          try { active.thumb.releasePointerCapture(ev.pointerId); } catch (e) {}
+          active = null;
+          document.removeEventListener('pointermove', onPointerMove);
+          document.removeEventListener('pointerup', onPointerUp);
+        };
+
+        const attachThumb = (thumb, input) => {
+          thumb.addEventListener('pointerdown', (ev) => {
+            ev.preventDefault();
+            try { thumb.setPointerCapture(ev.pointerId); } catch (e) {}
+            active = { thumb, input };
+            document.addEventListener('pointermove', onPointerMove);
+            document.addEventListener('pointerup', onPointerUp);
+          });
+        };
+        attachThumb(thumbStart, yearStartEl);
+        attachThumb(thumbEnd, yearEndEl);
+
+        // Clicking on the track moves the nearest thumb (ignores clicks inside current range)
+        container.addEventListener('pointerup', (ev) => {
+          if (ev.target && ev.target.closest && ev.target.closest('input[type="range"]')) return;
+          const targetClass = ev.target && ev.target.classList ? ev.target.classList : null;
+          const clickedIsTrack = targetClass && ev.target.classList.contains('slider-track');
+          if (!clickedIsTrack && ev.target !== container) return;
+          const rect = container.getBoundingClientRect();
+          const clickX = Math.max(rect.left, Math.min(rect.right, ev.clientX));
+          const mi = minY(); const ma = maxY();
+          const span = Math.max(1, ma - mi);
+          const clickedPct = (clickX - rect.left) / rect.width;
+          const clickedYear = Math.round(mi + clickedPct * (ma - mi));
+          const s = parseInt(yearStartEl.value, 10);
+          const e = parseInt(yearEndEl.value, 10);
+          if (clickedYear >= s && clickedYear <= e) return;
+          const startX = rect.left + ((s - mi) / span) * rect.width;
+          const endX = rect.left + ((e - mi) / span) * rect.width;
+          const distStart = Math.abs(clickX - startX);
+          const distEnd = Math.abs(clickX - endX);
+          const targetInput = distStart <= distEnd ? yearStartEl : yearEndEl;
+          const clamped = Math.max(mi, Math.min(ma, clickedYear));
+          targetInput.value = String(clamped);
+          targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+      } catch (e) { /* non-fatal */ }
+    })();
     
     // Restore saved chart preferences, prioritizing URL parameters
     const chartTwoPartyEl = document.getElementById('chart-twoparty');

@@ -179,6 +179,23 @@ Interactive Explorer for state-trends
 
     // Start/end year defaults derived from data extents (filled later when data loaded)
     el.addStateBtn.addEventListener('click', () => { addState(el.state.value); });
+    // When user picks a new state/unit (single-mode), auto-set start year to that unit's first available year
+    el.state.addEventListener('change', () => {
+      try {
+        // Only auto-adjust when not in multi-select compare mode (no selected chips)
+        if (selectedStates.length) return;
+        const abbr = el.state.value;
+        const all = window.__data || [];
+        const rows = all.filter(r => r.abbr === abbr).map(r => +r.year).filter(Boolean).sort((a,b) => a-b);
+        if (rows.length) {
+          const first = rows[0];
+          const curEnd = el.endYear && el.endYear.value ? +el.endYear.value : null;
+          el.startYear.value = String(first);
+          if (curEnd != null && +el.startYear.value > curEnd) el.endYear.value = el.startYear.value;
+          writeToUrl(); render();
+        }
+      } catch (e) { /* ignore */ }
+    });
     if (el.presetSel) {
       el.presetSel.addEventListener('change', (e) => {
         const v = e.target.value;
@@ -203,7 +220,7 @@ Interactive Explorer for state-trends
     // Clear multi-state selections and reset controls to sensible defaults
     selectedStates = [];
     renderStateChips();
-    el.state.value = 'AK';
+    el.state.value = 'CA';
     el.metric.value = METRIC.MARGIN;
     el.chart.value = 'auto';
     el.rel.checked = false;
@@ -213,19 +230,20 @@ Interactive Explorer for state-trends
     el.points.checked = true;
     // Reset to default full range instead of clearing
     try {
-      // Derive from loaded data if available; fallback to known 1916–2024
+      // Derive from loaded data if available; fallback to known 1864–2024 (data contains 1864)
       const all = window.__data || [];
-      let minYear = 1916, maxYear = 2024;
+      let minYear = 1864, maxYear = 2024;
       if (all.length) {
-        minYear = all.reduce((m, r) => Math.min(m, +r.year || m), Infinity);
-        maxYear = all.reduce((m, r) => Math.max(m, +r.year || m), -Infinity);
-        if (!isFinite(minYear) || minYear > 2100) minYear = 1916;
-        if (!isFinite(maxYear) || maxYear < 1800) maxYear = 2024;
+        const years = all.map(r => +r.year).filter(Boolean);
+        if (years.length) {
+          minYear = Math.min(...years);
+          maxYear = Math.max(...years);
+        }
       }
       el.startYear.value = String(minYear);
       el.endYear.value = String(maxYear);
     } catch (e) {
-      el.startYear.value = '1916';
+      el.startYear.value = '1864';
       el.endYear.value = '2024';
     }
     writeToUrl();
@@ -245,12 +263,35 @@ Interactive Explorer for state-trends
     if (!selectedStates.includes(s)) selectedStates.push(s);
     renderStateChips();
     if (selectedStates.length > 1) el.chart.value = 'line';
+    // When adding a state, ensure start year reflects the minimum available across selected states
+    try {
+      const all = window.__data || [];
+      const mins = selectedStates.map(abbr => {
+        const rows = all.filter(r => r.abbr === abbr).map(r => +r.year).filter(Boolean);
+        return rows.length ? Math.min(...rows) : Infinity;
+      }).filter(v => Number.isFinite(v));
+      if (mins.length) {
+        const newMin = Math.min(...mins);
+        el.startYear.value = String(newMin);
+      }
+    } catch (e) { }
     writeToUrl(); render();
   }
 
   function removeState(s) {
     selectedStates = selectedStates.filter(x => x !== s);
     renderStateChips();
+    try {
+      const all = window.__data || [];
+      const mins = selectedStates.map(abbr => {
+        const rows = all.filter(r => r.abbr === abbr).map(r => +r.year).filter(Boolean);
+        return rows.length ? Math.min(...rows) : Infinity;
+      }).filter(v => Number.isFinite(v));
+      if (mins.length) {
+        const newMin = Math.min(...mins);
+        el.startYear.value = String(newMin);
+      }
+    } catch (e) { }
     writeToUrl(); render();
   }
 
@@ -440,7 +481,9 @@ Interactive Explorer for state-trends
       dS.sort((a, b) => a.year - b.year);
       dataByState[s] = dS;
     });
-    const years = Array.from(new Set([].concat(...Object.values(dataByState).map(arr => arr.map(d => d.year))))).sort((a, b) => a - b);
+    // Also include national years (if present) so overlays align with the x axis
+    const natFiltered = (p.nat && yNatCol) ? nat.filter(d => d.year >= start && d.year <= end) : [];
+    const years = Array.from(new Set([].concat(...Object.values(dataByState).map(arr => arr.map(d => d.year)), natFiltered.map(d => d.year)))).sort((a, b) => a - b);
     const innerW = (el.root.getBoundingClientRect().width || 1100) - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
@@ -452,8 +495,7 @@ Interactive Explorer for state-trends
     xLine.domain(years).range([tickStart, tickEnd]);
 
     // compute filtered series for single and multi-state rendering
-    const dataFiltered = data.filter(d => d.year >= start && d.year <= end);
-    const natFiltered = nat.filter(d => d.year >= start && d.year <= end);
+  const dataFiltered = data.filter(d => d.year >= start && d.year <= end);
 
     // Determine y domain from all visible series: all states being compared and national overlay
     let visibleValues = [];
@@ -692,8 +734,216 @@ Interactive Explorer for state-trends
       const years = rows.map(r => +r.year).filter(Boolean);
       const minYear = Math.min(...years);
       const maxYear = Math.max(...years);
-      if (!el.startYear.value) el.startYear.value = String(minYear);
-      if (!el.endYear.value) el.endYear.value = String(maxYear);
+      // If we replaced number inputs with range inputs, wire up the slider UI
+      const yearStartInput = document.getElementById('startYear');
+      const yearEndInput = document.getElementById('endYear');
+      const yearRangeDisplay = document.getElementById('year-range-display');
+      const sliderRange = document.getElementById('slider-range');
+      const minLabel = document.getElementById('year-range-min-label');
+      const maxLabel = document.getElementById('year-range-max-label');
+
+  const computedMin = (Number.isFinite(minYear) ? minYear : 1864);
+  const computedMax = (Number.isFinite(maxYear) ? maxYear : 2024);
+      if (yearStartInput) {
+        yearStartInput.min = String(computedMin);
+        yearStartInput.max = String(computedMax);
+      }
+      if (yearEndInput) {
+        yearEndInput.min = String(computedMin);
+        yearEndInput.max = String(computedMax);
+      }
+      if (minLabel) minLabel.textContent = String(computedMin);
+      if (maxLabel) maxLabel.textContent = String(computedMax);
+
+      // Restore from URL params or localStorage if present
+      try {
+        const q = new URLSearchParams(location.search);
+        const urlStart = q.get('start') || q.get('yearStart') || null;
+        const urlEnd = q.get('end') || q.get('yearEnd') || null;
+        const storedStart = parseInt(localStorage.getItem('chartYearStart') || '', 10);
+        const storedEnd = parseInt(localStorage.getItem('chartYearEnd') || '', 10);
+        let initialStart = urlStart ? parseInt(urlStart, 10) : (Number.isFinite(storedStart) ? storedStart : computedMin);
+        let initialEnd = urlEnd ? parseInt(urlEnd, 10) : (Number.isFinite(storedEnd) ? storedEnd : computedMax);
+        if (!Number.isFinite(initialStart)) initialStart = computedMin;
+        if (!Number.isFinite(initialEnd)) initialEnd = computedMax;
+        if (initialStart < computedMin) initialStart = computedMin;
+        if (initialEnd > computedMax) initialEnd = computedMax;
+        if (initialStart > initialEnd) initialStart = initialEnd;
+        if (yearStartInput) yearStartInput.value = String(initialStart);
+        if (yearEndInput) yearEndInput.value = String(initialEnd);
+
+        const updateYearDisplay = () => {
+          const s = parseInt(yearStartInput.value, 10);
+          const e = parseInt(yearEndInput.value, 10);
+          if (yearRangeDisplay) yearRangeDisplay.textContent = `${s}-${e}`;
+          if (sliderRange && yearStartInput) {
+            const min = parseInt(yearStartInput.min, 10);
+            const max = parseInt(yearStartInput.max, 10);
+            const span = Math.max(1, max - min);
+            const percentStart = ((s - min) / span) * 100;
+            const percentEnd = ((e - min) / span) * 100;
+            const safeStart = Math.max(0, Math.min(100, percentStart));
+            const safeEnd = Math.max(0, Math.min(100, percentEnd));
+            sliderRange.style.left = safeStart + '%';
+            sliderRange.style.width = Math.max(0, safeEnd - safeStart) + '%';
+          }
+        };
+
+        if (yearStartInput) {
+          yearStartInput.addEventListener('input', () => {
+            // enforce a minimum 4-year gap: start <= end - 4
+            const s = parseInt(yearStartInput.value, 10);
+            const e = parseInt(yearEndInput.value, 10);
+            const minGap = 4;
+            const maxStart = e - minGap;
+            if (s > maxStart) {
+              yearStartInput.value = String(Math.max(parseInt(yearStartInput.min, 10), maxStart));
+            }
+            updateYearDisplay();
+            writeToUrl();
+            render();
+          });
+        }
+        if (yearEndInput) {
+          yearEndInput.addEventListener('input', () => {
+            // enforce a minimum 4-year gap: end >= start + 4
+            const s = parseInt(yearStartInput.value, 10);
+            const e = parseInt(yearEndInput.value, 10);
+            const minGap = 4;
+            const minEnd = s + minGap;
+            if (e < minEnd) {
+              yearEndInput.value = String(Math.min(parseInt(yearEndInput.max, 10), minEnd));
+            }
+            updateYearDisplay();
+            writeToUrl();
+            render();
+          });
+        }
+        // Replace native thumbs with custom thumb elements so only the visual
+        // thumbs capture pointer events. This prevents the full-width
+        // range inputs from swallowing clicks on the track.
+        if (yearStartInput && yearEndInput) {
+          const container = yearStartInput.closest('.dual-range-slider');
+          // Disable pointer events on the native inputs (we'll forward updates)
+          yearStartInput.style.pointerEvents = 'none';
+          yearEndInput.style.pointerEvents = 'none';
+
+          // Create custom thumb elements
+          const makeThumb = (cls) => {
+            const t = document.createElement('div');
+            t.className = 'slider-thumb ' + cls;
+            t.setAttribute('role', 'slider');
+            t.setAttribute('aria-valuemin', yearStartInput.min);
+            t.setAttribute('aria-valuemax', yearStartInput.max);
+            container.appendChild(t);
+            return t;
+          };
+          const thumbStart = makeThumb('thumb-start');
+          const thumbEnd = makeThumb('thumb-end');
+
+          const min = () => parseInt(yearStartInput.min, 10);
+          const max = () => parseInt(yearStartInput.max, 10);
+
+          const updateThumbs = () => {
+            const mi = min(); const ma = max();
+            const s = Math.max(mi, Math.min(ma, parseInt(yearStartInput.value, 10)));
+            const e = Math.max(mi, Math.min(ma, parseInt(yearEndInput.value, 10)));
+            const span = Math.max(1, ma - mi);
+            const pctS = ((s - mi) / span) * 100;
+            const pctE = ((e - mi) / span) * 100;
+            thumbStart.style.left = pctS + '%';
+            thumbEnd.style.left = pctE + '%';
+            thumbStart.setAttribute('aria-valuenow', String(s));
+            thumbEnd.setAttribute('aria-valuenow', String(e));
+          };
+
+          // Forward input changes to update thumb visuals
+          yearStartInput.addEventListener('input', updateThumbs);
+          yearEndInput.addEventListener('input', updateThumbs);
+
+          // Drag handling for thumbs
+          let active = null;
+          const onPointerMove = (ev) => {
+            if (!active) return;
+            const rect = container.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+            const mi = min(); const ma = max();
+            let yr = Math.round(mi + pct * (ma - mi));
+            // enforce 4-year gap during dragging
+            const minGap = 4;
+            const sVal = active.input === yearStartInput ? yr : parseInt(yearStartInput.value, 10);
+            const eVal = active.input === yearEndInput ? yr : parseInt(yearEndInput.value, 10);
+            if (active.input === yearStartInput) {
+              const maxStart = eVal - minGap;
+              yr = Math.min(yr, maxStart);
+              yr = Math.max(mi, yr);
+            } else {
+              const minEnd = sVal + minGap;
+              yr = Math.max(yr, minEnd);
+              yr = Math.min(ma, yr);
+            }
+            active.input.value = String(yr);
+            active.input.dispatchEvent(new Event('input', { bubbles: true }));
+          };
+          const onPointerUp = (ev) => {
+            if (!active) return;
+            try { active.thumb.releasePointerCapture(ev.pointerId); } catch (e) { }
+            active = null;
+            document.body.classList.remove('slider-dragging');
+            document.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('pointerup', onPointerUp);
+          };
+
+          const attachThumb = (thumb, input) => {
+            thumb.addEventListener('pointerdown', (ev) => {
+              ev.preventDefault();
+              try { thumb.setPointerCapture(ev.pointerId); } catch (e) { }
+              active = { thumb, input };
+              document.body.classList.add('slider-dragging');
+              document.addEventListener('pointermove', onPointerMove);
+              document.addEventListener('pointerup', onPointerUp);
+            });
+            // allow click on track to move nearest thumb
+            thumb.addEventListener('dblclick', (ev) => ev.stopPropagation());
+          };
+          attachThumb(thumbStart, yearStartInput);
+          attachThumb(thumbEnd, yearEndInput);
+
+          // Also allow clicking on the track to move a thumb (nearest)
+          if (container) {
+            container.addEventListener('pointerup', (ev) => {
+              const targetClass = ev.target && ev.target.classList ? ev.target.classList : null;
+              const clickedIsTrack = targetClass && ev.target.classList.contains('slider-track');
+              if (!clickedIsTrack && ev.target !== container) return;
+              const rect = container.getBoundingClientRect();
+              const clickX = Math.max(rect.left, Math.min(rect.right, ev.clientX));
+              const mi = min(); const ma = max();
+              const span = Math.max(1, ma - mi);
+              const clickedPct = (clickX - rect.left) / rect.width;
+              const clickedYear = Math.round(mi + clickedPct * (ma - mi));
+              const s = parseInt(yearStartInput.value, 10);
+              const e = parseInt(yearEndInput.value, 10);
+              if (clickedYear >= s && clickedYear <= e) return;
+              const startX = rect.left + ((s - mi) / span) * rect.width;
+              const endX = rect.left + ((e - mi) / span) * rect.width;
+              const distStart = Math.abs(clickX - startX);
+              const distEnd = Math.abs(clickX - endX);
+              const targetInput = distStart <= distEnd ? yearStartInput : yearEndInput;
+              const clamped = Math.max(mi, Math.min(ma, clickedYear));
+              targetInput.value = String(clamped);
+              targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+          }
+
+          // Initialize positions
+          updateThumbs();
+        }
+        // update display immediately
+        if (yearStartInput && yearEndInput) updateYearDisplay();
+      } catch (e) {
+        if (!el.startYear.value) el.startYear.value = String(minYear);
+        if (!el.endYear.value) el.endYear.value = String(maxYear);
+      }
     } catch (e) { }
     resize();
     render();
