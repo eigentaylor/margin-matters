@@ -41,7 +41,7 @@
   const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
   const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
 
-  // Known poll-closing times (ET) grouped by states. Used to set when
+  // Known poll-closing times (PT) grouped by states. Used to set when
   // counting should realistically start for each state.
   const POLL_CLOSINGS = {
     '15:00': ['KY', 'IN', 'PR'],
