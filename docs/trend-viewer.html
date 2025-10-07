@@ -168,116 +168,103 @@
 
 <body>
   <div class="container">
-    <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
-      <button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu"
-        aria-expanded="false"><span></span><span></span><span></span></button>
-      <div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn"
-          href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn"
-          href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn"
-          href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn"
-          href="./presidential_margins.html">Data (CSV)</a><a class="btn" href="./attributions.html">Attributions</a>
-      </div>
-      <script src="./header-toggle.js"></script>
-    </div>
-    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-      <a class="back" href="./index.html">← Back to Map</a>
-      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-    </div>
-    <div class="legend">Trend Viewer</div>
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+  </div>
+  <div class="legend">Trend Viewer</div>
 
-    <div class="card" style="margin-bottom:12px">
-      <div class="controls">
-        <div class="field">
-          <label for="stateSel">State</label>
-          <select id="stateSel" class="select-dark"></select>
-          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-            <button id="addStateBtn" class="btn btn-dark">Add state</button>
-            <div class="presets-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-              <label class="badge">Presets:</label>
-              <select id="presetSel" class="select-dark">
-                <option value="">— choose —</option>
-                <option value="preset1">WI/MI/PA</option>
-                <option value="preset2">2024 Swings</option>
-                <option value="preset3">Maine (ME + districts)</option>
-                <option value="preset4">Nebraska (NE + districts)</option>
-              </select>
-              <button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>
-            </div>
-          </div>
-          <div id="stateChips" class="state-chips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
-        </div>
-        <div class="field">
-          <label for="metricSel">Metric</label>
-          <select id="metricSel" class="select-dark">
-            <option value="margin" selected>Margin</option>
-            <option value="thirdParty">Third-Party Share</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="year-range-slider">Year range</label>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <label style="font-size:0.9rem"><span id="year-range-display">1864-2024</span></label>
-            <div class="dual-range-slider" id="yearSlider">
-              <div class="slider-track"></div>
-              <div class="slider-range" id="slider-range"></div>
-              <input id="startYear" type="range" class="slider-input" value="1864" step="4" min="1864" max="2020" />
-              <input id="endYear" type="range" class="slider-input" value="2024" step="4" min="1868" max="2024" />
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);">
-              <span id="year-range-min-label">1864</span>
-              <span id="year-range-max-label">2024</span>
-            </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="controls">
+      <div class="field">
+        <label for="stateSel">State</label>
+        <select id="stateSel" class="select-dark"></select>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+          <button id="addStateBtn" class="btn btn-dark">Add state</button>
+          <div class="presets-row" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <label class="badge">Presets:</label>
+            <select id="presetSel" class="select-dark">
+              <option value="">— choose —</option>
+              <option value="preset1">WI/MI/PA</option>
+              <option value="preset2">2024 Swings</option>
+              <option value="preset3">Maine (ME + districts)</option>
+              <option value="preset4">Nebraska (NE + districts)</option>
+            </select>
+            <button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>
           </div>
         </div>
-        <div class="field">
-          <label for="chartSel">Chart type</label>
-          <select id="chartSel" class="select-dark">
-            <option value="auto">Auto</option>
-            <option value="line" selected>Line</option>
-            <option value="bar">Bar</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Options</label>
-          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="relativeChk" />
-            Relative</label>
-          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="deltaChk" /> Delta</label>
-          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="twoPartyChk" />
-            Two-party</label>
-        </div>
-        <div class="field">
-          <label>Display</label>
-          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="natOverlay" /> National
-            overlay</label>
-          <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pointsToggle" checked />
-            Show points</label>
+        <div id="stateChips" class="state-chips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
+      </div>
+      <div class="field">
+        <label for="metricSel">Metric</label>
+        <select id="metricSel" class="select-dark">
+          <option value="margin" selected>Margin</option>
+          <option value="thirdParty">Third-Party Share</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="year-range-slider">Year range</label>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <label style="font-size:0.9rem"><span id="year-range-display">1864-2024</span></label>
+          <div class="dual-range-slider" id="yearSlider">
+            <div class="slider-track"></div>
+            <div class="slider-range" id="slider-range"></div>
+            <input id="startYear" type="range" class="slider-input" value="1864" step="4" min="1864" max="2020" />
+            <input id="endYear" type="range" class="slider-input" value="2024" step="4" min="1868" max="2024" />
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);">
+            <span id="year-range-min-label">1864</span>
+            <span id="year-range-max-label">2024</span>
+          </div>
         </div>
       </div>
-      <div class="spacer"></div>
-      <div class="legend" id="legend">
-        <div class="row" style="gap:14px;align-items:center">
-          <div class="row" style="gap:8px;align-items:center">
-            <div class="sw" style="background:#4ade80"></div>
-            <div class="lab">State</div>
-          </div>
-          <div class="row" style="gap:8px;align-items:center">
-            <div class="sw" style="background:#f472b6"></div>
-            <div class="lab">National</div>
-          </div>
+      <div class="field">
+        <label for="chartSel">Chart type</label>
+        <select id="chartSel" class="select-dark">
+          <option value="auto">Auto</option>
+          <option value="line" selected>Line</option>
+          <option value="bar">Bar</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Options</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="relativeChk" />
+          Relative</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="deltaChk" /> Delta</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="twoPartyChk" />
+          Two-party</label>
+      </div>
+      <div class="field">
+        <label>Display</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="natOverlay" /> National
+          overlay</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="pointsToggle" checked />
+          Show points</label>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="legend" id="legend">
+      <div class="row" style="gap:14px;align-items:center">
+        <div class="row" style="gap:8px;align-items:center">
+          <div class="sw" style="background:#4ade80"></div>
+          <div class="lab">State</div>
+        </div>
+        <div class="row" style="gap:8px;align-items:center">
+          <div class="sw" style="background:#f472b6"></div>
+          <div class="lab">National</div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="card">
-      <div
-        style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
-        <div class="legend" style="flex:1 1 auto;min-width:240px">Use presets or chips to compare multiple states.</div>
-        <button id="shareBtn" class="btn btn-dark" title="Copy link to this view" style="flex:0 0 auto">Share</button>
-      </div>
-      <div id="chart"></div>
-      <div id="notes" style="margin-top:8px;color:var(--muted);font-size:.92rem"></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+      <div class="legend" style="flex:1 1 auto;min-width:240px">Use presets or chips to compare multiple states.</div>
+      <button id="shareBtn" class="btn btn-dark" title="Copy link to this view" style="flex:0 0 auto">Share</button>
     </div>
-    <div id="footer-placeholder"></div>
+    <div id="chart"></div>
+    <div id="notes" style="margin-top:8px;color:var(--muted);font-size:.92rem"></div>
+  </div>
+  <div id="footer-placeholder"></div>
   </div>
 
   <div class="tooltip" id="tooltip"></div>
