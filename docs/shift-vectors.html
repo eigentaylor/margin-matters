@@ -23,27 +23,6 @@
         </div>
 
         <div class="card">
-            <div class="controls">
-                <div class="field year-field">
-                    <label for="yearSlider">Year</label>
-                    <div class="slider-row" style="display:flex;width:100%;align-items:center;gap:12px">
-                            <input id="yearSlider" type="range" min="0" max="1" step="1" value="1"
-                                aria-describedby="yearValue" disabled />
-                    </div>
-                    <span id="yearValue" class="badge">Loading…</span>
-                </div>
-                <br>
-                <div class="field" style="text-align:center;">
-                    <label>Scaling</label>
-                    <div class="toggle-row"  style="display:flex;width:100%;align-items:center;gap:12px">
-                        <label><input id="logScaleToggle" type="checkbox" checked /> Log scale (symlog)</label>
-                        <label><input id="fixedLengthToggle" type="checkbox" checked /> Normalize lengths</label>
-                        <label><input id="labelToggle" type="checkbox" checked /> Show labels</label>
-                        <label title="Attempt to place labels for every point (may be slow)"><input id="allLabelToggle"
-                                type="checkbox" checked /> Label all points</label>
-                    </div>
-                </div>
-            </div>
 
             <div class="card">
                 <div class="field">
@@ -99,6 +78,30 @@
                     preserveAspectRatio="xMidYMid meet"></svg>
                 <div id="chartNote" class="chart-note">Hover over any point to see the unit and raw vote deltas. Use the
                     toggles above to change scaling.</div>
+                <div id="noData" class="empty-state" hidden>No vote-change data for this year.</div>
+            </div>
+
+            <div class="controls">
+                <div class="field year-field">
+                    <label for="yearSlider">Year</label>
+                    <div class="slider-row" style="display:flex;width:100%;align-items:center;gap:12px">
+                        <input id="yearSlider" type="range" min="0" max="1" step="1" value="1"
+                            aria-describedby="yearValue" disabled />
+                    </div>
+                    <span id="yearValue" class="badge">Loading…</span>
+                </div>
+                <br>
+                <div class="field" style="text-align:center;">
+                    <label>Scaling</label>
+                    <div class="toggle-row" style="display:flex;width:100%;align-items:center;gap:12px">
+                        <label><input id="logScaleToggle" type="checkbox" checked /> Log scale (symlog)</label>
+                        <label><input id="fixedLengthToggle" type="checkbox" checked /> Normalize lengths</label>
+                        <label><input id="labelToggle" type="checkbox" checked /> Show labels</label>
+                        <label title="Attempt to place labels for every point (may be slow)"><input id="allLabelToggle"
+                                type="checkbox" checked /> Label all points</label>
+                    </div>
+                </div>
+            </div>
                 <div id="explain" class="chart-note" style="margin-top:8px">
                     Here we plot the change in raw Democratic votes (horizontal axis) versus the change in raw
                     Republican
@@ -136,9 +139,6 @@
                             amber region, the loss was greater for the Republicans.</li>
                     </ul>
                 </div>
-                <div id="noData" class="empty-state" hidden>No vote-change data for this year.</div>
-            </div>
-
             <div id="footer-placeholder"></div>
         </div>
 
