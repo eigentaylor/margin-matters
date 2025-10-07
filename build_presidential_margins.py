@@ -72,6 +72,7 @@ NOTES = {
     (1912, None): "In 1912, the main opposition to Wilson (D) was Theodore Roosevelt of the Progressive Party (Bull Moose), who we consider the de facto Republican candidate for margin purposes, with Taft as a third-party candidate.",
     (1948, 'AL'): "In 1948, Truman was not on the ballot in Alabama; the Democratic column represents a Dixiecrat slate. We copy the third-party votes to the D_votes column to reflect that this still indicates a Democratic-leaning outcome.",
     (1960, 'AL'): "Voters in Alabama voted for electors individually, with 5 pledged to Kennedy (D) and 6 unpledged; we count D_votes and T_votes based on the highest vote-getting elector in each category, as Wikipedia does.",
+    (2024, 'NE-01'): "NE-01 is the only electoral unit which had a more democratic raw margin compared to 2020. This is likely due in part to the redrawing of the district to include more of Omaha's suburbs.",
 }
 
 def safe_int(x):
