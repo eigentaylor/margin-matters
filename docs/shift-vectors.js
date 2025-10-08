@@ -170,7 +170,7 @@
             <div style="word-break: break-word; white-space: pre-line;">Δ D votes: <span class="arrow">${arrowGlyph(entry.dDelta)}</span> ${formatSigned(entry.dDelta)}</div>
             <div style="word-break: break-word; white-space: pre-line;">Δ R votes: <span class="arrow">${arrowGlyph(entry.rDelta)}</span> ${formatSigned(entry.rDelta)}</div>
             <div style="word-break: break-word; white-space: pre-line;">Partisan shift (ΔD - ΔR): <span class="arrow">${arrowGlyph(partisan)}</span> ${formatSigned(partisan)} <span class="pct"></span></div>
-            <div style="word-break: break-word; white-space: pre-line;">Turnout Δ (D+R): <span class="arrow">${arrowGlyph(turnout)}</span> ${formatSigned(turnout)}</div>
+            <div style="word-break: break-word; white-space: pre-line;">D/R Turnout Δ (D+R): <span class="arrow">${arrowGlyph(turnout)}</span> ${formatSigned(turnout)}</div>
             ${entry.totalDelta != null ? `<div style="word-break: break-word; white-space: pre-line;">Total Δ votes: <span class="arrow">${arrowGlyph(entry.totalDelta)}</span> ${formatSigned(entry.totalDelta)}</div>` : ''}
             <div style="word-break: break-word; white-space: pre-line;">Vector length: ${formatPlain(entry.length)} votes</div>
             ${entry.note ? `<div class="tooltip-note" style="word-break: break-word; white-space: pre-line;">${entry.note}</div>` : ''}
