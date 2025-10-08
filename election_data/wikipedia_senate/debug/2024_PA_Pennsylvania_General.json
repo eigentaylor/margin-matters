@@ -1,0 +1,326 @@
+{
+  "year": 2024,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "2024 United States Senate election in Pennsylvania [ 245 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Pennsylvania",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2024 United States Senate election in Pennsylvania [ 245 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dave McCormick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Casey Jr. (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Thomas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Leila Hazou",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marty Selker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dave McCormick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,399,295",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Casey Jr. (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,384,180",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Thomas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "89,653",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Leila Hazou",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66,388",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marty Selker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,621",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "6,963,137",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dave McCormick",
+      "party": "Republican",
+      "votes": 3399295,
+      "percent": 48.82
+    },
+    {
+      "candidate": "Bob Casey Jr. (incumbent)",
+      "party": "Democratic",
+      "votes": 3384180,
+      "percent": 48.6
+    },
+    {
+      "candidate": "John Thomas",
+      "party": "Libertarian",
+      "votes": 89653,
+      "percent": 1.29
+    },
+    {
+      "candidate": "Leila Hazou",
+      "party": "Green",
+      "votes": 66388,
+      "percent": 0.95
+    },
+    {
+      "candidate": "Marty Selker",
+      "party": "Constitution",
+      "votes": 23621,
+      "percent": 0.34
+    }
+  ]
+}

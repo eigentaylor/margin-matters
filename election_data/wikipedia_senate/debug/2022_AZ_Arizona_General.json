@@ -1,0 +1,272 @@
+{
+  "year": 2022,
+  "state": "Arizona",
+  "abbr": "AZ",
+  "round": "General",
+  "caption": "2022 United States Senate election in Arizona [ 226 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Arizona",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2022 United States Senate election in Arizona [ 226 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Kelly (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Blake Masters",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marc Victor (withdrawn)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Kelly (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,322,027",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Blake Masters",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,196,308",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marc Victor (withdrawn)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53,762",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "197",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,572,294",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Kelly (incumbent)",
+      "party": "Democratic",
+      "votes": 1322027,
+      "percent": 51.39
+    },
+    {
+      "candidate": "Blake Masters",
+      "party": "Republican",
+      "votes": 1196308,
+      "percent": 46.51
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 197,
+      "percent": 0.01
+    }
+  ]
+}

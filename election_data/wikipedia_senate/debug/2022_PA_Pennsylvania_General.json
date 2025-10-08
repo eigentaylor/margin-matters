@@ -1,0 +1,359 @@
+{
+  "year": 2022,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "2022 United States Senate election in Pennsylvania [ 471 ] [ 472 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Pennsylvania",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2022 United States Senate election in Pennsylvania [ 471 ] [ 472 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Fetterman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mehmet Oz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Erik Gerhardt",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard L. Weiss",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Wassmer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Fetterman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,751,012",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mehmet Oz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,487,260",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Erik Gerhardt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72,887",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard L. Weiss",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30,434",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Keystone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Wassmer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,428",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "7,864",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,375,885",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Fetterman",
+      "party": "Democratic",
+      "votes": 2751012,
+      "percent": 51.17
+    },
+    {
+      "candidate": "Mehmet Oz",
+      "party": "Republican",
+      "votes": 2487260,
+      "percent": 46.27
+    },
+    {
+      "candidate": "Erik Gerhardt",
+      "party": "Libertarian",
+      "votes": 72887,
+      "percent": 1.36
+    },
+    {
+      "candidate": "Richard L. Weiss",
+      "party": "Green",
+      "votes": 30434,
+      "percent": 0.57
+    },
+    {
+      "candidate": "Dan Wassmer",
+      "party": "Keystone",
+      "votes": 26428,
+      "percent": 0.49
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 7864,
+      "percent": 0.15
+    }
+  ]
+}

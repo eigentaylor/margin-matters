@@ -1,0 +1,321 @@
+{
+  "year": 2022,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2022 United States Senate election in North Carolina [ 255 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_North_Carolina",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2022 United States Senate election in North Carolina [ 255 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Budd",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cheri Beasley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shannon W. Bray",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Matthew Hoh",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Budd",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,905,786",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cheri Beasley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,784,049",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shannon W. Bray",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51,640",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Matthew Hoh",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,934",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,515",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,773,924",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ted Budd",
+      "party": "Republican",
+      "votes": 1905786,
+      "percent": 50.5
+    },
+    {
+      "candidate": "Cheri Beasley",
+      "party": "Democratic",
+      "votes": 1784049,
+      "percent": 47.27
+    },
+    {
+      "candidate": "Shannon W. Bray",
+      "party": "Libertarian",
+      "votes": 51640,
+      "percent": 1.37
+    },
+    {
+      "candidate": "Matthew Hoh",
+      "party": "Green",
+      "votes": 29934,
+      "percent": 0.79
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2515,
+      "percent": 0.07
+    }
+  ]
+}

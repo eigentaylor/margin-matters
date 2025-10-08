@@ -1,0 +1,354 @@
+{
+  "year": 2022,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "2022 United States Senate election in Oklahoma [ 98 ] [ 99 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Oklahoma",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2022 United States Senate election in Oklahoma [ 98 ] [ 99 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Lankford (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Madison Horn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Delaney",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kenneth Blevins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Registered electors",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Lankford (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "739,960",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Madison Horn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "369,370",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Delaney",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,907",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kenneth Blevins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,495",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,150,732",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,150,732",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Registered electors",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,295,906",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "James Lankford (incumbent)",
+      "party": "Republican",
+      "votes": 739960,
+      "percent": 64.3
+    },
+    {
+      "candidate": "Madison Horn",
+      "party": "Democratic",
+      "votes": 369370,
+      "percent": 32.1
+    },
+    {
+      "candidate": "Michael Delaney",
+      "party": "Independent",
+      "votes": 20907,
+      "percent": 1.82
+    },
+    {
+      "candidate": "Kenneth Blevins",
+      "party": "Libertarian",
+      "votes": 20495,
+      "percent": 1.78
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1150732,
+      "percent": 50.12
+    },
+    {
+      "candidate": "Registered electors",
+      "party": "Registered electors",
+      "votes": 2295906,
+      "percent": null
+    }
+  ]
+}

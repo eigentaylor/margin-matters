@@ -1,0 +1,245 @@
+{
+  "year": 2022,
+  "state": "South Dakota",
+  "abbr": "SD",
+  "round": "General",
+  "caption": "2022 United States Senate election in South Dakota [ 45 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_South_Dakota",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2022 United States Senate election in South Dakota [ 45 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Thune (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Bengs",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tamara Lesnar",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Thune (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "242,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Bengs",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "91,007",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tamara Lesnar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,697",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "348,020",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Thune (incumbent)",
+      "party": "Republican",
+      "votes": 242316,
+      "percent": 69.63
+    },
+    {
+      "candidate": "Brian Bengs",
+      "party": "Democratic",
+      "votes": 91007,
+      "percent": 26.15
+    },
+    {
+      "candidate": "Tamara Lesnar",
+      "party": "Libertarian",
+      "votes": 14697,
+      "percent": 4.22
+    }
+  ]
+}

@@ -1,0 +1,407 @@
+{
+  "year": 2024,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "2024 United States Senate election in New Jersey [ 346 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_New_Jersey",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2024 United States Senate election in New Jersey [ 346 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andy Kim",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Curtis Bashaw",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Christina Khalil",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kenneth Kaplan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patricia Mooneyham",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joanne Kuniansky",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andy Kim",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,161,491",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Curtis Bashaw",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,773,589",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Christina Khalil",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45,443",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kenneth Kaplan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,242",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Vote Better",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patricia Mooneyham",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,224",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joanne Kuniansky",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,806",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "4,337",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,036,132",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Andy Kim",
+      "party": "Democratic",
+      "votes": 2161491,
+      "percent": 53.55
+    },
+    {
+      "candidate": "Curtis Bashaw",
+      "party": "Republican",
+      "votes": 1773589,
+      "percent": 43.94
+    },
+    {
+      "candidate": "Christina Khalil",
+      "party": "Green",
+      "votes": 45443,
+      "percent": 1.13
+    },
+    {
+      "candidate": "Kenneth Kaplan",
+      "party": "Libertarian",
+      "votes": 24242,
+      "percent": 0.6
+    },
+    {
+      "candidate": "Patricia Mooneyham",
+      "party": "Vote Better",
+      "votes": 17224,
+      "percent": 0.43
+    },
+    {
+      "candidate": "Joanne Kuniansky",
+      "party": "Socialist Workers",
+      "votes": 9806,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 4337,
+      "percent": 0.11
+    }
+  ]
+}

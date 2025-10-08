@@ -1,0 +1,417 @@
+{
+  "year": 2022,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "2022 United States Senate election in New York [ 75 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_New_York",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2022 United States Senate election in New York [ 75 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Pinion",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Pinion",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Pinion",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Diane Sare",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,022,822",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "297,739",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,320,561",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Pinion",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,204,499",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Pinion",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "296,652",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Pinion",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,501,151",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "LaRouche",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Diane Sare",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,844",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,848,556",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Democratic",
+      "votes": 3022822,
+      "percent": 51.69
+    },
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Working Families",
+      "votes": 297739,
+      "percent": 5.09
+    },
+    {
+      "candidate": "Chuck Schumer (incumbent)",
+      "party": "Total",
+      "votes": 3320561,
+      "percent": 56.78
+    },
+    {
+      "candidate": "Joe Pinion",
+      "party": "Republican",
+      "votes": 2204499,
+      "percent": 37.69
+    },
+    {
+      "candidate": "Joe Pinion",
+      "party": "Conservative",
+      "votes": 296652,
+      "percent": 5.07
+    },
+    {
+      "candidate": "Joe Pinion",
+      "party": "Total",
+      "votes": 2501151,
+      "percent": 42.76
+    },
+    {
+      "candidate": "Diane Sare",
+      "party": "LaRouche",
+      "votes": 26844,
+      "percent": 0.46
+    }
+  ]
+}

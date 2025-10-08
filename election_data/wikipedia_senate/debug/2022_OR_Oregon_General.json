@@ -1,0 +1,321 @@
+{
+  "year": 2022,
+  "state": "Oregon",
+  "abbr": "OR",
+  "round": "General",
+  "caption": "2022 United States Senate election in Oregon [ 56 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Oregon",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2022 United States Senate election in Oregon [ 56 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Wyden (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jo Rae Perkins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Henry",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Pulju",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Wyden (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,076,424",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jo Rae Perkins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "788,991",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Progressive",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Henry",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36,883",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pacific Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Pulju",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,454",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,197",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,927,949",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ron Wyden (incumbent)",
+      "party": "Democratic",
+      "votes": 1076424,
+      "percent": 55.83
+    },
+    {
+      "candidate": "Jo Rae Perkins",
+      "party": "Republican",
+      "votes": 788991,
+      "percent": 40.92
+    },
+    {
+      "candidate": "Chris Henry",
+      "party": "Progressive",
+      "votes": 36883,
+      "percent": 1.91
+    },
+    {
+      "candidate": "Dan Pulju",
+      "party": "Pacific Green",
+      "votes": 23454,
+      "percent": 1.22
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2197,
+      "percent": 0.11
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "year": 2022,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "2022 United States Senate election in New Hampshire [ 150 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_New_Hampshire",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2022 United States Senate election in New Hampshire [ 150 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maggie Hassan (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don Bolduc",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeremy Kauffman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maggie Hassan (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "332,490",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don Bolduc",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "275,631",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeremy Kauffman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,390",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "464",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "620,975",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Maggie Hassan (incumbent)",
+      "party": "Democratic",
+      "votes": 332490,
+      "percent": 53.54
+    },
+    {
+      "candidate": "Don Bolduc",
+      "party": "Republican",
+      "votes": 275631,
+      "percent": 44.39
+    },
+    {
+      "candidate": "Jeremy Kauffman",
+      "party": "Libertarian",
+      "votes": 12390,
+      "percent": 2.0
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 464,
+      "percent": 0.07
+    }
+  ]
+}

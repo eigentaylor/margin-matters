@@ -1,0 +1,235 @@
+{
+  "year": 2024,
+  "state": "Washington",
+  "abbr": "WA",
+  "round": "General",
+  "caption": "2024 United States Senate election in Washington [ 57 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Washington",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2024 United States Senate election in Washington [ 57 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maria Cantwell (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Raul Garcia",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maria Cantwell (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,252,577",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Raul Garcia",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,549,187",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "10,627",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,812,391",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Maria Cantwell (incumbent)",
+      "party": "Democratic",
+      "votes": 2252577,
+      "percent": 59.09
+    },
+    {
+      "candidate": "Raul Garcia",
+      "party": "Republican",
+      "votes": 1549187,
+      "percent": 40.64
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 10627,
+      "percent": 0.28
+    }
+  ]
+}

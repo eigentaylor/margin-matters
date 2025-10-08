@@ -1,0 +1,412 @@
+{
+  "year": 2024,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "2024 United States Senate election in New York [ 73 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_New_York",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2024 United States Senate election in New York [ 73 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kirsten Gillibrand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kirsten Gillibrand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Sapraicone",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Sapraicone",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Sapraicone",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Diane Sare",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,318,903",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "392,395",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,711,298",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–8.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Sapraicone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,917,044",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Sapraicone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "329,070",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Sapraicone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,246,114",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "LaRouche",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Diane Sare",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39,413",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "7,996,825",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kirsten Gillibrand",
+      "party": "Democratic",
+      "votes": 4318903,
+      "percent": 54.01
+    },
+    {
+      "candidate": "Kirsten Gillibrand",
+      "party": "Working Families",
+      "votes": 392395,
+      "percent": 4.91
+    },
+    {
+      "candidate": "Kirsten Gillibrand (incumbent)",
+      "party": "Total",
+      "votes": 4711298,
+      "percent": 58.91
+    },
+    {
+      "candidate": "Mike Sapraicone",
+      "party": "Republican",
+      "votes": 2917044,
+      "percent": 36.48
+    },
+    {
+      "candidate": "Mike Sapraicone",
+      "party": "Conservative",
+      "votes": 329070,
+      "percent": 4.12
+    },
+    {
+      "candidate": "Mike Sapraicone",
+      "party": "Total",
+      "votes": 3246114,
+      "percent": 40.59
+    },
+    {
+      "candidate": "Diane Sare",
+      "party": "LaRouche",
+      "votes": 39413,
+      "percent": 0.49
+    }
+  ]
+}

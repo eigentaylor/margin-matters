@@ -1,0 +1,235 @@
+{
+  "year": 2024,
+  "state": "Wyoming",
+  "abbr": "WY",
+  "round": "General",
+  "caption": "United States Senate election in Wyoming, 2024 [ 21 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Wyoming",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Wyoming, 2024 [ 21 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Barrasso (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Morrow",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Barrasso (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "198,418",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Morrow",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63,727",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.98%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,017",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "264,162",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Barrasso (incumbent)",
+      "party": "Republican",
+      "votes": 198418,
+      "percent": 75.11
+    },
+    {
+      "candidate": "Scott Morrow",
+      "party": "Democratic",
+      "votes": 63727,
+      "percent": 24.12
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2017,
+      "percent": 0.76
+    }
+  ]
+}

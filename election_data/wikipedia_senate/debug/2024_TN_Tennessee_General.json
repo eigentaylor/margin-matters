@@ -1,0 +1,314 @@
+{
+  "year": 2024,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "2024 United States Senate election in Tennessee [ 46 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Tennessee",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2024 United States Senate election in Tennessee [ 46 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marsha Blackburn (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gloria Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tharon Chandler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pamela Moses",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hastina Robinson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marsha Blackburn (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,918,743",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gloria Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,027,461",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.76%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tharon Chandler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28,444",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pamela Moses",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,682",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hastina Robinson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,278",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,007,608",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Marsha Blackburn (incumbent)",
+      "party": "Republican",
+      "votes": 1918743,
+      "percent": 63.8
+    },
+    {
+      "candidate": "Gloria Johnson",
+      "party": "Democratic",
+      "votes": 1027461,
+      "percent": 34.16
+    },
+    {
+      "candidate": "Tharon Chandler",
+      "party": "Independent",
+      "votes": 28444,
+      "percent": 0.95
+    },
+    {
+      "candidate": "Pamela Moses",
+      "party": "Independent",
+      "votes": 24682,
+      "percent": 0.82
+    },
+    {
+      "candidate": "Hastina Robinson",
+      "party": "Independent",
+      "votes": 8278,
+      "percent": 0.28
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "year": 2022,
+  "state": "Georgia",
+  "abbr": "GA",
+  "round": "General",
+  "caption": "2022 United States Senate runoff election in Georgia [ 278 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Georgia#Runoff",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "2022 United States Senate runoff election in Georgia [ 278 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Raphael Warnock (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Herschel Walker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Raphael Warnock (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,820,633",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Herschel Walker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,721,244",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,541,877",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Raphael Warnock (incumbent)",
+      "party": "Democratic",
+      "votes": 1820633,
+      "percent": 51.4
+    },
+    {
+      "candidate": "Herschel Walker",
+      "party": "Republican",
+      "votes": 1721244,
+      "percent": 48.6
+    }
+  ]
+}

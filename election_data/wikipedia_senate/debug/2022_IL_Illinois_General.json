@@ -1,0 +1,2822 @@
+{
+  "year": 2022,
+  "state": "Illinois",
+  "abbr": "IL",
+  "round": "General",
+  "caption": "2022 United States Senate election in Illinois (by county) [ 80 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Illinois",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 103,
+  "table": {
+    "caption": "2022 United States Senate election in Illinois (by county) [ 80 ]",
+    "headers": [
+      {
+        "text": "County",
+        "colspan": 1,
+        "rowspan": 2
+      },
+      {
+        "text": "Tammy Duckworth Democratic",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Kathy Salvi Republican",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Various candidates Other parties",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Margin",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes cast",
+        "colspan": 1,
+        "rowspan": 2
+      },
+      {
+        "text": "#",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "#",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "#",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "#",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Totals",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "2,329,136",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "56.82%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "1,701,055",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "41.50%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "68,705",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "1.68%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "628,081",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "15.32%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "4,098,896",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "County",
+          "colspan": 1,
+          "rowspan": 2
+        },
+        {
+          "text": "Tammy Duckworth Democratic",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Kathy Salvi Republican",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Various candidates Other parties",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Margin",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Total votes cast",
+          "colspan": 1,
+          "rowspan": 2
+        }
+      ],
+      [
+        {
+          "text": "#",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "#",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "#",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "#",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Adams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,244",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,341",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "351",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-12,097",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-48.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,936",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Alexander",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "764",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "930",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-166",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-9.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,707",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Bond",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,061",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,193",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "139",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,132",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-33.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,393",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Boone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,022",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,157",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "338",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,135",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-17.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,517",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Brown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "394",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,475",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "77.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,081",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-56.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,897",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Bureau",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,028",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,429",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "213",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,401",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-18.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,670",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Calhoun",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "789",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,485",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-696",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-29.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,331",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Carroll",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,039",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,804",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "110",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,765",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-29.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,953",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Cass",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,260",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,581",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "91",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,321",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-33.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,932",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Champaign",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40,756",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,791",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,247",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,965",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67,794",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Christian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,865",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,222",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "330",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-4,357",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-35.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,417",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Clark",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,480",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,745",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "91",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,265",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-51.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,316",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Clay",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,082",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,554",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "101",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,472",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-60.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,737",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,856",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,662",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "255",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-6,806",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-46.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,773",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Coles",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,924",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,270",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "293",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-4,346",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-26.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,487",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Cook",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,080,175",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "74.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "341,447",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,300",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "738,728",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,441,922",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Crawford",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,100",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "158",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,415",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-49.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,943",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Cumberland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,077",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,607",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,530",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-53.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,763",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "DeKalb",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,688",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,063",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "747",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,625",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34,498",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "DeWitt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,784",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,152",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "144",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,638",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-38.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,080",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Douglas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,801",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,529",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "121",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,728",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-42.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,451",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "DuPage",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "194,606",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "141,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,818",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53,290",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "341,740",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Edgar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,583",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,361",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "108",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,778",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-45.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,052",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Edwards",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "448",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,280",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "81.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,832",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-65.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,783",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Effingham",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,190",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,409",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "78.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "293",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-9,219",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-58.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,892",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Fayette",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,678",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.96%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,190",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "77.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "137",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-4,512",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-56.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,005",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Ford",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,386",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,621",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "127",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,235",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-43.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,134",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Franklin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,908",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,545",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "228",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-5,637",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-41.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,681",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Fulton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,009",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "313",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,324",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-10.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,007",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Gallatin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "753",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,373",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-620",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-28.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,165",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Greene",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,144",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,297",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "82",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,153",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-47.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,523",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Grundy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,266",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "419",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,581",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-18.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,370",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Hamilton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "844",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,502",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,658",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-48.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,398",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Hancock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,875",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,177",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "150",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,302",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-45.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,202",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Hardin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "402",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,220",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-818",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-49.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,650",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Henderson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,020",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,813",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "76",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-793",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-27.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,909",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Henry",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,430",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,833",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "389",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-4,403",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-22.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,652",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Iroquois",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,222",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,018",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "76.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "198",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-5,796",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-55.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,438",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Jackson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,109",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,693",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "287",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,416",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,089",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Jasper",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "860",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,645",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,785",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-60.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,575",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Jefferson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,731",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,163",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "222",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-5,432",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-41.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,116",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Jersey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,648",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,402",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "210",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-3,754",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-40.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,260",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Jo Daviess",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,943",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,355",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "167",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,412",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-14.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,465",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,052",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,690",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "76.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2,638",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-54.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,813",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Kane",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "86,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68,771",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,693",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,706",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "157,941",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Kankakee",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,819",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,522",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "767",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-4,703",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-13.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35,108",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Kendall",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,151",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,294",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "820",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,857",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45,265",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Knox",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,072",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,130",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "364",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1,058",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-6.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,566",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Lake",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "138,584",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "87,529",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,300",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51,055",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "229,413",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "351",
+      "party": "",
+      "votes": 24936,
+      "percent": null
+    },
+    {
+      "candidate": "13",
+      "party": "",
+      "votes": 1707,
+      "percent": null
+    },
+    {
+      "candidate": "139",
+      "party": "",
+      "votes": 6393,
+      "percent": null
+    },
+    {
+      "candidate": "338",
+      "party": "",
+      "votes": 17517,
+      "percent": null
+    },
+    {
+      "candidate": "28",
+      "party": "",
+      "votes": 1897,
+      "percent": null
+    },
+    {
+      "candidate": "213",
+      "party": "",
+      "votes": 12670,
+      "percent": null
+    },
+    {
+      "candidate": "57",
+      "party": "",
+      "votes": 2331,
+      "percent": null
+    },
+    {
+      "candidate": "110",
+      "party": "",
+      "votes": 5953,
+      "percent": null
+    },
+    {
+      "candidate": "91",
+      "party": "",
+      "votes": 3932,
+      "percent": null
+    },
+    {
+      "candidate": "1,247",
+      "party": "",
+      "votes": 67794,
+      "percent": null
+    }
+  ]
+}

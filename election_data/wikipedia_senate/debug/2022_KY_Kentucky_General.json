@@ -1,0 +1,235 @@
+{
+  "year": 2022,
+  "state": "Kentucky",
+  "abbr": "KY",
+  "round": "General",
+  "caption": "2022 United States Senate election in Kentucky [ 69 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Kentucky",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2022 United States Senate election in Kentucky [ 69 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rand Paul (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles Booker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rand Paul (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "913,326",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles Booker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "564,311",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "193",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,477,830",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Rand Paul (incumbent)",
+      "party": "Republican",
+      "votes": 913326,
+      "percent": 61.8
+    },
+    {
+      "candidate": "Charles Booker",
+      "party": "Democratic",
+      "votes": 564311,
+      "percent": 38.19
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 193,
+      "percent": 0.01
+    }
+  ]
+}

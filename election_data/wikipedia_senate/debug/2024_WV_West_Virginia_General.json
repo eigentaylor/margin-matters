@@ -1,0 +1,273 @@
+{
+  "year": 2024,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "2024 United States Senate election in West Virginia [ 84 ] [ 85 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_West_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2024 United States Senate election in West Virginia [ 84 ] [ 85 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Justice",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Glenn Elliott",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Moran",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Justice",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "514,079",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+22.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Glenn Elliott",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "207,548",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−21.81%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Moran",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.68%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "15",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "747,717",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Independent",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Justice",
+      "party": "Republican",
+      "votes": 514079,
+      "percent": 68.75
+    },
+    {
+      "candidate": "Glenn Elliott",
+      "party": "Democratic",
+      "votes": 207548,
+      "percent": 27.76
+    },
+    {
+      "candidate": "David Moran",
+      "party": "Libertarian",
+      "votes": 26075,
+      "percent": 3.49
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 15,
+      "percent": 0.0
+    }
+  ]
+}

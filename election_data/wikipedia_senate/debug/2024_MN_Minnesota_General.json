@@ -1,0 +1,321 @@
+{
+  "year": 2024,
+  "state": "Minnesota",
+  "abbr": "MN",
+  "round": "General",
+  "caption": "2024 United States Senate election in Minnesota [ 71 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Minnesota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2024 United States Senate election in Minnesota [ 71 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Amy Klobuchar (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Royce White",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rebecca Whiting",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joyce Lacey",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic (DFL) hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Amy Klobuchar (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,792,441",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Royce White",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,291,712",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rebecca Whiting",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55,215",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joyce Lacey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46,377",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3,578",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,189,323",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL) hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Amy Klobuchar (incumbent)",
+      "party": "Democratic (DFL)",
+      "votes": 1792441,
+      "percent": 56.2
+    },
+    {
+      "candidate": "Royce White",
+      "party": "Republican",
+      "votes": 1291712,
+      "percent": 40.5
+    },
+    {
+      "candidate": "Rebecca Whiting",
+      "party": "Libertarian",
+      "votes": 55215,
+      "percent": 1.73
+    },
+    {
+      "candidate": "Joyce Lacey",
+      "party": "Independence",
+      "votes": 46377,
+      "percent": 1.45
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3578,
+      "percent": 0.11
+    }
+  ]
+}

@@ -1,0 +1,359 @@
+{
+  "year": 2024,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "2024 United States Senate election in Missouri [ 105 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Missouri",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2024 United States Senate election in Missouri [ 105 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Josh Hawley (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lucas Kunce",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "W.C. Young",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nathan Kline",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Josh Hawley (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,651,907",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.19",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lucas Kunce",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,243,728",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.73",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "W.C. Young",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35,671",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Better Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jared Young",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,111",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nathan Kline",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,123",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.16",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "19",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,972,559",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Josh Hawley (incumbent)",
+      "party": "Republican",
+      "votes": 1651907,
+      "percent": 55.57
+    },
+    {
+      "candidate": "Lucas Kunce",
+      "party": "Democratic",
+      "votes": 1243728,
+      "percent": 41.84
+    },
+    {
+      "candidate": "W.C. Young",
+      "party": "Libertarian",
+      "votes": 35671,
+      "percent": 1.2
+    },
+    {
+      "candidate": "Jared Young",
+      "party": "Better Party",
+      "votes": 21111,
+      "percent": 0.71
+    },
+    {
+      "candidate": "Nathan Kline",
+      "party": "Green",
+      "votes": 20123,
+      "percent": 0.68
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 19,
+      "percent": 0.0
+    }
+  ]
+}

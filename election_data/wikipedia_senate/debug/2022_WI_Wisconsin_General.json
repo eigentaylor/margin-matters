@@ -1,0 +1,278 @@
+{
+  "year": 2022,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "2022 United States Senate election in Wisconsin [ 25 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Wisconsin",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2022 United States Senate election in Wisconsin [ 25 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Johnson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mandela Barnes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Adam Paul (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Johnson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,337,185",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mandela Barnes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,310,467",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Adam Paul (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "4,758",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,652,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ron Johnson (incumbent)",
+      "party": "Republican",
+      "votes": 1337185,
+      "percent": 50.41
+    },
+    {
+      "candidate": "Mandela Barnes",
+      "party": "Democratic",
+      "votes": 1310467,
+      "percent": 49.41
+    },
+    {
+      "candidate": "Adam Paul (write-in)",
+      "party": "Independent",
+      "votes": 67,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 4758,
+      "percent": 0.18
+    }
+  ]
+}

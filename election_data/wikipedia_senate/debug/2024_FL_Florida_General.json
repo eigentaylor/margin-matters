@@ -1,0 +1,364 @@
+{
+  "year": 2024,
+  "state": "Florida",
+  "abbr": "FL",
+  "round": "General",
+  "caption": "2024 United States Senate election in Florida [ 144 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Florida",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2024 United States Senate election in Florida [ 144 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Scott (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Debbie Mucarsel-Powell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Everidge",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Feena Bonoan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tuan TQ Nguyen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Scott (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,977,706",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Debbie Mucarsel-Powell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,603,077",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Everidge",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62,683",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Feena Bonoan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57,363",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tuan TQ Nguyen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56,586",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "13",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "10,757,428",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Rick Scott (incumbent)",
+      "party": "Republican",
+      "votes": 5977706,
+      "percent": 55.57
+    },
+    {
+      "candidate": "Debbie Mucarsel-Powell",
+      "party": "Democratic",
+      "votes": 4603077,
+      "percent": 42.79
+    },
+    {
+      "candidate": "Ben Everidge",
+      "party": "Independent",
+      "votes": 62683,
+      "percent": 0.58
+    },
+    {
+      "candidate": "Feena Bonoan",
+      "party": "Libertarian",
+      "votes": 57363,
+      "percent": 0.53
+    },
+    {
+      "candidate": "Tuan TQ Nguyen",
+      "party": "Independent",
+      "votes": 56586,
+      "percent": 0.53
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 13,
+      "percent": 0.0
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "year": 2024,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "2024 United States Senate election in Wisconsin [ 175 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Wisconsin",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2024 United States Senate election in Wisconsin [ 175 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tammy Baldwin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Hovde",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Phil Anderson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas Leager",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Schiess (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tammy Baldwin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,672,777",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Hovde",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,643,996",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.95%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Disrupt the Corruption",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Phil Anderson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42,315",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "America First",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas Leager",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28,751",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Schiess (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,922",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,390,787",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tammy Baldwin (incumbent)",
+      "party": "Democratic",
+      "votes": 1672777,
+      "percent": 49.33
+    },
+    {
+      "candidate": "Eric Hovde",
+      "party": "Republican",
+      "votes": 1643996,
+      "percent": 48.48
+    },
+    {
+      "candidate": "Phil Anderson",
+      "party": "Disrupt the Corruption",
+      "votes": 42315,
+      "percent": 1.25
+    },
+    {
+      "candidate": "Thomas Leager",
+      "party": "America First",
+      "votes": 28751,
+      "percent": 0.85
+    },
+    {
+      "candidate": "John Schiess (write-in)",
+      "party": "Independent",
+      "votes": 26,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2922,
+      "percent": 0.09
+    }
+  ]
+}

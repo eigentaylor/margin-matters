@@ -1,0 +1,273 @@
+{
+  "year": 2024,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "2024 United States Senate election in Texas [ 179 ] [ 180 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Texas",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2024 United States Senate election in Texas [ 179 ] [ 180 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Cruz (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Colin Allred",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Brown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Cruz (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,990,741",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Colin Allred",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,031,249",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.76%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Brown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "267,039",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,825",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "11,291,854",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ted Cruz (incumbent)",
+      "party": "Republican",
+      "votes": 5990741,
+      "percent": 53.05
+    },
+    {
+      "candidate": "Colin Allred",
+      "party": "Democratic",
+      "votes": 5031249,
+      "percent": 44.56
+    },
+    {
+      "candidate": "Ted Brown",
+      "party": "Libertarian",
+      "votes": 267039,
+      "percent": 2.36
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2825,
+      "percent": 0.03
+    }
+  ]
+}

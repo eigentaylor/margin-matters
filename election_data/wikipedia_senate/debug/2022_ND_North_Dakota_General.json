@@ -1,0 +1,278 @@
+{
+  "year": 2022,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "2022 United States Senate election in North Dakota [ 24 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_North_Dakota",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2022 United States Senate election in North Dakota [ 24 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Hoeven (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Katrina Christiansen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Becker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Hoeven (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "135,474",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−22.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Katrina Christiansen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59,995",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Becker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44,406",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "265",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "240,140",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Hoeven (incumbent)",
+      "party": "Republican",
+      "votes": 135474,
+      "percent": 56.41
+    },
+    {
+      "candidate": "Katrina Christiansen",
+      "party": "Democratic–NPL",
+      "votes": 59995,
+      "percent": 24.98
+    },
+    {
+      "candidate": "Rick Becker",
+      "party": "Independent",
+      "votes": 44406,
+      "percent": 18.49
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 265,
+      "percent": 0.11
+    }
+  ]
+}

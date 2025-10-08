@@ -1,0 +1,364 @@
+{
+  "year": 2022,
+  "state": "Colorado",
+  "abbr": "CO",
+  "round": "General",
+  "caption": "2022 United States Senate election in Colorado [ 134 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Colorado",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2022 United States Senate election in Colorado [ 134 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Bennet (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe O'Dea",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Peotter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "T.J. Cole",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Frank Atwood",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Bennet (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,397,170",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe O'Dea",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,031,693",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Peotter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43,534",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Unity",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "T.J. Cole",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,379",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Approval Voting",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Frank Atwood",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,354",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "71",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,500,201",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Michael Bennet (incumbent)",
+      "party": "Democratic",
+      "votes": 1397170,
+      "percent": 55.88
+    },
+    {
+      "candidate": "Joe O'Dea",
+      "party": "Republican",
+      "votes": 1031693,
+      "percent": 41.26
+    },
+    {
+      "candidate": "Brian Peotter",
+      "party": "Libertarian",
+      "votes": 43534,
+      "percent": 1.74
+    },
+    {
+      "candidate": "T.J. Cole",
+      "party": "Unity",
+      "votes": 16379,
+      "percent": 0.66
+    },
+    {
+      "candidate": "Frank Atwood",
+      "party": "Approval Voting",
+      "votes": 11354,
+      "percent": 0.45
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 71,
+      "percent": 0.0
+    }
+  ]
+}

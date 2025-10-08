@@ -1,0 +1,306 @@
+{
+  "year": 2024,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "2024 United States Senate election in Ohio [ 169 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Ohio",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2024 United States Senate election in Ohio [ 169 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bernie Moreno",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sherrod Brown (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don Kissick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bernie Moreno",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,857,383",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sherrod Brown (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,650,949",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don Kissick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "195,648",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "640",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,704,620",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.26",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bernie Moreno",
+      "party": "Republican",
+      "votes": 2857383,
+      "percent": 50.09
+    },
+    {
+      "candidate": "Sherrod Brown (incumbent)",
+      "party": "Democratic",
+      "votes": 2650949,
+      "percent": 46.47
+    },
+    {
+      "candidate": "Don Kissick",
+      "party": "Libertarian",
+      "votes": 195648,
+      "percent": 3.43
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 640,
+      "percent": 0.01
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 6991,
+      "percent": 69.91
+    }
+  ]
+}

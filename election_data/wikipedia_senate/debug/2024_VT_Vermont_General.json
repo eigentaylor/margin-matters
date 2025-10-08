@@ -1,0 +1,407 @@
+{
+  "year": 2024,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "2024 United States Senate election in Vermont [ 26 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Vermont",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2024 United States Senate election in Vermont [ 26 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bernie Sanders (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gerald Malloy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Berry",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Matt Hill",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Justin Schoville",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Stewart Greenstein",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Independent hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bernie Sanders (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "229,429",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.28",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gerald Malloy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "116,512",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.60",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Berry",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,941",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Matt Hill",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,530",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green Mountain Peace and Justice",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Justin Schoville",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,339",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.49",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "E.P.I.C.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Stewart Greenstein",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,104",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "398",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.00",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "363,253",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bernie Sanders (incumbent)",
+      "party": "Independent",
+      "votes": 229429,
+      "percent": 63.16
+    },
+    {
+      "candidate": "Gerald Malloy",
+      "party": "Republican",
+      "votes": 116512,
+      "percent": 32.07
+    },
+    {
+      "candidate": "Steve Berry",
+      "party": "Independent",
+      "votes": 7941,
+      "percent": 2.19
+    },
+    {
+      "candidate": "Matt Hill",
+      "party": "Libertarian",
+      "votes": 4530,
+      "percent": 1.25
+    },
+    {
+      "candidate": "Justin Schoville",
+      "party": "Green Mountain Peace and Justice",
+      "votes": 3339,
+      "percent": 0.92
+    },
+    {
+      "candidate": "Mark Stewart Greenstein",
+      "party": "E.P.I.C.",
+      "votes": 1104,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 398,
+      "percent": 0.11
+    }
+  ]
+}

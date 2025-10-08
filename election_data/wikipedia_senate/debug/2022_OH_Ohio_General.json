@@ -1,0 +1,235 @@
+{
+  "year": 2022,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "2022 United States Senate election in Ohio [ 134 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Ohio",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2022 United States Senate election in Ohio [ 134 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "JD Vance",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Ryan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "JD Vance",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,192,114",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Ryan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,939,489",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.76%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,739",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,133,342",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "JD Vance",
+      "party": "Republican",
+      "votes": 2192114,
+      "percent": 53.03
+    },
+    {
+      "candidate": "Tim Ryan",
+      "party": "Democratic",
+      "votes": 1939489,
+      "percent": 46.92
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1739,
+      "percent": 0.04
+    }
+  ]
+}
