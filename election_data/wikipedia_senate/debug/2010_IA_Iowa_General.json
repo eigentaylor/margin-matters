@@ -1,0 +1,278 @@
+{
+  "year": 2010,
+  "state": "Iowa",
+  "abbr": "IA",
+  "round": "General",
+  "caption": "United States Senate election in Iowa, 2010 [ 38 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Iowa",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Iowa, 2010 [ 38 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Grassley (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roxanne Conlin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Heiderscheit",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Grassley (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "718,215",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roxanne Conlin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "371,686",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Heiderscheit",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,290",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "872",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,116,063",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Grassley (incumbent)",
+      "party": "Republican",
+      "votes": 718215,
+      "percent": 64.35
+    },
+    {
+      "candidate": "Roxanne Conlin",
+      "party": "Democratic",
+      "votes": 371686,
+      "percent": 33.3
+    },
+    {
+      "candidate": "John Heiderscheit",
+      "party": "Libertarian",
+      "votes": 25290,
+      "percent": 2.27
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 872,
+      "percent": 0.08
+    }
+  ]
+}

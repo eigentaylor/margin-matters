@@ -1,0 +1,273 @@
+{
+  "year": 2006,
+  "state": "Virginia",
+  "abbr": "VA",
+  "round": "General",
+  "caption": "United States Senate election in Virginia, 2006 [ 60 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Virginia, 2006 [ 60 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Webb",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Allen (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gail Parker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Webb",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,175,606",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Allen (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,166,277",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Greens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gail Parker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,102",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,460",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,370,445",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Webb",
+      "party": "Democratic",
+      "votes": 1175606,
+      "percent": 49.59
+    },
+    {
+      "candidate": "George Allen (incumbent)",
+      "party": "Republican",
+      "votes": 1166277,
+      "percent": 49.2
+    },
+    {
+      "candidate": "Gail Parker",
+      "party": "Independent Greens",
+      "votes": 26102,
+      "percent": 1.1
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2460,
+      "percent": 0.1
+    }
+  ]
+}

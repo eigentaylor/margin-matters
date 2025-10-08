@@ -1,0 +1,362 @@
+{
+  "year": 2000,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "General election results [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Wisconsin",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "General election results [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Herb Kohl (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Gillespie",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Peterson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eugene A. Hem",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert R. Raymond",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write Ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Herb Kohl (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,563,238",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Gillespie",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "940,744",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Peterson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,348",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eugene A. Hem",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,555",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert R. Raymond",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,296",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write Ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "902",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Herb Kohl (Incumbent)",
+      "party": "Democratic",
+      "votes": 1563238,
+      "percent": 61.54
+    },
+    {
+      "candidate": "John Gillespie",
+      "party": "Republican",
+      "votes": 940744,
+      "percent": 37.04
+    },
+    {
+      "candidate": "Tim Peterson",
+      "party": "Libertarian",
+      "votes": 21348,
+      "percent": 0.84
+    },
+    {
+      "candidate": "Eugene A. Hem",
+      "party": "Independent",
+      "votes": 9555,
+      "percent": 0.38
+    },
+    {
+      "candidate": "Robert R. Raymond",
+      "party": "Constitution",
+      "votes": 4296,
+      "percent": 0.17
+    },
+    {
+      "candidate": "Write Ins",
+      "party": "Independent",
+      "votes": 902,
+      "percent": 0.04
+    }
+  ]
+}

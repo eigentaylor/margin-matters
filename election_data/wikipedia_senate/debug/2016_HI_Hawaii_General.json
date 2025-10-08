@@ -1,0 +1,331 @@
+{
+  "year": 2016,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "United States Senate election in Hawaii, 2016 [ 26 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Hawaii",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Hawaii, 2016 [ 26 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Schatz (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Carroll",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joy Allison",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Kokowski",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Giuffre",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Schatz (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "306,604",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Carroll",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "92,653",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joy Allison",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,103",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Kokowski",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,809",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "American Shopping",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Giuffre",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,393",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "416,562",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Brian Schatz (incumbent)",
+      "party": "Democratic",
+      "votes": 306604,
+      "percent": 73.61
+    },
+    {
+      "candidate": "John Carroll",
+      "party": "Republican",
+      "votes": 92653,
+      "percent": 22.24
+    },
+    {
+      "candidate": "Joy Allison",
+      "party": "Constitution",
+      "votes": 9103,
+      "percent": 2.19
+    },
+    {
+      "candidate": "Michael Kokowski",
+      "party": "Libertarian",
+      "votes": 6809,
+      "percent": 1.63
+    },
+    {
+      "candidate": "John Giuffre",
+      "party": "American Shopping",
+      "votes": 1393,
+      "percent": 0.33
+    }
+  ]
+}

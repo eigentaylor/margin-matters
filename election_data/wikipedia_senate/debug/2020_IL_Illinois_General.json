@@ -1,0 +1,364 @@
+{
+  "year": 2020,
+  "state": "Illinois",
+  "abbr": "IL",
+  "round": "General",
+  "caption": "United States Senate election in Illinois, 2020 [ 82 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Illinois",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "United States Senate election in Illinois, 2020 [ 82 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dick Durbin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Curran",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Willie Wilson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Danny Malouf",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Black",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dick Durbin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,278,930",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Curran",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,319,870",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Willie Wilson Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Willie Wilson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "237,699",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Danny Malouf",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75,673",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Black",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56,711",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "18",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,968,901",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dick Durbin (incumbent)",
+      "party": "Democratic",
+      "votes": 3278930,
+      "percent": 54.93
+    },
+    {
+      "candidate": "Mark Curran",
+      "party": "Republican",
+      "votes": 2319870,
+      "percent": 38.87
+    },
+    {
+      "candidate": "Willie Wilson",
+      "party": "Willie Wilson Party",
+      "votes": 237699,
+      "percent": 3.98
+    },
+    {
+      "candidate": "Danny Malouf",
+      "party": "Libertarian",
+      "votes": 75673,
+      "percent": 1.27
+    },
+    {
+      "candidate": "David Black",
+      "party": "Green",
+      "votes": 56711,
+      "percent": 0.95
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 18,
+      "percent": 0.0
+    }
+  ]
+}

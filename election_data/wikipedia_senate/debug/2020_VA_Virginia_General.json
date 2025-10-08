@@ -1,0 +1,235 @@
+{
+  "year": 2020,
+  "state": "Virginia",
+  "abbr": "VA",
+  "round": "General",
+  "caption": "United States Senate election in Virginia, 2020 [ 71 ] [ q ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Virginia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Virginia, 2020 [ 71 ] [ q ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Warner (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Gade",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Warner (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,466,500",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Gade",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,934,199",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "4,388",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,405,087",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Warner (incumbent)",
+      "party": "Democratic",
+      "votes": 2466500,
+      "percent": 55.99
+    },
+    {
+      "candidate": "Daniel Gade",
+      "party": "Republican",
+      "votes": 1934199,
+      "percent": 43.91
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 4388,
+      "percent": 0.1
+    }
+  ]
+}

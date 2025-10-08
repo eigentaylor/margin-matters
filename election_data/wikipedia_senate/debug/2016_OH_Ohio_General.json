@@ -1,0 +1,374 @@
+{
+  "year": 2016,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "United States Senate election in Ohio, 2016 [ 181 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Ohio",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "United States Senate election in Ohio, 2016 [ 181 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rob Portman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Strickland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Connors",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joseph R. DeMare",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Rupert",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Stahl ( write-in )",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rob Portman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,118,567",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Strickland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,996,908",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Connors",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "93,041",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joseph R. DeMare",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "88,246",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Rupert",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "77,291",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Stahl ( write-in )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "111",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,374,164",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Rob Portman (incumbent)",
+      "party": "Republican",
+      "votes": 3118567,
+      "percent": 58.03
+    },
+    {
+      "candidate": "Ted Strickland",
+      "party": "Democratic",
+      "votes": 1996908,
+      "percent": 37.16
+    },
+    {
+      "candidate": "Tom Connors",
+      "party": "Independent",
+      "votes": 93041,
+      "percent": 1.73
+    },
+    {
+      "candidate": "Joseph R. DeMare",
+      "party": "Green",
+      "votes": 88246,
+      "percent": 1.64
+    },
+    {
+      "candidate": "Scott Rupert",
+      "party": "Independent",
+      "votes": 77291,
+      "percent": 1.44
+    },
+    {
+      "candidate": "James Stahl ( write-in )",
+      "party": "Independent",
+      "votes": 111,
+      "percent": 0.0
+    }
+  ]
+}

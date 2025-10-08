@@ -1,0 +1,299 @@
+{
+  "year": 2006,
+  "state": "Maine",
+  "abbr": "ME",
+  "round": "General",
+  "caption": "General election results [ 12 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Maine",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 12 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Olympia Snowe (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jean Hay Bright",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Slavick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Olympia Snowe (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "402,598",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "74.01",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.5",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jean Hay Bright",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "111,984",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.59",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.6",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Slavick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,220",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.37",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "290,614",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.42",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "543,802",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Olympia Snowe (incumbent)",
+      "party": "Republican",
+      "votes": 402598,
+      "percent": 74.01
+    },
+    {
+      "candidate": "Jean Hay Bright",
+      "party": "Democratic",
+      "votes": 111984,
+      "percent": 20.59
+    },
+    {
+      "candidate": "Bill Slavick",
+      "party": "Independent",
+      "votes": 29220,
+      "percent": 5.37
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 290614,
+      "percent": 53.42
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 543802,
+      "percent": null
+    }
+  ]
+}

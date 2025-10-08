@@ -1,0 +1,299 @@
+{
+  "year": 2002,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "General election results [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Kansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pat Roberts (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steven Rosile",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Cook",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pat Roberts (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "641,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "82.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+20.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steven Rosile",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70,725",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Cook",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65,050",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "570,350",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+45.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "776,850",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Pat Roberts (incumbent)",
+      "party": "Republican",
+      "votes": 641075,
+      "percent": 82.52
+    },
+    {
+      "candidate": "Steven Rosile",
+      "party": "Libertarian",
+      "votes": 70725,
+      "percent": 9.1
+    },
+    {
+      "candidate": "George Cook",
+      "party": "Reform",
+      "votes": 65050,
+      "percent": 8.37
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 570350,
+      "percent": 73.42
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 776850,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "year": 2016,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "2016 United States Senate election in Kansas [ 35 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Kansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2016 United States Senate election in Kansas [ 35 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Moran (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patrick Wiesner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert D. Garrard",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "DJ Smith (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Moran (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "732,376",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patrick Wiesner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "379,740",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert D. Garrard",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65,760",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "DJ Smith (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,177,922",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jerry Moran (incumbent)",
+      "party": "Republican",
+      "votes": 732376,
+      "percent": 62.18
+    },
+    {
+      "candidate": "Patrick Wiesner",
+      "party": "Democratic",
+      "votes": 379740,
+      "percent": 32.24
+    },
+    {
+      "candidate": "Robert D. Garrard",
+      "party": "Libertarian",
+      "votes": 65760,
+      "percent": 5.58
+    },
+    {
+      "candidate": "DJ Smith (write-in)",
+      "party": "Independent",
+      "votes": 46,
+      "percent": 0.0
+    }
+  ]
+}

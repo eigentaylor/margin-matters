@@ -1,0 +1,374 @@
+{
+  "year": 2010,
+  "state": "Alaska",
+  "abbr": "AK",
+  "round": "General",
+  "caption": "Final/certified general election results [ 81 ] [ 82 ] [ 83 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Alaska",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "Final/certified general election results [ 81 ] [ 82 ] [ 83 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lisa Murkowski (incumbent, write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Miller",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott McAdams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Haase",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Timothy Carter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Gianoutsos",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lisa Murkowski (incumbent, write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "101,091",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Miller",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "90,839",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott McAdams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60,045",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−22.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Haase",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,459",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Timothy Carter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "927",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Gianoutsos",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "458",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "255,962",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lisa Murkowski (incumbent, write-in)",
+      "party": "Republican",
+      "votes": 101091,
+      "percent": 39.49
+    },
+    {
+      "candidate": "Joe Miller",
+      "party": "Republican",
+      "votes": 90839,
+      "percent": 35.49
+    },
+    {
+      "candidate": "Scott McAdams",
+      "party": "Democratic",
+      "votes": 60045,
+      "percent": 23.46
+    },
+    {
+      "candidate": "David Haase",
+      "party": "Libertarian",
+      "votes": 1459,
+      "percent": 0.57
+    },
+    {
+      "candidate": "Timothy Carter",
+      "party": "Independent",
+      "votes": 927,
+      "percent": 0.36
+    },
+    {
+      "candidate": "Ted Gianoutsos",
+      "party": "Independent",
+      "votes": 458,
+      "percent": 0.18
+    }
+  ]
+}

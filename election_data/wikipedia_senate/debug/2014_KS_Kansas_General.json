@@ -1,0 +1,245 @@
+{
+  "year": 2014,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "United States Senate election in Kansas, 2014 [ 107 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Kansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Kansas, 2014 [ 107 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pat Roberts (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Greg Orman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Randall Batson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pat Roberts (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "460,350",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Greg Orman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "368,372",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Randall Batson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37,469",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "866,191",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Pat Roberts (incumbent)",
+      "party": "Republican",
+      "votes": 460350,
+      "percent": 53.15
+    },
+    {
+      "candidate": "Greg Orman",
+      "party": "Independent",
+      "votes": 368372,
+      "percent": 42.53
+    },
+    {
+      "candidate": "Randall Batson",
+      "party": "Libertarian",
+      "votes": 37469,
+      "percent": 4.32
+    }
+  ]
+}

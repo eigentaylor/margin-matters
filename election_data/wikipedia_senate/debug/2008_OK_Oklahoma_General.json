@@ -1,0 +1,299 @@
+{
+  "year": 2008,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "United States Senate election in Oklahoma, 2008 [ 23 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Oklahoma",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Oklahoma, 2008 [ 23 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Inhofe (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andrew Rice",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Wallace",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Inhofe (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "763,375",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andrew Rice",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "527,736",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Wallace",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55,708",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "235,639",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,346,819",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Inhofe (Incumbent)",
+      "party": "Republican",
+      "votes": 763375,
+      "percent": 56.68
+    },
+    {
+      "candidate": "Andrew Rice",
+      "party": "Democratic",
+      "votes": 527736,
+      "percent": 39.18
+    },
+    {
+      "candidate": "Stephen Wallace",
+      "party": "Independent",
+      "votes": 55708,
+      "percent": 4.14
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 235639,
+      "percent": 17.5
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1346819,
+      "percent": null
+    }
+  ]
+}

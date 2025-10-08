@@ -1,0 +1,177 @@
+{
+  "year": 2016,
+  "state": "California",
+  "abbr": "CA",
+  "round": "General",
+  "caption": "United States Senate election in California, 2016 [ 233 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_California",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "United States Senate election in California, 2016 [ 233 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kamala Harris",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Loretta Sanchez",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kamala Harris",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,542,753",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Loretta Sanchez",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,701,417",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.40%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "12,244,170",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kamala Harris",
+      "party": "Democratic",
+      "votes": 7542753,
+      "percent": 61.6
+    },
+    {
+      "candidate": "Loretta Sanchez",
+      "party": "Democratic",
+      "votes": 4701417,
+      "percent": 38.4
+    }
+  ]
+}

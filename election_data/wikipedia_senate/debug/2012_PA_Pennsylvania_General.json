@@ -1,0 +1,245 @@
+{
+  "year": 2012,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "United States Senate election in Pennsylvania, 2012 [ 85 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Pennsylvania",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Pennsylvania, 2012 [ 85 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Casey, Jr. (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Smith",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rayburn Smith",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Casey, Jr. (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,021,364",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.95%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Smith",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,509,132",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rayburn Smith",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "96,926",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,627,422",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Casey, Jr. (incumbent)",
+      "party": "Democratic",
+      "votes": 3021364,
+      "percent": 53.69
+    },
+    {
+      "candidate": "Tom Smith",
+      "party": "Republican",
+      "votes": 2509132,
+      "percent": 44.59
+    },
+    {
+      "candidate": "Rayburn Smith",
+      "party": "Libertarian",
+      "votes": 96926,
+      "percent": 1.72
+    }
+  ]
+}

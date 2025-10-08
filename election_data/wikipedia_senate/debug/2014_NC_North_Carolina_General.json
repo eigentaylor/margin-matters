@@ -1,0 +1,273 @@
+{
+  "year": 2014,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2014 United States Senate election in North Carolina [ 144 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_North_Carolina",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2014 United States Senate election in North Carolina [ 144 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thom Tillis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kay Hagan (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sean Haugh",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thom Tillis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,423,259",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.64%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kay Hagan (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,377,651",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sean Haugh",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "109,100",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "5,271",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,915,281",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Thom Tillis",
+      "party": "Republican",
+      "votes": 1423259,
+      "percent": 48.82
+    },
+    {
+      "candidate": "Kay Hagan (incumbent)",
+      "party": "Democratic",
+      "votes": 1377651,
+      "percent": 47.26
+    },
+    {
+      "candidate": "Sean Haugh",
+      "party": "Libertarian",
+      "votes": 109100,
+      "percent": 3.74
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 5271,
+      "percent": 0.18
+    }
+  ]
+}

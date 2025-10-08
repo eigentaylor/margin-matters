@@ -1,0 +1,240 @@
+{
+  "year": 2006,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "2006 United States Senate election in Ohio",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Ohio",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2006 United States Senate election in Ohio",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sherrod Brown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike DeWine (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Duncan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sherrod Brown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,257,369",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+20.0",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike DeWine (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,761,037",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−15.8",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Duncan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "830",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,019,236",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Sherrod Brown",
+      "party": "Democratic",
+      "votes": 2257369,
+      "percent": 56.16
+    },
+    {
+      "candidate": "Mike DeWine (incumbent)",
+      "party": "Republican",
+      "votes": 1761037,
+      "percent": 43.82
+    },
+    {
+      "candidate": "Richard Duncan",
+      "party": "Independent",
+      "votes": 830,
+      "percent": 0.02
+    }
+  ]
+}

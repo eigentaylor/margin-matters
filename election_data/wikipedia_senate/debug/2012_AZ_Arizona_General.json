@@ -1,0 +1,331 @@
+{
+  "year": 2012,
+  "state": "Arizona",
+  "abbr": "AZ",
+  "round": "General",
+  "caption": "United States Senate election in Arizona, 2012 [ 70 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Arizona",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Arizona, 2012 [ 70 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Flake",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Carmona",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marc J. Victor",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steven Watts (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don Manspeaker (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Flake",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,104,457",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Carmona",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,036,542",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marc J. Victor",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "102,109",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steven Watts (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "290",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don Manspeaker (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,243,422",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeff Flake",
+      "party": "Republican",
+      "votes": 1104457,
+      "percent": 49.23
+    },
+    {
+      "candidate": "Richard Carmona",
+      "party": "Democratic",
+      "votes": 1036542,
+      "percent": 46.2
+    },
+    {
+      "candidate": "Marc J. Victor",
+      "party": "Libertarian",
+      "votes": 102109,
+      "percent": 4.55
+    },
+    {
+      "candidate": "Steven Watts (write-in)",
+      "party": "Independent",
+      "votes": 290,
+      "percent": 0.01
+    },
+    {
+      "candidate": "Don Manspeaker (write-in)",
+      "party": "Independent",
+      "votes": 24,
+      "percent": 0.0
+    }
+  ]
+}

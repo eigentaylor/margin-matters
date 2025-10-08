@@ -1,0 +1,268 @@
+{
+  "year": 2004,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "2004 United States Senate election in New Hampshire [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_New_Hampshire",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2004 United States Senate election in New Hampshire [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Judd Gregg ( inc. )",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Doris Haddock",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Judd Gregg ( inc. )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "434,847",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Doris Haddock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "221,549",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "102",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "213,298",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "656,498",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Judd Gregg ( inc. )",
+      "party": "Republican",
+      "votes": 434847,
+      "percent": 66.24
+    },
+    {
+      "candidate": "Doris Haddock",
+      "party": "Democratic",
+      "votes": 221549,
+      "percent": 33.75
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 102,
+      "percent": 0.02
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 213298,
+      "percent": 32.49
+    }
+  ]
+}

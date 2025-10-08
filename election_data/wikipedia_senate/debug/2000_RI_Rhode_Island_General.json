@@ -1,0 +1,342 @@
+{
+  "year": 2000,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "General election results [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Rhode_Island",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "General election results [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lincoln Chafee (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Weygand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Christopher Young",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kenneth Proulx",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lincoln Chafee (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "222,588",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.65%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Weygand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "161,023",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Christopher Young",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,107",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kenneth Proulx",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,635",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "61,565",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.32%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "391,353",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lincoln Chafee (Incumbent)",
+      "party": "Republican",
+      "votes": 222588,
+      "percent": 56.88
+    },
+    {
+      "candidate": "Robert Weygand",
+      "party": "Democratic",
+      "votes": 161023,
+      "percent": 41.15
+    },
+    {
+      "candidate": "Christopher Young",
+      "party": "Reform",
+      "votes": 4107,
+      "percent": 1.05
+    },
+    {
+      "candidate": "Kenneth Proulx",
+      "party": "Independent",
+      "votes": 3635,
+      "percent": 0.93
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 61565,
+      "percent": 15.73
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 391353,
+      "percent": null
+    }
+  ]
+}

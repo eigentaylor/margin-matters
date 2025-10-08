@@ -1,0 +1,278 @@
+{
+  "year": 2016,
+  "state": "Arkansas",
+  "abbr": "AR",
+  "round": "General",
+  "caption": "United States Senate election in Arkansas, 2016 [ 27 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Arkansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Arkansas, 2016 [ 27 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Boozman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Conner Eldridge",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Frank Gilbert",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Boozman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "661,984",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conner Eldridge",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "400,602",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.78%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Frank Gilbert",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43,866",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.96%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,070",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,107,522",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Boozman (incumbent)",
+      "party": "Republican",
+      "votes": 661984,
+      "percent": 59.77
+    },
+    {
+      "candidate": "Conner Eldridge",
+      "party": "Democratic",
+      "votes": 400602,
+      "percent": 36.17
+    },
+    {
+      "candidate": "Frank Gilbert",
+      "party": "Libertarian",
+      "votes": 43866,
+      "percent": 3.96
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1070,
+      "percent": 0.1
+    }
+  ]
+}

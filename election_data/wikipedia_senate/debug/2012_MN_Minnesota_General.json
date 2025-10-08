@@ -1,0 +1,364 @@
+{
+  "year": 2012,
+  "state": "Minnesota",
+  "abbr": "MN",
+  "round": "General",
+  "caption": "United States Senate election in Minnesota, 2012 [ 39 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Minnesota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "United States Senate election in Minnesota, 2012 [ 39 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Amy Klobuchar (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kurt Bills",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Williams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Davis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Cavlan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic (DFL) hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Amy Klobuchar (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,854,595",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kurt Bills",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "867,974",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Williams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73,539",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Grassroots",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Davis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30,531",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Open Progressives",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Cavlan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,986",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,582",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,843,207",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL) hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Amy Klobuchar (incumbent)",
+      "party": "Democratic (DFL)",
+      "votes": 1854595,
+      "percent": 65.23
+    },
+    {
+      "candidate": "Kurt Bills",
+      "party": "Republican",
+      "votes": 867974,
+      "percent": 30.53
+    },
+    {
+      "candidate": "Stephen Williams",
+      "party": "Independence",
+      "votes": 73539,
+      "percent": 2.59
+    },
+    {
+      "candidate": "Tim Davis",
+      "party": "Grassroots",
+      "votes": 30531,
+      "percent": 1.07
+    },
+    {
+      "candidate": "Michael Cavlan",
+      "party": "Open Progressives",
+      "votes": 13986,
+      "percent": 0.49
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2582,
+      "percent": 0.09
+    }
+  ]
+}

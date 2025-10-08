@@ -1,0 +1,321 @@
+{
+  "year": 2020,
+  "state": "Iowa",
+  "abbr": "IA",
+  "round": "General",
+  "caption": "2020 United States Senate election in Iowa [ 145 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Iowa",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2020 United States Senate election in Iowa [ 145 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joni Ernst (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Theresa Greenfield",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Stewart",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Suzanne Herzog",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joni Ernst (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "864,997",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Theresa Greenfield",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "754,859",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Stewart",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36,961",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Suzanne Herzog",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,800",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,211",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,671,828",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joni Ernst (incumbent)",
+      "party": "Republican",
+      "votes": 864997,
+      "percent": 51.74
+    },
+    {
+      "candidate": "Theresa Greenfield",
+      "party": "Democratic",
+      "votes": 754859,
+      "percent": 45.15
+    },
+    {
+      "candidate": "Rick Stewart",
+      "party": "Libertarian",
+      "votes": 36961,
+      "percent": 2.21
+    },
+    {
+      "candidate": "Suzanne Herzog",
+      "party": "Independent",
+      "votes": 13800,
+      "percent": 0.83
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1211,
+      "percent": 0.07
+    }
+  ]
+}

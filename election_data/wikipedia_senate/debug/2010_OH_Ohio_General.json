@@ -1,0 +1,422 @@
+{
+  "year": 2010,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "United States Senate election in Ohio, 2010 [ 49 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Ohio",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Ohio, 2010 [ 49 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Jones Portman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lee Irwin Fisher",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Deaton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Pryce",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel LaBotz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Arthur Sullivan (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Jones Portman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,168,742",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lee Irwin Fisher",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,503,297",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Deaton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65,856",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Pryce",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50,101",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel LaBotz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,454",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Arthur Sullivan (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "648",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "665,445",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,815,098",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "NA",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Robert Jones Portman",
+      "party": "Republican",
+      "votes": 2168742,
+      "percent": 56.85
+    },
+    {
+      "candidate": "Lee Irwin Fisher",
+      "party": "Democratic",
+      "votes": 1503297,
+      "percent": 39.4
+    },
+    {
+      "candidate": "Eric Deaton",
+      "party": "Constitution",
+      "votes": 65856,
+      "percent": 1.72
+    },
+    {
+      "candidate": "Michael Pryce",
+      "party": "Independent",
+      "votes": 50101,
+      "percent": 1.31
+    },
+    {
+      "candidate": "Daniel LaBotz",
+      "party": "Socialist",
+      "votes": 26454,
+      "percent": 0.69
+    },
+    {
+      "candidate": "Arthur Sullivan (write-in)",
+      "party": "N/A",
+      "votes": 648,
+      "percent": 0.02
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 665445,
+      "percent": 17.44
+    }
+  ]
+}

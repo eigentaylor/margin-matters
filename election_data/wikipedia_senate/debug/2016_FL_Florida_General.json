@@ -1,0 +1,450 @@
+{
+  "year": 2016,
+  "state": "Florida",
+  "abbr": "FL",
+  "round": "General",
+  "caption": "United States Senate election in Florida, 2016 [ 338 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Florida",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "United States Senate election in Florida, 2016 [ 338 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marco Rubio (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patrick Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Stanton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Nathan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tony Khoury",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steven Machat",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Basil E. Dalack",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marco Rubio (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,835,191",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patrick Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,122,088",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+24.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Stanton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "196,956",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Nathan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52,451",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tony Khoury",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45,820",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steven Machat",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,918",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Basil E. Dalack",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22,236",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "160",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "9,301,820",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Marco Rubio (incumbent)",
+      "party": "Republican",
+      "votes": 4835191,
+      "percent": 51.98
+    },
+    {
+      "candidate": "Patrick Murphy",
+      "party": "Democratic",
+      "votes": 4122088,
+      "percent": 44.31
+    },
+    {
+      "candidate": "Paul Stanton",
+      "party": "Libertarian",
+      "votes": 196956,
+      "percent": 2.12
+    },
+    {
+      "candidate": "Bruce Nathan",
+      "party": "Independent",
+      "votes": 52451,
+      "percent": 0.56
+    },
+    {
+      "candidate": "Tony Khoury",
+      "party": "Independent",
+      "votes": 45820,
+      "percent": 0.49
+    },
+    {
+      "candidate": "Steven Machat",
+      "party": "Independent",
+      "votes": 26918,
+      "percent": 0.29
+    },
+    {
+      "candidate": "Basil E. Dalack",
+      "party": "Independent",
+      "votes": 22236,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 160,
+      "percent": 0.0
+    }
+  ]
+}

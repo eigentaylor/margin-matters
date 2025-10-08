@@ -1,0 +1,283 @@
+{
+  "year": 2014,
+  "state": "South Dakota",
+  "abbr": "SD",
+  "round": "General",
+  "caption": "United States Senate election in South Dakota, 2014 [ 92 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_South_Dakota",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in South Dakota, 2014 [ 92 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Rounds",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Weiland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Larry Pressler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gordon Howie",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Rounds",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "140,741",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+12.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Weiland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "82,456",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−32.98%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Larry Pressler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,741",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gordon Howie",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,474",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "279,412",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike Rounds",
+      "party": "Republican",
+      "votes": 140741,
+      "percent": 50.37
+    },
+    {
+      "candidate": "Rick Weiland",
+      "party": "Democratic",
+      "votes": 82456,
+      "percent": 29.51
+    },
+    {
+      "candidate": "Larry Pressler",
+      "party": "Independent",
+      "votes": 47741,
+      "percent": 17.09
+    },
+    {
+      "candidate": "Gordon Howie",
+      "party": "Independent",
+      "votes": 8474,
+      "percent": 3.03
+    }
+  ]
+}

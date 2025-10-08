@@ -1,0 +1,407 @@
+{
+  "year": 2006,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "2006 United States Senate election in Vermont",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Vermont",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2006 United States Senate election in Vermont",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bernie Sanders",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Tarrant",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cris Ericson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Craig Hill",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Peter D. Moss",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Peter Diamondstone",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Independent hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bernie Sanders",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "171,638",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Tarrant",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "84,924",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−33.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cris Ericson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,735",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Craig Hill",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,536",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peter D. Moss",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,518",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Liberty Union",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peter Diamondstone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "801",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "267",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "262,419",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bernie Sanders",
+      "party": "Independent",
+      "votes": 171638,
+      "percent": 65.41
+    },
+    {
+      "candidate": "Richard Tarrant",
+      "party": "Republican",
+      "votes": 84924,
+      "percent": 32.36
+    },
+    {
+      "candidate": "Cris Ericson",
+      "party": "Independent",
+      "votes": 1735,
+      "percent": 0.66
+    },
+    {
+      "candidate": "Craig Hill",
+      "party": "Green",
+      "votes": 1536,
+      "percent": 0.59
+    },
+    {
+      "candidate": "Peter D. Moss",
+      "party": "Independent",
+      "votes": 1518,
+      "percent": 0.58
+    },
+    {
+      "candidate": "Peter Diamondstone",
+      "party": "Liberty Union",
+      "votes": 801,
+      "percent": 0.31
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 267,
+      "percent": 0.1
+    }
+  ]
+}

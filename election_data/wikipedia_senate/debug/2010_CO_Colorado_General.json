@@ -1,0 +1,450 @@
+{
+  "year": 2010,
+  "state": "Colorado",
+  "abbr": "CO",
+  "round": "General",
+  "caption": "United States Senate election in Colorado, 2010 [ 77 ] [ 78 ] [ 79 ] [ 16 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Colorado",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "United States Senate election in Colorado, 2010 [ 77 ] [ 78 ] [ 79 ] [ 16 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Bennet (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ken Buck",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Kinsey",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maclyn Stringer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jason Napolitano",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charley Miller",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J. Moromisato",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Bennet (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "854,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ken Buck",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "824,789",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Kinsey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38,884",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maclyn Stringer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22,646",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jason Napolitano",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,450",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charley Miller",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,351",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J. Moromisato",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,780",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "83",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,777,668",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Michael Bennet (incumbent)",
+      "party": "Democratic",
+      "votes": 854685,
+      "percent": 48.08
+    },
+    {
+      "candidate": "Ken Buck",
+      "party": "Republican",
+      "votes": 824789,
+      "percent": 46.4
+    },
+    {
+      "candidate": "Bob Kinsey",
+      "party": "Green",
+      "votes": 38884,
+      "percent": 2.19
+    },
+    {
+      "candidate": "Maclyn Stringer",
+      "party": "Libertarian",
+      "votes": 22646,
+      "percent": 1.27
+    },
+    {
+      "candidate": "Jason Napolitano",
+      "party": "Independent",
+      "votes": 19450,
+      "percent": 1.09
+    },
+    {
+      "candidate": "Charley Miller",
+      "party": "Independent",
+      "votes": 11351,
+      "percent": 0.64
+    },
+    {
+      "candidate": "J. Moromisato",
+      "party": "Independent",
+      "votes": 5780,
+      "percent": 0.33
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 83,
+      "percent": 0.07
+    }
+  ]
+}

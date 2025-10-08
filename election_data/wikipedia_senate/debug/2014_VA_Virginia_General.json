@@ -1,0 +1,278 @@
+{
+  "year": 2014,
+  "state": "Virginia",
+  "abbr": "VA",
+  "round": "General",
+  "caption": "2014 United States Senate election in Virginia [ 140 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Virginia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2014 United States Senate election in Virginia [ 140 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Warner (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ed Gillespie",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Sarvis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Warner (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,073,667",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−15.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ed Gillespie",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,055,940",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Sarvis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53,102",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,764",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,184,473",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Warner (incumbent)",
+      "party": "Democratic",
+      "votes": 1073667,
+      "percent": 49.15
+    },
+    {
+      "candidate": "Ed Gillespie",
+      "party": "Republican",
+      "votes": 1055940,
+      "percent": 48.34
+    },
+    {
+      "candidate": "Robert Sarvis",
+      "party": "Libertarian",
+      "votes": 53102,
+      "percent": 2.43
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1764,
+      "percent": 0.08
+    }
+  ]
+}

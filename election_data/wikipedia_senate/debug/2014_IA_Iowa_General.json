@@ -1,0 +1,402 @@
+{
+  "year": 2014,
+  "state": "Iowa",
+  "abbr": "IA",
+  "round": "General",
+  "caption": "United States Senate election in Iowa, 2014 [ 196 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Iowa",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Iowa, 2014 [ 196 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joni Ernst",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Braley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Stewart",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Douglas Butzier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Quast",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ruth Smith",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joni Ernst",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "588,575",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Braley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "494,370",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−18.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Stewart",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,815",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Douglas Butzier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,232",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Quast",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,873",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ruth Smith",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,724",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,111",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,129,700",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joni Ernst",
+      "party": "Republican",
+      "votes": 588575,
+      "percent": 52.1
+    },
+    {
+      "candidate": "Bruce Braley",
+      "party": "Democratic",
+      "votes": 494370,
+      "percent": 43.76
+    },
+    {
+      "candidate": "Rick Stewart",
+      "party": "Independent",
+      "votes": 26815,
+      "percent": 2.37
+    },
+    {
+      "candidate": "Douglas Butzier",
+      "party": "Libertarian",
+      "votes": 8232,
+      "percent": 0.73
+    },
+    {
+      "candidate": "Bob Quast",
+      "party": "Independent",
+      "votes": 5873,
+      "percent": 0.52
+    },
+    {
+      "candidate": "Ruth Smith",
+      "party": "Independent",
+      "votes": 4724,
+      "percent": 0.42
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1111,
+      "percent": 0.1
+    }
+  ]
+}

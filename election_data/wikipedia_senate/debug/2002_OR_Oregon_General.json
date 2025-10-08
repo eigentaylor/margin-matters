@@ -1,0 +1,385 @@
+{
+  "year": 2002,
+  "state": "Oregon",
+  "abbr": "OR",
+  "round": "General",
+  "caption": "United States Senate election in Oregon, 2002 [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Oregon",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Oregon, 2002 [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gordon H. Smith (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Bradbury",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Fitzgerald",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lon Mabon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gordon H. Smith (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "712,287",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Bradbury",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "501,898",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Fitzgerald",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,979",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lon Mabon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,703",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,354",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "210,389",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+12.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,267,221",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Gordon H. Smith (Incumbent)",
+      "party": "Republican",
+      "votes": 712287,
+      "percent": 56.21
+    },
+    {
+      "candidate": "Bill Bradbury",
+      "party": "Democratic",
+      "votes": 501898,
+      "percent": 39.61
+    },
+    {
+      "candidate": "Dan Fitzgerald",
+      "party": "Libertarian",
+      "votes": 29979,
+      "percent": 2.37
+    },
+    {
+      "candidate": "Lon Mabon",
+      "party": "Constitution",
+      "votes": 21703,
+      "percent": 1.71
+    },
+    {
+      "candidate": "1,354",
+      "party": "Write-ins",
+      "votes": 1354,
+      "percent": 0.11
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 210389,
+      "percent": 16.6
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1267221,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,402 @@
+{
+  "year": 2018,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "United States Senate election in Connecticut, 2018 [ 34 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Connecticut",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Connecticut, 2018 [ 34 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Matthew Corey",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Lion",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Russell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "787,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37,894",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "825,579",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Matthew Corey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "545,717",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.94%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Lion",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,838",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Russell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,618",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "88",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,386,840",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chris Murphy",
+      "party": "Democratic",
+      "votes": 787685,
+      "percent": 56.8
+    },
+    {
+      "candidate": "Chris Murphy",
+      "party": "Working Families",
+      "votes": 37894,
+      "percent": 2.73
+    },
+    {
+      "candidate": "Chris Murphy (incumbent)",
+      "party": "Total",
+      "votes": 825579,
+      "percent": 59.53
+    },
+    {
+      "candidate": "Matthew Corey",
+      "party": "Republican",
+      "votes": 545717,
+      "percent": 39.35
+    },
+    {
+      "candidate": "Richard Lion",
+      "party": "Libertarian",
+      "votes": 8838,
+      "percent": 0.64
+    },
+    {
+      "candidate": "Jeff Russell",
+      "party": "Green",
+      "votes": 6618,
+      "percent": 0.48
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 88,
+      "percent": 0.0
+    }
+  ]
+}

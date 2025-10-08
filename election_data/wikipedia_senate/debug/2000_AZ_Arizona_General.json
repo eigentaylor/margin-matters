@@ -1,0 +1,342 @@
+{
+  "year": 2000,
+  "state": "Arizona",
+  "abbr": "AZ",
+  "round": "General",
+  "caption": "General election results [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Arizona",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "General election results [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jon Kyl (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "William Toel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Vance Hansen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barry Hess",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jon Kyl (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,108,196",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+25.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "William Toel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "109,230",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Vance Hansen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "108,926",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barry Hess",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70,724",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.69%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "998,966",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+57.34%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,397,076",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jon Kyl (Incumbent)",
+      "party": "Republican",
+      "votes": 1108196,
+      "percent": 79.32
+    },
+    {
+      "candidate": "William Toel",
+      "party": "Independent",
+      "votes": 109230,
+      "percent": 7.82
+    },
+    {
+      "candidate": "Vance Hansen",
+      "party": "Green",
+      "votes": 108926,
+      "percent": 7.8
+    },
+    {
+      "candidate": "Barry Hess",
+      "party": "Libertarian",
+      "votes": 70724,
+      "percent": 5.06
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 998966,
+      "percent": 71.5
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1397076,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "year": 2020,
+  "state": "South Carolina",
+  "abbr": "SC",
+  "round": "General",
+  "caption": "United States Senate election in South Carolina, 2020 [ 161 ] [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_South_Carolina",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in South Carolina, 2020 [ 161 ] [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lindsey Graham (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jaime Harrison",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Bledsoe",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lindsey Graham (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,369,137",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jaime Harrison",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,110,828",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Bledsoe",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32,845",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,294",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,515,104",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lindsey Graham (incumbent)",
+      "party": "Republican",
+      "votes": 1369137,
+      "percent": 54.44
+    },
+    {
+      "candidate": "Jaime Harrison",
+      "party": "Democratic",
+      "votes": 1110828,
+      "percent": 44.17
+    },
+    {
+      "candidate": "Bill Bledsoe",
+      "party": "Constitution",
+      "votes": 32845,
+      "percent": 1.3
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2294,
+      "percent": 0.09
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "year": 2018,
+  "state": "Massachusetts",
+  "abbr": "MA",
+  "round": "General",
+  "caption": "United States Senate election in Massachusetts, 2018 [ 139 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Massachusetts",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Massachusetts, 2018 [ 139 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elizabeth Warren (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Geoff Diehl",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shiva Ayyadurai",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elizabeth Warren (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,633,371",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Geoff Diehl",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "979,210",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shiva Ayyadurai",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "91,710",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,799",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,707,090",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Elizabeth Warren (incumbent)",
+      "party": "Democratic",
+      "votes": 1633371,
+      "percent": 60.34
+    },
+    {
+      "candidate": "Geoff Diehl",
+      "party": "Republican",
+      "votes": 979210,
+      "percent": 36.17
+    },
+    {
+      "candidate": "Shiva Ayyadurai",
+      "party": "Independent",
+      "votes": 91710,
+      "percent": 3.39
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2799,
+      "percent": 0.1
+    }
+  ]
+}

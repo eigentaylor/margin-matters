@@ -1,0 +1,314 @@
+{
+  "year": 2008,
+  "state": "Alaska",
+  "abbr": "AK",
+  "round": "General",
+  "caption": "2008 United States Senate election in Alaska [ 41 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Alaska",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2008 United States Senate election in Alaska [ 41 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Begich",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Stevens (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Bird",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Fredrick Haase",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Gianoutsos",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Begich",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "151,767",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Stevens (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "147,814",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Bird",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,197",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Fredrick Haase",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,483",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.78%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Gianoutsos",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,385",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,077",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "317,723",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Begich",
+      "party": "Democratic",
+      "votes": 151767,
+      "percent": 47.77
+    },
+    {
+      "candidate": "Ted Stevens (incumbent)",
+      "party": "Republican",
+      "votes": 147814,
+      "percent": 46.52
+    },
+    {
+      "candidate": "Bob Bird",
+      "party": "Independence",
+      "votes": 13197,
+      "percent": 4.15
+    },
+    {
+      "candidate": "Fredrick Haase",
+      "party": "Libertarian",
+      "votes": 2483,
+      "percent": 0.78
+    },
+    {
+      "candidate": "Ted Gianoutsos",
+      "party": "Independent",
+      "votes": 1385,
+      "percent": 0.44
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1077,
+      "percent": 0.34
+    }
+  ]
+}

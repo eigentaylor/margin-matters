@@ -1,0 +1,253 @@
+{
+  "year": 2004,
+  "state": "Washington",
+  "abbr": "WA",
+  "round": "General",
+  "caption": "General election results [ 21 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Washington",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 21 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patty Murray (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Nethercutt",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J. Mills",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Wilson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patty Murray (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,549,708",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.98%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Nethercutt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,204,584",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J. Mills",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34,055",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Wilson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30,304",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,818,651",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Patty Murray (Incumbent)",
+      "party": "Democratic",
+      "votes": 1549708,
+      "percent": 54.98
+    },
+    {
+      "candidate": "George Nethercutt",
+      "party": "Republican",
+      "votes": 1204584,
+      "percent": 42.74
+    },
+    {
+      "candidate": "J. Mills",
+      "party": "Libertarian",
+      "votes": 34055,
+      "percent": 1.21
+    },
+    {
+      "candidate": "Mark Wilson",
+      "party": "Green",
+      "votes": 30304,
+      "percent": 1.08
+    }
+  ]
+}

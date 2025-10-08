@@ -1,0 +1,245 @@
+{
+  "year": 2020,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "United States Senate election in West Virginia, 2020 [ 52 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_West_Virginia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in West Virginia, 2020 [ 52 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shelley Moore Capito (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paula Jean Swearengin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Moran",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shelley Moore Capito (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "547,454",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paula Jean Swearengin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "210,309",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Moran",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,155",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "778,918",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Shelley Moore Capito (incumbent)",
+      "party": "Republican",
+      "votes": 547454,
+      "percent": 70.28
+    },
+    {
+      "candidate": "Paula Jean Swearengin",
+      "party": "Democratic",
+      "votes": 210309,
+      "percent": 27.0
+    },
+    {
+      "candidate": "David Moran",
+      "party": "Libertarian",
+      "votes": 21155,
+      "percent": 2.72
+    }
+  ]
+}

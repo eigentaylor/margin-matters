@@ -1,0 +1,202 @@
+{
+  "year": 2018,
+  "state": "California",
+  "abbr": "CA",
+  "round": "General",
+  "caption": "United States Senate election in California, 2018",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_California",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "United States Senate election in California, 2018",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dianne Feinstein (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin de León",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dianne Feinstein (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,019,422",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin de León",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,093,942",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "11,113,364",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dianne Feinstein (incumbent)",
+      "party": "Democratic",
+      "votes": 6019422,
+      "percent": 54.16
+    },
+    {
+      "candidate": "Kevin de León",
+      "party": "Democratic",
+      "votes": 5093942,
+      "percent": 45.84
+    }
+  ]
+}

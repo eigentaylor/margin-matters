@@ -1,0 +1,625 @@
+{
+  "year": 2006,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "2006 United States Senate election, New York [ 58 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_New_York",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 14,
+  "table": {
+    "caption": "2006 United States Senate election, New York [ 58 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Clinton (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Spencer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Spencer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Spencer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Howie Hawkins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Russell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roger Calero",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Van Auken",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,698,931",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "160,705",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "148,792",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Clinton (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,008,428",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.73%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Spencer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,212,902",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Spencer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "179,287",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Spencer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,392,189",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−12.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Howie Hawkins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55,469",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Russell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,996",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.40%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roger Calero",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,967",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Equality",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Van Auken",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,004",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,616,239",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+23.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,490,053",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.9",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Hillary Clinton",
+      "party": "Democratic",
+      "votes": 2698931,
+      "percent": 60.11
+    },
+    {
+      "candidate": "Hillary Clinton",
+      "party": "Independence",
+      "votes": 160705,
+      "percent": 3.58
+    },
+    {
+      "candidate": "Hillary Clinton",
+      "party": "Working Families",
+      "votes": 148792,
+      "percent": 3.31
+    },
+    {
+      "candidate": "Hillary Clinton (incumbent)",
+      "party": "total",
+      "votes": 3008428,
+      "percent": 67.0
+    },
+    {
+      "candidate": "John Spencer",
+      "party": "Republican",
+      "votes": 1212902,
+      "percent": 27.01
+    },
+    {
+      "candidate": "John Spencer",
+      "party": "Conservative",
+      "votes": 179287,
+      "percent": 3.99
+    },
+    {
+      "candidate": "John Spencer",
+      "party": "total",
+      "votes": 1392189,
+      "percent": 31.01
+    },
+    {
+      "candidate": "Howie Hawkins",
+      "party": "Green",
+      "votes": 55469,
+      "percent": 1.24
+    },
+    {
+      "candidate": "Jeff Russell",
+      "party": "Libertarian",
+      "votes": 20996,
+      "percent": 0.47
+    },
+    {
+      "candidate": "Roger Calero",
+      "party": "Socialist Workers",
+      "votes": 6967,
+      "percent": 0.16
+    }
+  ]
+}

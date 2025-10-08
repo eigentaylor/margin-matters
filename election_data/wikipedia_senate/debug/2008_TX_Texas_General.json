@@ -1,0 +1,299 @@
+{
+  "year": 2008,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "2008 Texas U.S. Senate general election",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Texas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2008 Texas U.S. Senate general election",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Cornyn (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Noriega",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Yvonne Adams Schick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Cornyn (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,337,469",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Noriega",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,389,365",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Yvonne Adams Schick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "185,241",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "948,104",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "7,912,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Cornyn (incumbent)",
+      "party": "Republican",
+      "votes": 4337469,
+      "percent": 54.82
+    },
+    {
+      "candidate": "Rick Noriega",
+      "party": "Democratic",
+      "votes": 3389365,
+      "percent": 42.84
+    },
+    {
+      "candidate": "Yvonne Adams Schick",
+      "party": "Libertarian",
+      "votes": 185241,
+      "percent": 2.34
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 948104,
+      "percent": 11.98
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 7912075,
+      "percent": 58.28
+    }
+  ]
+}

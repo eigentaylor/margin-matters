@@ -1,0 +1,331 @@
+{
+  "year": 2010,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "United States Senate election in Hawaii, 2010 [ 19 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Hawaii",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Hawaii, 2010 [ 19 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Inouye (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Campbell Cavasso",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Brewer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lloyd Jeffrey Mallen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Jarrett",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Inouye (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "277,228",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "74.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Campbell Cavasso",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79,939",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Brewer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,762",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lloyd Jeffrey Mallen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,957",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Jarrett",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,697",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "370,583",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Daniel Inouye (incumbent)",
+      "party": "Democratic",
+      "votes": 277228,
+      "percent": 74.81
+    },
+    {
+      "candidate": "Campbell Cavasso",
+      "party": "Republican",
+      "votes": 79939,
+      "percent": 21.57
+    },
+    {
+      "candidate": "Jim Brewer",
+      "party": "Green",
+      "votes": 7762,
+      "percent": 2.09
+    },
+    {
+      "candidate": "Lloyd Jeffrey Mallen",
+      "party": "Libertarian",
+      "votes": 2957,
+      "percent": 0.8
+    },
+    {
+      "candidate": "Jeff Jarrett",
+      "party": "Independent",
+      "votes": 2697,
+      "percent": 0.73
+    }
+  ]
+}

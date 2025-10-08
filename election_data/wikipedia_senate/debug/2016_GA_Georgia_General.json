@@ -1,0 +1,245 @@
+{
+  "year": 2016,
+  "state": "Georgia",
+  "abbr": "GA",
+  "round": "General",
+  "caption": "United States Senate election in Georgia, 2016 [ 78 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Georgia",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Georgia, 2016 [ 78 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Johnny Isakson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Barksdale",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Allen Buckley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Johnny Isakson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,135,806",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Barksdale",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,599,726",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Allen Buckley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "162,260",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,897,792",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Johnny Isakson (incumbent)",
+      "party": "Republican",
+      "votes": 2135806,
+      "percent": 54.8
+    },
+    {
+      "candidate": "Jim Barksdale",
+      "party": "Democratic",
+      "votes": 1599726,
+      "percent": 41.04
+    },
+    {
+      "candidate": "Allen Buckley",
+      "party": "Libertarian",
+      "votes": 162260,
+      "percent": 4.16
+    }
+  ]
+}

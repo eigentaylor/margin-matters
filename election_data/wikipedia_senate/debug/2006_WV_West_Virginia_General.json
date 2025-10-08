@@ -1,0 +1,299 @@
+{
+  "year": 2006,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "2006 West Virginia United States Senate General Election",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_West_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2006 West Virginia United States Senate General Election",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Byrd (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Raese",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jesse Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Byrd (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "296,276",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Raese",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "155,043",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+13.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mountain",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jesse Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,565",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "141,233",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−26.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "459,884",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.4%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−21.5",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Robert Byrd (incumbent)",
+      "party": "Democratic",
+      "votes": 296276,
+      "percent": 64.42
+    },
+    {
+      "candidate": "John Raese",
+      "party": "Republican",
+      "votes": 155043,
+      "percent": 33.71
+    },
+    {
+      "candidate": "Jesse Johnson",
+      "party": "Mountain",
+      "votes": 8565,
+      "percent": 1.86
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 141233,
+      "percent": 30.71
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 459884,
+      "percent": 40.4
+    }
+  ]
+}

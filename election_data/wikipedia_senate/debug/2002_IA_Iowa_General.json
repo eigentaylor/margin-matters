@@ -1,0 +1,375 @@
+{
+  "year": 2002,
+  "state": "Iowa",
+  "abbr": "IA",
+  "round": "General",
+  "caption": "United States Senate election in Iowa, 2002 [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Iowa",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Iowa, 2002 [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Harkin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Greg Ganske",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Timothy A. Harthan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard J. Moore",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Harkin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "554,278",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Greg Ganske",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "447,892",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.94%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Timothy A. Harthan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,340",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard J. Moore",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,864",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "701",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "106,386",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,023,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Harkin (incumbent)",
+      "party": "Democratic",
+      "votes": 554278,
+      "percent": 54.18
+    },
+    {
+      "candidate": "Greg Ganske",
+      "party": "Republican",
+      "votes": 447892,
+      "percent": 43.78
+    },
+    {
+      "candidate": "Timothy A. Harthan",
+      "party": "Green",
+      "votes": 11340,
+      "percent": 1.11
+    },
+    {
+      "candidate": "Richard J. Moore",
+      "party": "Libertarian",
+      "votes": 8864,
+      "percent": 0.87
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 701,
+      "percent": 0.06
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 106386,
+      "percent": 10.4
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1023075,
+      "percent": null
+    }
+  ]
+}

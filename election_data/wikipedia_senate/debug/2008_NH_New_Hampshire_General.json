@@ -1,0 +1,240 @@
+{
+  "year": 2008,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "2008 United States Senate election in New Hampshire",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_New_Hampshire",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2008 United States Senate election in New Hampshire",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeanne Shaheen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Sununu (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ken Blevens",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeanne Shaheen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "358,438",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.95%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Sununu (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "314,403",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ken Blevens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,516",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "694,357",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeanne Shaheen",
+      "party": "Democratic",
+      "votes": 358438,
+      "percent": 51.62
+    },
+    {
+      "candidate": "John Sununu (incumbent)",
+      "party": "Republican",
+      "votes": 314403,
+      "percent": 45.28
+    },
+    {
+      "candidate": "Ken Blevens",
+      "party": "Libertarian",
+      "votes": 21516,
+      "percent": 3.1
+    }
+  ]
+}

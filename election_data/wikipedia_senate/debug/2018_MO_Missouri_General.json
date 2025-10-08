@@ -1,0 +1,359 @@
+{
+  "year": 2018,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "United States Senate election in Missouri, 2018 [ 117 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Missouri",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "United States Senate election in Missouri, 2018 [ 117 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Josh Hawley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Claire McCaskill (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Craig O'Dear",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Japheth Campbell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jo Crain",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Josh Hawley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,254,927",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+12.27",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Claire McCaskill (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,112,935",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.24",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Craig O'Dear",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34,398",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Japheth Campbell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.95",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jo Crain",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,706",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "7",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,442,289",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Josh Hawley",
+      "party": "Republican",
+      "votes": 1254927,
+      "percent": 51.38
+    },
+    {
+      "candidate": "Claire McCaskill (incumbent)",
+      "party": "Democratic",
+      "votes": 1112935,
+      "percent": 45.57
+    },
+    {
+      "candidate": "Craig O'Dear",
+      "party": "Independent",
+      "votes": 34398,
+      "percent": 1.41
+    },
+    {
+      "candidate": "Japheth Campbell",
+      "party": "Libertarian",
+      "votes": 27316,
+      "percent": 1.12
+    },
+    {
+      "candidate": "Jo Crain",
+      "party": "Green",
+      "votes": 12706,
+      "percent": 0.52
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 7,
+      "percent": 0.0
+    }
+  ]
+}

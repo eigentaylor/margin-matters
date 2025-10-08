@@ -1,0 +1,418 @@
+{
+  "year": 2008,
+  "state": "Idaho",
+  "abbr": "ID",
+  "round": "General",
+  "caption": "General election results [ 18 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Idaho",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "General election results [ 18 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Risch",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Larry LaRocco",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rex Rammell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kent Marmon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pro-Life",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Risch",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "371,744",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Larry LaRocco",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "219,903",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rex Rammell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34,510",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kent Marmon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,958",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pro-Life",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,662",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "151,841",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "644,780",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Risch",
+      "party": "Republican",
+      "votes": 371744,
+      "percent": 57.65
+    },
+    {
+      "candidate": "Larry LaRocco",
+      "party": "Democratic",
+      "votes": 219903,
+      "percent": 34.11
+    },
+    {
+      "candidate": "Rex Rammell",
+      "party": "Independent",
+      "votes": 34510,
+      "percent": 5.35
+    },
+    {
+      "candidate": "Kent Marmon",
+      "party": "Libertarian",
+      "votes": 9958,
+      "percent": 1.54
+    },
+    {
+      "candidate": "Pro-Life",
+      "party": "Independent",
+      "votes": 8662,
+      "percent": 1.35
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 151841,
+      "percent": 23.55
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 644780,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "year": 2000,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "West Virginia United States Senate election, 2000 [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_West_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "West Virginia United States Senate election, 2000 [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Byrd (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David T. Gallaher",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Whelan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 4,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Byrd (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "469,215",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "77.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David T. Gallaher",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "121,635",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Whelan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,627",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "347,580",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "603,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Robert Byrd (incumbent)",
+      "party": "Democratic",
+      "votes": 469215,
+      "percent": 77.75
+    },
+    {
+      "candidate": "David T. Gallaher",
+      "party": "Republican",
+      "votes": 121635,
+      "percent": 20.16
+    },
+    {
+      "candidate": "Joe Whelan",
+      "party": "Libertarian",
+      "votes": 12627,
+      "percent": 2.09
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 347580,
+      "percent": 57.6
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 603477,
+      "percent": 100.0
+    }
+  ]
+}

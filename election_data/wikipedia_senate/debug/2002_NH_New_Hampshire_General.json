@@ -1,0 +1,210 @@
+{
+  "year": 2002,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "General election results [ 27 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_New_Hampshire",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results [ 27 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Sununu",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeanne Shaheen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ken Blevens",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Sununu",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "227,229",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeanne Shaheen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "207,478",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ken Blevens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,835",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "444,542",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Sununu",
+      "party": "Republican",
+      "votes": 227229,
+      "percent": 51.12
+    },
+    {
+      "candidate": "Jeanne Shaheen",
+      "party": "Democratic",
+      "votes": 207478,
+      "percent": 46.67
+    },
+    {
+      "candidate": "Ken Blevens",
+      "party": "Libertarian",
+      "votes": 9835,
+      "percent": 2.21
+    }
+  ]
+}

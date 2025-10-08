@@ -1,0 +1,385 @@
+{
+  "year": 2004,
+  "state": "Utah",
+  "abbr": "UT",
+  "round": "General",
+  "caption": "General election results [ 11 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Utah",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "General election results [ 11 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Bennett (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Van Dam",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gary R. Van Horn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe LaBonte",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Bennett (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "626,640",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Van Dam",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "258,955",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gary R. Van Horn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,289",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Personal Choice",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe LaBonte",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,824",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "367,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.32%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "911,726",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Bennett (Incumbent)",
+      "party": "Republican",
+      "votes": 626640,
+      "percent": 68.73
+    },
+    {
+      "candidate": "Paul Van Dam",
+      "party": "Democratic",
+      "votes": 258955,
+      "percent": 28.4
+    },
+    {
+      "candidate": "Gary R. Van Horn",
+      "party": "Constitution",
+      "votes": 17289,
+      "percent": 1.9
+    },
+    {
+      "candidate": "Joe LaBonte",
+      "party": "Personal Choice",
+      "votes": 8824,
+      "percent": 0.97
+    },
+    {
+      "candidate": "18",
+      "party": "Write-ins",
+      "votes": 18,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 367685,
+      "percent": 40.33
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 911726,
+      "percent": null
+    }
+  ]
+}

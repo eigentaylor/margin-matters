@@ -1,0 +1,721 @@
+{
+  "year": 2000,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "2000 United States Senate election results [ 105 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_New_York",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 16,
+  "table": {
+    "caption": "2000 United States Senate election results [ 105 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Rodham Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Rodham Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Rodham Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hillary Rodham Clinton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Lazio",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Lazio",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Lazio",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeffrey Graham",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Dunau",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Adefope",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Clifton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Louis Wein",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jacob Perasso",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Rodham Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,562,415",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Rodham Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "102,094",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Liberal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Rodham Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "82,801",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hillary Rodham Clinton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,747,310",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.27",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Lazio",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,724,589",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Lazio",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "191,141",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Lazio",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,915,730",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.01",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.5",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeffrey Graham",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43,181",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.08",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Dunau",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40,991",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.60",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Right to Life",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Adefope",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,439",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.68",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Clifton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,734",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.31",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Louis Wein",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,414",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.05",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jacob Perasso",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,040",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.04",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.27",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Blank/scattering",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "179,823",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "831,580",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "6,779,839",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Hillary Rodham Clinton",
+      "party": "Democratic",
+      "votes": 3562415,
+      "percent": null
+    },
+    {
+      "candidate": "Hillary Rodham Clinton",
+      "party": "Working Families",
+      "votes": 102094,
+      "percent": null
+    },
+    {
+      "candidate": "Hillary Rodham Clinton",
+      "party": "Liberal",
+      "votes": 82801,
+      "percent": null
+    },
+    {
+      "candidate": "Hillary Rodham Clinton",
+      "party": "total",
+      "votes": 3747310,
+      "percent": 55.27
+    },
+    {
+      "candidate": "Rick Lazio",
+      "party": "Republican",
+      "votes": 2724589,
+      "percent": null
+    },
+    {
+      "candidate": "Rick Lazio",
+      "party": "Conservative",
+      "votes": 191141,
+      "percent": null
+    },
+    {
+      "candidate": "Rick Lazio",
+      "party": "total",
+      "votes": 2915730,
+      "percent": 43.01
+    },
+    {
+      "candidate": "Jeffrey Graham",
+      "party": "Independence",
+      "votes": 43181,
+      "percent": 0.64
+    },
+    {
+      "candidate": "Mark Dunau",
+      "party": "Green",
+      "votes": 40991,
+      "percent": 0.6
+    },
+    {
+      "candidate": "John Adefope",
+      "party": "Right to Life",
+      "votes": 21439,
+      "percent": 0.32
+    }
+  ]
+}

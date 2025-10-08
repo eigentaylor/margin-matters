@@ -1,0 +1,273 @@
+{
+  "year": 2018,
+  "state": "Indiana",
+  "abbr": "IN",
+  "round": "General",
+  "caption": "United States Senate election in Indiana, 2018 [ 165 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Indiana",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Indiana, 2018 [ 165 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Braun",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Donnelly (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lucy Brenton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Braun",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,158,000",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.5%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Donnelly (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,023,553",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.2%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lucy Brenton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100,942",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.3%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "70",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "<0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,282,565",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike Braun",
+      "party": "Republican",
+      "votes": 1158000,
+      "percent": 50.73
+    },
+    {
+      "candidate": "Joe Donnelly (incumbent)",
+      "party": "Democratic",
+      "votes": 1023553,
+      "percent": 44.84
+    },
+    {
+      "candidate": "Lucy Brenton",
+      "party": "Libertarian",
+      "votes": 100942,
+      "percent": 4.42
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 70,
+      "percent": 0.0
+    }
+  ]
+}

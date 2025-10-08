@@ -1,0 +1,235 @@
+{
+  "year": 2008,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "United States Senate election in Delaware, 2008 [ 16 ] [ 17 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Delaware",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Delaware, 2008 [ 16 ] [ 17 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Biden (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Christine O'Donnell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Biden (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "257,539",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Christine O'Donnell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "140,595",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "116,944",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "398,134",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joe Biden (incumbent)",
+      "party": "Democratic",
+      "votes": 257539,
+      "percent": 64.69
+    },
+    {
+      "candidate": "Christine O'Donnell",
+      "party": "Republican",
+      "votes": 140595,
+      "percent": 35.31
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 116944,
+      "percent": 29.38
+    }
+  ]
+}

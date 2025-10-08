@@ -1,0 +1,364 @@
+{
+  "year": 2020,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "2020 United States Senate election in Michigan [ 257 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Michigan",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2020 United States Senate election in Michigan [ 257 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gary Peters (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John James",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Valerie Willis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marcia Squier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Doug Dern",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gary Peters (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,734,568",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John James",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,642,233",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Valerie Willis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50,597",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marcia Squier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39,217",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Doug Dern",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,093",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "12",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,479,720",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Gary Peters (incumbent)",
+      "party": "Democratic",
+      "votes": 2734568,
+      "percent": 49.9
+    },
+    {
+      "candidate": "John James",
+      "party": "Republican",
+      "votes": 2642233,
+      "percent": 48.22
+    },
+    {
+      "candidate": "Valerie Willis",
+      "party": "Constitution",
+      "votes": 50597,
+      "percent": 0.92
+    },
+    {
+      "candidate": "Marcia Squier",
+      "party": "Green",
+      "votes": 39217,
+      "percent": 0.72
+    },
+    {
+      "candidate": "Doug Dern",
+      "party": "Natural Law",
+      "votes": 13093,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 12,
+      "percent": 0.0
+    }
+  ]
+}

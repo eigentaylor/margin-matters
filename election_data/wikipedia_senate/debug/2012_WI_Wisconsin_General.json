@@ -1,0 +1,321 @@
+{
+  "year": 2012,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "United States Senate election in Wisconsin, 2012 [ 125 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Wisconsin",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Wisconsin, 2012 [ 125 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tammy Baldwin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tommy Thompson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joseph Kexel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nimrod Allen, III",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tammy Baldwin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,547,104",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−15.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tommy Thompson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,380,126",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+16.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joseph Kexel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62,240",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nimrod Allen, III",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,455",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3,486",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,009,411",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tammy Baldwin",
+      "party": "Democratic",
+      "votes": 1547104,
+      "percent": 51.41
+    },
+    {
+      "candidate": "Tommy Thompson",
+      "party": "Republican",
+      "votes": 1380126,
+      "percent": 45.86
+    },
+    {
+      "candidate": "Joseph Kexel",
+      "party": "Libertarian",
+      "votes": 62240,
+      "percent": 2.07
+    },
+    {
+      "candidate": "Nimrod Allen, III",
+      "party": "Independent",
+      "votes": 16455,
+      "percent": 0.55
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3486,
+      "percent": 0.11
+    }
+  ]
+}

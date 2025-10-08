@@ -1,0 +1,240 @@
+{
+  "year": 2014,
+  "state": "Montana",
+  "abbr": "MT",
+  "round": "General",
+  "caption": "United States Senate election in Montana, 2014 [ 117 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Montana",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Montana, 2014 [ 117 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Daines",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Amanda Curtis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roger Roots",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Daines",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "213,709",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+30.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Amanda Curtis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "148,184",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−32.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roger Roots",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,933",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "369,826",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Steve Daines",
+      "party": "Republican",
+      "votes": 213709,
+      "percent": 57.79
+    },
+    {
+      "candidate": "Amanda Curtis",
+      "party": "Democratic",
+      "votes": 148184,
+      "percent": 40.07
+    },
+    {
+      "candidate": "Roger Roots",
+      "party": "Libertarian",
+      "votes": 7933,
+      "percent": 2.14
+    }
+  ]
+}

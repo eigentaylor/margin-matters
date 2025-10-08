@@ -1,0 +1,299 @@
+{
+  "year": 2004,
+  "state": "Arizona",
+  "abbr": "AZ",
+  "round": "General",
+  "caption": "General election results [ 6 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Arizona",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 6 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John McCain (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stuart Starky",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ernest Hancock",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John McCain (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,505,372",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "76.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stuart Starky",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "404,507",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ernest Hancock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51,798",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,100,865",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,961,677",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John McCain (incumbent)",
+      "party": "Republican",
+      "votes": 1505372,
+      "percent": 76.74
+    },
+    {
+      "candidate": "Stuart Starky",
+      "party": "Democratic",
+      "votes": 404507,
+      "percent": 20.62
+    },
+    {
+      "candidate": "Ernest Hancock",
+      "party": "Libertarian",
+      "votes": 51798,
+      "percent": 2.64
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 1100865,
+      "percent": 56.12
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1961677,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,466 @@
+{
+  "year": 2000,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "Tennessee United States Senate election, 2000 [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Tennessee",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "Tennessee United States Senate election, 2000 [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Frist (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Clark",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Burrell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles F. Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Watson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Jarrod Ownby",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joel Kinstle",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Frist (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,255,444",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Clark",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "621,152",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Burrell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,815",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles F. Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,004",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.07",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Watson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,416",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Jarrod Ownby",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,388",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joel Kinstle",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,135",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "259",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "634,292",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bill Frist (Incumbent)",
+      "party": "Republican",
+      "votes": 1255444,
+      "percent": 65.1
+    },
+    {
+      "candidate": "Jeff Clark",
+      "party": "Democratic",
+      "votes": 621152,
+      "percent": 32.21
+    },
+    {
+      "candidate": "Tom Burrell",
+      "party": "Green",
+      "votes": 25815,
+      "percent": 1.34
+    },
+    {
+      "candidate": "Charles F. Johnson",
+      "party": "Independent",
+      "votes": 10004,
+      "percent": 0.52
+    },
+    {
+      "candidate": "Robert Watson",
+      "party": "Independent",
+      "votes": 8416,
+      "percent": 0.44
+    },
+    {
+      "candidate": "David Jarrod Ownby",
+      "party": "Independent",
+      "votes": 4388,
+      "percent": 0.23
+    },
+    {
+      "candidate": "Joel Kinstle",
+      "party": "Independent",
+      "votes": 3135,
+      "percent": 0.16
+    },
+    {
+      "candidate": "259",
+      "party": "Write-in",
+      "votes": 259,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 634292,
+      "percent": 32.89
+    }
+  ]
+}

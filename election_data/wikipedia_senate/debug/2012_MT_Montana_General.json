@@ -1,0 +1,245 @@
+{
+  "year": 2012,
+  "state": "Montana",
+  "abbr": "MT",
+  "round": "General",
+  "caption": "United States Senate election in Montana, 2012 [ 47 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Montana",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in Montana, 2012 [ 47 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jon Tester (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Denny Rehberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Cox",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jon Tester (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "236,123",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Denny Rehberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "218,051",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Cox",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31,892",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "486,066",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jon Tester (incumbent)",
+      "party": "Democratic",
+      "votes": 236123,
+      "percent": 48.58
+    },
+    {
+      "candidate": "Denny Rehberg",
+      "party": "Republican",
+      "votes": 218051,
+      "percent": 44.86
+    },
+    {
+      "candidate": "Dan Cox",
+      "party": "Libertarian",
+      "votes": 31892,
+      "percent": 6.56
+    }
+  ]
+}

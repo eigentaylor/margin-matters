@@ -1,0 +1,299 @@
+{
+  "year": 2002,
+  "state": "Illinois",
+  "abbr": "IL",
+  "round": "General",
+  "caption": "United States Senate election in Illinois, 2002 [ 1 ] [ 6 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Illinois",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Illinois, 2002 [ 1 ] [ 6 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dick Durbin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Durkin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steven Burgauer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dick Durbin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,103,766",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Durkin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,325,703",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.65%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steven Burgauer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57,382",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.68%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "778,063",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,486,851",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dick Durbin (incumbent)",
+      "party": "Democratic",
+      "votes": 2103766,
+      "percent": 60.33
+    },
+    {
+      "candidate": "Jim Durkin",
+      "party": "Republican",
+      "votes": 1325703,
+      "percent": 38.02
+    },
+    {
+      "candidate": "Steven Burgauer",
+      "party": "Libertarian",
+      "votes": 57382,
+      "percent": 1.65
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 778063,
+      "percent": 22.31
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 3486851,
+      "percent": 49.5
+    }
+  ]
+}

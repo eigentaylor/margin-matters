@@ -1,0 +1,299 @@
+{
+  "year": 2006,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Hawaii",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Akaka (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cynthia Thielen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lloyd Mallan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Akaka (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "210,330",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.5%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cynthia Thielen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "126,097",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+12.3%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lloyd Mallan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,415",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "84,233",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "342,842",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Daniel Akaka (incumbent)",
+      "party": "Democratic",
+      "votes": 210330,
+      "percent": 61.35
+    },
+    {
+      "candidate": "Cynthia Thielen",
+      "party": "Republican",
+      "votes": 126097,
+      "percent": 36.78
+    },
+    {
+      "candidate": "Lloyd Mallan",
+      "party": "Libertarian",
+      "votes": 6415,
+      "percent": 1.87
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 84233,
+      "percent": 24.57
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 342842,
+      "percent": null
+    }
+  ]
+}

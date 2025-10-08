@@ -1,0 +1,342 @@
+{
+  "year": 2006,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "General election results [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Delaware",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "General election results [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Carper (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jan C. Ting",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Christine O'Donnell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "William E. Morris",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Carper (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "170,567",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jan C. Ting",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69,734",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−16.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Christine O'Donnell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,127",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "William E. Morris",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,671",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "100,833",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+27.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "254,099",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Carper (incumbent)",
+      "party": "Democratic",
+      "votes": 170567,
+      "percent": 67.13
+    },
+    {
+      "candidate": "Jan C. Ting",
+      "party": "Republican",
+      "votes": 69734,
+      "percent": 27.44
+    },
+    {
+      "candidate": "Christine O'Donnell",
+      "party": "Write-in",
+      "votes": 11127,
+      "percent": 4.38
+    },
+    {
+      "candidate": "William E. Morris",
+      "party": "Libertarian",
+      "votes": 2671,
+      "percent": 1.05
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 100833,
+      "percent": 39.68
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 254099,
+      "percent": null
+    }
+  ]
+}

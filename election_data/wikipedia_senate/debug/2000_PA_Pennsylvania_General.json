@@ -1,0 +1,359 @@
+{
+  "year": 2000,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "General election results [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Pennsylvania",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "General election results [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Santorum (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Klink",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Featherman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lester Searer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Domske",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Santorum (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,481,962",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Klink",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,154,908",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Featherman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45,775",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lester Searer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28,382",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.6%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Domske",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,089",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.5%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "327,054",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,735,116",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Rick Santorum (incumbent)",
+      "party": "Republican",
+      "votes": 2481962,
+      "percent": 52.42
+    },
+    {
+      "candidate": "Ron Klink",
+      "party": "Democratic",
+      "votes": 2154908,
+      "percent": 45.51
+    },
+    {
+      "candidate": "John Featherman",
+      "party": "Libertarian",
+      "votes": 45775,
+      "percent": 0.97
+    },
+    {
+      "candidate": "Lester Searer",
+      "party": "Constitution",
+      "votes": 28382,
+      "percent": 0.6
+    },
+    {
+      "candidate": "Robert Domske",
+      "party": "Reform",
+      "votes": 24089,
+      "percent": 0.51
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 327054,
+      "percent": 6.91
+    }
+  ]
+}

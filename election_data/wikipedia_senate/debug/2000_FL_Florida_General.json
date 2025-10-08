@@ -1,0 +1,400 @@
+{
+  "year": 2000,
+  "state": "Florida",
+  "abbr": "FL",
+  "round": "General",
+  "caption": "General election results [ 6 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Florida",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "General election results [ 6 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Nelson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill McCollum",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Willie Logan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Simonetta",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Darrell L. McCormick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joel Deckard",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andy Martin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nikki Oldaker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Nelson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,989,487",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill McCollum",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,705,348",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.19%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Willie Logan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "80,830",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Simonetta",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,087",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Darrell L. McCormick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,664",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joel Deckard",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,338",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andy Martin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,889",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nikki Oldaker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "88",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,856,731",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bill Nelson",
+      "party": "Democratic",
+      "votes": 2989487,
+      "percent": 51.04
+    },
+    {
+      "candidate": "Bill McCollum",
+      "party": "Republican",
+      "votes": 2705348,
+      "percent": 46.19
+    },
+    {
+      "candidate": "Willie Logan",
+      "party": "Independent",
+      "votes": 80830,
+      "percent": 1.38
+    },
+    {
+      "candidate": "Joe Simonetta",
+      "party": "Natural Law",
+      "votes": 26087,
+      "percent": 0.45
+    },
+    {
+      "candidate": "Darrell L. McCormick",
+      "party": "Independent",
+      "votes": 21664,
+      "percent": 0.37
+    },
+    {
+      "candidate": "Joel Deckard",
+      "party": "Reform",
+      "votes": 17338,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Andy Martin",
+      "party": "Independent",
+      "votes": 15889,
+      "percent": 0.27
+    },
+    {
+      "candidate": "Nikki Oldaker",
+      "party": "Write-in",
+      "votes": 88,
+      "percent": 0.0
+    }
+  ]
+}

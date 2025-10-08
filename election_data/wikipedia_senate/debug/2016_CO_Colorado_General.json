@@ -1,0 +1,417 @@
+{
+  "year": 2016,
+  "state": "Colorado",
+  "abbr": "CO",
+  "round": "General",
+  "caption": "United States Senate election in Colorado, 2016 [ 142 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Colorado",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Colorado, 2016 [ 142 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Bennet (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Darryl Glenn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lily Tang Williams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Arn Menconi",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Hammons",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Chapin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Fiorino",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Bennet (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,370,710",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Darryl Glenn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,215,318",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lily Tang Williams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "99,277",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Arn Menconi",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36,805",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Unity",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Hammons",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,336",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Chapin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,361",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Fiorino",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,216",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,743,023",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Michael Bennet (incumbent)",
+      "party": "Democratic",
+      "votes": 1370710,
+      "percent": 49.97
+    },
+    {
+      "candidate": "Darryl Glenn",
+      "party": "Republican",
+      "votes": 1215318,
+      "percent": 44.31
+    },
+    {
+      "candidate": "Lily Tang Williams",
+      "party": "Libertarian",
+      "votes": 99277,
+      "percent": 3.62
+    },
+    {
+      "candidate": "Arn Menconi",
+      "party": "Green",
+      "votes": 36805,
+      "percent": 1.34
+    },
+    {
+      "candidate": "Bill Hammons",
+      "party": "Unity",
+      "votes": 9336,
+      "percent": 0.34
+    },
+    {
+      "candidate": "Dan Chapin",
+      "party": "Independent",
+      "votes": 8361,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Paul Fiorino",
+      "party": "Independent",
+      "votes": 3216,
+      "percent": 0.12
+    }
+  ]
+}

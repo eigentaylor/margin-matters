@@ -1,0 +1,331 @@
+{
+  "year": 2016,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "United States Senate election in Oklahoma, 2016 [ 18 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Oklahoma",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Oklahoma, 2016 [ 18 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Lankford (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Workman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert T. Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sean Braddy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark T. Beard",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Lankford (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "980,892",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Workman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "355,911",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.40%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert T. Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43,421",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sean Braddy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40,405",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark T. Beard",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27,418",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,448,047",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "James Lankford (incumbent)",
+      "party": "Republican",
+      "votes": 980892,
+      "percent": 67.74
+    },
+    {
+      "candidate": "Mike Workman",
+      "party": "Democratic",
+      "votes": 355911,
+      "percent": 24.58
+    },
+    {
+      "candidate": "Robert T. Murphy",
+      "party": "Libertarian",
+      "votes": 43421,
+      "percent": 3.0
+    },
+    {
+      "candidate": "Sean Braddy",
+      "party": "Independent",
+      "votes": 40405,
+      "percent": 2.79
+    },
+    {
+      "candidate": "Mark T. Beard",
+      "party": "Independent",
+      "votes": 27418,
+      "percent": 1.89
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "year": 2016,
+  "state": "Louisiana",
+  "abbr": "LA",
+  "round": "General",
+  "caption": "United States Senate election runoff in Louisiana, 2016 [ 169 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Louisiana",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "United States Senate election runoff in Louisiana, 2016 [ 169 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Neely Kennedy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Foster Campbell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Neely Kennedy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "536,191",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Foster Campbell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "347,816",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.68%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "884,007",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Neely Kennedy",
+      "party": "Republican",
+      "votes": 536191,
+      "percent": 60.65
+    },
+    {
+      "candidate": "Foster Campbell",
+      "party": "Democratic",
+      "votes": 347816,
+      "percent": 39.35
+    }
+  ]
+}

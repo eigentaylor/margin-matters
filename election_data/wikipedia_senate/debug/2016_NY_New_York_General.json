@@ -1,0 +1,583 @@
+{
+  "year": 2016,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "United States Senate election in New York, 2016 [ 35 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_New_York",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 11,
+  "table": {
+    "caption": "United States Senate election in New York, 2016 [ 35 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robin Laverne Wilson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alex Merced",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,784,218",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "241,672",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "150,654",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Women's Equality",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45,401",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,221,945",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,723,920",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.65%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "267,622",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,813",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,009,355",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robin Laverne Wilson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "113,413",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alex Merced",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48,120",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "7,392,833",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Democratic",
+      "votes": 4784218,
+      "percent": 64.72
+    },
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Working Families",
+      "votes": 241672,
+      "percent": 3.27
+    },
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Independence",
+      "votes": 150654,
+      "percent": 2.04
+    },
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Women's Equality",
+      "votes": 45401,
+      "percent": 0.61
+    },
+    {
+      "candidate": "Chuck Schumer (incumbent)",
+      "party": "Total",
+      "votes": 5221945,
+      "percent": 70.64
+    },
+    {
+      "candidate": "Wendy Long",
+      "party": "Republican",
+      "votes": 1723920,
+      "percent": 23.32
+    },
+    {
+      "candidate": "Wendy Long",
+      "party": "Conservative",
+      "votes": 267622,
+      "percent": 3.62
+    },
+    {
+      "candidate": "Wendy Long",
+      "party": "Reform",
+      "votes": 17813,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Wendy Long",
+      "party": "Total",
+      "votes": 2009355,
+      "percent": 27.18
+    },
+    {
+      "candidate": "Robin Laverne Wilson",
+      "party": "Green",
+      "votes": 113413,
+      "percent": 1.53
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "year": 2018,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "United States Senate election in West Virginia, 2018 [ 128 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_West_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in West Virginia, 2018 [ 128 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Manchin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patrick Morrisey",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rusty Hollen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Manchin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "290,510",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−12.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patrick Morrisey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "271,113",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.79%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rusty Hollen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,411",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "586,034",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joe Manchin (incumbent)",
+      "party": "Democratic",
+      "votes": 290510,
+      "percent": 49.57
+    },
+    {
+      "candidate": "Patrick Morrisey",
+      "party": "Republican",
+      "votes": 271113,
+      "percent": 46.26
+    },
+    {
+      "candidate": "Rusty Hollen",
+      "party": "Libertarian",
+      "votes": 24411,
+      "percent": 4.17
+    }
+  ]
+}

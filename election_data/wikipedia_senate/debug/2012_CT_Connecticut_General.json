@@ -1,0 +1,440 @@
+{
+  "year": 2012,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "United States Senate election in Connecticut, 2012 [ 97 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Connecticut",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "United States Senate election in Connecticut, 2012 [ 97 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Linda McMahon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Linda McMahon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Linda McMahon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Passarelli",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "792,983",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+12.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35,778",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "828,761",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Linda McMahon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "604,569",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+30.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Linda McMahon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46,520",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Linda McMahon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "651,089",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+33.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Passarelli",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,045",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "6,869",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,511,764",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Independent Democrat",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chris Murphy",
+      "party": "Democratic",
+      "votes": 792983,
+      "percent": 52.45
+    },
+    {
+      "candidate": "Chris Murphy",
+      "party": "Working Families",
+      "votes": 35778,
+      "percent": 2.37
+    },
+    {
+      "candidate": "Chris Murphy",
+      "party": "Total",
+      "votes": 828761,
+      "percent": 54.82
+    },
+    {
+      "candidate": "Linda McMahon",
+      "party": "Republican",
+      "votes": 604569,
+      "percent": 39.99
+    },
+    {
+      "candidate": "Linda McMahon",
+      "party": "Independent Party",
+      "votes": 46520,
+      "percent": 3.08
+    },
+    {
+      "candidate": "Linda McMahon",
+      "party": "Total",
+      "votes": 651089,
+      "percent": 43.07
+    },
+    {
+      "candidate": "Paul Passarelli",
+      "party": "Libertarian",
+      "votes": 25045,
+      "percent": 1.66
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 6869,
+      "percent": 0.45
+    }
+  ]
+}

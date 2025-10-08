@@ -1,0 +1,289 @@
+{
+  "year": 2006,
+  "state": "New Mexico",
+  "abbr": "NM",
+  "round": "General",
+  "caption": "United States Senate election in New Mexico, 2006 [ 11 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_New_Mexico",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in New Mexico, 2006 [ 11 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Bingaman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Allen McCulloch",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Bingaman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "394,217",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Allen McCulloch",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "163,761",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.92%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "364",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "230,426",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+17.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "558,342",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeff Bingaman (incumbent)",
+      "party": "Democratic",
+      "votes": 394217,
+      "percent": 70.6
+    },
+    {
+      "candidate": "Allen McCulloch",
+      "party": "Republican",
+      "votes": 163761,
+      "percent": 29.33
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 364,
+      "percent": 0.06
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 230426,
+      "percent": 41.27
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 558342,
+      "percent": null
+    }
+  ]
+}

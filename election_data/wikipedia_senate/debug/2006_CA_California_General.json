@@ -1,0 +1,520 @@
+{
+  "year": 2006,
+  "state": "California",
+  "abbr": "CA",
+  "round": "General",
+  "caption": "United States Senate election in California, 2006 [ 26 ] [ 27 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_California",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 12,
+  "table": {
+    "caption": "United States Senate election in California, 2006 [ 26 ] [ 27 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dianne Feinstein (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dick Mountjoy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Todd Chretien",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael S. Metti",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marsha Feinland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don J. Grundmann",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kent Mesplay ( write-in )",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeffrey Mackler (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lea Sherman (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Connor Vlakancic (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Invalid or blank votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dianne Feinstein (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,076,289",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dick Mountjoy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,990,822",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Todd Chretien",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "147,074",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael S. Metti",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "133,851",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peace and Freedom",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marsha Feinland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "117,764",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "American Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don J. Grundmann",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75,350",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kent Mesplay ( write-in )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "160",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeffrey Mackler (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "108",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lea Sherman (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Connor Vlakancic (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Invalid or blank votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "357,583",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.19%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "8,899,059",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.93",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dianne Feinstein (incumbent)",
+      "party": "Democratic",
+      "votes": 5076289,
+      "percent": 59.43
+    },
+    {
+      "candidate": "Dick Mountjoy",
+      "party": "Republican",
+      "votes": 2990822,
+      "percent": 35.02
+    },
+    {
+      "candidate": "Todd Chretien",
+      "party": "Green",
+      "votes": 147074,
+      "percent": 1.72
+    },
+    {
+      "candidate": "Michael S. Metti",
+      "party": "Libertarian",
+      "votes": 133851,
+      "percent": 1.57
+    },
+    {
+      "candidate": "Marsha Feinland",
+      "party": "Peace and Freedom",
+      "votes": 117764,
+      "percent": 1.38
+    },
+    {
+      "candidate": "Don J. Grundmann",
+      "party": "American Independent",
+      "votes": 75350,
+      "percent": 0.88
+    },
+    {
+      "candidate": "Kent Mesplay ( write-in )",
+      "party": "Green",
+      "votes": 160,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Jeffrey Mackler (write-in)",
+      "party": "Independent",
+      "votes": 108,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Lea Sherman (write-in)",
+      "party": "Independent",
+      "votes": 47,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Connor Vlakancic (write-in)",
+      "party": "Independent",
+      "votes": 11,
+      "percent": 0.0
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "year": 2000,
+  "state": "Indiana",
+  "abbr": "IN",
+  "round": "General",
+  "caption": "2000 United States Senate election, Indiana [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Indiana",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2000 United States Senate election, Indiana [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Lugar (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Hager",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Lugar (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,427,944",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "683,273",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Hager",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33,992",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "744,671",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,145,209",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Lugar (Incumbent)",
+      "party": "Republican",
+      "votes": 1427944,
+      "percent": 66.56
+    },
+    {
+      "candidate": "David Johnson",
+      "party": "Democratic",
+      "votes": 683273,
+      "percent": 31.85
+    },
+    {
+      "candidate": "Paul Hager",
+      "party": "Libertarian",
+      "votes": 33992,
+      "percent": 1.58
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 744671,
+      "percent": 34.71
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 2145209,
+      "percent": 55.0
+    }
+  ]
+}

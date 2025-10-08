@@ -1,0 +1,460 @@
+{
+  "year": 2018,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "United States Senate election in New Jersey, 2018 [ 104 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_New_Jersey",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "United States Senate election in New Jersey, 2018 [ 104 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Menendez (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Hugin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Madelyn Hoffman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Murray Sabrin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Natalie Rivera",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tricia Flanagan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin Kimple",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hank Schroeder",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Menendez (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,711,654",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Hugin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,357,355",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Madelyn Hoffman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,150",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Murray Sabrin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,212",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natalie Rivera",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,897",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tricia Flanagan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,101",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin Kimple",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,087",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hank Schroeder",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,854",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,169,310",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Menendez (incumbent)",
+      "party": "Democratic",
+      "votes": 1711654,
+      "percent": 54.01
+    },
+    {
+      "candidate": "Bob Hugin",
+      "party": "Republican",
+      "votes": 1357355,
+      "percent": 42.83
+    },
+    {
+      "candidate": "Madelyn Hoffman",
+      "party": "Green",
+      "votes": 25150,
+      "percent": 0.79
+    },
+    {
+      "candidate": "Murray Sabrin",
+      "party": "Libertarian",
+      "votes": 21212,
+      "percent": 0.67
+    },
+    {
+      "candidate": "Natalie Rivera",
+      "party": "Independent",
+      "votes": 19897,
+      "percent": 0.63
+    },
+    {
+      "candidate": "Tricia Flanagan",
+      "party": "Independent",
+      "votes": 16101,
+      "percent": 0.51
+    },
+    {
+      "candidate": "Kevin Kimple",
+      "party": "Independent",
+      "votes": 9087,
+      "percent": 0.29
+    },
+    {
+      "candidate": "Hank Schroeder",
+      "party": "Independent",
+      "votes": 8854,
+      "percent": 0.28
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "year": 2008,
+  "state": "Oregon",
+  "abbr": "OR",
+  "round": "General",
+  "caption": "2008 United States Senate election in Oregon [ 32 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Oregon",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2008 United States Senate election in Oregon [ 32 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Merkley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gordon Smith (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Brownlow",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Merkley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "864,392",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gordon Smith (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "805,159",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Brownlow",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "92,565",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.52",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "5,388",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,767,504",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeff Merkley",
+      "party": "Democratic",
+      "votes": 864392,
+      "percent": 48.9
+    },
+    {
+      "candidate": "Gordon Smith (incumbent)",
+      "party": "Republican",
+      "votes": 805159,
+      "percent": 45.55
+    },
+    {
+      "candidate": "David Brownlow",
+      "party": "Constitution",
+      "votes": 92565,
+      "percent": 5.24
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 5388,
+      "percent": 0.3
+    }
+  ]
+}

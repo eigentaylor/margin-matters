@@ -1,0 +1,253 @@
+{
+  "year": 2004,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Pennsylvania",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Arlen Specter (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Hoeffel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Clymer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Betsy Summers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 4,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Arlen Specter (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,925,080",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Hoeffel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,334,126",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.99%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Clymer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "220,056",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.96%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Betsy Summers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79,263",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,769,590",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Arlen Specter (incumbent)",
+      "party": "Republican",
+      "votes": 2925080,
+      "percent": 52.62
+    },
+    {
+      "candidate": "Joe Hoeffel",
+      "party": "Democratic",
+      "votes": 2334126,
+      "percent": 41.99
+    },
+    {
+      "candidate": "Jim Clymer",
+      "party": "Constitution",
+      "votes": 220056,
+      "percent": 3.96
+    },
+    {
+      "candidate": "Betsy Summers",
+      "party": "Libertarian",
+      "votes": 79263,
+      "percent": 1.43
+    }
+  ]
+}

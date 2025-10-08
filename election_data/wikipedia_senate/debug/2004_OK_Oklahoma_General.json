@@ -1,0 +1,299 @@
+{
+  "year": 2004,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "2004 United States Senate election in Oklahoma [ 53 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Oklahoma",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2004 United States Senate election in Oklahoma [ 53 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Coburn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brad Carson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sheila Bilyeu",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Coburn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "763,433",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brad Carson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "596,750",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.97%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sheila Bilyeu",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "86,663",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "166,683",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−23.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,446,846",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Coburn",
+      "party": "Republican",
+      "votes": 763433,
+      "percent": 52.77
+    },
+    {
+      "candidate": "Brad Carson",
+      "party": "Democratic",
+      "votes": 596750,
+      "percent": 41.24
+    },
+    {
+      "candidate": "Sheila Bilyeu",
+      "party": "Independent",
+      "votes": 86663,
+      "percent": 5.99
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 166683,
+      "percent": 11.52
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1446846,
+      "percent": null
+    }
+  ]
+}

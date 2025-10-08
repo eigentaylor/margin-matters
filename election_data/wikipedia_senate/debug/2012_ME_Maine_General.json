@@ -1,0 +1,363 @@
+{
+  "year": 2012,
+  "state": "Maine",
+  "abbr": "ME",
+  "round": "General",
+  "caption": "United States Senate election in Maine, 2012 [ 85 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Maine",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Maine, 2012 [ 85 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Angus King",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charlie Summers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cynthia Dill",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Woods (withdrawn)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Danny Dalton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andrew Ian Dodge",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Angus King",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "370,580",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charlie Summers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "215,399",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−43.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cynthia Dill",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "92,900",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Woods (withdrawn)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,289",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Danny Dalton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,807",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andrew Ian Dodge",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,624",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "700,599",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Angus King",
+      "party": "Independent",
+      "votes": 370580,
+      "percent": 52.89
+    },
+    {
+      "candidate": "Charlie Summers",
+      "party": "Republican",
+      "votes": 215399,
+      "percent": 30.75
+    },
+    {
+      "candidate": "Cynthia Dill",
+      "party": "Democratic",
+      "votes": 92900,
+      "percent": 13.26
+    },
+    {
+      "candidate": "Danny Dalton",
+      "party": "Independent",
+      "votes": 5807,
+      "percent": 0.83
+    },
+    {
+      "candidate": "Andrew Ian Dodge",
+      "party": "Independent",
+      "votes": 5624,
+      "percent": 0.8
+    }
+  ]
+}

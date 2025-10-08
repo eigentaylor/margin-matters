@@ -1,0 +1,503 @@
+{
+  "year": 2010,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "United States Senate election in Nevada, 2010 [ 114 ] [ 115 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Nevada",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "United States Senate election in Nevada, 2010 [ 114 ] [ 115 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Harry Reid (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sharron Angle",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "None of These Candidates",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Ashjian",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael L. Haines",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Timothy Fasano",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jesse Holland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeffery C. Reeves",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wil Stand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Harry Reid (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "362,785",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sharron Angle",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "321,361",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,174",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.65%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tea Party of Nevada",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Ashjian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,811",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael L. Haines",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,261",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Timothy Fasano",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,185",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jesse Holland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,175",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeffery C. Reeves",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,510",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wil Stand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,119",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "721,381",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Harry Reid (incumbent)",
+      "party": "Democratic",
+      "votes": 362785,
+      "percent": 50.29
+    },
+    {
+      "candidate": "Sharron Angle",
+      "party": "Republican",
+      "votes": 321361,
+      "percent": 44.55
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "n/a",
+      "votes": 16174,
+      "percent": 2.25
+    },
+    {
+      "candidate": "Scott Ashjian",
+      "party": "Tea Party of Nevada",
+      "votes": 5811,
+      "percent": 0.81
+    },
+    {
+      "candidate": "Michael L. Haines",
+      "party": "Independent",
+      "votes": 4261,
+      "percent": 0.59
+    },
+    {
+      "candidate": "Timothy Fasano",
+      "party": "Independent American",
+      "votes": 3185,
+      "percent": 0.44
+    },
+    {
+      "candidate": "Jesse Holland",
+      "party": "Independent",
+      "votes": 3175,
+      "percent": 0.44
+    },
+    {
+      "candidate": "Jeffery C. Reeves",
+      "party": "Independent",
+      "votes": 2510,
+      "percent": 0.35
+    },
+    {
+      "candidate": "Wil Stand",
+      "party": "Independent",
+      "votes": 2119,
+      "percent": 0.29
+    }
+  ]
+}

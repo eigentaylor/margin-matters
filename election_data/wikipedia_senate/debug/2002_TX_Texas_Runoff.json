@@ -1,0 +1,160 @@
+{
+  "year": 2002,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "Runoff",
+  "caption": "Democratic runoff results",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Texas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "Democratic runoff results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Kirk",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Victor M. Morales",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Kirk",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "370,878",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.8",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Victor M. Morales",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "249,423",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.2",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "620,301",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ron Kirk",
+      "party": "Democratic",
+      "votes": 370878,
+      "percent": 59.8
+    },
+    {
+      "candidate": "Victor M. Morales",
+      "party": "Democratic",
+      "votes": 249423,
+      "percent": 40.2
+    }
+  ]
+}

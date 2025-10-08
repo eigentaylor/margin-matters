@@ -1,0 +1,240 @@
+{
+  "year": 2010,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "General election results [ 17 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_North_Dakota",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results [ 17 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Hoeven",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tracy Potter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Keith Hanson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Hoeven",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "181,689",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "76.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+44.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tracy Potter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52,955",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−46.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Keith Hanson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,890",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "238,534",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic–NPL",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Hoeven",
+      "party": "Republican",
+      "votes": 181689,
+      "percent": 76.08
+    },
+    {
+      "candidate": "Tracy Potter",
+      "party": "Democratic–NPL",
+      "votes": 52955,
+      "percent": 22.17
+    },
+    {
+      "candidate": "Keith Hanson",
+      "party": "Libertarian",
+      "votes": 3890,
+      "percent": 1.63
+    }
+  ]
+}

@@ -1,0 +1,424 @@
+{
+  "year": 2006,
+  "state": "Washington",
+  "abbr": "WA",
+  "round": "General",
+  "caption": "General election results [ 151 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Washington",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "General election results [ 151 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maria Cantwell (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike McGavick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Guthrie",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Aaron Dixon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robin Adair",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maria Cantwell (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,184,659",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.08",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike McGavick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "832,106",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.73",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Guthrie",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,331",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.22",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Aaron Dixon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,254",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robin Adair",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,384",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,445",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "343,084",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,085,179",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.39",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Maria Cantwell (incumbent)",
+      "party": "Democratic",
+      "votes": 1184659,
+      "percent": 56.81
+    },
+    {
+      "candidate": "Mike McGavick",
+      "party": "Republican",
+      "votes": 832106,
+      "percent": 39.91
+    },
+    {
+      "candidate": "Bruce Guthrie",
+      "party": "Libertarian",
+      "votes": 29331,
+      "percent": 1.41
+    },
+    {
+      "candidate": "Aaron Dixon",
+      "party": "Green",
+      "votes": 21254,
+      "percent": 1.02
+    },
+    {
+      "candidate": "Robin Adair",
+      "party": "Independent",
+      "votes": 16384,
+      "percent": 0.79
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1445,
+      "percent": 0.07
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 343084,
+      "percent": 16.9
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 2085179,
+      "percent": 63.81
+    },
+    {
+      "candidate": "Democratic hold",
+      "party": "Democratic hold",
+      "votes": 0,
+      "percent": 8.39
+    }
+  ]
+}

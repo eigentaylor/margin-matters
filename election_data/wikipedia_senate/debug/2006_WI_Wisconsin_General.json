@@ -1,0 +1,379 @@
+{
+  "year": 2006,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "2006 United States Senate election, Wisconsin [3]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Wisconsin",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2006 United States Senate election, Wisconsin [3]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Herb Kohl (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Lorge",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rae Vogeler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Glatzel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scattered",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Herb Kohl (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,439,214",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.31",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.8",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Lorge",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "630,299",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.48",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.5",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rae Vogeler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42,434",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.98",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Glatzel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,096",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.17",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Other",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scattered",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,254",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "808,915",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.83",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,138,297",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.86",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Herb Kohl (incumbent)",
+      "party": "Democratic",
+      "votes": 1439214,
+      "percent": 67.31
+    },
+    {
+      "candidate": "Robert Lorge",
+      "party": "Republican",
+      "votes": 630299,
+      "percent": 29.48
+    },
+    {
+      "candidate": "Rae Vogeler",
+      "party": "Green",
+      "votes": 42434,
+      "percent": 1.98
+    },
+    {
+      "candidate": "Ben Glatzel",
+      "party": "Independent",
+      "votes": 25096,
+      "percent": 1.17
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 808915,
+      "percent": 37.83
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 2138297,
+      "percent": 50.86
+    }
+  ]
+}

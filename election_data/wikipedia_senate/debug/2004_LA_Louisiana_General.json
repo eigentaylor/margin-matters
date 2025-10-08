@@ -1,0 +1,471 @@
+{
+  "year": 2004,
+  "state": "Louisiana",
+  "abbr": "LA",
+  "round": "General",
+  "caption": "Louisiana United States Senate election, 2004",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Louisiana",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "Louisiana United States Senate election, 2004",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Vitter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris John",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Neely Kennedy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Arthur A. Morrell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard M. Fontanesi",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "R. A. \"Skip\" Galan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sam Houston Melton, Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Vitter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "943,014",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris John",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "542,150",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Neely Kennedy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "275,821",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Arthur A. Morrell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,222",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard M. Fontanesi",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,097",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "R. A. \"Skip\" Galan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,463",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sam Houston Melton, Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,289",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "400,864",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,848,056",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "David Vitter",
+      "party": "Republican",
+      "votes": 943014,
+      "percent": 51.03
+    },
+    {
+      "candidate": "Chris John",
+      "party": "Democratic",
+      "votes": 542150,
+      "percent": 29.34
+    },
+    {
+      "candidate": "John Neely Kennedy",
+      "party": "Democratic",
+      "votes": 275821,
+      "percent": 14.92
+    },
+    {
+      "candidate": "Arthur A. Morrell",
+      "party": "Democratic",
+      "votes": 47222,
+      "percent": 2.56
+    },
+    {
+      "candidate": "Richard M. Fontanesi",
+      "party": "Independent",
+      "votes": 15097,
+      "percent": 0.82
+    },
+    {
+      "candidate": "R. A. \"Skip\" Galan",
+      "party": "Independent",
+      "votes": 12463,
+      "percent": 0.67
+    },
+    {
+      "candidate": "Sam Houston Melton, Jr.",
+      "party": "Democratic",
+      "votes": 12289,
+      "percent": 0.66
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 400864,
+      "percent": 21.69
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1848056,
+      "percent": 100.0
+    }
+  ]
+}

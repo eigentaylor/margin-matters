@@ -1,0 +1,278 @@
+{
+  "year": 2010,
+  "state": "Georgia",
+  "abbr": "GA",
+  "round": "General",
+  "caption": "United States Senate election in Georgia, 2010 [ 29 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Georgia",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Georgia, 2010 [ 29 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Johnny Isakson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Thurmond",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Donovan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Johnny Isakson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,489,904",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Thurmond",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "996,516",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.98%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Donovan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68,750",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "88",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,555,258",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Johnny Isakson (incumbent)",
+      "party": "Republican",
+      "votes": 1489904,
+      "percent": 58.31
+    },
+    {
+      "candidate": "Michael Thurmond",
+      "party": "Democratic",
+      "votes": 996516,
+      "percent": 39.0
+    },
+    {
+      "candidate": "Chuck Donovan",
+      "party": "Libertarian",
+      "votes": 68750,
+      "percent": 2.69
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 88,
+      "percent": 0.0
+    }
+  ]
+}

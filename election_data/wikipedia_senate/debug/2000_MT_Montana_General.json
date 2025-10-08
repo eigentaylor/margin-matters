@@ -1,0 +1,299 @@
+{
+  "year": 2000,
+  "state": "Montana",
+  "abbr": "MT",
+  "round": "General",
+  "caption": "General election results [ 8 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Montana",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 8 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Conrad Burns (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Schweitzer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gary Lee",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conrad Burns (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "208,082",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Schweitzer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "194,430",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gary Lee",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,089",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.2%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "13,652",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−21.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "411,601",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "{{{swing}}}",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Conrad Burns (incumbent)",
+      "party": "Republican",
+      "votes": 208082,
+      "percent": 50.55
+    },
+    {
+      "candidate": "Brian Schweitzer",
+      "party": "Democratic",
+      "votes": 194430,
+      "percent": 47.24
+    },
+    {
+      "candidate": "Gary Lee",
+      "party": "Reform",
+      "votes": 9089,
+      "percent": 2.2
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 13652,
+      "percent": 3.32
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 411601,
+      "percent": null
+    }
+  ]
+}

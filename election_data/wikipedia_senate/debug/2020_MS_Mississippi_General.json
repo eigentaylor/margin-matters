@@ -1,0 +1,245 @@
+{
+  "year": 2020,
+  "state": "Mississippi",
+  "abbr": "MS",
+  "round": "General",
+  "caption": "2020 United States Senate election in Mississippi [ 54 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Mississippi",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "2020 United States Senate election in Mississippi [ 54 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cindy Hyde-Smith (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Espy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jimmy Edwards",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cindy Hyde-Smith (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "709,511",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Espy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "578,691",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jimmy Edwards",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,152",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,311,354",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Cindy Hyde-Smith (incumbent)",
+      "party": "Republican",
+      "votes": 709511,
+      "percent": 54.11
+    },
+    {
+      "candidate": "Mike Espy",
+      "party": "Democratic",
+      "votes": 578691,
+      "percent": 44.13
+    },
+    {
+      "candidate": "Jimmy Edwards",
+      "party": "Libertarian",
+      "votes": 23152,
+      "percent": 1.77
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "year": 2002,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2002 United States Senate election in North Carolina [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_North_Carolina",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2002 United States Senate election in North Carolina [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elizabeth Dole",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Erskine Bowles",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sean Haugh",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elizabeth Dole",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,248,664",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.92%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Erskine Bowles",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,047,983",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.96%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.96%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sean Haugh",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33,807",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "727",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,331,181",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Elizabeth Dole",
+      "party": "Republican",
+      "votes": 1248664,
+      "percent": 53.56
+    },
+    {
+      "candidate": "Erskine Bowles",
+      "party": "Democratic",
+      "votes": 1047983,
+      "percent": 44.96
+    },
+    {
+      "candidate": "Sean Haugh",
+      "party": "Libertarian",
+      "votes": 33807,
+      "percent": 1.45
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 727,
+      "percent": 0.03
+    }
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "year": 2000,
+  "state": "Wyoming",
+  "abbr": "WY",
+  "round": "General",
+  "caption": "General election results [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Wyoming",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Craig Thomas (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mel Logan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Margaret Dawson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Craig Thomas (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "157,622",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mel Logan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,087",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−17.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Margaret Dawson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,950",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "110,535",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+32.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "213,659",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Craig Thomas (Incumbent)",
+      "party": "Republican",
+      "votes": 157622,
+      "percent": 73.77
+    },
+    {
+      "candidate": "Mel Logan",
+      "party": "Democratic",
+      "votes": 47087,
+      "percent": 22.04
+    },
+    {
+      "candidate": "Margaret Dawson",
+      "party": "Libertarian",
+      "votes": 8950,
+      "percent": 4.19
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 110535,
+      "percent": 51.73
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 213659,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "year": 2020,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "United States Senate election in New Hampshire, 2020 [ 96 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_New_Hampshire",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in New Hampshire, 2020 [ 96 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeanne Shaheen (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bryant \"Corky\" Messner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Justin O'Donnell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeanne Shaheen (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "450,778",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bryant \"Corky\" Messner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "326,229",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Justin O'Donnell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,421",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "486",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–0.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "795,914",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeanne Shaheen (incumbent)",
+      "party": "Democratic",
+      "votes": 450778,
+      "percent": 56.63
+    },
+    {
+      "candidate": "Bryant \"Corky\" Messner",
+      "party": "Republican",
+      "votes": 326229,
+      "percent": 40.99
+    },
+    {
+      "candidate": "Justin O'Donnell",
+      "party": "Libertarian",
+      "votes": 18421,
+      "percent": 2.32
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 486,
+      "percent": 0.06
+    }
+  ]
+}

@@ -1,0 +1,514 @@
+{
+  "year": 2002,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "United States Senate election in Tennessee, 2002 [ 12 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Tennessee",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table": {
+    "caption": "United States Senate election in Tennessee, 2002 [ 12 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lamar Alexander",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Clement",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Jay Hooker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wesley M. Baker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Connie Gammon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Karl Stanley Davidson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Basil Marceaux",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lamar Alexander",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "891,498",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Clement",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "728,232",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Jay Hooker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,401",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wesley M. Baker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,106",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Connie Gammon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,349",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Karl Stanley Davidson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,217",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Basil Marceaux",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,170",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "356",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "163,266",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−14.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,642,432",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lamar Alexander",
+      "party": "Republican",
+      "votes": 891498,
+      "percent": 54.28
+    },
+    {
+      "candidate": "Bob Clement",
+      "party": "Democratic",
+      "votes": 728232,
+      "percent": 44.34
+    },
+    {
+      "candidate": "John Jay Hooker",
+      "party": "Independent",
+      "votes": 6401,
+      "percent": 0.39
+    },
+    {
+      "candidate": "Wesley M. Baker",
+      "party": "Independent",
+      "votes": 6106,
+      "percent": 0.37
+    },
+    {
+      "candidate": "Connie Gammon",
+      "party": "Independent",
+      "votes": 5349,
+      "percent": 0.33
+    },
+    {
+      "candidate": "Karl Stanley Davidson",
+      "party": "Independent",
+      "votes": 2217,
+      "percent": 0.13
+    },
+    {
+      "candidate": "Basil Marceaux",
+      "party": "Independent",
+      "votes": 1170,
+      "percent": 0.07
+    },
+    {
+      "candidate": "356",
+      "party": "Write-ins",
+      "votes": 356,
+      "percent": 0.02
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 163266,
+      "percent": 9.94
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1642432,
+      "percent": 50.4
+    }
+  ]
+}

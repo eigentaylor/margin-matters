@@ -1,0 +1,324 @@
+{
+  "year": 2006,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "2006 United States Senate election in Connecticut [ 133 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Connecticut",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2006 United States Senate election in Connecticut [ 133 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Lieberman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ned Lamont",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alan Schlesinger",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ralph Ferrucci",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Timothy Knibbs",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Carl E. Vassar",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Connecticut for Lieberman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Lieberman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "564,095",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ned Lamont",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "450,844",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.73%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alan Schlesinger",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "109,198",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ralph Ferrucci",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,922",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Concerned Citizens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Timothy Knibbs",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,638",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Carl E. Vassar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "80",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,134,777",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Connecticut for Lieberman gain from Democratic",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joe Lieberman (incumbent)",
+      "party": "Connecticut for Lieberman",
+      "votes": 564095,
+      "percent": 49.71
+    },
+    {
+      "candidate": "Ned Lamont",
+      "party": "Democratic",
+      "votes": 450844,
+      "percent": 39.73
+    },
+    {
+      "candidate": "Alan Schlesinger",
+      "party": "Republican",
+      "votes": 109198,
+      "percent": 9.62
+    },
+    {
+      "candidate": "Ralph Ferrucci",
+      "party": "Green",
+      "votes": 5922,
+      "percent": 0.52
+    },
+    {
+      "candidate": "Timothy Knibbs",
+      "party": "Concerned Citizens",
+      "votes": 4638,
+      "percent": 0.41
+    },
+    {
+      "candidate": "Carl E. Vassar",
+      "party": "Write-in",
+      "votes": 80,
+      "percent": 0.01
+    }
+  ]
+}

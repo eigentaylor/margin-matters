@@ -1,0 +1,288 @@
+{
+  "year": 2020,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "United States Senate election in Delaware, 2020 [ 73 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Delaware",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Delaware, 2020 [ 73 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Coons (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lauren Witzke",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Turley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nadine Frost",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Coons (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "291,804",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lauren Witzke",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "186,054",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Turley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,833",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nadine Frost",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,244",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "490,935",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chris Coons (incumbent)",
+      "party": "Democratic",
+      "votes": 291804,
+      "percent": 59.44
+    },
+    {
+      "candidate": "Lauren Witzke",
+      "party": "Republican",
+      "votes": 186054,
+      "percent": 37.9
+    },
+    {
+      "candidate": "Mark Turley",
+      "party": "Independent Party",
+      "votes": 7833,
+      "percent": 1.59
+    },
+    {
+      "candidate": "Nadine Frost",
+      "party": "Libertarian",
+      "votes": 5244,
+      "percent": 1.07
+    }
+  ]
+}

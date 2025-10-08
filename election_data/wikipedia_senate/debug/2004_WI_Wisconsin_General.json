@@ -1,0 +1,281 @@
+{
+  "year": 2004,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "General election results [ 30 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Wisconsin",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 30 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Russ Feingold (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Michels",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Arif Khan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eugene A. Hem",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 4,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Russ Feingold (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,632,697",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Michels",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,301,183",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Arif Khan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,367",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eugene A. Hem",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,662",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "834",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,949,743",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Russ Feingold (incumbent)",
+      "party": "Democratic",
+      "votes": 1632697,
+      "percent": 55.35
+    },
+    {
+      "candidate": "Tim Michels",
+      "party": "Republican",
+      "votes": 1301183,
+      "percent": 44.11
+    },
+    {
+      "candidate": "Arif Khan",
+      "party": "Libertarian",
+      "votes": 8367,
+      "percent": 0.28
+    },
+    {
+      "candidate": "Eugene A. Hem",
+      "party": "Independent",
+      "votes": 6662,
+      "percent": 0.23
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 834,
+      "percent": 0.03
+    }
+  ]
+}

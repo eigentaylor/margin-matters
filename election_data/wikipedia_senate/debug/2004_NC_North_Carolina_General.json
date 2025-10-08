@@ -1,0 +1,283 @@
+{
+  "year": 2004,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2004 United States Senate election in North Carolina [ 1 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_North_Carolina",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2004 United States Senate election in North Carolina [ 1 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Burr",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Erskine Bowles",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Bailey",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Walker F. Rucker (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Burr",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,791,450",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Erskine Bowles",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,632,527",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–4.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Bailey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,743",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nonpartisan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Walker F. Rucker (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "362",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,471,720",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Burr",
+      "party": "Republican",
+      "votes": 1791450,
+      "percent": 51.6
+    },
+    {
+      "candidate": "Erskine Bowles",
+      "party": "Democratic",
+      "votes": 1632527,
+      "percent": 47.02
+    },
+    {
+      "candidate": "Tom Bailey",
+      "party": "Libertarian",
+      "votes": 47743,
+      "percent": 1.38
+    },
+    {
+      "candidate": "Walker F. Rucker (write-in)",
+      "party": "Nonpartisan",
+      "votes": 362,
+      "percent": 0.01
+    }
+  ]
+}

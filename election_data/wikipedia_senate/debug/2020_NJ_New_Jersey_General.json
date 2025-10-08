@@ -1,0 +1,331 @@
+{
+  "year": 2020,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "United States Senate election in New Jersey, 2020 [ 70 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_New_Jersey",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in New Jersey, 2020 [ 70 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cory Booker (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rikin Mehta",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Madelyn Hoffman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Veronica Fernandez",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Burke",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cory Booker (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,541,239",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rikin Mehta",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,817,091",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Madelyn Hoffman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38,288",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Veronica Fernandez",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32,290",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Burke",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,632",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,440,440",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Cory Booker (incumbent)",
+      "party": "Democratic",
+      "votes": 2541239,
+      "percent": 57.23
+    },
+    {
+      "candidate": "Rikin Mehta",
+      "party": "Republican",
+      "votes": 1817091,
+      "percent": 40.92
+    },
+    {
+      "candidate": "Madelyn Hoffman",
+      "party": "Green",
+      "votes": 38288,
+      "percent": 0.86
+    },
+    {
+      "candidate": "Veronica Fernandez",
+      "party": "Independent",
+      "votes": 32290,
+      "percent": 0.73
+    },
+    {
+      "candidate": "Daniel Burke",
+      "party": "Independent",
+      "votes": 11632,
+      "percent": 0.26
+    }
+  ]
+}

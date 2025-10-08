@@ -1,0 +1,288 @@
+{
+  "year": 2018,
+  "state": "Mississippi",
+  "abbr": "MS",
+  "round": "General",
+  "caption": "2018 United States Senate election in Mississippi [ 59 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Mississippi",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2018 United States Senate election in Mississippi [ 59 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roger Wicker (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Baria",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Danny Bedwell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shawn O'Hara",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roger Wicker (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "547,619",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Baria",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "369,567",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Danny Bedwell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,981",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shawn O'Hara",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,048",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "936,215",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Roger Wicker (incumbent)",
+      "party": "Republican",
+      "votes": 547619,
+      "percent": 58.49
+    },
+    {
+      "candidate": "David Baria",
+      "party": "Democratic",
+      "votes": 369567,
+      "percent": 39.47
+    },
+    {
+      "candidate": "Danny Bedwell",
+      "party": "Libertarian",
+      "votes": 12981,
+      "percent": 1.39
+    },
+    {
+      "candidate": "Shawn O'Hara",
+      "party": "Reform",
+      "votes": 6048,
+      "percent": 0.65
+    }
+  ]
+}

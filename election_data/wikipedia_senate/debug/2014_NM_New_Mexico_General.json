@@ -1,0 +1,202 @@
+{
+  "year": 2014,
+  "state": "New Mexico",
+  "abbr": "NM",
+  "round": "General",
+  "caption": "United States Senate election in New Mexico, 2014 [ 28 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_New_Mexico",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "United States Senate election in New Mexico, 2014 [ 28 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Udall (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Allen Weh",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Udall (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "286,409",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Allen Weh",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "229,097",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "515,506",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Udall (incumbent)",
+      "party": "Democratic",
+      "votes": 286409,
+      "percent": 55.56
+    },
+    {
+      "candidate": "Allen Weh",
+      "party": "Republican",
+      "votes": 229097,
+      "percent": 44.44
+    }
+  ]
+}

@@ -1,0 +1,385 @@
+{
+  "year": 2000,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "Ohio United States Senate election, 2000 [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Ohio",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "Ohio United States Senate election, 2000 [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike DeWine (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Celeste",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John McAlister",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Eastman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike DeWine (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,665,512",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Celeste",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,595,066",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John McAlister",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "116,724",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Eastman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70,713",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "786",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,070,446",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,448,801",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.6",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "{{{swing}}}",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike DeWine (Incumbent)",
+      "party": "Republican",
+      "votes": 2665512,
+      "percent": 59.92
+    },
+    {
+      "candidate": "Ted Celeste",
+      "party": "Democratic",
+      "votes": 1595066,
+      "percent": 35.85
+    },
+    {
+      "candidate": "John McAlister",
+      "party": "Libertarian",
+      "votes": 116724,
+      "percent": 2.62
+    },
+    {
+      "candidate": "John Eastman",
+      "party": "Natural Law",
+      "votes": 70713,
+      "percent": 1.59
+    },
+    {
+      "candidate": "786",
+      "party": "Write-in",
+      "votes": 786,
+      "percent": 0.02
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 1070446,
+      "percent": 24.06
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 4448801,
+      "percent": 63.6
+    }
+  ]
+}

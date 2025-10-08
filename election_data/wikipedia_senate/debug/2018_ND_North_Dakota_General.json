@@ -1,0 +1,230 @@
+{
+  "year": 2018,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "United States Senate election in North Dakota, 2018 [ 98 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_North_Dakota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "United States Senate election in North Dakota, 2018 [ 98 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin Cramer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Heidi Heitkamp (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin Cramer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "179,720",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.79%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Heidi Heitkamp (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "144,376",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.97%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,042",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.19%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "326,138",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic–NPL",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kevin Cramer",
+      "party": "Republican",
+      "votes": 179720,
+      "percent": 55.11
+    },
+    {
+      "candidate": "Heidi Heitkamp (incumbent)",
+      "party": "Democratic–NPL",
+      "votes": 144376,
+      "percent": 44.27
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2042,
+      "percent": 0.63
+    }
+  ]
+}

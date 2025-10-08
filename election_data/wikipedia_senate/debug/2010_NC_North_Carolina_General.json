@@ -1,0 +1,278 @@
+{
+  "year": 2010,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2010 United States Senate election in North Carolina [ 71 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_North_Carolina",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2010 United States Senate election in North Carolina [ 71 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Burr (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elaine Marshall",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Beitler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Burr (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,458,046",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elaine Marshall",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,145,074",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.97%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Beitler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55,682",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,272",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,660,079",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Burr (incumbent)",
+      "party": "Republican",
+      "votes": 1458046,
+      "percent": 54.81
+    },
+    {
+      "candidate": "Elaine Marshall",
+      "party": "Democratic",
+      "votes": 1145074,
+      "percent": 43.05
+    },
+    {
+      "candidate": "Mike Beitler",
+      "party": "Libertarian",
+      "votes": 55682,
+      "percent": 2.09
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1272,
+      "percent": 0.05
+    }
+  ]
+}

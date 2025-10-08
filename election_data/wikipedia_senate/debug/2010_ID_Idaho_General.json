@@ -1,0 +1,311 @@
+{
+  "year": 2010,
+  "state": "Idaho",
+  "abbr": "ID",
+  "round": "General",
+  "caption": "United States Senate election in Idaho, 2010 [ 11 ] [ 12 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Idaho",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Idaho, 2010 [ 11 ] [ 12 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Crapo (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Sullivan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Randy Bergquist",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Crapo (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "319,953",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−28.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Sullivan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "112,057",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+24.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Randy Bergquist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,429",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "91",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "207,896",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−52.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "449,530",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-10.8%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike Crapo (incumbent)",
+      "party": "Republican",
+      "votes": 319953,
+      "percent": 71.17
+    },
+    {
+      "candidate": "Tom Sullivan",
+      "party": "Democratic",
+      "votes": 112057,
+      "percent": 24.93
+    },
+    {
+      "candidate": "Randy Bergquist",
+      "party": "Constitution",
+      "votes": 17429,
+      "percent": 3.88
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 91,
+      "percent": 0.02
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 207896,
+      "percent": 46.24
+    }
+  ]
+}

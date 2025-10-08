@@ -1,0 +1,407 @@
+{
+  "year": 2012,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "United States Senate election in Michigan, 2012 [ 111 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Michigan",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in Michigan, 2012 [ 111 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Debbie Stabenow (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pete Hoekstra",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Boman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Harley Mikkelson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Matkin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Litle",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Debbie Stabenow (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,735,826",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pete Hoekstra",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,767,386",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Boman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "84,480",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Harley Mikkelson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27,890",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Matkin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,038",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Litle",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,229",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "69",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,652,918",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Debbie Stabenow (incumbent)",
+      "party": "Democratic",
+      "votes": 2735826,
+      "percent": 58.8
+    },
+    {
+      "candidate": "Pete Hoekstra",
+      "party": "Republican",
+      "votes": 1767386,
+      "percent": 37.98
+    },
+    {
+      "candidate": "Scott Boman",
+      "party": "Libertarian",
+      "votes": 84480,
+      "percent": 1.82
+    },
+    {
+      "candidate": "Harley Mikkelson",
+      "party": "Green",
+      "votes": 27890,
+      "percent": 0.6
+    },
+    {
+      "candidate": "Richard Matkin",
+      "party": "Constitution",
+      "votes": 26038,
+      "percent": 0.56
+    },
+    {
+      "candidate": "John Litle",
+      "party": "Natural Law",
+      "votes": 11229,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 69,
+      "percent": 0.0
+    }
+  ]
+}

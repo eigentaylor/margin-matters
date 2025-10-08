@@ -1,0 +1,288 @@
+{
+  "year": 2018,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "United States Senate election in Delaware, 2018 [ 95 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Delaware",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Delaware, 2018 [ 95 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Carper (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rob Arlett",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Demitri Theodoropoulos",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nadine Frost",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Carper (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "217,385",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rob Arlett",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "137,127",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Demitri Theodoropoulos",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,170",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nadine Frost",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,910",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "362,592",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Carper (incumbent)",
+      "party": "Democratic",
+      "votes": 217385,
+      "percent": 59.95
+    },
+    {
+      "candidate": "Rob Arlett",
+      "party": "Republican",
+      "votes": 137127,
+      "percent": 37.81
+    },
+    {
+      "candidate": "Demitri Theodoropoulos",
+      "party": "Green",
+      "votes": 4170,
+      "percent": 1.15
+    },
+    {
+      "candidate": "Nadine Frost",
+      "party": "Libertarian",
+      "votes": 3910,
+      "percent": 1.09
+    }
+  ]
+}

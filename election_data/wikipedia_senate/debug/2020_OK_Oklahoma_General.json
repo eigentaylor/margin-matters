@@ -1,0 +1,331 @@
+{
+  "year": 2020,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "United States Senate election in Oklahoma, 2020 [ 45 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Oklahoma",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Oklahoma, 2020 [ 45 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Inhofe (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Abby Broyles",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joan Farr",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "A. D. Nesbit",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Inhofe (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "979,140",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–5.10",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Abby Broyles",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "509,763",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.20",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34,435",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joan Farr",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,652",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.11",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "A. D. Nesbit",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,371",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,556,361",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Inhofe (incumbent)",
+      "party": "Republican",
+      "votes": 979140,
+      "percent": 62.91
+    },
+    {
+      "candidate": "Abby Broyles",
+      "party": "Democratic",
+      "votes": 509763,
+      "percent": 32.75
+    },
+    {
+      "candidate": "Robert Murphy",
+      "party": "Libertarian",
+      "votes": 34435,
+      "percent": 2.21
+    },
+    {
+      "candidate": "Joan Farr",
+      "party": "Independent",
+      "votes": 21652,
+      "percent": 1.39
+    },
+    {
+      "candidate": "A. D. Nesbit",
+      "party": "Independent",
+      "votes": 11371,
+      "percent": 0.73
+    }
+  ]
+}

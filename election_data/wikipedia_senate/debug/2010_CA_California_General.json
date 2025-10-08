@@ -1,0 +1,407 @@
+{
+  "year": 2010,
+  "state": "California",
+  "abbr": "CA",
+  "round": "General",
+  "caption": "United States Senate election in California, 2010 [ 46 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_California",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "United States Senate election in California, 2010 [ 46 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barbara Boxer (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Carly Fiorina",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gail Lightfoot",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marsha Feinland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Duane Roberts",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edward Noonan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barbara Boxer (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,218,137",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Carly Fiorina",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,217,386",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gail Lightfoot",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "175,235",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peace and Freedom",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marsha Feinland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "135,088",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Duane Roberts",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "128,512",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "American Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edward Noonan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "125,435",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "67",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "9,999,860",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Barbara Boxer (incumbent)",
+      "party": "Democratic",
+      "votes": 5218137,
+      "percent": 52.18
+    },
+    {
+      "candidate": "Carly Fiorina",
+      "party": "Republican",
+      "votes": 4217386,
+      "percent": 42.17
+    },
+    {
+      "candidate": "Gail Lightfoot",
+      "party": "Libertarian",
+      "votes": 175235,
+      "percent": 1.75
+    },
+    {
+      "candidate": "Marsha Feinland",
+      "party": "Peace and Freedom",
+      "votes": 135088,
+      "percent": 1.35
+    },
+    {
+      "candidate": "Duane Roberts",
+      "party": "Green",
+      "votes": 128512,
+      "percent": 1.29
+    },
+    {
+      "candidate": "Edward Noonan",
+      "party": "American Independent",
+      "votes": 125435,
+      "percent": 1.25
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 67,
+      "percent": 0.0
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "year": 2016,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "United States Senate election in Vermont, 2016 [ 24 ] [ 25 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Vermont",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "United States Senate election in Vermont, 2016 [ 24 ] [ 25 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patrick Leahy (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Milne",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cris Ericson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Trudell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Peter Diamondstone",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patrick Leahy (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "192,243",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Milne",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "103,637",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marijuana",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cris Ericson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,156",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.76%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Trudell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,223",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Liberty Union",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peter Diamondstone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,241",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.42%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "309",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "313,809",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Patrick Leahy (incumbent)",
+      "party": "Democratic",
+      "votes": 192243,
+      "percent": 61.26
+    },
+    {
+      "candidate": "Scott Milne",
+      "party": "Republican",
+      "votes": 103637,
+      "percent": 33.03
+    },
+    {
+      "candidate": "Cris Ericson",
+      "party": "Marijuana",
+      "votes": 9156,
+      "percent": 2.92
+    },
+    {
+      "candidate": "Jerry Trudell",
+      "party": "Independent",
+      "votes": 5223,
+      "percent": 1.66
+    },
+    {
+      "candidate": "Peter Diamondstone",
+      "party": "Liberty Union",
+      "votes": 3241,
+      "percent": 1.03
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 309,
+      "percent": 0.1
+    }
+  ]
+}

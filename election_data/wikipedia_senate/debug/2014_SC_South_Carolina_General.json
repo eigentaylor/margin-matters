@@ -1,0 +1,321 @@
+{
+  "year": 2014,
+  "state": "South Carolina",
+  "abbr": "SC",
+  "round": "General",
+  "caption": "United States Senate election in South Carolina, 2014 [ 87 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_South_Carolina",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in South Carolina, 2014 [ 87 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lindsey Graham (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brad Hutto [ 88 ]",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas Ravenel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Victor Kocher",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lindsey Graham (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "672,941",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brad Hutto [ 88 ]",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "480,933",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas Ravenel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,588",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Victor Kocher",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33,839",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "4,774",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,240,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lindsey Graham (incumbent)",
+      "party": "Republican",
+      "votes": 672941,
+      "percent": 54.27
+    },
+    {
+      "candidate": "Brad Hutto [ 88 ]",
+      "party": "Democratic",
+      "votes": 480933,
+      "percent": 38.78
+    },
+    {
+      "candidate": "Thomas Ravenel",
+      "party": "Independent",
+      "votes": 47588,
+      "percent": 3.84
+    },
+    {
+      "candidate": "Victor Kocher",
+      "party": "Libertarian",
+      "votes": 33839,
+      "percent": 2.73
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 4774,
+      "percent": 0.38
+    }
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "year": 2006,
+  "state": "Florida",
+  "abbr": "FL",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Florida",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Nelson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Katherine Harris",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Belinda Noah",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Moore",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Floyd Ray Frazier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roy Tanner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Nelson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,890,548",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Katherine Harris",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,826,127",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Belinda Noah",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,880",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Moore",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,695",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Floyd Ray Frazier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,628",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roy Tanner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,562",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "94",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,064,421",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+17.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,793,534",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bill Nelson (incumbent)",
+      "party": "Democratic",
+      "votes": 2890548,
+      "percent": 60.3
+    },
+    {
+      "candidate": "Katherine Harris",
+      "party": "Republican",
+      "votes": 1826127,
+      "percent": 38.1
+    },
+    {
+      "candidate": "Belinda Noah",
+      "party": "Independent",
+      "votes": 24880,
+      "percent": 0.52
+    },
+    {
+      "candidate": "Brian Moore",
+      "party": "Independent",
+      "votes": 19695,
+      "percent": 0.41
+    },
+    {
+      "candidate": "Floyd Ray Frazier",
+      "party": "Independent",
+      "votes": 16628,
+      "percent": 0.35
+    },
+    {
+      "candidate": "Roy Tanner",
+      "party": "Independent",
+      "votes": 15562,
+      "percent": 0.32
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 94,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 1064421,
+      "percent": 22.21
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 4793534,
+      "percent": null
+    }
+  ]
+}

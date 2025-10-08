@@ -1,0 +1,160 @@
+{
+  "year": 2012,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "Runoff",
+  "caption": "Democratic runoff results [ 105 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Texas",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "Democratic runoff results [ 105 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Sadler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Grady Yarbrough",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Sadler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "148,940",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.03",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Grady Yarbrough",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "87,365",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.97",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "236,305",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Paul Sadler",
+      "party": "Democratic",
+      "votes": 148940,
+      "percent": 63.03
+    },
+    {
+      "candidate": "Grady Yarbrough",
+      "party": "Democratic",
+      "votes": 87365,
+      "percent": 36.97
+    }
+  ]
+}

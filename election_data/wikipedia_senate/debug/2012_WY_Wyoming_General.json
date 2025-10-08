@@ -1,0 +1,288 @@
+{
+  "year": 2012,
+  "state": "Wyoming",
+  "abbr": "WY",
+  "round": "General",
+  "caption": "United States Senate election in Wyoming, 2012 [ 17 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Wyoming",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "United States Senate election in Wyoming, 2012 [ 17 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Barrasso (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Chesnut",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joel Otto",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Barrasso (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "185,250",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Chesnut",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53,019",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wyoming Country",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joel Otto",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,176",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "417",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "244,862",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Barrasso (incumbent)",
+      "party": "Republican",
+      "votes": 185250,
+      "percent": 75.66
+    },
+    {
+      "candidate": "Tim Chesnut",
+      "party": "Democratic",
+      "votes": 53019,
+      "percent": 21.65
+    },
+    {
+      "candidate": "Joel Otto",
+      "party": "Wyoming Country",
+      "votes": 6176,
+      "percent": 2.52
+    },
+    {
+      "candidate": "Write-ins",
+      "party": "n/a",
+      "votes": 417,
+      "percent": 0.17
+    }
+  ]
+}

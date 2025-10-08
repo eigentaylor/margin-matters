@@ -1,0 +1,514 @@
+{
+  "year": 2004,
+  "state": "Alaska",
+  "abbr": "AK",
+  "round": "General",
+  "caption": "2004 United States Senate election in Alaska [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Alaska",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table": {
+    "caption": "2004 United States Senate election in Alaska [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lisa Murkowski (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tony Knowles",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marc J. Millican",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Sanders",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Sykes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott A. Kohlhaas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Gianoutsas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lisa Murkowski (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "149,773",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−25.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tony Knowles",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "140,424",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+25.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marc J. Millican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,885",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Sanders",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,785",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Sykes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,053",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott A. Kohlhaas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,240",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Gianoutsas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "732",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "423",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "9,349",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−51.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "308,315",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lisa Murkowski (incumbent)",
+      "party": "Republican",
+      "votes": 149773,
+      "percent": 48.58
+    },
+    {
+      "candidate": "Tony Knowles",
+      "party": "Democratic",
+      "votes": 140424,
+      "percent": 45.55
+    },
+    {
+      "candidate": "Marc J. Millican",
+      "party": "Independent",
+      "votes": 8885,
+      "percent": 2.88
+    },
+    {
+      "candidate": "Jerry Sanders",
+      "party": "Independence",
+      "votes": 3785,
+      "percent": 1.23
+    },
+    {
+      "candidate": "Jim Sykes",
+      "party": "Green",
+      "votes": 3053,
+      "percent": 0.99
+    },
+    {
+      "candidate": "Scott A. Kohlhaas",
+      "party": "Libertarian",
+      "votes": 1240,
+      "percent": 0.4
+    },
+    {
+      "candidate": "Ted Gianoutsas",
+      "party": "Independent",
+      "votes": 732,
+      "percent": 0.24
+    },
+    {
+      "candidate": "423",
+      "party": "Write-ins",
+      "votes": 423,
+      "percent": 0.14
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 9349,
+      "percent": 3.03
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 308315,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "year": 2000,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "General election results [ 7 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Connecticut",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 7 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Lieberman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Philip Giordano",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "William Kozak",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wildey J. Moore",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Lieberman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "828,902",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Philip Giordano",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "448,077",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Concerned Citizens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "William Kozak",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,509",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wildey J. Moore",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,773",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,311,261",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joe Lieberman (incumbent)",
+      "party": "Democratic",
+      "votes": 828902,
+      "percent": 63.21
+    },
+    {
+      "candidate": "Philip Giordano",
+      "party": "Republican",
+      "votes": 448077,
+      "percent": 34.17
+    },
+    {
+      "candidate": "William Kozak",
+      "party": "Concerned Citizens",
+      "votes": 25509,
+      "percent": 1.95
+    },
+    {
+      "candidate": "Wildey J. Moore",
+      "party": "Libertarian",
+      "votes": 8773,
+      "percent": 0.67
+    }
+  ]
+}

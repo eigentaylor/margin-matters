@@ -1,0 +1,514 @@
+{
+  "year": 2008,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "United States Senate election in Tennessee, 2008 [ 25 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Tennessee",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table": {
+    "caption": "United States Senate election in Tennessee, 2008 [ 25 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lamar Alexander (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Tuke",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edward L. Buck",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Christopher G. Fenner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Towers Lewis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Lugo",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ed Lawhorn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Gatchell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lamar Alexander (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,579,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+10.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Tuke",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "767,236",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−12.69%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edward L. Buck",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31,631",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Christopher G. Fenner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,073",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Towers Lewis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,367",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Lugo",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,170",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ed Lawhorn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,986",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Gatchell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,645",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "812,241",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+23.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,424,585",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lamar Alexander (Incumbent)",
+      "party": "Republican",
+      "votes": 1579477,
+      "percent": 65.14
+    },
+    {
+      "candidate": "Bob Tuke",
+      "party": "Democratic",
+      "votes": 767236,
+      "percent": 31.64
+    },
+    {
+      "candidate": "Edward L. Buck",
+      "party": "Independent",
+      "votes": 31631,
+      "percent": 1.3
+    },
+    {
+      "candidate": "Christopher G. Fenner",
+      "party": "Independent",
+      "votes": 11073,
+      "percent": 0.46
+    },
+    {
+      "candidate": "Daniel Towers Lewis",
+      "party": "Independent",
+      "votes": 9367,
+      "percent": 0.39
+    },
+    {
+      "candidate": "Chris Lugo",
+      "party": "Independent",
+      "votes": 9170,
+      "percent": 0.38
+    },
+    {
+      "candidate": "Ed Lawhorn",
+      "party": "Independent",
+      "votes": 8986,
+      "percent": 0.37
+    },
+    {
+      "candidate": "David Gatchell",
+      "party": "Independent",
+      "votes": 7645,
+      "percent": 0.32
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 812241,
+      "percent": 33.5
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 2424585,
+      "percent": 66.34
+    }
+  ]
+}

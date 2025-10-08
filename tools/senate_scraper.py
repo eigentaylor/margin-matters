@@ -168,10 +168,10 @@ def extract_class_and_type(header_text: str, block: List[Tag], year: int) -> Tup
     race_type = "regular"
     text = header_text.lower()
 
-    m = re.search(r"class\s+(i{1,3}|\b[1-3]\b)", text)
-    if m:
-        raw = m.group(1).upper()
-        class_label = {"I":"I","II":"II","III":"III","1":"I","2":"II","3":"III"}.get(raw, None)
+    # m = re.search(r"class\s+(i{1,3}|\b[1-3]\b)", text)
+    # if m:
+    #     raw = m.group(1).upper()
+    #     class_label = {"I":"I","II":"II","III":"III","1":"I","2":"II","3":"III"}.get(raw, None)
 
     # try to infer class from year if not found
     if not class_label and year:
@@ -686,7 +686,7 @@ def default_years() -> List[int]:
     return list(range(end if end % 2 == 0 else end-1, start-1, -2))
 
 def main():
-    RELIABLE_START = 2022
+    RELIABLE_START = 2006
     
     print("Which years would you like to scrape?")
     print(f"1) Recent reliable window ({RELIABLE_START}–2024, even years)")

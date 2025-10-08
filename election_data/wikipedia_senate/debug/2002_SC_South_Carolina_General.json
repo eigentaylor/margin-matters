@@ -1,0 +1,387 @@
+{
+  "year": 2002,
+  "state": "South Carolina",
+  "abbr": "SC",
+  "round": "General",
+  "caption": "South Carolina U.S. Senate election, 2002 [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_South_Carolina",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "South Carolina U.S. Senate election, 2002 [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lindsey Graham",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alex Sanders",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Adams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Victor Kocher",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lindsey Graham",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "600,010",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alex Sanders",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "487,359",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Adams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,228",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Victor Kocher",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,684",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "667",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,102,948",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "112,651",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,102,948",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.9%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.1%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lindsey Graham",
+      "party": "Republican",
+      "votes": 600010,
+      "percent": 54.4
+    },
+    {
+      "candidate": "Alex Sanders",
+      "party": "Democratic",
+      "votes": 487359,
+      "percent": 44.19
+    },
+    {
+      "candidate": "Ted Adams",
+      "party": "Constitution",
+      "votes": 8228,
+      "percent": 0.75
+    },
+    {
+      "candidate": "Victor Kocher",
+      "party": "Libertarian",
+      "votes": 6684,
+      "percent": 0.61
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 667,
+      "percent": 0.06
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 112651,
+      "percent": 10.21
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1102948,
+      "percent": 53.9
+    }
+  ]
+}

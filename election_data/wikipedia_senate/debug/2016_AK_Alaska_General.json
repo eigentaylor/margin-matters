@@ -1,0 +1,407 @@
+{
+  "year": 2016,
+  "state": "Alaska",
+  "abbr": "AK",
+  "round": "General",
+  "caption": "2016 United States Senate election in Alaska [ 77 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Alaska",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2016 United States Senate election in Alaska [ 77 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lisa Murkowski (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Miller",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Margaret Stock",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ray Metcalfe",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Breck A. Craig",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Gianoutsos",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lisa Murkowski (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "138,149",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Miller",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "90,825",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+28.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Margaret Stock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41,194",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ray Metcalfe",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36,200",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Breck A. Craig",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,609",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Gianoutsos",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,758",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "706",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−39.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "311,441",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lisa Murkowski (incumbent)",
+      "party": "Republican",
+      "votes": 138149,
+      "percent": 44.36
+    },
+    {
+      "candidate": "Joe Miller",
+      "party": "Libertarian",
+      "votes": 90825,
+      "percent": 29.16
+    },
+    {
+      "candidate": "Margaret Stock",
+      "party": "Independent",
+      "votes": 41194,
+      "percent": 13.23
+    },
+    {
+      "candidate": "Ray Metcalfe",
+      "party": "Democratic",
+      "votes": 36200,
+      "percent": 11.62
+    },
+    {
+      "candidate": "Breck A. Craig",
+      "party": "Independent",
+      "votes": 2609,
+      "percent": 0.84
+    },
+    {
+      "candidate": "Ted Gianoutsos",
+      "party": "Independent",
+      "votes": 1758,
+      "percent": 0.56
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 706,
+      "percent": 0.23
+    }
+  ]
+}

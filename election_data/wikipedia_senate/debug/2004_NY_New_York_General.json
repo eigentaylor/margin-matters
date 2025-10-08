@@ -1,0 +1,588 @@
+{
+  "year": 2004,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "2004 United States Senate election, New York [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_New_York",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 12,
+  "table": {
+    "caption": "2004 United States Senate election, New York [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Howard Mills",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marilyn O'Grady",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David McReynolds",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don Silberger",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Abe Hirschfeld",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Martin Koppel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,384,907",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "216,198",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "168,719",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,769,824",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+16.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Howard Mills",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,625,069",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−19.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marilyn O'Grady",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "220,960",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David McReynolds",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36,942",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don Silberger",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,073",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Builders Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Abe Hirschfeld",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,196",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Martin Koppel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,811",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,144,755",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "6,702,875",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Democratic",
+      "votes": 4384907,
+      "percent": 65.42
+    },
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Independence",
+      "votes": 216198,
+      "percent": 3.23
+    },
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Working Families",
+      "votes": 168719,
+      "percent": 2.52
+    },
+    {
+      "candidate": "Chuck Schumer (Incumbent)",
+      "party": "total",
+      "votes": 4769824,
+      "percent": 71.16
+    },
+    {
+      "candidate": "Howard Mills",
+      "party": "Republican",
+      "votes": 1625069,
+      "percent": 24.24
+    },
+    {
+      "candidate": "Marilyn O'Grady",
+      "party": "Conservative",
+      "votes": 220960,
+      "percent": 3.3
+    },
+    {
+      "candidate": "David McReynolds",
+      "party": "Green",
+      "votes": 36942,
+      "percent": 0.55
+    },
+    {
+      "candidate": "Don Silberger",
+      "party": "Libertarian",
+      "votes": 19073,
+      "percent": 0.28
+    },
+    {
+      "candidate": "Abe Hirschfeld",
+      "party": "Builders Party",
+      "votes": 16196,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Martin Koppel",
+      "party": "Socialist Workers",
+      "votes": 14811,
+      "percent": 0.22
+    }
+  ]
+}

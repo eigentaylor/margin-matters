@@ -1,0 +1,241 @@
+{
+  "year": 2002,
+  "state": "Maine",
+  "abbr": "ME",
+  "round": "General",
+  "caption": "General election results [ 6 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Maine",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 6 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Susan Collins (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chellie Pingree",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Susan Collins (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "295,041",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chellie Pingree",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "209,858",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "85,183",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "504,899",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Susan Collins (incumbent)",
+      "party": "Republican",
+      "votes": 295041,
+      "percent": 58.44
+    },
+    {
+      "candidate": "Chellie Pingree",
+      "party": "Democratic",
+      "votes": 209858,
+      "percent": 41.56
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 85183,
+      "percent": 16.87
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 504899,
+      "percent": 100.0
+    }
+  ]
+}
