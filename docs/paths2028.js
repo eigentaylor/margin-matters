@@ -22,6 +22,11 @@
 		'01': 'AL', '02': 'AK', '04': 'AZ', '05': 'AR', '06': 'CA', '08': 'CO', '09': 'CT', '10': 'DE', '11': 'DC', '12': 'FL', '13': 'GA', '15': 'HI', '16': 'ID', '17': 'IL', '18': 'IN', '19': 'IA', '20': 'KS', '21': 'KY', '22': 'LA', '23': 'ME', '24': 'MD', '25': 'MA', '26': 'MI', '27': 'MN', '28': 'MS', '29': 'MO', '30': 'MT', '31': 'NE', '32': 'NV', '33': 'NH', '34': 'NJ', '35': 'NM', '36': 'NY', '37': 'NC', '38': 'ND', '39': 'OH', '40': 'OK', '41': 'OR', '42': 'PA', '44': 'RI', '45': 'SC', '46': 'SD', '47': 'TN', '48': 'TX', '49': 'UT', '50': 'VT', '51': 'VA', '53': 'WA', '54': 'WV', '55': 'WI', '56': 'WY'
 	};
 
+	// Shared DataLoader (will be present when utils/dataLoader.js is loaded)
+	const dataLoader = (window.DataLoader && typeof window.DataLoader.loadPresidentialMargins === 'function')
+		? window.DataLoader
+		: null;
+
 	// State-level store (for labels, summaries) and unit-level store for ME/NE districts
 	const stateStore = new Map(); // abbr -> { state, ev, margin, units, status, strength, baseStatus, baseStrength, manual }
 	const unitStore = new Map();  // unit -> { unit, state, ev, margin, status, strength, baseStatus, baseStrength, manual }
@@ -215,7 +220,36 @@
 
 	function initControls() { const slider = document.getElementById('thresholdSlider'); const valueEl = document.getElementById('thresholdValue'); if (slider && valueEl) { slider.value = Math.round(currentThreshold * 100).toString(); valueEl.textContent = `${slider.value}%`; slider.addEventListener('input', () => { valueEl.textContent = `${slider.value}%`; }); } const applyBtn = document.getElementById('applyThreshold'); if (applyBtn && slider) { applyBtn.addEventListener('click', () => { const val = parseFloat(slider.value); if (!isNaN(val)) applyClassification(val / 100, { resetManual: true }); }); } const resetBtn = document.getElementById('resetStates'); if (resetBtn) resetBtn.addEventListener('click', resetToBase); const dlBtn = document.getElementById('downloadPaths'); if (dlBtn) dlBtn.addEventListener('click', downloadAllPaths); const copyBtn = document.getElementById('copyShareURL'); if (copyBtn) copyBtn.addEventListener('click', copyShareURL); }
 
-	async function init() { initControls(); try { const rows2024 = await d3.csv('presidential_margins.csv', row => { if (+row.year !== 2024) return null; if (!row.abbr || row.abbr === 'NATIONAL') return null; const ev = parseInt(row.electoral_votes || row.electoral_Votes || row.ev, 10); if (!isFinite(ev) || ev <= 0) return null; const margin = parseFloat(row.relative_margin); return { abbr: row.abbr, ev, margin }; }); buildStateData(rows2024); await buildMap(); applyClassification(currentThreshold, { resetManual: true }); unitStore.forEach(u => updateUnitColor(u.unit)); decodeScenarioFromURL(); updateAllStateColors(); unitStore.forEach(u => updateUnitColor(u.unit)); updateSummary(); } catch (err) { console.error('[paths2028] failed to initialise', err); } }
+	async function init() {
+		initControls();
+		try {
+			const rowMapper = row => {
+				if (+row.year !== 2024) return null;
+				if (!row.abbr || row.abbr === 'NATIONAL') return null;
+				const ev = parseInt(row.electoral_votes || row.electoral_Votes || row.ev, 10);
+				if (!isFinite(ev) || ev <= 0) return null;
+				const margin = parseFloat(row.relative_margin);
+				return { abbr: row.abbr, ev, margin };
+			};
+
+			const dataPromise = dataLoader
+				? dataLoader.loadPresidentialMargins({ path: 'presidential_margins.csv', parser: rowMapper })
+				: (console.warn('[paths2028] DataLoader not present; falling back to d3.csv.'), d3.csv('presidential_margins.csv', rowMapper));
+
+			const rows2024 = await dataPromise;
+
+			buildStateData(rows2024);
+			await buildMap();
+			applyClassification(currentThreshold, { resetManual: true });
+			unitStore.forEach(u => updateUnitColor(u.unit));
+			decodeScenarioFromURL();
+			updateAllStateColors();
+			unitStore.forEach(u => updateUnitColor(u.unit));
+			updateSummary();
+		} catch (err) {
+			console.error('[paths2028] failed to initialise', err);
+		}
+	}
 
 	document.addEventListener('DOMContentLoaded', init);
 })();
