@@ -1,58 +1,58 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-2008,AL,813479,1266546,6788,19794,"{""Bob Barr"": 4991, ""Chuck Baldwin"": 4310, ""Others"": 3705, ""Ralph Nader"": 6788}",2099819
-2008,AK,123594,193841,3783,8762,"{""Bob Barr"": 1589, ""Chuck Baldwin"": 1660, ""Others"": 1730, ""Ralph Nader"": 3783}",326197
-2008,AZ,1034707,1230111,12555,28657,"{""Bob Barr"": 12555, ""Chuck Baldwin"": 1371, ""Cynthia"": 3406, ""Others"": 24, ""Ralph Nader"": 11301}",2293475
-2008,AR,422310,638017,12882,26290,"{""Bob Barr"": 4776, ""Chuck Baldwin"": 4023, ""Cynthia"": 3470, ""Others"": 1139, ""Ralph Nader"": 12882}",1086617
-2008,CA,8274473,5011781,108381,275646,"{""Bob Barr"": 67582, ""Chuck Baldwin"": 3145, ""Cynthia"": 38774, ""Others"": 57764, ""Ralph Nader"": 108381}",13561900
-2008,CO,1288633,1073629,13352,39200,"{""Bob Barr"": 10898, ""Chuck Baldwin"": 6233, ""Cynthia"": 2822, ""Others"": 5895, ""Ralph Nader"": 13352}",2401462
-2008,CT,997772,629428,19162,19597,"{""Chuck Baldwin"": 311, ""Cynthia"": 90, ""Others"": 34, ""Ralph Nader"": 19162}",1646797
-2008,DE,255459,152374,2401,4579,"{""Bob Barr"": 1109, ""Chuck Baldwin"": 626, ""Cynthia"": 385, ""Others"": 58, ""Ralph Nader"": 2401}",412412
-2008,DC,245800,17367,958,2686,"{""Cynthia"": 590, ""Others"": 1138, ""Ralph Nader"": 958}",265853
-2008,FL,4282074,4045624,28124,63046,"{""Bob Barr"": 17218, ""Chuck Baldwin"": 7915, ""Cynthia"": 2887, ""Others"": 6902, ""Ralph Nader"": 28124}",8390744
-2008,GA,1844123,2048759,28731,31604,"{""Bob Barr"": 28731, ""Chuck Baldwin"": 1402, ""Cynthia"": 250, ""Others"": 63, ""Ralph Nader"": 1158}",3924486
-2008,HI,325871,120566,3825,7131,"{""Bob Barr"": 1314, ""Chuck Baldwin"": 1013, ""Cynthia"": 979, ""Ralph Nader"": 3825}",453568
-2008,ID,236440,403012,7175,15670,"{""Bob Barr"": 3658, ""Chuck Baldwin"": 4747, ""Cynthia"": 39, ""Others"": 51, ""Ralph Nader"": 7175}",655122
-2008,IL,3419348,2031179,30948,71844,"{""Bob Barr"": 19642, ""Chuck Baldwin"": 8256, ""Cynthia"": 11838, ""Others"": 1160, ""Ralph Nader"": 30948}",5522371
-2008,IN,1374039,1345648,29257,31367,"{""Bob Barr"": 29257, ""Chuck Baldwin"": 1024, ""Cynthia"": 87, ""Others"": 90, ""Ralph Nader"": 909}",2751054
-2008,IA,828940,682379,8014,25804,"{""Bob Barr"": 4590, ""Chuck Baldwin"": 4445, ""Cynthia"": 1423, ""Others"": 7332, ""Ralph Nader"": 8014}",1537123
-2008,KS,514765,699655,10527,21452,"{""Bob Barr"": 6706, ""Chuck Baldwin"": 4148, ""Cynthia"": 35, ""Others"": 36, ""Ralph Nader"": 10527}",1235872
-2008,KY,751985,1048462,15378,26173,"{""Bob Barr"": 5989, ""Chuck Baldwin"": 4694, ""Others"": 112, ""Ralph Nader"": 15378}",1826620
-2008,LA,782989,1148275,9187,29497,"{""Chuck Baldwin"": 2581, ""Cynthia"": 9187, ""Others"": 10732, ""Ralph Nader"": 6997}",1960761
-2008,ME-AL,421923,295273,10636,13967,"{""Bob Barr"": 251, ""Chuck Baldwin"": 177, ""Cynthia"": 2900, ""Others"": 3, ""Ralph Nader"": 10636}",731163
-2008,ME-01,232145,144604,5263,6877,"{""Cynthia"": 1362, ""Others"": 252, ""Ralph Nader"": 5263}",383626
-2008,ME-02,189778,150669,5373,7090,"{""Cynthia"": 1538, ""Others"": 179, ""Ralph Nader"": 5373}",347537
-2008,MD,1629467,959862,14713,42267,"{""Bob Barr"": 9842, ""Chuck Baldwin"": 3760, ""Cynthia"": 4747, ""Others"": 9205, ""Ralph Nader"": 14713}",2631596
-2008,MA,1904097,1108854,28841,68034,"{""Bob Barr"": 13189, ""Chuck Baldwin"": 4971, ""Cynthia"": 6550, ""Others"": 14483, ""Ralph Nader"": 28841}",3080985
-2008,MI,2872579,2048639,33085,80548,"{""Bob Barr"": 23716, ""Chuck Baldwin"": 14685, ""Cynthia"": 8892, ""Others"": 170, ""Ralph Nader"": 33085}",5001766
-2008,MN,1573354,1275409,30152,61606,"{""Bob Barr"": 9174, ""Chuck Baldwin"": 6787, ""Cynthia"": 5174, ""Others"": 10319, ""Ralph Nader"": 30152}",2910369
-2008,MS,554662,724597,4011,10606,"{""Bob Barr"": 2529, ""Chuck Baldwin"": 2551, ""Cynthia"": 1034, ""Others"": 481, ""Ralph Nader"": 4011}",1289865
-2008,MO,1441911,1445814,17813,37480,"{""Bob Barr"": 11386, ""Chuck Baldwin"": 8201, ""Cynthia"": 80, ""Ralph Nader"": 17813}",2925205
-2008,MT,231667,242763,3686,15872,"{""Bob Barr"": 1355, ""Chuck Baldwin"": 143, ""Cynthia"": 23, ""Others"": 10665, ""Ralph Nader"": 3686}",490302
-2008,NE-AL,333319,452979,5406,14983,"{""Bob Barr"": 2740, ""Chuck Baldwin"": 2972, ""Cynthia"": 1028, ""Others"": 2837, ""Ralph Nader"": 5406}",801281
-2008,NE-01,121411,148179,1963,4303,"{""Bob Barr"": 922, ""Chuck Baldwin"": 1024, ""Cynthia"": 394, ""Ralph Nader"": 1963}",273893
-2008,NE-02,138809,135439,1628,3561,"{""Bob Barr"": 1014, ""Chuck Baldwin"": 599, ""Cynthia"": 320, ""Ralph Nader"": 1628}",277809
-2008,NE-03,73099,169361,1815,4282,"{""Bob Barr"": 804, ""Chuck Baldwin"": 1349, ""Cynthia"": 314, ""Ralph Nader"": 1815}",246742
-2008,NV,533736,412827,6150,21285,"{""Bob Barr"": 4263, ""Chuck Baldwin"": 3194, ""Cynthia"": 1411, ""Others"": 6267, ""Ralph Nader"": 6150}",967848
-2008,NH,384826,316534,3503,9610,"{""Bob Barr"": 2217, ""Chuck Baldwin"": 226, ""Cynthia"": 40, ""Others"": 3624, ""Ralph Nader"": 3503}",710970
-2008,NJ,2215422,1613207,21298,39608,"{""Bob Barr"": 8441, ""Chuck Baldwin"": 3956, ""Cynthia"": 3636, ""Others"": 2277, ""Ralph Nader"": 21298}",3868237
-2008,NM,472422,346832,5327,10904,"{""Bob Barr"": 2428, ""Chuck Baldwin"": 1597, ""Cynthia"": 1552, ""Ralph Nader"": 5327}",830158
-2008,NY,4804945,2752771,41249,83215,"{""Bob Barr"": 19596, ""Chuck Baldwin"": 634, ""Cynthia"": 12801, ""Others"": 8935, ""Ralph Nader"": 41249}",7640931
-2008,NC,2142651,2128474,25722,39664,"{""Bob Barr"": 25722, ""Cynthia"": 158, ""Others"": 12336, ""Ralph Nader"": 1448}",4310789
-2008,ND,141278,168601,4189,6742,"{""Bob Barr"": 1354, ""Chuck Baldwin"": 1199, ""Ralph Nader"": 4189}",316621
-2008,OH,2940044,2677820,42337,90486,"{""Bob Barr"": 19917, ""Chuck Baldwin"": 12565, ""Cynthia"": 8518, ""Others"": 7149, ""Ralph Nader"": 42337}",5708350
-2008,OK,502496,960165,0,0,{},1462661
-2008,OR,1037291,738475,18614,52098,"{""Bob Barr"": 7635, ""Chuck Baldwin"": 7693, ""Cynthia"": 4543, ""Others"": 13613, ""Ralph Nader"": 18614}",1827864
-2008,PA,3276363,2655885,42977,81024,"{""Bob Barr"": 19912, ""Chuck Baldwin"": 1092, ""Others"": 17043, ""Ralph Nader"": 42977}",6013272
-2008,RI,296571,165391,4829,9804,"{""Bob Barr"": 1382, ""Chuck Baldwin"": 675, ""Cynthia"": 797, ""Others"": 2121, ""Ralph Nader"": 4829}",471766
-2008,SC,862449,1034896,7283,23624,"{""Bob Barr"": 7283, ""Chuck Baldwin"": 6827, ""Cynthia"": 4461, ""Ralph Nader"": 5053}",1920969
-2008,SD,170924,203054,4267,7997,"{""Bob Barr"": 1835, ""Chuck Baldwin"": 1895, ""Ralph Nader"": 4267}",381975
-2008,TN,1087437,1479178,11560,33134,"{""Bob Barr"": 8547, ""Chuck Baldwin"": 8191, ""Cynthia"": 2499, ""Others"": 2337, ""Ralph Nader"": 11560}",2599749
-2008,TX,3528633,4479328,56116,69834,"{""Bob Barr"": 56116, ""Chuck Baldwin"": 5708, ""Cynthia"": 909, ""Others"": 1350, ""Ralph Nader"": 5751}",8077795
-2008,UT,327670,596030,12012,28670,"{""Bob Barr"": 6966, ""Chuck Baldwin"": 12012, ""Cynthia"": 982, ""Others"": 294, ""Ralph Nader"": 8416}",952370
-2008,VT,219262,98974,3339,6810,"{""Bob Barr"": 1067, ""Chuck Baldwin"": 500, ""Cynthia"": 66, ""Others"": 1838, ""Ralph Nader"": 3339}",325046
-2008,VA,1959532,1725005,11483,38723,"{""Bob Barr"": 11067, ""Chuck Baldwin"": 7474, ""Cynthia"": 2344, ""Others"": 6355, ""Ralph Nader"": 11483}",3723260
-2008,WA,1750848,1229216,29489,56814,"{""Bob Barr"": 12728, ""Chuck Baldwin"": 9432, ""Cynthia"": 3819, ""Others"": 1346, ""Ralph Nader"": 29489}",3036878
-2008,WV,303857,397466,7219,12128,"{""Chuck Baldwin"": 2465, ""Cynthia"": 2355, ""Others"": 89, ""Ralph Nader"": 7219}",713451
-2008,WI,1677211,1262393,17605,43813,"{""Bob Barr"": 8858, ""Chuck Baldwin"": 5072, ""Cynthia"": 4216, ""Others"": 8062, ""Ralph Nader"": 17605}",2983417
-2008,WY,82868,164958,2525,6832,"{""Bob Barr"": 1594, ""Chuck Baldwin"": 1192, ""Others"": 1521, ""Ralph Nader"": 2525}",254658
-2008,NATIONAL,69498516,59948323,739034,1866981,"{""Bob Barr"": 523715, ""Chuck Baldwin"": 199750, ""Cynthia"": 161797, ""Others"": 242685, ""Ralph Nader"": 739034}",131313820
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+2008,AL,813479,1266546,6788,19794,"{""Bob Barr"": 4991, ""Chuck Baldwin"": 4310, ""Others"": 3705, ""Ralph Nader"": 6788}",2099819,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,AK,123594,193841,3783,8762,"{""Bob Barr"": 1589, ""Chuck Baldwin"": 1660, ""Others"": 1730, ""Ralph Nader"": 3783}",326197,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,AZ,1034707,1230111,12555,28657,"{""Bob Barr"": 12555, ""Chuck Baldwin"": 1371, ""Cynthia"": 3406, ""Others"": 24, ""Ralph Nader"": 11301}",2293475,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,AR,422310,638017,12882,26290,"{""Bob Barr"": 4776, ""Chuck Baldwin"": 4023, ""Cynthia"": 3470, ""Others"": 1139, ""Ralph Nader"": 12882}",1086617,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,CA,8274473,5011781,108381,275646,"{""Bob Barr"": 67582, ""Chuck Baldwin"": 3145, ""Cynthia"": 38774, ""Others"": 57764, ""Ralph Nader"": 108381}",13561900,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,CO,1288633,1073629,13352,39200,"{""Bob Barr"": 10898, ""Chuck Baldwin"": 6233, ""Cynthia"": 2822, ""Others"": 5895, ""Ralph Nader"": 13352}",2401462,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,CT,997772,629428,19162,19597,"{""Chuck Baldwin"": 311, ""Cynthia"": 90, ""Others"": 34, ""Ralph Nader"": 19162}",1646797,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,DE,255459,152374,2401,4579,"{""Bob Barr"": 1109, ""Chuck Baldwin"": 626, ""Cynthia"": 385, ""Others"": 58, ""Ralph Nader"": 2401}",412412,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,DC,245800,17367,958,2686,"{""Cynthia"": 590, ""Others"": 1138, ""Ralph Nader"": 958}",265853,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,FL,4282074,4045624,28124,63046,"{""Bob Barr"": 17218, ""Chuck Baldwin"": 7915, ""Cynthia"": 2887, ""Others"": 6902, ""Ralph Nader"": 28124}",8390744,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,GA,1844123,2048759,28731,31604,"{""Bob Barr"": 28731, ""Chuck Baldwin"": 1402, ""Cynthia"": 250, ""Others"": 63, ""Ralph Nader"": 1158}",3924486,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,HI,325871,120566,3825,7131,"{""Bob Barr"": 1314, ""Chuck Baldwin"": 1013, ""Cynthia"": 979, ""Ralph Nader"": 3825}",453568,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,ID,236440,403012,7175,15670,"{""Bob Barr"": 3658, ""Chuck Baldwin"": 4747, ""Cynthia"": 39, ""Others"": 51, ""Ralph Nader"": 7175}",655122,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,IL,3419348,2031179,30948,71844,"{""Bob Barr"": 19642, ""Chuck Baldwin"": 8256, ""Cynthia"": 11838, ""Others"": 1160, ""Ralph Nader"": 30948}",5522371,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,IN,1374039,1345648,29257,31367,"{""Bob Barr"": 29257, ""Chuck Baldwin"": 1024, ""Cynthia"": 87, ""Others"": 90, ""Ralph Nader"": 909}",2751054,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,IA,828940,682379,8014,25804,"{""Bob Barr"": 4590, ""Chuck Baldwin"": 4445, ""Cynthia"": 1423, ""Others"": 7332, ""Ralph Nader"": 8014}",1537123,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,KS,514765,699655,10527,21452,"{""Bob Barr"": 6706, ""Chuck Baldwin"": 4148, ""Cynthia"": 35, ""Others"": 36, ""Ralph Nader"": 10527}",1235872,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,KY,751985,1048462,15378,26173,"{""Bob Barr"": 5989, ""Chuck Baldwin"": 4694, ""Others"": 112, ""Ralph Nader"": 15378}",1826620,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,LA,782989,1148275,9187,29497,"{""Chuck Baldwin"": 2581, ""Cynthia"": 9187, ""Others"": 10732, ""Ralph Nader"": 6997}",1960761,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,ME-AL,421923,295273,10636,13967,"{""Bob Barr"": 251, ""Chuck Baldwin"": 177, ""Cynthia"": 2900, ""Others"": 3, ""Ralph Nader"": 10636}",731163,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,ME-01,232145,144604,5263,6877,"{""Cynthia"": 1362, ""Others"": 252, ""Ralph Nader"": 5263}",383626,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,ME-02,189778,150669,5373,7090,"{""Cynthia"": 1538, ""Others"": 179, ""Ralph Nader"": 5373}",347537,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MD,1629467,959862,14713,42267,"{""Bob Barr"": 9842, ""Chuck Baldwin"": 3760, ""Cynthia"": 4747, ""Others"": 9205, ""Ralph Nader"": 14713}",2631596,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MA,1904097,1108854,28841,68034,"{""Bob Barr"": 13189, ""Chuck Baldwin"": 4971, ""Cynthia"": 6550, ""Others"": 14483, ""Ralph Nader"": 28841}",3080985,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MI,2872579,2048639,33085,80548,"{""Bob Barr"": 23716, ""Chuck Baldwin"": 14685, ""Cynthia"": 8892, ""Others"": 170, ""Ralph Nader"": 33085}",5001766,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MN,1573354,1275409,30152,61606,"{""Bob Barr"": 9174, ""Chuck Baldwin"": 6787, ""Cynthia"": 5174, ""Others"": 10319, ""Ralph Nader"": 30152}",2910369,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MS,554662,724597,4011,10606,"{""Bob Barr"": 2529, ""Chuck Baldwin"": 2551, ""Cynthia"": 1034, ""Others"": 481, ""Ralph Nader"": 4011}",1289865,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MO,1441911,1445814,17813,37480,"{""Bob Barr"": 11386, ""Chuck Baldwin"": 8201, ""Cynthia"": 80, ""Ralph Nader"": 17813}",2925205,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,MT,231667,242763,3686,15872,"{""Bob Barr"": 1355, ""Chuck Baldwin"": 143, ""Cynthia"": 23, ""Others"": 10665, ""Ralph Nader"": 3686}",490302,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NE-AL,333319,452979,5406,14983,"{""Bob Barr"": 2740, ""Chuck Baldwin"": 2972, ""Cynthia"": 1028, ""Others"": 2837, ""Ralph Nader"": 5406}",801281,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NE-01,121411,148179,1963,4303,"{""Bob Barr"": 922, ""Chuck Baldwin"": 1024, ""Cynthia"": 394, ""Ralph Nader"": 1963}",273893,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NE-02,138809,135439,1628,3561,"{""Bob Barr"": 1014, ""Chuck Baldwin"": 599, ""Cynthia"": 320, ""Ralph Nader"": 1628}",277809,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NE-03,73099,169361,1815,4282,"{""Bob Barr"": 804, ""Chuck Baldwin"": 1349, ""Cynthia"": 314, ""Ralph Nader"": 1815}",246742,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NV,533736,412827,6150,21285,"{""Bob Barr"": 4263, ""Chuck Baldwin"": 3194, ""Cynthia"": 1411, ""Others"": 6267, ""Ralph Nader"": 6150}",967848,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NH,384826,316534,3503,9610,"{""Bob Barr"": 2217, ""Chuck Baldwin"": 226, ""Cynthia"": 40, ""Others"": 3624, ""Ralph Nader"": 3503}",710970,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NJ,2215422,1613207,21298,39608,"{""Bob Barr"": 8441, ""Chuck Baldwin"": 3956, ""Cynthia"": 3636, ""Others"": 2277, ""Ralph Nader"": 21298}",3868237,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NM,472422,346832,5327,10904,"{""Bob Barr"": 2428, ""Chuck Baldwin"": 1597, ""Cynthia"": 1552, ""Ralph Nader"": 5327}",830158,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NY,4804945,2752771,41249,83215,"{""Bob Barr"": 19596, ""Chuck Baldwin"": 634, ""Cynthia"": 12801, ""Others"": 8935, ""Ralph Nader"": 41249}",7640931,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NC,2142651,2128474,25722,39664,"{""Bob Barr"": 25722, ""Cynthia"": 158, ""Others"": 12336, ""Ralph Nader"": 1448}",4310789,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,ND,141278,168601,4189,6742,"{""Bob Barr"": 1354, ""Chuck Baldwin"": 1199, ""Ralph Nader"": 4189}",316621,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,OH,2940044,2677820,42337,90486,"{""Bob Barr"": 19917, ""Chuck Baldwin"": 12565, ""Cynthia"": 8518, ""Others"": 7149, ""Ralph Nader"": 42337}",5708350,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,OK,502496,960165,0,0,{},1462661,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,OR,1037291,738475,18614,52098,"{""Bob Barr"": 7635, ""Chuck Baldwin"": 7693, ""Cynthia"": 4543, ""Others"": 13613, ""Ralph Nader"": 18614}",1827864,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,PA,3276363,2655885,42977,81024,"{""Bob Barr"": 19912, ""Chuck Baldwin"": 1092, ""Others"": 17043, ""Ralph Nader"": 42977}",6013272,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,RI,296571,165391,4829,9804,"{""Bob Barr"": 1382, ""Chuck Baldwin"": 675, ""Cynthia"": 797, ""Others"": 2121, ""Ralph Nader"": 4829}",471766,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,SC,862449,1034896,7283,23624,"{""Bob Barr"": 7283, ""Chuck Baldwin"": 6827, ""Cynthia"": 4461, ""Ralph Nader"": 5053}",1920969,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,SD,170924,203054,4267,7997,"{""Bob Barr"": 1835, ""Chuck Baldwin"": 1895, ""Ralph Nader"": 4267}",381975,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,TN,1087437,1479178,11560,33134,"{""Bob Barr"": 8547, ""Chuck Baldwin"": 8191, ""Cynthia"": 2499, ""Others"": 2337, ""Ralph Nader"": 11560}",2599749,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,TX,3528633,4479328,56116,69834,"{""Bob Barr"": 56116, ""Chuck Baldwin"": 5708, ""Cynthia"": 909, ""Others"": 1350, ""Ralph Nader"": 5751}",8077795,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,UT,327670,596030,12012,28670,"{""Bob Barr"": 6966, ""Chuck Baldwin"": 12012, ""Cynthia"": 982, ""Others"": 294, ""Ralph Nader"": 8416}",952370,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,VT,219262,98974,3339,6810,"{""Bob Barr"": 1067, ""Chuck Baldwin"": 500, ""Cynthia"": 66, ""Others"": 1838, ""Ralph Nader"": 3339}",325046,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,VA,1959532,1725005,11483,38723,"{""Bob Barr"": 11067, ""Chuck Baldwin"": 7474, ""Cynthia"": 2344, ""Others"": 6355, ""Ralph Nader"": 11483}",3723260,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,WA,1750848,1229216,29489,56814,"{""Bob Barr"": 12728, ""Chuck Baldwin"": 9432, ""Cynthia"": 3819, ""Others"": 1346, ""Ralph Nader"": 29489}",3036878,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,WV,303857,397466,7219,12128,"{""Chuck Baldwin"": 2465, ""Cynthia"": 2355, ""Others"": 89, ""Ralph Nader"": 7219}",713451,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,WI,1677211,1262393,17605,43813,"{""Bob Barr"": 8858, ""Chuck Baldwin"": 5072, ""Cynthia"": 4216, ""Others"": 8062, ""Ralph Nader"": 17605}",2983417,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,WY,82868,164958,2525,6832,"{""Bob Barr"": 1594, ""Chuck Baldwin"": 1192, ""Others"": 1521, ""Ralph Nader"": 2525}",254658,https://en.wikipedia.org/wiki/2008_United_States_presidential_election
+2008,NATIONAL,69498516,59948323,739034,1866981,"{""Bob Barr"": 523715, ""Chuck Baldwin"": 199750, ""Cynthia"": 161797, ""Others"": 242685, ""Ralph Nader"": 739034}",131313820,https://en.wikipedia.org/wiki/2008_United_States_presidential_election

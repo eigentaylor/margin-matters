@@ -1,58 +1,58 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1992,AL,690080,804283,183109,193697,"{""Andre Marrou"": 5737, ""Others"": 4851, ""Ross Perot"": 183109}",1688060
-1992,AK,78294,102000,73481,78212,"{""Andre Marrou"": 1378, ""Others"": 3353, ""Ross Perot"": 73481}",258506
-1992,AZ,543050,572086,353741,371839,"{""Andre Marrou"": 6759, ""Others"": 11339, ""Ross Perot"": 353741}",1486975
-1992,AR,505823,337324,99132,107506,"{""Andre Marrou"": 1261, ""Others"": 7113, ""Ross Perot"": 99132}",950653
-1992,CA,5121325,3630574,2296006,2379822,"{""Andre Marrou"": 48139, ""Others"": 35677, ""Ross Perot"": 2296006}",11131721
-1992,CO,629681,562850,366010,376649,"{""Andre Marrou"": 8669, ""Others"": 1970, ""Ross Perot"": 366010}",1569180
-1992,CT,682318,578313,348771,355701,"{""Andre Marrou"": 5391, ""Others"": 1539, ""Ross Perot"": 348771}",1616332
-1992,DE,126055,102313,59213,61367,"{""Andre Marrou"": 935, ""Others"": 1219, ""Ross Perot"": 59213}",289735
-1992,DC,192619,20698,9681,14255,"{""Andre Marrou"": 467, ""Others"": 4107, ""Ross Perot"": 9681}",227572
-1992,FL,2072798,2173310,1053067,1068284,"{""Andre Marrou"": 15079, ""Others"": 238, ""Ross Perot"": 1053067}",5314392
-1992,GA,1008966,995252,309657,316907,"{""Andre Marrou"": 7110, ""Others"": 140, ""Ross Perot"": 309657}",2321125
-1992,HI,179310,136822,53003,56710,"{""Andre Marrou"": 1119, ""Others"": 2588, ""Ross Perot"": 53003}",372842
-1992,ID,137013,202645,130395,142484,"{""Andre Marrou"": 1167, ""Others"": 10922, ""Ross Perot"": 130395}",482142
-1992,IL,2453350,1734096,840515,862711,"{""Andre Marrou"": 9218, ""Others"": 12978, ""Ross Perot"": 840515}",5050157
-1992,IN,848420,989375,455934,468076,"{""Andre Marrou"": 7936, ""Others"": 4206, ""Ross Perot"": 455934}",2305871
-1992,IA,586353,504891,253468,263363,"{""Andre Marrou"": 1076, ""Others"": 8819, ""Ross Perot"": 253468}",1354607
-1992,KS,390434,449951,312358,316851,"{""Andre Marrou"": 4314, ""Others"": 179, ""Ross Perot"": 312358}",1157236
-1992,KY,665104,617178,203944,210618,"{""Andre Marrou"": 4513, ""Others"": 2161, ""Ross Perot"": 203944}",1492900
-1992,LA,815971,733386,211478,240660,"{""Andre Marrou"": 3155, ""Others"": 26027, ""Ross Perot"": 211478}",1790017
-1992,ME-AL,263420,206504,206820,209575,"{""Andre Marrou"": 1681, ""Others"": 1074, ""Ross Perot"": 206820}",679499
-1992,ME-01,145191,115697,102828,102828,"{""Ross Perot"": 102828}",363716
-1992,ME-02,118229,90807,103992,103992,"{""Ross Perot"": 103992}",313028
-1992,MD,988571,707094,281414,289381,"{""Andre Marrou"": 4715, ""Others"": 3252, ""Ross Perot"": 281414}",1985046
-1992,MA,1318639,805039,630731,649986,"{""Andre Marrou"": 9021, ""Others"": 10234, ""Ross Perot"": 630731}",2773664
-1992,MI,1871182,1554940,824813,848551,"{""Andre Marrou"": 10175, ""Others"": 13563, ""Ross Perot"": 824813}",4274673
-1992,MN,1020997,747841,562506,579109,"{""Andre Marrou"": 3373, ""Others"": 13230, ""Ross Perot"": 562506}",2347947
-1992,MS,400258,487793,85626,93742,"{""Andre Marrou"": 2154, ""Others"": 5962, ""Ross Perot"": 85626}",981793
-1992,MO,1053873,811159,518741,526533,"{""Andre Marrou"": 7497, ""Others"": 295, ""Ross Perot"": 518741}",2391565
-1992,MT,154507,144207,107225,111897,"{""Andre Marrou"": 986, ""Others"": 3686, ""Ross Perot"": 107225}",410611
-1992,NE-AL,217344,344346,174687,177593,"{""Andre Marrou"": 1344, ""Others"": 1562, ""Ross Perot"": 174687}",739283
-1992,NE-01,80696,107081,59974,59974,"{""Ross Perot"": 59974}",247751
-1992,NE-02,78701,115255,48657,48657,"{""Ross Perot"": 48657}",242613
-1992,NE-03,57467,121342,65473,65473,"{""Ross Perot"": 65473}",244282
-1992,NV,189148,175828,132580,141342,"{""Andre Marrou"": 1835, ""Others"": 6927, ""Ross Perot"": 132580}",506318
-1992,NH,209040,202484,121337,126421,"{""Andre Marrou"": 3548, ""Others"": 1536, ""Ross Perot"": 121337}",537945
-1992,NJ,1436206,1356865,521829,550523,"{""Andre Marrou"": 6822, ""Others"": 21872, ""Ross Perot"": 521829}",3343594
-1992,NM,261617,212824,91895,95545,"{""Andre Marrou"": 1615, ""Others"": 2035, ""Ross Perot"": 91895}",569986
-1992,NY,3444450,2346649,1090721,1135834,"{""Andre Marrou"": 13451, ""Others"": 31662, ""Ross Perot"": 1090721}",6926933
-1992,NC,1114042,1134661,357864,363147,"{""Andre Marrou"": 5171, ""Others"": 112, ""Ross Perot"": 357864}",2611850
-1992,ND,99168,136244,71084,72721,"{""Andre Marrou"": 416, ""Others"": 1221, ""Ross Perot"": 71084}",308133
-1992,OH,1984942,1894310,1036426,1060712,"{""Andre Marrou"": 7252, ""Others"": 17034, ""Ross Perot"": 1036426}",4939964
-1992,OK,473066,592929,319878,324364,"{""Andre Marrou"": 4486, ""Ross Perot"": 319878}",1390359
-1992,OR,621314,475757,354091,365572,"{""Andre Marrou"": 4277, ""Others"": 7204, ""Ross Perot"": 354091}",1462643
-1992,PA,2239164,1791841,902667,928805,"{""Andre Marrou"": 21477, ""Others"": 4661, ""Ross Perot"": 902667}",4959810
-1992,RI,213302,131601,105045,108575,"{""Andre Marrou"": 571, ""Others"": 2959, ""Ross Perot"": 105045}",453478
-1992,SC,479514,577507,138872,145506,"{""Andre Marrou"": 2719, ""Others"": 3915, ""Ross Perot"": 138872}",1202527
-1992,SD,124888,136718,73295,74648,"{""Andre Marrou"": 814, ""Others"": 539, ""Ross Perot"": 73295}",336254
-1992,TN,933521,841300,199968,207817,"{""Andre Marrou"": 1847, ""Others"": 6002, ""Ross Perot"": 199968}",1982638
-1992,TX,2281815,2496071,1354781,1376132,"{""Andre Marrou"": 19699, ""Others"": 1652, ""Ross Perot"": 1354781}",6154018
-1992,UT,183429,322632,203400,237938,"{""Andre Marrou"": 1900, ""Others"": 32638, ""Ross Perot"": 203400}",743999
-1992,VT,133592,88122,65991,67987,"{""Andre Marrou"": 501, ""Others"": 1495, ""Ross Perot"": 65991}",289701
-1992,VA,1038650,1150517,348639,369498,"{""Andre Marrou"": 5730, ""Others"": 15129, ""Ross Perot"": 348639}",2558665
-1992,WA,993039,731235,541780,563954,"{""Andre Marrou"": 7533, ""Others"": 14641, ""Ross Perot"": 541780}",2288228
-1992,WV,331001,241974,108829,110702,"{""Andre Marrou"": 1873, ""Ross Perot"": 108829}",683677
-1992,WI,1041066,930855,544479,559193,"{""Andre Marrou"": 2877, ""Others"": 11837, ""Ross Perot"": 544479}",2531114
-1992,WY,68160,79347,51263,53080,"{""Andre Marrou"": 844, ""Others"": 973, ""Ross Perot"": 51263}",200587
-1992,NATIONAL,44909889,39104545,19742267,20412225,"{""Andre Marrou"": 291628, ""Others"": 378330, ""Ross Perot"": 19742267}",104426659
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1992,AL,690080,804283,183109,193697,"{""Andre Marrou"": 5737, ""Others"": 4851, ""Ross Perot"": 183109}",1688060,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,AK,78294,102000,73481,78212,"{""Andre Marrou"": 1378, ""Others"": 3353, ""Ross Perot"": 73481}",258506,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,AZ,543050,572086,353741,371839,"{""Andre Marrou"": 6759, ""Others"": 11339, ""Ross Perot"": 353741}",1486975,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,AR,505823,337324,99132,107506,"{""Andre Marrou"": 1261, ""Others"": 7113, ""Ross Perot"": 99132}",950653,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,CA,5121325,3630574,2296006,2379822,"{""Andre Marrou"": 48139, ""Others"": 35677, ""Ross Perot"": 2296006}",11131721,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,CO,629681,562850,366010,376649,"{""Andre Marrou"": 8669, ""Others"": 1970, ""Ross Perot"": 366010}",1569180,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,CT,682318,578313,348771,355701,"{""Andre Marrou"": 5391, ""Others"": 1539, ""Ross Perot"": 348771}",1616332,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,DE,126055,102313,59213,61367,"{""Andre Marrou"": 935, ""Others"": 1219, ""Ross Perot"": 59213}",289735,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,DC,192619,20698,9681,14255,"{""Andre Marrou"": 467, ""Others"": 4107, ""Ross Perot"": 9681}",227572,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,FL,2072798,2173310,1053067,1068284,"{""Andre Marrou"": 15079, ""Others"": 238, ""Ross Perot"": 1053067}",5314392,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,GA,1008966,995252,309657,316907,"{""Andre Marrou"": 7110, ""Others"": 140, ""Ross Perot"": 309657}",2321125,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,HI,179310,136822,53003,56710,"{""Andre Marrou"": 1119, ""Others"": 2588, ""Ross Perot"": 53003}",372842,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,ID,137013,202645,130395,142484,"{""Andre Marrou"": 1167, ""Others"": 10922, ""Ross Perot"": 130395}",482142,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,IL,2453350,1734096,840515,862711,"{""Andre Marrou"": 9218, ""Others"": 12978, ""Ross Perot"": 840515}",5050157,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,IN,848420,989375,455934,468076,"{""Andre Marrou"": 7936, ""Others"": 4206, ""Ross Perot"": 455934}",2305871,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,IA,586353,504891,253468,263363,"{""Andre Marrou"": 1076, ""Others"": 8819, ""Ross Perot"": 253468}",1354607,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,KS,390434,449951,312358,316851,"{""Andre Marrou"": 4314, ""Others"": 179, ""Ross Perot"": 312358}",1157236,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,KY,665104,617178,203944,210618,"{""Andre Marrou"": 4513, ""Others"": 2161, ""Ross Perot"": 203944}",1492900,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,LA,815971,733386,211478,240660,"{""Andre Marrou"": 3155, ""Others"": 26027, ""Ross Perot"": 211478}",1790017,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,ME-AL,263420,206504,206820,209575,"{""Andre Marrou"": 1681, ""Others"": 1074, ""Ross Perot"": 206820}",679499,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,ME-01,145191,115697,102828,102828,"{""Ross Perot"": 102828}",363716,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,ME-02,118229,90807,103992,103992,"{""Ross Perot"": 103992}",313028,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MD,988571,707094,281414,289381,"{""Andre Marrou"": 4715, ""Others"": 3252, ""Ross Perot"": 281414}",1985046,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MA,1318639,805039,630731,649986,"{""Andre Marrou"": 9021, ""Others"": 10234, ""Ross Perot"": 630731}",2773664,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MI,1871182,1554940,824813,848551,"{""Andre Marrou"": 10175, ""Others"": 13563, ""Ross Perot"": 824813}",4274673,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MN,1020997,747841,562506,579109,"{""Andre Marrou"": 3373, ""Others"": 13230, ""Ross Perot"": 562506}",2347947,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MS,400258,487793,85626,93742,"{""Andre Marrou"": 2154, ""Others"": 5962, ""Ross Perot"": 85626}",981793,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MO,1053873,811159,518741,526533,"{""Andre Marrou"": 7497, ""Others"": 295, ""Ross Perot"": 518741}",2391565,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,MT,154507,144207,107225,111897,"{""Andre Marrou"": 986, ""Others"": 3686, ""Ross Perot"": 107225}",410611,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NE-AL,217344,344346,174687,177593,"{""Andre Marrou"": 1344, ""Others"": 1562, ""Ross Perot"": 174687}",739283,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NE-01,80696,107081,59974,59974,"{""Ross Perot"": 59974}",247751,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NE-02,78701,115255,48657,48657,"{""Ross Perot"": 48657}",242613,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NE-03,57467,121342,65473,65473,"{""Ross Perot"": 65473}",244282,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NV,189148,175828,132580,141342,"{""Andre Marrou"": 1835, ""Others"": 6927, ""Ross Perot"": 132580}",506318,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NH,209040,202484,121337,126421,"{""Andre Marrou"": 3548, ""Others"": 1536, ""Ross Perot"": 121337}",537945,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NJ,1436206,1356865,521829,550523,"{""Andre Marrou"": 6822, ""Others"": 21872, ""Ross Perot"": 521829}",3343594,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NM,261617,212824,91895,95545,"{""Andre Marrou"": 1615, ""Others"": 2035, ""Ross Perot"": 91895}",569986,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NY,3444450,2346649,1090721,1135834,"{""Andre Marrou"": 13451, ""Others"": 31662, ""Ross Perot"": 1090721}",6926933,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NC,1114042,1134661,357864,363147,"{""Andre Marrou"": 5171, ""Others"": 112, ""Ross Perot"": 357864}",2611850,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,ND,99168,136244,71084,72721,"{""Andre Marrou"": 416, ""Others"": 1221, ""Ross Perot"": 71084}",308133,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,OH,1984942,1894310,1036426,1060712,"{""Andre Marrou"": 7252, ""Others"": 17034, ""Ross Perot"": 1036426}",4939964,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,OK,473066,592929,319878,324364,"{""Andre Marrou"": 4486, ""Ross Perot"": 319878}",1390359,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,OR,621314,475757,354091,365572,"{""Andre Marrou"": 4277, ""Others"": 7204, ""Ross Perot"": 354091}",1462643,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,PA,2239164,1791841,902667,928805,"{""Andre Marrou"": 21477, ""Others"": 4661, ""Ross Perot"": 902667}",4959810,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,RI,213302,131601,105045,108575,"{""Andre Marrou"": 571, ""Others"": 2959, ""Ross Perot"": 105045}",453478,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,SC,479514,577507,138872,145506,"{""Andre Marrou"": 2719, ""Others"": 3915, ""Ross Perot"": 138872}",1202527,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,SD,124888,136718,73295,74648,"{""Andre Marrou"": 814, ""Others"": 539, ""Ross Perot"": 73295}",336254,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,TN,933521,841300,199968,207817,"{""Andre Marrou"": 1847, ""Others"": 6002, ""Ross Perot"": 199968}",1982638,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,TX,2281815,2496071,1354781,1376132,"{""Andre Marrou"": 19699, ""Others"": 1652, ""Ross Perot"": 1354781}",6154018,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,UT,183429,322632,203400,237938,"{""Andre Marrou"": 1900, ""Others"": 32638, ""Ross Perot"": 203400}",743999,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,VT,133592,88122,65991,67987,"{""Andre Marrou"": 501, ""Others"": 1495, ""Ross Perot"": 65991}",289701,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,VA,1038650,1150517,348639,369498,"{""Andre Marrou"": 5730, ""Others"": 15129, ""Ross Perot"": 348639}",2558665,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,WA,993039,731235,541780,563954,"{""Andre Marrou"": 7533, ""Others"": 14641, ""Ross Perot"": 541780}",2288228,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,WV,331001,241974,108829,110702,"{""Andre Marrou"": 1873, ""Ross Perot"": 108829}",683677,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,WI,1041066,930855,544479,559193,"{""Andre Marrou"": 2877, ""Others"": 11837, ""Ross Perot"": 544479}",2531114,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,WY,68160,79347,51263,53080,"{""Andre Marrou"": 844, ""Others"": 973, ""Ross Perot"": 51263}",200587,https://en.wikipedia.org/wiki/1992_United_States_presidential_election
+1992,NATIONAL,44909889,39104545,19742267,20412225,"{""Andre Marrou"": 291628, ""Others"": 378330, ""Ross Perot"": 19742267}",104426659,https://en.wikipedia.org/wiki/1992_United_States_presidential_election

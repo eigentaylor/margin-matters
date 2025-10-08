@@ -1,58 +1,58 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-2004,AL,693933,1176394,6701,13122,"{""Michael Badnarik"": 3529, ""Michael Peroutka"": 1994, ""Others"": 898, ""Ralph Nader"": 6701}",1883449
-2004,AK,111025,190889,5069,10684,"{""David Cobb"": 1058, ""Michael Badnarik"": 1675, ""Michael Peroutka"": 2092, ""Others"": 790, ""Ralph Nader"": 5069}",312598
-2004,AZ,893524,1104294,11856,14767,"{""David Cobb"": 138, ""Michael Badnarik"": 11856, ""Ralph Nader"": 2773}",2012585
-2004,AR,469953,572898,6171,12094,"{""David Cobb"": 1488, ""Michael Badnarik"": 2352, ""Michael Peroutka"": 2083, ""Ralph Nader"": 6171}",1054945
-2004,CA,6745485,5509826,50165,166541,"{""David Cobb"": 40771, ""Michael Badnarik"": 50165, ""Michael Peroutka"": 26645, ""Others"": 27747, ""Ralph Nader"": 21213}",12421852
-2004,CO,1001732,1101255,12718,27343,"{""David Cobb"": 1591, ""Michael Badnarik"": 7664, ""Michael Peroutka"": 2562, ""Others"": 2808, ""Ralph Nader"": 12718}",2130330
-2004,CT,857488,693826,12969,27455,"{""David Cobb"": 9564, ""Michael Badnarik"": 3367, ""Michael Peroutka"": 1543, ""Others"": 12, ""Ralph Nader"": 12969}",1578769
-2004,DE,200152,171660,2153,3378,"{""David Cobb"": 250, ""Michael Badnarik"": 586, ""Michael Peroutka"": 289, ""Others"": 100, ""Ralph Nader"": 2153}",375190
-2004,DC,202970,21256,1485,3360,"{""David Cobb"": 737, ""Michael Badnarik"": 502, ""Others"": 636, ""Ralph Nader"": 1485}",227586
-2004,FL,3583544,3964522,32971,61744,"{""David Cobb"": 3917, ""Michael Badnarik"": 11996, ""Michael Peroutka"": 6626, ""Others"": 6234, ""Ralph Nader"": 32971}",7609810
-2004,GA,1366149,1914254,18387,21472,"{""David Cobb"": 228, ""Michael Badnarik"": 18387, ""Michael Peroutka"": 580, ""Others"": 46, ""Ralph Nader"": 2231}",3301875
-2004,HI,231708,194191,1737,3114,"{""David Cobb"": 1737, ""Michael Badnarik"": 1377}",429013
-2004,ID,181098,409235,3844,8114,"{""David Cobb"": 58, ""Michael Badnarik"": 3844, ""Michael Peroutka"": 3084, ""Others"": 13, ""Ralph Nader"": 1115}",598447
-2004,IL,2891550,2345946,32442,36826,"{""David Cobb"": 241, ""Michael Badnarik"": 32442, ""Michael Peroutka"": 440, ""Others"": 132, ""Ralph Nader"": 3571}",5274322
-2004,IN,969011,1479438,18058,19553,"{""David Cobb"": 102, ""Michael Badnarik"": 18058, ""Others"": 65, ""Ralph Nader"": 1328}",2468002
-2004,IA,741898,751957,5973,13053,"{""David Cobb"": 1141, ""Michael Badnarik"": 2992, ""Michael Peroutka"": 1304, ""Others"": 1643, ""Ralph Nader"": 5973}",1506908
-2004,KS,434993,736456,9348,16307,"{""David Cobb"": 33, ""Michael Badnarik"": 4013, ""Michael Peroutka"": 2899, ""Others"": 14, ""Ralph Nader"": 9348}",1187756
-2004,KY,712733,1069439,8856,13710,"{""Michael Badnarik"": 2619, ""Michael Peroutka"": 2213, ""Others"": 22, ""Ralph Nader"": 8856}",1795882
-2004,LA,820299,1102169,7032,20638,"{""David Cobb"": 1276, ""Michael Badnarik"": 2781, ""Michael Peroutka"": 5203, ""Others"": 4346, ""Ralph Nader"": 7032}",1943106
-2004,ME-AL,396842,330201,8069,13709,"{""David Cobb"": 2936, ""Michael Badnarik"": 1965, ""Michael Peroutka"": 735, ""Others"": 4, ""Ralph Nader"": 8069}",740752
-2004,ME-01,211703,165824,4004,6865,"{""David Cobb"": 1468, ""Michael Badnarik"": 1047, ""Michael Peroutka"": 346, ""Ralph Nader"": 4004}",384392
-2004,ME-02,185139,164377,4065,6840,"{""David Cobb"": 1468, ""Michael Badnarik"": 918, ""Michael Peroutka"": 389, ""Ralph Nader"": 4065}",356356
-2004,MD,1334493,1024703,11854,27482,"{""David Cobb"": 3632, ""Michael Badnarik"": 6094, ""Michael Peroutka"": 3421, ""Others"": 2481, ""Ralph Nader"": 11854}",2386678
-2004,MA,1803800,1071109,15022,37479,"{""David Cobb"": 10623, ""Michael Badnarik"": 15022, ""Others"": 7028, ""Ralph Nader"": 4806}",2912388
-2004,MI,2479183,2313746,24035,46323,"{""David Cobb"": 5325, ""Michael Badnarik"": 10552, ""Michael Peroutka"": 4980, ""Others"": 1431, ""Ralph Nader"": 24035}",4839252
-2004,MN,1445014,1346695,18683,36678,"{""David Cobb"": 4408, ""Michael Badnarik"": 4639, ""Michael Peroutka"": 3074, ""Others"": 5874, ""Ralph Nader"": 18683}",2828387
-2004,MS,458094,684981,3177,9070,"{""David Cobb"": 1073, ""Michael Badnarik"": 1793, ""Michael Peroutka"": 1759, ""Others"": 1268, ""Ralph Nader"": 3177}",1152145
-2004,MO,1259171,1455713,9831,16480,"{""Michael Badnarik"": 9831, ""Michael Peroutka"": 5355, ""Ralph Nader"": 1294}",2731364
-2004,MT,173710,266063,6168,10672,"{""David Cobb"": 996, ""Michael Badnarik"": 1733, ""Michael Peroutka"": 1764, ""Others"": 11, ""Ralph Nader"": 6168}",450445
-2004,NE-AL,254328,512814,5698,11044,"{""David Cobb"": 978, ""Michael Badnarik"": 2041, ""Michael Peroutka"": 1314, ""Others"": 1013, ""Ralph Nader"": 5698}",778186
-2004,NE-01,96314,169888,2025,3569,"{""David Cobb"": 453, ""Michael Badnarik"": 656, ""Michael Peroutka"": 405, ""Others"": 30, ""Ralph Nader"": 2025}",269771
-2004,NE-02,97858,153041,1731,3133,"{""David Cobb"": 261, ""Michael Badnarik"": 813, ""Michael Peroutka"": 305, ""Others"": 23, ""Ralph Nader"": 1731}",254032
-2004,NE-03,60156,189885,1942,3411,"{""David Cobb"": 264, ""Michael Badnarik"": 572, ""Michael Peroutka"": 604, ""Others"": 29, ""Ralph Nader"": 1942}",253452
-2004,NV,397190,418690,4838,13707,"{""David Cobb"": 853, ""Michael Badnarik"": 3176, ""Michael Peroutka"": 1152, ""Others"": 3688, ""Ralph Nader"": 4838}",829587
-2004,NH,340511,331237,4479,5990,"{""Michael Badnarik"": 372, ""Michael Peroutka"": 161, ""Others"": 978, ""Ralph Nader"": 4479}",677738
-2004,NJ,1911430,1670003,19418,30258,"{""David Cobb"": 1807, ""Michael Badnarik"": 4514, ""Michael Peroutka"": 2750, ""Others"": 1769, ""Ralph Nader"": 19418}",3611691
-2004,NM,370942,376930,4053,8432,"{""David Cobb"": 1226, ""Michael Badnarik"": 2382, ""Michael Peroutka"": 771, ""Ralph Nader"": 4053}",756304
-2004,NY,4314280,2962567,99873,114189,"{""David Cobb"": 87, ""Michael Badnarik"": 11607, ""Michael Peroutka"": 207, ""Others"": 2415, ""Ralph Nader"": 99873}",7391036
-2004,NC,1525849,1961166,11731,13992,"{""David Cobb"": 108, ""Michael Badnarik"": 11731, ""Others"": 348, ""Ralph Nader"": 1805}",3501007
-2004,ND,111052,196651,3756,5130,"{""Michael Badnarik"": 851, ""Michael Peroutka"": 514, ""Others"": 9, ""Ralph Nader"": 3756}",312833
-2004,OH,2741167,2859768,14676,26973,"{""David Cobb"": 192, ""Michael Badnarik"": 14676, ""Michael Peroutka"": 11939, ""Others"": 166}",5627908
-2004,OK,503966,959792,0,0,{},1463758
-2004,OR,943163,866831,7260,26788,"{""David Cobb"": 5315, ""Michael Badnarik"": 7260, ""Michael Peroutka"": 5257, ""Others"": 8956}",1836782
-2004,PA,2938095,2793847,21185,37648,"{""David Cobb"": 6319, ""Michael Badnarik"": 21185, ""Michael Peroutka"": 6318, ""Others"": 1170, ""Ralph Nader"": 2656}",5769590
-2004,RI,259765,169046,4651,8323,"{""David Cobb"": 1333, ""Michael Badnarik"": 907, ""Michael Peroutka"": 339, ""Others"": 1093, ""Ralph Nader"": 4651}",437134
-2004,SC,661699,937974,5520,18057,"{""David Cobb"": 1488, ""Michael Badnarik"": 3608, ""Michael Peroutka"": 5317, ""Others"": 2124, ""Ralph Nader"": 5520}",1617730
-2004,SD,149244,232584,4320,6387,"{""Michael Badnarik"": 964, ""Michael Peroutka"": 1103, ""Ralph Nader"": 4320}",388215
-2004,TN,1036477,1384375,8992,16467,"{""David Cobb"": 33, ""Michael Badnarik"": 4866, ""Michael Peroutka"": 2570, ""Others"": 6, ""Ralph Nader"": 8992}",2437319
-2004,TX,2832704,4526917,38787,51144,"{""David Cobb"": 1014, ""Michael Badnarik"": 38787, ""Michael Peroutka"": 1636, ""Others"": 548, ""Ralph Nader"": 9159}",7410765
-2004,UT,241199,663742,11305,22903,"{""David Cobb"": 39, ""Michael Badnarik"": 3375, ""Michael Peroutka"": 6841, ""Others"": 1343, ""Ralph Nader"": 11305}",927844
-2004,VT,184067,121180,4494,7062,"{""Michael Badnarik"": 1102, ""Others"": 1466, ""Ralph Nader"": 4494}",312309
-2004,VA,1454742,1716959,11032,26666,"{""David Cobb"": 104, ""Michael Badnarik"": 11032, ""Michael Peroutka"": 10161, ""Others"": 2976, ""Ralph Nader"": 2393}",3198367
-2004,WA,1510201,1304894,23283,43989,"{""David Cobb"": 2974, ""Michael Badnarik"": 11955, ""Michael Peroutka"": 3922, ""Others"": 1855, ""Ralph Nader"": 23283}",2859084
-2004,WV,326541,423778,4063,5568,"{""David Cobb"": 5, ""Michael Badnarik"": 1405, ""Michael Peroutka"": 82, ""Others"": 13, ""Ralph Nader"": 4063}",755887
-2004,WI,1489504,1478120,16390,29383,"{""David Cobb"": 2661, ""Michael Badnarik"": 6464, ""Others"": 3868, ""Ralph Nader"": 16390}",2997007
-2004,WY,70776,167629,2741,5023,"{""Michael Badnarik"": 1171, ""Michael Peroutka"": 631, ""Others"": 480, ""Ralph Nader"": 2741}",243428
-2004,NATIONAL,59028444,62040610,465151,1221576,"{""David Cobb"": 119859, ""Michael Badnarik"": 397265, ""Michael Peroutka"": 143630, ""Others"": 99887, ""Ralph Nader"": 465151}",122290630
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+2004,AL,693933,1176394,6701,13122,"{""Michael Badnarik"": 3529, ""Michael Peroutka"": 1994, ""Others"": 898, ""Ralph Nader"": 6701}",1883449,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,AK,111025,190889,5069,10684,"{""David Cobb"": 1058, ""Michael Badnarik"": 1675, ""Michael Peroutka"": 2092, ""Others"": 790, ""Ralph Nader"": 5069}",312598,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,AZ,893524,1104294,11856,14767,"{""David Cobb"": 138, ""Michael Badnarik"": 11856, ""Ralph Nader"": 2773}",2012585,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,AR,469953,572898,6171,12094,"{""David Cobb"": 1488, ""Michael Badnarik"": 2352, ""Michael Peroutka"": 2083, ""Ralph Nader"": 6171}",1054945,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,CA,6745485,5509826,50165,166541,"{""David Cobb"": 40771, ""Michael Badnarik"": 50165, ""Michael Peroutka"": 26645, ""Others"": 27747, ""Ralph Nader"": 21213}",12421852,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,CO,1001732,1101255,12718,27343,"{""David Cobb"": 1591, ""Michael Badnarik"": 7664, ""Michael Peroutka"": 2562, ""Others"": 2808, ""Ralph Nader"": 12718}",2130330,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,CT,857488,693826,12969,27455,"{""David Cobb"": 9564, ""Michael Badnarik"": 3367, ""Michael Peroutka"": 1543, ""Others"": 12, ""Ralph Nader"": 12969}",1578769,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,DE,200152,171660,2153,3378,"{""David Cobb"": 250, ""Michael Badnarik"": 586, ""Michael Peroutka"": 289, ""Others"": 100, ""Ralph Nader"": 2153}",375190,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,DC,202970,21256,1485,3360,"{""David Cobb"": 737, ""Michael Badnarik"": 502, ""Others"": 636, ""Ralph Nader"": 1485}",227586,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,FL,3583544,3964522,32971,61744,"{""David Cobb"": 3917, ""Michael Badnarik"": 11996, ""Michael Peroutka"": 6626, ""Others"": 6234, ""Ralph Nader"": 32971}",7609810,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,GA,1366149,1914254,18387,21472,"{""David Cobb"": 228, ""Michael Badnarik"": 18387, ""Michael Peroutka"": 580, ""Others"": 46, ""Ralph Nader"": 2231}",3301875,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,HI,231708,194191,1737,3114,"{""David Cobb"": 1737, ""Michael Badnarik"": 1377}",429013,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,ID,181098,409235,3844,8114,"{""David Cobb"": 58, ""Michael Badnarik"": 3844, ""Michael Peroutka"": 3084, ""Others"": 13, ""Ralph Nader"": 1115}",598447,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,IL,2891550,2345946,32442,36826,"{""David Cobb"": 241, ""Michael Badnarik"": 32442, ""Michael Peroutka"": 440, ""Others"": 132, ""Ralph Nader"": 3571}",5274322,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,IN,969011,1479438,18058,19553,"{""David Cobb"": 102, ""Michael Badnarik"": 18058, ""Others"": 65, ""Ralph Nader"": 1328}",2468002,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,IA,741898,751957,5973,13053,"{""David Cobb"": 1141, ""Michael Badnarik"": 2992, ""Michael Peroutka"": 1304, ""Others"": 1643, ""Ralph Nader"": 5973}",1506908,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,KS,434993,736456,9348,16307,"{""David Cobb"": 33, ""Michael Badnarik"": 4013, ""Michael Peroutka"": 2899, ""Others"": 14, ""Ralph Nader"": 9348}",1187756,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,KY,712733,1069439,8856,13710,"{""Michael Badnarik"": 2619, ""Michael Peroutka"": 2213, ""Others"": 22, ""Ralph Nader"": 8856}",1795882,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,LA,820299,1102169,7032,20638,"{""David Cobb"": 1276, ""Michael Badnarik"": 2781, ""Michael Peroutka"": 5203, ""Others"": 4346, ""Ralph Nader"": 7032}",1943106,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,ME-AL,396842,330201,8069,13709,"{""David Cobb"": 2936, ""Michael Badnarik"": 1965, ""Michael Peroutka"": 735, ""Others"": 4, ""Ralph Nader"": 8069}",740752,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,ME-01,211703,165824,4004,6865,"{""David Cobb"": 1468, ""Michael Badnarik"": 1047, ""Michael Peroutka"": 346, ""Ralph Nader"": 4004}",384392,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,ME-02,185139,164377,4065,6840,"{""David Cobb"": 1468, ""Michael Badnarik"": 918, ""Michael Peroutka"": 389, ""Ralph Nader"": 4065}",356356,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MD,1334493,1024703,11854,27482,"{""David Cobb"": 3632, ""Michael Badnarik"": 6094, ""Michael Peroutka"": 3421, ""Others"": 2481, ""Ralph Nader"": 11854}",2386678,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MA,1803800,1071109,15022,37479,"{""David Cobb"": 10623, ""Michael Badnarik"": 15022, ""Others"": 7028, ""Ralph Nader"": 4806}",2912388,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MI,2479183,2313746,24035,46323,"{""David Cobb"": 5325, ""Michael Badnarik"": 10552, ""Michael Peroutka"": 4980, ""Others"": 1431, ""Ralph Nader"": 24035}",4839252,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MN,1445014,1346695,18683,36678,"{""David Cobb"": 4408, ""Michael Badnarik"": 4639, ""Michael Peroutka"": 3074, ""Others"": 5874, ""Ralph Nader"": 18683}",2828387,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MS,458094,684981,3177,9070,"{""David Cobb"": 1073, ""Michael Badnarik"": 1793, ""Michael Peroutka"": 1759, ""Others"": 1268, ""Ralph Nader"": 3177}",1152145,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MO,1259171,1455713,9831,16480,"{""Michael Badnarik"": 9831, ""Michael Peroutka"": 5355, ""Ralph Nader"": 1294}",2731364,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,MT,173710,266063,6168,10672,"{""David Cobb"": 996, ""Michael Badnarik"": 1733, ""Michael Peroutka"": 1764, ""Others"": 11, ""Ralph Nader"": 6168}",450445,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NE-AL,254328,512814,5698,11044,"{""David Cobb"": 978, ""Michael Badnarik"": 2041, ""Michael Peroutka"": 1314, ""Others"": 1013, ""Ralph Nader"": 5698}",778186,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NE-01,96314,169888,2025,3569,"{""David Cobb"": 453, ""Michael Badnarik"": 656, ""Michael Peroutka"": 405, ""Others"": 30, ""Ralph Nader"": 2025}",269771,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NE-02,97858,153041,1731,3133,"{""David Cobb"": 261, ""Michael Badnarik"": 813, ""Michael Peroutka"": 305, ""Others"": 23, ""Ralph Nader"": 1731}",254032,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NE-03,60156,189885,1942,3411,"{""David Cobb"": 264, ""Michael Badnarik"": 572, ""Michael Peroutka"": 604, ""Others"": 29, ""Ralph Nader"": 1942}",253452,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NV,397190,418690,4838,13707,"{""David Cobb"": 853, ""Michael Badnarik"": 3176, ""Michael Peroutka"": 1152, ""Others"": 3688, ""Ralph Nader"": 4838}",829587,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NH,340511,331237,4479,5990,"{""Michael Badnarik"": 372, ""Michael Peroutka"": 161, ""Others"": 978, ""Ralph Nader"": 4479}",677738,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NJ,1911430,1670003,19418,30258,"{""David Cobb"": 1807, ""Michael Badnarik"": 4514, ""Michael Peroutka"": 2750, ""Others"": 1769, ""Ralph Nader"": 19418}",3611691,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NM,370942,376930,4053,8432,"{""David Cobb"": 1226, ""Michael Badnarik"": 2382, ""Michael Peroutka"": 771, ""Ralph Nader"": 4053}",756304,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NY,4314280,2962567,99873,114189,"{""David Cobb"": 87, ""Michael Badnarik"": 11607, ""Michael Peroutka"": 207, ""Others"": 2415, ""Ralph Nader"": 99873}",7391036,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NC,1525849,1961166,11731,13992,"{""David Cobb"": 108, ""Michael Badnarik"": 11731, ""Others"": 348, ""Ralph Nader"": 1805}",3501007,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,ND,111052,196651,3756,5130,"{""Michael Badnarik"": 851, ""Michael Peroutka"": 514, ""Others"": 9, ""Ralph Nader"": 3756}",312833,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,OH,2741167,2859768,14676,26973,"{""David Cobb"": 192, ""Michael Badnarik"": 14676, ""Michael Peroutka"": 11939, ""Others"": 166}",5627908,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,OK,503966,959792,0,0,{},1463758,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,OR,943163,866831,7260,26788,"{""David Cobb"": 5315, ""Michael Badnarik"": 7260, ""Michael Peroutka"": 5257, ""Others"": 8956}",1836782,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,PA,2938095,2793847,21185,37648,"{""David Cobb"": 6319, ""Michael Badnarik"": 21185, ""Michael Peroutka"": 6318, ""Others"": 1170, ""Ralph Nader"": 2656}",5769590,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,RI,259765,169046,4651,8323,"{""David Cobb"": 1333, ""Michael Badnarik"": 907, ""Michael Peroutka"": 339, ""Others"": 1093, ""Ralph Nader"": 4651}",437134,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,SC,661699,937974,5520,18057,"{""David Cobb"": 1488, ""Michael Badnarik"": 3608, ""Michael Peroutka"": 5317, ""Others"": 2124, ""Ralph Nader"": 5520}",1617730,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,SD,149244,232584,4320,6387,"{""Michael Badnarik"": 964, ""Michael Peroutka"": 1103, ""Ralph Nader"": 4320}",388215,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,TN,1036477,1384375,8992,16467,"{""David Cobb"": 33, ""Michael Badnarik"": 4866, ""Michael Peroutka"": 2570, ""Others"": 6, ""Ralph Nader"": 8992}",2437319,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,TX,2832704,4526917,38787,51144,"{""David Cobb"": 1014, ""Michael Badnarik"": 38787, ""Michael Peroutka"": 1636, ""Others"": 548, ""Ralph Nader"": 9159}",7410765,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,UT,241199,663742,11305,22903,"{""David Cobb"": 39, ""Michael Badnarik"": 3375, ""Michael Peroutka"": 6841, ""Others"": 1343, ""Ralph Nader"": 11305}",927844,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,VT,184067,121180,4494,7062,"{""Michael Badnarik"": 1102, ""Others"": 1466, ""Ralph Nader"": 4494}",312309,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,VA,1454742,1716959,11032,26666,"{""David Cobb"": 104, ""Michael Badnarik"": 11032, ""Michael Peroutka"": 10161, ""Others"": 2976, ""Ralph Nader"": 2393}",3198367,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,WA,1510201,1304894,23283,43989,"{""David Cobb"": 2974, ""Michael Badnarik"": 11955, ""Michael Peroutka"": 3922, ""Others"": 1855, ""Ralph Nader"": 23283}",2859084,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,WV,326541,423778,4063,5568,"{""David Cobb"": 5, ""Michael Badnarik"": 1405, ""Michael Peroutka"": 82, ""Others"": 13, ""Ralph Nader"": 4063}",755887,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,WI,1489504,1478120,16390,29383,"{""David Cobb"": 2661, ""Michael Badnarik"": 6464, ""Others"": 3868, ""Ralph Nader"": 16390}",2997007,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,WY,70776,167629,2741,5023,"{""Michael Badnarik"": 1171, ""Michael Peroutka"": 631, ""Others"": 480, ""Ralph Nader"": 2741}",243428,https://en.wikipedia.org/wiki/2004_United_States_presidential_election
+2004,NATIONAL,59028444,62040610,465151,1221576,"{""David Cobb"": 119859, ""Michael Badnarik"": 397265, ""Michael Peroutka"": 143630, ""Others"": 99887, ""Ralph Nader"": 465151}",122290630,https://en.wikipedia.org/wiki/2004_United_States_presidential_election

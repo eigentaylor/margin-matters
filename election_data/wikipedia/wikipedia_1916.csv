@@ -1,50 +1,50 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1916,AL,99409,28662,1916,2657,"{""Allan Benson"": 1916, ""James Hanly"": 741}",130728
-1916,AZ,33170,20524,3174,4327,"{""Allan Benson"": 3174, ""James Hanly"": 1153}",58021
-1916,AR,112211,48879,6999,9014,"{""Allan Benson"": 6999, ""James Hanly"": 2015}",170104
-1916,CA,466289,462516,42898,70798,"{""Allan Benson"": 42898, ""James Hanly"": 27713}",999603
-1916,CO,178816,102308,10049,13251,"{""Allan Benson"": 10049, ""James Hanly"": 2793, ""No Candidate (Bull Moose)"": 409}",294375
-1916,CT,99786,106514,5179,7574,"{""Allan Benson"": 5179, ""Arthur Reimer"": 606, ""James Hanly"": 1789}",213874
-1916,DE,24753,26011,566,1046,"{""Allan Benson"": 480, ""James Hanly"": 566}",51810
-1916,FL,55984,14611,5353,10139,"{""Allan Benson"": 5353, ""James Hanly"": 4786}",80734
-1916,GA,127754,11294,20692,21633,"{""Allan Benson"": 941, ""No Candidate (Bull Moose)"": 20692}",160681
-1916,ID,70054,55368,8066,9193,"{""Allan Benson"": 8066, ""James Hanly"": 1127}",134615
-1916,IL,950229,1152549,61394,89929,"{""Allan Benson"": 61394, ""Arthur Reimer"": 2488, ""James Hanly"": 26047}",2192707
-1916,IN,334063,341005,21855,43780,"{""Allan Benson"": 21855, ""Arthur Reimer"": 1659, ""James Hanly"": 16368, ""No Candidate (Bull Moose)"": 3898}",718848
-1916,IA,218699,280439,10973,14804,"{""Allan Benson"": 10973, ""Arthur Reimer"": 460, ""James Hanly"": 3371}",513942
-1916,KS,314588,277658,24685,37567,"{""Allan Benson"": 24685, ""James Hanly"": 12882}",629813
-1916,KY,269990,241854,4734,8234,"{""Allan Benson"": 4734, ""Arthur Reimer"": 332, ""James Hanly"": 3039, ""No Candidate (Bull Moose)"": 129}",520078
-1916,LA,79875,6466,6349,6641,"{""Allan Benson"": 292, ""No Candidate (Bull Moose)"": 6349}",92982
-1916,ME-AL,64033,69508,2177,2773,"{""Allan Benson"": 2177, ""James Hanly"": 596}",136314
-1916,MD,138359,117347,2903,6333,"{""Allan Benson"": 2674, ""Arthur Reimer"": 756, ""James Hanly"": 2903}",262039
-1916,MA,247885,268784,11058,15154,"{""Allan Benson"": 11058, ""Arthur Reimer"": 1097, ""James Hanly"": 2993}",531823
-1916,MI,286775,339097,16120,25101,"{""Allan Benson"": 16120, ""Arthur Reimer"": 842, ""James Hanly"": 8139}",650973
-1916,MN,179152,179544,20117,28668,"{""Allan Benson"": 20117, ""Arthur Reimer"": 468, ""James Hanly"": 7793, ""No Candidate (Bull Moose)"": 290}",387364
-1916,MS,80422,4253,1484,2004,"{""Allan Benson"": 1484, ""No Candidate (Bull Moose)"": 520}",86679
-1916,MO,398032,369339,14612,19398,"{""Allan Benson"": 14612, ""Arthur Reimer"": 902, ""James Hanly"": 3884}",786769
-1916,MT,101063,66750,9564,9866,"{""Allan Benson"": 9564, ""No Candidate (Bull Moose)"": 302}",177679
-1916,NE-AL,158827,117771,7141,10717,"{""Allan Benson"": 7141, ""Arthur Reimer"": 624, ""James Hanly"": 2952}",287315
-1916,NV,17776,12127,3065,3413,"{""Allan Benson"": 3065, ""James Hanly"": 348}",33316
-1916,NH,43781,43725,1318,1621,"{""Allan Benson"": 1318, ""James Hanly"": 303}",89127
-1916,NJ,211018,268982,10405,14442,"{""Allan Benson"": 10405, ""Arthur Reimer"": 855, ""James Hanly"": 3182}",494442
-1916,NM,33527,31152,1996,2108,"{""Allan Benson"": 1996, ""James Hanly"": 112}",66787
-1916,NY,759426,879238,45944,67641,"{""Allan Benson"": 45944, ""Arthur Reimer"": 2666, ""James Hanly"": 19031}",1706305
-1916,NC,168383,120890,509,564,"{""Allan Benson"": 509, ""James Hanly"": 55}",289837
-1916,ND,55206,53471,5716,6713,"{""Allan Benson"": 5716, ""James Hanly"": 997}",115390
-1916,OH,604161,514753,38092,46172,"{""Allan Benson"": 38092, ""James Hanly"": 8080}",1165086
-1916,OK,148113,97233,45527,47407,"{""Allan Benson"": 45527, ""James Hanly"": 1646, ""No Candidate (Bull Moose)"": 234}",292753
-1916,OR,120087,126813,9711,14750,"{""Allan Benson"": 9711, ""James Hanly"": 4729, ""No Candidate (Bull Moose)"": 310}",261650
-1916,PA,521784,703823,42638,71582,"{""Allan Benson"": 42638, ""Arthur Reimer"": 419, ""James Hanly"": 28525}",1297189
-1916,RI,40394,44858,1914,2564,"{""Allan Benson"": 1914, ""Arthur Reimer"": 180, ""James Hanly"": 470}",87816
-1916,SC,61846,1550,162,556,"{""Allan Benson"": 135, ""No Candidate (Bull Moose)"": 162}",63952
-1916,SD,59191,64217,3760,5534,"{""Allan Benson"": 3760, ""James Hanly"": 1774}",128942
-1916,TN,153280,116223,2542,2687,"{""Allan Benson"": 2542, ""James Hanly"": 145}",272190
-1916,TX,286514,64999,18969,20954,"{""Allan Benson"": 18969, ""James Hanly"": 1985}",372467
-1916,UT,84145,54137,4460,4864,"{""Allan Benson"": 4460, ""Arthur Reimer"": 144, ""James Hanly"": 149, ""No Candidate (Bull Moose)"": 111}",143146
-1916,VT,22708,40250,798,1517,"{""Allan Benson"": 798, ""James Hanly"": 709}",64475
-1916,VA,101840,48384,1056,1801,"{""Allan Benson"": 1056, ""Arthur Reimer"": 67, ""James Hanly"": 678}",152025
-1916,WA,183388,167208,22800,30398,"{""Allan Benson"": 22800, ""Arthur Reimer"": 730, ""James Hanly"": 6868}",380994
-1916,WV,140403,143124,6150,6325,"{""Allan Benson"": 6150, ""James Hanly"": 175}",289852
-1916,WI,191363,220822,27631,34949,"{""Allan Benson"": 27631, ""James Hanly"": 7318}",447134
-1916,WY,28316,21698,1453,1826,"{""Allan Benson"": 1453, ""James Hanly"": 373}",51840
-1916,NATIONAL,9126868,8548728,590524,860989,"{""Allan Benson"": 590524, ""Arthur Reimer"": 15295, ""James Hanly"": 221302, ""No Candidate (Bull Moose)"": 33406}",18536585
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1916,AL,99409,28662,1916,2657,"{""Allan Benson"": 1916, ""James Hanly"": 741}",130728,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,AZ,33170,20524,3174,4327,"{""Allan Benson"": 3174, ""James Hanly"": 1153}",58021,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,AR,112211,48879,6999,9014,"{""Allan Benson"": 6999, ""James Hanly"": 2015}",170104,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,CA,466289,462516,42898,70798,"{""Allan Benson"": 42898, ""James Hanly"": 27713}",999603,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,CO,178816,102308,10049,13251,"{""Allan Benson"": 10049, ""James Hanly"": 2793, ""No Candidate (Bull Moose)"": 409}",294375,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,CT,99786,106514,5179,7574,"{""Allan Benson"": 5179, ""Arthur Reimer"": 606, ""James Hanly"": 1789}",213874,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,DE,24753,26011,566,1046,"{""Allan Benson"": 480, ""James Hanly"": 566}",51810,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,FL,55984,14611,5353,10139,"{""Allan Benson"": 5353, ""James Hanly"": 4786}",80734,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,GA,127754,11294,20692,21633,"{""Allan Benson"": 941, ""No Candidate (Bull Moose)"": 20692}",160681,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,ID,70054,55368,8066,9193,"{""Allan Benson"": 8066, ""James Hanly"": 1127}",134615,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,IL,950229,1152549,61394,89929,"{""Allan Benson"": 61394, ""Arthur Reimer"": 2488, ""James Hanly"": 26047}",2192707,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,IN,334063,341005,21855,43780,"{""Allan Benson"": 21855, ""Arthur Reimer"": 1659, ""James Hanly"": 16368, ""No Candidate (Bull Moose)"": 3898}",718848,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,IA,218699,280439,10973,14804,"{""Allan Benson"": 10973, ""Arthur Reimer"": 460, ""James Hanly"": 3371}",513942,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,KS,314588,277658,24685,37567,"{""Allan Benson"": 24685, ""James Hanly"": 12882}",629813,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,KY,269990,241854,4734,8234,"{""Allan Benson"": 4734, ""Arthur Reimer"": 332, ""James Hanly"": 3039, ""No Candidate (Bull Moose)"": 129}",520078,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,LA,79875,6466,6349,6641,"{""Allan Benson"": 292, ""No Candidate (Bull Moose)"": 6349}",92982,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,ME-AL,64033,69508,2177,2773,"{""Allan Benson"": 2177, ""James Hanly"": 596}",136314,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MD,138359,117347,2903,6333,"{""Allan Benson"": 2674, ""Arthur Reimer"": 756, ""James Hanly"": 2903}",262039,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MA,247885,268784,11058,15154,"{""Allan Benson"": 11058, ""Arthur Reimer"": 1097, ""James Hanly"": 2993}",531823,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MI,286775,339097,16120,25101,"{""Allan Benson"": 16120, ""Arthur Reimer"": 842, ""James Hanly"": 8139}",650973,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MN,179152,179544,20117,28668,"{""Allan Benson"": 20117, ""Arthur Reimer"": 468, ""James Hanly"": 7793, ""No Candidate (Bull Moose)"": 290}",387364,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MS,80422,4253,1484,2004,"{""Allan Benson"": 1484, ""No Candidate (Bull Moose)"": 520}",86679,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MO,398032,369339,14612,19398,"{""Allan Benson"": 14612, ""Arthur Reimer"": 902, ""James Hanly"": 3884}",786769,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,MT,101063,66750,9564,9866,"{""Allan Benson"": 9564, ""No Candidate (Bull Moose)"": 302}",177679,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NE-AL,158827,117771,7141,10717,"{""Allan Benson"": 7141, ""Arthur Reimer"": 624, ""James Hanly"": 2952}",287315,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NV,17776,12127,3065,3413,"{""Allan Benson"": 3065, ""James Hanly"": 348}",33316,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NH,43781,43725,1318,1621,"{""Allan Benson"": 1318, ""James Hanly"": 303}",89127,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NJ,211018,268982,10405,14442,"{""Allan Benson"": 10405, ""Arthur Reimer"": 855, ""James Hanly"": 3182}",494442,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NM,33527,31152,1996,2108,"{""Allan Benson"": 1996, ""James Hanly"": 112}",66787,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NY,759426,879238,45944,67641,"{""Allan Benson"": 45944, ""Arthur Reimer"": 2666, ""James Hanly"": 19031}",1706305,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NC,168383,120890,509,564,"{""Allan Benson"": 509, ""James Hanly"": 55}",289837,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,ND,55206,53471,5716,6713,"{""Allan Benson"": 5716, ""James Hanly"": 997}",115390,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,OH,604161,514753,38092,46172,"{""Allan Benson"": 38092, ""James Hanly"": 8080}",1165086,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,OK,148113,97233,45527,47407,"{""Allan Benson"": 45527, ""James Hanly"": 1646, ""No Candidate (Bull Moose)"": 234}",292753,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,OR,120087,126813,9711,14750,"{""Allan Benson"": 9711, ""James Hanly"": 4729, ""No Candidate (Bull Moose)"": 310}",261650,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,PA,521784,703823,42638,71582,"{""Allan Benson"": 42638, ""Arthur Reimer"": 419, ""James Hanly"": 28525}",1297189,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,RI,40394,44858,1914,2564,"{""Allan Benson"": 1914, ""Arthur Reimer"": 180, ""James Hanly"": 470}",87816,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,SC,61846,1550,162,556,"{""Allan Benson"": 135, ""No Candidate (Bull Moose)"": 162}",63952,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,SD,59191,64217,3760,5534,"{""Allan Benson"": 3760, ""James Hanly"": 1774}",128942,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,TN,153280,116223,2542,2687,"{""Allan Benson"": 2542, ""James Hanly"": 145}",272190,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,TX,286514,64999,18969,20954,"{""Allan Benson"": 18969, ""James Hanly"": 1985}",372467,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,UT,84145,54137,4460,4864,"{""Allan Benson"": 4460, ""Arthur Reimer"": 144, ""James Hanly"": 149, ""No Candidate (Bull Moose)"": 111}",143146,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,VT,22708,40250,798,1517,"{""Allan Benson"": 798, ""James Hanly"": 709}",64475,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,VA,101840,48384,1056,1801,"{""Allan Benson"": 1056, ""Arthur Reimer"": 67, ""James Hanly"": 678}",152025,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,WA,183388,167208,22800,30398,"{""Allan Benson"": 22800, ""Arthur Reimer"": 730, ""James Hanly"": 6868}",380994,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,WV,140403,143124,6150,6325,"{""Allan Benson"": 6150, ""James Hanly"": 175}",289852,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,WI,191363,220822,27631,34949,"{""Allan Benson"": 27631, ""James Hanly"": 7318}",447134,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,WY,28316,21698,1453,1826,"{""Allan Benson"": 1453, ""James Hanly"": 373}",51840,https://en.wikipedia.org/wiki/1916_United_States_presidential_election
+1916,NATIONAL,9126868,8548728,590524,860989,"{""Allan Benson"": 590524, ""Arthur Reimer"": 15295, ""James Hanly"": 221302, ""No Candidate (Bull Moose)"": 33406}",18536585,https://en.wikipedia.org/wiki/1916_United_States_presidential_election

@@ -1,58 +1,58 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1996,AL,662165,769044,92149,103140,"{""Harry Browne"": 5290, ""Others"": 5701, ""Ross Perot"": 92149}",1534349
-1996,AK,80380,122746,26333,38494,"{""Harry Browne"": 2276, ""Others"": 2288, ""Ralph Nader"": 7597, ""Ross Perot"": 26333}",241620
-1996,AZ,653288,622073,112072,129044,"{""Harry Browne"": 14358, ""Others"": 552, ""Ralph Nader"": 2062, ""Ross Perot"": 112072}",1404405
-1996,AR,475171,325416,69884,83675,"{""Harry Browne"": 3076, ""Others"": 7066, ""Ralph Nader"": 3649, ""Ross Perot"": 69884}",884262
-1996,CA,5119835,3828380,697847,1071269,"{""Harry Browne"": 73600, ""Others"": 62806, ""Ralph Nader"": 237016, ""Ross Perot"": 697847}",10019484
-1996,CO,671152,691848,99629,147704,"{""Harry Browne"": 12392, ""Others"": 10613, ""Ralph Nader"": 25070, ""Ross Perot"": 99629}",1510704
-1996,CT,735740,483109,139523,173765,"{""Harry Browne"": 5788, ""Others"": 4133, ""Ralph Nader"": 24321, ""Ross Perot"": 139523}",1392614
-1996,DE,140355,99062,28719,31428,"{""Harry Browne"": 2052, ""Others"": 639, ""Ralph Nader"": 18, ""Ross Perot"": 28719}",270845
-1996,DC,158220,17339,4780,10167,"{""Harry Browne"": 588, ""Others"": 1188, ""Ralph Nader"": 4780, ""Ross Perot"": 3611}",185726
-1996,FL,2546870,2244536,483870,512388,"{""Harry Browne"": 23965, ""Others"": 452, ""Ralph Nader"": 4101, ""Ross Perot"": 483870}",5303794
-1996,GA,1053849,1080843,146337,164379,"{""Harry Browne"": 17870, ""Others"": 172, ""Ross Perot"": 146337}",2299071
-1996,HI,205012,113943,27358,41165,"{""Harry Browne"": 2493, ""Others"": 928, ""Ralph Nader"": 10386, ""Ross Perot"": 27358}",360120
-1996,ID,165443,256595,62518,69681,"{""Harry Browne"": 3325, ""Others"": 3838, ""Ross Perot"": 62518}",491719
-1996,IL,2341744,1587021,346408,382626,"{""Harry Browne"": 22548, ""Others"": 12223, ""Ralph Nader"": 1447, ""Ross Perot"": 346408}",4311391
-1996,IN,887424,1006693,224299,241725,"{""Harry Browne"": 15632, ""Others"": 673, ""Ralph Nader"": 1121, ""Ross Perot"": 224299}",2135842
-1996,IA,620258,492644,105159,121173,"{""Harry Browne"": 2315, ""Others"": 7149, ""Ralph Nader"": 6550, ""Ross Perot"": 105159}",1234075
-1996,KS,387659,583245,92639,103396,"{""Harry Browne"": 4557, ""Others"": 5286, ""Ralph Nader"": 914, ""Ross Perot"": 92639}",1074300
-1996,KY,636614,623283,120396,128811,"{""Harry Browne"": 4009, ""Others"": 3705, ""Ralph Nader"": 701, ""Ross Perot"": 120396}",1388708
-1996,LA,927837,712586,123293,143536,"{""Harry Browne"": 7499, ""Others"": 8025, ""Ralph Nader"": 4719, ""Ross Perot"": 123293}",1783959
-1996,ME-AL,312788,186378,85970,106731,"{""Harry Browne"": 2996, ""Others"": 2486, ""Ralph Nader"": 15279, ""Ross Perot"": 85970}",605897
-1996,ME-01,165053,100851,39845,51217,"{""Others"": 11372, ""Ross Perot"": 39845}",317121
-1996,ME-02,147735,85527,46125,55514,"{""Others"": 9389, ""Ross Perot"": 46125}",288776
-1996,MD,966207,681530,115812,133133,"{""Harry Browne"": 8765, ""Others"": 5950, ""Ralph Nader"": 2606, ""Ross Perot"": 115812}",1780870
-1996,MA,1571763,718107,227217,266916,"{""Harry Browne"": 20426, ""Others"": 14708, ""Ralph Nader"": 4565, ""Ross Perot"": 227217}",2556786
-1996,MI,1989653,1481212,336670,377979,"{""Harry Browne"": 27670, ""Others"": 11317, ""Ralph Nader"": 2322, ""Ross Perot"": 336670}",3848844
-1996,MN,1120438,766476,257704,305726,"{""Harry Browne"": 8271, ""Others"": 14843, ""Ralph Nader"": 24908, ""Ross Perot"": 257704}",2192640
-1996,MS,394022,439838,52222,59997,"{""Harry Browne"": 2809, ""Others"": 4966, ""Ross Perot"": 52222}",893857
-1996,MO,1025935,890016,217188,242114,"{""Harry Browne"": 10522, ""Others"": 13870, ""Ralph Nader"": 534, ""Ross Perot"": 217188}",2158065
-1996,MT,167922,179652,55229,59687,"{""Harry Browne"": 2526, ""Others"": 1932, ""Ross Perot"": 55229}",407261
-1996,NE-AL,236761,363467,71278,77187,"{""Harry Browne"": 2792, ""Others"": 3117, ""Ross Perot"": 71278}",677415
-1996,NE-01,87713,114560,25973,28057,"{""Others"": 2074, ""Ross Perot"": 25973}",230330
-1996,NE-02,84666,116892,18935,21102,"{""Others"": 2164, ""Ross Perot"": 18935}",222660
-1996,NE-03,64382,132015,26370,28028,"{""Others"": 1658, ""Ross Perot"": 26370}",224425
-1996,NV,203974,199244,43986,61061,"{""Harry Browne"": 4460, ""Others"": 7885, ""Ralph Nader"": 4730, ""Ross Perot"": 43986}",464279
-1996,NH,246214,196532,48390,56429,"{""Harry Browne"": 4237, ""Others"": 3802, ""Ross Perot"": 48390}",499175
-1996,NJ,1652329,1103078,262134,320400,"{""Harry Browne"": 14763, ""Others"": 11038, ""Ralph Nader"": 32465, ""Ross Perot"": 262134}",3075807
-1996,NM,273495,232751,32257,49828,"{""Harry Browne"": 2996, ""Others"": 1357, ""Ralph Nader"": 13218, ""Ross Perot"": 32257}",556074
-1996,NY,3756177,1933492,503458,626460,"{""Harry Browne"": 12220, ""Others"": 34826, ""Ralph Nader"": 75956, ""Ross Perot"": 503458}",6316129
-1996,NC,1107849,1225938,168059,182020,"{""Harry Browne"": 8740, ""Others"": 3113, ""Ralph Nader"": 2108, ""Ross Perot"": 168059}",2515807
-1996,ND,106905,125050,32515,34456,"{""Harry Browne"": 847, ""Others"": 1094, ""Ross Perot"": 32515}",266411
-1996,OH,2148222,1859883,483207,526329,"{""Harry Browne"": 12851, ""Others"": 27309, ""Ralph Nader"": 2962, ""Ross Perot"": 483207}",4534434
-1996,OK,488105,582315,130788,136293,"{""Harry Browne"": 5505, ""Ross Perot"": 130788}",1206713
-1996,OR,649641,538152,121221,189967,"{""Harry Browne"": 8903, ""Others"": 10428, ""Ralph Nader"": 49415, ""Ross Perot"": 121221}",1377760
-1996,PA,2215819,1801169,430984,489130,"{""Harry Browne"": 28000, ""Others"": 27060, ""Ralph Nader"": 3086, ""Ross Perot"": 430984}",4506118
-1996,RI,233050,104683,43723,52551,"{""Harry Browne"": 1109, ""Others"": 1679, ""Ralph Nader"": 6040, ""Ross Perot"": 43723}",390284
-1996,SC,506283,573458,64386,71948,"{""Harry Browne"": 4271, ""Others"": 3291, ""Ross Perot"": 64386}",1151689
-1996,SD,139333,150543,31250,33950,"{""Harry Browne"": 1472, ""Others"": 1228, ""Ross Perot"": 31250}",323826
-1996,TN,909146,863530,105918,121429,"{""Harry Browne"": 5020, ""Others"": 4064, ""Ralph Nader"": 6427, ""Ross Perot"": 105918}",1894105
-1996,TX,2459683,2736167,378537,415794,"{""Harry Browne"": 20256, ""Others"": 12191, ""Ralph Nader"": 4810, ""Ross Perot"": 378537}",5611644
-1996,UT,221633,361911,66461,82085,"{""Harry Browne"": 4129, ""Others"": 6880, ""Ralph Nader"": 4615, ""Ross Perot"": 66461}",665629
-1996,VT,137894,80352,31024,40203,"{""Harry Browne"": 1183, ""Others"": 2411, ""Ralph Nader"": 5585, ""Ross Perot"": 31024}",258449
-1996,VA,1091060,1138350,159861,187232,"{""Harry Browne"": 9174, ""Others"": 18197, ""Ross Perot"": 159861}",2416642
-1996,WA,1123323,840712,201003,289802,"{""Harry Browne"": 12522, ""Others"": 15955, ""Ralph Nader"": 60322, ""Ross Perot"": 201003}",2253837
-1996,WV,327812,233946,71639,74701,"{""Harry Browne"": 3062, ""Ross Perot"": 71639}",636459
-1996,WI,1071971,845029,227339,279169,"{""Harry Browne"": 7929, ""Others"": 15178, ""Ralph Nader"": 28723, ""Ross Perot"": 227339}",2196169
-1996,WY,77934,105388,25928,28249,"{""Harry Browne"": 1739, ""Others"": 582, ""Ross Perot"": 25928}",211571
-1996,NATIONAL,47402357,39198755,8085402,9676111,"{""Harry Browne"": 485798, ""Others"": 420009, ""Ralph Nader"": 684902, ""Ross Perot"": 8085402}",96277223
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1996,AL,662165,769044,92149,103140,"{""Harry Browne"": 5290, ""Others"": 5701, ""Ross Perot"": 92149}",1534349,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,AK,80380,122746,26333,38494,"{""Harry Browne"": 2276, ""Others"": 2288, ""Ralph Nader"": 7597, ""Ross Perot"": 26333}",241620,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,AZ,653288,622073,112072,129044,"{""Harry Browne"": 14358, ""Others"": 552, ""Ralph Nader"": 2062, ""Ross Perot"": 112072}",1404405,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,AR,475171,325416,69884,83675,"{""Harry Browne"": 3076, ""Others"": 7066, ""Ralph Nader"": 3649, ""Ross Perot"": 69884}",884262,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,CA,5119835,3828380,697847,1071269,"{""Harry Browne"": 73600, ""Others"": 62806, ""Ralph Nader"": 237016, ""Ross Perot"": 697847}",10019484,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,CO,671152,691848,99629,147704,"{""Harry Browne"": 12392, ""Others"": 10613, ""Ralph Nader"": 25070, ""Ross Perot"": 99629}",1510704,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,CT,735740,483109,139523,173765,"{""Harry Browne"": 5788, ""Others"": 4133, ""Ralph Nader"": 24321, ""Ross Perot"": 139523}",1392614,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,DE,140355,99062,28719,31428,"{""Harry Browne"": 2052, ""Others"": 639, ""Ralph Nader"": 18, ""Ross Perot"": 28719}",270845,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,DC,158220,17339,4780,10167,"{""Harry Browne"": 588, ""Others"": 1188, ""Ralph Nader"": 4780, ""Ross Perot"": 3611}",185726,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,FL,2546870,2244536,483870,512388,"{""Harry Browne"": 23965, ""Others"": 452, ""Ralph Nader"": 4101, ""Ross Perot"": 483870}",5303794,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,GA,1053849,1080843,146337,164379,"{""Harry Browne"": 17870, ""Others"": 172, ""Ross Perot"": 146337}",2299071,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,HI,205012,113943,27358,41165,"{""Harry Browne"": 2493, ""Others"": 928, ""Ralph Nader"": 10386, ""Ross Perot"": 27358}",360120,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,ID,165443,256595,62518,69681,"{""Harry Browne"": 3325, ""Others"": 3838, ""Ross Perot"": 62518}",491719,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,IL,2341744,1587021,346408,382626,"{""Harry Browne"": 22548, ""Others"": 12223, ""Ralph Nader"": 1447, ""Ross Perot"": 346408}",4311391,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,IN,887424,1006693,224299,241725,"{""Harry Browne"": 15632, ""Others"": 673, ""Ralph Nader"": 1121, ""Ross Perot"": 224299}",2135842,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,IA,620258,492644,105159,121173,"{""Harry Browne"": 2315, ""Others"": 7149, ""Ralph Nader"": 6550, ""Ross Perot"": 105159}",1234075,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,KS,387659,583245,92639,103396,"{""Harry Browne"": 4557, ""Others"": 5286, ""Ralph Nader"": 914, ""Ross Perot"": 92639}",1074300,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,KY,636614,623283,120396,128811,"{""Harry Browne"": 4009, ""Others"": 3705, ""Ralph Nader"": 701, ""Ross Perot"": 120396}",1388708,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,LA,927837,712586,123293,143536,"{""Harry Browne"": 7499, ""Others"": 8025, ""Ralph Nader"": 4719, ""Ross Perot"": 123293}",1783959,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,ME-AL,312788,186378,85970,106731,"{""Harry Browne"": 2996, ""Others"": 2486, ""Ralph Nader"": 15279, ""Ross Perot"": 85970}",605897,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,ME-01,165053,100851,39845,51217,"{""Others"": 11372, ""Ross Perot"": 39845}",317121,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,ME-02,147735,85527,46125,55514,"{""Others"": 9389, ""Ross Perot"": 46125}",288776,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MD,966207,681530,115812,133133,"{""Harry Browne"": 8765, ""Others"": 5950, ""Ralph Nader"": 2606, ""Ross Perot"": 115812}",1780870,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MA,1571763,718107,227217,266916,"{""Harry Browne"": 20426, ""Others"": 14708, ""Ralph Nader"": 4565, ""Ross Perot"": 227217}",2556786,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MI,1989653,1481212,336670,377979,"{""Harry Browne"": 27670, ""Others"": 11317, ""Ralph Nader"": 2322, ""Ross Perot"": 336670}",3848844,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MN,1120438,766476,257704,305726,"{""Harry Browne"": 8271, ""Others"": 14843, ""Ralph Nader"": 24908, ""Ross Perot"": 257704}",2192640,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MS,394022,439838,52222,59997,"{""Harry Browne"": 2809, ""Others"": 4966, ""Ross Perot"": 52222}",893857,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MO,1025935,890016,217188,242114,"{""Harry Browne"": 10522, ""Others"": 13870, ""Ralph Nader"": 534, ""Ross Perot"": 217188}",2158065,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,MT,167922,179652,55229,59687,"{""Harry Browne"": 2526, ""Others"": 1932, ""Ross Perot"": 55229}",407261,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NE-AL,236761,363467,71278,77187,"{""Harry Browne"": 2792, ""Others"": 3117, ""Ross Perot"": 71278}",677415,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NE-01,87713,114560,25973,28057,"{""Others"": 2074, ""Ross Perot"": 25973}",230330,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NE-02,84666,116892,18935,21102,"{""Others"": 2164, ""Ross Perot"": 18935}",222660,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NE-03,64382,132015,26370,28028,"{""Others"": 1658, ""Ross Perot"": 26370}",224425,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NV,203974,199244,43986,61061,"{""Harry Browne"": 4460, ""Others"": 7885, ""Ralph Nader"": 4730, ""Ross Perot"": 43986}",464279,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NH,246214,196532,48390,56429,"{""Harry Browne"": 4237, ""Others"": 3802, ""Ross Perot"": 48390}",499175,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NJ,1652329,1103078,262134,320400,"{""Harry Browne"": 14763, ""Others"": 11038, ""Ralph Nader"": 32465, ""Ross Perot"": 262134}",3075807,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NM,273495,232751,32257,49828,"{""Harry Browne"": 2996, ""Others"": 1357, ""Ralph Nader"": 13218, ""Ross Perot"": 32257}",556074,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NY,3756177,1933492,503458,626460,"{""Harry Browne"": 12220, ""Others"": 34826, ""Ralph Nader"": 75956, ""Ross Perot"": 503458}",6316129,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NC,1107849,1225938,168059,182020,"{""Harry Browne"": 8740, ""Others"": 3113, ""Ralph Nader"": 2108, ""Ross Perot"": 168059}",2515807,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,ND,106905,125050,32515,34456,"{""Harry Browne"": 847, ""Others"": 1094, ""Ross Perot"": 32515}",266411,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,OH,2148222,1859883,483207,526329,"{""Harry Browne"": 12851, ""Others"": 27309, ""Ralph Nader"": 2962, ""Ross Perot"": 483207}",4534434,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,OK,488105,582315,130788,136293,"{""Harry Browne"": 5505, ""Ross Perot"": 130788}",1206713,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,OR,649641,538152,121221,189967,"{""Harry Browne"": 8903, ""Others"": 10428, ""Ralph Nader"": 49415, ""Ross Perot"": 121221}",1377760,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,PA,2215819,1801169,430984,489130,"{""Harry Browne"": 28000, ""Others"": 27060, ""Ralph Nader"": 3086, ""Ross Perot"": 430984}",4506118,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,RI,233050,104683,43723,52551,"{""Harry Browne"": 1109, ""Others"": 1679, ""Ralph Nader"": 6040, ""Ross Perot"": 43723}",390284,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,SC,506283,573458,64386,71948,"{""Harry Browne"": 4271, ""Others"": 3291, ""Ross Perot"": 64386}",1151689,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,SD,139333,150543,31250,33950,"{""Harry Browne"": 1472, ""Others"": 1228, ""Ross Perot"": 31250}",323826,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,TN,909146,863530,105918,121429,"{""Harry Browne"": 5020, ""Others"": 4064, ""Ralph Nader"": 6427, ""Ross Perot"": 105918}",1894105,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,TX,2459683,2736167,378537,415794,"{""Harry Browne"": 20256, ""Others"": 12191, ""Ralph Nader"": 4810, ""Ross Perot"": 378537}",5611644,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,UT,221633,361911,66461,82085,"{""Harry Browne"": 4129, ""Others"": 6880, ""Ralph Nader"": 4615, ""Ross Perot"": 66461}",665629,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,VT,137894,80352,31024,40203,"{""Harry Browne"": 1183, ""Others"": 2411, ""Ralph Nader"": 5585, ""Ross Perot"": 31024}",258449,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,VA,1091060,1138350,159861,187232,"{""Harry Browne"": 9174, ""Others"": 18197, ""Ross Perot"": 159861}",2416642,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,WA,1123323,840712,201003,289802,"{""Harry Browne"": 12522, ""Others"": 15955, ""Ralph Nader"": 60322, ""Ross Perot"": 201003}",2253837,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,WV,327812,233946,71639,74701,"{""Harry Browne"": 3062, ""Ross Perot"": 71639}",636459,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,WI,1071971,845029,227339,279169,"{""Harry Browne"": 7929, ""Others"": 15178, ""Ralph Nader"": 28723, ""Ross Perot"": 227339}",2196169,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,WY,77934,105388,25928,28249,"{""Harry Browne"": 1739, ""Others"": 582, ""Ross Perot"": 25928}",211571,https://en.wikipedia.org/wiki/1996_United_States_presidential_election
+1996,NATIONAL,47402357,39198755,8085402,9676111,"{""Harry Browne"": 485798, ""Others"": 420009, ""Ralph Nader"": 684902, ""Ross Perot"": 8085402}",96277223,https://en.wikipedia.org/wiki/1996_United_States_presidential_election

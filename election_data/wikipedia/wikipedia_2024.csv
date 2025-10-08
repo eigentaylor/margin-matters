@@ -1,58 +1,58 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-2024,AL,772412,1462616,12075,30062,"{""Kennedy/Shanahan"": 12075, ""Oliver/Maat"": 4930, ""Others"": 8738, ""Stein/Ware"": 4319}",2265090
-2024,AK,140026,184458,5670,13693,"{""Kennedy/Shanahan"": 5670, ""Oliver/Maat"": 3040, ""Others"": 2641, ""Stein/Ware"": 2342}",338177
-2024,AZ,1582860,1770242,18319,37059,"{""Oliver/Maat"": 17898, ""Others"": 842, ""Stein/Ware"": 18319}",3390161
-2024,AR,396905,759241,13255,26530,"{""Kennedy/Shanahan"": 13255, ""Oliver/Maat"": 5715, ""Others"": 3285, ""Stein/Ware"": 4275}",1182676
-2024,CA,9276179,6081697,197645,507599,"{""Kennedy/Shanahan"": 197645, ""Oliver/Maat"": 66662, ""Others"": 75478, ""Stein/Ware"": 167814}",15865475
-2024,CO,1728159,1377441,35623,87145,"{""Kennedy/Shanahan"": 35623, ""Oliver/Maat"": 21439, ""Others"": 12739, ""Stein/Ware"": 17344}",3192745
-2024,CT,992053,736918,14281,30039,"{""Kennedy/Shanahan"": 8448, ""Oliver/Maat"": 6729, ""Others"": 581, ""Stein/Ware"": 14281}",1759010
-2024,DE,289758,214351,4636,8803,"{""Kennedy/Shanahan"": 4636, ""Oliver/Maat"": 2038, ""Others"": 1215, ""Stein/Ware"": 914}",512912
-2024,DC,294185,21076,2778,10608,"{""Kennedy/Shanahan"": 2778, ""Others"": 7830}",325869
-2024,FL,4683038,6110125,43155,100589,"{""Oliver/Maat"": 31972, ""Others"": 25462, ""Stein/Ware"": 43155}",10893752
-2024,GA,2548017,2663117,20684,39771,"{""Oliver/Maat"": 20684, ""Others"": 858, ""Stein/Ware"": 18229}",5250905
-2024,HI,313044,193661,4387,9996,"{""Oliver/Maat"": 2733, ""Others"": 2876, ""Stein/Ware"": 4387}",516701
-2024,ID,274972,605246,12812,24839,"{""Kennedy/Shanahan"": 12812, ""Oliver/Maat"": 4462, ""Others"": 4592, ""Stein/Ware"": 2973}",905057
-2024,IL,3062863,2449079,80426,121368,"{""Kennedy/Shanahan"": 80426, ""Oliver/Maat"": 3510, ""Others"": 6409, ""Stein/Ware"": 31023}",5633310
-2024,IN,1163603,1720347,29325,52727,"{""Kennedy/Shanahan"": 29325, ""Oliver/Maat"": 20425, ""Others"": 2977}",2936677
-2024,IA,707278,927019,13122,29209,"{""Kennedy/Shanahan"": 13122, ""Oliver/Maat"": 7218, ""Others"": 8869}",1663506
-2024,KS,544853,758802,16322,23936,"{""Kennedy/Shanahan"": 16322, ""Oliver/Maat"": 7614}",1327591
-2024,KY,704043,1337494,16769,32993,"{""Kennedy/Shanahan"": 16769, ""Oliver/Maat"": 6422, ""Others"": 2236, ""Stein/Ware"": 7566}",2074530
-2024,LA,766870,1208505,7138,31600,"{""Kennedy/Shanahan"": 6641, ""Oliver/Maat"": 6835, ""Others"": 10986, ""Stein/Ware"": 7138}",2006975
-2024,ME-AL,435652,377977,8967,17746,"{""Oliver/Maat"": 5286, ""Others"": 3493, ""Stein/Ware"": 8967}",831375
-2024,ME-01,258863,165214,4828,9632,"{""Oliver/Maat"": 2802, ""Others"": 2002, ""Stein/Ware"": 4828}",433709
-2024,ME-02,176789,212763,4139,8114,"{""Oliver/Maat"": 2484, ""Others"": 1491, ""Stein/Ware"": 4139}",397666
-2024,MD,1902577,1035550,33134,100207,"{""Kennedy/Shanahan"": 28819, ""Oliver/Maat"": 15570, ""Others"": 22684, ""Stein/Ware"": 33134}",3038334
-2024,MA,2126518,1251303,26545,95847,"{""Oliver/Maat"": 17735, ""Others"": 51567, ""Stein/Ware"": 26545}",3473668
-2024,MI,2736533,2816636,44607,111017,"{""Kennedy/Shanahan"": 26785, ""Oliver/Maat"": 22440, ""Others"": 17185, ""Stein/Ware"": 44607}",5664186
-2024,MN,1656979,1519032,24001,77909,"{""Kennedy/Shanahan"": 24001, ""Oliver/Maat"": 15155, ""Others"": 22478, ""Stein/Ware"": 16275}",3253920
-2024,MS,466668,747744,5387,13596,"{""Kennedy/Shanahan"": 5387, ""Oliver/Maat"": 2536, ""Others"": 3800, ""Stein/Ware"": 1873}",1228008
-2024,MO,1200599,1751986,23876,42742,"{""Oliver/Maat"": 23876, ""Others"": 1731, ""Stein/Ware"": 17135}",2995327
-2024,MT,231906,352079,11825,19005,"{""Kennedy/Shanahan"": 11825, ""Oliver/Maat"": 4275, ""Others"": 27, ""Stein/Ware"": 2878}",602990
-2024,NE-AL,369995,564816,6399,17371,"{""Oliver/Maat"": 6399, ""Others"": 8085, ""Stein/Ware"": 2887}",952182
-2024,NE-01,136153,177666,2420,6375,"{""Oliver/Maat"": 2420, ""Others"": 2944, ""Stein/Ware"": 1011}",320194
-2024,NE-02,163541,148905,2001,6200,"{""Oliver/Maat"": 2001, ""Others"": 3089, ""Stein/Ware"": 1110}",318646
-2024,NE-03,70301,238245,1978,4796,"{""Oliver/Maat"": 1978, ""Others"": 2052, ""Stein/Ware"": 766}",313342
-2024,NV,705197,751205,6059,28438,"{""Oliver/Maat"": 6059, ""Others"": 22379}",1484840
-2024,NH,418488,395523,4425,12178,"{""Oliver/Maat"": 4425, ""Others"": 4073, ""Stein/Ware"": 3680}",826189
-2024,NJ,2220713,1968215,39041,83797,"{""Kennedy/Shanahan"": 23479, ""Oliver/Maat"": 10500, ""Others"": 10777, ""Stein/Ware"": 39041}",4272725
-2024,NM,478802,423391,9553,21210,"{""Kennedy/Shanahan"": 9553, ""Oliver/Maat"": 3745, ""Others"": 3301, ""Stein/Ware"": 4611}",923403
-2024,NY,4619195,3578899,46698,64401,"{""Oliver/Maat"": 5338, ""Others"": 12365, ""Stein/Ware"": 46698}",8262495
-2024,NC,2715375,2898423,24762,85343,"{""Oliver/Maat"": 22125, ""Others"": 38456, ""Stein/Ware"": 24762}",5699141
-2024,ND,112327,246505,6227,9323,"{""Oliver/Maat"": 6227, ""Others"": 3096}",368155
-2024,OH,2533699,3180116,28200,53973,"{""Oliver/Maat"": 28200, ""Others"": 25773}",5767788
-2024,OK,499599,1036213,16020,30361,"{""Kennedy/Shanahan"": 16020, ""Oliver/Maat"": 9198, ""Others"": 5143}",1566173
-2024,OR,1240600,919480,33733,84413,"{""Kennedy/Shanahan"": 33733, ""Oliver/Maat"": 9061, ""Others"": 22520, ""Stein/Ware"": 19099}",2244493
-2024,PA,3423042,3543308,34538,92382,"{""Oliver/Maat"": 33318, ""Others"": 24526, ""Stein/Ware"": 34538}",7058732
-2024,RI,285156,214406,5045,13824,"{""Kennedy/Shanahan"": 5045, ""Oliver/Maat"": 1617, ""Others"": 4262, ""Stein/Ware"": 2900}",513386
-2024,SC,1028452,1483747,12669,35941,"{""Oliver/Maat"": 12669, ""Others"": 15155, ""Stein/Ware"": 8117}",2548140
-2024,SD,146859,272081,7204,9982,"{""Kennedy/Shanahan"": 7204, ""Oliver/Maat"": 2778}",428922
-2024,TN,1056265,1966865,21535,40812,"{""Kennedy/Shanahan"": 21535, ""Others"": 10310, ""Stein/Ware"": 8967}",3063942
-2024,TX,4835250,6393597,82701,159827,"{""Oliver/Maat"": 68557, ""Others"": 8569, ""Stein/Ware"": 82701}",11388674
-2024,UT,562566,883818,16902,42110,"{""Oliver/Maat"": 16902, ""Others"": 16986, ""Stein/Ware"": 8222}",1488494
-2024,VT,235791,119395,5905,14236,"{""Kennedy/Shanahan"": 5905, ""Oliver/Maat"": 1828, ""Others"": 5610, ""Stein/Ware"": 893}",369422
-2024,VA,2335395,2075085,34888,95461,"{""Oliver/Maat"": 19814, ""Others"": 40759, ""Stein/Ware"": 34888}",4505941
-2024,WA,2245849,1530923,54868,147471,"{""Kennedy/Shanahan"": 54868, ""Oliver/Maat"": 16428, ""Others"": 46421, ""Stein/Ware"": 29754}",3924243
-2024,WV,214309,533556,8947,14717,"{""Kennedy/Shanahan"": 8947, ""Oliver/Maat"": 3047, ""Others"": 192, ""Stein/Ware"": 2531}",762582
-2024,WI,1668229,1697626,17740,57063,"{""Kennedy/Shanahan"": 17740, ""Oliver/Maat"": 10511, ""Others"": 16537, ""Stein/Ware"": 12275}",3422918
-2024,WY,69527,192633,4193,6888,"{""Oliver/Maat"": 4193, ""Others"": 2695}",269048
-2024,NATIONAL,75017613,77302580,862049,2918109,"{""Kennedy/Shanahan"": 756393, ""Oliver/Maat"": 650126, ""Others"": 649541, ""Stein/Ware"": 862049}",155238302
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+2024,AL,772412,1462616,12075,30062,"{""Kennedy/Shanahan"": 12075, ""Oliver/Maat"": 4930, ""Others"": 8738, ""Stein/Ware"": 4319}",2265090,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,AK,140026,184458,5670,13693,"{""Kennedy/Shanahan"": 5670, ""Oliver/Maat"": 3040, ""Others"": 2641, ""Stein/Ware"": 2342}",338177,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,AZ,1582860,1770242,18319,37059,"{""Oliver/Maat"": 17898, ""Others"": 842, ""Stein/Ware"": 18319}",3390161,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,AR,396905,759241,13255,26530,"{""Kennedy/Shanahan"": 13255, ""Oliver/Maat"": 5715, ""Others"": 3285, ""Stein/Ware"": 4275}",1182676,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,CA,9276179,6081697,197645,507599,"{""Kennedy/Shanahan"": 197645, ""Oliver/Maat"": 66662, ""Others"": 75478, ""Stein/Ware"": 167814}",15865475,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,CO,1728159,1377441,35623,87145,"{""Kennedy/Shanahan"": 35623, ""Oliver/Maat"": 21439, ""Others"": 12739, ""Stein/Ware"": 17344}",3192745,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,CT,992053,736918,14281,30039,"{""Kennedy/Shanahan"": 8448, ""Oliver/Maat"": 6729, ""Others"": 581, ""Stein/Ware"": 14281}",1759010,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,DE,289758,214351,4636,8803,"{""Kennedy/Shanahan"": 4636, ""Oliver/Maat"": 2038, ""Others"": 1215, ""Stein/Ware"": 914}",512912,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,DC,294185,21076,2778,10608,"{""Kennedy/Shanahan"": 2778, ""Others"": 7830}",325869,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,FL,4683038,6110125,43155,100589,"{""Oliver/Maat"": 31972, ""Others"": 25462, ""Stein/Ware"": 43155}",10893752,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,GA,2548017,2663117,20684,39771,"{""Oliver/Maat"": 20684, ""Others"": 858, ""Stein/Ware"": 18229}",5250905,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,HI,313044,193661,4387,9996,"{""Oliver/Maat"": 2733, ""Others"": 2876, ""Stein/Ware"": 4387}",516701,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,ID,274972,605246,12812,24839,"{""Kennedy/Shanahan"": 12812, ""Oliver/Maat"": 4462, ""Others"": 4592, ""Stein/Ware"": 2973}",905057,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,IL,3062863,2449079,80426,121368,"{""Kennedy/Shanahan"": 80426, ""Oliver/Maat"": 3510, ""Others"": 6409, ""Stein/Ware"": 31023}",5633310,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,IN,1163603,1720347,29325,52727,"{""Kennedy/Shanahan"": 29325, ""Oliver/Maat"": 20425, ""Others"": 2977}",2936677,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,IA,707278,927019,13122,29209,"{""Kennedy/Shanahan"": 13122, ""Oliver/Maat"": 7218, ""Others"": 8869}",1663506,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,KS,544853,758802,16322,23936,"{""Kennedy/Shanahan"": 16322, ""Oliver/Maat"": 7614}",1327591,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,KY,704043,1337494,16769,32993,"{""Kennedy/Shanahan"": 16769, ""Oliver/Maat"": 6422, ""Others"": 2236, ""Stein/Ware"": 7566}",2074530,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,LA,766870,1208505,7138,31600,"{""Kennedy/Shanahan"": 6641, ""Oliver/Maat"": 6835, ""Others"": 10986, ""Stein/Ware"": 7138}",2006975,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,ME-AL,435652,377977,8967,17746,"{""Oliver/Maat"": 5286, ""Others"": 3493, ""Stein/Ware"": 8967}",831375,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,ME-01,258863,165214,4828,9632,"{""Oliver/Maat"": 2802, ""Others"": 2002, ""Stein/Ware"": 4828}",433709,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,ME-02,176789,212763,4139,8114,"{""Oliver/Maat"": 2484, ""Others"": 1491, ""Stein/Ware"": 4139}",397666,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MD,1902577,1035550,33134,100207,"{""Kennedy/Shanahan"": 28819, ""Oliver/Maat"": 15570, ""Others"": 22684, ""Stein/Ware"": 33134}",3038334,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MA,2126518,1251303,26545,95847,"{""Oliver/Maat"": 17735, ""Others"": 51567, ""Stein/Ware"": 26545}",3473668,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MI,2736533,2816636,44607,111017,"{""Kennedy/Shanahan"": 26785, ""Oliver/Maat"": 22440, ""Others"": 17185, ""Stein/Ware"": 44607}",5664186,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MN,1656979,1519032,24001,77909,"{""Kennedy/Shanahan"": 24001, ""Oliver/Maat"": 15155, ""Others"": 22478, ""Stein/Ware"": 16275}",3253920,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MS,466668,747744,5387,13596,"{""Kennedy/Shanahan"": 5387, ""Oliver/Maat"": 2536, ""Others"": 3800, ""Stein/Ware"": 1873}",1228008,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MO,1200599,1751986,23876,42742,"{""Oliver/Maat"": 23876, ""Others"": 1731, ""Stein/Ware"": 17135}",2995327,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,MT,231906,352079,11825,19005,"{""Kennedy/Shanahan"": 11825, ""Oliver/Maat"": 4275, ""Others"": 27, ""Stein/Ware"": 2878}",602990,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NE-AL,369995,564816,6399,17371,"{""Oliver/Maat"": 6399, ""Others"": 8085, ""Stein/Ware"": 2887}",952182,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NE-01,136153,177666,2420,6375,"{""Oliver/Maat"": 2420, ""Others"": 2944, ""Stein/Ware"": 1011}",320194,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NE-02,163541,148905,2001,6200,"{""Oliver/Maat"": 2001, ""Others"": 3089, ""Stein/Ware"": 1110}",318646,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NE-03,70301,238245,1978,4796,"{""Oliver/Maat"": 1978, ""Others"": 2052, ""Stein/Ware"": 766}",313342,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NV,705197,751205,6059,28438,"{""Oliver/Maat"": 6059, ""Others"": 22379}",1484840,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NH,418488,395523,4425,12178,"{""Oliver/Maat"": 4425, ""Others"": 4073, ""Stein/Ware"": 3680}",826189,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NJ,2220713,1968215,39041,83797,"{""Kennedy/Shanahan"": 23479, ""Oliver/Maat"": 10500, ""Others"": 10777, ""Stein/Ware"": 39041}",4272725,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NM,478802,423391,9553,21210,"{""Kennedy/Shanahan"": 9553, ""Oliver/Maat"": 3745, ""Others"": 3301, ""Stein/Ware"": 4611}",923403,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NY,4619195,3578899,46698,64401,"{""Oliver/Maat"": 5338, ""Others"": 12365, ""Stein/Ware"": 46698}",8262495,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NC,2715375,2898423,24762,85343,"{""Oliver/Maat"": 22125, ""Others"": 38456, ""Stein/Ware"": 24762}",5699141,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,ND,112327,246505,6227,9323,"{""Oliver/Maat"": 6227, ""Others"": 3096}",368155,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,OH,2533699,3180116,28200,53973,"{""Oliver/Maat"": 28200, ""Others"": 25773}",5767788,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,OK,499599,1036213,16020,30361,"{""Kennedy/Shanahan"": 16020, ""Oliver/Maat"": 9198, ""Others"": 5143}",1566173,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,OR,1240600,919480,33733,84413,"{""Kennedy/Shanahan"": 33733, ""Oliver/Maat"": 9061, ""Others"": 22520, ""Stein/Ware"": 19099}",2244493,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,PA,3423042,3543308,34538,92382,"{""Oliver/Maat"": 33318, ""Others"": 24526, ""Stein/Ware"": 34538}",7058732,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,RI,285156,214406,5045,13824,"{""Kennedy/Shanahan"": 5045, ""Oliver/Maat"": 1617, ""Others"": 4262, ""Stein/Ware"": 2900}",513386,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,SC,1028452,1483747,12669,35941,"{""Oliver/Maat"": 12669, ""Others"": 15155, ""Stein/Ware"": 8117}",2548140,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,SD,146859,272081,7204,9982,"{""Kennedy/Shanahan"": 7204, ""Oliver/Maat"": 2778}",428922,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,TN,1056265,1966865,21535,40812,"{""Kennedy/Shanahan"": 21535, ""Others"": 10310, ""Stein/Ware"": 8967}",3063942,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,TX,4835250,6393597,82701,159827,"{""Oliver/Maat"": 68557, ""Others"": 8569, ""Stein/Ware"": 82701}",11388674,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,UT,562566,883818,16902,42110,"{""Oliver/Maat"": 16902, ""Others"": 16986, ""Stein/Ware"": 8222}",1488494,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,VT,235791,119395,5905,14236,"{""Kennedy/Shanahan"": 5905, ""Oliver/Maat"": 1828, ""Others"": 5610, ""Stein/Ware"": 893}",369422,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,VA,2335395,2075085,34888,95461,"{""Oliver/Maat"": 19814, ""Others"": 40759, ""Stein/Ware"": 34888}",4505941,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,WA,2245849,1530923,54868,147471,"{""Kennedy/Shanahan"": 54868, ""Oliver/Maat"": 16428, ""Others"": 46421, ""Stein/Ware"": 29754}",3924243,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,WV,214309,533556,8947,14717,"{""Kennedy/Shanahan"": 8947, ""Oliver/Maat"": 3047, ""Others"": 192, ""Stein/Ware"": 2531}",762582,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,WI,1668229,1697626,17740,57063,"{""Kennedy/Shanahan"": 17740, ""Oliver/Maat"": 10511, ""Others"": 16537, ""Stein/Ware"": 12275}",3422918,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,WY,69527,192633,4193,6888,"{""Oliver/Maat"": 4193, ""Others"": 2695}",269048,https://en.wikipedia.org/wiki/2024_United_States_presidential_election
+2024,NATIONAL,75017613,77302580,862049,2918109,"{""Kennedy/Shanahan"": 756393, ""Oliver/Maat"": 650126, ""Others"": 649541, ""Stein/Ware"": 862049}",155238302,https://en.wikipedia.org/wiki/2024_United_States_presidential_election

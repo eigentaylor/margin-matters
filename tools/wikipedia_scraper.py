@@ -130,26 +130,26 @@ def scrape_wikipedia_election(year):
         # Get candidate info for this year
         rep_keywords, dem_keywords = get_candidate_parties(year)
         print(f"  🗳️  Looking for Republican keywords: {rep_keywords}, Democratic keywords: {dem_keywords}")
-        
+
         # Parse the table
-        election_data = parse_results_table(results_table, year, rep_keywords, dem_keywords)
-        
+        election_data = parse_results_table(results_table, year, rep_keywords, dem_keywords, source_url=url)
+
         if not election_data:
             print(f"  ❌ No data extracted from table")
             return None
-        
+
         # Convert to DataFrame
         df = pd.DataFrame(election_data)
-        
+
         print(f"  ✅ Extracted {len(df)} state records")
-        
+
         # Validate data
         total_votes = df['total_votes'].sum()
         total_r = df['R_votes'].sum()
         total_d = df['D_votes'].sum()
-        
+
         print(f"  📊 Totals: R={total_r:,} D={total_d:,} Total={total_votes:,}")
-        
+
         return df
         
     except requests.RequestException as e:
@@ -190,7 +190,7 @@ def find_results_table(soup, year):
     
     return None
 
-def parse_results_table(table, year, rep_keywords, dem_keywords):
+def parse_results_table(table, year, rep_keywords, dem_keywords, source_url=None):
     """
     Parse the results table and extract vote data.
     This is the tricky part - table structures vary by year.
@@ -390,6 +390,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                 'third_party_votes': third_party_votes,
                 'third_party_results': json.dumps(third_party_results, ensure_ascii=False, sort_keys=True),
                 'total_votes': total_votes,
+                'source_url': source_url,
             }
             
             election_data.append(record)
@@ -431,6 +432,7 @@ def parse_results_table(table, year, rep_keywords, dem_keywords):
                 'third_party_votes': total_tp_votes,
                 'third_party_results': json.dumps(merged_tp, ensure_ascii=False, sort_keys=True),
                 'total_votes': total_votes,
+                'source_url': source_url,
             }
             election_data.append(national_summary)
     except Exception:

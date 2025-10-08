@@ -110,6 +110,8 @@ def main():
             # New: total third-party votes and per-candidate breakdown
             r2['third_party_votes'] = safe_int(r.get('third_party_votes', 0))
             r2['third_party_results'] = r.get('third_party_results', '')
+            # preserve source URL from wikipedia scraper if present
+            r2['source_url'] = r.get('source_url', '')
             r2['top_third_party_share'] = r2['T_votes'] / r2['total_votes'] if r2['total_votes'] > 0 else 0.0
             # capture electoral_votes if present
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
@@ -293,6 +295,7 @@ def main():
             out = {
                 'year': year,
                 'abbr': abbr,
+                'source_url': r.get('source_url', ''),
                 'D_votes': r['D_votes'],
                 'D_share': r['D_votes'] / r['total_votes'] if r['total_votes'] > 0 else 0.0,
                 'R_votes': r['R_votes'],
@@ -480,7 +483,8 @@ def main():
         'two_party_margin_str', 'two_party_margin_delta_str',
         'two_party_national_margin_str', 'two_party_national_margin_delta_str',
         'two_party_relative_margin_str', 'two_party_relative_margin_delta_str',
-        'special_case_notes'
+        'special_case_notes',
+        'source_url',
     ]
 
     with open(outfile, 'w', newline='', encoding='utf-8') as f:

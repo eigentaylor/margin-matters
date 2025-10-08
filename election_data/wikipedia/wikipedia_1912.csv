@@ -1,50 +1,50 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1912,AL,82438,22680,9807,12841,"{""Eugene V. Debs"": 3029, ""William H. Taft"": 9807}",117959
-1912,AZ,10324,6949,3163,6449,"{""Eugene Chafin"": 265, ""Eugene V. Debs"": 3163, ""William H. Taft"": 3021}",23722
-1912,AR,68814,21644,25585,34646,"{""Eugene Chafin"": 908, ""Eugene V. Debs"": 8153, ""William H. Taft"": 25585}",125104
-1912,CA,283436,283610,79201,106481,"{""Eugene Chafin"": 23366, ""Eugene V. Debs"": 79201, ""William H. Taft"": 3914}",673527
-1912,CO,114232,72306,58386,80342,"{""Arthur Reimer"": 475, ""Eugene Chafin"": 5063, ""Eugene V. Debs"": 16418, ""William H. Taft"": 58386}",266880
-1912,CT,74561,34129,68324,81708,"{""Arthur Reimer"": 1260, ""Eugene Chafin"": 2068, ""Eugene V. Debs"": 10056, ""William H. Taft"": 68324}",190398
-1912,DE,22631,8886,15998,17177,"{""Eugene Chafin"": 623, ""Eugene V. Debs"": 556, ""William H. Taft"": 15998}",48694
-1912,FL,35343,4555,4806,10939,"{""Eugene Chafin"": 1854, ""Eugene V. Debs"": 4806, ""William H. Taft"": 4279}",50837
-1912,GA,93087,21985,5191,6398,"{""Eugene Chafin"": 149, ""Eugene V. Debs"": 1058, ""William H. Taft"": 5191}",121470
-1912,ID,33921,25527,32810,46306,"{""Eugene Chafin"": 1536, ""Eugene V. Debs"": 11960, ""William H. Taft"": 32810}",105754
-1912,IL,405048,386478,253593,354647,"{""Arthur Reimer"": 4066, ""Eugene Chafin"": 15710, ""Eugene V. Debs"": 81278, ""William H. Taft"": 253593}",1146173
-1912,IN,281890,162007,151267,210577,"{""Arthur Reimer"": 3130, ""Eugene Chafin"": 19249, ""Eugene V. Debs"": 36931, ""William H. Taft"": 151267}",654474
-1912,IA,185325,161819,119805,145212,"{""Eugene Chafin"": 8440, ""Eugene V. Debs"": 16967, ""William H. Taft"": 119805}",492356
-1912,KS,143663,120210,74845,101624,"{""Eugene V. Debs"": 26779, ""William H. Taft"": 74845}",365497
-1912,KY,219484,101766,115510,131464,"{""Arthur Reimer"": 1055, ""Eugene Chafin"": 3253, ""Eugene V. Debs"": 11646, ""William H. Taft"": 115510}",452714
-1912,LA,60871,9283,5261,9094,"{""Eugene V. Debs"": 5261, ""William H. Taft"": 3833}",79248
-1912,ME-AL,51113,48495,26545,30032,"{""Eugene Chafin"": 946, ""Eugene V. Debs"": 2541, ""William H. Taft"": 26545}",129640
-1912,MD,112674,57789,54956,61518,"{""Arthur Reimer"": 322, ""Eugene Chafin"": 2244, ""Eugene V. Debs"": 3996, ""William H. Taft"": 54956}",231981
-1912,MA,173408,142228,155948,172420,"{""Arthur Reimer"": 1102, ""Eugene Chafin"": 2754, ""Eugene V. Debs"": 12616, ""William H. Taft"": 155948}",488056
-1912,MI,150751,214584,152244,185641,"{""Arthur Reimer"": 1252, ""Eugene Chafin"": 8934, ""Eugene V. Debs"": 23211, ""William H. Taft"": 152244}",550976
-1912,MN,106426,125856,64334,101937,"{""Arthur Reimer"": 2212, ""Eugene Chafin"": 7886, ""Eugene V. Debs"": 27505, ""William H. Taft"": 64334}",334219
-1912,MS,57324,3549,2050,3610,"{""Eugene V. Debs"": 2050, ""William H. Taft"": 1560}",64483
-1912,MO,330746,124375,207821,243445,"{""Arthur Reimer"": 1778, ""Eugene Chafin"": 5380, ""Eugene V. Debs"": 28466, ""William H. Taft"": 207821}",698566
-1912,MT,27941,22456,18512,29429,"{""Eugene Chafin"": 32, ""Eugene V. Debs"": 10885, ""William H. Taft"": 18512}",79826
-1912,NE-AL,109008,72681,54226,67794,"{""Eugene Chafin"": 3383, ""Eugene V. Debs"": 10185, ""William H. Taft"": 54226}",249483
-1912,NV,7986,5620,3313,6509,"{""Eugene V. Debs"": 3313, ""William H. Taft"": 3196}",20115
-1912,NH,34724,17794,32927,35443,"{""Eugene Chafin"": 535, ""Eugene V. Debs"": 1981, ""William H. Taft"": 32927}",87961
-1912,NJ,178289,145410,88835,109040,"{""Arthur Reimer"": 1321, ""Eugene Chafin"": 2936, ""Eugene V. Debs"": 15948, ""William H. Taft"": 88835}",432739
-1912,NM,20437,8347,17733,20592,"{""Eugene V. Debs"": 2859, ""William H. Taft"": 17733}",49376
-1912,NY,655573,390093,455487,542649,"{""Arthur Reimer"": 4273, ""Eugene Chafin"": 19455, ""Eugene V. Debs"": 63434, ""William H. Taft"": 455487}",1588315
-1912,NC,144407,69135,29129,30234,"{""Eugene Chafin"": 118, ""Eugene V. Debs"": 987, ""William H. Taft"": 29129}",243776
-1912,ND,29555,25726,23090,31299,"{""Eugene Chafin"": 1243, ""Eugene V. Debs"": 6966, ""William H. Taft"": 23090}",86580
-1912,OH,424834,229807,278168,382453,"{""Arthur Reimer"": 2630, ""Eugene Chafin"": 11511, ""Eugene V. Debs"": 90144, ""William H. Taft"": 278168}",1037094
-1912,OK,119156,0,90786,134645,"{""Eugene Chafin"": 2185, ""Eugene V. Debs"": 41674, ""William H. Taft"": 90786}",253801
-1912,OR,47064,37600,34673,52376,"{""Eugene Chafin"": 4360, ""Eugene V. Debs"": 13343, ""William H. Taft"": 34673}",137040
-1912,PA,395637,444894,273360,377205,"{""Arthur Reimer"": 706, ""Eugene Chafin"": 19525, ""Eugene V. Debs"": 83614, ""William H. Taft"": 273360}",1217736
-1912,RI,30412,16878,27703,30604,"{""Arthur Reimer"": 236, ""Eugene Chafin"": 616, ""Eugene V. Debs"": 2049, ""William H. Taft"": 27703}",77894
-1912,SC,48357,1293,536,700,"{""Eugene V. Debs"": 164, ""William H. Taft"": 536}",50350
-1912,SD,48942,58811,4662,8572,"{""Eugene Chafin"": 3910, ""Eugene V. Debs"": 4662}",116325
-1912,TN,133021,54041,60475,64871,"{""Eugene Chafin"": 832, ""Eugene V. Debs"": 3564, ""William H. Taft"": 60475}",251933
-1912,TX,221589,28853,26755,54678,"{""Arthur Reimer"": 442, ""Eugene Chafin"": 1738, ""Eugene V. Debs"": 25743, ""William H. Taft"": 26755}",305120
-1912,UT,36579,24174,42100,51633,"{""Arthur Reimer"": 510, ""Eugene V. Debs"": 9023, ""William H. Taft"": 42100}",112386
-1912,VT,15354,22132,23332,25355,"{""Eugene Chafin"": 1095, ""Eugene V. Debs"": 928, ""William H. Taft"": 23332}",62841
-1912,VA,90332,21776,23288,24867,"{""Arthur Reimer"": 50, ""Eugene Chafin"": 709, ""Eugene V. Debs"": 820, ""William H. Taft"": 23288}",136975
-1912,WA,86840,113698,70445,122261,"{""Arthur Reimer"": 1872, ""Eugene Chafin"": 9810, ""Eugene V. Debs"": 40134, ""William H. Taft"": 70445}",322799
-1912,WV,113197,79112,56754,76519,"{""Eugene Chafin"": 4517, ""Eugene V. Debs"": 15248, ""William H. Taft"": 56754}",268828
-1912,WI,164230,62448,130596,173288,"{""Arthur Reimer"": 632, ""Eugene Chafin"": 8584, ""Eugene V. Debs"": 33476, ""William H. Taft"": 130596}",399966
-1912,WY,15310,9232,14560,17754,"{""Eugene Chafin"": 434, ""Eugene V. Debs"": 2760, ""William H. Taft"": 14560}",42296
-1912,NATIONAL,6296284,4122721,3486242,4625273,"{""Arthur Reimer"": 29324, ""Eugene Chafin"": 208156, ""Eugene V. Debs"": 901551, ""William H. Taft"": 3486242}",15044278
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1912,AL,82438,22680,9807,12841,"{""Eugene V. Debs"": 3029, ""William H. Taft"": 9807}",117959,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,AZ,10324,6949,3163,6449,"{""Eugene Chafin"": 265, ""Eugene V. Debs"": 3163, ""William H. Taft"": 3021}",23722,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,AR,68814,21644,25585,34646,"{""Eugene Chafin"": 908, ""Eugene V. Debs"": 8153, ""William H. Taft"": 25585}",125104,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,CA,283436,283610,79201,106481,"{""Eugene Chafin"": 23366, ""Eugene V. Debs"": 79201, ""William H. Taft"": 3914}",673527,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,CO,114232,72306,58386,80342,"{""Arthur Reimer"": 475, ""Eugene Chafin"": 5063, ""Eugene V. Debs"": 16418, ""William H. Taft"": 58386}",266880,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,CT,74561,34129,68324,81708,"{""Arthur Reimer"": 1260, ""Eugene Chafin"": 2068, ""Eugene V. Debs"": 10056, ""William H. Taft"": 68324}",190398,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,DE,22631,8886,15998,17177,"{""Eugene Chafin"": 623, ""Eugene V. Debs"": 556, ""William H. Taft"": 15998}",48694,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,FL,35343,4555,4806,10939,"{""Eugene Chafin"": 1854, ""Eugene V. Debs"": 4806, ""William H. Taft"": 4279}",50837,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,GA,93087,21985,5191,6398,"{""Eugene Chafin"": 149, ""Eugene V. Debs"": 1058, ""William H. Taft"": 5191}",121470,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,ID,33921,25527,32810,46306,"{""Eugene Chafin"": 1536, ""Eugene V. Debs"": 11960, ""William H. Taft"": 32810}",105754,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,IL,405048,386478,253593,354647,"{""Arthur Reimer"": 4066, ""Eugene Chafin"": 15710, ""Eugene V. Debs"": 81278, ""William H. Taft"": 253593}",1146173,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,IN,281890,162007,151267,210577,"{""Arthur Reimer"": 3130, ""Eugene Chafin"": 19249, ""Eugene V. Debs"": 36931, ""William H. Taft"": 151267}",654474,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,IA,185325,161819,119805,145212,"{""Eugene Chafin"": 8440, ""Eugene V. Debs"": 16967, ""William H. Taft"": 119805}",492356,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,KS,143663,120210,74845,101624,"{""Eugene V. Debs"": 26779, ""William H. Taft"": 74845}",365497,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,KY,219484,101766,115510,131464,"{""Arthur Reimer"": 1055, ""Eugene Chafin"": 3253, ""Eugene V. Debs"": 11646, ""William H. Taft"": 115510}",452714,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,LA,60871,9283,5261,9094,"{""Eugene V. Debs"": 5261, ""William H. Taft"": 3833}",79248,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,ME-AL,51113,48495,26545,30032,"{""Eugene Chafin"": 946, ""Eugene V. Debs"": 2541, ""William H. Taft"": 26545}",129640,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MD,112674,57789,54956,61518,"{""Arthur Reimer"": 322, ""Eugene Chafin"": 2244, ""Eugene V. Debs"": 3996, ""William H. Taft"": 54956}",231981,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MA,173408,142228,155948,172420,"{""Arthur Reimer"": 1102, ""Eugene Chafin"": 2754, ""Eugene V. Debs"": 12616, ""William H. Taft"": 155948}",488056,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MI,150751,214584,152244,185641,"{""Arthur Reimer"": 1252, ""Eugene Chafin"": 8934, ""Eugene V. Debs"": 23211, ""William H. Taft"": 152244}",550976,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MN,106426,125856,64334,101937,"{""Arthur Reimer"": 2212, ""Eugene Chafin"": 7886, ""Eugene V. Debs"": 27505, ""William H. Taft"": 64334}",334219,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MS,57324,3549,2050,3610,"{""Eugene V. Debs"": 2050, ""William H. Taft"": 1560}",64483,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MO,330746,124375,207821,243445,"{""Arthur Reimer"": 1778, ""Eugene Chafin"": 5380, ""Eugene V. Debs"": 28466, ""William H. Taft"": 207821}",698566,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,MT,27941,22456,18512,29429,"{""Eugene Chafin"": 32, ""Eugene V. Debs"": 10885, ""William H. Taft"": 18512}",79826,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NE-AL,109008,72681,54226,67794,"{""Eugene Chafin"": 3383, ""Eugene V. Debs"": 10185, ""William H. Taft"": 54226}",249483,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NV,7986,5620,3313,6509,"{""Eugene V. Debs"": 3313, ""William H. Taft"": 3196}",20115,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NH,34724,17794,32927,35443,"{""Eugene Chafin"": 535, ""Eugene V. Debs"": 1981, ""William H. Taft"": 32927}",87961,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NJ,178289,145410,88835,109040,"{""Arthur Reimer"": 1321, ""Eugene Chafin"": 2936, ""Eugene V. Debs"": 15948, ""William H. Taft"": 88835}",432739,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NM,20437,8347,17733,20592,"{""Eugene V. Debs"": 2859, ""William H. Taft"": 17733}",49376,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NY,655573,390093,455487,542649,"{""Arthur Reimer"": 4273, ""Eugene Chafin"": 19455, ""Eugene V. Debs"": 63434, ""William H. Taft"": 455487}",1588315,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NC,144407,69135,29129,30234,"{""Eugene Chafin"": 118, ""Eugene V. Debs"": 987, ""William H. Taft"": 29129}",243776,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,ND,29555,25726,23090,31299,"{""Eugene Chafin"": 1243, ""Eugene V. Debs"": 6966, ""William H. Taft"": 23090}",86580,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,OH,424834,229807,278168,382453,"{""Arthur Reimer"": 2630, ""Eugene Chafin"": 11511, ""Eugene V. Debs"": 90144, ""William H. Taft"": 278168}",1037094,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,OK,119156,0,90786,134645,"{""Eugene Chafin"": 2185, ""Eugene V. Debs"": 41674, ""William H. Taft"": 90786}",253801,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,OR,47064,37600,34673,52376,"{""Eugene Chafin"": 4360, ""Eugene V. Debs"": 13343, ""William H. Taft"": 34673}",137040,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,PA,395637,444894,273360,377205,"{""Arthur Reimer"": 706, ""Eugene Chafin"": 19525, ""Eugene V. Debs"": 83614, ""William H. Taft"": 273360}",1217736,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,RI,30412,16878,27703,30604,"{""Arthur Reimer"": 236, ""Eugene Chafin"": 616, ""Eugene V. Debs"": 2049, ""William H. Taft"": 27703}",77894,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,SC,48357,1293,536,700,"{""Eugene V. Debs"": 164, ""William H. Taft"": 536}",50350,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,SD,48942,58811,4662,8572,"{""Eugene Chafin"": 3910, ""Eugene V. Debs"": 4662}",116325,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,TN,133021,54041,60475,64871,"{""Eugene Chafin"": 832, ""Eugene V. Debs"": 3564, ""William H. Taft"": 60475}",251933,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,TX,221589,28853,26755,54678,"{""Arthur Reimer"": 442, ""Eugene Chafin"": 1738, ""Eugene V. Debs"": 25743, ""William H. Taft"": 26755}",305120,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,UT,36579,24174,42100,51633,"{""Arthur Reimer"": 510, ""Eugene V. Debs"": 9023, ""William H. Taft"": 42100}",112386,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,VT,15354,22132,23332,25355,"{""Eugene Chafin"": 1095, ""Eugene V. Debs"": 928, ""William H. Taft"": 23332}",62841,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,VA,90332,21776,23288,24867,"{""Arthur Reimer"": 50, ""Eugene Chafin"": 709, ""Eugene V. Debs"": 820, ""William H. Taft"": 23288}",136975,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,WA,86840,113698,70445,122261,"{""Arthur Reimer"": 1872, ""Eugene Chafin"": 9810, ""Eugene V. Debs"": 40134, ""William H. Taft"": 70445}",322799,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,WV,113197,79112,56754,76519,"{""Eugene Chafin"": 4517, ""Eugene V. Debs"": 15248, ""William H. Taft"": 56754}",268828,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,WI,164230,62448,130596,173288,"{""Arthur Reimer"": 632, ""Eugene Chafin"": 8584, ""Eugene V. Debs"": 33476, ""William H. Taft"": 130596}",399966,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,WY,15310,9232,14560,17754,"{""Eugene Chafin"": 434, ""Eugene V. Debs"": 2760, ""William H. Taft"": 14560}",42296,https://en.wikipedia.org/wiki/1912_United_States_presidential_election
+1912,NATIONAL,6296284,4122721,3486242,4625273,"{""Arthur Reimer"": 29324, ""Eugene Chafin"": 208156, ""Eugene V. Debs"": 901551, ""William H. Taft"": 3486242}",15044278,https://en.wikipedia.org/wiki/1912_United_States_presidential_election

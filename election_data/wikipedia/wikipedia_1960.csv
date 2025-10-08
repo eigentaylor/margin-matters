@@ -1,52 +1,52 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1960,AL,318303,237981,324050,324050,"{""Unpledged Electors"": 324050}",880334
-1960,AK,29809,30953,0,0,{},60762
-1960,AZ,176781,221241,469,469,"{""Eric Hass"": 469}",398491
-1960,AR,215049,184508,28952,28952,"{""Orval Faubus"": 28952}",428509
-1960,CA,3224099,3259722,1051,22757,"{""Eric Hass"": 1051}",6506578
-1960,CO,330629,402242,2803,3375,"{""Eric Hass"": 2803}",736246
-1960,CT,657055,565813,0,15,"{""Other"": 15}",1222883
-1960,DE,99590,96373,82,720,"{""Eric Hass"": 82}",196683
-1960,FL,748700,795476,0,0,{},1544176
-1960,GA,458638,274472,0,239,"{""Other"": 239}",733349
-1960,HI,92410,92295,0,0,{},184705
-1960,ID,138853,161597,0,0,{},300450
-1960,IL,2377846,2368988,10560,10575,"{""Eric Hass"": 10560}",4757409
-1960,IN,952358,1175120,1136,7882,"{""Eric Hass"": 1136}",2135360
-1960,IA,550565,722381,230,864,"{""Eric Hass"": 230}",1273810
-1960,KS,363213,561474,0,4138,"{""Other"": 4138}",928825
-1960,KY,521855,602607,0,0,{},1124462
-1960,LA,407339,230980,169572,169572,"{""Unpledged Electors"": 169572}",807891
-1960,ME-AL,181159,240608,0,0,{},421767
-1960,MD,565808,489538,0,3,"{""Other"": 3}",1055349
-1960,MA,1487174,976750,3892,5556,"{""Eric Hass"": 3892}",2469480
-1960,MI,1687269,1620428,1718,10400,"{""Eric Hass"": 1718, ""Unpledged Electors"": 539}",3318097
-1960,MN,779933,757915,962,4039,"{""Eric Hass"": 962}",1541887
-1960,MS,108362,73561,116248,116248,"{""Unpledged Electors"": 116248}",298171
-1960,MO,972201,962221,0,0,{},1934422
-1960,MT,134891,141841,0,847,"{""Other"": 847}",277579
-1960,NE-AL,232542,380553,0,0,{},613095
-1960,NV,54880,52387,0,0,{},107267
-1960,NH,137772,157989,0,0,{},295761
-1960,NJ,1385415,1363324,4262,24372,"{""Eric Hass"": 4262}",2773111
-1960,NM,156027,153733,570,1347,"{""Eric Hass"": 570}",311107
-1960,NY,3830085,3446419,0,14575,"{""Other"": 14575}",7291079
-1960,NC,713136,655420,0,0,{},1368556
-1960,ND,123963,154310,0,158,"{""Other"": 158}",278431
-1960,OH,1944248,2217611,0,0,{},4161859
-1960,OK,370111,533039,0,0,{},903150
-1960,OR,367402,408060,0,959,"{""Other"": 959}",776421
-1960,PA,2556282,2439956,7185,10303,"{""Eric Hass"": 7185}",5006541
-1960,RI,258032,147502,0,1,"{""Other"": 1}",405535
-1960,SC,198129,188558,0,1,"{""Other"": 1}",386688
-1960,SD,128070,178417,0,0,{},306487
-1960,TN,481453,556577,0,13762,"{""Other"": 13762}",1051792
-1960,TX,1167567,1121310,0,22207,"{""Other"": 22207}",2311084
-1960,UT,169248,205361,0,100,"{""Other"": 100}",374709
-1960,VT,69186,98131,0,7,"{""Other"": 7}",167324
-1960,VA,362327,404521,397,4601,"{""Eric Hass"": 397}",771449
-1960,WA,599298,629273,10895,13001,"{""Eric Hass"": 10895}",1241572
-1960,WV,441786,395995,0,0,{},837781
-1960,WI,830805,895175,1310,3102,"{""Eric Hass"": 1310}",1729082
-1960,WY,63331,77451,0,0,{},140782
-1960,NATIONAL,34220984,34108157,286359,503341,"{""Eric Hass"": 47522, ""Unpledged Electors"": 286359}",68832482
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1960,AL,318303,237981,324050,324050,"{""Unpledged Electors"": 324050}",880334,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,AK,29809,30953,0,0,{},60762,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,AZ,176781,221241,469,469,"{""Eric Hass"": 469}",398491,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,AR,215049,184508,28952,28952,"{""Orval Faubus"": 28952}",428509,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,CA,3224099,3259722,1051,22757,"{""Eric Hass"": 1051}",6506578,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,CO,330629,402242,2803,3375,"{""Eric Hass"": 2803}",736246,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,CT,657055,565813,0,15,"{""Other"": 15}",1222883,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,DE,99590,96373,82,720,"{""Eric Hass"": 82}",196683,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,FL,748700,795476,0,0,{},1544176,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,GA,458638,274472,0,239,"{""Other"": 239}",733349,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,HI,92410,92295,0,0,{},184705,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,ID,138853,161597,0,0,{},300450,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,IL,2377846,2368988,10560,10575,"{""Eric Hass"": 10560}",4757409,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,IN,952358,1175120,1136,7882,"{""Eric Hass"": 1136}",2135360,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,IA,550565,722381,230,864,"{""Eric Hass"": 230}",1273810,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,KS,363213,561474,0,4138,"{""Other"": 4138}",928825,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,KY,521855,602607,0,0,{},1124462,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,LA,407339,230980,169572,169572,"{""Unpledged Electors"": 169572}",807891,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,ME-AL,181159,240608,0,0,{},421767,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MD,565808,489538,0,3,"{""Other"": 3}",1055349,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MA,1487174,976750,3892,5556,"{""Eric Hass"": 3892}",2469480,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MI,1687269,1620428,1718,10400,"{""Eric Hass"": 1718, ""Unpledged Electors"": 539}",3318097,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MN,779933,757915,962,4039,"{""Eric Hass"": 962}",1541887,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MS,108362,73561,116248,116248,"{""Unpledged Electors"": 116248}",298171,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MO,972201,962221,0,0,{},1934422,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,MT,134891,141841,0,847,"{""Other"": 847}",277579,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NE-AL,232542,380553,0,0,{},613095,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NV,54880,52387,0,0,{},107267,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NH,137772,157989,0,0,{},295761,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NJ,1385415,1363324,4262,24372,"{""Eric Hass"": 4262}",2773111,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NM,156027,153733,570,1347,"{""Eric Hass"": 570}",311107,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NY,3830085,3446419,0,14575,"{""Other"": 14575}",7291079,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NC,713136,655420,0,0,{},1368556,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,ND,123963,154310,0,158,"{""Other"": 158}",278431,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,OH,1944248,2217611,0,0,{},4161859,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,OK,370111,533039,0,0,{},903150,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,OR,367402,408060,0,959,"{""Other"": 959}",776421,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,PA,2556282,2439956,7185,10303,"{""Eric Hass"": 7185}",5006541,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,RI,258032,147502,0,1,"{""Other"": 1}",405535,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,SC,198129,188558,0,1,"{""Other"": 1}",386688,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,SD,128070,178417,0,0,{},306487,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,TN,481453,556577,0,13762,"{""Other"": 13762}",1051792,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,TX,1167567,1121310,0,22207,"{""Other"": 22207}",2311084,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,UT,169248,205361,0,100,"{""Other"": 100}",374709,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,VT,69186,98131,0,7,"{""Other"": 7}",167324,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,VA,362327,404521,397,4601,"{""Eric Hass"": 397}",771449,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,WA,599298,629273,10895,13001,"{""Eric Hass"": 10895}",1241572,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,WV,441786,395995,0,0,{},837781,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,WI,830805,895175,1310,3102,"{""Eric Hass"": 1310}",1729082,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,WY,63331,77451,0,0,{},140782,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
+1960,NATIONAL,34220984,34108157,286359,503341,"{""Eric Hass"": 47522, ""Unpledged Electors"": 286359}",68832482,https://en.wikipedia.org/wiki/1960_United_States_presidential_election
