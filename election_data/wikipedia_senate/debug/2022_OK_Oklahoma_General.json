@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Oklahoma",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 6,
+  "parsed_rows": 5,
+  "table_total_votes": 1150732,
   "table": {
     "caption": "2022 United States Senate election in Oklahoma [ 98 ] [ 99 ]",
     "headers": [
@@ -315,7 +316,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "James Lankford (incumbent)",
+      "candidate": "James Lankford",
       "party": "Republican",
       "votes": 739960,
       "percent": 64.3
@@ -337,12 +338,6 @@
       "party": "Libertarian",
       "votes": 20495,
       "percent": 1.78
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1150732,
-      "percent": 50.12
     },
     {
       "candidate": "Registered electors",

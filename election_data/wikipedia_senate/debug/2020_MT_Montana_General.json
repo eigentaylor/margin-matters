@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 605637,
   "table": {
     "caption": "United States Senate election in Montana, 2020 [ 106 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Steve Daines (incumbent)",
+      "candidate": "Steve Daines",
       "party": "Republican",
       "votes": 333174,
       "percent": 55.01

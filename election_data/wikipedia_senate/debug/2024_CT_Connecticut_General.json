@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Connecticut",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 5,
+  "table_total_votes": 1708259,
   "table": {
     "caption": "2024 United States Senate election in Connecticut [ 31 ]",
     "headers": [
@@ -359,18 +360,6 @@
     {
       "candidate": "Chris Murphy",
       "party": "Democratic",
-      "votes": 953646,
-      "percent": 55.83
-    },
-    {
-      "candidate": "Chris Murphy",
-      "party": "Working Families",
-      "votes": 47049,
-      "percent": 2.75
-    },
-    {
-      "candidate": "Chris Murphy (incumbent)",
-      "party": "Total",
       "votes": 1000695,
       "percent": 58.58
     },

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Tennessee",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 11,
+  "parsed_rows": 12,
+  "table_total_votes": 2959761,
   "table": {
     "caption": "2020 United States Senate election in Tennessee [ 118 ]",
     "headers": [
@@ -577,6 +578,12 @@
       "percent": 0.32
     },
     {
+      "candidate": "Kacey Morgan",
+      "party": "Independent",
+      "votes": 9598,
+      "percent": 0.32
+    },
+    {
       "candidate": "Ronnie Henley",
       "party": "Independent",
       "votes": 8478,
@@ -599,12 +606,6 @@
       "party": "Independent",
       "votes": 4872,
       "percent": 0.16
-    },
-    {
-      "candidate": "Jeffrey Grunau",
-      "party": "Independent",
-      "votes": 4160,
-      "percent": 0.14
     }
   ]
 }

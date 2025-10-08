@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 5374164,
   "table": {
     "caption": "United States Senate election in Ohio, 2016 [ 181 ]",
     "headers": [
@@ -335,7 +336,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Rob Portman (incumbent)",
+      "candidate": "Rob Portman",
       "party": "Republican",
       "votes": 3118567,
       "percent": 58.03
@@ -365,7 +366,7 @@
       "percent": 1.44
     },
     {
-      "candidate": "James Stahl ( write-in )",
+      "candidate": "James Stahl",
       "party": "Independent",
       "votes": 111,
       "percent": 0.0

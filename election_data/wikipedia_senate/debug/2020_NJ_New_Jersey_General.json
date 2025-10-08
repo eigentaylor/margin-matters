@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 4440440,
   "table": {
     "caption": "United States Senate election in New Jersey, 2020 [ 70 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Cory Booker (incumbent)",
+      "candidate": "Cory Booker",
       "party": "Democratic",
       "votes": 2541239,
       "percent": 57.23

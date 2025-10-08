@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 3390787,
   "table": {
     "caption": "2024 United States Senate election in Wisconsin [ 175 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tammy Baldwin (incumbent)",
+      "candidate": "Tammy Baldwin",
       "party": "Democratic",
       "votes": 1672777,
       "percent": 49.33
@@ -349,7 +350,7 @@
       "percent": 0.85
     },
     {
-      "candidate": "John Schiess (write-in)",
+      "candidate": "John Schiess",
       "party": "Independent",
       "votes": 26,
       "percent": 0.0

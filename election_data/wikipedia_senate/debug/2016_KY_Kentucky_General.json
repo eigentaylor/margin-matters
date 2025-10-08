@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1903465,
   "table": {
     "caption": "United States Senate election in Kentucky, 2016 [ 81 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Rand Paul (incumbent)",
+      "candidate": "Rand Paul",
       "party": "Republican",
       "votes": 1090177,
       "percent": 57.27

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 264162,
   "table": {
     "caption": "United States Senate election in Wyoming, 2024 [ 21 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Barrasso (incumbent)",
+      "candidate": "John Barrasso",
       "party": "Republican",
       "votes": 198418,
       "percent": 75.11

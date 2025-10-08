@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 369656,
   "table": {
     "caption": "United States Senate election in South Dakota, 2016 [ 35 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Thune (incumbent)",
+      "candidate": "John Thune",
       "party": "Republican",
       "votes": 265516,
       "percent": 71.83

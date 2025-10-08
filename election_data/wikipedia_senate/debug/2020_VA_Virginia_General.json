@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 4405087,
   "table": {
     "caption": "United States Senate election in Virginia, 2020 [ 71 ] [ q ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mark Warner (incumbent)",
+      "candidate": "Mark Warner",
       "party": "Democratic",
       "votes": 2466500,
       "percent": 55.99

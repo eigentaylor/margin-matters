@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1556361,
   "table": {
     "caption": "United States Senate election in Oklahoma, 2020 [ 45 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jim Inhofe (incumbent)",
+      "candidate": "Jim Inhofe",
       "party": "Republican",
       "votes": 979140,
       "percent": 62.91

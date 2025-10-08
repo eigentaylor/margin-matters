@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 3189323,
   "table": {
     "caption": "2024 United States Senate election in Minnesota [ 71 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Amy Klobuchar (incumbent)",
+      "candidate": "Amy Klobuchar",
       "party": "Democratic (DFL)",
       "votes": 1792441,
       "percent": 56.2

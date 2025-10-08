@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 2049893,
   "table": {
     "caption": "United States Senate election in South Carolina, 2016 [ 26 ] [ 27 ]",
     "headers": [
@@ -298,19 +299,19 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tim Scott (incumbent)",
+      "candidate": "Tim Scott",
       "party": "Republican",
       "votes": 1241609,
       "percent": 60.57
     },
     {
-      "candidate": "Thomas Dixon [ 28 ]",
+      "candidate": "Thomas Dixon",
       "party": "Democratic",
       "votes": 757022,
       "percent": 36.93
     },
     {
-      "candidate": "Bill Bledsoe [ 29 ]",
+      "candidate": "Bill Bledsoe",
       "party": "Libertarian",
       "votes": 37482,
       "percent": 1.83

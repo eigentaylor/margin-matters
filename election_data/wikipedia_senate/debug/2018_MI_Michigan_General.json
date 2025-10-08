@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 4237271,
   "table": {
     "caption": "2018 United States Senate election in Michigan [ 153 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Debbie Stabenow (incumbent)",
+      "candidate": "Debbie Stabenow",
       "party": "Democratic",
       "votes": 2214478,
       "percent": 52.26

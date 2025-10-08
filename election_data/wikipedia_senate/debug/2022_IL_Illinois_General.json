@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Illinois",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 103,
+  "parsed_rows": 90,
+  "table_total_votes": null,
   "table": {
     "caption": "2022 United States Senate election in Illinois (by county) [ 80 ]",
     "headers": [
@@ -2785,7 +2786,7 @@
     {
       "candidate": "28",
       "party": "",
-      "votes": 1897,
+      "votes": 3547,
       "percent": null
     },
     {
@@ -2797,7 +2798,7 @@
     {
       "candidate": "57",
       "party": "",
-      "votes": 2331,
+      "votes": 6370,
       "percent": null
     },
     {
@@ -2809,7 +2810,7 @@
     {
       "candidate": "91",
       "party": "",
-      "votes": 3932,
+      "votes": 10248,
       "percent": null
     },
     {

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 2596879,
   "table": {
     "caption": "United States Senate election in Minnesota, 2018 [ 44 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Amy Klobuchar (incumbent)",
+      "candidate": "Amy Klobuchar",
       "party": "Democratic (DFL)",
       "votes": 1566174,
       "percent": 60.31

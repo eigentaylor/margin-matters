@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1216646,
   "table": {
     "caption": "2022 United States Senate election in Iowa",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Chuck Grassley (incumbent)",
+      "candidate": "Chuck Grassley",
       "party": "Republican",
       "votes": 681501,
       "percent": 56.01

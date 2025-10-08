@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 5968901,
   "table": {
     "caption": "United States Senate election in Illinois, 2020 [ 82 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dick Durbin (incumbent)",
+      "candidate": "Dick Durbin",
       "party": "Democratic",
       "votes": 3278930,
       "percent": 54.93

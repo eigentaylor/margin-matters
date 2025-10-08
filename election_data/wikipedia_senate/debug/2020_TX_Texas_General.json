@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 11144040,
   "table": {
     "caption": "2020 United States Senate election in Texas [ 190 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Cornyn (incumbent)",
+      "candidate": "John Cornyn",
       "party": "Republican",
       "votes": 5962983,
       "percent": 53.51
@@ -322,7 +323,7 @@
       "percent": 0.73
     },
     {
-      "candidate": "Ricardo Turullols-Bonilla (write-in)",
+      "candidate": "Ricardo Turullols-Bonilla",
       "party": "Independent",
       "votes": 678,
       "percent": 0.01

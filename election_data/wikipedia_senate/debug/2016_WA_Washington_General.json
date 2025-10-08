@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 3243317,
   "table": {
     "caption": "United States Senate election in Washington, 2016 [ 36 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patty Murray (incumbent)",
+      "candidate": "Patty Murray",
       "party": "Democratic",
       "votes": 1913979,
       "percent": 59.01

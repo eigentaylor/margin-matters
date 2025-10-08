@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1695702,
   "table": {
     "caption": "2022 United States Senate election in South Carolina [ 38 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tim Scott (incumbent)",
+      "candidate": "Tim Scott",
       "party": "Republican",
       "votes": 1066274,
       "percent": 62.88

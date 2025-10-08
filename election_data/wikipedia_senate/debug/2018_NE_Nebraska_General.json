@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 698883,
   "table": {
     "caption": "2018 United States Senate election in Nebraska [ 45 ]",
     "headers": [
@@ -278,7 +279,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Deb Fischer ( inc. )",
+      "candidate": "Deb Fischer",
       "party": "Republican",
       "votes": 403151,
       "percent": 57.69

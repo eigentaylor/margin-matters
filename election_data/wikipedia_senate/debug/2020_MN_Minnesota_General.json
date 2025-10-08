@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 3214256,
   "table": {
     "caption": "2020 United States Senate election in Minnesota [ 111 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tina Smith (incumbent)",
+      "candidate": "Tina Smith",
       "party": "Democratic (DFL)",
       "votes": 1566522,
       "percent": 48.74

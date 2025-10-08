@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 2660763,
   "table": {
     "caption": "United States Senate election in Wisconsin, 2018 [ 146 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tammy Baldwin (incumbent)",
+      "candidate": "Tammy Baldwin",
       "party": "Democratic",
       "votes": 1472914,
       "percent": 55.36

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 1215401,
   "table": {
     "caption": "2024 United States Senate election in Mississippi [ 30 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Roger Wicker (incumbent)",
+      "candidate": "Roger Wicker",
       "party": "Republican",
       "votes": 763420,
       "percent": 62.81

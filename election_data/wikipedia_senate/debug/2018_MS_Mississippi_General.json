@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 936215,
   "table": {
     "caption": "2018 United States Senate election in Mississippi [ 59 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Roger Wicker (incumbent)",
+      "candidate": "Roger Wicker",
       "party": "Republican",
       "votes": 547619,
       "percent": 58.49

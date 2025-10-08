@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 1952478,
   "table": {
     "caption": "United States Senate election in Oregon, 2016 [ 35 ]",
     "headers": [
@@ -372,7 +373,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ronald Wyden (incumbent)",
+      "candidate": "Ronald Wyden",
       "party": "Democratic",
       "votes": 1105119,
       "percent": 56.6

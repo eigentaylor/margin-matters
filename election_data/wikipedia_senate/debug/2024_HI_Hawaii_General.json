@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 501763,
   "table": {
     "caption": "2024 United States Senate election in Hawaii [ 31 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mazie Hirono (incumbent)",
+      "candidate": "Mazie Hirono",
       "party": "Democratic",
       "votes": 324194,
       "percent": 64.61

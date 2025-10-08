@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 620975,
   "table": {
     "caption": "2022 United States Senate election in New Hampshire [ 150 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Maggie Hassan (incumbent)",
+      "candidate": "Maggie Hassan",
       "party": "Democratic",
       "votes": 332490,
       "percent": 53.54

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 5474952,
   "table": {
     "caption": "2020 United States Senate election in North Carolina [ 261 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Thom Tillis (incumbent)",
+      "candidate": "Thom Tillis",
       "party": "Republican",
       "votes": 2665598,
       "percent": 48.69

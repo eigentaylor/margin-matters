@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 311441,
   "table": {
     "caption": "2016 United States Senate election in Alaska [ 77 ]",
     "headers": [
@@ -362,7 +363,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lisa Murkowski (incumbent)",
+      "candidate": "Lisa Murkowski",
       "party": "Republican",
       "votes": 138149,
       "percent": 44.36

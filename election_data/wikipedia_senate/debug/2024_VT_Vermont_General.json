@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 363253,
   "table": {
     "caption": "2024 United States Senate election in Vermont [ 26 ]",
     "headers": [
@@ -362,7 +363,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bernie Sanders (incumbent)",
+      "candidate": "Bernie Sanders",
       "party": "Independent",
       "votes": 229429,
       "percent": 63.16

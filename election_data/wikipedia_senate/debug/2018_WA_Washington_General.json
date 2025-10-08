@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 3086168,
   "table": {
     "caption": "United States Senate election in Washington, 2018 [ 37 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Maria Cantwell (incumbent)",
+      "candidate": "Maria Cantwell",
       "party": "Democratic",
       "votes": 1803364,
       "percent": 58.43

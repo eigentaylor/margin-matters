@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 1193261,
   "table": {
     "caption": "United States Senate election in Arkansas, 2020 [ 32 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tom Cotton (incumbent)",
+      "candidate": "Tom Cotton",
       "party": "Republican",
       "votes": 793871,
       "percent": 66.53

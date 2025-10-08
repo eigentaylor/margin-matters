@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 2321249,
   "table": {
     "caption": "2020 United States Senate election in Oregon [ 59 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jeff Merkley (incumbent)",
+      "candidate": "Jeff Merkley",
       "party": "Democratic",
       "votes": 1321047,
       "percent": 56.91

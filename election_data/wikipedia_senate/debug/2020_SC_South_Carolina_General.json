@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2515104,
   "table": {
     "caption": "United States Senate election in South Carolina, 2020 [ 161 ] [ 2 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lindsey Graham (incumbent)",
+      "candidate": "Lindsey Graham",
       "party": "Republican",
       "votes": 1369137,
       "percent": 54.44

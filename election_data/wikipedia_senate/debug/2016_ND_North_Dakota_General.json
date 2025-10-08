@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 342501,
   "table": {
     "caption": "United States Senate election in North Dakota, 2016 [ 17 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Hoeven (incumbent)",
+      "candidate": "John Hoeven",
       "party": "Republican",
       "votes": 268788,
       "percent": 78.48

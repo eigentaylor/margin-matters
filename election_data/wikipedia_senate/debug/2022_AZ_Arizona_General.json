@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Arizona",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 3,
+  "parsed_rows": 4,
+  "table_total_votes": 2572294,
   "table": {
     "caption": "2022 United States Senate election in Arizona [ 226 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mark Kelly (incumbent)",
+      "candidate": "Mark Kelly",
       "party": "Democratic",
       "votes": 1322027,
       "percent": 51.39
@@ -261,6 +262,12 @@
       "party": "Republican",
       "votes": 1196308,
       "percent": 46.51
+    },
+    {
+      "candidate": "Marc Victor",
+      "party": "Libertarian",
+      "votes": 53762,
+      "percent": 2.09
     },
     {
       "candidate": "Write-in",

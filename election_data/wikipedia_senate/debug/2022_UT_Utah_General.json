@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1076061,
   "table": {
     "caption": "2022 United States Senate election in Utah [ 117 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Lee (incumbent)",
+      "candidate": "Mike Lee",
       "party": "Republican",
       "votes": 571974,
       "percent": 53.15

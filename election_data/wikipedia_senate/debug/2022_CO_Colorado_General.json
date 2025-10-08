@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2500201,
   "table": {
     "caption": "2022 United States Senate election in Colorado [ 134 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Michael Bennet (incumbent)",
+      "candidate": "Michael Bennet",
       "party": "Democratic",
       "votes": 1397170,
       "percent": 55.88

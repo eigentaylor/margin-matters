@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 4417084,
   "table": {
     "caption": "United States Senate election in Ohio, 2018 [ 183 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Sherrod Brown (incumbent)",
+      "candidate": "Sherrod Brown",
       "party": "Democratic",
       "votes": 2358508,
       "percent": 53.4

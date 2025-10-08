@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1177922,
   "table": {
     "caption": "2016 United States Senate election in Kansas [ 35 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jerry Moran (incumbent)",
+      "candidate": "Jerry Moran",
       "party": "Republican",
       "votes": 732376,
       "percent": 62.18
@@ -279,7 +280,7 @@
       "percent": 5.58
     },
     {
-      "candidate": "DJ Smith (write-in)",
+      "candidate": "DJ Smith",
       "party": "Independent",
       "votes": 46,
       "percent": 0.0

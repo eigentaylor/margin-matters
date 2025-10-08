@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1477830,
   "table": {
     "caption": "2022 United States Senate election in Kentucky [ 69 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Rand Paul (incumbent)",
+      "candidate": "Rand Paul",
       "party": "Republican",
       "votes": 913326,
       "percent": 61.8

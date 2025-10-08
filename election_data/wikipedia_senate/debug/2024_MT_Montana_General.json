@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 607262,
   "table": {
     "caption": "2024 United States Senate election in Montana [ 129 ]",
     "headers": [
@@ -262,7 +263,7 @@
       "percent": 52.64
     },
     {
-      "candidate": "Jon Tester (incumbent)",
+      "candidate": "Jon Tester",
       "party": "Democratic",
       "votes": 276305,
       "percent": 45.5

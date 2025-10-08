@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1464728,
   "table": {
     "caption": "2024 United States Senate election in Nevada [ 159 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jacky Rosen (incumbent)",
+      "candidate": "Jacky Rosen",
       "party": "Democratic",
       "votes": 701105,
       "percent": 47.87

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2282565,
   "table": {
     "caption": "United States Senate election in Indiana, 2018 [ 165 ]",
     "headers": [
@@ -252,7 +253,7 @@
       "percent": 50.73
     },
     {
-      "candidate": "Joe Donnelly (incumbent)",
+      "candidate": "Joe Donnelly",
       "party": "Democratic",
       "votes": 1023553,
       "percent": 44.84

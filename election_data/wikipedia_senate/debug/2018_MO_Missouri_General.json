@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2442289,
   "table": {
     "caption": "United States Senate election in Missouri, 2018 [ 117 ]",
     "headers": [
@@ -326,7 +327,7 @@
       "percent": 51.38
     },
     {
-      "candidate": "Claire McCaskill (incumbent)",
+      "candidate": "Claire McCaskill",
       "party": "Democratic",
       "votes": 1112935,
       "percent": 45.57

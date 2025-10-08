@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 4445535,
   "table": {
     "caption": "United States Senate election in Virginia, 2024 [ 90 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tim Kaine (incumbent)",
+      "candidate": "Tim Kaine",
       "party": "Democratic",
       "votes": 2417115,
       "percent": 54.37

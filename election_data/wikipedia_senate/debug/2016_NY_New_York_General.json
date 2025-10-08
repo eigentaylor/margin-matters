@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_New_York",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 11,
+  "parsed_rows": 4,
+  "table_total_votes": 7392833,
   "table": {
     "caption": "United States Senate election in New York, 2016 [ 35 ]",
     "headers": [
@@ -522,54 +523,12 @@
     {
       "candidate": "Chuck Schumer",
       "party": "Democratic",
-      "votes": 4784218,
-      "percent": 64.72
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Working Families",
-      "votes": 241672,
-      "percent": 3.27
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Independence",
-      "votes": 150654,
-      "percent": 2.04
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Women's Equality",
-      "votes": 45401,
-      "percent": 0.61
-    },
-    {
-      "candidate": "Chuck Schumer (incumbent)",
-      "party": "Total",
       "votes": 5221945,
       "percent": 70.64
     },
     {
       "candidate": "Wendy Long",
       "party": "Republican",
-      "votes": 1723920,
-      "percent": 23.32
-    },
-    {
-      "candidate": "Wendy Long",
-      "party": "Conservative",
-      "votes": 267622,
-      "percent": 3.62
-    },
-    {
-      "candidate": "Wendy Long",
-      "party": "Reform",
-      "votes": 17813,
-      "percent": 0.24
-    },
-    {
-      "candidate": "Wendy Long",
-      "party": "Total",
       "votes": 2009355,
       "percent": 27.18
     },
@@ -578,6 +537,12 @@
       "party": "Green",
       "votes": 113413,
       "percent": 1.53
+    },
+    {
+      "candidate": "Alex Merced",
+      "party": "Libertarian",
+      "votes": 48120,
+      "percent": 0.65
     }
   ]
 }

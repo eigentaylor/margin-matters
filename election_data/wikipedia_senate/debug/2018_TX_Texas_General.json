@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 8371655,
   "table": {
     "caption": "2018 United States Senate election in Texas [ 249 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ted Cruz (incumbent)",
+      "candidate": "Ted Cruz",
       "party": "Republican",
       "votes": 4260553,
       "percent": 50.89

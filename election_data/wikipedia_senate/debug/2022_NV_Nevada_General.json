@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 1020850,
   "table": {
     "caption": "2022 United States Senate election in Nevada [ 181 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Catherine Cortez Masto (incumbent)",
+      "candidate": "Catherine Cortez Masto",
       "party": "Democratic",
       "votes": 498316,
       "percent": 48.81

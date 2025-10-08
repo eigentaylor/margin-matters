@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 490935,
   "table": {
     "caption": "United States Senate election in Delaware, 2020 [ 73 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Chris Coons (incumbent)",
+      "candidate": "Chris Coons",
       "party": "Democratic",
       "votes": 291804,
       "percent": 59.44

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1107522,
   "table": {
     "caption": "United States Senate election in Arkansas, 2016 [ 27 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Boozman (incumbent)",
+      "candidate": "John Boozman",
       "party": "Republican",
       "votes": 661984,
       "percent": 59.77

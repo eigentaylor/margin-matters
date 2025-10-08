@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 901306,
   "table": {
     "caption": "2022 United States Senate election in Arkansas [ 38 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Boozman (incumbent)",
+      "candidate": "John Boozman",
       "party": "Republican",
       "votes": 592437,
       "percent": 65.73

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 4691133,
   "table": {
     "caption": "2016 United States Senate election in North Carolina [ 163 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Richard Burr (incumbent)",
+      "candidate": "Richard Burr",
       "party": "Republican",
       "votes": 2395376,
       "percent": 51.06

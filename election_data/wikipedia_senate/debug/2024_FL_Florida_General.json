@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 10757428,
   "table": {
     "caption": "2024 United States Senate election in Florida [ 144 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Rick Scott (incumbent)",
+      "candidate": "Rick Scott",
       "party": "Republican",
       "votes": 5977706,
       "percent": 55.57

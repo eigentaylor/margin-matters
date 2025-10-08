@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 3541877,
   "table": {
     "caption": "2022 United States Senate runoff election in Georgia [ 278 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Raphael Warnock (incumbent)",
+      "candidate": "Raphael Warnock",
       "party": "Democratic",
       "votes": 1820633,
       "percent": 51.4

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 504384,
   "table": {
     "caption": "United States Senate election in Montana, 2018 [ 106 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jon Tester (incumbent)",
+      "candidate": "Jon Tester",
       "party": "Democratic",
       "votes": 253876,
       "percent": 50.33

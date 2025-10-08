@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1115608,
   "table": {
     "caption": "United States Senate election in Utah, 2016 [ 67 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Lee (incumbent)",
+      "candidate": "Mike Lee",
       "party": "Republican",
       "votes": 760241,
       "percent": 68.15

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 2743023,
   "table": {
     "caption": "United States Senate election in Colorado, 2016 [ 142 ]",
     "headers": [
@@ -372,7 +373,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Michael Bennet (incumbent)",
+      "candidate": "Michael Bennet",
       "party": "Democratic",
       "votes": 1370710,
       "percent": 49.97

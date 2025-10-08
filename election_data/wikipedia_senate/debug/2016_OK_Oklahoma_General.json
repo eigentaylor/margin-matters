@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1448047,
   "table": {
     "caption": "United States Senate election in Oklahoma, 2016 [ 18 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "James Lankford (incumbent)",
+      "candidate": "James Lankford",
       "party": "Republican",
       "votes": 980892,
       "percent": 67.74

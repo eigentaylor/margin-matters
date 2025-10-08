@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 10,
+  "table_total_votes": 272330,
   "table": {
     "caption": "United States Senate election in Vermont, 2018",
     "headers": [
@@ -473,7 +474,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bernie Sanders (incumbent)",
+      "candidate": "Bernie Sanders",
       "party": "Independent",
       "votes": 183649,
       "percent": 67.44

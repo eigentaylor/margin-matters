@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 5491878,
   "table": {
     "caption": "United States Senate election in Illinois, 2016 [ 152 ]",
     "headers": [
@@ -289,7 +290,7 @@
       "percent": 54.86
     },
     {
-      "candidate": "Mark Kirk (incumbent)",
+      "candidate": "Mark Kirk",
       "party": "Republican",
       "votes": 2184692,
       "percent": 39.78

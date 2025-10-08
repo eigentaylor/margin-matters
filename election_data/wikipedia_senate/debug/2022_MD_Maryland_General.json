@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 2002336,
   "table": {
     "caption": "2022 United States Senate election in Maryland [ 66 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Chris Van Hollen (incumbent)",
+      "candidate": "Chris Van Hollen",
       "party": "Democratic",
       "votes": 1316897,
       "percent": 65.77

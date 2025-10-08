@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 8190005,
   "table": {
     "caption": "United States Senate election in Florida, 2018 [ 314 ]",
     "headers": [
@@ -215,7 +216,7 @@
       "percent": 50.05
     },
     {
-      "candidate": "Bill Nelson (incumbent)",
+      "candidate": "Bill Nelson",
       "party": "Democratic",
       "votes": 4089472,
       "percent": 49.93

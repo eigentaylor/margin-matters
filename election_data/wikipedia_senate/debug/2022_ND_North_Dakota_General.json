@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 240140,
   "table": {
     "caption": "2022 United States Senate election in North Dakota [ 24 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Hoeven (incumbent)",
+      "candidate": "John Hoeven",
       "party": "Republican",
       "votes": 135474,
       "percent": 56.41

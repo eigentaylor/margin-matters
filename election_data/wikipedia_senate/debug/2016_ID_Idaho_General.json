@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 678943,
   "table": {
     "caption": "United States Senate election in Idaho, 2016 [ 31 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Crapo (incumbent)",
+      "candidate": "Mike Crapo",
       "party": "Republican",
       "votes": 449017,
       "percent": 66.13

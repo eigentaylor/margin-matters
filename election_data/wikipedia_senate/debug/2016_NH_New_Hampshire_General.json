@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 739140,
   "table": {
     "caption": "United States Senate election in New Hampshire, 2016 [ 3 ]",
     "headers": [
@@ -289,7 +290,7 @@
       "percent": 47.98
     },
     {
-      "candidate": "Kelly Ayotte (incumbent)",
+      "candidate": "Kelly Ayotte",
       "party": "Republican",
       "votes": 353632,
       "percent": 47.84

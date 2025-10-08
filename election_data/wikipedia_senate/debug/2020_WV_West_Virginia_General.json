@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 778918,
   "table": {
     "caption": "United States Senate election in West Virginia, 2020 [ 52 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Shelley Moore Capito (incumbent)",
+      "candidate": "Shelley Moore Capito",
       "party": "Republican",
       "votes": 547454,
       "percent": 70.28

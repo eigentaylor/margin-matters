@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Connecticut",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 3,
+  "table_total_votes": 1259887,
   "table": {
     "caption": "2022 United States Senate election in Connecticut [ 59 ]",
     "headers": [
@@ -285,18 +286,6 @@
     {
       "candidate": "Richard Blumenthal",
       "party": "Democratic",
-      "votes": 701175,
-      "percent": 55.65
-    },
-    {
-      "candidate": "Richard Blumenthal",
-      "party": "Working Families",
-      "votes": 22689,
-      "percent": 1.8
-    },
-    {
-      "candidate": "Richard Blumenthal (incumbent)",
-      "party": "Total",
       "votes": 723864,
       "percent": 57.45
     },

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_New_York",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 3,
+  "table_total_votes": 5848556,
   "table": {
     "caption": "2022 United States Senate election in New York [ 75 ]",
     "headers": [
@@ -374,36 +375,12 @@
     {
       "candidate": "Chuck Schumer",
       "party": "Democratic",
-      "votes": 3022822,
-      "percent": 51.69
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Working Families",
-      "votes": 297739,
-      "percent": 5.09
-    },
-    {
-      "candidate": "Chuck Schumer (incumbent)",
-      "party": "Total",
       "votes": 3320561,
       "percent": 56.78
     },
     {
       "candidate": "Joe Pinion",
       "party": "Republican",
-      "votes": 2204499,
-      "percent": 37.69
-    },
-    {
-      "candidate": "Joe Pinion",
-      "party": "Conservative",
-      "votes": 296652,
-      "percent": 5.07
-    },
-    {
-      "candidate": "Joe Pinion",
-      "party": "Total",
       "votes": 2501151,
       "percent": 42.76
     },

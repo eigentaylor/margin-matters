@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1671828,
   "table": {
     "caption": "2020 United States Senate election in Iowa [ 145 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Joni Ernst (incumbent)",
+      "candidate": "Joni Ernst",
       "party": "Republican",
       "votes": 864997,
       "percent": 51.74

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 364327,
   "table": {
     "caption": "2024 United States Senate election in North Dakota [ 31 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Kevin Cramer (incumbent)",
+      "candidate": "Kevin Cramer",
       "party": "Republican",
       "votes": 241569,
       "percent": 66.31

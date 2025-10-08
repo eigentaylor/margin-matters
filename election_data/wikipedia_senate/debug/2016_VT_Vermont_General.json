@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 313809,
   "table": {
     "caption": "United States Senate election in Vermont, 2016 [ 24 ] [ 25 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patrick Leahy (incumbent)",
+      "candidate": "Patrick Leahy",
       "party": "Democratic",
       "votes": 192243,
       "percent": 61.26

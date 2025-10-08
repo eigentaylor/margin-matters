@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 491948,
   "table": {
     "caption": "2024 United States Senate election in Rhode Island [ 37 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Sheldon Whitehouse (incumbent)",
+      "candidate": "Sheldon Whitehouse",
       "party": "Democratic",
       "votes": 294665,
       "percent": 59.9

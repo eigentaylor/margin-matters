@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_New_York",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 2,
+  "table_total_votes": 6055151,
   "table": {
     "caption": "United States Senate election in New York, 2018 [ 64 ]",
     "headers": [
@@ -448,54 +449,12 @@
     {
       "candidate": "Kirsten Gillibrand",
       "party": "Democratic",
-      "votes": 3755489,
-      "percent": 62.02
-    },
-    {
-      "candidate": "Kirsten Gillibrand",
-      "party": "Working Families",
-      "votes": 160128,
-      "percent": 2.64
-    },
-    {
-      "candidate": "Kirsten Gillibrand",
-      "party": "Independence",
-      "votes": 99325,
-      "percent": 1.64
-    },
-    {
-      "candidate": "Kirsten Gillibrand",
-      "party": "Women's Equality",
-      "votes": 41989,
-      "percent": 0.69
-    },
-    {
-      "candidate": "Kirsten Gillibrand (incumbent)",
-      "party": "Total",
       "votes": 4056931,
       "percent": 67.0
     },
     {
       "candidate": "Chele Chiavacci Farley",
       "party": "Republican",
-      "votes": 1730439,
-      "percent": 28.58
-    },
-    {
-      "candidate": "Chele Chiavacci Farley",
-      "party": "Conservative",
-      "votes": 246171,
-      "percent": 4.07
-    },
-    {
-      "candidate": "Chele Chiavacci Farley",
-      "party": "Reform",
-      "votes": 21610,
-      "percent": 0.35
-    },
-    {
-      "candidate": "Chele Chiavacci Farley",
-      "party": "Total",
       "votes": 1998220,
       "percent": 33.0
     }

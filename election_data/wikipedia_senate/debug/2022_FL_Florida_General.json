@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 7758126,
   "table": {
     "caption": "United States Senate election in Florida, 2022 [ 177 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Marco Rubio (incumbent)",
+      "candidate": "Marco Rubio",
       "party": "Republican",
       "votes": 4474847,
       "percent": 57.68

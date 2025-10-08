@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 388351,
   "table": {
     "caption": "United States Senate election in Hawaii, 2018 [ 27 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mazie Hirono (incumbent)",
+      "candidate": "Mazie Hirono",
       "party": "Democratic",
       "votes": 276316,
       "percent": 71.15

@@ -200,7 +200,7 @@ def extract_class_and_type(header_text: str, block: List[Tag], year: int) -> Tup
 
     return class_label, race_type
 
-def parse_result_table(table: Tag) -> List[Dict]:
+def parse_result_table(table: Tag) -> Tuple[List[Dict], Optional[int]]:
     """
     Parse a candidate-by-row 'wikitable' for votes/percentages.
     Handles common column name variants.
@@ -255,7 +255,9 @@ def parse_result_table(table: Tag) -> List[Dict]:
             col_cursor += span
         return ""
 
-    rows_out = []
+    # Collect raw rows (preserve order)
+    raw_rows = []
+    table_total: Optional[int] = None
     for tr in table.find_all("tr"):
         if not isinstance(tr, Tag):
             continue
@@ -271,27 +273,93 @@ def parse_result_table(table: Tag) -> List[Dict]:
         votes = clean_int(votes_txt)
         pct = clean_percent(pct_txt)
 
-        # Filter out header-ish or summary rows
-        if not candidate and votes == 0:
-            continue
-        # Common noise rows
-        if any(s in candidate.lower() for s in ["total", "write-in total", "blanket primary", "no candidate", "scatter"]):
-            continue
-        if "eliminated" in candidate.lower() or "withdrawn" in candidate.lower():
-            continue
-
-        # Keep only rows with some result
-        if votes == 0 and pct is None:
+        # Detect table-level total/turnout rows. These often have an empty candidate cell and
+        # party like 'Total' or similar, or the candidate cell itself might say 'Total'.
+        party_l = (party or "").strip().lower()
+        cand_l = (candidate or "").strip().lower()
+        if (not candidate and re.search(r"\btotal(s)?\b", party_l)) or re.search(r"\b(total|turnout|write-in total|votes total)\b", cand_l):
+            # prefer non-zero votes if present
+            table_total = int(votes or 0)
+            # also try to capture percent, but we only return integer total
             continue
 
-        rows_out.append({
-            "candidate": candidate,
-            "party": party,
+        # Skip rows that are clearly not data
+        if not candidate and not party and votes == 0 and pct is None:
+            continue
+
+        raw_rows.append({
+            "candidate": candidate or "",
+            "party": party or "",
             "votes": votes,
             "percent": pct
         })
 
-    return rows_out
+    # Normalize candidate names and aggregate per-candidate
+    def normalize_candidate(name: str) -> str:
+        if not name or not isinstance(name, str):
+            return ""
+        # remove parenthetical notes like (incumbent)
+        no_paren = re.sub(r"\s*\([^)]*\)", "", name)
+        # strip bracketed refs like [1]
+        no_refs = re.sub(r"\s*\[[^\]]*\]", "", no_paren)
+        # collapse whitespace
+        return re.sub(r"\s+", " ", no_refs).strip()
+
+    cand_map = {}
+    for r in raw_rows:
+        raw_cand = r.get('candidate') or ""
+        key = normalize_candidate(raw_cand)
+        if not key:
+            # skip rows with no candidate (we already captured table_total separately)
+            continue
+        cand_map.setdefault(key, []).append(r)
+
+    rows_out = []
+    for cand_key, entries in cand_map.items():
+        # if cand_key is empty string, skip
+        if not cand_key:
+            continue
+
+        # Determine if any entry is a 'Total' party row for this candidate
+        total_entry = None
+        for e in entries:
+            p = (e.get('party') or '').lower()
+            if re.search(r"\btotal(s)?\b", p):
+                total_entry = e
+                break
+
+        if total_entry:
+            chosen_votes = int(total_entry.get('votes') or 0)
+            chosen_pct = total_entry.get('percent')
+        else:
+            # fallback: sum votes across entries
+            chosen_votes = sum(int((e.get('votes') or 0)) for e in entries)
+            # pick first non-null percent if present
+            chosen_pct = next((e.get('percent') for e in entries if e.get('percent') is not None), None)
+
+        # choose the candidate's party as the first seen non-total party
+        chosen_party = ""
+        for e in entries:
+            p = (e.get('party') or '').strip()
+            if p and not re.search(r"\btotal(s)?\b", p.lower()):
+                chosen_party = re.sub(r"\s*\[[^\]]*\]", "", p).strip()
+                break
+
+        # Final candidate name: normalize and strip refs/parentheticals
+        final_name = cand_key
+
+        # Skip obviously non-candidate rows
+        if chosen_votes == 0 and chosen_pct is None:
+            continue
+
+        rows_out.append({
+            "candidate": final_name,
+            "party": chosen_party,
+            "votes": chosen_votes,
+            "percent": chosen_pct
+        })
+
+    return rows_out, table_total
 
 def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
     """
@@ -407,7 +475,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
                     continue  # skip primaries for now; focus on general/special/runoff
                 if caption_text == '':
                     continue # figure this out later
-                rows = parse_result_table(tbl)
+                rows, table_total = parse_result_table(tbl)
                 if not rows:
                     continue
 
@@ -443,7 +511,8 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
                         'source_url': state_url,
                         'class': eff_class,
                         'race_type': race_type,
-                        'parsed_rows': rows and len(rows) or 0,
+                        'parsed_rows': len(rows) if rows else 0,
+                        'table_total_votes': table_total,
                         'table': serialize_table_structure(tbl),
                         'rows_preview': rows[:10] if rows else []
                     }
@@ -466,6 +535,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
                         'party': rec['party'],
                         'votes': rec['votes'],
                         'percent': rec['percent'],
+                        'table_total_votes': table_total,
                         'source_url': state_url
                     })
             return found_rows
@@ -488,7 +558,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
         # Prefer the *last* round for each distinct seat (if multiple tables are clearly the same seat).
         # Heuristic: if multiple tables exist and their header/preceding text includes "runoff", keep the runoff too but mark round.
         for round_label, tbl, caption_text in tables:
-            rows = parse_result_table(tbl)
+            rows, table_total = parse_result_table(tbl)
             if not rows:
                 continue
 
@@ -525,6 +595,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
                     'class': eff_class,
                     'race_type': race_type,
                     'parsed_rows': len(rows),
+                    'table_total_votes': table_total,
                     'table': serialize_table_structure(tbl),
                     'rows_preview': rows[:10]
                 }
@@ -557,6 +628,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
                     "party": rec["party"],
                     "votes": rec["votes"],
                     "percent": rec["percent"],
+                    "table_total_votes": table_total,
                     "source_url": url
                 })
 
@@ -581,7 +653,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
             return "yellow"
         p = party.lower()
         if "dem" in p:
-            return "blue"
+            return "deepskyblue"
         if "rep" in p or "republican" in p:
             return "red"
         return "yellow"
@@ -635,6 +707,7 @@ def scrape_senate_year(year: int) -> Optional[pd.DataFrame]:
             'round': chosen_round,
             'caption': caption,
             'results': json.dumps(results, ensure_ascii=False),
+            'total_votes': int(rows_round['votes'].sum()),
             'winner': strip_refs(winner),
             'runner_up': strip_refs(runner_up),
             'color': color,
@@ -686,7 +759,7 @@ def default_years() -> List[int]:
     return list(range(end if end % 2 == 0 else end-1, start-1, -2))
 
 def main():
-    RELIABLE_START = 2006
+    RELIABLE_START = 2016
     
     print("Which years would you like to scrape?")
     print(f"1) Recent reliable window ({RELIABLE_START}–2024, even years)")
@@ -718,3 +791,32 @@ if __name__ == "__main__":
     main()
     t1 = time.time()
     print(f"🕒 Elapsed: {t1 - t0:.1f}s")
+
+
+def _self_test_parse_table():
+    """Construct a synthetic messy wikitable HTML and ensure parse_result_table aggregates correctly."""
+    from bs4 import BeautifulSoup
+
+    html = '''
+    <table class="wikitable">
+      <tr><th>Candidate</th><th>Party</th><th>Votes</th><th>%</th></tr>
+      <tr><td>Kristen Gillibrand (incumbent)</td><td>Democratic</td><td>500,000</td><td>60%</td></tr>
+      <tr><td>Kristen Gillibrand</td><td>Working Families</td><td>0</td><td></td></tr>
+      <tr><td>Kristen Gillibrand</td><td>Independence</td><td>0</td><td></td></tr>
+      <tr><td></td><td>Total</td><td>500,000</td><td>60%</td></tr>
+      <tr><td>Other Candidate</td><td>Republican</td><td>300,000</td><td>36%</td></tr>
+    </table>
+    '''
+    soup = BeautifulSoup(html, 'html.parser')
+    tbl = soup.find('table')
+    if not isinstance(tbl, Tag):
+        print('TEST ERROR: table not found')
+        return
+    out = parse_result_table(tbl)
+    print('SELF TEST OUTPUT:')
+    print(out)
+
+
+# Run self-test when invoked directly for quick validation
+if False:
+    _self_test_parse_table()

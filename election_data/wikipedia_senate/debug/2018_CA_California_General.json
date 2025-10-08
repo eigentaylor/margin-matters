@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 11113364,
   "table": {
     "caption": "United States Senate election in California, 2018",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dianne Feinstein (incumbent)",
+      "candidate": "Dianne Feinstein",
       "party": "Democratic",
       "votes": 6019422,
       "percent": 54.16

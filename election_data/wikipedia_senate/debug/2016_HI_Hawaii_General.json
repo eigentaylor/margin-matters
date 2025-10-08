@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 416562,
   "table": {
     "caption": "United States Senate election in Hawaii, 2016 [ 26 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Brian Schatz (incumbent)",
+      "candidate": "Brian Schatz",
       "party": "Democratic",
       "votes": 306604,
       "percent": 73.61

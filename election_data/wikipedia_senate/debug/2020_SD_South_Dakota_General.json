@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 420219,
   "table": {
     "caption": "United States Senate election in South Dakota, 2020 [ 20 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Rounds (incumbent)",
+      "candidate": "Mike Rounds",
       "party": "Republican",
       "votes": 276232,
       "percent": 65.74

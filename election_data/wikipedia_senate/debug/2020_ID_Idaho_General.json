@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 859827,
   "table": {
     "caption": "United States Senate election in Idaho, 2020 [ 31 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jim Risch (incumbent)",
+      "candidate": "Jim Risch",
       "party": "Republican",
       "votes": 538446,
       "percent": 62.62

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2732546,
   "table": {
     "caption": "United States Senate election in Indiana, 2016 [ 95 ]",
     "headers": [
@@ -279,7 +280,7 @@
       "percent": 5.47
     },
     {
-      "candidate": "James L. Johnson, Jr. (write-in)",
+      "candidate": "James L. Johnson, Jr.",
       "party": "Independent",
       "votes": 127,
       "percent": 0.01

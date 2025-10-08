@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 819183,
   "table": {
     "caption": "United States Senate election in Maine, 2020 [ 167 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Susan Collins (incumbent)",
+      "candidate": "Susan Collins",
       "party": "Republican",
       "votes": 417645,
       "percent": 50.98

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 408517,
   "table": {
     "caption": "2022 United States Senate election in Hawaii [ 27 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Brian Schatz (incumbent)",
+      "candidate": "Brian Schatz",
       "party": "Democratic",
       "votes": 290894,
       "percent": 71.21

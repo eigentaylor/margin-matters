@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 2299889,
   "table": {
     "caption": "2018 United States Senate election in Maryland [ 61 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ben Cardin (incumbent)",
+      "candidate": "Ben Cardin",
       "party": "Democratic",
       "votes": 1491614,
       "percent": 64.86

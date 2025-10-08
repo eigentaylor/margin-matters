@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Ohio",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 6991,
   "table": {
     "caption": "2024 United States Senate election in Ohio [ 169 ]",
     "headers": [
@@ -279,7 +280,7 @@
       "percent": 50.09
     },
     {
-      "candidate": "Sherrod Brown (incumbent)",
+      "candidate": "Sherrod Brown",
       "party": "Democratic",
       "votes": 2650949,
       "percent": 46.47
@@ -295,12 +296,6 @@
       "party": "Write-in",
       "votes": 640,
       "percent": 0.01
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 6991,
-      "percent": 69.91
     }
   ]
 }

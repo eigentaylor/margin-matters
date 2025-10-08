@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1311354,
   "table": {
     "caption": "2020 United States Senate election in Mississippi [ 54 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Cindy Hyde-Smith (incumbent)",
+      "candidate": "Cindy Hyde-Smith",
       "party": "Republican",
       "votes": 709511,
       "percent": 54.11

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Connecticut",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 5,
+  "table_total_votes": 1386840,
   "table": {
     "caption": "United States Senate election in Connecticut, 2018 [ 34 ]",
     "headers": [
@@ -359,18 +360,6 @@
     {
       "candidate": "Chris Murphy",
       "party": "Democratic",
-      "votes": 787685,
-      "percent": 56.8
-    },
-    {
-      "candidate": "Chris Murphy",
-      "party": "Working Families",
-      "votes": 37894,
-      "percent": 2.73
-    },
-    {
-      "candidate": "Chris Murphy (incumbent)",
-      "party": "Total",
       "votes": 825579,
       "percent": 59.53
     },

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 203420,
   "table": {
     "caption": "United States Senate election in Wyoming, 2018 [ 22 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Barrasso (incumbent)",
+      "candidate": "John Barrasso",
       "party": "Republican",
       "votes": 136210,
       "percent": 66.96

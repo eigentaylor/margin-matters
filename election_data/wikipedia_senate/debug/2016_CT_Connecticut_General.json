@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Connecticut",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 6,
+  "table_total_votes": 1596276,
   "table": {
     "caption": "United States Senate election in Connecticut, 2016 [ 36 ]",
     "headers": [
@@ -406,18 +407,6 @@
     {
       "candidate": "Richard Blumenthal",
       "party": "Democratic",
-      "votes": 920766,
-      "percent": 57.68
-    },
-    {
-      "candidate": "Richard Blumenthal",
-      "party": "Working Families",
-      "votes": 87948,
-      "percent": 5.51
-    },
-    {
-      "candidate": "Richard Blumenthal (incumbent)",
-      "party": "Total",
       "votes": 1008714,
       "percent": 63.19
     },
@@ -440,13 +429,13 @@
       "percent": 1.05
     },
     {
-      "candidate": "Andrew Rule (write-in)",
+      "candidate": "Andrew Rule",
       "party": "Independent",
       "votes": 26,
       "percent": 0.0
     },
     {
-      "candidate": "John M. Traceski (write-in)",
+      "candidate": "John M. Traceski",
       "party": "Independent",
       "votes": 12,
       "percent": 0.0

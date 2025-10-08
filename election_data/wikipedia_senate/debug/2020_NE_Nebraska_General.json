@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 930012,
   "table": {
     "caption": "United States Senate election in Nebraska, 2020 [ 39 ]",
     "headers": [
@@ -315,7 +316,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ben Sasse ( inc. )",
+      "candidate": "Ben Sasse",
       "party": "Republican",
       "votes": 583507,
       "percent": 62.74
@@ -327,7 +328,7 @@
       "percent": 24.43
     },
     {
-      "candidate": "Preston Love Jr. (write-in)",
+      "candidate": "Preston Love Jr.",
       "party": "Democratic",
       "votes": 58411,
       "percent": 6.28

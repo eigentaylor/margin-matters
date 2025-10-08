@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 2087444,
   "table": {
     "caption": "2016 United States Senate election in Alabama [ 35 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Richard Shelby (incumbent)",
+      "candidate": "Richard Shelby",
       "party": "Republican",
       "votes": 1335104,
       "percent": 63.96

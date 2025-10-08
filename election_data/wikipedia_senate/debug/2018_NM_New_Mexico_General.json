@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 697012,
   "table": {
     "caption": "2018 United States Senate election in New Mexico",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Martin Heinrich (incumbent)",
+      "candidate": "Martin Heinrich",
       "party": "Democratic",
       "votes": 376998,
       "percent": 54.09

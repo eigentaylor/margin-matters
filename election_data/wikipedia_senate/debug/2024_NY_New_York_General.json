@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_New_York",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 3,
+  "table_total_votes": 7996825,
   "table": {
     "caption": "2024 United States Senate election in New York [ 73 ]",
     "headers": [
@@ -369,36 +370,12 @@
     {
       "candidate": "Kirsten Gillibrand",
       "party": "Democratic",
-      "votes": 4318903,
-      "percent": 54.01
-    },
-    {
-      "candidate": "Kirsten Gillibrand",
-      "party": "Working Families",
-      "votes": 392395,
-      "percent": 4.91
-    },
-    {
-      "candidate": "Kirsten Gillibrand (incumbent)",
-      "party": "Total",
       "votes": 4711298,
       "percent": 58.91
     },
     {
       "candidate": "Mike Sapraicone",
       "party": "Republican",
-      "votes": 2917044,
-      "percent": 36.48
-    },
-    {
-      "candidate": "Mike Sapraicone",
-      "party": "Conservative",
-      "votes": 329070,
-      "percent": 4.12
-    },
-    {
-      "candidate": "Mike Sapraicone",
-      "party": "Total",
       "votes": 3246114,
       "percent": 40.59
     },

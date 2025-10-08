@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 13,
+  "table_total_votes": 1383290,
   "table": {
     "caption": "2022 United States Senate election in Louisiana [ 47 ]",
     "headers": [
@@ -514,7 +515,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Kennedy (incumbent)",
+      "candidate": "John Kennedy",
       "party": "Republican",
       "votes": 851568,
       "percent": 61.56

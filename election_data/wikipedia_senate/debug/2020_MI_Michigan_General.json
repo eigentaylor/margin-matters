@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 5479720,
   "table": {
     "caption": "2020 United States Senate election in Michigan [ 257 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Gary Peters (incumbent)",
+      "candidate": "Gary Peters",
       "party": "Democratic",
       "votes": 2734568,
       "percent": 49.9

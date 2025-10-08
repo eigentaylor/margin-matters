@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 3897792,
   "table": {
     "caption": "United States Senate election in Georgia, 2016 [ 78 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Johnny Isakson (incumbent)",
+      "candidate": "Johnny Isakson",
       "party": "Republican",
       "votes": 2135806,
       "percent": 54.8

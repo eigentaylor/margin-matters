@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 820782,
   "table": {
     "caption": "2024 United States Senate election in Maine [ 35 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Angus King (incumbent)",
+      "candidate": "Angus King",
       "party": "Independent",
       "votes": 427331,
       "percent": 52.06

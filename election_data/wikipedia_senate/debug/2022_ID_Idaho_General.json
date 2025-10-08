@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 590890,
   "table": {
     "caption": "2022 United States Senate election in Idaho [ 35 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Crapo (incumbent)",
+      "candidate": "Mike Crapo",
       "party": "Republican",
       "votes": 358539,
       "percent": 60.68

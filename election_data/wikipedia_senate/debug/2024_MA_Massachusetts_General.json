@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 3413329,
   "table": {
     "caption": "2024 United States Senate election in Massachusetts [ 79 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Elizabeth Warren (incumbent)",
+      "candidate": "Elizabeth Warren",
       "party": "Democratic",
       "votes": 2041668,
       "percent": 59.81

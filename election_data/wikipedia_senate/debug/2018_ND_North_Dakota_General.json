@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 326138,
   "table": {
     "caption": "United States Senate election in North Dakota, 2018 [ 98 ]",
     "headers": [
@@ -215,7 +216,7 @@
       "percent": 55.11
     },
     {
-      "candidate": "Heidi Heitkamp (incumbent)",
+      "candidate": "Heidi Heitkamp",
       "party": "Democratic–NPL",
       "votes": 144376,
       "percent": 44.27

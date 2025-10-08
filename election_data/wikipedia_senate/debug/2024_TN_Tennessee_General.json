@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 3007608,
   "table": {
     "caption": "2024 United States Senate election in Tennessee [ 46 ]",
     "headers": [
@@ -281,7 +282,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Marsha Blackburn (incumbent)",
+      "candidate": "Marsha Blackburn",
       "party": "Republican",
       "votes": 1918743,
       "percent": 63.8

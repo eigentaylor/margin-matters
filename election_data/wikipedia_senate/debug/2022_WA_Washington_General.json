@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 3047900,
   "table": {
     "caption": "2022 United States Senate election in Washington [ 94 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patty Murray (incumbent)",
+      "candidate": "Patty Murray",
       "party": "Democratic",
       "votes": 1741827,
       "percent": 57.15

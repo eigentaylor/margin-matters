@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 938336,
   "table": {
     "caption": "2024 United States Senate election in Nebraska [ 61 ]",
     "headers": [
@@ -241,7 +242,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Deb Fischer (incumbent)",
+      "candidate": "Deb Fischer",
       "party": "Republican",
       "votes": 499124,
       "percent": 53.19

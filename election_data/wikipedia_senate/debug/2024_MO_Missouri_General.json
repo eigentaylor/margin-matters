@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2972559,
   "table": {
     "caption": "2024 United States Senate election in Missouri [ 105 ]",
     "headers": [
@@ -320,7 +321,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Josh Hawley (incumbent)",
+      "candidate": "Josh Hawley",
       "party": "Republican",
       "votes": 1651907,
       "percent": 55.57

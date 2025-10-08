@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 354587,
   "table": {
     "caption": "2020 United States Senate election in Alaska [ 74 ]",
     "headers": [
@@ -251,13 +252,13 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dan Sullivan (incumbent)",
+      "candidate": "Dan Sullivan",
       "party": "Republican",
       "votes": 191112,
       "percent": 53.9
     },
     {
-      "candidate": "Al Gross [ a ]",
+      "candidate": "Al Gross",
       "party": "Independent",
       "votes": 146068,
       "percent": 41.19

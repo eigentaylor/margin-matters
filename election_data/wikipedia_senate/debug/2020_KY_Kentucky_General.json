@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2135057,
   "table": {
     "caption": "2020 United States Senate election in Kentucky [ 122 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mitch McConnell (incumbent)",
+      "candidate": "Mitch McConnell",
       "party": "Republican",
       "votes": 1233315,
       "percent": 57.76

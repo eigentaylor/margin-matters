@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2802641,
   "table": {
     "caption": "2016 United States Senate election in Missouri [ 97 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Roy Blunt (incumbent)",
+      "candidate": "Roy Blunt",
       "party": "Republican",
       "votes": 1378458,
       "percent": 49.18

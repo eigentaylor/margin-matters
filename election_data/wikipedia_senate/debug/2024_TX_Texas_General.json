@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 11291854,
   "table": {
     "caption": "2024 United States Senate election in Texas [ 179 ] [ 180 ]",
     "headers": [
@@ -246,7 +247,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ted Cruz (incumbent)",
+      "candidate": "Ted Cruz",
       "party": "Republican",
       "votes": 5990741,
       "percent": 53.05

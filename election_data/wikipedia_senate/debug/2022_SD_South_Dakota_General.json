@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 348020,
   "table": {
     "caption": "2022 United States Senate election in South Dakota [ 45 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Thune (incumbent)",
+      "candidate": "John Thune",
       "party": "Republican",
       "votes": 242316,
       "percent": 69.63

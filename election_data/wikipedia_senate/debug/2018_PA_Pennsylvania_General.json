@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 5009400,
   "table": {
     "caption": "United States Senate election in Pennsylvania, 2018 [ 112 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bob Casey Jr. (incumbent)",
+      "candidate": "Bob Casey Jr.",
       "party": "Democratic",
       "votes": 2792437,
       "percent": 55.74

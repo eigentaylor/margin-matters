@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2948741,
   "table": {
     "caption": "2016 United States Senate election in Wisconsin [ 111 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ron Johnson (incumbent)",
+      "candidate": "Ron Johnson",
       "party": "Republican",
       "votes": 1479471,
       "percent": 50.17

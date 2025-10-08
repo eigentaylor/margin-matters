@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1004956,
   "table": {
     "caption": "2022 United States Senate election in Kansas [ 40 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jerry Moran (incumbent)",
+      "candidate": "Jerry Moran",
       "party": "Republican",
       "votes": 602976,
       "percent": 60.0

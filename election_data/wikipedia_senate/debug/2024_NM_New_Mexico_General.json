@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_New_Mexico",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 3,
+  "parsed_rows": 2,
+  "table_total_votes": 6533,
   "table": {
     "caption": "2024 United States Senate election in New Mexico [ 49 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Martin Heinrich (incumbent)",
+      "candidate": "Martin Heinrich",
       "party": "Democratic",
       "votes": 497333,
       "percent": 55.06
@@ -224,12 +225,6 @@
       "party": "Republican",
       "votes": 405978,
       "percent": 44.94
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 6533,
-      "percent": 65.33
     }
   ]
 }
