@@ -6,7 +6,6 @@ Interactive Explorer for state-trends
 */
 
 (function () {
-  const csvPath = './presidential_margins.csv';
   const el = {
     state: document.getElementById('stateSel'),
     // replace measure dropdown with metric + flags
@@ -28,6 +27,10 @@ Interactive Explorer for state-trends
     startYear: document.getElementById('startYear'),
     endYear: document.getElementById('endYear')
   };
+
+  const dataLoader = (window.DataLoader && typeof window.DataLoader.loadPresidentialMargins === 'function')
+    ? window.DataLoader
+    : null;
 
   // User-selected states for multi-compare. Starts with the select's value.
   let selectedStates = [];
@@ -724,8 +727,16 @@ Interactive Explorer for state-trends
     tip.style('opacity', 0).style('transform', 'translateY(-6px)');
   }
 
+  const dataPromise = dataLoader
+    ? dataLoader.loadPresidentialMargins()
+    : d3.csv('./presidential_margins.csv', d3.autoType);
+
+  if (!dataLoader) {
+    console.warn('[Trend Viewer] DataLoader not found; falling back to direct CSV load.');
+  }
+
   // Load data
-  d3.csv(csvPath, d3.autoType).then(rows => {
+  dataPromise.then(rows => {
     window.__data = rows;
     const states = Array.from(new Set(rows.map(r => r.abbr)));
     initControls(states);

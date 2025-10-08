@@ -2,6 +2,9 @@
 (function () {
     const DATA_PATH = './presidential_margins.csv';
     const MIN_MAG_SWATCH = 150;
+    const dataLoader = (window.DataLoader && typeof window.DataLoader.loadPresidentialMargins === 'function')
+        ? window.DataLoader
+        : null;
 
     const yearSlider = document.getElementById('yearSlider');
     const yearValue = document.getElementById('yearValue');
@@ -842,7 +845,15 @@
         updateFromSlider();
     });
 
-    d3.csv(DATA_PATH, d3.autoType).then(raw => {
+    const dataPromise = dataLoader
+        ? dataLoader.loadPresidentialMargins()
+        : d3.csv(DATA_PATH, d3.autoType);
+
+    if (!dataLoader) {
+        console.warn('[Shift Vectors] DataLoader not found; using direct CSV load.');
+    }
+
+    dataPromise.then(raw => {
         if (!Array.isArray(raw) || !raw.length) throw new Error('Empty dataset');
         //console.log('raw data', raw);
         const structured = raw.map(row => ({
