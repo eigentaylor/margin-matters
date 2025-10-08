@@ -735,7 +735,7 @@ def scrape_multiple_years(years, output_dir="election_data/wikipedia"):
         # set column order
         # include third-party breakdown columns
         # Keep a stable ordering while being resilient if some columns are missing
-        desired_cols = ['year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'third_party_votes', 'third_party_results', 'total_votes']
+        desired_cols = ['year', 'abbr', 'D_votes', 'R_votes', 'T_votes', 'third_party_votes', 'third_party_results', 'total_votes', 'source_url']
         present_cols = [c for c in desired_cols if c in combined_df.columns]
         combined_df = combined_df[present_cols]
         
