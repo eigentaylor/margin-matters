@@ -186,7 +186,7 @@ def compute_national_stats(entries: List[Dict[str, object]]) -> Dict[int, Dict[s
         t_sum = sum(e["T_votes"] for e in lst)
         total_sum = sum(e["total_votes"] for e in lst) or 1
 
-        pres_margin = (d_sum - r_sum) / total_sum if total_sum else 0.0
+        sen_margin = (d_sum - r_sum) / total_sum if total_sum else 0.0
         two_party_total = d_sum + r_sum
         two_party_margin = (d_sum - r_sum) / two_party_total if two_party_total else 0.0
         third_party_share = t_sum / total_sum if total_sum else 0.0
@@ -196,7 +196,7 @@ def compute_national_stats(entries: List[Dict[str, object]]) -> Dict[int, Dict[s
             "R_votes": r_sum,
             "T_votes": t_sum,
             "total_votes": total_sum,
-            "margin": pres_margin,
+            "margin": sen_margin,
             "two_party_margin": two_party_margin,
             "third_party_share": third_party_share,
             "prev_year": prev_year,
@@ -234,8 +234,8 @@ def enrich_entries(entries: List[Dict[str, object]], national_stats: Dict[int, D
         entry["top_third_party_share"] = top_third_share
         entry["third_party_votes"] = t_votes
 
-        pres_margin_val = (d_votes - r_votes) / total_votes if total_votes else 0.0
-        entry["pres_margin_val"] = pres_margin_val
+        sen_margin_val = (d_votes - r_votes) / total_votes if total_votes else 0.0
+        entry["sen_margin_val"] = sen_margin_val
 
         two_party_total = d_votes + r_votes
         two_party_margin = (d_votes - r_votes) / two_party_total if two_party_total else 0.0
@@ -246,7 +246,7 @@ def enrich_entries(entries: List[Dict[str, object]], national_stats: Dict[int, D
         entry["two_party_national_margin"] = national["two_party_margin"]
         entry["third_party_national_share"] = national["third_party_share"]
 
-        relative_margin_val = pres_margin_val - national["margin"]
+        relative_margin_val = sen_margin_val - national["margin"]
         entry["relative_margin_val"] = relative_margin_val
 
         two_party_relative_margin = two_party_margin - national["two_party_margin"]
@@ -297,7 +297,7 @@ def enrich_entries(entries: List[Dict[str, object]], national_stats: Dict[int, D
                 entry["D_delta"] = 0
                 entry["R_delta"] = 0
                 entry["total_delta"] = 0
-                entry["pres_margin_delta_val"] = None
+                entry["sen_margin_delta_val"] = None
                 entry["relative_margin_delta_val"] = None
                 entry["two_party_margin_delta_val"] = None
                 entry["two_party_relative_margin_delta_val"] = None
@@ -305,7 +305,7 @@ def enrich_entries(entries: List[Dict[str, object]], national_stats: Dict[int, D
                 entry["D_delta"] = entry["D_votes"] - prev_entry["D_votes"]
                 entry["R_delta"] = entry["R_votes"] - prev_entry["R_votes"]
                 entry["total_delta"] = entry["total_votes"] - prev_entry["total_votes"]
-                entry["pres_margin_delta_val"] = entry["pres_margin_val"] - prev_entry["pres_margin_val"]
+                entry["sen_margin_delta_val"] = entry["sen_margin_val"] - prev_entry["sen_margin_val"]
                 entry["relative_margin_delta_val"] = entry["relative_margin_val"] - prev_entry["relative_margin_val"]
                 entry["two_party_margin_delta_val"] = entry["two_party_margin"] - prev_entry["two_party_margin"]
                 entry["two_party_relative_margin_delta_val"] = entry["two_party_relative_margin"] - prev_entry["two_party_relative_margin"]
@@ -323,15 +323,15 @@ def build_national_entries(national_stats: Dict[int, Dict[str, float]]) -> List[
         t_votes = stats["T_votes"]
         total_votes = stats["total_votes"]
 
-        pres_margin = stats["margin"]
+        sen_margin = stats["margin"]
         two_party_margin = stats["two_party_margin"]
         third_party_share = stats["third_party_share"]
 
-        pres_margin_delta_val = None
+        sen_margin_delta_val = None
         two_party_margin_delta_val = None
         third_party_relative_share = 0.0
         if prev_stats is not None:
-            pres_margin_delta_val = pres_margin - prev_stats["margin"]
+            sen_margin_delta_val = sen_margin - prev_stats["margin"]
             two_party_margin_delta_val = two_party_margin - prev_stats["two_party_margin"]
         national_rows.append({
             "year": year,
@@ -351,7 +351,7 @@ def build_national_entries(national_stats: Dict[int, Dict[str, float]]) -> List[
             "third_party_share": third_party_share,
             "top_third_party_share": 0.0,
             "third_party_votes": t_votes,
-            "pres_margin_val": pres_margin,
+            "sen_margin_val": sen_margin,
             "relative_margin_val": 0.0,
             "two_party_margin": two_party_margin,
             "two_party_relative_margin": 0.0,
@@ -359,18 +359,18 @@ def build_national_entries(national_stats: Dict[int, Dict[str, float]]) -> List[
             "D_delta": (d_votes - prev_stats["D_votes"]) if prev_stats else 0,
             "R_delta": (r_votes - prev_stats["R_votes"]) if prev_stats else 0,
             "total_delta": (total_votes - prev_stats["total_votes"]) if prev_stats else 0,
-            "pres_margin_delta_val": pres_margin_delta_val,
+            "sen_margin_delta_val": sen_margin_delta_val,
             "relative_margin_delta_val": 0.0 if prev_stats else None,
             "two_party_margin_delta_val": two_party_margin_delta_val,
             "two_party_relative_margin_delta_val": 0.0 if prev_stats else None,
-            "national_margin_val": pres_margin,
+            "national_margin_val": sen_margin,
             "two_party_national_margin": two_party_margin,
             "third_party_national_share": third_party_share,
-            "national_margin_delta_val": pres_margin_delta_val,
+            "national_margin_delta_val": sen_margin_delta_val,
             "two_party_national_margin_delta": two_party_margin_delta_val,
-            "winner": "Democratic Party" if pres_margin > 0 else ("Republican Party" if pres_margin < 0 else "Split"),
-            "runner_up": "Republican Party" if pres_margin > 0 else ("Democratic Party" if pres_margin < 0 else "Split"),
-            "winner_bucket": "D" if pres_margin > 0 else ("R" if pres_margin < 0 else "T"),
+            "winner": "Democratic Party" if sen_margin > 0 else ("Republican Party" if sen_margin < 0 else "Split"),
+            "runner_up": "Republican Party" if sen_margin > 0 else ("Democratic Party" if sen_margin < 0 else "Split"),
+            "winner_bucket": "D" if sen_margin > 0 else ("R" if sen_margin < 0 else "T"),
             "D_candidate": "Democratic total",
             "R_candidate": "Republican total",
             "top_third_party": "Various",
@@ -385,8 +385,8 @@ def build_national_entries(national_stats: Dict[int, Dict[str, float]]) -> List[
 
 
 def format_entry(entry: Dict[str, object]) -> Dict[str, object]:
-    pres_margin_val = entry.get("pres_margin_val", 0.0) or 0.0
-    pres_margin_delta_val = entry.get("pres_margin_delta_val")
+    sen_margin_val = entry.get("sen_margin_val", 0.0) or 0.0
+    sen_margin_delta_val = entry.get("sen_margin_delta_val")
     national_margin_val = entry.get("national_margin_val", 0.0) or 0.0
     national_margin_delta_val = entry.get("national_margin_delta_val")
     relative_margin_val = entry.get("relative_margin_val", 0.0) or 0.0
@@ -424,8 +424,8 @@ def format_entry(entry: Dict[str, object]) -> Dict[str, object]:
         "D_delta": entry.get("D_delta", 0),
         "R_delta": entry.get("R_delta", 0),
         "total_delta": entry.get("total_delta", 0),
-        "pres_margin": f"{pres_margin_val:.12f}",
-        "pres_margin_delta": f"{pres_margin_delta_val:.12f}" if pres_margin_delta_val is not None else "0",
+        "sen_margin": f"{sen_margin_val:.12f}",
+        "sen_margin_delta": f"{sen_margin_delta_val:.12f}" if sen_margin_delta_val is not None else "0",
         "national_margin": f"{national_margin_val:.12f}",
         "national_margin_delta": f"{national_margin_delta_val:.12f}" if national_margin_delta_val is not None else "0",
         "relative_margin": f"{relative_margin_val:.12f}",
@@ -440,8 +440,8 @@ def format_entry(entry: Dict[str, object]) -> Dict[str, object]:
         "two_party_relative_margin": two_party_relative_margin_val,
         "two_party_relative_margin_delta": two_party_relative_margin_delta_val if two_party_relative_margin_delta_val is not None else 0.0,
         "color": entry.get("color", "transparent"),
-        "pres_margin_str": utils.lean_str(pres_margin_val),
-        "pres_margin_delta_str": utils.lean_str(pres_margin_delta_val),
+        "sen_margin_str": utils.lean_str(sen_margin_val),
+        "sen_margin_delta_str": utils.lean_str(sen_margin_delta_val),
         "national_margin_str": utils.lean_str(national_margin_val),
         "national_margin_delta_str": utils.lean_str(national_margin_delta_val),
         "relative_margin_str": utils.lean_str(relative_margin_val),
@@ -498,8 +498,8 @@ def write_output(entries: List[Dict[str, object]], national_rows: List[Dict[str,
         "D_delta",
         "R_delta",
         "total_delta",
-        "pres_margin",
-        "pres_margin_delta",
+        "sen_margin",
+        "sen_margin_delta",
         "national_margin",
         "national_margin_delta",
         "relative_margin",
@@ -514,8 +514,8 @@ def write_output(entries: List[Dict[str, object]], national_rows: List[Dict[str,
         "two_party_relative_margin",
         "two_party_relative_margin_delta",
         "color",
-        "pres_margin_str",
-        "pres_margin_delta_str",
+        "sen_margin_str",
+        "sen_margin_delta_str",
         "national_margin_str",
         "national_margin_delta_str",
         "relative_margin_str",
