@@ -11,6 +11,10 @@
     const pointSummary = document.getElementById('pointSummary');
     const pointCountEl = document.getElementById('pointCount');
     const tooltipEl = document.getElementById('tooltip');
+    const dataToggle = document.getElementById('dataToggle');
+    const dataPanel = document.getElementById('dataPanel');
+    const dataSummary = document.getElementById('dataSummary');
+    const dataTable = document.getElementById('shiftDataTable');
     const noDataEl = document.getElementById('noData');
     const chartNote = document.getElementById('chartNote');
     const labelToggle = document.getElementById('labelToggle');
@@ -121,6 +125,8 @@
         return value.toFixed(2);
     }
 
+    function formatSignedSmall(v) { return d3.format('+,.0f')(v); }
+
     function colorFor(entry) {
         const dx = entry.dDelta;
         const ry = entry.rDelta;
@@ -193,6 +199,8 @@
     let yearOrder = [];
     let entriesByYear = new Map();
     const lastPositions = new Map();
+    // table sort state
+    let tableSort = { key: 'label', dir: 'asc' };
 
     function update(year) {
         hideTooltip();
@@ -695,6 +703,10 @@
                 ? 'All vectors are normalized to unit length. Hover to see raw vote deltas and notes.'
                 : 'Points reflect absolute vote changes since the prior election. Hover for details.';
         }
+        // If the data panel is visible, refresh the table for this year
+        if (dataPanel && dataPanel.hidden === false) {
+            buildTableForYear(year);
+        }
     }
 
     function updateFromSlider() {
@@ -704,6 +716,101 @@
         yearValue.textContent = String(year);
         update(year);
         updateUrl();
+    }
+
+    // Build and manage the data table for the current year
+    function buildTableForYear(year) {
+        if (!dataTable) return;
+        const rows = entriesByYear.get(year) || [];
+        const tbody = dataTable.querySelector('tbody');
+        tbody.innerHTML = '';
+        const formatted = rows.map(r => {
+            const d = Number.isFinite(r.dDelta) ? r.dDelta : 0;
+            const rr = Number.isFinite(r.rDelta) ? r.rDelta : 0;
+            const turnout = d + rr;
+            const length = Math.sqrt(d * d + rr * rr);
+            return Object.assign({}, r, { turnout, length });
+        });
+
+        // sort
+        const key = tableSort.key;
+        const dir = tableSort.dir === 'asc' ? 1 : -1;
+        formatted.sort((a, b) => {
+            const va = a[key];
+            const vb = b[key];
+            if (va == null && vb == null) return 0;
+            if (va == null) return 1 * dir;
+            if (vb == null) return -1 * dir;
+            if (typeof va === 'string') return va.localeCompare(vb) * dir;
+            return (va - vb) * dir;
+        });
+
+        formatted.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.tabIndex = 0;
+            tr.setAttribute('data-id', r.id);
+            const tdLabel = document.createElement('td'); tdLabel.textContent = r.label; tr.appendChild(tdLabel);
+            const tdD = document.createElement('td'); tdD.textContent = formatSignedSmall(r.dDelta); tr.appendChild(tdD);
+            const tdR = document.createElement('td'); tdR.textContent = formatSignedSmall(r.rDelta); tr.appendChild(tdR);
+            const tdT = document.createElement('td'); tdT.textContent = formatSignedSmall(r.turnout); tr.appendChild(tdT);
+            const tdTot = document.createElement('td'); tdTot.textContent = r.totalDelta != null ? formatSignedSmall(r.totalDelta) : '\u2014'; tr.appendChild(tdTot);
+            const tdLen = document.createElement('td'); tdLen.textContent = r.length != null ? formatPlain(r.length) : '\u2014'; tr.appendChild(tdLen);
+            const tdNote = document.createElement('td'); tdNote.textContent = r.note || ''; tr.appendChild(tdNote);
+
+            // hover/keyboard interactions: highlight corresponding point and show tooltip
+            tr.addEventListener('mouseenter', (e) => {
+                try { pointsLayer.select(`circle[data-id="${r.id}"]`).classed('active', true); } catch (e) { }
+                showTooltip(e, r);
+            });
+            tr.addEventListener('mouseleave', () => {
+                try { pointsLayer.select(`circle[data-id="${r.id}"]`).classed('active', false); } catch (e) { }
+                hideTooltip();
+            });
+            tr.addEventListener('focus', (e) => {
+                try { pointsLayer.select(`circle[data-id="${r.id}"]`).classed('active', true); } catch (e) { }
+                showTooltip(e, r);
+            });
+            tr.addEventListener('blur', () => { try { pointsLayer.select(`circle[data-id="${r.id}"]`).classed('active', false); } catch (e) { } hideTooltip(); });
+
+            tbody.appendChild(tr);
+        });
+
+        if (dataSummary) dataSummary.textContent = `${formatted.length} units — sorted by ${tableSort.key} ${tableSort.dir}`;
+    }
+
+    // hook sorting on header clicks
+    if (dataTable) {
+        const thead = dataTable.querySelector('thead');
+        thead.addEventListener('click', (e) => {
+            const th = e.target.closest('th');
+            if (!th || !th.dataset.key) return;
+            const key = th.dataset.key;
+            if (tableSort.key === key) tableSort.dir = tableSort.dir === 'asc' ? 'desc' : 'asc';
+            else { tableSort.key = key; tableSort.dir = 'asc'; }
+            // update sorted classes
+            thead.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            th.classList.add(tableSort.dir === 'asc' ? 'sorted-asc' : 'sorted-desc');
+            // rebuild for current year
+            const idx = Number(yearSlider.value);
+            const year = yearOrder[idx];
+            buildTableForYear(year);
+        });
+    }
+
+    // data panel toggle
+    if (dataToggle && dataPanel) {
+        dataToggle.addEventListener('click', () => {
+            const expanded = dataPanel.hidden === false;
+            if (expanded) {
+                dataPanel.hidden = true; dataToggle.textContent = 'Show table'; dataToggle.setAttribute('aria-expanded', 'false');
+            } else {
+                dataPanel.hidden = false; dataToggle.textContent = 'Hide table'; dataToggle.setAttribute('aria-expanded', 'true');
+                // build table for current year immediately
+                const idx = Number(yearSlider.value);
+                const year = yearOrder[idx];
+                buildTableForYear(year);
+            }
+        });
     }
 
     function updateUrl() {

@@ -1579,6 +1579,34 @@ body.shift-vectors-page {
 .shift-vectors .controls { display:grid; gap:16px }
 @media (min-width:720px) { .shift-vectors .controls { grid-template-columns: repeat(2, minmax(0,1fr)); align-items:end } }
 @media (min-width:1024px) { .shift-vectors .controls { grid-template-columns: repeat(3, minmax(0,1fr)) } }
+
+/* Mobile-first: stack chart above controls and table for small screens */
+@media (max-width: 720px) {
+  .shift-vectors .chart-card { order: 0; }
+  .shift-vectors .controls { order: 1; }
+  .shift-vectors .data-panel { order: 2; }
+  .shift-vectors .card { padding: 12px }
+  /* larger touch targets */
+  .shift-vectors .toggle-row label, .shift-vectors .badge, .shift-vectors .btn { padding: 10px 12px }
+  .shift-vectors .chart-card { min-height: 360px }
+}
+
+/* Data panel styles */
+.shift-vectors .data-panel .btn { min-width: 120px }
+.shift-vectors #dataPanel { transition: max-height 0.28s ease, opacity 0.2s ease }
+.shift-vectors .shift-data-table th, .shift-vectors .shift-data-table td { font-size: 0.92rem; padding: 8px 10px }
+.shift-vectors .shift-data-table thead th.sortable { cursor: pointer }
+.shift-vectors .shift-data-table thead th.sorted-asc::after, .shift-vectors .shift-data-table thead th.sorted-desc::after { margin-left: 6px; opacity: 0.85 }
+
+/* Make table rows easier to tap on mobile */
+.shift-vectors .shift-data-table tbody tr { touch-action: manipulation }
+.shift-vectors .shift-data-table tbody tr td { padding: 12px 10px }
+
+/* small screens: let table take full width and allow scrolling horizontally */
+@media (max-width: 520px) {
+  .shift-vectors .table-wrap { overflow-x: auto }
+  .shift-vectors .shift-data-table th, .shift-vectors .shift-data-table td { white-space: nowrap }
+}
 .shift-vectors .field { display:flex; flex-direction:column; gap:8px }
 .shift-vectors .field label { font-size:0.9rem; color:var(--muted) }
 .shift-vectors .slider-row { display:flex; align-items:center; gap:12px }

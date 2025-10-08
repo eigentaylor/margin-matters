@@ -140,6 +140,41 @@
                 </ul>
             </div>
         </div>
+        <!-- Data panel: collapsed by default on mobile, expands to show sortable table -->
+        <div class="card data-panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div>
+                    <strong>Data</strong>
+                    <div class="legend-note" style="margin-top:6px">Expand to see the raw vote-delta table for the selected year. Tap column headers to sort.</div>
+                </div>
+                <div>
+                    <button id="dataToggle" class="btn" aria-expanded="false">Show table</button>
+                </div>
+            </div>
+
+            <div id="dataPanel" hidden style="margin-top:12px">
+                <div id="dataSummary" class="chart-note">Loading…</div>
+                <div class="table-wrap" style="margin-top:8px">
+                    <table id="shiftDataTable" class="shift-data-table ev-breakdown-table" aria-describedby="dataSummary">
+                        <thead>
+                            <tr>
+                                <th data-key="label" scope="col" class="sortable">Unit</th>
+                                <th data-key="dDelta" scope="col" class="sortable">Δ D</th>
+                                <th data-key="rDelta" scope="col" class="sortable">Δ R</th>
+                                <th data-key="turnout" scope="col" class="sortable">Turnout Δ</th>
+                                <th data-key="totalDelta" scope="col" class="sortable">Total Δ</th>
+                                <th data-key="length" scope="col" class="sortable">Vector length</th>
+                                <th data-key="note" scope="col">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div id="footer-placeholder"></div>
     </div>
 
