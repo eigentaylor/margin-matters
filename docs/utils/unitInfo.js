@@ -1,5 +1,5 @@
 'use strict';
-import { isUnitFlipped } from "./flipScenarios";
+import { isUnitFlipped } from "./flipScenarios.js";
 // Small shared utilities for unit-level vote/EV computations.
 // These are intentionally conservative and read other project helpers from
 // the global window (e.g. getRowsForYear, getEvFor, _curYear, _curPv).
