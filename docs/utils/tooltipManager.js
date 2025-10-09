@@ -193,7 +193,7 @@ export function formatUnitTooltip(unit, opts) {
             if (votes.length >= 2) {
                 const margin = votes[0].count - votes[1].count;
                 const marginText = `${frontRunner}+${formatter(margin)} vote${margin !== 1 ? 's' : ''}`;
-                console.log('formatUnitTooltip vote margin', { unit, votes, margin, marginText });
+                if (window.DEBUG_TOOLTIP) console.log('formatUnitTooltip vote margin', { unit, votes, margin, marginText });
                 rows.push(marginText);
             }
         }

@@ -865,7 +865,7 @@ import { parsePvText, clampPv, applyPvOverride } from './utils/pvTools.js';
               let highlight = '#A0A0A0';
               sel.attr('fill', highlight);
             } catch (e) { sel.attr('fill', '#A0A0A0'); }
-              try {
+            try {
               // Determine state abbreviation robustly: prefer bound datum, fall back to element id (e.g., 'state-TX')
               let abbr = null;
               try {
