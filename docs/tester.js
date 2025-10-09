@@ -18,6 +18,11 @@ import './utils/evBreakdownModal.js';
 import ElectionMap from './utils/electionMap.js';
 import { colorForMargin as siteColorForMargin } from './utils/siteState.js';
 import {
+  getUnitFinalVoteTotals,
+  calculateUnitVoteTallies,
+  clampMargin
+} from './utils/unitInfo.js';
+import {
   setFlipDependencies,
   buildFlipScenarioMaps,
   updateFlipMetricOptionsForYear,
@@ -41,198 +46,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
 
   // Make the active-tip state exportable so callers can check/update it
   const _activeTipState = window._activeTipState || { info: null };
-  function getUnitFinalVoteTotals(unit, opts) {
-    try {
-      if (!unit) return null;
-      const options = opts || {};
-      let year = (options.year != null && isFinite(options.year)) ? Number(options.year) : null;
-      if (!isFinite(year) || year <= 0) {
-        if (typeof window._curYear === 'number' && isFinite(window._curYear)) {
-          year = window._curYear;
-        } else {
-          const yearEl = document.getElementById('yearSlider');
-          year = yearEl ? parseInt(yearEl.value, 10) : null;
-        }
-      }
-      if (!isFinite(year) || year <= 0) return null;
-
-      let pv = (options.pv != null && isFinite(options.pv)) ? Number(options.pv) : null;
-      if (!isFinite(pv)) pv = (typeof window._curPv === 'number' && isFinite(window._curPv)) ? window._curPv : 0;
-
-      const useActiveFlip = options.useActiveFlip !== false;
-      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-      if (!keyUnit) return null;
-
-      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-      if (!rows || !rows.length) return null;
-
-      const row = rows.find(x => x.unit === keyUnit);
-      if (!row) return null;
-
-      const totalVotesRaw = totalVotesFromRow(row);
-      if (!isFinite(totalVotesRaw) || totalVotesRaw <= 0) return null;
-
-      const natMargin = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
-      const breakdown = computePvAdjustedBreakdown(row, pv, natMargin);
-
-      let dVotes = Math.max(0, breakdown.dVotes);
-      let rVotes = Math.max(0, breakdown.rVotes);
-      let totalThirdVotes = Math.max(0, breakdown.totalThirdVotes);
-      let topThirdVotes = Math.max(0, breakdown.topThirdVotes);
-      let totalVotes = Math.max(0, breakdown.totalVotes || totalVotesRaw);
-
-      if (totalThirdVotes < topThirdVotes) totalThirdVotes = topThirdVotes;
-
-      if (useActiveFlip) {
-        const flipped = (typeof isUnitFlipped === 'function') ? isUnitFlipped(year, keyUnit) : false;
-        const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
-        if (flipped && activeFlip && Array.isArray(activeFlip.units)) {
-          const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-          if (flipUnit && flipUnit.votes_to_flip) {
-            const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-            if (votesToFlip > 0) {
-              if (dVotes >= rVotes) {
-                dVotes = Math.max(0, dVotes - votesToFlip);
-                rVotes = rVotes + votesToFlip;
-              } else {
-                dVotes = dVotes + votesToFlip;
-                rVotes = Math.max(0, rVotes - votesToFlip);
-              }
-            }
-          }
-        }
-      }
-
-      return {
-        dVotes,
-        rVotes,
-        topThirdVotes,
-        totalThirdVotes,
-        totalVotes
-      };
-    } catch (e) {
-      console.warn(e);
-      return null;
-    }
-  }
-  try { window.getUnitFinalVoteTotals = getUnitFinalVoteTotals; } catch (e) { console.warn(e); }
-
-  // Calculate vote tallies for a specific unit (for index.html - real elections only)
-  // Returns {D: number, R: number, O: number, total: number} or null if not applicable
-  // Put a star on the current leader (D, R, or O)
-  function calculateUnitVoteTallies(unit) {
-    try {
-      // Only show vote tallies on index.html (real elections), not tester or future
-      const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
-      if (!isIndexPage) return null;
-
-      let year = (typeof window._curYear === 'number' && isFinite(window._curYear)) ? window._curYear : null;
-      if (!isFinite(year)) {
-        const yearEl = document.getElementById('yearSlider');
-        year = yearEl ? parseInt(yearEl.value, 10) : null;
-      }
-      const pv = window._curPv || 0;
-      if (!year || year > 2024) return null; // Only real elections
-
-      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-
-      // During election night, use the counted votes from the snapshot
-      if (window._electionNightActive && window._electionNightSnapshot) {
-        const snapshot = window._electionNightSnapshot;
-        const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0, 2) : null;
-        const candidates = [];
-        if (unit && !candidates.includes(unit)) candidates.push(unit);
-        if (keyUnit && !candidates.includes(keyUnit)) candidates.push(keyUnit);
-        if (abbr && !candidates.includes(abbr)) candidates.push(abbr);
-
-        let snap = null;
-        for (const candidate of candidates) {
-          if (candidate && snapshot.has(candidate)) {
-            snap = snapshot.get(candidate);
-            if (snap) break;
-          }
-        }
-
-        if (snap) {
-          // Use the counted votes from the snapshot (starts at 0, grows as batches come in)
-          const dVotes = snap.dVotes || 0;
-          const rVotes = snap.rVotes || 0;
-          const oVotes = snap.oVotes || 0; // This is the top third party votes during election night
-
-          // Don't display if no votes have been counted yet
-          const total = dVotes + rVotes + oVotes;
-          if (total <= 0) return null;
-          // Special-case: 1948 AL stores Dixiecrat/Thurmond in the D column in the CSV;
-          // for display we zero out the D_col so it is not shown as a Democratic two-party total.
-          try {
-            const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0, 2) : null;
-            if (year === 1948 && abbr === 'AL') {
-              return {
-                D: 0,
-                R: Math.round(rVotes),
-                O: Math.round(oVotes),
-                total: Math.round(rVotes + oVotes)
-              };
-            }
-          } catch (e) { console.warn(e); }
-
-          return {
-            D: Math.round(dVotes),
-            R: Math.round(rVotes),
-            O: Math.round(oVotes),
-            total: Math.round(total)
-          };
-        }
-      }
-
-      const totals = getUnitFinalVoteTotals(unit, { year, pv });
-      if (!totals) return null;
-
-      const dRounded = Math.round(Math.max(0, totals.dVotes || 0));
-      const rRounded = Math.round(Math.max(0, totals.rVotes || 0));
-      const oRounded = Math.round(Math.max(0, totals.topThirdVotes || 0));
-
-      // For historical special cases (1948 AL) the CSV intentionally copies
-      // the Dixiecrat/Thurmond total into the D_votes column. For tooltip
-      // clarity we do not display that copied D_votes as Democratic votes.
-      try {
-        const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-        const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0, 2) : null;
-        if (year === 1948 && abbr === 'AL') {
-          // Use raw CSV R_votes and T_votes for display so the copied D_votes doesn't
-          // push adjusted two-party math to R=0. Prefer topThirdVotes from the row if present.
-          try {
-            const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-            const row = (rows && rows.length) ? rows.find(x => x.unit === (keyUnit || unit)) : null;
-            let rawR = rRounded;
-            let rawO = oRounded;
-            if (row) {
-              rawR = Math.round(Math.max(0, +row.rVotes || 0));
-              // prefer a dedicated topThirdVotes or T_votes if present, else fall back to totals
-              rawO = Math.round(Math.max(0, (+row.topThirdVotes || +row.tVotes || oRounded || 0)));
-            }
-            return {
-              D: 0,
-              R: rawR,
-              O: rawO,
-              total: rawR + rawO
-            };
-          } catch (e) {
-            return { D: 0, R: rRounded, O: oRounded, total: rRounded + oRounded };
-          }
-        }
-      } catch (e) { console.warn(e); }
-
-      return {
-        D: dRounded,
-        R: rRounded,
-        O: oRounded,
-        total: dRounded + rRounded + oRounded
-      };
-    } catch (e) {
-      return null;
-    }
-  }
 
   function syncSmallBoxesConfigRef() {
     try { window.smallBoxesConfig = ElectionMap._smallBoxesConfig; } catch (e) { console.warn(e); }
@@ -253,17 +66,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
   try {
     window.setSmallBoxesConfig = setSmallBoxesConfig;
     window.nudgeSmallBoxes = nudgeSmallBoxes;
-  } catch (e) { console.warn(e); }
-
-  function setVisualCenterStates(list) {
-    try {
-      ElectionMap.setVisualCenterStates(list);
-      try { window.visualCenterStates = ElectionMap._visualCenterStates; } catch (err) { console.warn(err); }
-    } catch (e) { console.warn(e); }
-  }
-  try {
-    window.visualCenterStates = ElectionMap._visualCenterStates;
-    window.setVisualCenterStates = setVisualCenterStates;
   } catch (e) { console.warn(e); }
 
   function getTotalEvForState(year, abbrOrUnit) {
@@ -351,7 +153,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
     _activeTipState.info.clientX = evt.clientX;
     _activeTipState.info.clientY = evt.clientY;
   }
-
 
   try {
     window.showMapTip = function (evt, text, info) {
@@ -528,73 +329,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
   }
   try { window.marginToColor = marginToColor; } catch (e) { console.warn(e); }
 
-  function clampMargin(value) {
-    if (!isFinite(value)) return 0;
-    const LIMIT = 1 - 1e-9;
-    if (value > LIMIT) return LIMIT;
-    if (value < -LIMIT) return -LIMIT;
-    return value;
-  }
-
-  function totalVotesFromRow(row) {
-    const direct = +row.total;
-    if (isFinite(direct) && direct > 0) return direct;
-    const fallback = (+row.dVotes || 0) + (+row.rVotes || 0) + (+row.tVotes || 0);
-    return fallback > 0 ? fallback : 0;
-  }
-
-  function computePvAdjustedBreakdown(row, pvShift = 0, natActualMargin = 0) {
-    // Given a data row with dVotes, rVotes, tVotes (or total), and a desired PV shift,
-    const pv = isFinite(pvShift) ? 1 * (pvShift - natActualMargin) : 0;
-    //console.log({ pvShift, natActualMargin, pv });
-    const totalVotes = totalVotesFromRow(row);
-
-    let dVotesBase = Math.max(0, +row.dVotes || 0);
-    let rVotesBase = Math.max(0, +row.rVotes || 0);
-
-    let totalThirdVotes = +row.tVotes;
-    if (!isFinite(totalThirdVotes) || totalThirdVotes < 0) {
-      totalThirdVotes = Math.max(0, totalVotes - dVotesBase - rVotesBase);
-    }
-    if (totalVotes > 0) totalThirdVotes = Math.min(totalVotes, totalThirdVotes);
-    else totalThirdVotes = 0;
-
-    let topThirdVotes = +row.topThirdVotes;
-    if (!isFinite(topThirdVotes) || topThirdVotes < 0) topThirdVotes = totalThirdVotes;
-    topThirdVotes = Math.max(0, Math.min(totalThirdVotes, topThirdVotes));
-
-    const otherThirdVotes = Math.max(0, totalThirdVotes - topThirdVotes);
-    const twoPartyVotes = Math.max(0, totalVotes - totalThirdVotes);
-
-    const twoPartyDenom = twoPartyVotes > EPS ? twoPartyVotes : 0;
-    let baseDShareTwoParty = twoPartyDenom > 0 ? dVotesBase / twoPartyDenom : 0.5;
-    if (!isFinite(baseDShareTwoParty)) baseDShareTwoParty = 0.5;
-    baseDShareTwoParty = Math.max(0, Math.min(1, baseDShareTwoParty));
-
-    const baseMargin = clampMargin(2 * baseDShareTwoParty - 1);
-    const targetMargin = clampMargin(baseMargin + pv);
-    const targetDShareTwoParty = (targetMargin + 1) / 2;
-    const targetRShareTwoParty = 1 - targetDShareTwoParty;
-
-    const adjustedDVotes = twoPartyVotes * targetDShareTwoParty;
-    const adjustedRVotes = twoPartyVotes * targetRShareTwoParty;
-
-    return {
-      totalVotes,
-      dVotes: adjustedDVotes,
-      rVotes: adjustedRVotes,
-      twoPartyVotes,
-      totalThirdVotes,
-      topThirdVotes,
-      otherThirdVotes,
-      baseMargin,
-      targetMargin,
-      twoPartyShareOfTotal: totalVotes > EPS ? twoPartyVotes / totalVotes : 0,
-      topThirdShareOfTotal: totalVotes > EPS ? topThirdVotes / totalVotes : 0,
-      totalThirdShareOfTotal: totalVotes > EPS ? totalThirdVotes / totalVotes : 0
-    };
-  }
-
   const byYear = new Map();
   const evByUnit = new Map();
   // expose for tooltip/helper access outside closure
@@ -611,8 +345,7 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
     return v;
   }
 
-  function dbg() {
-    //console.log('[tester]', ...arguments); 
+  function dbg() {//console.log('[tester]', ...arguments); 
   }
 
   Promise.all([
@@ -1099,8 +832,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
       }, 100);
     }
   }
-
-  
 
   function updateAll() {
     dbg('updateAll: starting...');
