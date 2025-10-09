@@ -102,6 +102,9 @@ export function formatUnitTooltip(unit, opts) {
             }
             // When not in proportional mode, show winner-take-all allocation (based on PV-adjusted winner or snapshot).
             const wta = (typeof calculateUnitWinnerTakeAllEVs === 'function') ? calculateUnitWinnerTakeAllEVs(unit) : null;
+            if (unit === 'AL' && window._curYear === 1960) {
+                console.log('[EV-TRACE] 1960 AL special case in tooltip WTA allocation', { unit, ev, evAllocation: wta });
+            }
             return wta;
         })();
         if (evAllocation) {

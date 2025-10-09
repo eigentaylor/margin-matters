@@ -153,9 +153,9 @@ export function calculateUnitProportionalEVs(unit) {
                 return allocateProportionalEVs(dVotesBase, rVotesBase, Math.max(0, tVotesBase), ev, topThirdShare, r.thirdPartyResults);
             }
         }
-    // console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
-    const natForYear = (typeof window._getNatMargin === 'function') ? window._getNatMargin(year) : 0;
-    const breakdown = computePvAdjustedBreakdown(r, pv, natForYear);
+        // console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
+        const natForYear = (typeof window._getNatMargin === 'function') ? window._getNatMargin(year) : 0;
+        const breakdown = computePvAdjustedBreakdown(r, pv, natForYear);
         let dVotes = Math.max(0, breakdown.dVotes);
         let rVotes = Math.max(0, breakdown.rVotes);
         let tVotes = Math.max(0, breakdown.totalThirdVotes);
@@ -529,7 +529,9 @@ export function calculateUnitWinnerTakeAllEVs(unit) {
                     const side = Math.sign((pv || 0) - (nat || 0));
                     if (side >= 0) dEV = ev; else rEV = ev;
                 }
-
+                if (unit === 'AL' && year === 1960) {
+                    console.log('[EV-TRACE] 1960 AL special case in election night snapshot', { snap, dEV, rEV, oEV });
+                }
                 return { D: dEV, R: rEV, O: oEV, thirdParties: {} };
             }
             // If no snapshot for this unit, fall through to static row logic
@@ -551,7 +553,15 @@ export function calculateUnitWinnerTakeAllEVs(unit) {
                 if (side >= 0) dEV = ev; else rEV = ev;
             }
         }
-
+        if (unit === 'AL' && year === 1960) {
+            console.log('[EV-TRACE] 1960 AL special case in static row logic', { r, margin, pv, adjMargin, dEV, rEV, oEV });
+            if (rEV === 0) {
+                return { D: 5, R: 0, O: 6, thirdParties: {} }; // Special fixed split for 1960 AL if not R winner
+            }
+            else {
+                return { D: 0, R: 11, O: 0, thirdParties: {} }; // Normal R winner-take-all 
+            }
+        }
         return { D: dEV, R: rEV, O: oEV, thirdParties: {} };
     } catch (e) {
         return null;
