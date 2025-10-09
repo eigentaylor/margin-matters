@@ -1,199 +1,42 @@
+'use strict';
+import {
+  PV_CAP, EPS, STOP_EPS, STOP_KEY_PREC, ID_TO_ABBR, SMALL_STATES,
+  getStateName
+} from './utils/constants.js';
+import {
+  allocateProportionalEVs, isProportionalEvMode,
+  getAllEvAllocations,
+} from './utils/evAllocation.js';
+import {
+  _ensureTip, _placeTipAt, showMapTip, hideMapTip, moveMapTip,
+  refreshActiveMapTip, createUnitTipInfo, _setActiveTip, _activeTipState
+} from './utils/tooltipManager.js';
+import {
+  fmtLean, formatter, leanStr
+} from './utils/formatters.js';
+import './utils/evBreakdownModal.js';
+import {
+  setFlipDependencies,
+  buildFlipScenarioMaps,
+  updateFlipMetricOptionsForYear,
+  updateFlipButtons,
+  isUnitFlipped,
+  clearFlips,
+  applyFlip
+} from './utils/flipScenarios.js';
+import { parsePvText, clampPv, applyPvOverride } from './utils/pvTools.js';
+
 (function () {
-  const PV_CAP = 0.5;
-  const EPS = 1e-8;
-  const STOP_EPS = 0.000005; // tolerance when matching slider to exact flip stops
-  const STOP_KEY_PREC = 6;   // rounding precision for matching stops to CSV
-  // FIPS -> USPS state abbreviation map (contiguous plus AK, HI, DC)
-  const ID_TO_ABBR = { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
-  // Very small states to skip labeling on the map
-  const SMALL_STATES = new Set(["MA", "RI", "CT", "NJ", "DE", "MD", "DC", "NH", "VT"]);
-
-  // Proportional EV allocation function using largest remainder method
-  // Now supports multiple third parties via thirdPartyResults object
-  function allocateProportionalEVs(dVotes, rVotes, oVotes, totalEVs, topThirdPartyShare, thirdPartyResults) {
-    const total = dVotes + rVotes + oVotes;
-    if (total <= 0 || totalEVs <= 0) return { D: 0, R: 0, O: 0, thirdParties: {} };
-
-    // When thirdPartyResults is provided and has multiple parties, split third party votes proportionally
-    const thirdParties = {};
-    let hasMultipleThirdParties = false;
-
-    if (thirdPartyResults && typeof thirdPartyResults === 'object') {
-      const thirdPartyEntries = Object.entries(thirdPartyResults).filter(([name, votes]) => {
-        // Filter out "Other(s)"
-        return name !== 'Other' && name !== 'Others';
-      });
-      if (thirdPartyEntries.length > 0) {
-        hasMultipleThirdParties = thirdPartyEntries.length > 1;
-
-        // Calculate quotas for each party including third parties
-        const parties = [
-          { name: 'D', votes: dVotes },
-          { name: 'R', votes: rVotes }
-        ];
-
-        // Add each third party
-        thirdPartyEntries.forEach(([name, votes]) => {
-          parties.push({ name: name, votes: +votes || 0, isThirdParty: true });
-        });
-
-        // Calculate quotas using largest remainder method
-        const allocated = {};
-        let totalAllocated = 0;
-        const remainders = [];
-
-        parties.forEach(p => {
-          const share = p.votes / total;
-          const quota = Math.floor(share * totalEVs);
-          const remainder = (share * totalEVs) - quota;
-
-          if (p.isThirdParty) {
-            thirdParties[p.name] = quota;
-          } else {
-            allocated[p.name] = quota;
-          }
-          totalAllocated += quota;
-          remainders.push({ name: p.name, remainder, isThirdParty: p.isThirdParty });
-        });
-
-        // Allocate remaining EVs
-        let remaining = totalEVs - totalAllocated;
-        remainders.sort((a, b) => b.remainder - a.remainder);
-
-        for (let i = 0; i < remaining && i < remainders.length; i++) {
-          const r = remainders[i];
-          if (r.isThirdParty) {
-            thirdParties[r.name] = (thirdParties[r.name] || 0) + 1;
-          } else {
-            allocated[r.name] = (allocated[r.name] || 0) + 1;
-          }
-        }
-
-        return {
-          D: allocated.D || 0,
-          R: allocated.R || 0,
-          O: 0, // Not used when we have detailed third parties
-          thirdParties: thirdParties
-        };
-      }
-    }
-
-    // Fallback to simple D/R/O allocation when no detailed third party data
-    const dShare = dVotes / total;
-    const rShare = rVotes / total;
-    const oShare = oVotes / total;
-
-    const dQuota = Math.floor(dShare * totalEVs);
-    const rQuota = Math.floor(rShare * totalEVs);
-    const oQuota = Math.floor(oShare * totalEVs);
-
-    let allocated = { D: dQuota, R: rQuota, O: oQuota };
-    let remaining = totalEVs - (dQuota + rQuota + oQuota);
-
-    if (remaining > 0) {
-      const remainders = [
-        { party: 'D', remainder: (dShare * totalEVs) - dQuota },
-        { party: 'R', remainder: (rShare * totalEVs) - rQuota },
-        { party: 'O', remainder: (oShare * totalEVs) - oQuota }
-      ];
-
-      remainders.sort((a, b) => b.remainder - a.remainder);
-
-      for (let i = 0; i < remaining; i++) {
-        allocated[remainders[i].party]++;
-      }
-    }
-
-    return { ...allocated, thirdParties: {} };
-  }
-
   // Check if proportional EV mode is enabled
-  function isProportionalEvMode() {
-    try {
-      const toggle = document.getElementById('propEvToggle');
-      return toggle && toggle.checked;
-    } catch (e) {
-      return false;
-    }
-  }
+  try { window.isProportionalEvMode = isProportionalEvMode; } catch (e) { console.warn(e); }
 
-  // Calculate proportional EV allocation for a specific unit
-  // Returns {D: number, R: number, O: number, thirdParties: {}} or null if proportional mode is off
-  function calculateUnitProportionalEVs(unit) {
-    try {
-      if (!isProportionalEvMode()) return null;
+  // Expose PV helper utilities for legacy inline scripts/pages that expect globals
+  try { window.applyPvOverride = applyPvOverride; } catch (e) { }
+  try { window.parsePvText = parsePvText; } catch (e) { }
+  try { window.clampPv = clampPv; } catch (e) { }
 
-      const year = window._curYear;
-      const pv = window._curPv || 0;
-      if (!year) return null;
-
-      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-      if (!rows || !rows.length) return null;
-
-      const r = rows.find(x => x.unit === keyUnit);
-      if (!r) return null;
-
-      const ev = +r.ev || 0;
-      if (ev <= 0) return null;
-
-      const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
-      const flipped = isUnitFlipped(year, keyUnit);
-
-      if (flipped && activeFlip && activeFlip.units) {
-        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-        if (flipUnit && flipUnit.votes_to_flip) {
-          let dVotesBase = Math.max(0, +r.dVotes || 0);
-          let rVotesBase = Math.max(0, +r.rVotes || 0);
-          let tVotesBase = Math.max(0, +r.tVotes || 0);
-          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotesBase >= rVotesBase) {
-            dVotesBase = Math.max(0, dVotesBase - votesToFlip);
-            rVotesBase = rVotesBase + votesToFlip;
-          } else {
-            dVotesBase = dVotesBase + votesToFlip;
-            rVotesBase = Math.max(0, rVotesBase - votesToFlip);
-          }
-          const topThirdShare = totalVotesFromRow(r) > 0 ? (Math.max(0, +r.topThirdVotes || 0) / totalVotesFromRow(r)) : 0;
-          return allocateProportionalEVs(dVotesBase, rVotesBase, Math.max(0, tVotesBase), ev, topThirdShare, r.thirdPartyResults);
-        }
-      }
-      // console.log('Calculating proportional EVs for', keyUnit, 'with PV shift', pv);
-      const breakdown = computePvAdjustedBreakdown(r, pv, getNatMargin(year));
-      let dVotes = Math.max(0, breakdown.dVotes);
-      let rVotes = Math.max(0, breakdown.rVotes);
-      let tVotes = Math.max(0, breakdown.totalThirdVotes);
-
-      if (flipped && activeFlip && activeFlip.units) {
-        const flipUnit = activeFlip.units.find(u => u.unit === keyUnit);
-        if (flipUnit && flipUnit.votes_to_flip) {
-          const votesToFlip = Math.max(0, +flipUnit.votes_to_flip || 0);
-          if (dVotes >= rVotes) {
-            dVotes = Math.max(0, dVotes - votesToFlip);
-            rVotes = rVotes + votesToFlip;
-          } else {
-            dVotes = dVotes + votesToFlip;
-            rVotes = Math.max(0, rVotes - votesToFlip);
-          }
-        }
-      }
-
-      const topThirdShare = breakdown.topThirdShareOfTotal;
-      // Capture allocation result so we can log it for 1960 (compare with map/election-night)
-      const allocResult = allocateProportionalEVs(dVotes, rVotes, tVotes, ev, topThirdShare, r.thirdPartyResults);
-
-      // try {
-      //   if (year === 1960) {
-      //     console.log('[EV-TRACE] calculateUnitProportionalEVs', { year, keyUnit, ev, dVotes, rVotes, tVotes, thirdPartyResults: r.thirdPartyResults, allocResult });
-      //   }
-      // } catch(e) {}
-
-      return allocResult;
-    } catch (e) {
-      return null;
-    }
-  }
-
+  // Make the active-tip state exportable so callers can check/update it
+  const _activeTipState = window._activeTipState || { info: null };
   function getUnitFinalVoteTotals(unit, opts) {
     try {
       if (!unit) return null;
@@ -264,10 +107,11 @@
         totalVotes
       };
     } catch (e) {
+      console.warn(e);
       return null;
     }
   }
-  try { window.getUnitFinalVoteTotals = getUnitFinalVoteTotals; } catch (e) { }
+  try { window.getUnitFinalVoteTotals = getUnitFinalVoteTotals; } catch (e) { console.warn(e); }
 
   // Calculate vote tallies for a specific unit (for index.html - real elections only)
   // Returns {D: number, R: number, O: number, total: number} or null if not applicable
@@ -326,7 +170,7 @@
                 total: Math.round(rVotes + oVotes)
               };
             }
-          } catch (e) { }
+          } catch (e) { console.warn(e); }
 
           return {
             D: Math.round(dVotes),
@@ -373,7 +217,7 @@
             return { D: 0, R: rRounded, O: oRounded, total: rRounded + oRounded };
           }
         }
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
 
       return {
         D: dRounded,
@@ -397,13 +241,13 @@
     gapY: 4        // vertical gap between boxes
   };
   let _smallBoxesConfig = { ..._defaultSmallBoxesConfig };
-  try { window.smallBoxesConfig = _smallBoxesConfig; } catch (e) { }
+  try { window.smallBoxesConfig = _smallBoxesConfig; } catch (e) { console.warn(e); }
   // Helper to update config at runtime and re-render quickly
   function setSmallBoxesConfig(patch) {
     try {
       if (patch && typeof patch === 'object') Object.assign(_smallBoxesConfig, patch);
       // Keep the exported reference updated too
-      try { window.smallBoxesConfig = _smallBoxesConfig; } catch (e) { }
+      try { window.smallBoxesConfig = _smallBoxesConfig; } catch (e) { console.warn(e); }
       // Re-render using last known colors if available
       const year = window._curYear || (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : 2024);
       const ac = window._lastAbbrColors || null;
@@ -427,7 +271,7 @@
     _smallBoxesConfig.y = (_smallBoxesConfig.y || 0) + (+dy || 0);
     setSmallBoxesConfig({});
   }
-  try { window.setSmallBoxesConfig = setSmallBoxesConfig; window.nudgeSmallBoxes = nudgeSmallBoxes; } catch (e) { }
+  try { window.setSmallBoxesConfig = setSmallBoxesConfig; window.nudgeSmallBoxes = nudgeSmallBoxes; } catch (e) { console.warn(e); }
 
   // Lazily created layer for state labels
   let stateLabelsLayer = null; // d3 selection of g.state-labels
@@ -437,87 +281,29 @@
   // Configurable whitelist for which states should use visual-center placement.
   // Default to a focused set; if emptied, we treat as ALL states using visual center.
   let _visualCenterStates = new Set(['MI', 'FL', 'LA']);
-  try { window.visualCenterStates = _visualCenterStates; } catch (e) { }
+  try { window.visualCenterStates = _visualCenterStates; } catch (e) { console.warn(e); }
   function setVisualCenterStates(list) {
     try {
       if (Array.isArray(list)) _visualCenterStates = new Set(list.map(s => String(s || '').toUpperCase()));
       else if (list instanceof Set) _visualCenterStates = new Set(Array.from(list).map(s => String(s || '').toUpperCase()));
       // publish reference for quick tweaking in console
-      try { window.visualCenterStates = _visualCenterStates; } catch (e) { }
+      try { window.visualCenterStates = _visualCenterStates; } catch (e) { console.warn(e); }
       // centers depend on geometry, so clear cache
-      try { _visualCenterCache.clear(); } catch (e) { }
+      try { _visualCenterCache.clear(); } catch (e) { console.warn(e); }
       // re-render labels
-      try { updateStateLabels(window._curYear || 2024); } catch (e) { }
+      try { updateStateLabels(window._curYear || 2024); } catch (e) { console.warn(e); }
     } catch (e) { /* ignore */ }
   }
-  try { window.setVisualCenterStates = setVisualCenterStates; } catch (e) { }
+  try { window.setVisualCenterStates = setVisualCenterStates; } catch (e) { console.warn(e); }
 
-  // Centralized tooltip helpers (consistent positioning; fixes offset glitches)
-  function _getMapWrap() {
-    return document.getElementById('map-wrap') || document.body;
-  }
-  function _ensureTip() {
-    return document.getElementById('mapTip') || null;
-  }
-  function _placeTipAt(evt) {
-    const tip = _ensureTip(); if (!tip) return;
-    const wrap = _getMapWrap();
-    const wr = wrap.getBoundingClientRect();
-    const offsetX = 12, offsetY = 12;
-    let x = evt.clientX - wr.left + offsetX;
-    let y = evt.clientY - wr.top + offsetY;
-    // Clamp within container
-    const prev = tip.style.display;
-    if (prev === 'none') tip.style.display = 'block';
-    const tr = tip.getBoundingClientRect();
-    if (prev === 'none') tip.style.display = 'none';
-    const pad = 6;
-    x = Math.max(pad, Math.min(wr.width - pad, x));
-    y = Math.max(pad, Math.min(wr.height - pad, y));
-    tip.style.left = x + 'px';
-    tip.style.top = y + 'px';
-  }
-  function showMapTip(evt, text) {
-    try {
-      const tip = _ensureTip(); if (!tip) return;
-      // Handle multi-line tooltips by converting newlines to <br> tags
-      const content = text != null ? String(text).replace(/\n/g, '<br>') : '';
-      tip.innerHTML = content;
-      tip.style.display = 'block';
-      _placeTipAt(evt);
-    } catch (e) { }
-  }
-  function moveMapTip(evt) { try { _placeTipAt(evt); } catch (e) { } }
-  const _activeTipState = {
-    info: null
-  };
-  function _setActiveTip(info) { _activeTipState.info = info || null; }
+
   function _updateActiveTipCoords(evt) {
     if (!_activeTipState.info || !evt) return;
     _activeTipState.info.clientX = evt.clientX;
     _activeTipState.info.clientY = evt.clientY;
   }
-  function refreshActiveMapTip() {
-    try {
-      const info = _activeTipState.info;
-      if (!info || typeof info.getText !== 'function') return;
-      const text = info.getText();
-      if (text == null) return;
-      const coords = {
-        clientX: info.clientX,
-        clientY: info.clientY
-      };
-      if (coords.clientX == null || coords.clientY == null) return;
-      showMapTip(coords, text);
-    } catch (e) { }
-  }
-  function hideMapTip() {
-    try {
-      const tip = _ensureTip();
-      if (tip) tip.style.display = 'none';
-    } catch (e) { }
-    _setActiveTip(null);
-  }
+
+
   try {
     window.showMapTip = function (evt, text, info) {
       if (info) {
@@ -534,301 +320,8 @@
     };
     window.hideMapTip = hideMapTip;
     window.refreshActiveMapTip = refreshActiveMapTip;
-  } catch (e) { }
+  } catch (e) { console.warn(e); }
 
-  function createUnitTipInfo(unit, opts) {
-    const options = { ...(opts || {}) };
-    return {
-      unit,
-      options,
-      clientX: null,
-      clientY: null,
-      getText: function () { return formatUnitTooltip(unit, options); }
-    };
-  }
-
-  function formatUnitTooltip(unit, opts) {
-    try {
-      const options = opts || {};
-      if (options.staticText != null) return options.staticText;
-      const display = options.label || unit;
-      const info = (typeof window.getAdjustedInfo === 'function') ? window.getAdjustedInfo(unit) : null;
-      let ev = options.evOverride;
-      if (info && info.ev != null && !isNaN(info.ev)) ev = info.ev;
-      let marginStr = options.marginOverride || '';
-      if (info && info.marginStr) marginStr = info.marginStr;
-      const cappedMarginStr = (function () {
-        if (!marginStr || typeof marginStr !== 'string') return marginStr;
-        const match = marginStr.match(/^([A-Z])\+([\d.]+)$/);
-        if (!match) return marginStr;
-        const prefix = match[1];
-        const value = parseFloat(match[2]);
-        if (!isFinite(value) || value <= 99.9) return marginStr;
-        return `${prefix}+99.9`;
-      })();
-
-      // Build tooltip content with multiple rows
-      const rows = [];
-
-      // First row: Basic info (display name, EV, margin)
-      const basicParts = [];
-      if (display) basicParts.push(display);
-      if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
-      if (cappedMarginStr) basicParts.push(cappedMarginStr);
-      if (basicParts.length) rows.push(basicParts.join(' · '));
-
-      // Second row: EV allocation (for proportional mode)
-      const evAllocation = (function () {
-        const electionNightActive = !!window._electionNightActive;
-        const reportingVal = (info && info.reporting != null) ? Number(info.reporting) : null;
-        const fullyCounted = (reportingVal != null && isFinite(reportingVal)) ? (reportingVal >= 0.999) : false;
-        if (electionNightActive && !fullyCounted) return null;
-        const alloc = calculateUnitProportionalEVs(unit);
-        // try {
-        //   // Log why calculateUnitProportionalEVs may have returned null or what it returned
-        //   if ((window._curYear === 1960) || (alloc && (alloc.D || alloc.R || alloc.O))) {
-        //     console.log('[EV-TRACE] tooltip evAllocation computed', { unit, electionNightActive, reportingVal, fullyCounted, alloc });
-        //   }
-        // } catch(e) {}
-        return alloc;
-      })();
-      if (evAllocation) {
-        const evParts = [];
-        if (evAllocation.D > 0) evParts.push(`D: ${evAllocation.D}`);
-        if (evAllocation.R > 0) evParts.push(`R: ${evAllocation.R}`);
-        // Aggregate any "Other" EVs: include traditional O plus any detailed thirdParty allocations
-        const detailed = evAllocation.thirdParties || {};
-        let othersTotal = (evAllocation.O || 0);
-        try {
-          Object.values(detailed).forEach(v => { if (isFinite(v)) othersTotal += Number(v) || 0; });
-        } catch (e) { /* ignore */ }
-        // try {
-        //   if (window._curYear === 1960) {
-        //     console.log('[EV-TRACE] tooltip evParts O aggregation', { unit, ev, evAllocation, detailed, othersTotal });
-        //   }
-        // } catch(e) {}
-        if (othersTotal > 0) {
-          // Try to display the top third-party's last name instead of a generic 'O'
-          let topThirdLabel = null;
-          try {
-            const lastNameFrom = (full) => {
-              try {
-                if (!full || typeof full !== 'string') return null;
-                const s = full.trim(); if (!s) return null;
-                if (s.indexOf(',') !== -1) return s.split(',')[0].trim();
-                const parts = s.split(/\s+/).filter(Boolean);
-                return parts.length ? parts[parts.length - 1] : s;
-              } catch (e) { return null; }
-            };
-            if (info && info.thirdPartyResults && typeof info.thirdPartyResults === 'object') {
-              const entries = Object.entries(info.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
-              if (entries.length) {
-                entries.sort((a, b) => b.votes - a.votes);
-                const top = entries[0];
-                if (top && top.name) topThirdLabel = lastNameFrom(String(top.name)) || String(top.name);
-              }
-            }
-          } catch (e) { }
-          if (topThirdLabel) evParts.push(`${topThirdLabel}: ${othersTotal}`);
-          else evParts.push(`O: ${othersTotal}`);
-        }
-        if (evParts.length) {
-          rows.push(evParts.join(' | '));
-        }
-      }
-
-      // Third row: Vote tallies (for index.html - real elections only)
-      const voteTallies = calculateUnitVoteTallies(unit);
-      if (voteTallies) {
-        const voteParts = [];
-        const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
-
-        // Find the party with the highest vote tally
-        const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
-        const frontRunner = (function () {
-          if (voteTallies.D === maxVotes) return 'D';
-          if (voteTallies.R === maxVotes) return 'R';
-          if (voteTallies.O === maxVotes) return 'O';
-          return null;
-        })();
-        const displayNames = true; // if true, show candidate last names in tooltip (if available)
-        const onlyThirdParty = false; // if true, show only third-party name for O, not generic 'O' but still show D and R (not names)
-        const candidateNames = (function () {
-          if (!displayNames) return { D: 'D', R: 'R', O: 'O' };
-          //try { console.log('info for', unit, info); } catch(e){}
-
-          // Helper: return a sensible "last name" from a full name string
-          const lastNameFrom = (full) => {
-            try {
-              if (!full || typeof full !== 'string') return null;
-              const s = full.trim();
-              if (!s) return null;
-              // If name is in "Last, First" format, take the part before comma
-              if (s.indexOf(',') !== -1) return s.split(',')[0].trim();
-              // Otherwise take last token
-              const parts = s.split(/\s+/).filter(Boolean);
-              return parts.length ? parts[parts.length - 1] : s;
-            } catch (e) { return null; }
-          };
-
-          const names = { D: 'D', R: 'R', O: 'Top O' };
-
-          // Prefer explicit per-party candidate entries when present
-          try {
-            if (info && info.candidates && typeof info.candidates === 'object') {
-              const candObj = info.candidates;
-              console.log('candidates object', candObj);
-              if (candObj.D && candObj.D.name && !onlyThirdParty) {
-                const ln = lastNameFrom(candObj.D.name);
-                if (ln) names.D = ln;
-              }
-              if (candObj.R && candObj.R.name && !onlyThirdParty) {
-                const ln = lastNameFrom(candObj.R.name);
-                if (ln) names.R = ln;
-              }
-              // For O, prefer an explicit O candidate entry
-              if (candObj.O && candObj.O.name) {
-                const ln = lastNameFrom(candObj.O.name);
-                //console.log('extracted O from candidates.O.name', ln);
-                if (ln) names.O = ln;
-
-              }
-            } else {
-              // Fallback: some data rows expose dCandidate/rCandidate as simple strings
-              console.log('candidates object not found, checking dCandidate/rCandidate', info);
-              if (info && info.dCandidate && !names.D) {
-                const ln = lastNameFrom(String(info.dCandidate)); if (ln) names.D = ln;
-                console.log('extracted D from dCandidate', ln);
-              }
-              if (info && info.rCandidate && !names.R) {
-                const ln = lastNameFrom(String(info.rCandidate)); if (ln) names.R = ln;
-                console.log('extracted R from rCandidate', ln);
-              }
-            }
-          } catch (e) { }
-
-          // If we still don't have a top third-party name for O, try to infer from thirdPartyResults
-          try {
-            if ((!names.O || names.O === 'O') && info && info.thirdPartyResults && typeof info.thirdPartyResults === 'object') {
-              const entries = Object.entries(info.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
-              if (entries.length) {
-                entries.sort((a, b) => b.votes - a.votes);
-                const top = entries[0];
-                if (top && top.name) {
-                  const ln = lastNameFrom(String(top.name));
-                  if (ln) names.O = ln;
-                }
-              }
-            }
-          } catch (e) { }
-
-          return names;
-        })();
-        //console.log('candidateNames', candidateNames);
-        // Only display parties with votes, add star to the highest
-        if (voteTallies.D > 0) {
-          const dLabel = candidateNames && candidateNames.D ? candidateNames.D : 'D';
-          voteParts.push(`${voteTallies.D === maxVotes ? dLabel + '*' : dLabel}: ${formatter(voteTallies.D)}`);
-        }
-        if (voteTallies.R > 0) {
-          const rLabel = candidateNames && candidateNames.R ? candidateNames.R : 'R';
-          voteParts.push(`${voteTallies.R === maxVotes ? rLabel + '*' : rLabel}: ${formatter(voteTallies.R)}`);
-        }
-        // Only display top third party if it has votes (not all third parties)
-        if (voteTallies.O > 0) {
-          const oLabel = candidateNames && candidateNames.O ? candidateNames.O : 'O';
-          voteParts.push(`${voteTallies.O === maxVotes ? oLabel + '*' : oLabel}: ${formatter(voteTallies.O)}`);
-        }
-
-        // Only add vote row if we have votes to display
-        if (voteParts.length) {
-          rows.push(voteParts.join(' | '));
-        }
-
-        // Add vote margin between top and runner-up
-        const votes = [
-          { party: 'D', count: voteTallies.D },
-          { party: 'R', count: voteTallies.R },
-          { party: 'O', count: voteTallies.O }
-        ].filter(v => v.count > 0).sort((a, b) => b.count - a.count);
-
-        if (votes.length >= 2) {
-          const margin = votes[0].count - votes[1].count;
-          const marginText = `${frontRunner}+${formatter(margin)} vote${margin !== 1 ? 's' : ''}`;
-          rows.push(marginText);
-        }
-      }
-
-      // Election night reporting info
-      const reportingText = (function () {
-        if (!window._electionNightActive) return '';
-        if (!info || info.reporting == null) return '';
-        const value = Number(info.reporting);
-        if (!isFinite(value) || value < 0) return '';
-        const pct = Math.max(0, Math.min(100, value * 100));
-        const label = (pct >= 99.95) ? '100.0% counted' : `${pct.toFixed(1)}% counted`;
-        return label;
-      })();
-      if (reportingText) rows.push(reportingText);
-
-      // Called/confidence info
-      if (info) {
-        if (info.called) {
-          rows.push('Called');
-        } else {
-          const reporting = (info.reporting != null && isFinite(info.reporting)) ? info.reporting : 0;
-          const confidence = (info.confidence != null && isFinite(info.confidence)) ? info.confidence : null;
-          if (reporting > EPS && confidence != null) {
-            const pct = Math.max(0, Math.min(100, Math.round(confidence * 100)));
-            rows.push(`Confidence ${pct}%`);
-          }
-        }
-      }
-
-      return rows.join('\n');
-    } catch (e) { return unit; }
-  }
-
-  // Expose helper to get candidate last names for a unit (D, R, top third-party O)
-  function getUnitCandidateLastNames(unit, opts) {
-    try {
-      const options = opts || {};
-      let year = (options.year != null && isFinite(options.year)) ? Number(options.year) : (typeof window._curYear === 'number' ? window._curYear : null);
-      if (!isFinite(year)) year = null;
-      if (!unit) return { D: 'D', R: 'R', O: 'O' };
-      const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-      const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-      const row = (rows && rows.length) ? rows.find(x => x.unit === keyUnit) : null;
-      // last name extractor
-      const lastNameFrom = (full) => {
-        try {
-          if (!full || typeof full !== 'string') return null;
-          const s = full.trim(); if (!s) return null;
-          if (s.indexOf(',') !== -1) return s.split(',')[0].trim();
-          const parts = s.split(/\s+/).filter(Boolean); return parts.length ? parts[parts.length - 1] : s;
-        } catch (e) { return null; }
-      };
-      const names = { D: 'D', R: 'R', O: 'O' };
-      if (row) {
-        try {
-          if (row.dCandidate) {
-            const ln = lastNameFrom(String(row.dCandidate)); if (ln) names.D = ln;
-          }
-          if (row.rCandidate) {
-            const ln = lastNameFrom(String(row.rCandidate)); if (ln) names.R = ln;
-          }
-          if (row.thirdPartyResults && typeof row.thirdPartyResults === 'object') {
-            const entries = Object.entries(row.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
-            if (entries.length) {
-              entries.sort((a, b) => b.votes - a.votes);
-              const top = entries[0]; if (top && top.name) { const ln = lastNameFrom(String(top.name)); if (ln) names.O = ln; }
-            }
-          }
-        } catch (e) { }
-      }
-      return names;
-    } catch (e) { return { D: 'D', R: 'R', O: 'O' }; }
-  }
 
   // Compute a "visual center" for a GeoJSON Polygon/MultiPolygon feature using
   // projected screen coordinates and a lightweight polylabel-like search.
@@ -1013,7 +506,7 @@
           color = entry ? entry.color : '#2f2f2f';
         }
         let ev = null;
-        try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, unit); } catch (e) { }
+        try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, unit); } catch (e) { console.warn(e); }
         if ((ev == null || isNaN(ev)) && typeof window.getRowsForYear === 'function') {
           const rows = window.getRowsForYear(year) || [];
           const row = rows.find(r => r.unit === unit || r.unit === label);
@@ -1100,11 +593,11 @@
           try {
             const tipInfo = createUnitTipInfo(d.unit, { label: d.label, evOverride: d.ev });
             if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
-          } catch (e) { }
+          } catch (e) { console.warn(e); }
         };
         g.on('mouseenter', hoverHandler)
-          .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { } })
-          .on('mouseleave', function () { try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { } });
+          .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { console.warn(e); } })
+          .on('mouseleave', function () { try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { console.warn(e); } });
 
         // Click-through disabled in future mode; only enable for historical/tester pages
         if (!window._futureMode) {
@@ -1120,7 +613,7 @@
       });
 
       // Keep label layer on top of overlay if exists
-      try { raiseStateLabelsLayer(); } catch (e) { }
+      try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
       //console.log('[smallBoxes] render done (svg overlay). count:', data.length);
     } catch (e) { console.warn('[smallBoxes] svg overlay render error', e); }
   }
@@ -1132,30 +625,30 @@
         const sel = d3.select('svg#map').select('g.state-labels');
         if (!sel.empty()) sel.raise();
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
   }
 
   // Recompute visual centers if layout/projection likely changed
   try {
     window.addEventListener('resize', function () {
-      try { _visualCenterCache.clear(); } catch (e) { }
-      try { updateStateLabels(window._curYear || 2024); } catch (e) { }
+      try { _visualCenterCache.clear(); } catch (e) { console.warn(e); }
+      try { updateStateLabels(window._curYear || 2024); } catch (e) { console.warn(e); }
     });
     window.addEventListener('mapReady', function () {
-      try { _visualCenterCache.clear(); } catch (e) { }
+      try { _visualCenterCache.clear(); } catch (e) { console.warn(e); }
     });
-  } catch (e) { }
+  } catch (e) { console.warn(e); }
 
   function ensureStateLabelsLayer() {
     try {
       try {
         const svgSel = d3.select('svg#map');
         //console.log('[labels] ensureStateLabelsLayer enter', { svgExists: !svgSel.empty(), mapGExists: !!window.mapG });
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       if (stateLabelsLayer && !stateLabelsLayer.empty()) return stateLabelsLayer;
       // Prefer to attach to main map group if exposed; otherwise, to the svg root
       const svg = d3.select('svg#map');
-      if (svg.empty()) { try { console.warn('[labels] svg#map not found'); } catch (e) { }; return null; }
+      if (svg.empty()) { try { console.warn('[labels] svg#map not found'); } catch (e) { console.warn(e); }; return null; }
       // Normalize mapG to a proper D3 selection if available
       let parent = null;
       try {
@@ -1170,19 +663,19 @@
       if (!parent || parent.empty()) parent = svg;
       try {
         //console.log('[labels] parent resolved', { tag: parent.node() && parent.node().tagName, id: parent.attr('id') || '', class: parent.attr('class') || '' });
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       let layer = parent.select('g.state-labels');
       if (layer.empty()) {
         layer = parent.append('g').attr('class', 'state-labels').attr('pointer-events', 'none');
         //try { console.log('[labels] created state-labels layer under', parent.node() === svg.node() ? 'svg#map' : 'mapG'); } catch(e) {}
       }
       // keep labels above states/districts
-      try { layer.raise(); } catch (e) { }
+      try { layer.raise(); } catch (e) { console.warn(e); }
       stateLabelsLayer = layer;
       try {
         const countNow = svg.selectAll('g.state-labels').nodes().length;
         //console.log('[labels] ensureStateLabelsLayer exit', { layersInSvg: countNow });
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       return layer;
     } catch (e) { return null; }
   }
@@ -1206,9 +699,12 @@
       try {
         const ev = window._evByUnitMap && window._evByUnitMap.get(`${year}:${abbr}`);
         if (isFinite(ev)) return ev;
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       return null;
-    } catch (e) { return null; }
+    } catch (e) {
+      console.warn(e);
+      return null;
+    }
   }
 
   // Create/update text labels for states for the current year
@@ -1220,7 +716,7 @@
     //try { console.log('[labels] updateStateLabels start', { year, stateCount: states.size ? states.size() : states.nodes().length }); } catch(e) {}
     if (states.empty()) {
       // Map may not be ready yet; try again shortly
-      try { setTimeout(() => { try { updateStateLabels(year); } catch (e) { } }, 100); } catch (e) { }
+      try { setTimeout(() => { try { updateStateLabels(year); } catch (e) { console.warn(e); } }, 100); } catch (e) { console.warn(e); }
       return;
     }
     // Extra guard: if the label layer somehow isn't attached, create under svg directly
@@ -1230,10 +726,10 @@
         stateLabelsLayer = svg.append('g').attr('class', 'state-labels').attr('pointer-events', 'none');
         console.log('[labels] fallback created state-labels under svg');
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
     states.each(function (d) {
       try {
-        const node = this;
+        const node = d3.select(this).node();
         // derive abbr from FIPS id
         const id = (d && d.id != null) ? String(d.id).padStart(2, '0') : (node && node.__data__ && node.__data__.id != null ? String(node.__data__.id).padStart(2, '0') : null);
         if (!id || !(id in ID_TO_ABBR)) return;
@@ -1253,7 +749,7 @@
               const vc = _computeVisualCenter(geom, abbr);
               if (vc) { cx = vc.x; cy = vc.y; }
             }
-          } catch (e) { }
+          } catch (e) { console.warn(e); }
         }
         // Fallbacks: centroid, then bbox center
         if (cx == null || cy == null) {
@@ -1262,11 +758,11 @@
               const c = window.mapPath.centroid(d);
               if (Array.isArray(c) && c.length === 2 && isFinite(c[0]) && isFinite(c[1])) { cx = c[0]; cy = c[1]; }
             }
-          } catch (e) { }
+          } catch (e) { console.warn(e); }
         }
         if (cx == null || cy == null) {
           let bbox;
-          try { bbox = node.getBBox(); } catch (e) { bbox = null; }
+          try { bbox = node.getBBox(); } catch (e) { console.warn(e); bbox = null; }
           if (!bbox) return;
           cx = bbox.x + bbox.width / 2;
           cy = bbox.y + bbox.height / 2;
@@ -1276,7 +772,7 @@
         let ev = null;
         try {
           ev = (typeof window.getEvFor === 'function') ? window.getEvFor(year, abbr) : null;
-        } catch (e) { }
+        } catch (e) { console.warn(e); }
         if (ev == null || !isFinite(ev)) {
           ev = getTotalEvForState(year, abbr);
         }
@@ -1328,12 +824,12 @@
                 exit => exit.remove()
               );
             }
-          } catch (e) { }
+          } catch (e) { console.warn(e); }
         }
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
     });
     // keep labels above boundaries and districts
-    try { stateLabelsLayer.raise(); } catch (e) { }
+    try { stateLabelsLayer.raise(); } catch (e) { console.warn(e); }
     // Post-update: quick presence check without spamming
     // try {
     //   const tx = _labelCache.get('TX');
@@ -1354,7 +850,7 @@
         //   } catch(e) {}
         //   try { console.log('[labels] mapReady calling updateStateLabels', { y }); } catch(e) {}
         //   updateStateLabels(y);
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       try {
         // Rebind hover to use centralized tooltip logic
         const idToAbbr = ID_TO_ABBR;
@@ -1369,9 +865,19 @@
               let highlight = '#A0A0A0';
               sel.attr('fill', highlight);
             } catch (e) { sel.attr('fill', '#A0A0A0'); }
-            try {
-              const id = d && d.id != null ? String(d.id).padStart(2, '0') : null;
-              const abbr = id ? idToAbbr[id] : null;
+              try {
+              // Determine state abbreviation robustly: prefer bound datum, fall back to element id (e.g., 'state-TX')
+              let abbr = null;
+              try {
+                if (d && d.id != null) abbr = idToAbbr[String(d.id).padStart(2, '0')];
+              } catch (e) { /* ignore */ }
+              if (!abbr) {
+                try {
+                  const elId = (this && this.id) ? this.id : (this && this.getAttribute ? this.getAttribute('id') : null);
+                  if (elId && elId.startsWith && elId.startsWith('state-')) abbr = elId.slice('state-'.length);
+                  else if (elId && elId.length === 2) abbr = elId.toUpperCase();
+                } catch (e) { /* ignore */ }
+              }
               if (abbr) {
                 try {
                   const curYear = (window._curYear != null) ? window._curYear : (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : null);
@@ -1389,22 +895,22 @@
                   if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
                 } catch (e) { /* ignore tooltip errors */ }
               }
-            } catch (e) { }
+            } catch (e) { console.warn(e); }
           })
-          .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { } })
+          .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { console.warn(e); } })
           .on('mouseout', function () {
             const sel = d3.select(this);
             const orig = sel.attr('data-orig-fill') || '#2f2f2f';
             sel.attr('fill', orig);
             sel.attr('data-orig-fill', null);
-            try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { }
+            try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { console.warn(e); }
           });
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
     });
-  } catch (e) { }
+  } catch (e) { console.warn(e); }
 
   // Expose for manual testing: you can call window.updateStateLabels(2024) in console
-  try { window.updateStateLabels = updateStateLabels; } catch (e) { }
+  try { window.updateStateLabels = updateStateLabels; } catch (e) { console.warn(e); }
 
   // URL parameter management for sharing
   // Support: pv can be an integer index (slider index), a numeric PV (e.g. 0.045),
@@ -1461,7 +967,7 @@
       const m = sel ? String(sel.value || '').toLowerCase() : '';
       if (m) url.searchParams.set('metric', m);
       else url.searchParams.delete('metric');
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     // Persist proportional EV mode
     try {
@@ -1471,20 +977,14 @@
       } else {
         url.searchParams.delete('propEv');
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     // No flipped URL param: we store PV overrides directly as numeric values (possibly negative)
 
     window.history.replaceState({}, '', url);
   }
 
-  function leanStr(x) {
-    if (!isFinite(x)) return '';
-    if (Math.abs(x) < 0.000005) return 'EVEN';
-    const s = (Math.abs(x) * 100).toFixed(1);
-    return (x > 0 ? 'D+' : 'R+') + s;
-  }
-  try { window.leanStr = leanStr; } catch (e) { }
+  try { window.leanStr = leanStr; } catch (e) { console.warn(e); }
 
   function marginToColor(m, isThirdParty = false) {
     if (isThirdParty) return '#C9A400'; // Yellow for third-party
@@ -1499,7 +999,7 @@
     if (m < 0.20) return '#4169E1';
     return '#00008B';
   }
-  try { window.marginToColor = marginToColor; } catch (e) { }
+  try { window.marginToColor = marginToColor; } catch (e) { console.warn(e); }
 
   function clampMargin(value) {
     if (!isFinite(value)) return 0;
@@ -1653,57 +1153,8 @@
       if (year && unit && ev) evByUnit.set(`${year}:${unit}`, ev);
     });
 
-    // Build flip scenarios (metric-aware)
-    window._flipByYear = new Map(); // year -> metric -> { classic/no_majority/tie: [rows] }
-    const groupFD = new Map();
-    (flipDetails || []).forEach(r => {
-      const y = +r.year; const mode = String(r.mode || '').toLowerCase();
-      const metric = (r.metric && String(r.metric).toLowerCase()) || 'votes';
-      if (!y || !mode) return;
-      const key = `${y}:${metric}:${mode}`;
-      const arr = groupFD.get(key) || [];
-      arr.push({ unit: r.abbr, ev: +r.ev || 0, votes_to_flip: +r.votes_to_flip || 0, pct_of_state_votes: +r.pct_of_state_votes || 0 });
-      groupFD.set(key, arr);
-    });
-    // sort states by votes_to_flip ascending for determinism
-    groupFD.forEach(arr => arr.sort((a, b) => (a.votes_to_flip || 0) - (b.votes_to_flip || 0)));
-    // store per year/metric
-    const modes = ['classic', 'no_majority', 'tie'];
-    const years = new Set((flipDetails || []).map(r => +r.year));
-    years.forEach(y => {
-      if (!window._flipByYear.has(y)) window._flipByYear.set(y, new Map());
-      const byMetric = window._flipByYear.get(y);
-      // discover metrics present for this year from groupFD keys
-      const metricsForYear = new Set();
-      groupFD.forEach((_, key) => { const [ky, metric] = key.split(':'); if (+ky === +y) metricsForYear.add(metric); });
-      if (metricsForYear.size === 0) metricsForYear.add('votes');
-      metricsForYear.forEach(metric => {
-        const o = {};
-        modes.forEach(m => o[m] = groupFD.get(`${y}:${metric}:${m}`) || []);
-        byMetric.set(metric, o);
-      });
-    });
-
-    // Capture per-year total EV from flip_results.csv for accurate EV bar scaling
-    window._totalEvByYear = new Map();
-    try {
-      (flipResults || []).forEach(r => {
-        const y = +r.year;
-        const tot = +r.total_ev || 0;
-        if (y && isFinite(tot) && tot > 0) window._totalEvByYear.set(y, tot);
-      });
-    } catch (e) { /* optional */ }
-
-    // Track available metrics per year from flip_results.csv
-    window._metricsByYear = new Map(); // year -> Set(metrics)
-    try {
-      (flipResults || []).forEach(r => {
-        const y = +r.year; const metric = (r.metric && String(r.metric).toLowerCase()) || 'votes';
-        if (!y) return;
-        if (!window._metricsByYear.has(y)) window._metricsByYear.set(y, new Set());
-        window._metricsByYear.get(y).add(metric);
-      });
-    } catch (e) { }
+    // Build flip scenarios (metric-aware) and associated metadata
+    buildFlipScenarioMaps(flipDetails, flipResults);
 
     // Index stop colors CSV: year -> stop_key -> unit -> { winner, color_css, result_color_name }
     // Also capture effective PV per stop so the slider uses the precomputed nudge/average.
@@ -1728,7 +1179,7 @@
         // Record effective once per stop key
         if (!effByStop.has(key) && eff != null && isFinite(eff)) effByStop.set(key, eff);
       });
-    } catch (e) { /* optional */ }
+    } catch (e) { console.warn(e); }
 
     // expose simple accessors
     window.getRowsForYear = function (y) { try { return byYear.get(y) || []; } catch (e) { return []; } };
@@ -1785,7 +1236,7 @@
             // Default sort by area descending
             try { return window.mapPath.area(b) - window.mapPath.area(a); } catch (e) { return 0; }
           });
-        } catch (e) { }
+        } catch (e) { console.warn(e); }
 
         feats.forEach(f => {
           // prefer an explicit 'unit' property (e.g. 'ME-01'/'NE-02'), fall back to abbr or GEOID
@@ -1842,14 +1293,14 @@
                 // Use a neutral highlight color to avoid party-color confusion
                 let highlight = '#A0A0A0';
                 // Preserve bright yellow for third-party highlight when the fill is already yellow
-                try { if (cur && cur.toLowerCase && cur.toLowerCase() === '#ffd700') highlight = '#FFD700'; } catch (e) { }
+                try { if (cur && cur.toLowerCase && cur.toLowerCase() === '#ffd700') highlight = '#FFD700'; } catch (e) { console.warn(e); }
                 sel.attr('fill', highlight);
                 const unit = sel.attr('data-unit');
                 const tipInfo = createUnitTipInfo(unit, { label: unit });
                 if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
-              } catch (e) { }
+              } catch (e) { console.warn(e); }
             })
-            .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { } })
+            .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { console.warn(e); } })
             .on('mouseout', function () {
               try {
                 const sel = d3.select(this);
@@ -1857,14 +1308,14 @@
                 sel.attr('fill', orig);
                 sel.attr('data-orig-fill', null);
                 if (typeof window.hideMapTip === 'function') window.hideMapTip();
-              } catch (e) { }
+              } catch (e) { console.warn(e); }
             })
             .on('click', function () {
               if (window._futureMode) return; // disable navigation in future mode
               try {
                 const unit = this.getAttribute('data-unit');
                 if (unit) window.open(`unit/${unit}.html`, '_blank');
-              } catch (e) { }
+              } catch (e) { console.warn(e); }
             });
           window._districtPaths.set(useUnit, p);
         });
@@ -1890,9 +1341,9 @@
           }
         } catch (e) { /* masking optional */ }
         // Bring state boundary mesh to front so white seams remain visible above district fills
-        try { d3.select('svg#map').select('g').select('.state-boundaries').raise(); } catch (e) { }
+        try { d3.select('svg#map').select('g').select('.state-boundaries').raise(); } catch (e) { console.warn(e); }
         // apply initial colors now that district paths exist
-        try { updateAll(); } catch (e) { }
+        try { updateAll(); } catch (e) { console.warn(e); }
       } catch (e) {
         console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
       }
@@ -1926,7 +1377,7 @@
         const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
         //console.log('[stops] raw stop keys (sample)', sampleKeys);
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     // Always include EVEN and (unless forced to 0 by future) Actual
     const stopsSet = new Set([0]);
@@ -1992,17 +1443,17 @@
                 if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
               }
             }
-          } catch (e) { }
+          } catch (e) { console.warn(e); }
         }
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
     // Keep slider stops as the base numeric stops only. Preset stops will be rendered
     // as separate chips that set a numeric PV override (window._pvOverride) when clicked.
     const allStops = stops.slice();
     try {
       const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s) || []).length }));
       //console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
     // Ensure every base stop has an effective value (keep any precomputed ones).
     for (let i = 0; i < allStops.length; i++) {
       const s = allStops[i];
@@ -2067,21 +1518,21 @@
       container.querySelectorAll('span.btn').forEach((el) => {
         el.addEventListener('click', () => {
           // Changing PV stop should reset any active flips
-          try { clearFlips(); } catch (e) { }
+          try { clearFlips(); } catch (e) { console.warn(e); }
           const pvValAttr = el.getAttribute('data-pv');
           if (pvValAttr != null) {
             // This is a preset chip: set numeric PV override instead of changing slider index
             const val = parseFloat(pvValAttr);
             if (!isNaN(val)) {
-              try { window._pvOverride = val; window._pvPresetName = el.getAttribute('data-name') || null; } catch (e) { }
-              try { updateAll(); } catch (e) { }
+              try { window._pvOverride = val; window._pvPresetName = el.getAttribute('data-name') || null; } catch (e) { console.warn(e); }
+              try { updateAll(); } catch (e) { console.warn(e); }
               //try { console.log('[stops] preset chip click -> set PV override', { year, val }); } catch(e) {}
             }
           } else {
             // Regular stop chip: set slider index
             const i = Number(el.getAttribute('data-idx'));
             const s = document.getElementById('pvSlider');
-            try { window._pvOverride = null; } catch (e) { }
+            try { window._pvOverride = null; } catch (e) { console.warn(e); }
             if (s) { s.value = String(i); updateAll(); }
           }
         });
@@ -2120,7 +1571,7 @@
         const hadActive = !!(window._activeFlip && window._activeFlip.year === yNow);
         const prevMode = hadActive ? window._activeFlip.mode : null;
         // Do not clear the details if open; instead, re-apply same flip mode with new metric
-        if (!hadActive) { try { clearFlips(); } catch (e) { } }
+        if (!hadActive) { try { clearFlips(); } catch (e) { console.warn(e); } }
         updateFlipMetricOptionsForYear();
         // If a flip is active, re-apply same mode using the new metric
         if (hadActive && prevMode) {
@@ -2132,14 +1583,14 @@
         try {
           const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
           updateUrl(yNow, pvIdx, flipMode);
-        } catch (e) { }
+        } catch (e) { console.warn(e); }
       });
     }
     pvSlider.addEventListener('input', () => {
       // Don't clear flips if we're in the middle of applying one
       if (!window._applyingFlip) clearFlips();
       // moving the slider cancels any PV override and flipped flag
-      try { window._pvOverride = null; } catch (e) { }
+      try { window._pvOverride = null; } catch (e) { console.warn(e); }
       // no flipped flag; numeric overrides encode sign directly
       updateAll();
       // Update URL with new PV index
@@ -2171,7 +1622,7 @@
       if (sel && urlParams.metric && (urlParams.metric === 'votes' || urlParams.metric === 'margin')) {
         sel.value = urlParams.metric;
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     // Preselect proportional EV mode from URL if present
     try {
@@ -2179,7 +1630,7 @@
       if (propEvToggle && urlParams.propEv) {
         propEvToggle.checked = true;
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     yearSlider.value = String(y);
     yearVal.textContent = y;
@@ -2203,7 +1654,7 @@
       // Apply numeric PV override
       try { window._pvOverride = parseFloat(urlParams.pvValue); } catch (e) { window._pvOverride = null; }
       // If flipped flag present, negate the override and mark flipped state
-      if (urlParams.pvValue) { try { window._pvOverride = parseFloat(urlParams.pvValue); } catch (e) { } }
+      if (urlParams.pvValue) { try { window._pvOverride = parseFloat(urlParams.pvValue); } catch (e) { console.warn(e); } }
     } else if (urlParams.pvPreset != null) {
       // Look up preset by scanning pvPreset select options (match label/value)
       const pvPresetEl = document.getElementById('pvPreset');
@@ -2220,7 +1671,7 @@
         }
         if (foundVal != null && !isNaN(foundVal)) {
           try { window._pvOverride = foundVal; } catch (e) { window._pvOverride = null; }
-          if (urlParams.pvValue) { try { window._pvOverride = foundVal; } catch (e) { } }
+          if (urlParams.pvValue) { try { window._pvOverride = foundVal; } catch (e) { console.warn(e); } }
         }
       }
     }
@@ -2287,7 +1738,7 @@
             const stops = (stopsByYear && stopsByYear.get(y)) || [0];
             const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0; cur = stopVal;
           }
-        } catch (e) { }
+        } catch (e) { console.warn(e); }
         // Apply numeric negation of current PV (flip)
         applyPvOverride(-cur);
         // push the new state to URL
@@ -2345,9 +1796,9 @@
       try {
         if (typeof getAllEvAllocations === 'function') allocations = getAllEvAllocations();
         //console.log('allocations:', allocations);
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       if (!allocations) {
-        try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch (e) { }
+        try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch (e) { console.warn(e); }
       }
       const thirdPartiesWithEVs = new Map(); // Map of name -> total EV count
       let totalOtherEV = 0;
@@ -2400,7 +1851,7 @@
             totalDEv = allocations.reduce((s, a) => s + (a.dEV || 0), 0);
             totalREv = allocations.reduce((s, a) => s + (a.rEV || 0), 0);
           }
-        } catch (e) { }
+        } catch (e) { console.warn(e); }
 
         // If we have EV totals, render first line with fixed-space layout so names don't jump
         if ((totalDEv > 0 || totalREv > 0) && (dCandidate || rCandidate)) {
@@ -2430,6 +1881,7 @@
         }
       }
     } catch (e) {
+      console.warn(e);
       // Fallback to original simple text when something goes wrong
       if (dCandidate || rCandidate) {
         candidateNamesEl.textContent = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
@@ -2497,7 +1949,7 @@
         pvEl.min = 0; pvEl.max = Math.max(0, stopsNow.length - 1); pvEl.step = 1; pvEl.value = String(idx);
         window._prevYear = year;
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
     // pvSlider is now an index into the stops array
     const nat = getNatMargin(year);
     // expose current for tooltip helper
@@ -2541,7 +1993,7 @@
           // Avoid duplicating if already present
           if (!base.includes('(' + window._pvPresetName + ')')) out = base + ' (' + window._pvPresetName + ')';
         }
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
       el.textContent = out;
     })();
 
@@ -2808,10 +2260,11 @@
               return d3.interpolateRgb(current, fill);
             });
         } catch (e) {
+          console.warn(e);
           d3.select(this).attr('fill', fill);
         }
       });
-      try { raiseStateLabelsLayer(); } catch (e) { }
+      try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
     })();
 
     // color district polygons (ME/NE) if overlay loaded
@@ -2847,10 +2300,10 @@
               const halo = pSel.node && pSel.node().previousSibling;
               if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
 
-            } catch (e) { }
+            } catch (e) { console.warn(e); }
           });
           // after districts update, keep labels above them
-          try { raiseStateLabelsLayer(); } catch (e) { }
+          try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
         } catch (e) { /* ignore */ }
       }
     }
@@ -2860,7 +2313,7 @@
     try {
       const t = window._totalEvByYear && window._totalEvByYear.get(year);
       if (isFinite(t) && t > 0) totalEV = t;
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     const otherEV = oEV || 0;
     const uEV = Math.max(0, totalEV - (dEV + rEV + otherEV));
@@ -2891,18 +2344,18 @@
       seg.el.style.borderRadius = '0';
       if (!visible) {
         // hide immediately (no transition) to avoid flicker when value is zero
-        try { seg.el.style.transition = 'none'; seg.el.style.willChange = 'auto'; } catch (e) { }
+        try { seg.el.style.transition = 'none'; seg.el.style.willChange = 'auto'; } catch (e) { console.warn(e); }
         seg.el.style.width = '0%';
         seg.el.style.display = 'none';
         return;
       }
 
       // ensure element is visible before animating
-      try { seg.el.style.display = ''; } catch (e) { }
+      try { seg.el.style.display = ''; } catch (e) { console.warn(e); }
       try {
         seg.el.style.transition = `left ${TRANS_MS}ms ${TRANS_EASE}, right ${TRANS_MS}ms ${TRANS_EASE}, width ${TRANS_MS}ms ${TRANS_EASE}`;
         seg.el.style.willChange = 'left, right, width';
-      } catch (e) { }
+      } catch (e) { console.warn(e); }
 
       const anchor = (seg.el.dataset && seg.el.dataset.anchor) || '';
       const widthPct = `${Math.max(0, seg.pct).toFixed(3)}%`;
@@ -3029,7 +2482,7 @@
 
         closeWrap.innerHTML = bellwetherStateLegend + closeSection;
       }
-    } catch (e) { /* optional */ }
+    } catch (e) { console.warn(e); }
 
     // Adjusted national PV totals at current PV stop
     try {
@@ -3201,7 +2654,7 @@
             if (!isFinite(b)) return;
             const curRel = +r.rm || 0; // relative margin by definition
             const prevRel = b;
-            delta = curRel - b;
+            let delta = curRel - b;
             if (year < 2024 && baselineYear === 2024) {
               delta = -delta; // invert delta when comparing historical year to future 2024
             }
@@ -3209,13 +2662,8 @@
           });
           // Sort ascending by delta (more R shift first, more D shift last)
           items.sort((a, b) => a.delta - b.delta);
-          function fmtLean(x) {
-            if (!isFinite(x)) return '';
-            if (Math.abs(x) < 0.000005) return 'EVEN';
-            const s = (Math.abs(x) * 100).toFixed(1);
-            return (x > 0 ? 'D+' : 'R+') + s;
-          }
-          function textColor(bg) { try { if (!bg || bg[0] !== '#') return '#fff'; const c = bg.slice(1); const val = parseInt(c, 16); const rr = (val >> 16) & 255, gg = (val >> 8) & 255, bb = val & 255; const lum = 0.299 * rr + 0.587 * gg + 0.114 * bb; return lum > 186 ? '#000' : '#fff'; } catch (e) { return '#fff'; } }
+
+          function textColor(bg) { try { if (!bg || bg[0] !== '#') return '#fff'; const c = bg.slice(1); const val = parseInt(c, 16); const rr = (val >> 16) & 255, gg = (val >> 8) & 255, bb = val & 255; const lum = 0.299 * rr + 0.587 * gg + 0.114 * bb; return lum > 186 ? '#000' : '#fff'; } catch (e) { console.warn(e); return '#fff'; } }
           const html = items.map(it => {
             const bg = marginToColor(it.curRel);
             const txt = textColor(bg);
@@ -3231,15 +2679,15 @@
           listEl.innerHTML = html || '<span class="legend">No data.</span>';
         }
       }
-    } catch (e) { /* optional */ }
+    } catch (e) { console.warn(e); }
 
     // If the baseline select is present, ensure changing it reruns updateAll
     try {
       const sel = document.getElementById('relBaseline');
       if (sel) {
-        sel.addEventListener('change', () => { try { if (typeof window.updateAll === 'function') window.updateAll(); } catch (e) { } });
+        sel.addEventListener('change', () => { try { if (typeof window.updateAll === 'function') window.updateAll(); } catch (e) { console.warn(e); } });
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     // Ensure 2024 baseline option is disabled when viewing year 2024 and
     // if user had 2024 selected while year == 2024, switch it to 'prev'.
@@ -3263,20 +2711,22 @@
           }
         }
       }
-    } catch (e) { }
+    } catch (e) { console.warn(e); }
 
     dbg('updateAll: ending successfully');
     // Update candidate names and special notes
-    try { updateCandidateInfo(year); } catch (e) { }
+    try { updateCandidateInfo(year); } catch (e) { console.warn(e); }
     // Update on-map labels last so they sit on top and have current EV totals
-    try { updateStateLabels(year); } catch (e) { }
-    try { raiseStateLabelsLayer(); } catch (e) { }
+    try { updateStateLabels(year); } catch (e) { console.warn(e); }
+    try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
   }
+
+  setFlipDependencies({ updateAll, updateUrl });
 
   // Expose updateAll to global scope for applyFlip
   window.updateAll = updateAll;
   // Expose small-state boxes renderer for manual testing
-  try { window.renderSmallStateBoxes = renderSmallStateBoxes; } catch (e) { }
+  try { window.renderSmallStateBoxes = renderSmallStateBoxes; } catch (e) { console.warn(e); }
 
   // Expose scope variables needed by external functions
   window._stopsByYear = stopsByYear;
@@ -3287,1301 +2737,4 @@
   // Expose proportional EV allocation for use in modal
   window.allocateProportionalEVs = allocateProportionalEVs;
 })();
-
-// Current metric helper and options filter
-function getCurrentMetric() {
-  const sel = document.getElementById('flipMetric');
-  const val = sel ? String(sel.value || 'votes').toLowerCase() : 'votes';
-  return (val === 'margin') ? 'margin' : 'votes';
-}
-function updateFlipMetricOptionsForYear() {
-  try {
-    const yearEl = document.getElementById('yearSlider');
-    const sel = document.getElementById('flipMetric');
-    if (!yearEl || !sel) return;
-    const y = +yearEl.value;
-    const avail = (window._metricsByYear && window._metricsByYear.get(y)) || new Set(['votes']);
-    // Show/hide options based on availability
-    Array.from(sel.options).forEach(opt => {
-      const m = String(opt.value || '').toLowerCase();
-      opt.disabled = !avail.has(m);
-      // If currently selected is disabled, switch to a valid one
-    });
-    const cur = String(sel.value || '').toLowerCase();
-    if (!avail.has(cur)) {
-      sel.value = avail.has('votes') ? 'votes' : Array.from(avail)[0] || 'votes';
-    }
-  } catch (e) { }
-}
-
-// Access flip scenarios for current year/metric
-function getFlipScenariosForYearMetric(y) {
-  const byYear = window._flipByYear || new Map();
-  const byMetric = byYear.get(y);
-  const metric = getCurrentMetric();
-  if (!byMetric) return null;
-  // Backward compatibility: if map doesn't store Map metrics, treat object directly
-  if (typeof byMetric.get !== 'function') return byMetric;
-  return byMetric.get(metric) || byMetric.get('votes') || null;
-}
-
-// Helper for tooltip: given a unit abbr (state or district), return {ev, margin, marginStr}
-window.getAdjustedInfo = function (unit) {
-  try {
-    const year = window._curYear;
-    const pv = window._curPv || 0;
-    if (!year) return null;
-    const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-    const snapshot = (window._electionNightActive && window._electionNightSnapshot && window._electionNightSnapshot.size)
-      ? window._electionNightSnapshot
-      : null;
-    if (snapshot) {
-      const abbr = (typeof keyUnit === 'string' && keyUnit.length >= 2) ? keyUnit.slice(0, 2) : null;
-      const candidates = [];
-      if (unit && !candidates.includes(unit)) candidates.push(unit);
-      if (keyUnit && !candidates.includes(keyUnit)) candidates.push(keyUnit);
-      if (abbr && !candidates.includes(abbr)) candidates.push(abbr);
-      let snap = null;
-      for (const candidate of candidates) {
-        if (candidate && snapshot.has(candidate)) {
-          snap = snapshot.get(candidate);
-          if (snap) break;
-        }
-      }
-      if (snap) {
-        let evVal = snap.ev;
-        if (evVal == null) {
-          try { if (typeof window.getEvFor === 'function') evVal = window.getEvFor(year, keyUnit); } catch (e) { }
-        }
-        const hasMargin = snap.margin != null && isFinite(snap.margin);
-        const marginVal = hasMargin ? snap.margin : null;
-        let marginStrVal = snap.marginStr;
-        if (marginStrVal == null || marginStrVal === '') {
-          if (!hasMargin) marginStrVal = 'None';
-          else if (typeof leanStr === 'function') marginStrVal = leanStr(marginVal);
-          else {
-            const pct = (Math.abs(marginVal) * 100).toFixed(1);
-            marginStrVal = `${marginVal >= 0 ? 'D' : 'R'}+${pct}`;
-          }
-        }
-        const calledVal = !!snap.called;
-        const reportingVal = (snap.reporting != null && isFinite(snap.reporting)) ? Math.max(0, Math.min(1, snap.reporting)) : 0;
-        const confidenceVal = (snap.confidence != null && isFinite(snap.confidence)) ? Math.max(0, Math.min(1, snap.confidence)) : 0;
-        // Normalize candidate info: prefer a candidates object with D/R/O entries when possible,
-        // but also expose dCandidate/rCandidate and thirdPartyResults for backward compatibility.
-        const outCandidates = {};
-        try {
-          if (snap.candidates && Array.isArray(snap.candidates)) {
-            // Try to map array into D/R/O keys if elements include party/id hints
-            snap.candidates.forEach(c => {
-              try {
-                if (!c) return;
-                // party id may be at c.party, c.id, or c.abbr
-                const pid = (c.party || c.id || c.abbr || '').toString();
-                if (pid === 'D' || pid === 'Dem' || /D/i.test(pid)) outCandidates.D = c;
-                else if (pid === 'R' || pid === 'GOP' || /R/i.test(pid)) outCandidates.R = c;
-                else {
-                  // fallback: register as a third-party candidate under O if not set
-                  if (!outCandidates.O) outCandidates.O = c;
-                }
-              } catch (e) { }
-            });
-          } else if (snap.candidates && typeof snap.candidates === 'object') {
-            // If already an object, copy over
-            Object.assign(outCandidates, snap.candidates);
-          }
-        } catch (e) { }
-        // Expose simple name fields if present on snap
-        const dCand = (snap.dCandidate || snap.D_candidate || (outCandidates.D && outCandidates.D.name) || null);
-        const rCand = (snap.rCandidate || snap.R_candidate || (outCandidates.R && outCandidates.R.name) || null);
-        const thirdPartyResults = (snap.thirdPartyResults || snap.third_party_results || null);
-        return {
-          ev: evVal,
-          margin: marginVal,
-          marginStr: marginStrVal,
-          called: calledVal,
-          reporting: reportingVal,
-          confidence: confidenceVal,
-          candidates: (Object.keys(outCandidates).length ? outCandidates : (Array.isArray(snap.candidates) ? snap.candidates.slice() : [])),
-          dCandidate: dCand,
-          rCandidate: rCand,
-          thirdPartyResults: thirdPartyResults
-        };
-      }
-    }
-    const rows = (function () {
-      // byYear lives inside the IIFE; expose via window if available
-      if (typeof window.getRowsForYear === 'function') return window.getRowsForYear(year);
-      return null;
-    })();
-    // Fallback: reconstruct from CSV already parsed via closure if not exposed
-    let r = null;
-    if (rows && rows.length) {
-      r = rows.find(x => x.unit === keyUnit);
-    }
-    // If closure isn't exposed, try reading from the DOM colors map via evByUnit
-    // but we did store evByUnit in closure as well; we mirror EV lookup by re-reading electoral_college.csv not feasible here.
-    // Instead, rely on title info for EV not available; return margin only if needed.
-    let ev = null;
-    try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, keyUnit); } catch (e) { }
-    if ((ev == null || isNaN(ev)) && r && isFinite(+r.ev)) ev = +r.ev;
-    if (!r) return { ev, margin: null, marginStr: '', called: false, reporting: 0, confidence: 0 };
-    // Default margin from row
-    let m = (+r.rm || 0) + (pv || 0);
-    // Special case: For ME/NE statewide tooltips, recompute at-large margin from districts when available
-    try {
-      const isAL = (keyUnit === 'ME-AL' || keyUnit === 'NE-AL');
-      if (isAL && Array.isArray(rows) && rows.length) {
-        const st = keyUnit.slice(0, 2);
-        const districtUnits = (st === 'ME') ? ['ME-01', 'ME-02'] : ['NE-01', 'NE-02', 'NE-03'];
-        const haveAll = districtUnits.every(u => rows.some(rr => rr && rr.unit === u));
-        if (haveAll) {
-          // Build a map of votes_to_flip for active scenario
-          const f = window._activeFlip;
-          const vtByUnit = new Map();
-          if (f && f.year === year && Array.isArray(f.units)) {
-            f.units.forEach(u => vtByUnit.set(u.unit, Math.max(0, +u.votes_to_flip || 0)));
-          }
-          let dSum = 0, rSum = 0;
-          for (const du of districtUnits) {
-            const row = rows.find(x => x && x.unit === du);
-            if (!row) continue;
-            let d0 = +row.dVotes || 0;
-            let r0 = +row.rVotes || 0;
-            const vt = vtByUnit.get(du) || 0;
-            const flipped = (!!vt) || (f && f._set && f._set.has(du));
-            if (flipped) {
-              if (d0 >= r0) { d0 = Math.max(0, d0 - vt); r0 = r0 + vt; }
-              else { d0 = d0 + vt; r0 = Math.max(0, r0 - vt); }
-            }
-            dSum += d0; rSum += r0;
-          }
-          const twoTot = dSum + rSum;
-          if (twoTot > 0) {
-            m = (dSum - rSum) / twoTot; // recomputed two-party margin
-            // If at-large itself is flipped, force sign to opposite side
-            const alFlipped = (f && f.year === year && f._set && f._set.has(keyUnit));
-            if (alFlipped) m = (m > 0 ? -1e-6 : 1e-6);
-          }
-          // For ME/NE state hover, prefer showing total state EV instead of AL-only EV
-          if (unit === st) {
-            try {
-              const parts = rows.filter(x => x && (x.unit === `${st}-AL` || x.unit.startsWith(`${st}-`)));
-              const sumEv = parts.reduce((s, x) => s + (+x.ev || 0), 0);
-              if (isFinite(sumEv) && sumEv > 0) ev = sumEv;
-            } catch (e) { }
-          }
-        }
-      }
-    } catch (e) { /* non-fatal recompute for AL */ }
-    // Check if this unit is flipped in the current scenario
-    const flipped = isUnitFlipped(year, keyUnit);
-    if (flipped) {
-      // If flipped, reverse the winner by nudging margin to opposite side
-      m = (m > 0 ? -0.000001 : 0.000001); // Use small epsilon like in updateAll
-      console.log('getAdjustedInfo: unit flipped', { unit, keyUnit, originalMargin: (+r.rm || 0) + (pv || 0), flippedMargin: m });
-    }
-    // Build candidate info from the CSV row for tooltip consumers
-    const candMap = {};
-    try {
-      if (r.dCandidate) candMap.D = { name: String(r.dCandidate) };
-      if (r.rCandidate) candMap.R = { name: String(r.rCandidate) };
-      // derive top third-party candidate name if present in parsed thirdPartyResults
-      if (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') {
-        const entries = Object.entries(r.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
-        if (entries.length) {
-          entries.sort((a, b) => b.votes - a.votes);
-          candMap.O = { name: String(entries[0].name) };
-        }
-      } else if (r.thirdPartyResults && typeof r.thirdPartyResults === 'string') {
-        // if still serialized string, leave as-is and parsing elsewhere will handle it
-      }
-
-    } catch (e) { }
-
-    return {
-      ev,
-      margin: m,
-      marginStr: (function () {
-        if (!isFinite(m)) return '';
-        if (Math.abs(m) < 0.000005) return 'EVEN';
-
-        // Check for third-party scenario (yellow window) for any year
-        {
-          const t = +r.tp || 0;
-          const a = 3 * t - 1;
-          if (a > 0) {
-            const rVal = +(r.rm || 0);
-            const pv = window._curPv || 0;
-            const nD = -rVal + a;
-            const nR = -rVal - a;
-            const EPS = 1e-9;
-            // If current PV places this unit in the yellow window, show T+ margin
-            if (pv > nR + EPS && pv < nD - EPS) {
-              const windowCenter = -rVal; // Center of yellow window
-              const windowHalfWidth = a; // Half-width of yellow window
-              const distanceFromCenter = Math.abs(pv - windowCenter);
-              const relativePosition = distanceFromCenter / windowHalfWidth; // 0 to 1
-              const thirdPartyStrength = (1 - relativePosition) * windowHalfWidth;
-              const s = (thirdPartyStrength * 100).toFixed(1);
-              return 'T+' + s; // Third-party win
-            }
-          }
-        }
-
-        const s = (Math.abs(m) * 100).toFixed(1);
-        return (m > 0 ? 'D+' : 'R+') + s;
-      })(),
-      called: false,
-      reporting: 0,
-      confidence: 0,
-      // attach candidate metadata for tooltips and other UI consumers
-      candidates: (Object.keys(candMap).length ? candMap : undefined),
-      dCandidate: r.dCandidate || null,
-      rCandidate: r.rCandidate || null,
-      thirdPartyResults: r.thirdPartyResults || null
-    };
-  } catch (e) { return null; }
-}
-
-// Update visibility of flip buttons based on year and scenario equality
-function updateFlipButtons() {
-  try {
-    const yearEl = document.getElementById('yearSlider');
-    const y = yearEl ? +yearEl.value : null;
-    const btnClassic = document.getElementById('flipClassic');
-    const btnNoMaj = document.getElementById('flipNoMaj');
-    const btnTie = document.getElementById('flipTie');
-    if (!btnNoMaj) return;
-    const yearSc = (y != null) ? getFlipScenariosForYearMetric(y) : null;
-    // No-majority button: hide if identical to classic or data missing
-    if (!yearSc || !yearSc.classic || !yearSc.no_majority) {
-      btnNoMaj.style.display = '';
-    } else {
-      const a = (yearSc.classic || []).map(r => r.unit).join('|');
-      const b = (yearSc.no_majority || []).map(r => r.unit).join('|');
-      btnNoMaj.style.display = (a === b) ? 'none' : '';
-    }
-    // Tie button: show only when tie scenario exists and is distinct from other scenarios
-    try {
-      if (!btnTie) {
-        // nothing
-      } else if (!yearSc || !yearSc.tie || !Array.isArray(yearSc.tie) || yearSc.tie.length === 0) {
-        btnTie.style.display = 'none';
-      } else {
-        // Normalize unit lists by sorting so equality is order-insensitive
-        const sortUnits = (arr) => (arr || []).map(r => String(r.unit || r).trim()).filter(x => x).sort().join('|');
-        const tieUnits = sortUnits(yearSc.tie);
-        const noMajUnits = sortUnits(yearSc.no_majority);
-        // Show Tie only when a tie solution exists and is distinct from the break-majority solution
-        btnTie.style.display = (tieUnits === '' || tieUnits === noMajUnits) ? 'none' : '';
-      }
-    } catch (e) { /* non-fatal */ }
-
-    // Update active button styling to reflect current applied flip for this year
-    const active = (window._activeFlip && window._activeFlip.year === y) ? window._activeFlip.mode : null;
-    try {
-      const btns = [btnClassic, btnNoMaj, btnTie];
-      btns.forEach(b => {
-        if (!b) return;
-        const id = b.id || '';
-        const should = (id === 'flipClassic' && active === 'classic') || (id === 'flipNoMaj' && active === 'no_majority') || (id === 'flipTie' && active === 'tie');
-        if (should) b.classList.add('active'); else b.classList.remove('active');
-      });
-    } catch (e) { }
-  } catch (e) { }
-}
-
-// Flip application state and helpers
-window._activeFlip = null; // { year, mode, units: [{unit, votes_to_flip, ev}], votesSum }
-function isUnitFlipped(year, unit) {
-  const f = window._activeFlip; if (!f || f.year !== year) return false;
-  // Historical static: CO in 1876 is not flippable (its electors voted for Hayes)
-  if (year === 1876 && (unit === 'CO' || unit === 'CO-AL')) return false;
-  // allow unit or at-large semantics
-  if (unit === 'ME' || unit === 'NE') unit = unit + '-AL';
-  const result = !!(f._set && f._set.has(unit));
-  // if (f._set && f._set.size > 0) {
-  //   console.log('isUnitFlipped check', {unit, hasUnit: result, setContents: Array.from(f._set)});
-  // }
-  return result;
-}
-function clearFlips() {
-  window._activeFlip = null;
-  const wrap = document.getElementById('flipDetailsWrap'); if (wrap) wrap.style.display = 'none';
-  const t = document.getElementById('flipDetails'); if (t) t.innerHTML = '';
-  const votes = document.getElementById('flipVotes'); if (votes) votes.textContent = '0';
-  const cnt = document.getElementById('flipCount'); if (cnt) cnt.textContent = '0';
-  const pct = document.getElementById('flipVotesPct'); if (pct) pct.textContent = '0%';
-
-  // Clear flip parameter from URL
-  const yearEl = document.getElementById('yearSlider');
-  const pvEl = document.getElementById('pvSlider');
-  if (yearEl && pvEl) {
-    updateUrl(parseInt(yearEl.value), parseInt(pvEl.value), null);
-  }
-}
-function applyFlip(mode) {
-  console.log('applyFlip', mode);
-  try {
-    window._applyingFlip = true; // Flag to prevent clearing during PV slider change
-
-    // Turn off proportional EV mode when applying flip scenarios
-    const propEvToggle = document.getElementById('propEvToggle');
-    if (propEvToggle && propEvToggle.checked) {
-      propEvToggle.checked = false;
-      console.log('applyFlip: disabled proportional EV mode for flip scenario');
-    }
-
-    const yearEl = document.getElementById('yearSlider');
-    const year = +yearEl.value;
-    const by = getFlipScenariosForYearMetric(year);
-    if (!by) { try { console.log('applyFlip: no scenarios for year', year); } catch (e) { }; return; }
-    const rows = by[mode] || [];
-    // Toggle: if same mode is already active for this year, clear flips
-    const curMetric = getCurrentMetric();
-    if (window._activeFlip && window._activeFlip.year === year && window._activeFlip.mode === mode && window._activeFlip.metric === curMetric) {
-      clearFlips();
-      try { updateAll(); updateFlipButtons(); } catch (e) { }
-      return;
-    }
-    try { console.log('applyFlip click', { mode, year, rows: rows.length, sample: rows.slice(0, 3) }); } catch (e) { }
-    // Snap PV slider to the 'Actual' stop before applying flips
-    try {
-      const stopsNow = (window._stopsByYear) ? (window._stopsByYear.get(year) || [0]) : [0];
-      const natNow = window._getNatMargin ? window._getNatMargin(year) : 0;
-      const STOP_EPS = window._STOP_EPS || 0.00005;
-      let idx = stopsNow.findIndex(v => Math.abs(v - natNow) <= STOP_EPS);
-      if (idx < 0) idx = stopsNow.findIndex(v => Math.abs(v) <= STOP_EPS);
-      if (idx < 0) idx = 0;
-      const pvEl = document.getElementById('pvSlider');
-      if (pvEl) {
-        pvEl.value = String(idx);
-        console.log('applyFlip: set PV slider to actual stop', { idx, natNow, stopsLength: stopsNow.length });
-      }
-    } catch (e) {
-      console.error('applyFlip: error setting PV to actual:', e);
-    }
-    const set = new Set(rows.map(r => r.unit));
-    const votesSum = rows.reduce((s, r) => s + (r.votes_to_flip || 0), 0);
-    window._activeFlip = { year, mode, metric: curMetric, units: rows, votesSum, _set: set };
-    try { console.log('applyFlip set state', { units: rows.map(r => r.unit).slice(0, 8), votesSum }); } catch (e) { }
-    console.log('applyFlip: rendering flip details');
-    renderFlipDetails();
-    console.log('applyFlip', window._activeFlip);
-    console.log('applyFlip: calling updateAll...');
-    updateAll();
-    console.log('applyFlip: updateAll done');
-
-    // Update URL parameters
-    const pvEl = document.getElementById('pvSlider');
-    if (pvEl) {
-      updateUrl(year, parseInt(pvEl.value), mode);
-    }
-    try { updateFlipButtons(); } catch (e) { }
-  } catch (e) {
-    console.error('applyFlip error:', e);
-  } finally {
-    window._applyingFlip = false; // Always clear the flag
-  }
-}
-function renderFlipDetails() {
-  try {
-    const f = window._activeFlip; if (!f) return;
-    const wrap = document.getElementById('flipDetailsWrap'); if (wrap) wrap.style.display = '';
-    const title = document.getElementById('flipDetailsTitle');
-    if (title) {
-      const m = (f.metric === 'margin') ? 'min margin' : 'min votes';
-      title.textContent = `Applied flips (optimize: ${m})`;
-    }
-    const t = document.getElementById('flipDetails'); if (!t) return;
-    const year = f.year;
-    const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : [];
-    const byUnit = new Map(); rows.forEach(r => byUnit.set(r.unit, r));
-    let html = '';
-    let dEv = 0, rEv = 0;
-    f.units.forEach(u => {
-      const unit = u.unit;
-      const row = byUnit.get(unit);
-      if (!row) return;
-      const ev = +u.ev || +row.ev || 0;
-      // compute before/after using votes_to_flip: move voters from current winner to loser
-      const d0 = +row.dVotes || 0;
-      const r0 = +row.rVotes || 0;
-      const vt = Math.max(0, +u.votes_to_flip || 0);
-      let d1 = d0, r1 = r0;
-      if (d0 >= r0) {
-        // D originally won; flip to R by moving vt votes from D to R
-        d1 = Math.max(0, d0 - vt);
-        r1 = r0 + vt;
-      } else {
-        // R originally won; flip to D by moving vt votes from R to D
-        d1 = d0 + vt;
-        r1 = Math.max(0, r0 - vt);
-      }
-      html += `<tr><td>${unit}</td><td>${ev}</td><td>${d0.toLocaleString('en-US')}<br/>→ ${d1.toLocaleString('en-US')}</td>
-      <td>${r0.toLocaleString('en-US')}<br/>→ ${r1.toLocaleString('en-US')}</td><td>${(+u.votes_to_flip || 0).toLocaleString('en-US')} (${+u.pct_of_state_votes || 0}%)</td></tr>`;
-    });
-    t.innerHTML = html;
-    const votes = document.getElementById('flipVotes'); if (votes) votes.textContent = (f.votesSum || 0).toLocaleString('en-US');
-    const cnt = document.getElementById('flipCount'); if (cnt) cnt.textContent = String(f.units.length);
-    // Update percent of total votes changed badge
-    try {
-      const pctEl = document.getElementById('flipVotesPct');
-      if (pctEl) {
-        const natRow = rows.find(rr => rr && (rr.unit === 'NATIONAL' || rr.unit === 'NAT'));
-        const total = natRow ? (+natRow.total || (+natRow.dVotes + +natRow.rVotes + +natRow.tVotes) || 0) : 0;
-        let pct = (total > 0) ? ((f.votesSum || 0) / total * 100) : 0;
-        let txt = '0%';
-        if (isFinite(pct) && total > 0) {
-          if (Math.abs(pct) < 0.01) txt = pct.toExponential(2) + '%';
-          else txt = pct.toFixed(4) + '%';
-        }
-        pctEl.textContent = txt;
-      }
-    } catch (e) { }
-    // EC badge is updated by updateAll; here we just ensure badge shows current numbers after next update
-  } catch (e) { }
-}
-
-// ============================================================================
-// EV Breakdown Modal Functionality
-// ============================================================================
-
-(function () {
-  // State for the EV breakdown modal
-  let currentSort = { column: 'state', ascending: true };
-
-  // Initialize the modal when DOM is ready
-  function initEvBreakdownModal() {
-    const propEvToggle = document.getElementById('propEvToggle');
-    const evBreakdownBtn = document.getElementById('evBreakdownBtn');
-    const evBreakdownModal = document.getElementById('evBreakdownModal');
-    const evBreakdownClose = document.getElementById('evBreakdownClose');
-
-    if (!propEvToggle || !evBreakdownBtn || !evBreakdownModal) return;
-
-    // Always show the button (regardless of proportional mode)
-    evBreakdownBtn.style.display = 'inline-block';
-
-    // Update table when proportional EV toggle changes
-    propEvToggle.addEventListener('change', function () {
-      // Update the table if modal is open
-      if (evBreakdownModal.style.display === 'flex') {
-        updateEvBreakdownTable();
-      }
-    });
-
-    // Open modal
-    evBreakdownBtn.addEventListener('click', function () {
-      updateEvBreakdownTable();
-      evBreakdownModal.style.display = 'flex';
-    });
-
-    // Close modal
-    if (evBreakdownClose) {
-      evBreakdownClose.addEventListener('click', function () {
-        evBreakdownModal.style.display = 'none';
-      });
-    }
-
-    // Close on background click
-    evBreakdownModal.addEventListener('click', function (e) {
-      if (e.target === evBreakdownModal) {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && evBreakdownModal.style.display === 'flex') {
-        evBreakdownModal.style.display = 'none';
-      }
-    });
-
-    // Add sorting listeners to table headers
-    const table = document.getElementById('evBreakdownTable');
-    if (table) {
-      const headers = table.querySelectorAll('th.sortable');
-      headers.forEach(header => {
-        header.addEventListener('click', function () {
-          const column = this.getAttribute('data-column');
-          if (currentSort.column === column) {
-            currentSort.ascending = !currentSort.ascending;
-          } else {
-            currentSort.column = column;
-            currentSort.ascending = true;
-          }
-          updateEvBreakdownTable();
-        });
-      });
-    }
-
-    // Update table when year or PV changes (if modal is open)
-    const yearSlider = document.getElementById('yearSlider');
-    const pvSlider = document.getElementById('pvSlider');
-
-    if (yearSlider) {
-      yearSlider.addEventListener('input', function () {
-        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
-          // Use setTimeout to ensure updateAll() has completed
-          setTimeout(() => updateEvBreakdownTable(), 50);
-        }
-      });
-    }
-
-    if (pvSlider) {
-      pvSlider.addEventListener('input', function () {
-        if (evBreakdownModal && evBreakdownModal.style.display === 'flex') {
-          // Use setTimeout to ensure updateAll() has completed
-          setTimeout(() => updateEvBreakdownTable(), 50);
-        }
-      });
-    }
-  }
-
-  // Get EV allocations for all states
-  function getAllEvAllocations() {
-    const year = window._curYear;
-    if (!year) return [];
-
-    const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-    if (!rows || !rows.length) return [];
-
-    const isProportional = (() => {
-      try {
-        const toggle = document.getElementById('propEvToggle');
-        return toggle && toggle.checked;
-      } catch (e) {
-        return false;
-      }
-    })();
-
-    const isElectionNight = window._electionNightActive || false;
-    const snapshot = window._electionNightSnapshot || null;
-
-    const allocations = [];
-
-    // Get all unique state/unit codes (excluding NATIONAL)
-    const processedStates = new Set();
-    rows.forEach(r => {
-      if (!r || !r.unit) return;
-      const unit = r.unit;
-
-      // Skip national totals
-      if (unit === 'NATIONAL' || unit === 'NAT') return;
-
-      // Use the unit as-is for display (including ME-01, ME-02, NE-01, NE-02, NE-03)
-      let displayUnit = unit;
-
-      // Skip duplicates
-      if (processedStates.has(displayUnit)) return;
-      processedStates.add(displayUnit);
-
-      const ev = +r.ev || 0;
-      if (ev <= 0) return;
-
-      // Get state name
-      const stateName = getStateName(displayUnit);
-
-      // Initialize allocation
-      let dEV = 0, rEV = 0, oEV = 0;
-      let thirdPartyEVs = {}; // Store individual third party EVs
-      let showBlank = false;
-      let dVotes = 0, rVotes = 0, oVotes = 0;
-
-      // Check if we should show blank (election night mode)
-      if (isElectionNight && snapshot) {
-        // snapshot is a Map, get the state data by unit key
-        const stateData = snapshot.get(displayUnit);
-        if (stateData) {
-          const called = stateData.called || false;
-          const reporting = stateData.reporting || 0;
-
-          // Show blank if not called or not 100% counted
-          if (!called || reporting < 0.999) {
-            showBlank = true;
-          } else {
-            // Use election night vote counts
-            dVotes = stateData.dVotes || 0;
-            rVotes = stateData.rVotes || 0;
-            oVotes = stateData.oVotes || 0;
-          }
-        } else {
-          showBlank = true;
-        }
-      }
-
-      // Calculate allocations if not blank
-      if (!showBlank) {
-        // Special case: Alabama 1960 and Mississippi 1960 - always use fixed allocation
-        if (year === 1960 && (displayUnit === 'AL' || displayUnit === 'MS')) {
-          // Check winner with PV adjustment (use >= 0 to match map logic)
-          const margin = +r.rm || 0;
-          const pv = window._curPv || 0;
-          const adjMargin = margin + pv;
-          const winner = adjMargin >= 0 ? 'D' : 'R';  // Match map's m >= 0 check
-
-          if (winner !== 'R') {
-            // Democrats/Third party win: use the special fixed split
-            if (displayUnit === 'AL') {
-              dEV = 5;  // Alabama: 5D, 6O
-              oEV = 6;
-            } else {
-              dEV = 0;  // Mississippi: 0D, 8O
-              oEV = 8;
-            }
-          } else {
-            // Republicans win: normal winner-take-all
-            rEV = ev;
-          }
-
-          // Get vote counts
-          if (!isElectionNight) {
-            dVotes = +r.dVotes || 0;
-            rVotes = +r.rVotes || 0;
-            oVotes = +r.tVotes || 0;
-          }
-        } else if (isProportional) {
-          // Use proportional allocation
-          // Get base vote counts for BOTH EV allocation AND margin display
-          const baseD = +r.dVotes || 0;
-          const baseR = +r.rVotes || 0;
-          const baseO = +r.tVotes || 0;
-
-          // Store the original votes for margin display (before PV adjustment)
-          dVotes = baseD;
-          rVotes = baseR;
-          oVotes = baseO;
-
-          if (!isElectionNight) {
-            // Apply PV adjustment ONLY for EV allocation calculation
-            const pv = window._curPv || 0;
-            const total = +r.total || (baseD + baseR + baseO) || 0;
-            let dVotesAdj = baseD;
-            let rVotesAdj = baseR;
-            let oVotesAdj = baseO;
-
-            if (total > 0 && pv !== 0) {
-              // Apply uniform swing adjustment for EV allocation
-              const rm = +r.rm || 0;
-              const adjMargin = rm + pv;
-              const tp = Math.max(0, Math.min(1, (r.thirdShare != null ? +r.thirdShare : +r.tp) || 0));
-
-              // Calculate adjusted two-party share
-              let twoD = 0.5 + adjMargin / 2;
-              twoD = Math.max(0, Math.min(1, twoD));
-
-              const dShare = (1 - tp) * twoD;
-              const rShare = (1 - tp) * (1 - twoD);
-              const oShare = tp;
-
-              dVotesAdj = total * dShare;
-              rVotesAdj = total * rShare;
-              oVotesAdj = total * oShare;
-            }
-
-            // Allocate EVs proportionally using adjusted votes
-            const allocFn = window.allocateProportionalEVs || function (d, r, o, ev) {
-              // Fallback if function not available
-              return { D: 0, R: 0, O: 0, thirdParties: {} };
-            };
-            const alloc = allocFn(dVotesAdj, rVotesAdj, oVotesAdj, ev, +r.tp || 0, r.thirdPartyResults);
-            dEV = alloc.D;
-            rEV = alloc.R;
-            oEV = alloc.O;
-            // Store third party allocations if they exist
-            thirdPartyEVs = alloc.thirdParties || {};
-          }
-        } else {
-          // Winner-take-all - match map logic exactly
-          const margin = +r.rm || 0;
-          const pv = window._curPv || 0;
-          const adjMargin = margin + pv;
-
-          // Check if this is a third party winner (color = 'yellow')
-          const isThirdPartyWinner = (r.color === 'yellow' || r.color === '#C9A400');
-
-          if (isThirdPartyWinner) {
-            // Third party won - allocate all EVs to O
-            oEV = ev;
-          } else {
-            // Normal two-party winner-take-all
-            // Match the map's logic from updateAll()
-            if (adjMargin > 0) {
-              dEV = ev;
-            } else if (adjMargin < 0) {
-              rEV = ev;
-            } else {
-              // Tie-breaking: match map's logic (line 2083-2085)
-              // Get national margin and stop value for tie-breaking
-              const nat = (typeof getNatMargin === 'function') ? getNatMargin(year) : 0;
-              const stopVal = pv;  // Current PV is the stop value
-              const side = Math.sign((stopVal || 0) - (nat || 0));
-              if (side >= 0) dEV = ev;
-              else rEV = ev;
-            }
-          }
-
-          // Get vote counts
-          if (!isElectionNight) {
-            dVotes = +r.dVotes || 0;
-            rVotes = +r.rVotes || 0;
-            oVotes = +r.tVotes || 0;
-          }
-        }
-      }
-
-      // If there are Other EVs but we don't have a detailed thirdPartyEVs
-      // mapping, infer a breakdown. However, when NOT in proportional mode
-      // (winner-take-all), don't proportionally split O EVs across multiple
-      // third-party names — instead give the entire O block to the single
-      // top third-party candidate (by votes). Proportional splitting only
-      // applies when proportional mode is active.
-      if (!showBlank && oEV > 0 && Object.keys(thirdPartyEVs || {}).length === 0) {
-        try {
-          const tpVotes = (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') ? r.thirdPartyResults : {};
-          const tpNames = Object.keys(tpVotes).filter(n => (tpVotes[n] || 0) > 0);
-          // If we're in proportional mode, keep the existing floor+largest-fractions
-          // behavior to split O EVs among third parties.
-          if (typeof isProportional !== 'undefined' && isProportional) {
-            if (tpNames.length > 0) {
-              const totalTpVotes = tpNames.reduce((s, n) => s + (+tpVotes[n] || 0), 0);
-              if (totalTpVotes > 0) {
-                // Proportionally assign integer EVs using floor+largest-fractions method
-                const floats = tpNames.map(name => {
-                  const raw = (oEV * (+tpVotes[name] || 0)) / totalTpVotes;
-                  return { name, raw, frac: raw - Math.floor(raw), assigned: Math.floor(raw) };
-                });
-                let assignedSum = floats.reduce((s, f) => s + f.assigned, 0);
-                let remaining = oEV - assignedSum;
-                // Sort by fractional part descending to distribute remainders fairly
-                floats.sort((a, b) => b.frac - a.frac);
-                let idx = 0;
-                while (remaining > 0 && floats.length > 0) {
-                  floats[idx % floats.length].assigned += 1;
-                  remaining -= 1;
-                  idx += 1;
-                }
-                const allocMap = {};
-                floats.forEach(f => { if (f.assigned > 0) allocMap[f.name] = f.assigned; });
-                // If rounding produced no assignments (shouldn't), fall back to Other
-                thirdPartyEVs = Object.keys(allocMap).length ? allocMap : { Other: oEV };
-              } else {
-                // No vote totals for third parties, but names exist: give the whole
-                // O EV block to the first listed third party to at least surface a name
-                const map = {}; map[tpNames[0]] = oEV; thirdPartyEVs = map;
-              }
-            } else {
-              // No per-row third-party vote info available: fall back to generic
-              thirdPartyEVs = { Other: oEV };
-            }
-          } else {
-            // Winner-take-all: give all O EVs to the top third-party candidate (if any)
-            if (tpNames.length > 0) {
-              // Find the third-party with the maximum votes
-              let topName = tpNames[0];
-              for (let i = 1; i < tpNames.length; i++) {
-                const n = tpNames[i];
-                if ((+tpVotes[n] || 0) > (+tpVotes[topName] || 0)) topName = n;
-              }
-              const map = {};
-              map[topName] = oEV;
-              thirdPartyEVs = map;
-            } else {
-              thirdPartyEVs = { Other: oEV };
-            }
-          }
-        } catch (e) {
-          thirdPartyEVs = { Other: oEV };
-        }
-      }
-
-      // Calculate vote percentages for margin column
-      let dPct = 0, rPct = 0, oPct = 0;
-      if (!showBlank && (dVotes > 0 || rVotes > 0 || oVotes > 0)) {
-        const totalVotes = dVotes + rVotes + oVotes;
-        if (totalVotes > 0) {
-          dPct = (dVotes / totalVotes) * 100;
-          rPct = (rVotes / totalVotes) * 100;
-          oPct = (oVotes / totalVotes) * 100;
-        }
-      }
-
-      allocations.push({
-        state: displayUnit,
-        stateName: stateName,
-        dEV: showBlank ? null : dEV,
-        rEV: showBlank ? null : rEV,
-        oEV: showBlank ? null : oEV,
-        thirdPartyEVs: showBlank ? {} : thirdPartyEVs, // Include third party EVs
-        thirdPartyVotes: showBlank ? {} : (r.thirdPartyResults || {}), // Include third party votes for tooltips
-        totalEV: ev,
-        dVotes: showBlank ? null : dVotes,
-        rVotes: showBlank ? null : rVotes,
-        oVotes: showBlank ? null : oVotes,
-        dPct: showBlank ? null : dPct,
-        rPct: showBlank ? null : rPct,
-        oPct: showBlank ? null : oPct,
-        dCandidate: r.dCandidate || '', // Add candidate names
-        rCandidate: r.rCandidate || '',
-        showBlank: showBlank
-      });
-    });
-
-    return allocations;
-  }
-
-  // Get full state name from abbreviation
-  function getStateName(abbr) {
-    const STATE_NAMES = {
-      'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
-      'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'DC': 'District of Columbia',
-      'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois',
-      'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana',
-      'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota',
-      'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
-      'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
-      'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon',
-      'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota',
-      'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia',
-      'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
-    };
-
-    // Handle ME-AL, NE-AL, ME-01, NE-02, etc.
-    if (abbr.includes('-')) {
-      const parts = abbr.split('-');
-      const state = STATE_NAMES[parts[0]] || parts[0];
-      if (parts[1] === 'AL') {
-        return `${state} At-Large`;
-      } else {
-        return `${state} CD-${parts[1]}`;
-      }
-    }
-
-    return STATE_NAMES[abbr] || abbr;
-  }
-
-  // Sort allocations based on current sort state
-  function sortAllocations(allocations) {
-    const sorted = [...allocations];
-    const { column, ascending } = currentSort;
-
-    sorted.sort((a, b) => {
-      let aVal, bVal;
-
-      switch (column) {
-        case 'state':
-          aVal = a.stateName;
-          bVal = b.stateName;
-          break;
-        case 'margin':
-          // Sort by Democratic percentage
-          aVal = a.dPct === null ? -1 : a.dPct;
-          bVal = b.dPct === null ? -1 : b.dPct;
-          break;
-        case 'd':
-          aVal = a.dEV === null ? -1 : a.dEV;
-          bVal = b.dEV === null ? -1 : b.dEV;
-          break;
-        case 'r':
-          aVal = a.rEV === null ? -1 : a.rEV;
-          bVal = b.rEV === null ? -1 : b.rEV;
-          break;
-        case 'o':
-          aVal = a.oEV === null ? -1 : a.oEV;
-          bVal = b.oEV === null ? -1 : b.oEV;
-          break;
-        case 'total':
-          aVal = a.totalEV;
-          bVal = b.totalEV;
-          break;
-        default:
-          // Handle third party columns (tp-NAME format)
-          if (column && column.startsWith('tp-')) {
-            const tpName = column.substring(3);
-            aVal = (a.thirdPartyEVs && a.thirdPartyEVs[tpName]) || 0;
-            bVal = (b.thirdPartyEVs && b.thirdPartyEVs[tpName]) || 0;
-          } else {
-            return 0;
-          }
-      }
-
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return ascending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-      } else {
-        return ascending ? (aVal - bVal) : (bVal - aVal);
-      }
-    });
-
-    return sorted;
-  }
-
-  // Update the table with current data
-  // Update the table with current data
-  function updateEvBreakdownTable() {
-    const tbody = document.getElementById('evBreakdownBody');
-    const table = document.getElementById('evBreakdownTable');
-    if (!tbody || !table) return;
-
-    // Get and sort allocations
-    const allocations = getAllEvAllocations();
-    const sorted = sortAllocations(allocations);
-
-    // Check if proportional mode is enabled
-    const isProportional = (() => {
-      try {
-        const toggle = document.getElementById('propEvToggle');
-        return toggle && toggle.checked;
-      } catch (e) {
-        return false;
-      }
-    })();
-
-    // Determine if we need third party columns and get candidate names + totals
-    let dCandidate = '';
-    let rCandidate = '';
-    const thirdPartyNames = new Set();
-    let hasAnyThirdPartyEVs = false;
-    const thirdPartyTotals = {}; // name -> EV total across states
-    let totalOtherEV_ForHeader = 0; // aggregate O EVs when no detailed breakdown
-
-    sorted.forEach(alloc => {
-      if (!dCandidate && alloc.dCandidate) dCandidate = alloc.dCandidate;
-      if (!rCandidate && alloc.rCandidate) rCandidate = alloc.rCandidate;
-
-      // Check for detailed third party EVs and accumulate totals
-      if (alloc.thirdPartyEVs && typeof alloc.thirdPartyEVs === 'object') {
-        Object.keys(alloc.thirdPartyEVs).forEach(name => {
-          const v = alloc.thirdPartyEVs[name] || 0;
-          if (v > 0) {
-            thirdPartyNames.add(name);
-            hasAnyThirdPartyEVs = true;
-            thirdPartyTotals[name] = (thirdPartyTotals[name] || 0) + v;
-          }
-        });
-      }
-      // Aggregate generic Other EVs
-      if (alloc.oEV > 0) {
-        hasAnyThirdPartyEVs = true;
-        totalOtherEV_ForHeader += alloc.oEV;
-      }
-    });
-
-    const hasDetailedThirdParties = thirdPartyNames.size > 0;
-    const thirdPartyList = Array.from(thirdPartyNames).sort();
-
-    // Also inject third-party names into candidate display area so they appear under D vs R
-    try {
-      const candidateNamesEl = document.getElementById('candidateNames');
-      if (candidateNamesEl) {
-        const base = (dCandidate || rCandidate) ? `${(window._curYear || '')} : ${dCandidate} (D) vs ${rCandidate} (R)` : '';
-        let extra = '';
-        if (thirdPartyList.length > 0) {
-          // Include EV counts for each third party when available
-          extra = '<br>' + thirdPartyList.map(name => {
-            const cnt = thirdPartyTotals[name] || 0;
-            return cnt > 0 ? `${name} (${cnt} ${cnt === 1 ? 'EV' : 'EVs'})` : name;
-          }).join(', ');
-        } else if (hasAnyThirdPartyEVs && thirdPartyList.length === 0) {
-          // Generic Other with aggregate EVs if present
-          extra = '<br>Other' + (totalOtherEV_ForHeader > 0 ? ` (${totalOtherEV_ForHeader} EVs)` : '');
-        }
-        if (base || extra) candidateNamesEl.innerHTML = (base || '') + extra;
-      }
-    } catch (e) { }
-
-    // Show O EVs column only if: proportional mode is on, OR any third party got EVs
-    const showOColumn = isProportional || hasAnyThirdPartyEVs;
-
-    // Helper to get last name
-    const getLastName = (fullName) => {
-      if (!fullName) return '';
-      const parts = fullName.trim().split(/\s+/);
-      return parts[parts.length - 1];
-    };
-
-    // Update table headers
-    const thead = table.querySelector('thead');
-    if (thead) {
-      const headerRow = thead.querySelector('tr');
-      if (headerRow) {
-        headerRow.innerHTML = '';
-
-        // State column
-        const stateHeader = document.createElement('th');
-        stateHeader.className = 'sortable';
-        stateHeader.setAttribute('data-column', 'state');
-        stateHeader.textContent = 'State';
-        headerRow.appendChild(stateHeader);
-
-        // Margin column (now just D% and R%)
-        const marginHeader = document.createElement('th');
-        marginHeader.className = 'sortable';
-        marginHeader.setAttribute('data-column', 'margin');
-        marginHeader.textContent = 'Margin (D%, R%)';
-        headerRow.appendChild(marginHeader);
-
-        // D EVs column with candidate name in format "Obama (D) EVs"
-        const dHeader = document.createElement('th');
-        dHeader.className = 'sortable';
-        dHeader.setAttribute('data-column', 'd');
-        const dLastName = getLastName(dCandidate);
-        dHeader.textContent = dLastName ? `${dLastName} (D) EVs` : 'D EVs';
-        headerRow.appendChild(dHeader);
-
-        // R EVs column with candidate name in format "Romney (R) EVs"
-        const rHeader = document.createElement('th');
-        rHeader.className = 'sortable';
-        rHeader.setAttribute('data-column', 'r');
-        const rLastName = getLastName(rCandidate);
-        rHeader.textContent = rLastName ? `${rLastName} (R) EVs` : 'R EVs';
-        headerRow.appendChild(rHeader);
-
-        // Third party columns (if any have EVs in proportional mode or detailed third parties)
-        if (hasDetailedThirdParties) {
-          thirdPartyList.forEach(name => {
-            const tpHeader = document.createElement('th');
-            tpHeader.className = 'sortable';
-            tpHeader.setAttribute('data-column', `tp-${name}`);
-            tpHeader.textContent = `${name} EVs`;
-            headerRow.appendChild(tpHeader);
-          });
-        } else if (showOColumn) {
-          // O EVs column (traditional third party aggregate)
-          const oHeader = document.createElement('th');
-          oHeader.className = 'sortable';
-          oHeader.setAttribute('data-column', 'o');
-          oHeader.textContent = 'O EVs';
-          headerRow.appendChild(oHeader);
-        }
-
-        // Total EVs column
-        const totalHeader = document.createElement('th');
-        totalHeader.className = 'sortable';
-        totalHeader.setAttribute('data-column', 'total');
-        totalHeader.textContent = 'Total EVs';
-        headerRow.appendChild(totalHeader);
-      }
-    }
-
-    // Re-add click handlers to new headers
-    const headers = table.querySelectorAll('th.sortable');
-    headers.forEach(header => {
-      const column = header.getAttribute('data-column');
-      // Remove old listeners by cloning
-      const newHeader = header.cloneNode(true);
-      header.parentNode.replaceChild(newHeader, header);
-
-      newHeader.addEventListener('click', function () {
-        if (currentSort.column === column) {
-          currentSort.ascending = !currentSort.ascending;
-        } else {
-          currentSort.column = column;
-          currentSort.ascending = true;
-        }
-        updateEvBreakdownTable();
-      });
-
-      // Update sort indicators
-      newHeader.classList.remove('sorted-asc', 'sorted-desc');
-      if (column === currentSort.column) {
-        newHeader.classList.add(currentSort.ascending ? 'sorted-asc' : 'sorted-desc');
-      }
-    });
-
-    // Build table rows
-    tbody.innerHTML = '';
-
-    // Calculate totals
-    let totalD = 0, totalR = 0, totalO = 0, totalAll = 0;
-    const totalThirdParties = {};
-    thirdPartyList.forEach(name => totalThirdParties[name] = 0);
-
-    sorted.forEach(alloc => {
-      const row = document.createElement('tr');
-      row.setAttribute('data-state', alloc.state);
-
-      // State name cell (with hover tooltip showing last names)
-      const stateCell = document.createElement('td');
-      stateCell.textContent = alloc.stateName;
-      if (!alloc.showBlank && alloc.dVotes !== null) {
-        const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
-        const voteInfo = [];
-        if (alloc.dVotes > 0) {
-          const dLastName = getLastName(alloc.dCandidate);
-          voteInfo.push(`D${dLastName ? ' (' + dLastName + ')' : ''}: ${formatter(alloc.dVotes)}`);
-        }
-        if (alloc.rVotes > 0) {
-          const rLastName = getLastName(alloc.rCandidate);
-          voteInfo.push(`R${rLastName ? ' (' + rLastName + ')' : ''}: ${formatter(alloc.rVotes)}`);
-        }
-        if (alloc.oVotes > 0) voteInfo.push(`O: ${formatter(alloc.oVotes)}`);
-        stateCell.title = voteInfo.join(' | ');
-      }
-      row.appendChild(stateCell);
-
-      // Margin column (D% and R% only)
-      const marginCell = document.createElement('td');
-      if (alloc.showBlank) {
-        marginCell.textContent = '—';
-        marginCell.classList.add('blank-entry');
-      } else {
-        const dPct = alloc.dPct || 0;
-        const rPct = alloc.rPct || 0;
-        marginCell.textContent = `${dPct.toFixed(1)}%, ${rPct.toFixed(1)}%`;
-      }
-      row.appendChild(marginCell);
-
-      // D EVs
-      const dCell = document.createElement('td');
-      if (alloc.showBlank) {
-        dCell.textContent = '—';
-        dCell.classList.add('blank-entry');
-      } else {
-        const dEV = alloc.dEV || 0;
-        const percent = alloc.totalEV > 0 ? Math.round((dEV / alloc.totalEV) * 100) : 0;
-        dCell.textContent = dEV > 0 ? `${dEV} (${percent}%)` : dEV;
-        totalD += dEV;
-      }
-      row.appendChild(dCell);
-
-      // R EVs
-      const rCell = document.createElement('td');
-      if (alloc.showBlank) {
-        rCell.textContent = '—';
-        rCell.classList.add('blank-entry');
-      } else {
-        const rEV = alloc.rEV || 0;
-        const percent = alloc.totalEV > 0 ? Math.round((rEV / alloc.totalEV) * 100) : 0;
-        rCell.textContent = rEV > 0 ? `${rEV} (${percent}%)` : rEV;
-        totalR += rEV;
-      }
-      row.appendChild(rCell);
-
-      // Third party EVs (either individual columns or aggregate O column)
-      if (hasDetailedThirdParties) {
-        // Show individual third party columns with tooltips
-        thirdPartyList.forEach(name => {
-          const tpCell = document.createElement('td');
-          if (alloc.showBlank) {
-            tpCell.textContent = '—';
-            tpCell.classList.add('blank-entry');
-          } else {
-            const tpEV = (alloc.thirdPartyEVs && alloc.thirdPartyEVs[name]) || 0;
-            const percent = alloc.totalEV > 0 ? Math.round((tpEV / alloc.totalEV) * 100) : 0;
-            tpCell.textContent = tpEV > 0 ? `${tpEV} (${percent}%)` : tpEV;
-            totalThirdParties[name] = (totalThirdParties[name] || 0) + tpEV;
-
-            // Add tooltip with vote information
-            if (alloc.thirdPartyVotes && alloc.thirdPartyVotes[name]) {
-              const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
-              const votes = alloc.thirdPartyVotes[name];
-              const totalVotes = alloc.dVotes + alloc.rVotes + alloc.oVotes;
-              const votePct = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(1) : '0.0';
-              tpCell.title = `${formatter(votes)} votes (${votePct}%)`;
-            }
-          }
-          row.appendChild(tpCell);
-        });
-      } else if (showOColumn) {
-        // Show traditional O EVs column with tooltip
-        const oCell = document.createElement('td');
-        if (alloc.showBlank) {
-          oCell.textContent = '—';
-          oCell.classList.add('blank-entry');
-        } else {
-          const oEV = alloc.oEV || 0;
-          const percent = alloc.totalEV > 0 ? Math.round((oEV / alloc.totalEV) * 100) : 0;
-          oCell.textContent = oEV > 0 ? `${oEV} (${percent}%)` : oEV;
-          totalO += oEV;
-
-          // Add tooltip with vote information
-          if (alloc.oVotes > 0) {
-            const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
-            const totalVotes = alloc.dVotes + alloc.rVotes + alloc.oVotes;
-            const votePct = totalVotes > 0 ? ((alloc.oVotes / totalVotes) * 100).toFixed(1) : '0.0';
-            oCell.title = `${formatter(alloc.oVotes)} votes (${votePct}%)`;
-          }
-        }
-        row.appendChild(oCell);
-      }
-
-      // Total EVs (always shown)
-      const totalCell = document.createElement('td');
-      totalCell.textContent = alloc.totalEV;
-      totalAll += alloc.totalEV;
-      row.appendChild(totalCell);
-
-      tbody.appendChild(row);
-    });
-
-    // Add total row
-    const totalRow = document.createElement('tr');
-    totalRow.classList.add('total-row');
-
-    const totalLabelCell = document.createElement('td');
-    totalLabelCell.textContent = 'Total';
-    totalLabelCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalLabelCell);
-
-    // Empty cell for margin column in total row
-    const totalMarginCell = document.createElement('td');
-    totalMarginCell.textContent = '—';
-    totalMarginCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalMarginCell);
-
-    const totalDCell = document.createElement('td');
-    const totalDPercent = totalAll > 0 ? ((totalD / totalAll) * 100).toFixed(1) : '0.0';
-    totalDCell.textContent = totalD > 0 ? `${totalD} (${totalDPercent}%)` : totalD;
-    totalDCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalDCell);
-
-    const totalRCell = document.createElement('td');
-    const totalRPercent = totalAll > 0 ? ((totalR / totalAll) * 100).toFixed(1) : '0.0';
-    totalRCell.textContent = totalR > 0 ? `${totalR} (${totalRPercent}%)` : totalR;
-    totalRCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalRCell);
-
-    // Third party totals (either individual columns or aggregate O column)
-    if (hasDetailedThirdParties) {
-      thirdPartyList.forEach(name => {
-        const tpTotalCell = document.createElement('td');
-        const tpTotal = totalThirdParties[name] || 0;
-        const tpPercent = totalAll > 0 ? ((tpTotal / totalAll) * 100).toFixed(1) : '0.0';
-        tpTotalCell.textContent = tpTotal > 0 ? `${tpTotal} (${tpPercent}%)` : tpTotal;
-        tpTotalCell.style.fontWeight = 'bold';
-        totalRow.appendChild(tpTotalCell);
-      });
-    } else if (showOColumn) {
-      const totalOCell = document.createElement('td');
-      const totalOPercent = totalAll > 0 ? ((totalO / totalAll) * 100).toFixed(1) : '0.0';
-      totalOCell.textContent = totalO > 0 ? `${totalO} (${totalOPercent}%)` : totalO;
-      totalOCell.style.fontWeight = 'bold';
-      totalRow.appendChild(totalOCell);
-    }
-
-    const totalAllCell = document.createElement('td');
-    totalAllCell.textContent = totalAll;
-    totalAllCell.style.fontWeight = 'bold';
-    totalRow.appendChild(totalAllCell);
-
-    tbody.appendChild(totalRow);
-  }
-
-  // Expose update function globally so it can be called during election night
-  window.updateEvBreakdownTable = updateEvBreakdownTable;
-
-  // Also expose the allocations helper so other UI code can call it directly
-  try { if (typeof getAllEvAllocations === 'function') window.getAllEvAllocations = getAllEvAllocations; } catch (e) { }
-
-  // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEvBreakdownModal);
-  } else {
-    initEvBreakdownModal();
-  }
-})();
-// Expose helper to global scope so other UI bits can call it
-try { if (typeof getAllEvAllocations === 'function') window.getAllEvAllocations = getAllEvAllocations; } catch (e) { }
 
