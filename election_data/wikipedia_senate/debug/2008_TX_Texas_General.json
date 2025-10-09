@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Texas",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 7912075,
   "table": {
     "caption": "2008 Texas U.S. Senate general election",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Cornyn (incumbent)",
+      "candidate": "John Cornyn",
       "party": "Republican",
       "votes": 4337469,
       "percent": 54.82
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 948104,
       "percent": 11.98
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 7912075,
-      "percent": 58.28
     }
   ]
 }

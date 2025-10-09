@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1006901,
   "table": {
     "caption": "United States Senate election in Utah, 2012 [ 57 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Orrin Hatch (incumbent)",
+      "candidate": "Orrin Hatch",
       "party": "Republican",
       "votes": 657608,
       "percent": 65.31

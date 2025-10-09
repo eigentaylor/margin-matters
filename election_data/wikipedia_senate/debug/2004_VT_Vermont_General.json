@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Vermont",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 8,
+  "table_total_votes": 307208,
   "table": {
     "caption": "General election results [ 5 ]",
     "headers": [
@@ -414,7 +415,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patrick Leahy (incumbent)",
+      "candidate": "Patrick Leahy",
       "party": "Democratic",
       "votes": 216972,
       "percent": 70.63
@@ -460,12 +461,6 @@
       "party": "Majority",
       "votes": 141574,
       "percent": 46.08
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 307208,
-      "percent": 100.0
     }
   ]
 }

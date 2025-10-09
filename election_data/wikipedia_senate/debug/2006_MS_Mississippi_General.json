@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 610921,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Trent Lott (incumbent)",
+      "candidate": "Trent Lott",
       "party": "Republican",
       "votes": 388399,
       "percent": 63.58

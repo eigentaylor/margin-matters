@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Washington",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 3,
+  "parsed_rows": 2,
+  "table_total_votes": 2565589,
   "table": {
     "caption": "General election results [ 63 ]",
     "headers": [
@@ -184,7 +185,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patty Murray (incumbent)",
+      "candidate": "Patty Murray",
       "party": "Democratic",
       "votes": 1314930,
       "percent": 52.36
@@ -194,12 +195,6 @@
       "party": "Republican",
       "votes": 1196164,
       "percent": 47.64
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2565589,
-      "percent": 71.24
     }
   ]
 }

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Connecticut",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 5,
+  "table_total_votes": 1153115,
   "table": {
     "caption": "United States Senate election in Connecticut, 2010 [ 102 ] [ 103 ]",
     "headers": [
@@ -359,18 +360,6 @@
     {
       "candidate": "Richard Blumenthal",
       "party": "Democratic",
-      "votes": 605204,
-      "percent": 52.48
-    },
-    {
-      "candidate": "Richard Blumenthal",
-      "party": "Working Families",
-      "votes": 30836,
-      "percent": 2.68
-    },
-    {
-      "candidate": "Richard Blumenthal",
-      "party": "Total",
       "votes": 636040,
       "percent": 55.16
     },

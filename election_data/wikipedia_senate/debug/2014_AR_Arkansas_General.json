@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 847505,
   "table": {
     "caption": "United States Senate election in Arkansas, 2014 [ 90 ]",
     "headers": [
@@ -289,7 +290,7 @@
       "percent": 56.5
     },
     {
-      "candidate": "Mark Pryor (incumbent)",
+      "candidate": "Mark Pryor",
       "party": "Democratic",
       "votes": 334174,
       "percent": 39.43

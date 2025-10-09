@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 5449128,
   "table": {
     "caption": "United States Senate election in Ohio, 2012 [ 156 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Sherrod Brown (incumbent)",
+      "candidate": "Sherrod Brown",
       "party": "Democratic",
       "votes": 2762766,
       "percent": 50.7

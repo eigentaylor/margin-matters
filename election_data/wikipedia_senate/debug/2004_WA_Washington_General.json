@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2818651,
   "table": {
     "caption": "General election results [ 21 ]",
     "headers": [
@@ -226,7 +227,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patty Murray (Incumbent)",
+      "candidate": "Patty Murray",
       "party": "Democratic",
       "votes": 1549708,
       "percent": 54.98

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Connecticut",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 4,
+  "table_total_votes": 1511764,
   "table": {
     "caption": "United States Senate election in Connecticut, 2012 [ 97 ]",
     "headers": [
@@ -391,36 +392,12 @@
     {
       "candidate": "Chris Murphy",
       "party": "Democratic",
-      "votes": 792983,
-      "percent": 52.45
-    },
-    {
-      "candidate": "Chris Murphy",
-      "party": "Working Families",
-      "votes": 35778,
-      "percent": 2.37
-    },
-    {
-      "candidate": "Chris Murphy",
-      "party": "Total",
       "votes": 828761,
       "percent": 54.82
     },
     {
       "candidate": "Linda McMahon",
       "party": "Republican",
-      "votes": 604569,
-      "percent": 39.99
-    },
-    {
-      "candidate": "Linda McMahon",
-      "party": "Independent Party",
-      "votes": 46520,
-      "percent": 3.08
-    },
-    {
-      "candidate": "Linda McMahon",
-      "party": "Total",
       "votes": 651089,
       "percent": 43.07
     },

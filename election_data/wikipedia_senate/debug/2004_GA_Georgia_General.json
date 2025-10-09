@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Georgia",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 3220951,
   "table": {
     "caption": "2004 United States Senate election, Georgia [ 11 ]",
     "headers": [
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 576510,
       "percent": 17.9
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 3220951,
-      "percent": null
     }
   ]
 }

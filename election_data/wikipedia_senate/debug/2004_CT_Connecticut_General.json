@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": null,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -204,7 +205,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Chris Dodd (Incumbent)",
+      "candidate": "Chris Dodd",
       "party": "Democratic",
       "votes": 945347,
       "percent": 66.35

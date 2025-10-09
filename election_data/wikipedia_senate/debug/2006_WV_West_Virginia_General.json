@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_West_Virginia",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 459884,
   "table": {
     "caption": "2006 West Virginia United States Senate General Election",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Robert Byrd (incumbent)",
+      "candidate": "Robert Byrd",
       "party": "Democratic",
       "votes": 296276,
       "percent": 64.42
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 141233,
       "percent": 30.71
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 459884,
-      "percent": 40.4
     }
   ]
 }

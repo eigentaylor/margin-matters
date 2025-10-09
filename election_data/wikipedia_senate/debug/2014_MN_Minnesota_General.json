@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1981528,
   "table": {
     "caption": "United States Senate election in Minnesota, 2014 [ 89 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Al Franken (incumbent)",
+      "candidate": "Al Franken",
       "party": "Democratic (DFL)",
       "votes": 1053205,
       "percent": 53.15

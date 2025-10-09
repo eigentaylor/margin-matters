@@ -86,6 +86,32 @@ a:hover {
   gap: 8px
 }
 
+.dataset-switch {
+  margin-bottom: 16px;
+}
+
+.dataset-switch select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #1b1b1b;
+  color: var(--fg);
+}
+
+.dataset-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dataset-section {
+  display: none;
+}
+
+.dataset-section.is-active {
+  display: block;
+}
+
 /* Make small-links buttons a consistent size and center their content */
 .small-links .btn {
   display: inline-flex;

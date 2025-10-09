@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 5769590,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -226,7 +227,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Arlen Specter (incumbent)",
+      "candidate": "Arlen Specter",
       "party": "Republican",
       "votes": 2925080,
       "percent": 52.62

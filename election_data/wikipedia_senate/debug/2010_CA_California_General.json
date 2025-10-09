@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 9999860,
   "table": {
     "caption": "United States Senate election in California, 2010 [ 46 ]",
     "headers": [
@@ -362,7 +363,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Barbara Boxer (incumbent)",
+      "candidate": "Barbara Boxer",
       "party": "Democratic",
       "votes": 5218137,
       "percent": 52.18

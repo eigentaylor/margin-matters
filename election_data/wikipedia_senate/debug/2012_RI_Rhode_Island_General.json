@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 418189,
   "table": {
     "caption": "United States Senate election in Rhode Island, 2012 [ 31 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Sheldon Whitehouse (incumbent)",
+      "candidate": "Sheldon Whitehouse",
       "party": "Democratic",
       "votes": 271034,
       "percent": 64.81

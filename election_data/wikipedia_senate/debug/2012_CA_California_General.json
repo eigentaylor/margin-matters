@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 12578511,
   "table": {
     "caption": "United States Senate election in California, 2012 [ 38 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dianne Feinstein (incumbent)",
+      "candidate": "Dianne Feinstein",
       "party": "Democratic",
       "votes": 7864624,
       "percent": 62.52

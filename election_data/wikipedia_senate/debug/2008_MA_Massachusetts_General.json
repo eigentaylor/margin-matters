@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Massachusetts",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 2994247,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Kerry (incumbent)",
+      "candidate": "John Kerry",
       "party": "Democratic",
       "votes": 1971974,
       "percent": 65.86
@@ -287,12 +288,6 @@
       "candidate": "Majority",
       "party": "Majority",
       "votes": 1037116,
-      "percent": null
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2994247,
       "percent": null
     }
   ]

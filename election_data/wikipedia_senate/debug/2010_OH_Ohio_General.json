@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 3815098,
   "table": {
     "caption": "United States Senate election in Ohio, 2010 [ 49 ]",
     "headers": [
@@ -407,7 +408,7 @@
       "percent": 0.69
     },
     {
-      "candidate": "Arthur Sullivan (write-in)",
+      "candidate": "Arthur Sullivan",
       "party": "N/A",
       "votes": 648,
       "percent": 0.02

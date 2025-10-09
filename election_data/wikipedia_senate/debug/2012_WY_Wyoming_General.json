@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 244862,
   "table": {
     "caption": "United States Senate election in Wyoming, 2012 [ 17 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Barrasso (incumbent)",
+      "candidate": "John Barrasso",
       "party": "Republican",
       "votes": 185250,
       "percent": 75.66

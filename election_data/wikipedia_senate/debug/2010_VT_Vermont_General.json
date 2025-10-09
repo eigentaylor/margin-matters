@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 8,
+  "table_total_votes": 235065,
   "table": {
     "caption": "United States Senate election in Vermont, 2010 [ 18 ]",
     "headers": [
@@ -414,7 +415,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Patrick Leahy (incumbent)",
+      "candidate": "Patrick Leahy",
       "party": "Democratic",
       "votes": 151281,
       "percent": 64.36

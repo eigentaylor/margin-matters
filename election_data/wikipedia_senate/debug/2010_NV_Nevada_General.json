@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 9,
+  "table_total_votes": 721381,
   "table": {
     "caption": "United States Senate election in Nevada, 2010 [ 114 ] [ 115 ]",
     "headers": [
@@ -446,7 +447,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Harry Reid (incumbent)",
+      "candidate": "Harry Reid",
       "party": "Democratic",
       "votes": 362785,
       "percent": 50.29

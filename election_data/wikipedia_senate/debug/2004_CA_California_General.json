@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_California",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 10,
+  "parsed_rows": 9,
+  "table_total_votes": 5703,
   "table": {
     "caption": "2004 United States Senate election, California [ 10 ]",
     "headers": [
@@ -378,7 +379,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Barbara Boxer (Incumbent)",
+      "candidate": "Barbara Boxer",
       "party": "Democratic",
       "votes": 6955728,
       "percent": 57.71
@@ -408,19 +409,19 @@
       "percent": 0.67
     },
     {
-      "candidate": "Dennis Richter ( write-in )",
+      "candidate": "Dennis Richter",
       "party": "No party",
       "votes": 43,
       "percent": 0.0
     },
     {
-      "candidate": "Howard Johnson ( write-in )",
+      "candidate": "Howard Johnson",
       "party": "No party",
       "votes": 8,
       "percent": 0.0
     },
     {
-      "candidate": "John Emery Jones ( write-in )",
+      "candidate": "John Emery Jones",
       "party": "No party",
       "votes": 2,
       "percent": 0.0
@@ -430,12 +431,6 @@
       "party": "Invalid or blank votes",
       "votes": 536388,
       "percent": 4.26
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 5703,
-      "percent": 57.03
     }
   ]
 }

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 384993,
   "table": {
     "caption": "United States Senate election in Rhode Island, 2006 [ 47 ]",
     "headers": [
@@ -188,7 +189,7 @@
       "percent": 53.52
     },
     {
-      "candidate": "Lincoln Chafee (incumbent)",
+      "candidate": "Lincoln Chafee",
       "party": "Republican",
       "votes": 178950,
       "percent": 46.48

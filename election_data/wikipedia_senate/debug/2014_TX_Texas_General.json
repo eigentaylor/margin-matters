@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 4648358,
   "table": {
     "caption": "2014 United States Senate election in Texas [ 72 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Cornyn (incumbent)",
+      "candidate": "John Cornyn",
       "party": "Republican",
       "votes": 2861531,
       "percent": 61.56
@@ -322,7 +323,7 @@
       "percent": 1.18
     },
     {
-      "candidate": "Mohammed Tahiro (write-in)",
+      "candidate": "Mohammed Tahiro",
       "party": "Independent",
       "votes": 998,
       "percent": 0.02

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Tennessee",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 10,
+  "parsed_rows": 9,
+  "table_total_votes": 2424585,
   "table": {
     "caption": "United States Senate election in Tennessee, 2008 [ 25 ]",
     "headers": [
@@ -451,7 +452,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lamar Alexander (Incumbent)",
+      "candidate": "Lamar Alexander",
       "party": "Republican",
       "votes": 1579477,
       "percent": 65.14
@@ -503,12 +504,6 @@
       "party": "Majority",
       "votes": 812241,
       "percent": 33.5
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2424585,
-      "percent": 66.34
     }
   ]
 }

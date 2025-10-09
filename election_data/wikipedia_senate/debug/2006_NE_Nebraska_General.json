@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 590961,
   "table": {
     "caption": "2006 United States Senate election in Nebraska [ 13 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ben Nelson ( inc. )",
+      "candidate": "Ben Nelson",
       "party": "Democratic",
       "votes": 378388,
       "percent": 63.88

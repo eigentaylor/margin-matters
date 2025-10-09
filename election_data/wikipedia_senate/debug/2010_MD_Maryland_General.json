@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1833873,
   "table": {
     "caption": "United States Senate election in Maryland, 2010 [ 19 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Barbara Mikulski (incumbent)",
+      "candidate": "Barbara Mikulski",
       "party": "Democratic",
       "votes": 1140531,
       "percent": 62.19

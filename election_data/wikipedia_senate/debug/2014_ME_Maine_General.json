@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 604008,
   "table": {
     "caption": "2014 United States Senate election in Maine [ 70 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Susan Collins (incumbent)",
+      "candidate": "Susan Collins",
       "party": "Republican",
       "votes": 413495,
       "percent": 68.46

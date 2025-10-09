@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Wyoming",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 193136,
   "table": {
     "caption": "General election results [ 13 ]",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Craig L. Thomas (incumbent)",
+      "candidate": "Craig L. Thomas",
       "party": "Republican",
       "votes": 135174,
       "percent": 69.99
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 77503,
       "percent": 40.13
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 193136,
-      "percent": null
     }
   ]
 }

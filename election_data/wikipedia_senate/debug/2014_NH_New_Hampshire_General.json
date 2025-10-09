@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 488159,
   "table": {
     "caption": "United States Senate election in New Hampshire, 2014 [ 109 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jeanne Shaheen (incumbent)",
+      "candidate": "Jeanne Shaheen",
       "party": "Democratic",
       "votes": 251184,
       "percent": 51.46

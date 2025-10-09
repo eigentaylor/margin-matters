@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Minnesota",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 2887646,
   "table": {
     "caption": "2008 United States Senate election in Minnesota: Certified Results after election contest [ 10 ] [ 7 ] [ 91 ] [ 92 ]",
     "headers": [
@@ -368,7 +369,7 @@
       "percent": 41.994
     },
     {
-      "candidate": "Norm Coleman (incumbent)",
+      "candidate": "Norm Coleman",
       "party": "Republican",
       "votes": 1212317,
       "percent": 41.983
@@ -402,12 +403,6 @@
       "party": "Plurality",
       "votes": 312,
       "percent": 0.011
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2887646,
-      "percent": null
     }
   ]
 }

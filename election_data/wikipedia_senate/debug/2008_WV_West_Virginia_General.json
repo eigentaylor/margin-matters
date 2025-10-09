@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 702189,
   "table": {
     "caption": "General election results [ 6 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jay Rockefeller (incumbent)",
+      "candidate": "Jay Rockefeller",
       "party": "Democratic",
       "votes": 447560,
       "percent": 63.74

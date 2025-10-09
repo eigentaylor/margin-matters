@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 1134777,
   "table": {
     "caption": "2006 United States Senate election in Connecticut [ 133 ]",
     "headers": [
@@ -285,7 +286,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Joe Lieberman (incumbent)",
+      "candidate": "Joe Lieberman",
       "party": "Connecticut for Lieberman",
       "votes": 564095,
       "percent": 49.71

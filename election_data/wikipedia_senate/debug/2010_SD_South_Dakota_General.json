@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 1,
+  "table_total_votes": 227947,
   "table": {
     "caption": "United States Senate election in South Dakota, 2010 [ 15 ]",
     "headers": [
@@ -130,7 +131,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Thune (incumbent)",
+      "candidate": "John Thune",
       "party": "Republican",
       "votes": 227947,
       "percent": 100.0

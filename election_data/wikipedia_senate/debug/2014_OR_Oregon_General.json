@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 1461618,
   "table": {
     "caption": "United States Senate election in Oregon, 2014 [ 51 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jeff Merkley (incumbent)",
+      "candidate": "Jeff Merkley",
       "party": "Democratic",
       "votes": 814537,
       "percent": 55.73

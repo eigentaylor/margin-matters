@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Georgia",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 4,
+  "parsed_rows": 3,
+  "table_total_votes": 2137956,
   "table": {
     "caption": "Runoff results [ 49 ]",
     "headers": [
@@ -229,7 +230,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Saxby Chambliss (Incumbent)",
+      "candidate": "Saxby Chambliss",
       "party": "Republican",
       "votes": 1228033,
       "percent": 57.44
@@ -245,12 +246,6 @@
       "party": "Majority",
       "votes": 318110,
       "percent": 14.88
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2137956,
-      "percent": null
     }
   ]
 }

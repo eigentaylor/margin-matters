@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 4081043,
   "table": {
     "caption": "General election results [ 107 ]",
     "headers": [
@@ -215,7 +216,7 @@
       "percent": 58.64
     },
     {
-      "candidate": "Rick Santorum (incumbent)",
+      "candidate": "Rick Santorum",
       "party": "Republican",
       "votes": 1684778,
       "percent": 41.28

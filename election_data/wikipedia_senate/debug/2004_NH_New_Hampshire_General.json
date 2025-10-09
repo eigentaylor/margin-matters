@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 656498,
   "table": {
     "caption": "2004 United States Senate election in New Hampshire [ 3 ]",
     "headers": [
@@ -241,7 +242,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Judd Gregg ( inc. )",
+      "candidate": "Judd Gregg",
       "party": "Republican",
       "votes": 434847,
       "percent": 66.24

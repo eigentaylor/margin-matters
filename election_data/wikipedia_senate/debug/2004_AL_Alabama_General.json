@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1839066,
   "table": {
     "caption": "2004 United States Senate election in Alabama [ 5 ]",
     "headers": [
@@ -184,7 +185,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Richard Shelby (incumbent)",
+      "candidate": "Richard Shelby",
       "party": "Republican",
       "votes": 1242200,
       "percent": 67.55

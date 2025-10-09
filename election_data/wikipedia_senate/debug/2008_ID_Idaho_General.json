@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Idaho",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 644780,
   "table": {
     "caption": "General election results [ 18 ]",
     "headers": [
@@ -407,12 +408,6 @@
       "party": "Majority",
       "votes": 151841,
       "percent": 23.55
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 644780,
-      "percent": null
     }
   ]
 }

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2184473,
   "table": {
     "caption": "2014 United States Senate election in Virginia [ 140 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mark Warner (incumbent)",
+      "candidate": "Mark Warner",
       "party": "Democratic",
       "votes": 1073667,
       "percent": 49.15

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 13,
+  "table_total_votes": 1374065,
   "table": {
     "caption": "2014 United States Senate election in Tennessee [ 101 ]",
     "headers": [
@@ -584,7 +585,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lamar Alexander (incumbent)",
+      "candidate": "Lamar Alexander",
       "party": "Republican",
       "votes": 850087,
       "percent": 61.87

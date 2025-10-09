@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Michigan",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 4848620,
   "table": {
     "caption": "General election results [ 31 ]",
     "headers": [
@@ -377,7 +378,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Carl Levin (incumbent)",
+      "candidate": "Carl Levin",
       "party": "Democratic",
       "votes": 3038386,
       "percent": 62.66
@@ -417,12 +418,6 @@
       "party": "Majority",
       "votes": 1397316,
       "percent": 28.82
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 4848620,
-      "percent": null
     }
   ]
 }

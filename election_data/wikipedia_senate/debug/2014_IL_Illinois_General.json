@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 3603519,
   "table": {
     "caption": "United States Senate election in Illinois, 2014 [ 46 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dick Durbin (incumbent)",
+      "candidate": "Dick Durbin",
       "party": "Democratic",
       "votes": 1929637,
       "percent": 53.55

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 import params
 from .config import OUT_DIR, STATE_DIR, UNIT_DIR, SMALL_STATES, ME_NE_STATES, LAST_UPDATED, FOOTER_TEXT, EXPLANATION_TEXT
@@ -63,10 +63,18 @@ def make_state_pages(states_sorted: List[str]):
     write_text(OUT_DIR / "state-pages.html", html)
 
 
-def build_pages(rows: List[Dict]):
+def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
     headers = list(rows[0].keys()) if rows else []
     basic_cols, third_cols, tp_cols = split_columns_into_three(headers)
     by_abbr = group_by_abbr(rows)
+
+    senate_rows = senate_rows or []
+    senate_headers = list(senate_rows[0].keys()) if senate_rows else []
+    if senate_headers:
+        senate_basic_cols, senate_third_cols, senate_tp_cols = split_columns_into_three(senate_headers)
+    else:
+        senate_basic_cols, senate_third_cols, senate_tp_cols = [], [], []
+    senate_by_abbr = group_by_abbr(senate_rows) if senate_rows else {}
 
     states = sorted({abbr for abbr in by_abbr.keys() if (len(abbr) == 2 or '-AL' in abbr)})
     district_units = sorted({abbr for abbr in by_abbr.keys() if '-' in abbr})
@@ -127,6 +135,62 @@ def build_pages(rows: List[Dict]):
             f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
+
+        pres_sections = [table1_section]
+        if table3_section:
+            pres_sections.append(table3_section)
+        pres_sections.append(table2_section)
+        pres_tables_html = "\n".join(pres_sections)
+
+        senate_table_rows = senate_by_abbr.get(st, []) if senate_by_abbr else []
+        if senate_table_rows:
+            senate_table1 = (
+                f'<div class="card" data-table-type="total">\n'
+                f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Senate Total Data</h2>\n'
+                f'  <div class="table-wrap">{render_table(senate_table_rows, senate_basic_cols)}</div>\n'
+                f'  {render_info_box(senate_basic_cols)}\n'
+                f'</div>'
+            )
+            senate_table3 = ''
+            if senate_third_cols:
+                senate_table3 = (
+                    f'<div class="card" data-table-type="third-party">\n'
+                    f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Senate Third-Party Data</h2>\n'
+                    f'  <div class="table-wrap">{render_table(senate_table_rows, senate_third_cols)}</div>\n'
+                    f'  {render_info_box(senate_third_cols)}\n'
+                    f'</div>'
+                )
+            senate_table2 = (
+                f'<div class="card" data-table-type="two-party">\n'
+                f'  <h2 style="margin-top:0">{params.ABBR_TO_STATE.get(st, st)} ({st}) — Senate Two-Party Data</h2>\n'
+                f'  <div class="table-wrap">{render_table(senate_table_rows, senate_tp_cols, two_party=True)}</div>\n'
+                f'  {render_info_box(senate_tp_cols)}\n'
+                f'</div>'
+            )
+            senate_sections = [senate_table1]
+            if senate_table3:
+                senate_sections.append(senate_table3)
+            senate_sections.append(senate_table2)
+            senate_tables_html = "\n".join(senate_sections)
+            senate_section_attr = ''
+        else:
+            senate_tables_html = (
+                f'<div class="card">\n'
+                f'  <h2 style="margin-top:0">Senate data unavailable</h2>\n'
+                f'  <p class="legend">We do not have Senate general election results for {params.ABBR_TO_STATE.get(st, st)} in the dataset.</p>\n'
+                f'</div>'
+            )
+            senate_section_attr = ' data-empty="true"'
+
+        dataset_sections_html = (
+            '<div class="dataset-sections">\n'
+            '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+            '  <div class="dataset-section" data-dataset="senate"{senate_attr}>\n{senate_tables}\n  </div>\n'
+            '</div>'
+        ).format(pres_tables=pres_tables_html, senate_tables=senate_tables_html, senate_attr=senate_section_attr)
+
+        available_datasets_value = "presidential,senate"
+
         legend_text = f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide"
         page = (
             PAGE_HTML
@@ -135,11 +199,10 @@ def build_pages(rows: List[Dict]):
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide")
             .replace("%STATE_ABBR%", st)
             .replace("%EXTRA_LINKS%", extra_links)
-            .replace("%TABLE1_SECTION%", table1_section)
-            .replace("%TABLE3_SECTION%", table3_section)
-            .replace("%TABLE2_SECTION%", table2_section)
+            .replace("%DATASET_SECTIONS%", dataset_sections_html)
             .replace("%FOOTER_TEXT%", FOOTER_TEXT)
             .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
+            .replace("%AVAILABLE_DATASETS%", available_datasets_value)
         )
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(STATE_DIR / f"{st[:2]}.html", page)
@@ -202,6 +265,18 @@ def build_pages(rows: List[Dict]):
             f'  {render_info_box(tp_cols)}\n'
             f'</div>'
         )
+        pres_sections = [table1_section]
+        if table3_section:
+            pres_sections.append(table3_section)
+        pres_sections.append(table2_section)
+        pres_tables_html = "\n".join(pres_sections)
+
+        dataset_sections_html = (
+            '<div class="dataset-sections">\n'
+            '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+            '</div>'
+        ).format(pres_tables=pres_tables_html)
+
         legend_text = f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})"
         page = (
             PAGE_HTML
@@ -210,11 +285,10 @@ def build_pages(rows: List[Dict]):
             .replace("%HEADING%", f"{params.ABBR_TO_STATE.get(unit, unit)} ({unit})")
             .replace("%STATE_ABBR%", unit)
             .replace("%EXTRA_LINKS%", extra_links)
-            .replace("%TABLE1_SECTION%", table1_section)
-            .replace("%TABLE3_SECTION%", table3_section)
-            .replace("%TABLE2_SECTION%", table2_section)
+            .replace("%DATASET_SECTIONS%", dataset_sections_html)
             .replace("%FOOTER_TEXT%", FOOTER_TEXT)
             .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
+            .replace("%AVAILABLE_DATASETS%", "presidential")
         )
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(UNIT_DIR / f"{unit}.html", page)
@@ -304,6 +378,61 @@ def build_pages(rows: List[Dict]):
         f'  <div class="table-wrap">{render_table(national_rows, nat_tp_cols, two_party=True)}{render_info_box(nat_tp_cols)}</div>\n'
         f'</div>'
     )
+    pres_sections = [table1_section]
+    if table3_section:
+        pres_sections.append(table3_section)
+    pres_sections.append(table2_section)
+    pres_tables_html = "\n".join(pres_sections)
+
+    national_senate_rows = senate_by_abbr.get('NAT', []) if senate_by_abbr else []
+    if national_senate_rows:
+        senate_table1 = (
+            f'<div class="card" data-table-type="total">\n'
+            f'  <h2 style="margin-top:0">National — Senate Total Data</h2>\n'
+            f'  <div class="table-wrap">{render_table(national_senate_rows, senate_basic_cols)}</div>\n'
+            f'  {render_info_box(senate_basic_cols)}\n'
+            f'</div>'
+        )
+        senate_table3 = ''
+        if senate_third_cols:
+            senate_table3 = (
+                f'<div class="card" data-table-type="third-party">\n'
+                f'  <h2 style="margin-top:0">National — Senate Third-Party Data</h2>\n'
+                f'  <div class="table-wrap">{render_table(national_senate_rows, senate_third_cols)}</div>\n'
+                f'  {render_info_box(senate_third_cols)}\n'
+                f'</div>'
+            )
+        senate_table2 = (
+            f'<div class="card" data-table-type="two-party">\n'
+            f'  <h2 style="margin-top:0">National — Senate Two-Party Data</h2>\n'
+            f'  <div class="table-wrap">{render_table(national_senate_rows, senate_tp_cols, two_party=True)}</div>\n'
+            f'  {render_info_box(senate_tp_cols)}\n'
+            f'</div>'
+        )
+        senate_sections = [senate_table1]
+        if senate_table3:
+            senate_sections.append(senate_table3)
+        senate_sections.append(senate_table2)
+        senate_tables_html = "\n".join(senate_sections)
+        senate_section_attr = ''
+    else:
+        senate_tables_html = (
+            '<div class="card">\n'
+            '  <h2 style="margin-top:0">Senate data unavailable</h2>\n'
+            '  <p class="legend">National Senate results are not available in the dataset.</p>\n'
+            '</div>'
+        )
+        senate_section_attr = ' data-empty="true"'
+
+    dataset_sections_html = (
+        '<div class="dataset-sections">\n'
+        '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+        '  <div class="dataset-section" data-dataset="senate"{senate_attr}>\n{senate_tables}\n  </div>\n'
+        '</div>'
+    ).format(pres_tables=pres_tables_html, senate_tables=senate_tables_html, senate_attr=senate_section_attr)
+
+    available_datasets_value = "presidential,senate" if national_senate_rows else "presidential"
+
     page = (
         PAGE_HTML
         .replace("%LEGEND%", "National (NAT)")
@@ -311,11 +440,10 @@ def build_pages(rows: List[Dict]):
         .replace("%HEADING%", f"National (NAT)")
         .replace("%STATE_ABBR%", "NAT")
         .replace("%EXTRA_LINKS%", "")
-        .replace("%TABLE1_SECTION%", table1_section)
-        .replace("%TABLE3_SECTION%", table3_section)
-        .replace("%TABLE2_SECTION%", table2_section)
+        .replace("%DATASET_SECTIONS%", dataset_sections_html)
         .replace("%FOOTER_TEXT%", FOOTER_TEXT)
         .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
+        .replace("%AVAILABLE_DATASETS%", available_datasets_value)
     )
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(STATE_DIR / f"NAT.html", page)

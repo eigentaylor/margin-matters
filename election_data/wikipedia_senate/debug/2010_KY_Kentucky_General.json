@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1356096,
   "table": {
     "caption": "United States Senate election in Kentucky, 2010 [ 182 ]",
     "headers": [
@@ -236,7 +237,7 @@
       "percent": 44.25
     },
     {
-      "candidate": "Billy Ray Wilson (write-in)",
+      "candidate": "Billy Ray Wilson",
       "party": "Independent",
       "votes": 338,
       "percent": 0.02

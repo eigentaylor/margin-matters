@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1017151,
   "table": {
     "caption": "United States Senate election in Oklahoma, 2010 [ 20 ]",
     "headers": [
@@ -303,7 +304,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tom Coburn (incumbent)",
+      "candidate": "Tom Coburn",
       "party": "Republican",
       "votes": 718482,
       "percent": 70.64

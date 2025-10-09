@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 3482445,
   "table": {
     "caption": "2008 United States Senate election in New Jersey",
     "headers": [
@@ -372,7 +373,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Frank Lautenberg (incumbent)",
+      "candidate": "Frank Lautenberg",
       "party": "Democratic",
       "votes": 1951218,
       "percent": 56.03

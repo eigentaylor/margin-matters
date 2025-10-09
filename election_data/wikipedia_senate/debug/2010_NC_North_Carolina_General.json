@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2660079,
   "table": {
     "caption": "2010 United States Senate election in North Carolina [ 71 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Richard Burr (incumbent)",
+      "candidate": "Richard Burr",
       "party": "Republican",
       "votes": 1458046,
       "percent": 54.81

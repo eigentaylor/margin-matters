@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Hawaii",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 342842,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Daniel Akaka (incumbent)",
+      "candidate": "Daniel Akaka",
       "party": "Democratic",
       "votes": 210330,
       "percent": 61.35
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 84233,
       "percent": 24.57
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 342842,
-      "percent": null
     }
   ]
 }

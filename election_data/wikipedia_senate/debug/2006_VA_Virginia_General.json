@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2370445,
   "table": {
     "caption": "United States Senate election in Virginia, 2006 [ 60 ]",
     "headers": [
@@ -252,7 +253,7 @@
       "percent": 49.59
     },
     {
-      "candidate": "George Allen (incumbent)",
+      "candidate": "George Allen",
       "party": "Republican",
       "votes": 1166277,
       "percent": 49.2

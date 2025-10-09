@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 11,
+  "table_total_votes": 3376649,
   "table": {
     "caption": "United States Senate election in New Jersey, 2012 [ 59 ]",
     "headers": [
@@ -520,7 +521,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bob Menendez (incumbent)",
+      "candidate": "Bob Menendez",
       "party": "Democratic",
       "votes": 1987680,
       "percent": 58.87

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 255962,
   "table": {
     "caption": "Final/certified general election results [ 81 ] [ 82 ] [ 83 ]",
     "headers": [
@@ -335,7 +336,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lisa Murkowski (incumbent, write-in)",
+      "candidate": "Lisa Murkowski",
       "party": "Republican",
       "votes": 101091,
       "percent": 39.49

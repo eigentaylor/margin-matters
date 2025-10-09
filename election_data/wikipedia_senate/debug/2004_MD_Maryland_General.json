@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2321931,
   "table": {
     "caption": "United States Senate election in Maryland, 2004 [ 5 ] [ 6 ] [ 7 ]",
     "headers": [
@@ -340,7 +341,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Barbara A. Mikulski (Incumbent)",
+      "candidate": "Barbara A. Mikulski",
       "party": "Democratic",
       "votes": 1504691,
       "percent": 64.8

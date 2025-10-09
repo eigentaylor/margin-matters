@@ -85,12 +85,16 @@ TESTER_PV_CAP: float = 0.5
 # Place this in your local copy of params.py to customize the table output.
 TABLE_COLUMNS: Optional[List] = [
     ("year", "Year"),
+    ("class", "Class"),
+    ("D_candidate", "D Cand."),
+    ("R_candidate", "R Cand."),
     ("D_votes", "D"),
     ("D_pct", "D %"),
     ("R_votes", "R"),
     ("R_pct", "R %"),
     ("margin_breakdown", "Margin (D%, R%, 3rd%)"),
     ("pres_margin_str", "State Margin"),
+    ("sen_margin_str", "Senate Margin"),
     ("national_margin_str", "Nat. Margin"),
     ("relative_margin_str", "Rel. Margin"),
     ("pres_margin_delta_str", "Margin Δ"),
@@ -112,6 +116,7 @@ TABLE_COLUMNS: Optional[List] = [
     ("third_party_relative_share_str", "3rd-Party Rel. Share"),
     ("total_votes", "Total votes"),
     ("electoral_votes", "EVs"),
+    ("source_url", "Source"),
 ]
 
 ABBR_TO_STATE = {

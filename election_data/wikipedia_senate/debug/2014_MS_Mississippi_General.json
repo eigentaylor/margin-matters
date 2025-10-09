@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 631858,
   "table": {
     "caption": "2014 United States Senate election in Mississippi [ 87 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Thad Cochran (incumbent)",
+      "candidate": "Thad Cochran",
       "party": "Republican",
       "votes": 378481,
       "percent": 59.9

@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 292762,
   "table": {
     "caption": "United States Senate election in Vermont, 2012 [ 18 ]",
     "headers": [
@@ -362,7 +363,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bernie Sanders (incumbent)",
+      "candidate": "Bernie Sanders",
       "party": "Independent",
       "votes": 207848,
       "percent": 71.0

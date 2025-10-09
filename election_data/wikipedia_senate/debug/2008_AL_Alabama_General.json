@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 2060191,
   "table": {
     "caption": "2008 United States Senate election in Alabama [ 22 ]",
     "headers": [
@@ -179,7 +180,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jeff Sessions (incumbent)",
+      "candidate": "Jeff Sessions",
       "party": "Republican",
       "votes": 1305383,
       "percent": 63.36

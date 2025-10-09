@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 724430,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Susan Collins (incumbent)",
+      "candidate": "Susan Collins",
       "party": "Republican",
       "votes": 444300,
       "percent": 61.33

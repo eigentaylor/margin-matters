@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Kansas",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 6,
+  "parsed_rows": 5,
+  "table_total_votes": 1210690,
   "table": {
     "caption": "General election results [ 16 ]",
     "headers": [
@@ -303,7 +304,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Pat Roberts (Incumbent)",
+      "candidate": "Pat Roberts",
       "party": "Republican",
       "votes": 727121,
       "percent": 60.06
@@ -331,12 +332,6 @@
       "party": "Majority",
       "votes": 285722,
       "percent": 23.6
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1210690,
-      "percent": null
     }
   ]
 }

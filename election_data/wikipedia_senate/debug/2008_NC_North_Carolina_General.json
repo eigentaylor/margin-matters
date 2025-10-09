@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 4271970,
   "table": {
     "caption": "2008 United States Senate election in North Carolina [ 56 ]",
     "headers": [
@@ -252,7 +253,7 @@
       "percent": 52.65
     },
     {
-      "candidate": "Elizabeth Dole (incumbent)",
+      "candidate": "Elizabeth Dole",
       "party": "Republican",
       "votes": 1887510,
       "percent": 44.18

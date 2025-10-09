@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 1442588,
   "table": {
     "caption": "General election results [ 33 ]",
     "headers": [
@@ -280,7 +281,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ronald Wyden (Incumbent)",
+      "candidate": "Ronald Wyden",
       "party": "Democratic",
       "votes": 825507,
       "percent": 57.22

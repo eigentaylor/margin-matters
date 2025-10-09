@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 3156553,
   "table": {
     "caption": "United States Senate election in Massachusetts, 2012 [ 311 ]",
     "headers": [
@@ -215,7 +216,7 @@
       "percent": 53.74
     },
     {
-      "candidate": "Scott Brown (incumbent)",
+      "candidate": "Scott Brown",
       "party": "Republican",
       "votes": 1458048,
       "percent": 46.19

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 12,
+  "table_total_votes": 1264994,
   "table": {
     "caption": "United States Senate election in Louisiana, 2010 [ 48 ] [ 49 ]",
     "headers": [
@@ -557,7 +558,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "David Vitter (incumbent)",
+      "candidate": "David Vitter",
       "party": "Republican",
       "votes": 715415,
       "percent": 56.56

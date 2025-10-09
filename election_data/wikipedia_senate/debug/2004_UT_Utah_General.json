@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Utah",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 6,
+  "table_total_votes": 911726,
   "table": {
     "caption": "General election results [ 11 ]",
     "headers": [
@@ -340,7 +341,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bob Bennett (Incumbent)",
+      "candidate": "Bob Bennett",
       "party": "Republican",
       "votes": 626640,
       "percent": 68.73
@@ -374,12 +375,6 @@
       "party": "Majority",
       "votes": 367685,
       "percent": 40.33
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 911726,
-      "percent": null
     }
   ]
 }

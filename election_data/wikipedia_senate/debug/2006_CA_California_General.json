@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_California",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 12,
+  "parsed_rows": 11,
+  "table_total_votes": 5393,
   "table": {
     "caption": "United States Senate election in California, 2006 [ 26 ] [ 27 ]",
     "headers": [
@@ -457,7 +458,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dianne Feinstein (incumbent)",
+      "candidate": "Dianne Feinstein",
       "party": "Democratic",
       "votes": 5076289,
       "percent": 59.43
@@ -493,25 +494,25 @@
       "percent": 0.88
     },
     {
-      "candidate": "Kent Mesplay ( write-in )",
+      "candidate": "Kent Mesplay",
       "party": "Green",
       "votes": 160,
       "percent": 0.0
     },
     {
-      "candidate": "Jeffrey Mackler (write-in)",
+      "candidate": "Jeffrey Mackler",
       "party": "Independent",
       "votes": 108,
       "percent": 0.0
     },
     {
-      "candidate": "Lea Sherman (write-in)",
+      "candidate": "Lea Sherman",
       "party": "Independent",
       "votes": 47,
       "percent": 0.0
     },
     {
-      "candidate": "Connor Vlakancic (write-in)",
+      "candidate": "Connor Vlakancic",
       "party": "Independent",
       "votes": 11,
       "percent": 0.0

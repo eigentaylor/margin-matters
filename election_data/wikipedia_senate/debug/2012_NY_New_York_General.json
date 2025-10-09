@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_New_York",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 10,
+  "parsed_rows": 5,
+  "table_total_votes": 6677666,
   "table": {
     "caption": "2012 United States Senate election in New York [ 45 ]",
     "headers": [
@@ -485,42 +486,12 @@
     {
       "candidate": "Kirsten Gillibrand",
       "party": "Democratic",
-      "votes": 4432525,
-      "percent": 66.38
-    },
-    {
-      "candidate": "Kirsten Gillibrand",
-      "party": "Working Families",
-      "votes": 251292,
-      "percent": 3.76
-    },
-    {
-      "candidate": "Kirsten Gillibrand",
-      "party": "Independence",
-      "votes": 138513,
-      "percent": 2.07
-    },
-    {
-      "candidate": "Kirsten Gillibrand (incumbent)",
-      "party": "Total",
       "votes": 4822330,
       "percent": 72.21
     },
     {
       "candidate": "Wendy Long",
       "party": "Republican",
-      "votes": 1517578,
-      "percent": 22.73
-    },
-    {
-      "candidate": "Wendy Long",
-      "party": "Conservative",
-      "votes": 241124,
-      "percent": 3.61
-    },
-    {
-      "candidate": "Wendy Long",
-      "party": "Total",
       "votes": 1758702,
       "percent": 26.34
     },

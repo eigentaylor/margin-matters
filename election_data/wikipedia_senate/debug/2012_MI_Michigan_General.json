@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 4652918,
   "table": {
     "caption": "United States Senate election in Michigan, 2012 [ 111 ]",
     "headers": [
@@ -362,7 +363,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Debbie Stabenow (incumbent)",
+      "candidate": "Debbie Stabenow",
       "party": "Democratic",
       "votes": 2735826,
       "percent": 58.8

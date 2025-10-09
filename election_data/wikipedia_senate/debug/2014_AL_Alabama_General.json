@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 818090,
   "table": {
     "caption": "United States Senate election in Alabama, 2014 [ 14 ]",
     "headers": [
@@ -177,7 +178,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jeff Sessions (incumbent)",
+      "candidate": "Jeff Sessions",
       "party": "Republican",
       "votes": 795606,
       "percent": 97.25

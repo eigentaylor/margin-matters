@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1240075,
   "table": {
     "caption": "United States Senate election in South Carolina, 2014 [ 87 ]",
     "headers": [
@@ -288,13 +289,13 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lindsey Graham (incumbent)",
+      "candidate": "Lindsey Graham",
       "party": "Republican",
       "votes": 672941,
       "percent": 54.27
     },
     {
-      "candidate": "Brad Hutto [ 88 ]",
+      "candidate": "Brad Hutto",
       "party": "Democratic",
       "votes": 480933,
       "percent": 38.78

@@ -738,9 +738,9 @@ def scrape_multiple_years(years: List[int], output_dir="election_data/wikipedia_
     if not all_years_ok:
         print("❌ no successful years")
         return None
-
+    COMBINE_YEARS = range(GLOBAL_MIN_YEAR, GLOBAL_MAX_YEAR + 1, 2)
     # Combine
-    files = [outdir / f"wikipedia_senate_{y}.csv" for y in all_years_ok]
+    files = [outdir / f"wikipedia_senate_{y}.csv" for y in COMBINE_YEARS if (outdir / f"wikipedia_senate_{y}.csv").exists()]
     combo = pd.concat([pd.read_csv(p) for p in files], ignore_index=True)
     combo = combo.sort_values(["year","state","class","race_type","round"])
     combo_file = outdir / "wikipedia_senate_combined.csv"
@@ -759,7 +759,7 @@ def default_years() -> List[int]:
     return list(range(end if end % 2 == 0 else end-1, start-1, -2))
 
 def main():
-    RELIABLE_START = 2016
+    RELIABLE_START = 2004
     
     print("Which years would you like to scrape?")
     print(f"1) Recent reliable window ({RELIABLE_START}–2024, even years)")

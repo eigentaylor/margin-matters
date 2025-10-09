@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1871431,
   "table": {
     "caption": "General election results [ 22 ]",
     "headers": [
@@ -241,7 +242,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lindsey Graham (incumbent)",
+      "candidate": "Lindsey Graham",
       "party": "Republican",
       "votes": 1076534,
       "percent": 57.52

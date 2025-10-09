@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2138297,
   "table": {
     "caption": "2006 United States Senate election, Wisconsin [3]",
     "headers": [
@@ -340,7 +341,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Herb Kohl (incumbent)",
+      "candidate": "Herb Kohl",
       "party": "Democratic",
       "votes": 1439214,
       "percent": 67.31
@@ -364,16 +365,16 @@
       "percent": 1.17
     },
     {
+      "candidate": "Scattered",
+      "party": "Other",
+      "votes": 1254,
+      "percent": 0.06
+    },
+    {
       "candidate": "Majority",
       "party": "Majority",
       "votes": 808915,
       "percent": 37.83
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2138297,
-      "percent": 50.86
     }
   ]
 }

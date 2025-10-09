@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 866191,
   "table": {
     "caption": "United States Senate election in Kansas, 2014 [ 107 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Pat Roberts (incumbent)",
+      "candidate": "Pat Roberts",
       "party": "Republican",
       "votes": 460350,
       "percent": 53.15

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 477658,
   "table": {
     "caption": "General election results [ 11 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Max Baucus (incumbent)",
+      "candidate": "Max Baucus",
       "party": "Democratic",
       "votes": 348289,
       "percent": 72.92

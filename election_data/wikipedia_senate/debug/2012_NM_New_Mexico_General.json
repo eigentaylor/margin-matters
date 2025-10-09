@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 775792,
   "table": {
     "caption": "2012 United States Senate election in New Mexico [ 56 ]",
     "headers": [
@@ -279,7 +280,7 @@
       "percent": 3.63
     },
     {
-      "candidate": "Robert L. Anderson (write-in)",
+      "candidate": "Robert L. Anderson",
       "party": "Independent",
       "votes": 617,
       "percent": 0.08

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 437170,
   "table": {
     "caption": "United States Senate election in Idaho, 2014 [ 14 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jim Risch (incumbent)",
+      "candidate": "Jim Risch",
       "party": "Republican",
       "votes": 285596,
       "percent": 65.33

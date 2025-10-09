@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2555258,
   "table": {
     "caption": "United States Senate election in Georgia, 2010 [ 29 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Johnny Isakson (incumbent)",
+      "candidate": "Johnny Isakson",
       "party": "Republican",
       "votes": 1489904,
       "percent": 58.31

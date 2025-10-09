@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Alaska",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 10,
+  "parsed_rows": 9,
+  "table_total_votes": 308315,
   "table": {
     "caption": "2004 United States Senate election in Alaska [ 5 ]",
     "headers": [
@@ -451,7 +452,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Lisa Murkowski (incumbent)",
+      "candidate": "Lisa Murkowski",
       "party": "Republican",
       "votes": 149773,
       "percent": 48.58
@@ -503,12 +504,6 @@
       "party": "Majority",
       "votes": 9349,
       "percent": 3.03
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 308315,
-      "percent": null
     }
   ]
 }

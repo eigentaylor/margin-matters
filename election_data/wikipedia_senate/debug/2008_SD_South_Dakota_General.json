@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 380673,
   "table": {
     "caption": "General election results [ 33 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tim Johnson (incumbent)",
+      "candidate": "Tim Johnson",
       "party": "Democratic",
       "votes": 237889,
       "percent": 62.49

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 391188,
   "table": {
     "caption": "General election results [ 39 ]",
     "headers": [
@@ -188,7 +189,7 @@
       "percent": 50.58
     },
     {
-      "candidate": "Tom Daschle (incumbent)",
+      "candidate": "Tom Daschle",
       "party": "Democratic",
       "votes": 193340,
       "percent": 49.42

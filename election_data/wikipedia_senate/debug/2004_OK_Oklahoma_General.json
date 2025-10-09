@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Oklahoma",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 1446846,
   "table": {
     "caption": "2004 United States Senate election in Oklahoma [ 53 ]",
     "headers": [
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 166683,
       "percent": 11.52
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1446846,
-      "percent": null
     }
   ]
 }

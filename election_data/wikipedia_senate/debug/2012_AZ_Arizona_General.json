@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 2243422,
   "table": {
     "caption": "United States Senate election in Arizona, 2012 [ 70 ]",
     "headers": [
@@ -316,13 +317,13 @@
       "percent": 4.55
     },
     {
-      "candidate": "Steven Watts (write-in)",
+      "candidate": "Steven Watts",
       "party": "Independent",
       "votes": 290,
       "percent": 0.01
     },
     {
-      "candidate": "Don Manspeaker (write-in)",
+      "candidate": "Don Manspeaker",
       "party": "Independent",
       "votes": 24,
       "percent": 0.0

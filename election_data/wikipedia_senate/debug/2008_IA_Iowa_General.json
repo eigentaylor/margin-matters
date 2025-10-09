@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Iowa",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 1502918,
   "table": {
     "caption": "United States Senate election in Iowa, 2008 [ 13 ]",
     "headers": [
@@ -256,7 +257,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tom Harkin (incumbent)",
+      "candidate": "Tom Harkin",
       "party": "Democratic",
       "votes": 941665,
       "percent": 62.66
@@ -278,12 +279,6 @@
       "party": "Majority",
       "votes": 381659,
       "percent": 25.39
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1502918,
-      "percent": null
     }
   ]
 }

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Minnesota",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 2202772,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -417,12 +418,6 @@
       "party": "Majority",
       "votes": 443196,
       "percent": 20.2
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2202772,
-      "percent": 70.64
     }
   ]
 }

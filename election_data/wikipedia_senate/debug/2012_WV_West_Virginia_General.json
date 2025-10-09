@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 660212,
   "table": {
     "caption": "United States Senate election in West Virginia, 2012 [ 29 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Joe Manchin (incumbent)",
+      "candidate": "Joe Manchin",
       "party": "Democratic",
       "votes": 399908,
       "percent": 60.57

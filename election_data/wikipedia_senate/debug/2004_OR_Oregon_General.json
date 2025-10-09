@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Oregon",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 1780550,
   "table": {
     "caption": "General election results [ 6 ]",
     "headers": [
@@ -357,7 +358,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ron Wyden (Incumbent)",
+      "candidate": "Ron Wyden",
       "party": "Democratic",
       "votes": 1128728,
       "percent": 63.39
@@ -397,12 +398,6 @@
       "party": "Majority",
       "votes": 563474,
       "percent": 31.64
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1780550,
-      "percent": null
     }
   ]
 }

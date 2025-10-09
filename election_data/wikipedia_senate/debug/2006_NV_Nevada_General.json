@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Nevada",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 7,
+  "parsed_rows": 6,
+  "table_total_votes": 582572,
   "table": {
     "caption": "General election results [ 22 ]",
     "headers": [
@@ -330,7 +331,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John Ensign (incumbent)",
+      "candidate": "John Ensign",
       "party": "Republican",
       "votes": 322501,
       "percent": 55.36
@@ -364,12 +365,6 @@
       "party": "Majority",
       "votes": 83705,
       "percent": 14.37
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 582572,
-      "percent": null
     }
   ]
 }

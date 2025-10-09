@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Maryland",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 6,
+  "parsed_rows": 5,
+  "table_total_votes": 1781139,
   "table": {
     "caption": "Maryland United States Senate election results, 2006 [ 68 ]",
     "headers": [
@@ -321,12 +322,6 @@
       "party": "Majority",
       "votes": 178295,
       "percent": 100.0
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1781139,
-      "percent": null
     }
   ]
 }

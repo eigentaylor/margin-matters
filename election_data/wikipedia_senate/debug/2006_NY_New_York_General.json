@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_New_York",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 14,
+  "parsed_rows": 8,
+  "table_total_votes": 4490053,
   "table": {
     "caption": "2006 United States Senate election, New York [ 58 ]",
     "headers": [
@@ -564,42 +565,12 @@
     {
       "candidate": "Hillary Clinton",
       "party": "Democratic",
-      "votes": 2698931,
-      "percent": 60.11
-    },
-    {
-      "candidate": "Hillary Clinton",
-      "party": "Independence",
-      "votes": 160705,
-      "percent": 3.58
-    },
-    {
-      "candidate": "Hillary Clinton",
-      "party": "Working Families",
-      "votes": 148792,
-      "percent": 3.31
-    },
-    {
-      "candidate": "Hillary Clinton (incumbent)",
-      "party": "total",
       "votes": 3008428,
       "percent": 67.0
     },
     {
       "candidate": "John Spencer",
       "party": "Republican",
-      "votes": 1212902,
-      "percent": 27.01
-    },
-    {
-      "candidate": "John Spencer",
-      "party": "Conservative",
-      "votes": 179287,
-      "percent": 3.99
-    },
-    {
-      "candidate": "John Spencer",
-      "party": "total",
       "votes": 1392189,
       "percent": 31.01
     },
@@ -620,6 +591,24 @@
       "party": "Socialist Workers",
       "votes": 6967,
       "percent": 0.16
+    },
+    {
+      "candidate": "Bill Van Auken",
+      "party": "Socialist Equality",
+      "votes": 6004,
+      "percent": 0.13
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 1616239,
+      "percent": 36.0
+    },
+    {
+      "candidate": "Democratic hold",
+      "party": "Democratic hold",
+      "votes": 0,
+      "percent": 11.9
     }
   ]
 }

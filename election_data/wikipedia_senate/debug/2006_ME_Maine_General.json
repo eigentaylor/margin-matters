@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Maine",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 543802,
   "table": {
     "caption": "General election results [ 12 ]",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Olympia Snowe (incumbent)",
+      "candidate": "Olympia Snowe",
       "party": "Republican",
       "votes": 402598,
       "percent": 74.01
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 290614,
       "percent": 53.42
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 543802,
-      "percent": null
     }
   ]
 }

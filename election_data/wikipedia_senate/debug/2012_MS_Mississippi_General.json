@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1241568,
   "table": {
     "caption": "United States Senate election in Mississippi, 2012 [ 20 ]",
     "headers": [
@@ -261,7 +262,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Roger Wicker (incumbent)",
+      "candidate": "Roger Wicker",
       "party": "Republican",
       "votes": 709626,
       "percent": 57.16

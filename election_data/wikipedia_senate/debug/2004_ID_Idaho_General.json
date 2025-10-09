@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 503932,
   "table": {
     "caption": "United States Senate election in Idaho, 2004 [ 3 ]",
     "headers": [
@@ -214,13 +215,13 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Crapo (incumbent)",
+      "candidate": "Mike Crapo",
       "party": "Republican",
       "votes": 499796,
       "percent": 99.18
     },
     {
-      "candidate": "Scott McClure (write-in)",
+      "candidate": "Scott McClure",
       "party": "Democratic",
       "votes": 4136,
       "percent": 0.82

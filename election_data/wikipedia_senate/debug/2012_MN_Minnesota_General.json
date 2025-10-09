@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2843207,
   "table": {
     "caption": "United States Senate election in Minnesota, 2012 [ 39 ]",
     "headers": [
@@ -325,7 +326,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Amy Klobuchar (incumbent)",
+      "candidate": "Amy Klobuchar",
       "party": "Democratic (DFL)",
       "votes": 1854595,
       "percent": 65.23

@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1039349,
   "table": {
     "caption": "Arkansas Senate election 2004",
     "headers": [
@@ -167,7 +168,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Blanche Lincoln (Incumbent)",
+      "candidate": "Blanche Lincoln",
       "party": "Democratic",
       "votes": 580973,
       "percent": 55.9

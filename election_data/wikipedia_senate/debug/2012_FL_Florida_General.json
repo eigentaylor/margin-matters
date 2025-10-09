@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 8189946,
   "table": {
     "caption": "United States Senate election in Florida, 2012 [ 127 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bill Nelson (incumbent)",
+      "candidate": "Bill Nelson",
       "party": "Democratic",
       "votes": 4523451,
       "percent": 55.23

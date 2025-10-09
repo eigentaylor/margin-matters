@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Louisiana",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 8,
+  "table_total_votes": 1848056,
   "table": {
     "caption": "Louisiana United States Senate election, 2004",
     "headers": [
@@ -460,12 +461,6 @@
       "party": "Majority",
       "votes": 400864,
       "percent": 21.69
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1848056,
-      "percent": 100.0
     }
   ]
 }

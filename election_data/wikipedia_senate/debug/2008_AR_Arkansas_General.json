@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 1011754,
   "table": {
     "caption": "2008 United States Senate election in Arkansas [ 12 ]",
     "headers": [
@@ -157,7 +158,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mark Pryor (incumbent)",
+      "candidate": "Mark Pryor",
       "party": "Democratic",
       "votes": 804678,
       "percent": 79.53

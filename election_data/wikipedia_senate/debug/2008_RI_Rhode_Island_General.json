@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Rhode_Island",
   "class": "II",
   "race_type": "regular",
-  "parsed_rows": 4,
+  "parsed_rows": 3,
+  "table_total_votes": 436818,
   "table": {
     "caption": "2008 Rhode Island U.S. Senator general election",
     "headers": [
@@ -229,7 +230,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jack Reed (incumbent)",
+      "candidate": "Jack Reed",
       "party": "Democratic",
       "votes": 320644,
       "percent": 73.4
@@ -245,12 +246,6 @@
       "party": "Majority",
       "votes": 204470,
       "percent": 46.81
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 436818,
-      "percent": null
     }
   ]
 }

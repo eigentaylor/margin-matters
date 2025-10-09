@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Nevada",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 810068,
   "table": {
     "caption": "General election results [ 3 ]",
     "headers": [
@@ -367,7 +368,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Harry Reid (incumbent)",
+      "candidate": "Harry Reid",
       "party": "Democratic",
       "votes": 494805,
       "percent": 61.08
@@ -407,12 +408,6 @@
       "party": "Majority",
       "votes": 210165,
       "percent": 25.94
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 810068,
-      "percent": null
     }
   ]
 }

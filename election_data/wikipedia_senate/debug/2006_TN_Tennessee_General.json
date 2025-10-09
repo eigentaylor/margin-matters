@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Tennessee",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 11,
+  "parsed_rows": 10,
+  "table_total_votes": 1833695,
   "table": {
     "caption": "United States Senate election in Tennessee, 2006 [ 109 ]",
     "headers": [
@@ -505,10 +506,10 @@
       "percent": 2.72
     },
     {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1833695,
-      "percent": 49.97
+      "candidate": "Republican hold",
+      "party": "Republican hold",
+      "votes": 0,
+      "percent": -14.39
     }
   ]
 }

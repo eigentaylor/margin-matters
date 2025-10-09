@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 168390,
   "table": {
     "caption": "United States Senate election in Wyoming, 2014 [ 38 ]",
     "headers": [
@@ -288,7 +289,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mike Enzi (incumbent)",
+      "candidate": "Mike Enzi",
       "party": "Republican",
       "votes": 121554,
       "percent": 72.19

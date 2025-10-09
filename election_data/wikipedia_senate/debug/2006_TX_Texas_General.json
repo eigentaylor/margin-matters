@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Texas",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 4314663,
   "table": {
     "caption": "United States Senate election in Texas, 2006 [ 16 ]",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Kay Bailey Hutchison (incumbent)",
+      "candidate": "Kay Bailey Hutchison",
       "party": "Republican",
       "votes": 2661789,
       "percent": 61.69
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 1106587,
       "percent": 25.7
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 4314663,
-      "percent": null
     }
   ]
 }

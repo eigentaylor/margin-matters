@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 7,
+  "table_total_votes": 1869535,
   "table": {
     "caption": "United States Senate election in New Jersey, 2014 [ 83 ]",
     "headers": [
@@ -372,7 +373,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Cory Booker (incumbent)",
+      "candidate": "Cory Booker",
       "party": "Democratic",
       "votes": 1043866,
       "percent": 55.84

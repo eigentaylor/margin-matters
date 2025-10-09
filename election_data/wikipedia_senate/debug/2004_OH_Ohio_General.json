@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Ohio",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 4,
+  "parsed_rows": 3,
+  "table_total_votes": 5426196,
   "table": {
     "caption": "2004 United States Senate election, Ohio [ 25 ]",
     "headers": [
@@ -194,7 +195,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "George Voinovich (Incumbent)",
+      "candidate": "George Voinovich",
       "party": "Republican",
       "votes": 3464651,
       "percent": 63.85
@@ -210,12 +211,6 @@
       "party": "Independent",
       "votes": 296,
       "percent": 0.01
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 5426196,
-      "percent": 100.0
     }
   ]
 }

@@ -53,16 +53,20 @@
   const scriptUrl = getCurrentScriptUrl();
   const locationHref = typeof global.location !== 'undefined' ? global.location.href : '';
   const baseUrl = scriptUrl ? normalizeBase(scriptUrl) : normalizeBase(locationHref);
-  const defaultCsvPath = (() => {
-    console.log('DataLoader baseUrl:', baseUrl, 'scriptUrl:', scriptUrl);
-    console.log('Trying:', scriptUrl ? toAbsolute('../presidential_margins.csv', scriptUrl) : 'N/A');
+  const defaultPresidentialPath = (() => {
     if (scriptUrl) return toAbsolute('../presidential_margins.csv', scriptUrl);
     if (baseUrl) return toAbsolute('presidential_margins.csv', baseUrl);
     return 'presidential_margins.csv';
   })();
 
-  function resolvePath(path) {
-    if (!path) return defaultCsvPath;
+  const defaultSenatePath = (() => {
+    if (scriptUrl) return toAbsolute('../senate_margins.csv', scriptUrl);
+    if (baseUrl) return toAbsolute('senate_margins.csv', baseUrl);
+    return 'senate_margins.csv';
+  })();
+
+  function resolvePath(path, fallback) {
+    if (!path) return fallback || defaultPresidentialPath;
     const base = scriptUrl || baseUrl || locationHref || undefined;
     return toAbsolute(path, base);
   }
@@ -85,7 +89,7 @@
     const d3 = ensureD3();
     const parser = options.parser === undefined ? getDefaultParser() : options.parser;
     const parserKey = options.parser === undefined ? DEFAULT_PARSER_KEY : options.parser;
-    const absPath = resolvePath(path);
+  const absPath = resolvePath(path, defaultPresidentialPath);
 
     let pathCache = cache.get(absPath);
     if (!pathCache) {
@@ -118,12 +122,21 @@
   }
 
   function loadPresidentialMargins(options = {}) {
-    const targetPath = options.path ? options.path : defaultCsvPath;
+    const targetPath = resolvePath(options.path, defaultPresidentialPath);
     return loadCsv(targetPath, { parser: options.parser, force: options.force });
   }
 
   function prefetchPresidentialMargins(options = {}) {
     return loadPresidentialMargins(options).then(rows => rows);
+  }
+
+  function loadSenateMargins(options = {}) {
+    const targetPath = resolvePath(options.path, defaultSenatePath);
+    return loadCsv(targetPath, { parser: options.parser, force: options.force });
+  }
+
+  function prefetchSenateMargins(options = {}) {
+    return loadSenateMargins(options).then(rows => rows);
   }
 
   function clearCache(path, parser) {
@@ -146,9 +159,13 @@
     loadCsv,
     loadPresidentialMargins,
     prefetchPresidentialMargins,
+    loadSenateMargins,
+    prefetchSenateMargins,
     clearCache,
     resolvePath,
-    defaultPath: defaultCsvPath
+    defaultPath: defaultPresidentialPath,
+    defaultPresidentialPath,
+    defaultSenatePath
   };
 
   global.DataLoader = Object.assign({}, global.DataLoader || {}, api);

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1453868,
   "table": {
     "caption": "United States Senate election in Kentucky, 2014 [ 175 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Mitch McConnell (incumbent)",
+      "candidate": "Mitch McConnell",
       "party": "Republican",
       "votes": 806787,
       "percent": 56.19

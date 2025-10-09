@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 2084972,
   "table": {
     "caption": "United States Senate election in Massachusetts, 2014 [ 41 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Ed Markey (incumbent)",
+      "candidate": "Ed Markey",
       "party": "Democratic",
       "votes": 1289944,
       "percent": 61.87

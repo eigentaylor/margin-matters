@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 2428233,
   "table": {
     "caption": "General election results [ 6 ]",
     "headers": [
@@ -194,7 +195,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Evan Bayh (incumbent)",
+      "candidate": "Evan Bayh",
       "party": "Democratic",
       "votes": 1496976,
       "percent": 61.65

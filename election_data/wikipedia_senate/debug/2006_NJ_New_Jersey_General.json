@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_New_Jersey",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 12,
+  "parsed_rows": 11,
+  "table_total_votes": 2250070,
   "table": {
     "caption": "United States Senate election in New Jersey, 2006 [ 121 ]",
     "headers": [
@@ -488,7 +489,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bob Menendez (incumbent)",
+      "candidate": "Bob Menendez",
       "party": "Democratic",
       "votes": 1200843,
       "percent": 53.37

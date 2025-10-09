@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Utah",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 571252,
   "table": {
     "caption": "General election results [ 11 ]",
     "headers": [
@@ -377,7 +378,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Orrin Hatch (Incumbent)",
+      "candidate": "Orrin Hatch",
       "party": "Republican",
       "votes": 356238,
       "percent": 62.36
@@ -417,12 +418,6 @@
       "party": "Majority",
       "votes": 178779,
       "percent": 31.3
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 571252,
-      "percent": null
     }
   ]
 }

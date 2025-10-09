@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Florida",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 8,
+  "table_total_votes": 4793534,
   "table": {
     "caption": "General election results",
     "headers": [
@@ -404,7 +405,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bill Nelson (incumbent)",
+      "candidate": "Bill Nelson",
       "party": "Democratic",
       "votes": 2890548,
       "percent": 60.3
@@ -450,12 +451,6 @@
       "party": "Majority",
       "votes": 1064421,
       "percent": 22.21
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 4793534,
-      "percent": null
     }
   ]
 }

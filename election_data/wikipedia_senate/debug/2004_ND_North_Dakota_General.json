@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 310696,
   "table": {
     "caption": "2004 United States Senate election, North Dakota",
     "headers": [
@@ -162,7 +163,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Byron Dorgan (incumbent)",
+      "candidate": "Byron Dorgan",
       "party": "Democratic–NPL",
       "votes": 149936,
       "percent": 68.28

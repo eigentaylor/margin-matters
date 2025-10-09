@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_New_York",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 4,
+  "table_total_votes": 4594038,
   "table": {
     "caption": "United States Senate election in New York, 2010 [ 26 ] [ 27 ]",
     "headers": [
@@ -448,42 +449,12 @@
     {
       "candidate": "Chuck Schumer",
       "party": "Democratic",
-      "votes": 2686043,
-      "percent": 58.47
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Working Families",
-      "votes": 183672,
-      "percent": 4.0
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Independence",
-      "votes": 177396,
-      "percent": 3.86
-    },
-    {
-      "candidate": "Chuck Schumer (incumbent)",
-      "party": "Total",
       "votes": 3047111,
       "percent": 66.33
     },
     {
       "candidate": "Jay Townsend",
       "party": "Republican",
-      "votes": 1238947,
-      "percent": 26.97
-    },
-    {
-      "candidate": "Jay Townsend",
-      "party": "Conservative",
-      "votes": 240777,
-      "percent": 5.24
-    },
-    {
-      "candidate": "Jay Townsend",
-      "party": "Total",
       "votes": 1479724,
       "percent": 32.21
     },

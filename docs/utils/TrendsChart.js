@@ -38,6 +38,19 @@
       .style('z-index', 1000)
       .style('white-space', 'nowrap');
 
+  // controls: show presidential margins overlay (only visible for senate dataset)
+  const controls = d3.select(rootEl).append('div').attr('class', 'trends-controls').style('margin','6px 0');
+  const presLabel = controls.append('label').style('font-size','13px').style('color','#666').style('display', 'none');
+  const presCheckbox = presLabel.append('input').attr('type','checkbox').attr('class','show-pres-checkbox').style('margin-right','6px').property('checked', true);
+  presLabel.append('span').text('Show presidential margins');
+  // control: split senate series by class (I/II/III) - only for senate dataset
+  const classLabel = controls.append('label').style('font-size','13px').style('color','#666').style('display', 'none').style('margin-left','12px');
+  const classCheckbox = classLabel.append('input').attr('type','checkbox').attr('class','split-class-checkbox').style('margin-right','6px').property('checked', false);
+  classLabel.append('span').text('Split by Senate class');
+
+  // keep last props so control can trigger redraws
+  let lastProps = null;
+
     function fmt(v, rel, delta){
       if (v == null || isNaN(v)) return '';
       const sign = v > 0 ? 'D' : v < 0 ? 'R' : '';
@@ -61,6 +74,20 @@
     }
 
     function update(props){
+      lastProps = props;
+      // show presidential checkbox only when dataset is 'senate'
+      try {
+        const ds = props && props.dataset ? String(props.dataset) : null;
+        if (ds === 'senate') {
+          presLabel.style('display', 'inline-block');
+          classLabel.style('display', 'inline-block');
+        } else {
+          presLabel.style('display', 'none');
+          classLabel.style('display', 'none');
+        }
+      } catch (e) {
+        // ignore
+      }
       const { data, state, metric, chart, rel, delta, twoP, yearStart, yearEnd, notesEl } = props;
       if (!data) return;
       const rows = data.filter(r=>r.abbr===state);
@@ -123,6 +150,7 @@
           value: value,
           str: r[strCol] || fmt(value, rel, delta),
           color: r.color || null,
+          class: r.class || r['class'] || '',
           baseMargin: parseNum(r.pres_margin)
         };
       }).filter(d=>d.value!=null && d.year>=start && d.year<=end);
@@ -133,11 +161,45 @@
         baseMargin: parseNum(r.pres_margin),
         color: winnerColor(parseNum(r.pres_margin), r.color)
       })).filter(d=>d.value!=null && d.year>=start && d.year<=end) : [];
+      // presidential margins series (optional overlay)
+  const showPres = (props && props.showPres!=null) ? !!props.showPres : !!presCheckbox.property('checked');
+  const showSplit = (props && props.splitByClass!=null) ? !!props.splitByClass : !!classCheckbox.property('checked');
+      let dataP = [];
+      if (showPres) {
+        // Prefer explicit presidential dataset passed in props (use NATIONAL rows)
+        try {
+            const presRows = props && props.presData ? (props.presData || []) : null;
+            if (Array.isArray(presRows) && presRows.length) {
+              // Try to find state-level presidential rows first
+              const stateAbbrRaw = props && props.state ? String(props.state) : null;
+              const stateAbbr = stateAbbrRaw ? stateAbbrRaw.replace(/-.+$/, '') : null; // strip districts like ME-AL
+              const stateKey = stateAbbr ? stateAbbr.toUpperCase() : null;
+              const statePres = stateKey ? presRows.filter(r => String(r.abbr).toUpperCase() === stateKey) : [];
+              if (statePres.length) {
+                dataP = statePres.map(r=>({ year:+r.year, value: parseNum(r.pres_margin), str: fmt(parseNum(r.pres_margin), false, false) })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
+              } else {
+                // fallback to NATIONAL row when state rows aren't present
+                const nat = presRows.filter(r => String(r.abbr).toUpperCase() === 'NATIONAL');
+                if (nat.length) {
+                  dataP = nat.map(r=>({ year:+r.year, value: parseNum(r.pres_margin), str: fmt(parseNum(r.pres_margin), false, false) })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
+                } else {
+                  // final fallback: use per-state pres_margin from the senate-derived rows
+                  dataP = rows.map(r=>({ year:+r.year, value: parseNum(r.pres_margin), str: fmt(parseNum(r.pres_margin), false, false) })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
+                }
+              }
+          } else {
+            // fallback: use per-state pres margins
+            dataP = rows.map(r=>({ year:+r.year, value: parseNum(r.pres_margin), str: fmt(parseNum(r.pres_margin), false, false) })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
+          }
+        } catch (e) {
+          dataP = rows.map(r=>({ year:+r.year, value: parseNum(r.pres_margin), str: fmt(parseNum(r.pres_margin), false, false) })).filter(d=>d.value!=null && d.year>=start && d.year<=end);
+        }
+      }
       dataS.sort((a,b)=>a.year-b.year);
       dataN.sort((a,b)=>a.year-b.year);
-      const years = Array.from(new Set([...dataS.map(d=>d.year), ...dataN.map(d=>d.year)])).sort((a,b)=>a-b);
+      const years = Array.from(new Set([...dataS.map(d=>d.year), ...dataN.map(d=>d.year), ...dataP.map(d=>d.year)])).sort((a,b)=>a-b);
       x.domain(years);
-      const values = [...dataS.map(d=>d.value), ...dataN.map(d=>d.value)];
+      const values = [...dataS.map(d=>d.value), ...dataN.map(d=>d.value), ...dataP.map(d=>d.value)];
       const yMin = d3.min(values);
       const yMax = d3.max(values);
       let pad = (yMax - yMin) || 0.1; pad *= 0.15;
@@ -155,8 +217,39 @@
 
       const kind = chart==='auto' ? (isThird? 'line':'line') : chart;
       if (kind==='line'){
-        seriesG.append('path').datum(dataS).attr('fill','none').attr('stroke', color.state).attr('stroke-width',2).attr('d', line);
+        const ds = props && props.dataset ? String(props.dataset) : null;
+        if (ds === 'senate' && showSplit) {
+          // group by class label and draw a separate line per class
+          const grouped = Array.from(d3.group(dataS, d => d.class));
+          const classDomain = grouped.map(g => g[0] || '');
+          var classColor = d3.scaleOrdinal().domain(classDomain).range(d3.schemeCategory10);
+          grouped.forEach(([cls, arr]) => {
+            arr.sort((a,b)=>a.year-b.year);
+            seriesG.append('path')
+              .datum(arr)
+              .attr('fill','none')
+              .attr('stroke', classColor(cls))
+              .attr('stroke-width',2)
+              .attr('d', line);
+          });
+        } else {
+          seriesG.append('path').datum(dataS).attr('fill','none').attr('stroke', color.state).attr('stroke-width',2).attr('d', line);
+        }
         if (dataN.length) seriesG.append('path').datum(dataN).attr('fill','none').attr('stroke', color.nat).attr('stroke-dasharray','5 5').attr('stroke-width',2).attr('d', line);
+        // presidential (state) dotted line overlay
+        seriesG.selectAll('path.pres-line').remove();
+        if (dataP.length){
+          seriesG.append('path')
+            .datum(dataP)
+            .attr('class','pres-line')
+            .attr('fill','none')
+            .attr('stroke','#999')
+            .attr('stroke-dasharray','3 3')
+            .attr('stroke-width',1.5)
+            .attr('opacity',0.9)
+            .attr('pointer-events','none')
+            .attr('d', line);
+        }
         
         // Add interactive points for state data (always show them like Trend Viewer)
         pointsG.selectAll('circle.data-point')
@@ -302,6 +395,29 @@
           });
       }
     }
+
+    // wire checkbox to redraw using lastProps
+    presCheckbox.on('change', function(){
+      try {
+        if (!lastProps) return;
+        // toggle showPres in props when re-calling update
+        const next = Object.assign({}, lastProps, { showPres: !!presCheckbox.property('checked') });
+        update(next);
+      } catch (err) {
+        // swallow errors
+      }
+    });
+
+    // wire split-by-class checkbox to redraw
+    classCheckbox.on('change', function(){
+      try {
+        if (!lastProps) return;
+        const next = Object.assign({}, lastProps, { splitByClass: !!classCheckbox.property('checked') });
+        update(next);
+      } catch (err) {
+        // swallow
+      }
+    });
 
     return { update };
   }

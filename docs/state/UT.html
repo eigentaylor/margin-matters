@@ -9,7 +9,7 @@
 </head>
 <body>
 <script src="../maintenance-check.js"></script>
-<div class="container">
+<div class="container" data-available-datasets="presidential,senate">
   <div id="header-placeholder" data-is-inner="true"></div>
   <div class="legend" style="margin-top:12px">Utah (UT) — Statewide</div>
   <div id="back-to-map-placeholder" data-is-inner="true"></div>
@@ -53,21 +53,54 @@
     </div>
   </div>
   
+  <div class="card dataset-switch" id="dataset-switch">
+    <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+      <label for="dataset-select" class="legend" style="margin:0;font-size:0.95rem;">Dataset:</label>
+      <select id="dataset-select" class="dataset-select" style="min-width:180px;">
+        <option value="presidential">Presidential</option>
+        <option value="senate">Senate</option>
+      </select>
+      <span id="dataset-select-hint" class="legend" style="font-size:0.85rem;opacity:0.85;">Switch between presidential and senate results.</span>
+    </div>
+    <div id="dataset-status" class="legend" style="margin-top:8px;display:none;"></div>
+  </div>
+
   
-  <div class="card" data-table-type="total">
+  <div class="dataset-sections">
+  <div class="dataset-section is-active" data-dataset="presidential">
+<div class="card" data-table-type="total">
   <h2 style="margin-top:0">Utah (UT) — Total Data</h2>
-  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>State Margin</th><th>Nat. Margin</th><th>Rel. Margin</th><th>Total votes</th><th>EVs</th></tr></thead><tbody><tr><td>1896</td><td><span class="cell-inner"><span class="raw">64,607(82.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13,491(17.3%)</span><span class="delta"></span></span></td><td>(82.7%, 17.3%, 0.0%)</td><td><span class="cell-inner"><span class="raw">D+65.4</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">R+4.3</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+69.7</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">78,119</span><span class="delta"></span></span></td><td>3</td></tr><tr><td>1900</td><td><span class="cell-inner"><span class="raw">45,006(48.7%)</span><span class="delta">(Δ -19,601)</span></span></td><td><span class="cell-inner"><span class="raw">47,139(51.0%)</span><span class="delta">(Δ 33,648)</span></span></td><td>(48.3%, 50.6%, 0.2%)</td><td><span class="cell-inner"><span class="raw">R+2.3</span><span class="delta">(Δ R+67.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+6.1</span><span class="delta">(Δ R+1.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.8</span><span class="delta">(Δ R+65.9)</span></span></td><td><span class="cell-inner"><span class="raw">93,189</span><span class="delta">(Δ 15,070)</span></span></td><td>3</td></tr><tr><td>1904</td><td><span class="cell-inner"><span class="raw">33,413(32.9%)</span><span class="delta">(Δ -11,593)</span></span></td><td><span class="cell-inner"><span class="raw">62,446(61.4%)</span><span class="delta">(Δ 15,307)</span></span></td><td>(32.9%, 61.4%, 5.7%)</td><td><span class="cell-inner"><span class="raw">R+28.6</span><span class="delta">(Δ R+26.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.8</span><span class="delta">(Δ R+12.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.7</span><span class="delta">(Δ R+13.6)</span></span></td><td><span class="cell-inner"><span class="raw">101,672</span><span class="delta">(Δ 8,483)</span></span></td><td>3</td></tr><tr><td>1908</td><td><span class="cell-inner"><span class="raw">42,601(39.3%)</span><span class="delta">(Δ 9,188)</span></span></td><td><span class="cell-inner"><span class="raw">61,028(56.2%)</span><span class="delta">(Δ -1,418)</span></span></td><td>(39.2%, 56.2%, 4.5%)</td><td><span class="cell-inner"><span class="raw">R+17.0</span><span class="delta">(Δ D+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+8.5</span><span class="delta">(Δ D+10.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+8.4</span><span class="delta">(Δ D+1.3)</span></span></td><td><span class="cell-inner"><span class="raw">108,613</span><span class="delta">(Δ 6,941)</span></span></td><td>3</td></tr><tr><td>1912</td><td><span class="cell-inner"><span class="raw">36,579(35.6%)</span><span class="delta">(Δ -6,022)</span></span></td><td><span class="cell-inner"><span class="raw">24,174(23.5%)</span><span class="delta">(Δ -36,854)</span></span></td><td>(32.5%, 21.5%, 37.5%)</td><td><span class="cell-inner"><span class="raw">T+4.9</span><span class="delta">(Δ D+28.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+14.4</span><span class="delta">(Δ D+23.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+3.4</span><span class="delta">(Δ D+5.0)</span></span></td><td><span class="cell-inner"><span class="raw">112,386</span><span class="delta">(Δ 3,773)</span></span></td><td>4</td></tr><tr><td>1916</td><td><span class="cell-inner"><span class="raw">84,145(58.9%)</span><span class="delta">(Δ 47,566)</span></span></td><td><span class="cell-inner"><span class="raw">54,137(37.9%)</span><span class="delta">(Δ 29,963)</span></span></td><td>(58.8%, 37.8%, 3.1%)</td><td><span class="cell-inner"><span class="raw">D+21.0</span><span class="delta">(Δ D+9.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.1</span><span class="delta">(Δ R+11.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+17.8</span><span class="delta">(Δ D+21.3)</span></span></td><td><span class="cell-inner"><span class="raw">143,146</span><span class="delta">(Δ 30,760)</span></span></td><td>4</td></tr><tr><td>1920</td><td><span class="cell-inner"><span class="raw">56,639(39.7%)</span><span class="delta">(Δ -27,506)</span></span></td><td><span class="cell-inner"><span class="raw">81,555(57.2%)</span><span class="delta">(Δ 27,418)</span></span></td><td>(38.8%, 55.9%, 3.1%)</td><td><span class="cell-inner"><span class="raw">R+17.1</span><span class="delta">(Δ R+38.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+26.2</span><span class="delta">(Δ R+29.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.1</span><span class="delta">(Δ R+8.8)</span></span></td><td><span class="cell-inner"><span class="raw">145,828</span><span class="delta">(Δ 2,682)</span></span></td><td>4</td></tr><tr><td>1924</td><td><span class="cell-inner"><span class="raw">47,001(29.9%)</span><span class="delta">(Δ -9,638)</span></span></td><td><span class="cell-inner"><span class="raw">77,327(49.3%)</span><span class="delta">(Δ -4,228)</span></span></td><td>(29.9%, 49.3%, 20.8%)</td><td><span class="cell-inner"><span class="raw">R+19.3</span><span class="delta">(Δ R+2.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+25.2</span><span class="delta">(Δ D+1.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+5.9</span><span class="delta">(Δ R+3.2)</span></span></td><td><span class="cell-inner"><span class="raw">156,990</span><span class="delta">(Δ 11,162)</span></span></td><td>4</td></tr><tr><td>1928</td><td><span class="cell-inner"><span class="raw">80,985(45.9%)</span><span class="delta">(Δ 33,984)</span></span></td><td><span class="cell-inner"><span class="raw">94,618(53.6%)</span><span class="delta">(Δ 17,291)</span></span></td><td>(45.9%, 53.6%, 0.5%)</td><td><span class="cell-inner"><span class="raw">R+7.7</span><span class="delta">(Δ D+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+17.4</span><span class="delta">(Δ D+7.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.7</span><span class="delta">(Δ D+3.8)</span></span></td><td><span class="cell-inner"><span class="raw">176,603</span><span class="delta">(Δ 19,613)</span></span></td><td>4</td></tr><tr><td>1932</td><td><span class="cell-inner"><span class="raw">116,750(56.8%)</span><span class="delta">(Δ 35,765)</span></span></td><td><span class="cell-inner"><span class="raw">84,795(41.2%)</span><span class="delta">(Δ -9,823)</span></span></td><td>(56.5%, 41.0%, 2.0%)</td><td><span class="cell-inner"><span class="raw">D+15.5</span><span class="delta">(Δ D+23.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+17.8</span><span class="delta">(Δ D+35.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.3</span><span class="delta">(Δ R+12.0)</span></span></td><td><span class="cell-inner"><span class="raw">206,578</span><span class="delta">(Δ 29,975)</span></span></td><td>4</td></tr><tr><td>1936</td><td><span class="cell-inner"><span class="raw">150,246(69.6%)</span><span class="delta">(Δ 33,496)</span></span></td><td><span class="cell-inner"><span class="raw">64,555(29.9%)</span><span class="delta">(Δ -20,240)</span></span></td><td>(69.3%, 29.8%, 0.5%)</td><td><span class="cell-inner"><span class="raw">D+39.5</span><span class="delta">(Δ D+24.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+24.3</span><span class="delta">(Δ D+6.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+15.3</span><span class="delta">(Δ D+17.6)</span></span></td><td><span class="cell-inner"><span class="raw">216,677</span><span class="delta">(Δ 10,099)</span></span></td><td>4</td></tr><tr><td>1940</td><td><span class="cell-inner"><span class="raw">154,277(62.3%)</span><span class="delta">(Δ 4,031)</span></span></td><td><span class="cell-inner"><span class="raw">93,151(37.6%)</span><span class="delta">(Δ 28,596)</span></span></td><td>(62.3%, 37.6%, 0.1%)</td><td><span class="cell-inner"><span class="raw">D+24.7</span><span class="delta">(Δ R+14.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+10.0</span><span class="delta">(Δ R+14.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+14.7</span><span class="delta">(Δ R+0.6)</span></span></td><td><span class="cell-inner"><span class="raw">247,819</span><span class="delta">(Δ 31,142)</span></span></td><td>4</td></tr><tr><td>1944</td><td><span class="cell-inner"><span class="raw">150,088(60.4%)</span><span class="delta">(Δ -4,189)</span></span></td><td><span class="cell-inner"><span class="raw">97,891(39.4%)</span><span class="delta">(Δ 4,740)</span></span></td><td>(60.4%, 39.4%, 0.1%)</td><td><span class="cell-inner"><span class="raw">D+21.0</span><span class="delta">(Δ R+3.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.5</span><span class="delta">(Δ R+2.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+13.5</span><span class="delta">(Δ R+1.2)</span></span></td><td><span class="cell-inner"><span class="raw">248,319</span><span class="delta">(Δ 500)</span></span></td><td>4</td></tr><tr><td>1948</td><td><span class="cell-inner"><span class="raw">149,151(54.0%)</span><span class="delta">(Δ -937)</span></span></td><td><span class="cell-inner"><span class="raw">124,402(45.0%)</span><span class="delta">(Δ 26,511)</span></span></td><td>(54.0%, 45.0%, 1.0%)</td><td><span class="cell-inner"><span class="raw">D+9.0</span><span class="delta">(Δ R+12.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ R+9.1)</span></span></td><td><span class="cell-inner"><span class="raw">276,305</span><span class="delta">(Δ 27,986)</span></span></td><td>4</td></tr><tr><td>1952</td><td><span class="cell-inner"><span class="raw">135,364(41.1%)</span><span class="delta">(Δ -13,787)</span></span></td><td><span class="cell-inner"><span class="raw">194,190(58.9%)</span><span class="delta">(Δ 69,788)</span></span></td><td>(41.1%, 58.9%, 0.0%)</td><td><span class="cell-inner"><span class="raw">R+17.9</span><span class="delta">(Δ R+26.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+10.9</span><span class="delta">(Δ R+15.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.0</span><span class="delta">(Δ R+11.5)</span></span></td><td><span class="cell-inner"><span class="raw">329,554</span><span class="delta">(Δ 53,249)</span></span></td><td>4</td></tr><tr><td>1956</td><td><span class="cell-inner"><span class="raw">118,364(35.4%)</span><span class="delta">(Δ -17,000)</span></span></td><td><span class="cell-inner"><span class="raw">215,631(64.6%)</span><span class="delta">(Δ 21,441)</span></span></td><td>(35.4%, 64.6%, 0.0%)</td><td><span class="cell-inner"><span class="raw">R+29.1</span><span class="delta">(Δ R+11.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+15.4</span><span class="delta">(Δ R+4.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+13.7</span><span class="delta">(Δ R+6.7)</span></span></td><td><span class="cell-inner"><span class="raw">333,995</span><span class="delta">(Δ 4,441)</span></span></td><td>4</td></tr><tr><td>1960</td><td><span class="cell-inner"><span class="raw">169,248(45.2%)</span><span class="delta">(Δ 50,884)</span></span></td><td><span class="cell-inner"><span class="raw">205,361(54.8%)</span><span class="delta">(Δ -10,270)</span></span></td><td>(45.2%, 54.8%, 0.0%)</td><td><span class="cell-inner"><span class="raw">R+9.6</span><span class="delta">(Δ D+19.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.2</span><span class="delta">(Δ D+15.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.8</span><span class="delta">(Δ D+3.9)</span></span></td><td><span class="cell-inner"><span class="raw">374,709</span><span class="delta">(Δ 40,714)</span></span></td><td>4</td></tr><tr><td>1964</td><td><span class="cell-inner"><span class="raw">219,628(54.9%)</span><span class="delta">(Δ 50,380)</span></span></td><td><span class="cell-inner"><span class="raw">180,682(45.1%)</span><span class="delta">(Δ -24,679)</span></span></td><td>(54.9%, 45.1%, 0.0%)</td><td><span class="cell-inner"><span class="raw">D+9.7</span><span class="delta">(Δ D+19.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+22.6</span><span class="delta">(Δ D+22.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+12.9</span><span class="delta">(Δ R+3.1)</span></span></td><td><span class="cell-inner"><span class="raw">400,310</span><span class="delta">(Δ 25,601)</span></span></td><td>4</td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">156,665(37.1%)</span><span class="delta">(Δ -62,963)</span></span></td><td><span class="cell-inner"><span class="raw">238,728(56.5%)</span><span class="delta">(Δ 58,046)</span></span></td><td>(37.1%, 56.5%, 6.4%)</td><td><span class="cell-inner"><span class="raw">R+19.4</span><span class="delta">(Δ R+29.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+0.7</span><span class="delta">(Δ R+23.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.7</span><span class="delta">(Δ R+5.9)</span></span></td><td><span class="cell-inner"><span class="raw">422,568</span><span class="delta">(Δ 22,258)</span></span></td><td>4</td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">126,284(26.4%)</span><span class="delta">(Δ -30,381)</span></span></td><td><span class="cell-inner"><span class="raw">323,643(67.6%)</span><span class="delta">(Δ 84,915)</span></span></td><td>(26.4%, 67.6%, 6.0%)</td><td><span class="cell-inner"><span class="raw">R+41.2</span><span class="delta">(Δ R+21.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+23.1</span><span class="delta">(Δ R+22.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.1</span><span class="delta">(Δ D+0.6)</span></span></td><td><span class="cell-inner"><span class="raw">478,476</span><span class="delta">(Δ 55,908)</span></span></td><td>4</td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">182,110(34.8%)</span><span class="delta">(Δ 55,826)</span></span></td><td><span class="cell-inner"><span class="raw">337,908(64.5%)</span><span class="delta">(Δ 14,265)</span></span></td><td>(33.6%, 62.4%, 0.7%)</td><td><span class="cell-inner"><span class="raw">R+28.8</span><span class="delta">(Δ D+12.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ D+25.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+30.9</span><span class="delta">(Δ R+12.8)</span></span></td><td><span class="cell-inner"><span class="raw">541,198</span><span class="delta">(Δ 62,722)</span></span></td><td>4</td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">124,266(20.9%)</span><span class="delta">(Δ -57,844)</span></span></td><td><span class="cell-inner"><span class="raw">439,687(74.0%)</span><span class="delta">(Δ 101,779)</span></span></td><td>(20.6%, 72.8%, 5.0%)</td><td><span class="cell-inner"><span class="raw">R+52.2</span><span class="delta">(Δ R+23.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.7</span><span class="delta">(Δ R+11.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+42.5</span><span class="delta">(Δ R+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">604,222</span><span class="delta">(Δ 63,024)</span></span></td><td>4</td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">155,369(24.8%)</span><span class="delta">(Δ 31,103)</span></span></td><td><span class="cell-inner"><span class="raw">469,105(74.8%)</span><span class="delta">(Δ 29,418)</span></span></td><td>(24.7%, 74.5%, 0.4%)</td><td><span class="cell-inner"><span class="raw">R+49.8</span><span class="delta">(Δ D+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.2</span><span class="delta">(Δ R+8.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+31.6</span><span class="delta">(Δ D+10.9)</span></span></td><td><span class="cell-inner"><span class="raw">629,656</span><span class="delta">(Δ 25,434)</span></span></td><td>5</td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">207,343(32.2%)</span><span class="delta">(Δ 51,974)</span></span></td><td><span class="cell-inner"><span class="raw">428,442(66.6%)</span><span class="delta">(Δ -40,663)</span></span></td><td>(32.0%, 66.2%, 1.2%)</td><td><span class="cell-inner"><span class="raw">R+34.2</span><span class="delta">(Δ D+15.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.7</span><span class="delta">(Δ D+10.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+26.4</span><span class="delta">(Δ D+5.2)</span></span></td><td><span class="cell-inner"><span class="raw">647,008</span><span class="delta">(Δ 17,352)</span></span></td><td>5</td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">183,429(25.9%)</span><span class="delta">(Δ -23,914)</span></span></td><td><span class="cell-inner"><span class="raw">322,632(45.5%)</span><span class="delta">(Δ -105,810)</span></span></td><td>(24.7%, 43.4%, 27.3%)</td><td><span class="cell-inner"><span class="raw">R+18.7</span><span class="delta">(Δ D+15.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+5.6</span><span class="delta">(Δ D+13.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+24.3</span><span class="delta">(Δ D+2.2)</span></span></td><td><span class="cell-inner"><span class="raw">743,999</span><span class="delta">(Δ 96,991)</span></span></td><td>5</td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">221,633(34.1%)</span><span class="delta">(Δ 38,204)</span></span></td><td><span class="cell-inner"><span class="raw">361,911(55.7%)</span><span class="delta">(Δ 39,279)</span></span></td><td>(33.3%, 54.4%, 10.0%)</td><td><span class="cell-inner"><span class="raw">R+21.1</span><span class="delta">(Δ R+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+8.5</span><span class="delta">(Δ D+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+29.6</span><span class="delta">(Δ R+5.3)</span></span></td><td><span class="cell-inner"><span class="raw">665,629</span><span class="delta">(Δ -78,370)</span></span></td><td>5</td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">203,053(26.9%)</span><span class="delta">(Δ -18,580)</span></span></td><td><span class="cell-inner"><span class="raw">515,096(68.3%)</span><span class="delta">(Δ 153,185)</span></span></td><td>(26.3%, 66.8%, 4.7%)</td><td><span class="cell-inner"><span class="raw">R+40.5</span><span class="delta">(Δ R+19.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.5</span><span class="delta">(Δ R+8.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+41.0</span><span class="delta">(Δ R+11.4)</span></span></td><td><span class="cell-inner"><span class="raw">770,754</span><span class="delta">(Δ 105,125)</span></span></td><td>5</td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">241,199(26.3%)</span><span class="delta">(Δ 38,146)</span></span></td><td><span class="cell-inner"><span class="raw">663,742(72.4%)</span><span class="delta">(Δ 148,646)</span></span></td><td>(26.0%, 71.5%, 1.2%)</td><td><span class="cell-inner"><span class="raw">R+45.5</span><span class="delta">(Δ R+5.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+43.1</span><span class="delta">(Δ R+2.1)</span></span></td><td><span class="cell-inner"><span class="raw">927,844</span><span class="delta">(Δ 157,090)</span></span></td><td>5</td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">327,670(35.0%)</span><span class="delta">(Δ 86,471)</span></span></td><td><span class="cell-inner"><span class="raw">596,030(63.7%)</span><span class="delta">(Δ -67,712)</span></span></td><td>(34.4%, 62.6%, 1.3%)</td><td><span class="cell-inner"><span class="raw">R+28.2</span><span class="delta">(Δ D+17.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.3</span><span class="delta">(Δ D+9.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+35.5</span><span class="delta">(Δ D+7.6)</span></span></td><td><span class="cell-inner"><span class="raw">952,370</span><span class="delta">(Δ 24,526)</span></span></td><td>5</td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">251,813(25.1%)</span><span class="delta">(Δ -75,857)</span></span></td><td><span class="cell-inner"><span class="raw">740,600(73.7%)</span><span class="delta">(Δ 144,570)</span></span></td><td>(24.7%, 72.8%, 1.2%)</td><td><span class="cell-inner"><span class="raw">R+48.0</span><span class="delta">(Δ R+19.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.9</span><span class="delta">(Δ R+3.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+51.9</span><span class="delta">(Δ R+16.4)</span></span></td><td><span class="cell-inner"><span class="raw">1,017,440</span><span class="delta">(Δ 65,070)</span></span></td><td>6</td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">310,676(29.0%)</span><span class="delta">(Δ 58,863)</span></span></td><td><span class="cell-inner"><span class="raw">515,231(48.2%)</span><span class="delta">(Δ -225,369)</span></span></td><td>(27.5%, 45.5%, 21.5%)</td><td><span class="cell-inner"><span class="raw">R+18.1</span><span class="delta">(Δ D+30.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ R+1.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.2</span><span class="delta">(Δ D+31.7)</span></span></td><td><span class="cell-inner"><span class="raw">1,131,430</span><span class="delta">(Δ 113,990)</span></span></td><td>6</td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">560,282(38.3%)</span><span class="delta">(Δ 249,606)</span></span></td><td><span class="cell-inner"><span class="raw">865,140(59.1%)</span><span class="delta">(Δ 349,909)</span></span></td><td>(37.6%, 58.1%, 2.6%)</td><td><span class="cell-inner"><span class="raw">R+20.5</span><span class="delta">(Δ R+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ D+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+24.9</span><span class="delta">(Δ R+4.8)</span></span></td><td><span class="cell-inner"><span class="raw">1,488,289</span><span class="delta">(Δ 356,859)</span></span></td><td>6</td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">562,566(38.4%)</span><span class="delta">(Δ 2,284)</span></span></td><td><span class="cell-inner"><span class="raw">883,818(60.4%)</span><span class="delta">(Δ 18,678)</span></span></td><td>(37.8%, 59.4%, 1.1%)</td><td><span class="cell-inner"><span class="raw">R+21.6</span><span class="delta">(Δ R+1.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.5</span><span class="delta">(Δ R+5.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.1</span><span class="delta">(Δ D+4.8)</span></span></td><td><span class="cell-inner"><span class="raw">1,488,494</span><span class="delta">(Δ 205)</span></span></td><td>6</td></tr></tbody></table></div>
-  <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>State Margin</dt><dd>Margin between the two major-party candidates, including third-party votes ((D - R)/total).</dd><dt>Nat. Margin</dt><dd>The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).</dd><dt>Rel. Margin</dt><dd>The presidential margin relative to the national presidential margin (Margin - Nat. Margin).</dd><dt>Total votes</dt><dd>Total voter turnout or ballots cast (when provided).</dd><dt>EVs</dt><dd>Number of electoral votes allocated to this state or unit.</dd></dl></div>
+  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>D Cand.</th><th>R Cand.</th><th>State Margin</th><th>Nat. Margin</th><th>Rel. Margin</th><th>Total votes</th><th>Source</th><th>EVs</th></tr></thead><tbody><tr><td>1896</td><td><span class="cell-inner"><span class="raw">64,607(82.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13,491(17.3%)</span><span class="delta"></span></span></td><td>(82.7%, 17.3%, 0.0%)</td><td>William Jennings Bryan</td><td>William McKinley</td><td><span class="cell-inner"><span class="raw">D+65.4</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">R+4.3</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+69.7</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">78,119</span><span class="delta"></span></span></td><td><a href="https://en.wikipedia.org/wiki/1896_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>3</td></tr><tr><td>1900</td><td><span class="cell-inner"><span class="raw">45,006(48.7%)</span><span class="delta">(Δ -19,601)</span></span></td><td><span class="cell-inner"><span class="raw">47,139(51.0%)</span><span class="delta">(Δ 33,648)</span></span></td><td>(48.3%, 50.6%, 0.2%)</td><td>William Jennings Bryan</td><td>William McKinley</td><td><span class="cell-inner"><span class="raw">R+2.3</span><span class="delta">(Δ R+67.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+6.1</span><span class="delta">(Δ R+1.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.8</span><span class="delta">(Δ R+65.9)</span></span></td><td><span class="cell-inner"><span class="raw">93,189</span><span class="delta">(Δ 15,070)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1900_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>3</td></tr><tr><td>1904</td><td><span class="cell-inner"><span class="raw">33,413(32.9%)</span><span class="delta">(Δ -11,593)</span></span></td><td><span class="cell-inner"><span class="raw">62,446(61.4%)</span><span class="delta">(Δ 15,307)</span></span></td><td>(32.9%, 61.4%, 5.7%)</td><td>Alton B. Parker</td><td>Theodore Roosevelt</td><td><span class="cell-inner"><span class="raw">R+28.6</span><span class="delta">(Δ R+26.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.8</span><span class="delta">(Δ R+12.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.7</span><span class="delta">(Δ R+13.6)</span></span></td><td><span class="cell-inner"><span class="raw">101,672</span><span class="delta">(Δ 8,483)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1904_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>3</td></tr><tr><td>1908</td><td><span class="cell-inner"><span class="raw">42,601(39.3%)</span><span class="delta">(Δ 9,188)</span></span></td><td><span class="cell-inner"><span class="raw">61,028(56.2%)</span><span class="delta">(Δ -1,418)</span></span></td><td>(39.2%, 56.2%, 4.5%)</td><td>William Jennings Bryan</td><td>William Howard Taft</td><td><span class="cell-inner"><span class="raw">R+17.0</span><span class="delta">(Δ D+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+8.5</span><span class="delta">(Δ D+10.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+8.4</span><span class="delta">(Δ D+1.3)</span></span></td><td><span class="cell-inner"><span class="raw">108,613</span><span class="delta">(Δ 6,941)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1908_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>3</td></tr><tr><td>1912</td><td><span class="cell-inner"><span class="raw">36,579(35.6%)</span><span class="delta">(Δ -6,022)</span></span></td><td><span class="cell-inner"><span class="raw">24,174(23.5%)</span><span class="delta">(Δ -36,854)</span></span></td><td>(32.5%, 21.5%, 37.5%)</td><td>Woodrow Wilson</td><td>Theodore Roosevelt</td><td><span class="cell-inner"><span class="raw">T+4.9</span><span class="delta">(Δ D+28.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+14.4</span><span class="delta">(Δ D+23.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+3.4</span><span class="delta">(Δ D+5.0)</span></span></td><td><span class="cell-inner"><span class="raw">112,386</span><span class="delta">(Δ 3,773)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1912_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1916</td><td><span class="cell-inner"><span class="raw">84,145(58.9%)</span><span class="delta">(Δ 47,566)</span></span></td><td><span class="cell-inner"><span class="raw">54,137(37.9%)</span><span class="delta">(Δ 29,963)</span></span></td><td>(58.8%, 37.8%, 3.1%)</td><td>Woodrow Wilson</td><td>Charles Evans Hughes</td><td><span class="cell-inner"><span class="raw">D+21.0</span><span class="delta">(Δ D+9.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.1</span><span class="delta">(Δ R+11.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+17.8</span><span class="delta">(Δ D+21.3)</span></span></td><td><span class="cell-inner"><span class="raw">143,146</span><span class="delta">(Δ 30,760)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1916_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1920</td><td><span class="cell-inner"><span class="raw">56,639(39.7%)</span><span class="delta">(Δ -27,506)</span></span></td><td><span class="cell-inner"><span class="raw">81,555(57.2%)</span><span class="delta">(Δ 27,418)</span></span></td><td>(38.8%, 55.9%, 3.1%)</td><td>James M. Cox</td><td>Warren G. Harding</td><td><span class="cell-inner"><span class="raw">R+17.1</span><span class="delta">(Δ R+38.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+26.2</span><span class="delta">(Δ R+29.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.1</span><span class="delta">(Δ R+8.8)</span></span></td><td><span class="cell-inner"><span class="raw">145,828</span><span class="delta">(Δ 2,682)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1920_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1924</td><td><span class="cell-inner"><span class="raw">47,001(29.9%)</span><span class="delta">(Δ -9,638)</span></span></td><td><span class="cell-inner"><span class="raw">77,327(49.3%)</span><span class="delta">(Δ -4,228)</span></span></td><td>(29.9%, 49.3%, 20.8%)</td><td>John W. Davis</td><td>Calvin Coolidge</td><td><span class="cell-inner"><span class="raw">R+19.3</span><span class="delta">(Δ R+2.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+25.2</span><span class="delta">(Δ D+1.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+5.9</span><span class="delta">(Δ R+3.2)</span></span></td><td><span class="cell-inner"><span class="raw">156,990</span><span class="delta">(Δ 11,162)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1924_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1928</td><td><span class="cell-inner"><span class="raw">80,985(45.9%)</span><span class="delta">(Δ 33,984)</span></span></td><td><span class="cell-inner"><span class="raw">94,618(53.6%)</span><span class="delta">(Δ 17,291)</span></span></td><td>(45.9%, 53.6%, 0.5%)</td><td>Al Smith</td><td>Herbert Hoover</td><td><span class="cell-inner"><span class="raw">R+7.7</span><span class="delta">(Δ D+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+17.4</span><span class="delta">(Δ D+7.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.7</span><span class="delta">(Δ D+3.8)</span></span></td><td><span class="cell-inner"><span class="raw">176,603</span><span class="delta">(Δ 19,613)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1928_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1932</td><td><span class="cell-inner"><span class="raw">116,750(56.8%)</span><span class="delta">(Δ 35,765)</span></span></td><td><span class="cell-inner"><span class="raw">84,795(41.2%)</span><span class="delta">(Δ -9,823)</span></span></td><td>(56.5%, 41.0%, 2.0%)</td><td>Franklin D. Roosevelt</td><td>Herbert Hoover</td><td><span class="cell-inner"><span class="raw">D+15.5</span><span class="delta">(Δ D+23.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+17.8</span><span class="delta">(Δ D+35.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.3</span><span class="delta">(Δ R+12.0)</span></span></td><td><span class="cell-inner"><span class="raw">206,578</span><span class="delta">(Δ 29,975)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1932_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1936</td><td><span class="cell-inner"><span class="raw">150,246(69.6%)</span><span class="delta">(Δ 33,496)</span></span></td><td><span class="cell-inner"><span class="raw">64,555(29.9%)</span><span class="delta">(Δ -20,240)</span></span></td><td>(69.3%, 29.8%, 0.5%)</td><td>Franklin D. Roosevelt</td><td>Alf Landon</td><td><span class="cell-inner"><span class="raw">D+39.5</span><span class="delta">(Δ D+24.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+24.3</span><span class="delta">(Δ D+6.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+15.3</span><span class="delta">(Δ D+17.6)</span></span></td><td><span class="cell-inner"><span class="raw">216,677</span><span class="delta">(Δ 10,099)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1936_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1940</td><td><span class="cell-inner"><span class="raw">154,277(62.3%)</span><span class="delta">(Δ 4,031)</span></span></td><td><span class="cell-inner"><span class="raw">93,151(37.6%)</span><span class="delta">(Δ 28,596)</span></span></td><td>(62.3%, 37.6%, 0.1%)</td><td>Franklin D. Roosevelt</td><td>Wendell Willkie</td><td><span class="cell-inner"><span class="raw">D+24.7</span><span class="delta">(Δ R+14.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+10.0</span><span class="delta">(Δ R+14.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+14.7</span><span class="delta">(Δ R+0.6)</span></span></td><td><span class="cell-inner"><span class="raw">247,819</span><span class="delta">(Δ 31,142)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1940_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1944</td><td><span class="cell-inner"><span class="raw">150,088(60.4%)</span><span class="delta">(Δ -4,189)</span></span></td><td><span class="cell-inner"><span class="raw">97,891(39.4%)</span><span class="delta">(Δ 4,740)</span></span></td><td>(60.4%, 39.4%, 0.1%)</td><td>Franklin D. Roosevelt</td><td>Thomas E. Dewey</td><td><span class="cell-inner"><span class="raw">D+21.0</span><span class="delta">(Δ R+3.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.5</span><span class="delta">(Δ R+2.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+13.5</span><span class="delta">(Δ R+1.2)</span></span></td><td><span class="cell-inner"><span class="raw">248,319</span><span class="delta">(Δ 500)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1944_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1948</td><td><span class="cell-inner"><span class="raw">149,151(54.0%)</span><span class="delta">(Δ -937)</span></span></td><td><span class="cell-inner"><span class="raw">124,402(45.0%)</span><span class="delta">(Δ 26,511)</span></span></td><td>(54.0%, 45.0%, 1.0%)</td><td>Harry S. Truman</td><td>Thomas E. Dewey</td><td><span class="cell-inner"><span class="raw">D+9.0</span><span class="delta">(Δ R+12.1)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ R+9.1)</span></span></td><td><span class="cell-inner"><span class="raw">276,305</span><span class="delta">(Δ 27,986)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1948_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1952</td><td><span class="cell-inner"><span class="raw">135,364(41.1%)</span><span class="delta">(Δ -13,787)</span></span></td><td><span class="cell-inner"><span class="raw">194,190(58.9%)</span><span class="delta">(Δ 69,788)</span></span></td><td>(41.1%, 58.9%, 0.0%)</td><td>Adlai Stevenson</td><td>Dwight D. Eisenhower</td><td><span class="cell-inner"><span class="raw">R+17.9</span><span class="delta">(Δ R+26.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+10.9</span><span class="delta">(Δ R+15.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.0</span><span class="delta">(Δ R+11.5)</span></span></td><td><span class="cell-inner"><span class="raw">329,554</span><span class="delta">(Δ 53,249)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1952_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1956</td><td><span class="cell-inner"><span class="raw">118,364(35.4%)</span><span class="delta">(Δ -17,000)</span></span></td><td><span class="cell-inner"><span class="raw">215,631(64.6%)</span><span class="delta">(Δ 21,441)</span></span></td><td>(35.4%, 64.6%, 0.0%)</td><td>Adlai Stevenson</td><td>Dwight D. Eisenhower</td><td><span class="cell-inner"><span class="raw">R+29.1</span><span class="delta">(Δ R+11.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+15.4</span><span class="delta">(Δ R+4.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+13.7</span><span class="delta">(Δ R+6.7)</span></span></td><td><span class="cell-inner"><span class="raw">333,995</span><span class="delta">(Δ 4,441)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1956_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1960</td><td><span class="cell-inner"><span class="raw">169,248(45.2%)</span><span class="delta">(Δ 50,884)</span></span></td><td><span class="cell-inner"><span class="raw">205,361(54.8%)</span><span class="delta">(Δ -10,270)</span></span></td><td>(45.2%, 54.8%, 0.0%)</td><td>John F. Kennedy</td><td>Richard Nixon</td><td><span class="cell-inner"><span class="raw">R+9.6</span><span class="delta">(Δ D+19.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.2</span><span class="delta">(Δ D+15.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.8</span><span class="delta">(Δ D+3.9)</span></span></td><td><span class="cell-inner"><span class="raw">374,709</span><span class="delta">(Δ 40,714)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1960_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1964</td><td><span class="cell-inner"><span class="raw">219,628(54.9%)</span><span class="delta">(Δ 50,380)</span></span></td><td><span class="cell-inner"><span class="raw">180,682(45.1%)</span><span class="delta">(Δ -24,679)</span></span></td><td>(54.9%, 45.1%, 0.0%)</td><td>Lyndon B. Johnson</td><td>Barry Goldwater</td><td><span class="cell-inner"><span class="raw">D+9.7</span><span class="delta">(Δ D+19.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+22.6</span><span class="delta">(Δ D+22.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+12.9</span><span class="delta">(Δ R+3.1)</span></span></td><td><span class="cell-inner"><span class="raw">400,310</span><span class="delta">(Δ 25,601)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1964_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">156,665(37.1%)</span><span class="delta">(Δ -62,963)</span></span></td><td><span class="cell-inner"><span class="raw">238,728(56.5%)</span><span class="delta">(Δ 58,046)</span></span></td><td>(37.1%, 56.5%, 6.4%)</td><td>Hubert Humphrey</td><td>Richard Nixon</td><td><span class="cell-inner"><span class="raw">R+19.4</span><span class="delta">(Δ R+29.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+0.7</span><span class="delta">(Δ R+23.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.7</span><span class="delta">(Δ R+5.9)</span></span></td><td><span class="cell-inner"><span class="raw">422,568</span><span class="delta">(Δ 22,258)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1968_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">126,284(26.4%)</span><span class="delta">(Δ -30,381)</span></span></td><td><span class="cell-inner"><span class="raw">323,643(67.6%)</span><span class="delta">(Δ 84,915)</span></span></td><td>(26.4%, 67.6%, 6.0%)</td><td>George McGovern</td><td>Richard Nixon</td><td><span class="cell-inner"><span class="raw">R+41.2</span><span class="delta">(Δ R+21.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+23.1</span><span class="delta">(Δ R+22.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.1</span><span class="delta">(Δ D+0.6)</span></span></td><td><span class="cell-inner"><span class="raw">478,476</span><span class="delta">(Δ 55,908)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1972_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">182,110(34.8%)</span><span class="delta">(Δ 55,826)</span></span></td><td><span class="cell-inner"><span class="raw">337,908(64.5%)</span><span class="delta">(Δ 14,265)</span></span></td><td>(33.6%, 62.4%, 0.7%)</td><td>Jimmy Carter</td><td>Gerald Ford</td><td><span class="cell-inner"><span class="raw">R+28.8</span><span class="delta">(Δ D+12.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ D+25.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+30.9</span><span class="delta">(Δ R+12.8)</span></span></td><td><span class="cell-inner"><span class="raw">541,198</span><span class="delta">(Δ 62,722)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1976_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">124,266(20.9%)</span><span class="delta">(Δ -57,844)</span></span></td><td><span class="cell-inner"><span class="raw">439,687(74.0%)</span><span class="delta">(Δ 101,779)</span></span></td><td>(20.6%, 72.8%, 5.0%)</td><td>Jimmy Carter</td><td>Ronald Reagan</td><td><span class="cell-inner"><span class="raw">R+52.2</span><span class="delta">(Δ R+23.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.7</span><span class="delta">(Δ R+11.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+42.5</span><span class="delta">(Δ R+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">604,222</span><span class="delta">(Δ 63,024)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1980_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>4</td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">155,369(24.8%)</span><span class="delta">(Δ 31,103)</span></span></td><td><span class="cell-inner"><span class="raw">469,105(74.8%)</span><span class="delta">(Δ 29,418)</span></span></td><td>(24.7%, 74.5%, 0.4%)</td><td>Walter Mondale</td><td>Ronald Reagan</td><td><span class="cell-inner"><span class="raw">R+49.8</span><span class="delta">(Δ D+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.2</span><span class="delta">(Δ R+8.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+31.6</span><span class="delta">(Δ D+10.9)</span></span></td><td><span class="cell-inner"><span class="raw">629,656</span><span class="delta">(Δ 25,434)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1984_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">207,343(32.2%)</span><span class="delta">(Δ 51,974)</span></span></td><td><span class="cell-inner"><span class="raw">428,442(66.6%)</span><span class="delta">(Δ -40,663)</span></span></td><td>(32.0%, 66.2%, 1.2%)</td><td>Michael Dukakis</td><td>George H.W. Bush</td><td><span class="cell-inner"><span class="raw">R+34.2</span><span class="delta">(Δ D+15.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.7</span><span class="delta">(Δ D+10.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+26.4</span><span class="delta">(Δ D+5.2)</span></span></td><td><span class="cell-inner"><span class="raw">647,008</span><span class="delta">(Δ 17,352)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1988_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">183,429(25.9%)</span><span class="delta">(Δ -23,914)</span></span></td><td><span class="cell-inner"><span class="raw">322,632(45.5%)</span><span class="delta">(Δ -105,810)</span></span></td><td>(24.7%, 43.4%, 27.3%)</td><td>Bill Clinton</td><td>George H.W. Bush</td><td><span class="cell-inner"><span class="raw">R+18.7</span><span class="delta">(Δ D+15.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+5.6</span><span class="delta">(Δ D+13.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+24.3</span><span class="delta">(Δ D+2.2)</span></span></td><td><span class="cell-inner"><span class="raw">743,999</span><span class="delta">(Δ 96,991)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1992_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">221,633(34.1%)</span><span class="delta">(Δ 38,204)</span></span></td><td><span class="cell-inner"><span class="raw">361,911(55.7%)</span><span class="delta">(Δ 39,279)</span></span></td><td>(33.3%, 54.4%, 10.0%)</td><td>Bill Clinton</td><td>Bob Dole</td><td><span class="cell-inner"><span class="raw">R+21.1</span><span class="delta">(Δ R+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+8.5</span><span class="delta">(Δ D+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+29.6</span><span class="delta">(Δ R+5.3)</span></span></td><td><span class="cell-inner"><span class="raw">665,629</span><span class="delta">(Δ -78,370)</span></span></td><td><a href="https://en.wikipedia.org/wiki/1996_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">203,053(26.9%)</span><span class="delta">(Δ -18,580)</span></span></td><td><span class="cell-inner"><span class="raw">515,096(68.3%)</span><span class="delta">(Δ 153,185)</span></span></td><td>(26.3%, 66.8%, 4.7%)</td><td>Al Gore</td><td>George W. Bush</td><td><span class="cell-inner"><span class="raw">R+40.5</span><span class="delta">(Δ R+19.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.5</span><span class="delta">(Δ R+8.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+41.0</span><span class="delta">(Δ R+11.4)</span></span></td><td><span class="cell-inner"><span class="raw">770,754</span><span class="delta">(Δ 105,125)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2000_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">241,199(26.3%)</span><span class="delta">(Δ 38,146)</span></span></td><td><span class="cell-inner"><span class="raw">663,742(72.4%)</span><span class="delta">(Δ 148,646)</span></span></td><td>(26.0%, 71.5%, 1.2%)</td><td>John Kerry</td><td>George W. Bush</td><td><span class="cell-inner"><span class="raw">R+45.5</span><span class="delta">(Δ R+5.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+43.1</span><span class="delta">(Δ R+2.1)</span></span></td><td><span class="cell-inner"><span class="raw">927,844</span><span class="delta">(Δ 157,090)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2004_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">327,670(35.0%)</span><span class="delta">(Δ 86,471)</span></span></td><td><span class="cell-inner"><span class="raw">596,030(63.7%)</span><span class="delta">(Δ -67,712)</span></span></td><td>(34.4%, 62.6%, 1.3%)</td><td>Barack Obama</td><td>John McCain</td><td><span class="cell-inner"><span class="raw">R+28.2</span><span class="delta">(Δ D+17.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.3</span><span class="delta">(Δ D+9.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+35.5</span><span class="delta">(Δ D+7.6)</span></span></td><td><span class="cell-inner"><span class="raw">952,370</span><span class="delta">(Δ 24,526)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2008_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>5</td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">251,813(25.1%)</span><span class="delta">(Δ -75,857)</span></span></td><td><span class="cell-inner"><span class="raw">740,600(73.7%)</span><span class="delta">(Δ 144,570)</span></span></td><td>(24.7%, 72.8%, 1.2%)</td><td>Barack Obama</td><td>Mitt Romney</td><td><span class="cell-inner"><span class="raw">R+48.0</span><span class="delta">(Δ R+19.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.9</span><span class="delta">(Δ R+3.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+51.9</span><span class="delta">(Δ R+16.4)</span></span></td><td><span class="cell-inner"><span class="raw">1,017,440</span><span class="delta">(Δ 65,070)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2012_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>6</td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">310,676(29.0%)</span><span class="delta">(Δ 58,863)</span></span></td><td><span class="cell-inner"><span class="raw">515,231(48.2%)</span><span class="delta">(Δ -225,369)</span></span></td><td>(27.5%, 45.5%, 21.5%)</td><td>Hillary Clinton</td><td>Donald Trump</td><td><span class="cell-inner"><span class="raw">R+18.1</span><span class="delta">(Δ D+30.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ R+1.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.2</span><span class="delta">(Δ D+31.7)</span></span></td><td><span class="cell-inner"><span class="raw">1,131,430</span><span class="delta">(Δ 113,990)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2016_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>6</td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">560,282(38.3%)</span><span class="delta">(Δ 249,606)</span></span></td><td><span class="cell-inner"><span class="raw">865,140(59.1%)</span><span class="delta">(Δ 349,909)</span></span></td><td>(37.6%, 58.1%, 2.6%)</td><td>Joe Biden</td><td>Donald Trump</td><td><span class="cell-inner"><span class="raw">R+20.5</span><span class="delta">(Δ R+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ D+2.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+24.9</span><span class="delta">(Δ R+4.8)</span></span></td><td><span class="cell-inner"><span class="raw">1,488,289</span><span class="delta">(Δ 356,859)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2020_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>6</td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">562,566(38.4%)</span><span class="delta">(Δ 2,284)</span></span></td><td><span class="cell-inner"><span class="raw">883,818(60.4%)</span><span class="delta">(Δ 18,678)</span></span></td><td>(37.8%, 59.4%, 1.1%)</td><td>Kamala Harris</td><td>Donald Trump</td><td><span class="cell-inner"><span class="raw">R+21.6</span><span class="delta">(Δ R+1.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.5</span><span class="delta">(Δ R+5.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.1</span><span class="delta">(Δ D+4.8)</span></span></td><td><span class="cell-inner"><span class="raw">1,488,494</span><span class="delta">(Δ 205)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2024_United_States_presidential_election" target="_blank" rel="noopener noreferrer">Wikipedia</a></td><td>6</td></tr></tbody></table></div>
+  <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>D Cand.</dt><dd>Name of the Democratic candidate.</dd><dt>R Cand.</dt><dd>Name of the Republican candidate.</dd><dt>State Margin</dt><dd>Margin between the two major-party candidates, including third-party votes ((D - R)/total).</dd><dt>Nat. Margin</dt><dd>The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).</dd><dt>Rel. Margin</dt><dd>The presidential margin relative to the national presidential margin (Margin - Nat. Margin).</dd><dt>Total votes</dt><dd>Total voter turnout or ballots cast (when provided).</dd><dt>Source</dt><dd>URL of the source for this data (usually Wikipedia).</dd><dt>EVs</dt><dd>Number of electoral votes allocated to this state or unit.</dd></dl></div>
 </div>
-  <div class="card" data-table-type="third-party">
+<div class="card" data-table-type="third-party">
   <h2 style="margin-top:0">Utah (UT) — Third-Party Data</h2>
   <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>Other votes</th><th>Top 3rd-Party Candidate</th><th>Top 3rd-Party Share</th><th>Total 3rd-Party Votes</th><th>State 3rd-Party Share</th><th>3rd-Party Nat. Share</th><th>3rd-Party Rel. Share</th></tr></thead><tbody><tr><td>1896</td><td><span class="cell-inner"><span class="raw">64,607(82.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13,491(17.3%)</span><span class="delta"></span></span></td><td>(82.7%, 17.3%, 0.0%)</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">21</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.03%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.27%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-2.24%</span><span class="delta"></span></span></td></tr><tr><td>1900</td><td><span class="cell-inner"><span class="raw">45,006(48.7%)</span><span class="delta">(Δ -19,601)</span></span></td><td><span class="cell-inner"><span class="raw">47,139(51.0%)</span><span class="delta">(Δ 33,648)</span></span></td><td>(48.3%, 50.6%, 0.2%)</td><td><span class="cell-inner"><span class="raw">209(0.2%)</span><span class="delta"></span></span></td><td>John Woolley</td><td><span class="cell-inner"><span class="raw">0.22%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1,044</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.12%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.84%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-1.72%</span><span class="delta"></span></span></td></tr><tr><td>1904</td><td><span class="cell-inner"><span class="raw">33,413(32.9%)</span><span class="delta">(Δ -11,593)</span></span></td><td><span class="cell-inner"><span class="raw">62,446(61.4%)</span><span class="delta">(Δ 15,307)</span></span></td><td>(32.9%, 61.4%, 5.7%)</td><td><span class="cell-inner"><span class="raw">5,767(5.7%)</span><span class="delta"></span></span></td><td>Eugene V. Debs</td><td><span class="cell-inner"><span class="raw">5.67%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5,813</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.72%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.99%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.28%</span><span class="delta"></span></span></td></tr><tr><td>1908</td><td><span class="cell-inner"><span class="raw">42,601(39.3%)</span><span class="delta">(Δ 9,188)</span></span></td><td><span class="cell-inner"><span class="raw">61,028(56.2%)</span><span class="delta">(Δ -1,418)</span></span></td><td>(39.2%, 56.2%, 4.5%)</td><td><span class="cell-inner"><span class="raw">4,895(4.5%)</span><span class="delta"></span></span></td><td>Eugene V. Debs</td><td><span class="cell-inner"><span class="raw">4.51%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4,984</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.59%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.39%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.80%</span><span class="delta"></span></span></td></tr><tr><td>1912</td><td><span class="cell-inner"><span class="raw">36,579(35.6%)</span><span class="delta">(Δ -6,022)</span></span></td><td><span class="cell-inner"><span class="raw">24,174(23.5%)</span><span class="delta">(Δ -36,854)</span></span></td><td>(32.5%, 21.5%, 37.5%)</td><td><span class="cell-inner"><span class="raw">42,100(40.9%)</span><span class="delta"></span></span></td><td>William H. Taft</td><td><span class="cell-inner"><span class="raw">37.46%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">51,633</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">45.94%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">30.74%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">15.20%</span><span class="delta"></span></span></td></tr><tr><td>1916</td><td><span class="cell-inner"><span class="raw">84,145(58.9%)</span><span class="delta">(Δ 47,566)</span></span></td><td><span class="cell-inner"><span class="raw">54,137(37.9%)</span><span class="delta">(Δ 29,963)</span></span></td><td>(58.8%, 37.8%, 3.1%)</td><td><span class="cell-inner"><span class="raw">4,460(3.1%)</span><span class="delta"></span></span></td><td>Allan Benson</td><td><span class="cell-inner"><span class="raw">3.12%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4,864</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.40%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.64%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-1.25%</span><span class="delta"></span></span></td></tr><tr><td>1920</td><td><span class="cell-inner"><span class="raw">56,639(39.7%)</span><span class="delta">(Δ -27,506)</span></span></td><td><span class="cell-inner"><span class="raw">81,555(57.2%)</span><span class="delta">(Δ 27,418)</span></span></td><td>(38.8%, 55.9%, 3.1%)</td><td><span class="cell-inner"><span class="raw">4,475(3.1%)</span><span class="delta"></span></span></td><td>Parley Christensen</td><td><span class="cell-inner"><span class="raw">3.07%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">7,634</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.23%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.53%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.30%</span><span class="delta"></span></span></td></tr><tr><td>1924</td><td><span class="cell-inner"><span class="raw">47,001(29.9%)</span><span class="delta">(Δ -9,638)</span></span></td><td><span class="cell-inner"><span class="raw">77,327(49.3%)</span><span class="delta">(Δ -4,228)</span></span></td><td>(29.9%, 49.3%, 20.8%)</td><td><span class="cell-inner"><span class="raw">32,662(20.8%)</span><span class="delta"></span></span></td><td>Robert La Follette</td><td><span class="cell-inner"><span class="raw">20.81%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">32,662</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">20.81%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">17.14%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.67%</span><span class="delta"></span></span></td></tr><tr><td>1928</td><td><span class="cell-inner"><span class="raw">80,985(45.9%)</span><span class="delta">(Δ 33,984)</span></span></td><td><span class="cell-inner"><span class="raw">94,618(53.6%)</span><span class="delta">(Δ 17,291)</span></span></td><td>(45.9%, 53.6%, 0.5%)</td><td><span class="cell-inner"><span class="raw">954(0.5%)</span><span class="delta"></span></span></td><td>Norman Thomas</td><td><span class="cell-inner"><span class="raw">0.54%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1,000</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.57%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.99%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.42%</span><span class="delta"></span></span></td></tr><tr><td>1932</td><td><span class="cell-inner"><span class="raw">116,750(56.8%)</span><span class="delta">(Δ 35,765)</span></span></td><td><span class="cell-inner"><span class="raw">84,795(41.2%)</span><span class="delta">(Δ -9,823)</span></span></td><td>(56.5%, 41.0%, 2.0%)</td><td><span class="cell-inner"><span class="raw">4,087(2.0%)</span><span class="delta"></span></span></td><td>Thomas/Maurer</td><td><span class="cell-inner"><span class="raw">1.98%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5,033</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.44%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.94%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.51%</span><span class="delta"></span></span></td></tr><tr><td>1936</td><td><span class="cell-inner"><span class="raw">150,246(69.6%)</span><span class="delta">(Δ 33,496)</span></span></td><td><span class="cell-inner"><span class="raw">64,555(29.9%)</span><span class="delta">(Δ -20,240)</span></span></td><td>(69.3%, 29.8%, 0.5%)</td><td><span class="cell-inner"><span class="raw">1,121(0.5%)</span><span class="delta"></span></span></td><td>William Lemke</td><td><span class="cell-inner"><span class="raw">0.52%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1,876</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.87%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.66%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-1.79%</span><span class="delta"></span></span></td></tr><tr><td>1940</td><td><span class="cell-inner"><span class="raw">154,277(62.3%)</span><span class="delta">(Δ 4,031)</span></span></td><td><span class="cell-inner"><span class="raw">93,151(37.6%)</span><span class="delta">(Δ 28,596)</span></span></td><td>(62.3%, 37.6%, 0.1%)</td><td><span class="cell-inner"><span class="raw">200(0.1%)</span><span class="delta"></span></span></td><td>Norman Thomas</td><td><span class="cell-inner"><span class="raw">0.08%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">391</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.16%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.48%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.32%</span><span class="delta"></span></span></td></tr><tr><td>1944</td><td><span class="cell-inner"><span class="raw">150,088(60.4%)</span><span class="delta">(Δ -4,189)</span></span></td><td><span class="cell-inner"><span class="raw">97,891(39.4%)</span><span class="delta">(Δ 4,740)</span></span></td><td>(60.4%, 39.4%, 0.1%)</td><td><span class="cell-inner"><span class="raw">340(0.1%)</span><span class="delta"></span></span></td><td>Norman Thomas</td><td><span class="cell-inner"><span class="raw">0.14%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">340</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.14%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.72%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.58%</span><span class="delta"></span></span></td></tr><tr><td>1948</td><td><span class="cell-inner"><span class="raw">149,151(54.0%)</span><span class="delta">(Δ -937)</span></span></td><td><span class="cell-inner"><span class="raw">124,402(45.0%)</span><span class="delta">(Δ 26,511)</span></span></td><td>(54.0%, 45.0%, 1.0%)</td><td><span class="cell-inner"><span class="raw">2,679(1.0%)</span><span class="delta"></span></span></td><td>Henry Wallace</td><td><span class="cell-inner"><span class="raw">0.97%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2,752</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.38%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-4.38%</span><span class="delta"></span></span></td></tr><tr><td>1952</td><td><span class="cell-inner"><span class="raw">135,364(41.1%)</span><span class="delta">(Δ -13,787)</span></span></td><td><span class="cell-inner"><span class="raw">194,190(58.9%)</span><span class="delta">(Δ 69,788)</span></span></td><td>(41.1%, 58.9%, 0.0%)</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.49%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.49%</span><span class="delta"></span></span></td></tr><tr><td>1956</td><td><span class="cell-inner"><span class="raw">118,364(35.4%)</span><span class="delta">(Δ -17,000)</span></span></td><td><span class="cell-inner"><span class="raw">215,631(64.6%)</span><span class="delta">(Δ 21,441)</span></span></td><td>(35.4%, 64.6%, 0.0%)</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.67%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.67%</span><span class="delta"></span></span></td></tr><tr><td>1960</td><td><span class="cell-inner"><span class="raw">169,248(45.2%)</span><span class="delta">(Δ 50,884)</span></span></td><td><span class="cell-inner"><span class="raw">205,361(54.8%)</span><span class="delta">(Δ -10,270)</span></span></td><td>(45.2%, 54.8%, 0.0%)</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">100</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.03%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.70%</span><span class="delta"></span></span></td></tr><tr><td>1964</td><td><span class="cell-inner"><span class="raw">219,628(54.9%)</span><span class="delta">(Δ 50,380)</span></span></td><td><span class="cell-inner"><span class="raw">180,682(45.1%)</span><span class="delta">(Δ -24,679)</span></span></td><td>(54.9%, 45.1%, 0.0%)</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta"></span></span></td><td>None</td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.48%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-0.48%</span><span class="delta"></span></span></td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">156,665(37.1%)</span><span class="delta">(Δ -62,963)</span></span></td><td><span class="cell-inner"><span class="raw">238,728(56.5%)</span><span class="delta">(Δ 58,046)</span></span></td><td>(37.1%, 56.5%, 6.4%)</td><td><span class="cell-inner"><span class="raw">26,906(6.4%)</span><span class="delta"></span></span></td><td>George Wallace</td><td><span class="cell-inner"><span class="raw">6.37%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">27,175</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.43%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13.86%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-7.43%</span><span class="delta"></span></span></td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">126,284(26.4%)</span><span class="delta">(Δ -30,381)</span></span></td><td><span class="cell-inner"><span class="raw">323,643(67.6%)</span><span class="delta">(Δ 84,915)</span></span></td><td>(26.4%, 67.6%, 6.0%)</td><td><span class="cell-inner"><span class="raw">28,549(6.0%)</span><span class="delta"></span></span></td><td>John Schmitz</td><td><span class="cell-inner"><span class="raw">5.97%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28,549</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.97%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.80%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.16%</span><span class="delta"></span></span></td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">182,110(34.8%)</span><span class="delta">(Δ 55,826)</span></span></td><td><span class="cell-inner"><span class="raw">337,908(64.5%)</span><span class="delta">(Δ 14,265)</span></span></td><td>(33.6%, 62.4%, 0.7%)</td><td><span class="cell-inner"><span class="raw">3,907(0.7%)</span><span class="delta"></span></span></td><td>Eugene McCarthy</td><td><span class="cell-inner"><span class="raw">0.72%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">21,180</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.91%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.90%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.01%</span><span class="delta"></span></span></td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">124,266(20.9%)</span><span class="delta">(Δ -57,844)</span></span></td><td><span class="cell-inner"><span class="raw">439,687(74.0%)</span><span class="delta">(Δ 101,779)</span></span></td><td>(20.6%, 72.8%, 5.0%)</td><td><span class="cell-inner"><span class="raw">30,284(5.1%)</span><span class="delta"></span></span></td><td>John Anderson</td><td><span class="cell-inner"><span class="raw">5.01%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">40,269</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.66%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">8.24%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">-1.57%</span><span class="delta"></span></span></td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">155,369(24.8%)</span><span class="delta">(Δ 31,103)</span></span></td><td><span class="cell-inner"><span class="raw">469,105(74.8%)</span><span class="delta">(Δ 29,418)</span></span></td><td>(24.7%, 74.5%, 0.4%)</td><td><span class="cell-inner"><span class="raw">2,447(0.4%)</span><span class="delta"></span></span></td><td>David Bergland</td><td><span class="cell-inner"><span class="raw">0.39%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5,182</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.82%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.67%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.15%</span><span class="delta"></span></span></td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">207,343(32.2%)</span><span class="delta">(Δ 51,974)</span></span></td><td><span class="cell-inner"><span class="raw">428,442(66.6%)</span><span class="delta">(Δ -40,663)</span></span></td><td>(32.0%, 66.2%, 1.2%)</td><td><span class="cell-inner"><span class="raw">7,473(1.2%)</span><span class="delta"></span></span></td><td>Ron Paul</td><td><span class="cell-inner"><span class="raw">1.16%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">11,223</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.98%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.75%</span><span class="delta"></span></span></td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">183,429(25.9%)</span><span class="delta">(Δ -23,914)</span></span></td><td><span class="cell-inner"><span class="raw">322,632(45.5%)</span><span class="delta">(Δ -105,810)</span></span></td><td>(24.7%, 43.4%, 27.3%)</td><td><span class="cell-inner"><span class="raw">203,400(28.7%)</span><span class="delta"></span></span></td><td>Ross Perot</td><td><span class="cell-inner"><span class="raw">27.34%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">237,938</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">31.98%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">19.55%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">12.43%</span><span class="delta"></span></span></td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">221,633(34.1%)</span><span class="delta">(Δ 38,204)</span></span></td><td><span class="cell-inner"><span class="raw">361,911(55.7%)</span><span class="delta">(Δ 39,279)</span></span></td><td>(33.3%, 54.4%, 10.0%)</td><td><span class="cell-inner"><span class="raw">66,461(10.2%)</span><span class="delta"></span></span></td><td>Ross Perot</td><td><span class="cell-inner"><span class="raw">9.98%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">82,085</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">12.33%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">10.05%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.28%</span><span class="delta"></span></span></td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">203,053(26.9%)</span><span class="delta">(Δ -18,580)</span></span></td><td><span class="cell-inner"><span class="raw">515,096(68.3%)</span><span class="delta">(Δ 153,185)</span></span></td><td>(26.3%, 66.8%, 4.7%)</td><td><span class="cell-inner"><span class="raw">35,850(4.8%)</span><span class="delta"></span></span></td><td>Ralph Nader</td><td><span class="cell-inner"><span class="raw">4.65%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">52,605</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.83%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.75%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.08%</span><span class="delta"></span></span></td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">241,199(26.3%)</span><span class="delta">(Δ 38,146)</span></span></td><td><span class="cell-inner"><span class="raw">663,742(72.4%)</span><span class="delta">(Δ 148,646)</span></span></td><td>(26.0%, 71.5%, 1.2%)</td><td><span class="cell-inner"><span class="raw">11,305(1.2%)</span><span class="delta"></span></span></td><td>Ralph Nader</td><td><span class="cell-inner"><span class="raw">1.22%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">22,903</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.47%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.47%</span><span class="delta"></span></span></td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">327,670(35.0%)</span><span class="delta">(Δ 86,471)</span></span></td><td><span class="cell-inner"><span class="raw">596,030(63.7%)</span><span class="delta">(Δ -67,712)</span></span></td><td>(34.4%, 62.6%, 1.3%)</td><td><span class="cell-inner"><span class="raw">12,012(1.3%)</span><span class="delta"></span></span></td><td>Chuck Baldwin</td><td><span class="cell-inner"><span class="raw">1.26%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28,670</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.01%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.42%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.59%</span><span class="delta"></span></span></td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">251,813(25.1%)</span><span class="delta">(Δ -75,857)</span></span></td><td><span class="cell-inner"><span class="raw">740,600(73.7%)</span><span class="delta">(Δ 144,570)</span></span></td><td>(24.7%, 72.8%, 1.2%)</td><td><span class="cell-inner"><span class="raw">12,572(1.3%)</span><span class="delta"></span></span></td><td>Johnson/Gray</td><td><span class="cell-inner"><span class="raw">1.24%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">25,027</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.46%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.73%</span><span class="delta"></span></span></td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">310,676(29.0%)</span><span class="delta">(Δ 58,863)</span></span></td><td><span class="cell-inner"><span class="raw">515,231(48.2%)</span><span class="delta">(Δ -225,369)</span></span></td><td>(27.5%, 45.5%, 21.5%)</td><td><span class="cell-inner"><span class="raw">243,690(22.8%)</span><span class="delta"></span></span></td><td>McMullin/Finn</td><td><span class="cell-inner"><span class="raw">21.54%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">305,523</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">27.00%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.73%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">21.27%</span><span class="delta"></span></span></td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">560,282(38.3%)</span><span class="delta">(Δ 249,606)</span></span></td><td><span class="cell-inner"><span class="raw">865,140(59.1%)</span><span class="delta">(Δ 349,909)</span></span></td><td>(37.6%, 58.1%, 2.6%)</td><td><span class="cell-inner"><span class="raw">38,447(2.6%)</span><span class="delta"></span></span></td><td>Jorgensen/Cohen</td><td><span class="cell-inner"><span class="raw">2.58%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">62,867</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.22%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.84%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.38%</span><span class="delta"></span></span></td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">562,566(38.4%)</span><span class="delta">(Δ 2,284)</span></span></td><td><span class="cell-inner"><span class="raw">883,818(60.4%)</span><span class="delta">(Δ 18,678)</span></span></td><td>(37.8%, 59.4%, 1.1%)</td><td><span class="cell-inner"><span class="raw">16,902(1.2%)</span><span class="delta"></span></span></td><td>Oliver/Maat</td><td><span class="cell-inner"><span class="raw">1.14%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">42,110</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.83%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.88%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">0.95%</span><span class="delta"></span></span></td></tr></tbody></table></div>
   <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>Other votes</dt><dd>Number of votes for third-party (other) candidates (raw count(pct%)).</dd><dt>Top 3rd-Party Candidate</dt><dd>Name of the highest-vote third-party / other candidate in that state and year.</dd><dt>Top 3rd-Party Share</dt><dd>Share of the vote received by third-party (other) candidates.</dd><dt>Total 3rd-Party Votes</dt><dd>Total votes for all third-party / other candidates combined (may exceed top candidate).</dd><dt>State 3rd-Party Share</dt><dd>Share of the vote received by third-party (other) candidates.</dd><dt>3rd-Party Nat. Share</dt><dd>The national third-party share for that year (3rd-Party votes / total votes).</dd><dt>3rd-Party Rel. Share</dt><dd>Third-party share relative to the national third-party share (3rd-Party share - Nat. 3rd-Party share).</dd></dl></div>
 </div>
-  <div class="card" data-table-type="two-party">
+<div class="card" data-table-type="two-party">
   <h2 style="margin-top:0">Utah (UT) — Two-Party Data</h2>
   <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>2-Party Margin</th><th>2-Party Nat. Margin</th><th>2-Party Rel. Margin</th><th>EVs</th></tr></thead><tbody><tr><td>1896</td><td><span class="cell-inner"><span class="raw">64,607(82.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">13,491(17.3%)</span><span class="delta"></span></span></td><td>(82.7%, 17.3%, 0.0%)</td><td><span class="cell-inner"><span class="raw">D+65.5</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">R+4.4</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+69.9</span><span class="delta"></span></span></td><td>3</td></tr><tr><td>1900</td><td><span class="cell-inner"><span class="raw">45,006(48.8%)</span><span class="delta">(Δ -19,601)</span></span></td><td><span class="cell-inner"><span class="raw">47,139(51.2%)</span><span class="delta">(Δ 33,648)</span></span></td><td>(48.3%, 50.6%, 0.2%)</td><td><span class="cell-inner"><span class="raw">R+2.3</span><span class="delta">(Δ R+67.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+6.3</span><span class="delta">(Δ R+1.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.0</span><span class="delta">(Δ R+65.9)</span></span></td><td>3</td></tr><tr><td>1904</td><td><span class="cell-inner"><span class="raw">33,413(34.9%)</span><span class="delta">(Δ -11,593)</span></span></td><td><span class="cell-inner"><span class="raw">62,446(65.1%)</span><span class="delta">(Δ 15,307)</span></span></td><td>(32.9%, 61.4%, 5.7%)</td><td><span class="cell-inner"><span class="raw">R+30.3</span><span class="delta">(Δ R+28.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.0</span><span class="delta">(Δ R+13.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+10.3</span><span class="delta">(Δ R+14.3)</span></span></td><td>3</td></tr><tr><td>1908</td><td><span class="cell-inner"><span class="raw">42,601(41.1%)</span><span class="delta">(Δ 9,188)</span></span></td><td><span class="cell-inner"><span class="raw">61,028(58.9%)</span><span class="delta">(Δ -1,418)</span></span></td><td>(39.2%, 56.2%, 4.5%)</td><td><span class="cell-inner"><span class="raw">R+17.8</span><span class="delta">(Δ D+12.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.0</span><span class="delta">(Δ D+11.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+8.8</span><span class="delta">(Δ D+1.5)</span></span></td><td>3</td></tr><tr><td>1912</td><td><span class="cell-inner"><span class="raw">36,579(60.2%)</span><span class="delta">(Δ -6,022)</span></span></td><td><span class="cell-inner"><span class="raw">24,174(39.8%)</span><span class="delta">(Δ -36,854)</span></span></td><td>(32.5%, 21.5%, 37.5%)</td><td><span class="cell-inner"><span class="raw">D+20.4</span><span class="delta">(Δ D+38.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+20.9</span><span class="delta">(Δ D+29.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+0.4</span><span class="delta">(Δ D+8.3)</span></span></td><td>4</td></tr><tr><td>1916</td><td><span class="cell-inner"><span class="raw">84,145(60.9%)</span><span class="delta">(Δ 47,566)</span></span></td><td><span class="cell-inner"><span class="raw">54,137(39.1%)</span><span class="delta">(Δ 29,963)</span></span></td><td>(58.8%, 37.8%, 3.1%)</td><td><span class="cell-inner"><span class="raw">D+21.7</span><span class="delta">(Δ D+1.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.3</span><span class="delta">(Δ R+17.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+18.4</span><span class="delta">(Δ D+18.9)</span></span></td><td>4</td></tr><tr><td>1920</td><td><span class="cell-inner"><span class="raw">56,639(41.0%)</span><span class="delta">(Δ -27,506)</span></span></td><td><span class="cell-inner"><span class="raw">81,555(59.0%)</span><span class="delta">(Δ 27,418)</span></span></td><td>(38.8%, 55.9%, 3.1%)</td><td><span class="cell-inner"><span class="raw">R+18.0</span><span class="delta">(Δ R+39.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+27.7</span><span class="delta">(Δ R+31.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.7</span><span class="delta">(Δ R+8.8)</span></span></td><td>4</td></tr><tr><td>1924</td><td><span class="cell-inner"><span class="raw">47,001(37.8%)</span><span class="delta">(Δ -9,638)</span></span></td><td><span class="cell-inner"><span class="raw">77,327(62.2%)</span><span class="delta">(Δ -4,228)</span></span></td><td>(29.9%, 49.3%, 20.8%)</td><td><span class="cell-inner"><span class="raw">R+24.4</span><span class="delta">(Δ R+6.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+30.4</span><span class="delta">(Δ R+2.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+6.0</span><span class="delta">(Δ R+3.6)</span></span></td><td>4</td></tr><tr><td>1928</td><td><span class="cell-inner"><span class="raw">80,985(46.1%)</span><span class="delta">(Δ 33,984)</span></span></td><td><span class="cell-inner"><span class="raw">94,618(53.9%)</span><span class="delta">(Δ 17,291)</span></span></td><td>(45.9%, 53.6%, 0.5%)</td><td><span class="cell-inner"><span class="raw">R+7.8</span><span class="delta">(Δ D+16.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+17.6</span><span class="delta">(Δ D+12.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.8</span><span class="delta">(Δ D+3.8)</span></span></td><td>4</td></tr><tr><td>1932</td><td><span class="cell-inner"><span class="raw">116,750(57.9%)</span><span class="delta">(Δ 35,765)</span></span></td><td><span class="cell-inner"><span class="raw">84,795(42.1%)</span><span class="delta">(Δ -9,823)</span></span></td><td>(56.5%, 41.0%, 2.0%)</td><td><span class="cell-inner"><span class="raw">D+15.9</span><span class="delta">(Δ D+23.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+18.3</span><span class="delta">(Δ D+35.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.4</span><span class="delta">(Δ R+12.3)</span></span></td><td>4</td></tr><tr><td>1936</td><td><span class="cell-inner"><span class="raw">150,246(69.9%)</span><span class="delta">(Δ 33,496)</span></span></td><td><span class="cell-inner"><span class="raw">64,555(30.1%)</span><span class="delta">(Δ -20,240)</span></span></td><td>(69.3%, 29.8%, 0.5%)</td><td><span class="cell-inner"><span class="raw">D+39.9</span><span class="delta">(Δ D+24.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+24.9</span><span class="delta">(Δ D+6.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+15.0</span><span class="delta">(Δ D+17.4)</span></span></td><td>4</td></tr><tr><td>1940</td><td><span class="cell-inner"><span class="raw">154,277(62.4%)</span><span class="delta">(Δ 4,031)</span></span></td><td><span class="cell-inner"><span class="raw">93,151(37.6%)</span><span class="delta">(Δ 28,596)</span></span></td><td>(62.3%, 37.6%, 0.1%)</td><td><span class="cell-inner"><span class="raw">D+24.7</span><span class="delta">(Δ R+15.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+10.0</span><span class="delta">(Δ R+14.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+14.7</span><span class="delta">(Δ R+0.3)</span></span></td><td>4</td></tr><tr><td>1944</td><td><span class="cell-inner"><span class="raw">150,088(60.5%)</span><span class="delta">(Δ -4,189)</span></span></td><td><span class="cell-inner"><span class="raw">97,891(39.5%)</span><span class="delta">(Δ 4,740)</span></span></td><td>(60.4%, 39.4%, 0.1%)</td><td><span class="cell-inner"><span class="raw">D+21.0</span><span class="delta">(Δ R+3.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.5</span><span class="delta">(Δ R+2.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+13.5</span><span class="delta">(Δ R+1.2)</span></span></td><td>4</td></tr><tr><td>1948</td><td><span class="cell-inner"><span class="raw">149,151(54.5%)</span><span class="delta">(Δ -937)</span></span></td><td><span class="cell-inner"><span class="raw">124,402(45.5%)</span><span class="delta">(Δ 26,511)</span></span></td><td>(54.0%, 45.0%, 1.0%)</td><td><span class="cell-inner"><span class="raw">D+9.0</span><span class="delta">(Δ R+12.0)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.7</span><span class="delta">(Δ R+2.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.3</span><span class="delta">(Δ R+9.2)</span></span></td><td>4</td></tr><tr><td>1952</td><td><span class="cell-inner"><span class="raw">135,364(41.1%)</span><span class="delta">(Δ -13,787)</span></span></td><td><span class="cell-inner"><span class="raw">194,190(58.9%)</span><span class="delta">(Δ 69,788)</span></span></td><td>(41.1%, 58.9%, 0.0%)</td><td><span class="cell-inner"><span class="raw">R+17.9</span><span class="delta">(Δ R+26.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+10.9</span><span class="delta">(Δ R+15.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+6.9</span><span class="delta">(Δ R+11.3)</span></span></td><td>4</td></tr><tr><td>1956</td><td><span class="cell-inner"><span class="raw">118,364(35.4%)</span><span class="delta">(Δ -17,000)</span></span></td><td><span class="cell-inner"><span class="raw">215,631(64.6%)</span><span class="delta">(Δ 21,441)</span></span></td><td>(35.4%, 64.6%, 0.0%)</td><td><span class="cell-inner"><span class="raw">R+29.1</span><span class="delta">(Δ R+11.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+15.5</span><span class="delta">(Δ R+4.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+13.6</span><span class="delta">(Δ R+6.7)</span></span></td><td>4</td></tr><tr><td>1960</td><td><span class="cell-inner"><span class="raw">169,248(45.2%)</span><span class="delta">(Δ 50,884)</span></span></td><td><span class="cell-inner"><span class="raw">205,361(54.8%)</span><span class="delta">(Δ -10,270)</span></span></td><td>(45.2%, 54.8%, 0.0%)</td><td><span class="cell-inner"><span class="raw">R+9.6</span><span class="delta">(Δ D+19.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.2</span><span class="delta">(Δ D+15.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+9.8</span><span class="delta">(Δ D+3.8)</span></span></td><td>4</td></tr><tr><td>1964</td><td><span class="cell-inner"><span class="raw">219,628(54.9%)</span><span class="delta">(Δ 50,380)</span></span></td><td><span class="cell-inner"><span class="raw">180,682(45.1%)</span><span class="delta">(Δ -24,679)</span></span></td><td>(54.9%, 45.1%, 0.0%)</td><td><span class="cell-inner"><span class="raw">D+9.7</span><span class="delta">(Δ D+19.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+22.7</span><span class="delta">(Δ D+22.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+13.0</span><span class="delta">(Δ R+3.2)</span></span></td><td>4</td></tr><tr><td>1968</td><td><span class="cell-inner"><span class="raw">156,665(39.6%)</span><span class="delta">(Δ -62,963)</span></span></td><td><span class="cell-inner"><span class="raw">238,728(60.4%)</span><span class="delta">(Δ 58,046)</span></span></td><td>(37.1%, 56.5%, 6.4%)</td><td><span class="cell-inner"><span class="raw">R+20.8</span><span class="delta">(Δ R+30.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+0.8</span><span class="delta">(Δ R+23.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+19.9</span><span class="delta">(Δ R+7.0)</span></span></td><td>4</td></tr><tr><td>1972</td><td><span class="cell-inner"><span class="raw">126,284(28.1%)</span><span class="delta">(Δ -30,381)</span></span></td><td><span class="cell-inner"><span class="raw">323,643(71.9%)</span><span class="delta">(Δ 84,915)</span></span></td><td>(26.4%, 67.6%, 6.0%)</td><td><span class="cell-inner"><span class="raw">R+43.9</span><span class="delta">(Δ R+23.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+23.6</span><span class="delta">(Δ R+22.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.3</span><span class="delta">(Δ R+0.3)</span></span></td><td>4</td></tr><tr><td>1976</td><td><span class="cell-inner"><span class="raw">182,110(35.0%)</span><span class="delta">(Δ 55,826)</span></span></td><td><span class="cell-inner"><span class="raw">337,908(65.0%)</span><span class="delta">(Δ 14,265)</span></span></td><td>(33.6%, 62.4%, 0.7%)</td><td><span class="cell-inner"><span class="raw">R+30.0</span><span class="delta">(Δ D+13.9)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.1</span><span class="delta">(Δ D+25.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+32.1</span><span class="delta">(Δ R+11.8)</span></span></td><td>4</td></tr><tr><td>1980</td><td><span class="cell-inner"><span class="raw">124,266(22.0%)</span><span class="delta">(Δ -57,844)</span></span></td><td><span class="cell-inner"><span class="raw">439,687(78.0%)</span><span class="delta">(Δ 101,779)</span></span></td><td>(20.6%, 72.8%, 5.0%)</td><td><span class="cell-inner"><span class="raw">R+55.9</span><span class="delta">(Δ R+26.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+10.6</span><span class="delta">(Δ R+12.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+45.3</span><span class="delta">(Δ R+13.3)</span></span></td><td>4</td></tr><tr><td>1984</td><td><span class="cell-inner"><span class="raw">155,369(24.9%)</span><span class="delta">(Δ 31,103)</span></span></td><td><span class="cell-inner"><span class="raw">469,105(75.1%)</span><span class="delta">(Δ 29,418)</span></span></td><td>(24.7%, 74.5%, 0.4%)</td><td><span class="cell-inner"><span class="raw">R+50.2</span><span class="delta">(Δ D+5.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+18.3</span><span class="delta">(Δ R+7.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+31.9</span><span class="delta">(Δ D+13.4)</span></span></td><td>5</td></tr><tr><td>1988</td><td><span class="cell-inner"><span class="raw">207,343(32.6%)</span><span class="delta">(Δ 51,974)</span></span></td><td><span class="cell-inner"><span class="raw">428,442(67.4%)</span><span class="delta">(Δ -40,663)</span></span></td><td>(32.0%, 66.2%, 1.2%)</td><td><span class="cell-inner"><span class="raw">R+34.8</span><span class="delta">(Δ D+15.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+7.8</span><span class="delta">(Δ D+10.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+27.0</span><span class="delta">(Δ D+4.9)</span></span></td><td>5</td></tr><tr><td>1992</td><td><span class="cell-inner"><span class="raw">183,429(36.2%)</span><span class="delta">(Δ -23,914)</span></span></td><td><span class="cell-inner"><span class="raw">322,632(63.8%)</span><span class="delta">(Δ -105,810)</span></span></td><td>(24.7%, 43.4%, 27.3%)</td><td><span class="cell-inner"><span class="raw">R+27.5</span><span class="delta">(Δ D+7.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+6.9</span><span class="delta">(Δ D+14.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+34.4</span><span class="delta">(Δ R+7.4)</span></span></td><td>5</td></tr><tr><td>1996</td><td><span class="cell-inner"><span class="raw">221,633(38.0%)</span><span class="delta">(Δ 38,204)</span></span></td><td><span class="cell-inner"><span class="raw">361,911(62.0%)</span><span class="delta">(Δ 39,279)</span></span></td><td>(33.3%, 54.4%, 10.0%)</td><td><span class="cell-inner"><span class="raw">R+24.0</span><span class="delta">(Δ D+3.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+9.5</span><span class="delta">(Δ D+2.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+33.5</span><span class="delta">(Δ D+0.9)</span></span></td><td>5</td></tr><tr><td>2000</td><td><span class="cell-inner"><span class="raw">203,053(28.3%)</span><span class="delta">(Δ -18,580)</span></span></td><td><span class="cell-inner"><span class="raw">515,096(71.7%)</span><span class="delta">(Δ 153,185)</span></span></td><td>(26.3%, 66.8%, 4.7%)</td><td><span class="cell-inner"><span class="raw">R+43.5</span><span class="delta">(Δ R+19.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+0.5</span><span class="delta">(Δ R+8.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+44.0</span><span class="delta">(Δ R+10.5)</span></span></td><td>5</td></tr><tr><td>2004</td><td><span class="cell-inner"><span class="raw">241,199(26.7%)</span><span class="delta">(Δ 38,146)</span></span></td><td><span class="cell-inner"><span class="raw">663,742(73.3%)</span><span class="delta">(Δ 148,646)</span></span></td><td>(26.0%, 71.5%, 1.2%)</td><td><span class="cell-inner"><span class="raw">R+46.7</span><span class="delta">(Δ R+3.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.5</span><span class="delta">(Δ R+3.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+44.2</span><span class="delta">(Δ R+0.2)</span></span></td><td>5</td></tr><tr><td>2008</td><td><span class="cell-inner"><span class="raw">327,670(35.5%)</span><span class="delta">(Δ 86,471)</span></span></td><td><span class="cell-inner"><span class="raw">596,030(64.5%)</span><span class="delta">(Δ -67,712)</span></span></td><td>(34.4%, 62.6%, 1.3%)</td><td><span class="cell-inner"><span class="raw">R+29.1</span><span class="delta">(Δ D+17.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+7.4</span><span class="delta">(Δ D+9.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+36.4</span><span class="delta">(Δ D+7.8)</span></span></td><td>5</td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">251,813(25.4%)</span><span class="delta">(Δ -75,857)</span></span></td><td><span class="cell-inner"><span class="raw">740,600(74.6%)</span><span class="delta">(Δ 144,570)</span></span></td><td>(24.7%, 72.8%, 1.2%)</td><td><span class="cell-inner"><span class="raw">R+49.3</span><span class="delta">(Δ R+20.2)</span></span></td><td><span class="cell-inner"><span class="raw">D+3.9</span><span class="delta">(Δ R+3.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+53.2</span><span class="delta">(Δ R+16.7)</span></span></td><td>6</td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">310,676(37.6%)</span><span class="delta">(Δ 58,863)</span></span></td><td><span class="cell-inner"><span class="raw">515,231(62.4%)</span><span class="delta">(Δ -225,369)</span></span></td><td>(27.5%, 45.5%, 21.5%)</td><td><span class="cell-inner"><span class="raw">R+24.8</span><span class="delta">(Δ D+24.5)</span></span></td><td><span class="cell-inner"><span class="raw">D+2.2</span><span class="delta">(Δ R+1.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+27.0</span><span class="delta">(Δ D+26.2)</span></span></td><td>6</td></tr><tr><td>2020</td><td><span class="cell-inner"><span class="raw">560,282(39.3%)</span><span class="delta">(Δ 249,606)</span></span></td><td><span class="cell-inner"><span class="raw">865,140(60.7%)</span><span class="delta">(Δ 349,909)</span></span></td><td>(37.6%, 58.1%, 2.6%)</td><td><span class="cell-inner"><span class="raw">R+21.4</span><span class="delta">(Δ D+3.4)</span></span></td><td><span class="cell-inner"><span class="raw">D+4.5</span><span class="delta">(Δ D+2.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+25.9</span><span class="delta">(Δ D+1.1)</span></span></td><td>6</td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">562,566(38.9%)</span><span class="delta">(Δ 2,284)</span></span></td><td><span class="cell-inner"><span class="raw">883,818(61.1%)</span><span class="delta">(Δ 18,678)</span></span></td><td>(37.8%, 59.4%, 1.1%)</td><td><span class="cell-inner"><span class="raw">R+22.2</span><span class="delta">(Δ R+0.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.5</span><span class="delta">(Δ R+6.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+20.7</span><span class="delta">(Δ D+5.2)</span></span></td><td>6</td></tr></tbody></table></div>
   <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>2-Party Margin</dt><dd>Margin between the two major-party candidates, ignoring third-party votes ((D - R)/(D + R)).</dd><dt>2-Party Nat. Margin</dt><dd>The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).</dd><dt>2-Party Rel. Margin</dt><dd>The presidential margin relative to the national presidential margin (Margin - Nat. Margin).</dd><dt>EVs</dt><dd>Number of electoral votes allocated to this state or unit.</dd></dl></div>
+</div>
+  </div>
+  <div class="dataset-section" data-dataset="senate">
+<div class="card" data-table-type="total">
+  <h2 style="margin-top:0">Utah (UT) — Senate Total Data</h2>
+  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>Class</th><th>D Cand.</th><th>R Cand.</th><th>Senate Margin</th><th>Nat. Margin</th><th>Rel. Margin</th><th>Total votes</th><th>Source</th></tr></thead><tbody><tr><td>2004</td><td><span class="cell-inner"><span class="raw">258,955(20.2%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">626,640(49.0%)</span><span class="delta"></span></span></td><td>(20.2%, 49.0%, 28.7%)</td><td>III</td><td>Paul Van Dam</td><td>Bob Bennett</td><td><span class="cell-inner"><span class="raw">R+28.7</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+3.6</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">R+32.4</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1,279,411</span><span class="delta"></span></span></td><td><a href="https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2006</td><td><span class="cell-inner"><span class="raw">177,459(23.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">356,238(47.5%)</span><span class="delta"></span></span></td><td>(23.7%, 47.5%, 23.8%)</td><td>I</td><td>Pete Ashdown</td><td>Orrin Hatch</td><td><span class="cell-inner"><span class="raw">R+23.8</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+10.0</span><span class="delta">(Δ D+6.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+33.9</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">750,031</span><span class="delta"></span></span></td><td><a href="https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2010</td><td><span class="cell-inner"><span class="raw">207,708(25.4%)</span><span class="delta">(Δ -51,247)</span></span></td><td><span class="cell-inner"><span class="raw">390,179(47.8%)</span><span class="delta">(Δ -236,461)</span></span></td><td>(25.4%, 47.8%, 22.4%)</td><td>III</td><td>Sam Granato</td><td>Mike Lee</td><td><span class="cell-inner"><span class="raw">R+22.4</span><span class="delta">(Δ D+6.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+5.4</span><span class="delta">(Δ R+12.3)</span></span></td><td><span class="cell-inner"><span class="raw">R+16.9</span><span class="delta">(Δ D+15.4)</span></span></td><td><span class="cell-inner"><span class="raw">816,318</span><span class="delta">(Δ -463,093)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">301,873(29.9%)</span><span class="delta">(Δ 124,414)</span></span></td><td><span class="cell-inner"><span class="raw">659,770(65.4%)</span><span class="delta">(Δ 303,532)</span></span></td><td>(29.9%, 65.4%, 3.2%)</td><td>I</td><td>Scott Howell</td><td>Orrin Hatch</td><td><span class="cell-inner"><span class="raw">R+35.5</span><span class="delta">(Δ R+11.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+11.2</span><span class="delta">(Δ D+16.7)</span></span></td><td><span class="cell-inner"><span class="raw">R+46.7</span><span class="delta">(Δ R+12.8)</span></span></td><td><span class="cell-inner"><span class="raw">1,009,062</span><span class="delta">(Δ 259,031)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">301,860(27.1%)</span><span class="delta">(Δ 94,152)</span></span></td><td><span class="cell-inner"><span class="raw">760,241(68.1%)</span><span class="delta">(Δ 370,062)</span></span></td><td>(27.1%, 68.1%, 2.5%)</td><td>III</td><td>Misty Snow</td><td>Mike Lee</td><td><span class="cell-inner"><span class="raw">R+41.1</span><span class="delta">(Δ R+18.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+10.6</span><span class="delta">(Δ D+17.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+51.7</span><span class="delta">(Δ R+34.8)</span></span></td><td><span class="cell-inner"><span class="raw">1,115,608</span><span class="delta">(Δ 299,290)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2018</td><td><span class="cell-inner"><span class="raw">328,541(30.9%)</span><span class="delta">(Δ 26,668)</span></span></td><td><span class="cell-inner"><span class="raw">665,215(62.6%)</span><span class="delta">(Δ 5,445)</span></span></td><td>(30.9%, 62.6%, 2.7%)</td><td>I</td><td>Jenny Wilson</td><td>Mitt Romney</td><td><span class="cell-inner"><span class="raw">R+31.7</span><span class="delta">(Δ D+3.8)</span></span></td><td><span class="cell-inner"><span class="raw">D+20.2</span><span class="delta">(Δ D+9.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+51.8</span><span class="delta">(Δ R+5.1)</span></span></td><td><span class="cell-inner"><span class="raw">1,062,897</span><span class="delta">(Δ 53,835)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2022</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta">(Δ -301,860)</span></span></td><td><span class="cell-inner"><span class="raw">571,974(53.2%)</span><span class="delta">(Δ -188,267)</span></span></td><td>(0.0%, 53.2%, 42.7%)</td><td>III</td><td>None</td><td>Mike Lee</td><td><span class="cell-inner"><span class="raw">R+53.2</span><span class="delta">(Δ R+12.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.4</span><span class="delta">(Δ R+0.5)</span></span></td><td><span class="cell-inner"><span class="raw">R+50.8</span><span class="delta">(Δ D+0.9)</span></span></td><td><span class="cell-inner"><span class="raw">1,076,061</span><span class="delta">(Δ -39,547)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">464,515(31.7%)</span><span class="delta">(Δ 135,974)</span></span></td><td><span class="cell-inner"><span class="raw">914,700(62.5%)</span><span class="delta">(Δ 249,485)</span></span></td><td>(31.7%, 62.5%, 5.7%)</td><td>I</td><td>Caroline Gleich</td><td>John Curtis</td><td><span class="cell-inner"><span class="raw">R+30.8</span><span class="delta">(Δ D+0.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.2</span><span class="delta">(Δ D+1.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+29.5</span><span class="delta">(Δ D+22.3)</span></span></td><td><span class="cell-inner"><span class="raw">1,463,509</span><span class="delta">(Δ 400,612)</span></span></td><td><a href="https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Utah" target="_blank" rel="noopener noreferrer">Wikipedia</a></td></tr></tbody></table></div>
+  <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>Class</dt><dd>Senate class (I, II, or III) for this race.</dd><dt>D Cand.</dt><dd>Name of the Democratic candidate.</dd><dt>R Cand.</dt><dd>Name of the Republican candidate.</dd><dt>Senate Margin</dt><dd>Senate margin between the two major-party candidates, including third-party votes ((D - R)/total).</dd><dt>Nat. Margin</dt><dd>The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).</dd><dt>Rel. Margin</dt><dd>The presidential margin relative to the national presidential margin (Margin - Nat. Margin).</dd><dt>Total votes</dt><dd>Total voter turnout or ballots cast (when provided).</dd><dt>Source</dt><dd>URL of the source for this data (usually Wikipedia).</dd></dl></div>
+</div>
+<div class="card" data-table-type="third-party">
+  <h2 style="margin-top:0">Utah (UT) — Senate Third-Party Data</h2>
+  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>Other votes</th><th>Top 3rd-Party Candidate</th><th>Top 3rd-Party Share</th><th>Total 3rd-Party Votes</th><th>State 3rd-Party Share</th><th>3rd-Party Nat. Share</th><th>3rd-Party Rel. Share</th></tr></thead><tbody><tr><td>2004</td><td><span class="cell-inner"><span class="raw">258,955(20.2%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">626,640(49.0%)</span><span class="delta"></span></span></td><td>(20.2%, 49.0%, 28.7%)</td><td><span class="cell-inner"><span class="raw">393,816(30.8%)</span><span class="delta"></span></span></td><td>Majority</td><td><span class="cell-inner"><span class="raw">28.74%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">393,816</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">30.78%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">24.76%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.02%</span><span class="delta"></span></span></td></tr><tr><td>2006</td><td><span class="cell-inner"><span class="raw">177,459(23.7%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">356,238(47.5%)</span><span class="delta"></span></span></td><td>(23.7%, 47.5%, 23.8%)</td><td><span class="cell-inner"><span class="raw">216,334(28.8%)</span><span class="delta"></span></span></td><td>Majority</td><td><span class="cell-inner"><span class="raw">23.84%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">216,334</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">28.84%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">16.19%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">12.65%</span><span class="delta"></span></span></td></tr><tr><td>2010</td><td><span class="cell-inner"><span class="raw">207,708(25.4%)</span><span class="delta">(Δ -51,247)</span></span></td><td><span class="cell-inner"><span class="raw">390,179(47.8%)</span><span class="delta">(Δ -236,461)</span></span></td><td>(25.4%, 47.8%, 22.4%)</td><td><span class="cell-inner"><span class="raw">218,431(26.8%)</span><span class="delta"></span></span></td><td>Majority</td><td><span class="cell-inner"><span class="raw">22.36%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">218,431</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">26.76%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">8.19%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">18.57%</span><span class="delta"></span></span></td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">301,873(29.9%)</span><span class="delta">(Δ 124,414)</span></span></td><td><span class="cell-inner"><span class="raw">659,770(65.4%)</span><span class="delta">(Δ 303,532)</span></span></td><td>(29.9%, 65.4%, 3.2%)</td><td><span class="cell-inner"><span class="raw">47,419(4.7%)</span><span class="delta"></span></span></td><td>Shaun McCausland</td><td><span class="cell-inner"><span class="raw">3.16%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">47,419</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.70%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.56%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.14%</span><span class="delta"></span></span></td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">301,860(27.1%)</span><span class="delta">(Δ 94,152)</span></span></td><td><span class="cell-inner"><span class="raw">760,241(68.1%)</span><span class="delta">(Δ 370,062)</span></span></td><td>(27.1%, 68.1%, 2.5%)</td><td><span class="cell-inner"><span class="raw">53,507(4.8%)</span><span class="delta"></span></span></td><td>Stoney Fonua</td><td><span class="cell-inner"><span class="raw">2.45%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">53,507</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.80%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.52%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">1.27%</span><span class="delta"></span></span></td></tr><tr><td>2018</td><td><span class="cell-inner"><span class="raw">328,541(30.9%)</span><span class="delta">(Δ 26,668)</span></span></td><td><span class="cell-inner"><span class="raw">665,215(62.6%)</span><span class="delta">(Δ 5,445)</span></span></td><td>(30.9%, 62.6%, 2.7%)</td><td><span class="cell-inner"><span class="raw">69,141(6.5%)</span><span class="delta"></span></span></td><td>Tim Aalders</td><td><span class="cell-inner"><span class="raw">2.71%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">69,141</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">6.50%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.29%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">4.22%</span><span class="delta"></span></span></td></tr><tr><td>2022</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta">(Δ -301,860)</span></span></td><td><span class="cell-inner"><span class="raw">571,974(53.2%)</span><span class="delta">(Δ -188,267)</span></span></td><td>(0.0%, 53.2%, 42.7%)</td><td><span class="cell-inner"><span class="raw">504,087(46.8%)</span><span class="delta"></span></span></td><td>Evan McMullin</td><td><span class="cell-inner"><span class="raw">42.74%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">504,087</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">46.85%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">15.16%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">31.69%</span><span class="delta"></span></span></td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">464,515(31.7%)</span><span class="delta">(Δ 135,974)</span></span></td><td><span class="cell-inner"><span class="raw">914,700(62.5%)</span><span class="delta">(Δ 249,485)</span></span></td><td>(31.7%, 62.5%, 5.7%)</td><td><span class="cell-inner"><span class="raw">84,294(5.8%)</span><span class="delta"></span></span></td><td>Carlton Bowen</td><td><span class="cell-inner"><span class="raw">5.74%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">84,294</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">5.76%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">3.24%</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">2.52%</span><span class="delta"></span></span></td></tr></tbody></table></div>
+  <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>Other votes</dt><dd>Number of votes for third-party (other) candidates (raw count(pct%)).</dd><dt>Top 3rd-Party Candidate</dt><dd>Name of the highest-vote third-party / other candidate in that state and year.</dd><dt>Top 3rd-Party Share</dt><dd>Share of the vote received by third-party (other) candidates.</dd><dt>Total 3rd-Party Votes</dt><dd>Total votes for all third-party / other candidates combined (may exceed top candidate).</dd><dt>State 3rd-Party Share</dt><dd>Share of the vote received by third-party (other) candidates.</dd><dt>3rd-Party Nat. Share</dt><dd>The national third-party share for that year (3rd-Party votes / total votes).</dd><dt>3rd-Party Rel. Share</dt><dd>Third-party share relative to the national third-party share (3rd-Party share - Nat. 3rd-Party share).</dd></dl></div>
+</div>
+<div class="card" data-table-type="two-party">
+  <h2 style="margin-top:0">Utah (UT) — Senate Two-Party Data</h2>
+  <div class="table-wrap"><table><thead><tr><th>Year</th><th>D</th><th>R</th><th>Margin (D%, R%, 3rd%)</th><th>2-Party Margin</th><th>2-Party Nat. Margin</th><th>2-Party Rel. Margin</th></tr></thead><tbody><tr><td>2004</td><td><span class="cell-inner"><span class="raw">258,955(29.2%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">626,640(70.8%)</span><span class="delta"></span></span></td><td>(20.2%, 49.0%, 28.7%)</td><td><span class="cell-inner"><span class="raw">R+41.5</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+4.8</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">R+46.3</span><span class="delta"></span></span></td></tr><tr><td>2006</td><td><span class="cell-inner"><span class="raw">177,459(33.3%)</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">356,238(66.7%)</span><span class="delta"></span></span></td><td>(23.7%, 47.5%, 23.8%)</td><td><span class="cell-inner"><span class="raw">R+33.5</span><span class="delta"></span></span></td><td><span class="cell-inner"><span class="raw">D+12.0</span><span class="delta">(Δ D+7.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+45.5</span><span class="delta"></span></span></td></tr><tr><td>2010</td><td><span class="cell-inner"><span class="raw">207,708(34.7%)</span><span class="delta">(Δ -51,247)</span></span></td><td><span class="cell-inner"><span class="raw">390,179(65.3%)</span><span class="delta">(Δ -236,461)</span></span></td><td>(25.4%, 47.8%, 22.4%)</td><td><span class="cell-inner"><span class="raw">R+30.5</span><span class="delta">(Δ D+11.0)</span></span></td><td><span class="cell-inner"><span class="raw">R+6.3</span><span class="delta">(Δ R+14.1)</span></span></td><td><span class="cell-inner"><span class="raw">R+24.3</span><span class="delta">(Δ D+22.1)</span></span></td></tr><tr><td>2012</td><td><span class="cell-inner"><span class="raw">301,873(31.4%)</span><span class="delta">(Δ 124,414)</span></span></td><td><span class="cell-inner"><span class="raw">659,770(68.6%)</span><span class="delta">(Δ 303,532)</span></span></td><td>(29.9%, 65.4%, 3.2%)</td><td><span class="cell-inner"><span class="raw">R+37.2</span><span class="delta">(Δ R+3.7)</span></span></td><td><span class="cell-inner"><span class="raw">D+11.7</span><span class="delta">(Δ D+17.9)</span></span></td><td><span class="cell-inner"><span class="raw">R+48.9</span><span class="delta">(Δ R+3.4)</span></span></td></tr><tr><td>2016</td><td><span class="cell-inner"><span class="raw">301,860(28.4%)</span><span class="delta">(Δ 94,152)</span></span></td><td><span class="cell-inner"><span class="raw">760,241(71.6%)</span><span class="delta">(Δ 370,062)</span></span></td><td>(27.1%, 68.1%, 2.5%)</td><td><span class="cell-inner"><span class="raw">R+43.2</span><span class="delta">(Δ R+12.6)</span></span></td><td><span class="cell-inner"><span class="raw">D+11.0</span><span class="delta">(Δ D+18.4)</span></span></td><td><span class="cell-inner"><span class="raw">R+54.2</span><span class="delta">(Δ R+29.9)</span></span></td></tr><tr><td>2018</td><td><span class="cell-inner"><span class="raw">328,541(33.1%)</span><span class="delta">(Δ 26,668)</span></span></td><td><span class="cell-inner"><span class="raw">665,215(66.9%)</span><span class="delta">(Δ 5,445)</span></span></td><td>(30.9%, 62.6%, 2.7%)</td><td><span class="cell-inner"><span class="raw">R+33.9</span><span class="delta">(Δ D+3.3)</span></span></td><td><span class="cell-inner"><span class="raw">D+20.6</span><span class="delta">(Δ D+9.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+54.5</span><span class="delta">(Δ R+5.6)</span></span></td></tr><tr><td>2022</td><td><span class="cell-inner"><span class="raw">0(0.0%)</span><span class="delta">(Δ -301,860)</span></span></td><td><span class="cell-inner"><span class="raw">571,974(100.0%)</span><span class="delta">(Δ -188,267)</span></span></td><td>(0.0%, 53.2%, 42.7%)</td><td><span class="cell-inner"><span class="raw">R+100.0</span><span class="delta">(Δ R+56.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+2.8</span><span class="delta">(Δ R+0.8)</span></span></td><td><span class="cell-inner"><span class="raw">R+97.2</span><span class="delta">(Δ R+43.0)</span></span></td></tr><tr><td>2024</td><td><span class="cell-inner"><span class="raw">464,515(33.7%)</span><span class="delta">(Δ 135,974)</span></span></td><td><span class="cell-inner"><span class="raw">914,700(66.3%)</span><span class="delta">(Δ 249,485)</span></span></td><td>(31.7%, 62.5%, 5.7%)</td><td><span class="cell-inner"><span class="raw">R+32.6</span><span class="delta">(Δ D+1.2)</span></span></td><td><span class="cell-inner"><span class="raw">R+1.3</span><span class="delta">(Δ D+1.6)</span></span></td><td><span class="cell-inner"><span class="raw">R+31.4</span><span class="delta">(Δ D+23.1)</span></span></td></tr></tbody></table></div>
+  <div class="card"><h3 style="margin-top:0">Column explanations</h3><dl class="info-dl"><dt>Δ</dt><dd>Change (delta) in the value from the previous election year.</dd><dt>Year</dt><dd>Election year.</dd><dt>D</dt><dd>Number of votes for the Democratic candidate (raw count(pct%)).</dd><dt>R</dt><dd>Number of votes for the Republican candidate (raw count(pct%)).</dd><dt>Margin (D%, R%, 3rd%)</dt><dd>Vote share breakdown showing Democratic %, Republican %, and top third-party % in format (D%, R%, 3rd%).</dd><dt>2-Party Margin</dt><dd>Margin between the two major-party candidates, ignoring third-party votes ((D - R)/(D + R)).</dd><dt>2-Party Nat. Margin</dt><dd>The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).</dd><dt>2-Party Rel. Margin</dt><dd>The presidential margin relative to the national presidential margin (Margin - Nat. Margin).</dd></dl></div>
+</div>
+  </div>
 </div>
   <div id="footer-placeholder"></div>
 </div>
@@ -125,6 +158,16 @@ window.__collectViewStateForUrl = function() {
       chartRelative: chartRelative ? !!chartRelative.checked : null,
       chartDelta: chartDelta ? !!chartDelta.checked : null,
       chartThirdParty: chartThird ? !!chartThird.checked : null,
+      // indicate whether the currently active dataset is the senate dataset
+      senate: (function(){
+        try {
+          const dsEl = document.getElementById('dataset-select');
+          if (dsEl && typeof dsEl.value === 'string') return dsEl.value === 'senate';
+          const activeSection = document.querySelector('.dataset-section.is-active');
+          if (activeSection) return activeSection.getAttribute('data-dataset') === 'senate';
+        } catch(e) {}
+        return false;
+      })(),
       chartYearStart: toInt(yearStartInput),
       chartYearEnd: toInt(yearEndInput)
     };
@@ -174,9 +217,10 @@ window.__collectViewStateForUrl = function() {
       const twoPartyMode = twoPartyToggle ? twoPartyToggle.checked : false;
       const relativeMode = relativeToggle ? relativeToggle.checked : false;
 
-      const totalDataTable = document.querySelector('[data-table-type="total"]');
-      const thirdPartyTable = document.querySelector('[data-table-type="third-party"]');
-      const twoPartyTable = document.querySelector('[data-table-type="two-party"]');
+      const activeSection = document.querySelector('.dataset-section.is-active') || document;
+      const totalDataTable = activeSection.querySelector('[data-table-type="total"]');
+      const thirdPartyTable = activeSection.querySelector('[data-table-type="third-party"]');
+      const twoPartyTable = activeSection.querySelector('[data-table-type="two-party"]');
 
       if (totalDataTable) totalDataTable.style.display = 'none';
       if (thirdPartyTable) thirdPartyTable.style.display = 'none';
@@ -363,12 +407,52 @@ window.__collectViewStateForUrl = function() {
 // Interactive chart functionality
 (function() {
   const pageStateAbbr = 'UT';
+  const availableDatasetsRaw = 'presidential,senate';
+  const availableDatasets = availableDatasetsRaw.split(',').map(s => s.trim()).filter(Boolean);
+  const datasetLabels = { presidential: 'Presidential', senate: 'Senate' };
+  const datasetSwitchCard = document.getElementById('dataset-switch');
+  const datasetSelect = document.getElementById('dataset-select');
+  const datasetStatusEl = document.getElementById('dataset-status');
+  const datasetSections = Array.from(document.querySelectorAll('.dataset-section'));
+  const chartContainer = document.getElementById('interactive-chart');
+  const chartNotesEl = document.getElementById('chart-notes');
+  const yearStartInput = document.getElementById('year-start');
+  const yearEndInput = document.getElementById('year-end');
+  const yearRangeDisplay = document.getElementById('year-range-display');
+  const sliderRange = document.getElementById('slider-range');
+  const minLabel = document.getElementById('year-range-min-label');
+  const maxLabel = document.getElementById('year-range-max-label');
+
   let chart = null;
-  let chartData = null;
+  let datasetData = { presidential: [], senate: [] };
+  let chartData = [];
+  let activeDataset = availableDatasets.length ? availableDatasets[0] : 'presidential';
   let stateYearBounds = { min: null, max: null };
+  let controlsInitialized = false;
+
+  try {
+    const storedDataset = localStorage.getItem('statePageDataset');
+    const urlDataset = readUrlString('dataset', null);
+    if (urlDataset && availableDatasets.includes(urlDataset)) {
+      activeDataset = urlDataset;
+    } else if (storedDataset && availableDatasets.includes(storedDataset)) {
+      activeDataset = storedDataset;
+    }
+  } catch (err) {
+    /* non-fatal */
+  }
 
   const readUrlBool = (name, fallback = null) => (typeof window.__readUrlBool === 'function' ? window.__readUrlBool(name, fallback) : fallback);
   const readUrlInt = (name, fallback = null) => (typeof window.__readUrlInt === 'function' ? window.__readUrlInt(name, fallback) : fallback);
+  const readUrlString = (name, fallback = null) => {
+    try {
+      const params = new URLSearchParams(window.location.search || '');
+      const value = params.get(name);
+      return value !== null ? value : fallback;
+    } catch (err) {
+      return fallback;
+    }
+  };
   const clamp = (value, min, max) => {
     if (!Number.isFinite(value)) return min;
     if (min != null && value < min) return min;
@@ -378,259 +462,234 @@ window.__collectViewStateForUrl = function() {
   
   // Load data and initialize chart
   Promise.all([
-    d3.csv('../presidential_margins.csv')
-  ]).then(([data]) => {
-    chartData = data;
-    
-    // Create chart
-    const chartContainer = document.getElementById('interactive-chart');
+    d3.csv('../presidential_margins.csv'),
+    d3.csv('../senate_margins.csv').catch(err => {
+      console.warn('Failed to load senate_margins.csv:', err);
+      return [];
+    })
+  ]).then(([presidentialRows, senateRowsRaw]) => {
+    datasetData.presidential = presidentialRows || [];
+    datasetData.senate = (senateRowsRaw || []).map(transformSenateRow);
+
+    if (!availableDatasets.includes('presidential') && datasetData.presidential.length) {
+      availableDatasets.push('presidential');
+    }
+
+    configureDatasetSelect();
+    initializeControls();
+
     if (chartContainer) {
       chart = TrendsChart.create(chartContainer);
-      updateChart();
     }
-    
-    // Set up event listeners for chart controls
+
+    setActiveDataset(activeDataset);
+  }).catch(err => {
+    console.error('Failed to load chart data:', err);
+    if (chartContainer) {
+      chartContainer.innerHTML = '<div class="legend" style="text-align: center; padding: 40px;">Unable to load interactive chart. Please ensure the data files are available.</div>';
+    }
+  });
+
+  function transformSenateRow(row) {
+    if (!row) return row;
+    const copy = { ...row };
+    if (copy.abbr === 'ME') copy.abbr = 'ME-AL';
+    if (copy.abbr === 'NE') copy.abbr = 'NE-AL';
+    if (Object.prototype.hasOwnProperty.call(copy, 'sen_margin')) {
+      copy.pres_margin = copy.sen_margin;
+    }
+    if (Object.prototype.hasOwnProperty.call(copy, 'sen_margin_delta')) {
+      copy.pres_margin_delta = copy.sen_margin_delta;
+    }
+    if (Object.prototype.hasOwnProperty.call(copy, 'sen_margin_str')) {
+      copy.pres_margin_str = copy.sen_margin_str;
+    }
+    if (Object.prototype.hasOwnProperty.call(copy, 'sen_margin_delta_str')) {
+      copy.pres_margin_delta_str = copy.sen_margin_delta_str;
+    }
+    return copy;
+  }
+
+  function configureDatasetSelect() {
+    if (!datasetSelect) return;
+    while (datasetSelect.options.length) {
+      datasetSelect.remove(0);
+    }
+    availableDatasets.forEach(ds => {
+      const option = document.createElement('option');
+      option.value = ds;
+      option.textContent = datasetLabels[ds] || ds.charAt(0).toUpperCase() + ds.slice(1);
+      datasetSelect.appendChild(option);
+    });
+    if (datasetSelect.options.length === 0) {
+      const fallback = document.createElement('option');
+      fallback.value = 'presidential';
+      fallback.textContent = datasetLabels.presidential;
+      datasetSelect.appendChild(fallback);
+      if (!availableDatasets.length) availableDatasets.push('presidential');
+    }
+    datasetSelect.value = activeDataset;
+    const hint = document.getElementById('dataset-select-hint');
+    if (availableDatasets.length <= 1) {
+      if (datasetSwitchCard) datasetSwitchCard.style.display = 'none';
+      if (hint) hint.style.display = 'none';
+    } else {
+      if (datasetSwitchCard) datasetSwitchCard.style.display = '';
+      if (hint) hint.style.display = '';
+    }
+    datasetSelect.addEventListener('change', (event) => {
+      setActiveDataset(event.target.value);
+      try {
+        localStorage.setItem('statePageDataset', event.target.value);
+      } catch (err) {
+        /* non-fatal */
+      }
+    });
+  }
+
+  function initializeControls() {
+    if (controlsInitialized) return;
+    controlsInitialized = true;
+
     const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty'];
     controls.forEach(id => {
       const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('change', () => {
-          // Sync with footer toggles
-          if (id === 'chart-twoparty' && el.checked) {
-            const footerTwoParty = document.getElementById('twoPartyToggle');
-            const footerRelative = document.getElementById('relativeToggle');
-            const chartThirdParty = document.getElementById('chart-thirdparty');
-            if (footerTwoParty) footerTwoParty.checked = true;
-            if (footerRelative) footerRelative.checked = false;
-            if (chartThirdParty) chartThirdParty.checked = false;
-            const chartRelativeToggle = document.getElementById('chart-relative');
-            if (chartRelativeToggle) chartRelativeToggle.checked = false;
-            // Trigger table update
-            if (typeof window.updateTableVisibilityFromChart === 'function') {
-              window.updateTableVisibilityFromChart();
-            }
-          } else if (id === 'chart-thirdparty' && el.checked) {
-            const footerTwoParty = document.getElementById('twoPartyToggle');
-            const footerRelative = document.getElementById('relativeToggle');
-            const chartTwoParty = document.getElementById('chart-twoparty');
-            if (footerTwoParty) footerTwoParty.checked = false;
-            if (footerRelative) footerRelative.checked = true;
-            if (chartTwoParty) chartTwoParty.checked = false;
-            const chartRelativeToggle = document.getElementById('chart-relative');
-            if (chartRelativeToggle) chartRelativeToggle.checked = true;
-            // Trigger table update
-            if (typeof window.updateTableVisibilityFromChart === 'function') {
-              window.updateTableVisibilityFromChart();
-            }
+      if (!el) return;
+      el.addEventListener('change', () => {
+        if (id === 'chart-twoparty' && el.checked) {
+          const footerTwoParty = document.getElementById('twoPartyToggle');
+          const footerRelative = document.getElementById('relativeToggle');
+          const chartThirdParty = document.getElementById('chart-thirdparty');
+          if (footerTwoParty) footerTwoParty.checked = true;
+          if (footerRelative) footerRelative.checked = false;
+          if (chartThirdParty) chartThirdParty.checked = false;
+          const chartRelativeToggle = document.getElementById('chart-relative');
+          if (chartRelativeToggle) chartRelativeToggle.checked = false;
+          if (typeof window.updateTableVisibilityFromChart === 'function') {
+            window.updateTableVisibilityFromChart();
           }
-          updateChart();
-        });
-      }
+        } else if (id === 'chart-thirdparty' && el.checked) {
+          const footerTwoParty = document.getElementById('twoPartyToggle');
+          const footerRelative = document.getElementById('relativeToggle');
+          const chartTwoParty = document.getElementById('chart-twoparty');
+          if (footerTwoParty) footerTwoParty.checked = false;
+          if (footerRelative) footerRelative.checked = true;
+          if (chartTwoParty) chartTwoParty.checked = false;
+          const chartRelativeToggle = document.getElementById('chart-relative');
+          if (chartRelativeToggle) chartRelativeToggle.checked = true;
+          if (typeof window.updateTableVisibilityFromChart === 'function') {
+            window.updateTableVisibilityFromChart();
+          }
+        }
+        updateChart();
+      });
     });
-    
-  const yearStart = document.getElementById('year-start');
-  const yearEnd = document.getElementById('year-end');
-  const yearRangeDisplay = document.getElementById('year-range-display');
-  const sliderRange = document.getElementById('slider-range');
-    const minLabel = document.getElementById('year-range-min-label');
-    const maxLabel = document.getElementById('year-range-max-label');
 
-    const stateCandidates = new Set([pageStateAbbr]);
-    if (pageStateAbbr && pageStateAbbr.endsWith('-AL')) {
-      stateCandidates.add(pageStateAbbr.slice(0, 2));
-    } else if (pageStateAbbr && pageStateAbbr.length === 2) {
-      stateCandidates.add(`${pageStateAbbr}-AL`);
-    }
-    const stateRows = chartData.filter(r => stateCandidates.has(r.abbr));
-    const stateYears = stateRows
-      .map(r => parseInt(r.year, 10))
-      .filter(year => Number.isFinite(year))
-      .sort((a, b) => a - b);
-    const computedMinYear = stateYears.length ? stateYears[0] : (yearStart ? parseInt(yearStart.min || '1864', 10) : 1864);
-    const computedMaxYear = stateYears.length ? stateYears[stateYears.length - 1] : (yearEnd ? parseInt(yearEnd.max || '2024', 10) : 2024);
-    stateYearBounds = { min: computedMinYear, max: computedMaxYear };
-    window.__chartYearBounds = stateYearBounds;
-
-    if (yearStart) {
-      yearStart.min = String(computedMinYear);
-      yearStart.max = String(computedMaxYear);
-    }
-    if (yearEnd) {
-      yearEnd.min = String(computedMinYear);
-      yearEnd.max = String(computedMaxYear);
-    }
-    if (minLabel) minLabel.textContent = computedMinYear;
-    if (maxLabel) maxLabel.textContent = computedMaxYear;
-
-    const urlStart = readUrlInt('chartStart', null);
-    const urlEnd = readUrlInt('chartEnd', null);
-    const storedStartRaw = parseInt(localStorage.getItem('chartYearStart') || '', 10);
-    const storedEndRaw = parseInt(localStorage.getItem('chartYearEnd') || '', 10);
-    const storedStart = Number.isNaN(storedStartRaw) ? null : storedStartRaw;
-    const storedEnd = Number.isNaN(storedEndRaw) ? null : storedEndRaw;
-
-    let initialStart = urlStart !== null ? urlStart : storedStart;
-    let initialEnd = urlEnd !== null ? urlEnd : storedEnd;
-
-    if (initialStart == null) initialStart = computedMinYear;
-    if (initialEnd == null) initialEnd = computedMaxYear;
-
-    initialStart = clamp(initialStart, computedMinYear, computedMaxYear);
-    initialEnd = clamp(initialEnd, computedMinYear, computedMaxYear);
-    if (initialStart > initialEnd) initialStart = initialEnd;
-
-    if (yearStart) yearStart.value = String(initialStart);
-    if (yearEnd) {
-      if (initialEnd < initialStart) initialEnd = initialStart;
-      yearEnd.value = String(initialEnd);
-    }
-    
-    const updateYearDisplay = () => {
-      if (yearRangeDisplay && yearStart && yearEnd) {
-        const start = parseInt(yearStart.value);
-        const end = parseInt(yearEnd.value);
-        yearRangeDisplay.textContent = `${start}-${end}`;
-        
-        // Update the visual range indicator
-        if (sliderRange) {
-          const min = parseInt(yearStart.min, 10);
-          const max = parseInt(yearStart.max, 10);
-          const span = Math.max(1, max - min);
-          const percentStart = ((start - min) / span) * 100;
-          const percentEnd = ((end - min) / span) * 100;
-          const safeStart = Math.max(0, Math.min(100, percentStart));
-          const safeEnd = Math.max(0, Math.min(100, percentEnd));
-          sliderRange.style.left = safeStart + '%';
-          sliderRange.style.width = Math.max(0, safeEnd - safeStart) + '%';
-        }
-      }
-    };
-    
-    if (yearStart) {
-      yearStart.addEventListener('input', () => {
-        // Ensure start doesn't exceed end
-        if (parseInt(yearStart.value) > parseInt(yearEnd.value)) {
-          yearStart.value = yearEnd.value;
+    if (yearStartInput) {
+      yearStartInput.addEventListener('input', () => {
+        if (yearEndInput && parseInt(yearStartInput.value, 10) > parseInt(yearEndInput.value, 10)) {
+          yearStartInput.value = yearEndInput.value;
         }
         updateYearDisplay();
         updateChart();
       });
     }
-    if (yearEnd) {
-      yearEnd.addEventListener('input', () => {
-        // Ensure end doesn't go below start
-        if (parseInt(yearEnd.value) < parseInt(yearStart.value)) {
-          yearEnd.value = yearStart.value;
+    if (yearEndInput) {
+      yearEndInput.addEventListener('input', () => {
+        if (yearStartInput && parseInt(yearEndInput.value, 10) < parseInt(yearStartInput.value, 10)) {
+          yearEndInput.value = yearStartInput.value;
         }
         updateYearDisplay();
         updateChart();
       });
     }
-    
-    updateYearDisplay();
 
-    // Create custom thumbs for the year range so the full-width native range
-    // inputs do not steal pointer events. Custom thumbs forward value updates
-    // to the underlying inputs (which remain the source of truth).
-    (function(){
-      try {
-        const yearStartEl = document.getElementById('year-start');
-        const yearEndEl = document.getElementById('year-end');
-        const container = yearStartEl && yearStartEl.closest && yearStartEl.closest('.dual-range-slider');
-        if (!yearStartEl || !yearEndEl || !container) return;
+    (function setupCustomThumbs(){
+      if (!yearStartInput || !yearEndInput) return;
+      const container = yearStartInput.closest && yearStartInput.closest('.dual-range-slider');
+      if (!container) return;
 
-        // Make native inputs non-interactive (visual only). We still programmatically
-        // update their values and dispatch events so existing handlers run.
-        yearStartEl.style.pointerEvents = 'none';
-        yearEndEl.style.pointerEvents = 'none';
+      yearStartInput.style.pointerEvents = 'none';
+      yearEndInput.style.pointerEvents = 'none';
 
-        const makeThumb = (cls) => {
-          const t = document.createElement('div');
-          t.className = 'slider-thumb ' + cls;
-          container.appendChild(t);
-          return t;
-        };
-        const thumbStart = makeThumb('thumb-start');
-        const thumbEnd = makeThumb('thumb-end');
+      const makeThumb = (cls) => {
+        const t = document.createElement('div');
+        t.className = 'slider-thumb ' + cls;
+        container.appendChild(t);
+        return t;
+      };
+      const thumbStart = makeThumb('thumb-start');
+      const thumbEnd = makeThumb('thumb-end');
 
-        const minY = () => parseInt(yearStartEl.min, 10);
-        const maxY = () => parseInt(yearStartEl.max, 10);
+      const minY = () => parseInt(yearStartInput.min || '1864', 10);
+      const maxY = () => parseInt(yearStartInput.max || '2024', 10);
 
-        const updateThumbs = () => {
-          const mi = minY(); const ma = maxY();
-          const s = Math.max(mi, Math.min(ma, parseInt(yearStartEl.value, 10) || mi));
-          const e = Math.max(mi, Math.min(ma, parseInt(yearEndEl.value, 10) || ma));
-          const span = Math.max(1, ma - mi);
-          const pctS = ((s - mi) / span) * 100;
-          const pctE = ((e - mi) / span) * 100;
-          thumbStart.style.left = pctS + '%';
-          thumbEnd.style.left = pctE + '%';
-        };
+      const updateThumbs = () => {
+        const mi = minY();
+        const ma = maxY();
+        const s = Math.max(mi, Math.min(ma, parseInt(yearStartInput.value, 10) || mi));
+        const e = Math.max(mi, Math.min(ma, parseInt(yearEndInput.value, 10) || ma));
+        const span = Math.max(1, ma - mi);
+        const pctS = ((s - mi) / span) * 100;
+        const pctE = ((e - mi) / span) * 100;
+        thumbStart.style.left = pctS + '%';
+        thumbEnd.style.left = pctE + '%';
+      };
 
-        yearStartEl.addEventListener('input', updateThumbs);
-        yearEndEl.addEventListener('input', updateThumbs);
-        updateThumbs();
+      yearStartInput.addEventListener('input', updateThumbs);
+      yearEndInput.addEventListener('input', updateThumbs);
+      updateThumbs();
 
-        // Drag support for custom thumbs
-        let active = null;
-        const onPointerMove = (ev) => {
-          if (!active) return;
-          const rect = container.getBoundingClientRect();
-          const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
-          const mi = minY(); const ma = maxY();
-          const yr = Math.round(mi + pct * (ma - mi));
-          active.input.value = String(yr);
-          active.input.dispatchEvent(new Event('input', { bubbles: true }));
-        };
-        const onPointerUp = (ev) => {
-          if (!active) return;
-          try { active.thumb.releasePointerCapture(ev.pointerId); } catch (e) {}
-          active = null;
-          document.removeEventListener('pointermove', onPointerMove);
-          document.removeEventListener('pointerup', onPointerUp);
-        };
+      let active = null;
+      const onPointerMove = (ev) => {
+        if (!active) return;
+        const rect = container.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
+        const mi = minY(); const ma = maxY();
+        const yr = Math.round(mi + pct * (ma - mi));
+        active.input.value = String(yr);
+        active.input.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      const onPointerUp = (ev) => {
+        if (!active) return;
+        try { active.thumb.releasePointerCapture(ev.pointerId); } catch (e) {}
+        active = null;
+        document.removeEventListener('pointermove', onPointerMove);
+        document.removeEventListener('pointerup', onPointerUp);
+      };
 
-        const attachThumb = (thumb, input) => {
-          thumb.addEventListener('pointerdown', (ev) => {
-            ev.preventDefault();
-            try { thumb.setPointerCapture(ev.pointerId); } catch (e) {}
-            active = { thumb, input };
-            document.addEventListener('pointermove', onPointerMove);
-            document.addEventListener('pointerup', onPointerUp);
-          });
-        };
-        attachThumb(thumbStart, yearStartEl);
-        attachThumb(thumbEnd, yearEndEl);
-
-        // Clicking on the track moves the nearest thumb (ignores clicks inside current range)
-        container.addEventListener('pointerup', (ev) => {
-          if (ev.target && ev.target.closest && ev.target.closest('input[type="range"]')) return;
-          const targetClass = ev.target && ev.target.classList ? ev.target.classList : null;
-          const clickedIsTrack = targetClass && ev.target.classList.contains('slider-track');
-          if (!clickedIsTrack && ev.target !== container) return;
-          const rect = container.getBoundingClientRect();
-          const clickX = Math.max(rect.left, Math.min(rect.right, ev.clientX));
-          const mi = minY(); const ma = maxY();
-          const span = Math.max(1, ma - mi);
-          const clickedPct = (clickX - rect.left) / rect.width;
-          const clickedYear = Math.round(mi + clickedPct * (ma - mi));
-          const s = parseInt(yearStartEl.value, 10);
-          const e = parseInt(yearEndEl.value, 10);
-          if (clickedYear >= s && clickedYear <= e) return;
-          const startX = rect.left + ((s - mi) / span) * rect.width;
-          const endX = rect.left + ((e - mi) / span) * rect.width;
-          const distStart = Math.abs(clickX - startX);
-          const distEnd = Math.abs(clickX - endX);
-          const targetInput = distStart <= distEnd ? yearStartEl : yearEndEl;
-          const clamped = Math.max(mi, Math.min(ma, clickedYear));
-          targetInput.value = String(clamped);
-          targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+      const attachThumb = (thumb, input) => {
+        thumb.addEventListener('pointerdown', (ev) => {
+          ev.preventDefault();
+          try { thumb.setPointerCapture(ev.pointerId); } catch (e) {}
+          active = { thumb, input };
+          document.addEventListener('pointermove', onPointerMove);
+          document.addEventListener('pointerup', onPointerUp);
         });
+      };
+      attachThumb(thumbStart, yearStartInput);
+      attachThumb(thumbEnd, yearEndInput);
 
-      } catch (e) { /* non-fatal */ }
+      container.addEventListener('pointerup', (ev) => {
+        if (ev.target && ev.target.closest && ev.target.closest('input[type="range"]')) return;
+        const rect = container.getBoundingClientRect();
+        const clickX = Math.max(rect.left, Math.min(rect.right, ev.clientX));
+        const mi = minY(); const ma = maxY();
+        const span = Math.max(1, ma - mi);
+        const clickedPct = (clickX - rect.left) / rect.width;
+        const clickedYear = Math.round(mi + clickedPct * span);
+        const startVal = parseInt(yearStartInput.value, 10);
+        const endVal = parseInt(yearEndInput.value, 10);
+        if (clickedYear >= startVal && clickedYear <= endVal) return;
+        const startX = rect.left + ((startVal - mi) / span) * rect.width;
+        const endX = rect.left + ((endVal - mi) / span) * rect.width;
+        const targetInput = Math.abs(clickX - startX) <= Math.abs(clickX - endX) ? yearStartInput : yearEndInput;
+        const clamped = Math.max(mi, Math.min(ma, clickedYear));
+        targetInput.value = String(clamped);
+        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+      });
     })();
-    
-    // Restore saved chart preferences, prioritizing URL parameters
+
     const chartTwoPartyEl = document.getElementById('chart-twoparty');
     const chartRelativeEl = document.getElementById('chart-relative');
     const chartDeltaEl = document.getElementById('chart-delta');
@@ -664,40 +723,189 @@ window.__collectViewStateForUrl = function() {
     if (chartRelativeEl) chartRelativeEl.checked = !!initialRelative;
     if (chartDeltaEl) chartDeltaEl.checked = !!initialDelta;
     if (chartThirdEl) chartThirdEl.checked = !!initialThird;
+  }
 
-    updateYearDisplay();
-    updateChart();
-  }).catch(err => {
-    console.error('Failed to load chart data:', err);
-    const chartContainer = document.getElementById('interactive-chart');
-    if (chartContainer) {
-      chartContainer.innerHTML = '<div class="legend" style="text-align: center; padding: 40px;">Unable to load interactive chart. Please ensure the data files are available.</div>';
+  function getStateCandidates() {
+    const set = new Set();
+    if (pageStateAbbr) set.add(pageStateAbbr);
+    if (pageStateAbbr && pageStateAbbr.endsWith('-AL')) {
+      set.add(pageStateAbbr.slice(0, 2));
+    } else if (pageStateAbbr && pageStateAbbr.length === 2) {
+      set.add(`${pageStateAbbr}-AL`);
     }
-  });
+    return set;
+  }
+
+  function getStateRows(source = chartData) {
+    if (!source || !source.length) return [];
+    const candidates = getStateCandidates();
+    return source.filter(r => candidates.has(r.abbr));
+  }
+
+  function toggleDatasetSections(dataset) {
+    datasetSections.forEach(section => {
+      const type = section.getAttribute('data-dataset');
+      if (type === dataset) {
+        section.classList.add('is-active');
+      } else {
+        section.classList.remove('is-active');
+      }
+    });
+  }
+
+  function updateDatasetStatus() {
+    if (!datasetStatusEl) return;
+    const rows = getStateRows();
+    if (!rows.length) {
+      datasetStatusEl.textContent = `${datasetLabels[activeDataset] || activeDataset} data is not available for this location.`;
+      datasetStatusEl.style.display = 'block';
+    } else {
+      datasetStatusEl.textContent = '';
+      datasetStatusEl.style.display = 'none';
+    }
+  }
+
+  function updateYearBounds() {
+    const datasetYears = (chartData || []).map(r => parseInt(r.year, 10)).filter(year => Number.isFinite(year)).sort((a, b) => a - b);
+    const stateYears = getStateRows().map(r => parseInt(r.year, 10)).filter(year => Number.isFinite(year)).sort((a, b) => a - b);
+
+    // Compute bounds from the union of datasetYears and stateYears so that
+    // the UI isn't artificially limited by one source missing years.
+    const allYears = [];
+    if (datasetYears && datasetYears.length) allYears.push(...datasetYears);
+    if (stateYears && stateYears.length) allYears.push(...stateYears);
+    const uniq = Array.from(new Set(allYears)).sort((a,b)=>a-b);
+
+    let computedMinYear = uniq.length ? uniq[0] : parseInt(yearStartInput?.min || '1864', 10);
+    let computedMaxYear = uniq.length ? uniq[uniq.length - 1] : parseInt(yearEndInput?.max || '2024', 10);
+
+    if (!Number.isFinite(computedMinYear)) computedMinYear = 1864;
+    if (!Number.isFinite(computedMaxYear)) computedMaxYear = 2024;
+    if (computedMinYear > computedMaxYear) computedMinYear = computedMaxYear;
+
+    stateYearBounds = { min: computedMinYear, max: computedMaxYear };
+    window.__chartYearBounds = stateYearBounds;
+
+    if (yearStartInput) {
+      yearStartInput.min = String(computedMinYear);
+      yearStartInput.max = String(computedMaxYear);
+      if (!Number.isFinite(parseInt(yearStartInput.value, 10))) {
+        yearStartInput.value = String(computedMinYear);
+      }
+      if (parseInt(yearStartInput.value, 10) < computedMinYear) {
+        yearStartInput.value = String(computedMinYear);
+      }
+      if (parseInt(yearStartInput.value, 10) > computedMaxYear) {
+        yearStartInput.value = String(computedMaxYear);
+      }
+    }
+    if (yearEndInput) {
+      yearEndInput.min = String(computedMinYear);
+      yearEndInput.max = String(computedMaxYear);
+      if (!Number.isFinite(parseInt(yearEndInput.value, 10))) {
+        yearEndInput.value = String(computedMaxYear);
+      }
+      if (parseInt(yearEndInput.value, 10) > computedMaxYear) {
+        yearEndInput.value = String(computedMaxYear);
+      }
+      if (parseInt(yearEndInput.value, 10) < computedMinYear) {
+        yearEndInput.value = String(computedMinYear);
+      }
+    }
+
+    if (yearStartInput && yearEndInput && parseInt(yearStartInput.value, 10) > parseInt(yearEndInput.value, 10)) {
+      yearStartInput.value = yearEndInput.value;
+    }
+
+    if (minLabel) minLabel.textContent = computedMinYear;
+    if (maxLabel) maxLabel.textContent = computedMaxYear;
+    try {
+      // Debug: expose dataset/state years and computed bounds to the console/window
+      console.log('[debug] updateYearBounds', { activeDataset: activeDataset, datasetYears: datasetYears, stateYears: stateYears, bounds: stateYearBounds });
+      window.__lastDatasetYears = datasetYears;
+      window.__lastStateYears = stateYears;
+    } catch (e) { /* non-fatal */ }
+  }
+
+  function updateYearDisplay() {
+    if (!yearRangeDisplay || !yearStartInput || !yearEndInput) return;
+    const start = parseInt(yearStartInput.value, 10);
+    const end = parseInt(yearEndInput.value, 10);
+    if (Number.isFinite(start) && Number.isFinite(end)) {
+      yearRangeDisplay.textContent = `${start}-${end}`;
+    }
+    if (sliderRange && Number.isFinite(start) && Number.isFinite(end)) {
+      const min = parseInt(yearStartInput.min || '1864', 10);
+      const max = parseInt(yearStartInput.max || '2024', 10);
+      const span = Math.max(1, max - min);
+      const percentStart = ((start - min) / span) * 100;
+      const percentEnd = ((end - min) / span) * 100;
+      const safeStart = Math.max(0, Math.min(100, percentStart));
+      const safeEnd = Math.max(0, Math.min(100, percentEnd));
+      sliderRange.style.left = `${safeStart}%`;
+      sliderRange.style.width = `${Math.max(0, safeEnd - safeStart)}%`;
+    }
+  }
+
+  function setActiveDataset(nextDataset) {
+    if (!availableDatasets.includes(nextDataset)) {
+      nextDataset = availableDatasets[0] || 'presidential';
+    }
+    activeDataset = nextDataset;
+    chartData = datasetData[nextDataset] || [];
+    if (datasetSelect && datasetSelect.value !== nextDataset) {
+      datasetSelect.value = nextDataset;
+    }
+    toggleDatasetSections(nextDataset);
+    updateDatasetStatus();
+    updateYearBounds();
+    updateYearDisplay();
+    // If senate dataset is selected, disable/show deltas control appropriately
+    try {
+      const chartDelta = document.getElementById('chart-delta');
+      if (chartDelta) {
+        if (nextDataset === 'senate') {
+          chartDelta.checked = false;
+          chartDelta.disabled = true;
+          chartDelta.closest && chartDelta.closest('label') && (chartDelta.closest('label').style.opacity = '0.5');
+        } else {
+          chartDelta.disabled = false;
+          chartDelta.closest && chartDelta.closest('label') && (chartDelta.closest('label').style.opacity = '1');
+          // restore saved state if any
+          const savedDelta = localStorage.getItem('chartDelta') === 'true';
+          chartDelta.checked = !!savedDelta;
+        }
+      }
+    } catch (e) {}
+
+    updateChart();
+    if (typeof window.updateTableVisibilityFromChart === 'function') {
+      window.updateTableVisibilityFromChart();
+    }
+  }
   
   function updateChart() {
-    if (!chart || !chartData) return;
+    if (!chart) return;
 
-    const state = pageStateAbbr;
     const twoP = document.getElementById('chart-twoparty')?.checked || false;
     const rel = document.getElementById('chart-relative')?.checked || false;
-    const delta = document.getElementById('chart-delta')?.checked || false;
+  let delta = document.getElementById('chart-delta')?.checked || false;
     const thirdParty = document.getElementById('chart-thirdparty')?.checked || false;
 
-    const yearStartInput = document.getElementById('year-start');
-    const yearEndInput = document.getElementById('year-end');
     let yearStartVal = parseInt(yearStartInput?.value ?? '', 10);
     let yearEndVal = parseInt(yearEndInput?.value ?? '', 10);
 
     const minBound = stateYearBounds?.min ?? null;
     const maxBound = stateYearBounds?.max ?? null;
 
+    if (minBound != null) {
+      yearStartVal = clamp(Number.isFinite(yearStartVal) ? yearStartVal : minBound, minBound, maxBound);
+    }
+    if (maxBound != null) {
+      yearEndVal = clamp(Number.isFinite(yearEndVal) ? yearEndVal : maxBound, minBound != null ? Math.max(minBound, yearStartVal) : yearStartVal, maxBound);
+    }
     if (!Number.isFinite(yearStartVal)) yearStartVal = minBound != null ? minBound : yearStartVal;
     if (!Number.isFinite(yearEndVal)) yearEndVal = maxBound != null ? maxBound : yearEndVal;
-
-    if (minBound != null) yearStartVal = clamp(yearStartVal, minBound, maxBound);
-    if (maxBound != null) yearEndVal = clamp(yearEndVal, minBound != null ? Math.max(minBound, yearStartVal) : yearStartVal, maxBound);
-
     if (yearStartVal > yearEndVal) {
       yearEndVal = yearStartVal;
     }
@@ -706,45 +914,54 @@ window.__collectViewStateForUrl = function() {
       yearStartInput.value = String(yearStartVal);
     }
     if (yearEndInput && parseInt(yearEndInput.value, 10) !== yearEndVal) {
-      yearEndInput.value = 2020;
+      yearEndInput.value = String(yearEndVal);
     }
 
-    const rangeDisplayEl = document.getElementById('year-range-display');
-    if (rangeDisplayEl) rangeDisplayEl.textContent = `${yearStartVal}-${yearEndVal}`;
-    const sliderRangeEl = document.getElementById('slider-range');
-    if (sliderRangeEl && yearStartInput) {
-      const min = parseInt(yearStartInput.min, 10);
-      const max = parseInt(yearStartInput.max, 10);
-      const span = Math.max(1, max - min);
-      const percentStart = ((yearStartVal - min) / span) * 100;
-      const percentEnd = ((yearEndVal - min) / span) * 100;
-      const safeStart = Math.max(0, Math.min(100, percentStart));
-      const safeEnd = Math.max(0, Math.min(100, percentEnd));
-      sliderRangeEl.style.left = `${safeStart}%`;
-      sliderRangeEl.style.width = `${Math.max(0, safeEnd - safeStart)}%`;
+    updateYearDisplay();
+
+    try {
+      localStorage.setItem('chartTwoParty', twoP ? 'true' : 'false');
+      localStorage.setItem('chartRelative', rel ? 'true' : 'false');
+      localStorage.setItem('chartDelta', delta ? 'true' : 'false');
+      localStorage.setItem('chartThirdParty', thirdParty ? 'true' : 'false');
+      if (Number.isFinite(yearStartVal)) localStorage.setItem('chartYearStart', String(yearStartVal));
+      if (Number.isFinite(yearEndVal)) localStorage.setItem('chartYearEnd', String(yearEndVal));
+    } catch (err) {
+      /* non-fatal */
     }
 
-    localStorage.setItem('chartTwoParty', twoP ? 'true' : 'false');
-    localStorage.setItem('chartRelative', rel ? 'true' : 'false');
-    localStorage.setItem('chartDelta', delta ? 'true' : 'false');
-    localStorage.setItem('chartThirdParty', thirdParty ? 'true' : 'false');
-    if (Number.isFinite(yearStartVal)) localStorage.setItem('chartYearStart', String(yearStartVal));
-    if (Number.isFinite(yearEndVal)) localStorage.setItem('chartYearEnd', String(yearEndVal));
+    const stateRows = getStateRows();
+    if (!chartData || !chartData.length || !stateRows.length) {
+      if (chartNotesEl) {
+        chartNotesEl.textContent = `${datasetLabels[activeDataset] || activeDataset} data is not available for this location.`;
+      }
+      if (chartContainer) {
+        chartContainer.classList.add('chart-empty');
+      }
+      return;
+    }
 
-    const metric = thirdParty ? 'thirdParty' : 'margin';
-    const chartType = 'line';
+    if (chartContainer) {
+      chartContainer.classList.remove('chart-empty');
+    }
 
+  // Ensure deltas are disabled for senate dataset
+  if (activeDataset === 'senate') delta = false;
+
+  const metric = thirdParty ? 'thirdParty' : 'margin';
     chart.update({
       data: chartData,
-      state: state,
-      metric: metric,
-      chart: chartType,
-      rel: rel,
-      delta: delta,
-      twoP: twoP,
+      state: pageStateAbbr,
+      metric,
+      chart: 'line',
+      rel,
+      delta,
+      twoP,
       yearStart: yearStartVal,
       yearEnd: yearEndVal,
-      notesEl: document.getElementById('chart-notes')
+      dataset: activeDataset,
+      presData: datasetData.presidential,
+      notesEl: chartNotesEl
     });
 
     if (!window.__suppressViewStateUrl && typeof window.updateUrl === 'function') {

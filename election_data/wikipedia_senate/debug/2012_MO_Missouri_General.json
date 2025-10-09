@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 2725793,
   "table": {
     "caption": "United States Senate election in Missouri, 2012 [ 96 ]",
     "headers": [
@@ -251,7 +252,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Claire McCaskill (incumbent)",
+      "candidate": "Claire McCaskill",
       "party": "Democratic",
       "votes": 1494125,
       "percent": 54.81

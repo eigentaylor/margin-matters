@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 2949743,
   "table": {
     "caption": "General election results [ 30 ]",
     "headers": [
@@ -248,7 +249,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Russ Feingold (incumbent)",
+      "candidate": "Russ Feingold",
       "party": "Democratic",
       "votes": 1632697,
       "percent": 55.35

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_South_Carolina",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 8,
+  "table_total_votes": 1597221,
   "table": {
     "caption": "South Carolina U.S. Senate Election, 2004",
     "headers": [
@@ -447,12 +448,6 @@
       "party": "Majority",
       "votes": 152783,
       "percent": 9.57
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1597221,
-      "percent": 69.0
     }
   ]
 }

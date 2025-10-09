@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_New_Mexico",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 558342,
   "table": {
     "caption": "United States Senate election in New Mexico, 2006 [ 11 ]",
     "headers": [
@@ -256,7 +257,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jeff Bingaman (incumbent)",
+      "candidate": "Jeff Bingaman",
       "party": "Democratic",
       "votes": 394217,
       "percent": 70.6
@@ -278,12 +279,6 @@
       "party": "Majority",
       "votes": 230426,
       "percent": 41.27
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 558342,
-      "percent": null
     }
   ]
 }

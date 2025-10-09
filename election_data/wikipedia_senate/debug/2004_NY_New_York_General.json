@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_New_York",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 12,
+  "parsed_rows": 8,
+  "table_total_votes": 6702875,
   "table": {
     "caption": "2004 United States Senate election, New York [ 5 ]",
     "headers": [
@@ -527,24 +528,6 @@
     {
       "candidate": "Chuck Schumer",
       "party": "Democratic",
-      "votes": 4384907,
-      "percent": 65.42
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Independence",
-      "votes": 216198,
-      "percent": 3.23
-    },
-    {
-      "candidate": "Chuck Schumer",
-      "party": "Working Families",
-      "votes": 168719,
-      "percent": 2.52
-    },
-    {
-      "candidate": "Chuck Schumer (Incumbent)",
-      "party": "total",
       "votes": 4769824,
       "percent": 71.16
     },
@@ -583,6 +566,12 @@
       "party": "Socialist Workers",
       "votes": 14811,
       "percent": 0.22
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 3144755,
+      "percent": 46.92
     }
   ]
 }

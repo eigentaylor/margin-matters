@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1485499,
   "table": {
     "caption": "2010 United States Senate election in Alabama [ 14 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Richard Shelby (incumbent)",
+      "candidate": "Richard Shelby",
       "party": "Republican",
       "votes": 968181,
       "percent": 65.18

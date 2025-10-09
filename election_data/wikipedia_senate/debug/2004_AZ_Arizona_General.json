@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Arizona",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 5,
+  "parsed_rows": 4,
+  "table_total_votes": 1961677,
   "table": {
     "caption": "General election results [ 6 ]",
     "headers": [
@@ -266,7 +267,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "John McCain (incumbent)",
+      "candidate": "John McCain",
       "party": "Republican",
       "votes": 1505372,
       "percent": 76.74
@@ -288,12 +289,6 @@
       "party": "Majority",
       "votes": 1100865,
       "percent": 56.12
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1961677,
-      "percent": null
     }
   ]
 }

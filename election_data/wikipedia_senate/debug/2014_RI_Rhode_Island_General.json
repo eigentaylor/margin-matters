@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 316898,
   "table": {
     "caption": "United States Senate election in Rhode Island, 2014 [ 21 ]",
     "headers": [
@@ -214,7 +215,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jack Reed (incumbent)",
+      "candidate": "Jack Reed",
       "party": "Democratic",
       "votes": 223675,
       "percent": 70.58

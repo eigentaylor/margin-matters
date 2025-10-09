@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 3471720,
   "table": {
     "caption": "2004 United States Senate election in North Carolina [ 1 ]",
     "headers": [
@@ -274,7 +275,7 @@
       "percent": 1.38
     },
     {
-      "candidate": "Walker F. Rucker (write-in)",
+      "candidate": "Walker F. Rucker",
       "party": "Nonpartisan",
       "votes": 362,
       "percent": 0.01

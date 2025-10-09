@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 820733,
   "table": {
     "caption": "United States Senate election in Oklahoma, 2014 [ 28 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jim Inhofe (incumbent)",
+      "candidate": "Jim Inhofe",
       "party": "Republican",
       "votes": 558166,
       "percent": 68.01

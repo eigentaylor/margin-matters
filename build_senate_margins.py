@@ -124,6 +124,8 @@ def build_base_entries(rows: List[Dict[str, str]]) -> List[Dict[str, object]]:
         year = safe_int(row.get("year"))
         state = row.get("state") or ""
         abbr = row.get("abbr") or ""
+        if abbr in ["ME", "NE"]:
+            abbr += "-AL"
         race_class = row.get("class") or ""
         race_type = row.get("race_type") or "regular"
         round_label = row.get("round") or "General"

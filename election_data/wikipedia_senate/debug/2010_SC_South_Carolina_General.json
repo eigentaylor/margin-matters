@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 1318794,
   "table": {
     "caption": "United States Senate election in South Carolina, 2010 [ 8 ]",
     "headers": [
@@ -303,7 +304,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jim DeMint (Incumbent)",
+      "candidate": "Jim DeMint",
       "party": "Republican",
       "votes": 810771,
       "percent": 61.48

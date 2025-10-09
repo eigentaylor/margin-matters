@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 4,
+  "table_total_votes": 1767504,
   "table": {
     "caption": "2008 United States Senate election in Oregon [ 32 ]",
     "headers": [
@@ -252,7 +253,7 @@
       "percent": 48.9
     },
     {
-      "candidate": "Gordon Smith (incumbent)",
+      "candidate": "Gordon Smith",
       "party": "Republican",
       "votes": 805159,
       "percent": 45.55

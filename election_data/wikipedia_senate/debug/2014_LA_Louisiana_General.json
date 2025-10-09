@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 1273589,
   "table": {
     "caption": "United States Senate election runoff in Louisiana, 2014 [ 101 ]",
     "headers": [
@@ -188,7 +189,7 @@
       "percent": 55.93
     },
     {
-      "candidate": "Mary Landrieu (incumbent)",
+      "candidate": "Mary Landrieu",
       "party": "Democratic",
       "votes": 561210,
       "percent": 44.07

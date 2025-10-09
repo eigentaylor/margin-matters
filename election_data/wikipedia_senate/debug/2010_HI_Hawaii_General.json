@@ -8,6 +8,7 @@
   "class": "III",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 370583,
   "table": {
     "caption": "United States Senate election in Hawaii, 2010 [ 19 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Daniel Inouye (incumbent)",
+      "candidate": "Daniel Inouye",
       "party": "Democratic",
       "votes": 277228,
       "percent": 74.81

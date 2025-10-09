@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 486066,
   "table": {
     "caption": "United States Senate election in Montana, 2012 [ 47 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jon Tester (incumbent)",
+      "candidate": "Jon Tester",
       "party": "Democratic",
       "votes": 236123,
       "percent": 48.58

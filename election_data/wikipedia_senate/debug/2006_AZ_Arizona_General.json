@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Arizona",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 6,
+  "parsed_rows": 5,
+  "table_total_votes": 1526783,
   "table": {
     "caption": "2006 United States Senate election in Arizona [ 41 ]",
     "headers": [
@@ -303,7 +304,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jon Kyl (incumbent)",
+      "candidate": "Jon Kyl",
       "party": "Republican",
       "votes": 814398,
       "percent": 53.34
@@ -331,12 +332,6 @@
       "party": "Majority",
       "votes": 150257,
       "percent": 9.84
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1526783,
-      "percent": null
     }
   ]
 }

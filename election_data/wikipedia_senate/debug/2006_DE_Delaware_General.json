@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Delaware",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 6,
+  "parsed_rows": 5,
+  "table_total_votes": 254099,
   "table": {
     "caption": "General election results [ 9 ]",
     "headers": [
@@ -303,7 +304,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tom Carper (incumbent)",
+      "candidate": "Tom Carper",
       "party": "Democratic",
       "votes": 170567,
       "percent": 67.13
@@ -331,12 +332,6 @@
       "party": "Majority",
       "votes": 100833,
       "percent": 39.68
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 254099,
-      "percent": null
     }
   ]
 }

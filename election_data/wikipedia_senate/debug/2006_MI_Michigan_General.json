@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Michigan",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 8,
+  "parsed_rows": 7,
+  "table_total_votes": 3780142,
   "table": {
     "caption": "2006 United States Senate election in Michigan",
     "headers": [
@@ -340,7 +341,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Debbie Stabenow (incumbent)",
+      "candidate": "Debbie Stabenow",
       "party": "Democratic",
       "votes": 2151278,
       "percent": 56.91
@@ -374,12 +375,6 @@
       "party": "Majority",
       "votes": 591681,
       "percent": 15.6
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 3780142,
-      "percent": 52.64
     },
     {
       "candidate": "Democratic hold",

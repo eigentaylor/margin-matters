@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 5,
+  "table_total_votes": 5329884,
   "table": {
     "caption": "2008 United States Senate election in Illinois [ 1 ] [ 8 ]",
     "headers": [
@@ -298,7 +299,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Dick Durbin (incumbent)",
+      "candidate": "Dick Durbin",
       "party": "Democratic",
       "votes": 3615844,
       "percent": 67.84

@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Washington",
   "class": "I",
   "race_type": "regular",
-  "parsed_rows": 9,
+  "parsed_rows": 8,
+  "table_total_votes": 2085179,
   "table": {
     "caption": "General election results [ 151 ]",
     "headers": [
@@ -367,7 +368,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Maria Cantwell (incumbent)",
+      "candidate": "Maria Cantwell",
       "party": "Democratic",
       "votes": 1184659,
       "percent": 56.81
@@ -407,12 +408,6 @@
       "party": "Majority",
       "votes": 343084,
       "percent": 16.9
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 2085179,
-      "percent": 63.81
     },
     {
       "candidate": "Democratic hold",

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 6,
+  "table_total_votes": 2041020,
   "table": {
     "caption": "United States Senate election in Colorado, 2014 [ 111 ]",
     "headers": [
@@ -336,7 +337,7 @@
       "percent": 48.21
     },
     {
-      "candidate": "Mark Udall (incumbent)",
+      "candidate": "Mark Udall",
       "party": "Democratic",
       "votes": 944203,
       "percent": 46.26

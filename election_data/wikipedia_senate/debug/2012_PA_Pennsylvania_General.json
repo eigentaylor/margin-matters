@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 5627422,
   "table": {
     "caption": "United States Senate election in Pennsylvania, 2012 [ 85 ]",
     "headers": [
@@ -224,7 +225,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bob Casey, Jr. (incumbent)",
+      "candidate": "Bob Casey, Jr.",
       "party": "Democratic",
       "votes": 3021364,
       "percent": 53.69

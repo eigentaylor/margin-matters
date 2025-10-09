@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 10,
+  "table_total_votes": 2321477,
   "table": {
     "caption": "United States Senate election in Tennessee, 2012 [ 21 ]",
     "headers": [
@@ -483,7 +484,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Bob Corker (incumbent)",
+      "candidate": "Bob Corker",
       "party": "Republican",
       "votes": 1506443,
       "percent": 64.89

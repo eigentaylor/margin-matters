@@ -7,7 +7,8 @@
   "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Kentucky",
   "class": "III",
   "race_type": "regular",
-  "parsed_rows": 3,
+  "parsed_rows": 2,
+  "table_total_votes": 1724362,
   "table": {
     "caption": "2004 Kentucky U.S. Senator general election [ 15 ]",
     "headers": [
@@ -202,7 +203,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Jim Bunning (incumbent)",
+      "candidate": "Jim Bunning",
       "party": "Republican",
       "votes": 873507,
       "percent": 50.66
@@ -212,12 +213,6 @@
       "party": "Democratic",
       "votes": 850855,
       "percent": 49.34
-    },
-    {
-      "candidate": "Turnout",
-      "party": "Turnout",
-      "votes": 1724362,
-      "percent": null
     }
   ]
 }

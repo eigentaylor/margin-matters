@@ -8,6 +8,7 @@
   "class": "I",
   "race_type": "regular",
   "parsed_rows": 3,
+  "table_total_votes": 1341111,
   "table": {
     "caption": "2006 United States Senate election in Indiana [ 5 ]",
     "headers": [
@@ -184,7 +185,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Richard Lugar (incumbent)",
+      "candidate": "Richard Lugar",
       "party": "Republican",
       "votes": 1171553,
       "percent": 87.36

@@ -8,6 +8,7 @@
   "class": "II",
   "race_type": "regular",
   "parsed_rows": 2,
+  "table_total_votes": 515506,
   "table": {
     "caption": "United States Senate election in New Mexico, 2014 [ 28 ]",
     "headers": [
@@ -187,7 +188,7 @@
   },
   "rows_preview": [
     {
-      "candidate": "Tom Udall (incumbent)",
+      "candidate": "Tom Udall",
       "party": "Democratic",
       "votes": 286409,
       "percent": 55.56
