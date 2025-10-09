@@ -278,6 +278,29 @@ export function calculateUnitVoteTallies(unit) {
                 const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
                 const row = rows.find(x => x && x.unit === keyUnit);
                 if (row) {
+                    // If this unit is flipped in the active scenario, prefer the
+                    // flipped/adjusted totals from getUnitFinalVoteTotals so the
+                    // tooltip reflects the scenario. Otherwise, return raw CSV counts.
+                    let useAdjustedForFlip = false;
+                    try {
+                        const keyU = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+                        const flipped = (typeof isUnitFlipped === 'function') ? isUnitFlipped(year, keyU) : (typeof window.isUnitFlipped === 'function' ? window.isUnitFlipped(year, keyU) : false);
+                        useAdjustedForFlip = !!flipped;
+                    } catch (e) { useAdjustedForFlip = false; }
+
+                    if (useAdjustedForFlip) {
+                        try {
+                            const totals = getUnitFinalVoteTotals(unit, { year, pv });
+                            if (totals) {
+                                const dAdj = Math.round(Math.max(0, totals.dVotes || 0));
+                                const rAdj = Math.round(Math.max(0, totals.rVotes || 0));
+                                const oAdj = Math.round(Math.max(0, totals.topThirdVotes || 0));
+                                if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: returning ADJUSTED counts for flipped unit', unit, { D: dAdj, R: rAdj, O: oAdj });
+                                return { D: dAdj, R: rAdj, O: oAdj, total: dAdj + rAdj + oAdj };
+                            }
+                        } catch (e) { /* fallthrough to raw */ }
+                    }
+
                     const dRaw = Math.round(Math.max(0, +row.dVotes || 0));
                     const rRaw = Math.round(Math.max(0, +row.rVotes || 0));
                     const oRaw = Math.round(Math.max(0, (+row.topThirdVotes || +row.tVotes || 0)));
