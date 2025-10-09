@@ -1,19 +1,20 @@
-(function () {
-  // Lightweight, reusable US election map renderer with optional ME/NE district overlay.
-  // Exposes a global ElectionMap with:
-  // - build({ svgSelector, topoUrl, districtGeoUrl, stateHandlers, districtHandlers })
-  // - setStateFill(abbr, color)
-  // - setDistrictFill(unit, color)
-  // - statePaths (Map abbr -> d3 selection)
-  // - districtPaths (Map unit -> d3 selection)
+'use strict';
 
-  if (!window.d3 || !window.topojson) {
-    console.warn('[ElectionMap] Requires d3 and topojson on the page before this script.');
-  }
+// Lightweight, reusable US election map renderer with optional ME/NE district overlay.
+// Exposes a global ElectionMap with:
+// - build({ svgSelector, topoUrl, districtGeoUrl, stateHandlers, districtHandlers })
+// - setStateFill(abbr, color)
+// - setDistrictFill(unit, color)
+// - statePaths (Map abbr -> d3 selection)
+// - districtPaths (Map unit -> d3 selection)
 
-  const ID_TO_ABBR = { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
+if (!window.d3 || !window.topojson) {
+  console.warn('[ElectionMap] Requires d3 and topojson on the page before this script.');
+}
 
-  const ElectionMap = {
+const ID_TO_ABBR = { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
+
+const ElectionMap = {
     statePaths: new Map(),
     districtPaths: new Map(),
     _handlers: { state: {}, district: {} },
@@ -27,6 +28,25 @@
       if (!patch || typeof patch !== 'object') return;
       Object.assign(this._smallBoxesConfig, patch);
       if (this._lastAbbrColors && this._lastUnitColors) this.renderSmallStateBoxes(this._lastYear || 2024, this._lastAbbrColors, this._lastUnitColors);
+    },
+    nudgeSmallBoxes(dx = 0, dy = 0) {
+      const cfg = this._smallBoxesConfig;
+      let x = cfg.x;
+      if (!Number.isFinite(x)) {
+        try {
+          const svg = d3.select('svg#map');
+          const vb = svg.empty() ? [0, 0, 975, 610] : (svg.attr('viewBox') ? svg.attr('viewBox').split(/\s+/).map(Number) : [0, 0, 975, 610]);
+          const width = vb[2] || 975;
+          x = width - (cfg.right || 8) - (cfg.boxW || 86);
+        } catch (e) {
+          x = 860;
+        }
+      }
+      const nextX = x + (Number(dx) || 0);
+      const nextY = (cfg.y || 0) + (Number(dy) || 0);
+      cfg.x = nextX;
+      cfg.y = nextY;
+      this.setSmallBoxesConfig({});
     },
     setVisualCenterStates(list) {
       if (Array.isArray(list)) this._visualCenterStates = new Set(list.map(s => String(s).toUpperCase()));
@@ -379,5 +399,8 @@
     }
   };
 
-  try { window.ElectionMap = ElectionMap; } catch (e) { }
-})();
+if (typeof window !== 'undefined') {
+  try { window.ElectionMap = ElectionMap; } catch (e) { /* noop */ }
+}
+
+export default ElectionMap;

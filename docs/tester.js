@@ -15,6 +15,8 @@ import {
   fmtLean, formatter, leanStr
 } from './utils/formatters.js';
 import './utils/evBreakdownModal.js';
+import ElectionMap from './utils/electionMap.js';
+import { colorForMargin as siteColorForMargin } from './utils/siteState.js';
 import {
   setFlipDependencies,
   buildFlipScenarioMaps,
@@ -232,72 +234,117 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
     }
   }
 
-  // Tunable config for small-state overlay placement and sizing (exposed via window.smallBoxesConfig)
-  const _defaultSmallBoxesConfig = {
-    // If x is a number, use absolute x. Otherwise, compute from right margin.
-    x: null,
-    right: 8,      // px from right edge of SVG
-    y: 240,        // starting y (moved down to avoid covering ME/upper NE)
-    boxW: 75,      // minimal width to fit widest label + EV
-    boxH: 25,      // compact height
-    gapY: 4        // vertical gap between boxes
-  };
-  let _smallBoxesConfig = { ..._defaultSmallBoxesConfig };
-  try { window.smallBoxesConfig = _smallBoxesConfig; } catch (e) { console.warn(e); }
-  // Helper to update config at runtime and re-render quickly
+  function syncSmallBoxesConfigRef() {
+    try { window.smallBoxesConfig = ElectionMap._smallBoxesConfig; } catch (e) { console.warn(e); }
+  }
+  syncSmallBoxesConfigRef();
   function setSmallBoxesConfig(patch) {
     try {
-      if (patch && typeof patch === 'object') Object.assign(_smallBoxesConfig, patch);
-      // Keep the exported reference updated too
-      try { window.smallBoxesConfig = _smallBoxesConfig; } catch (e) { console.warn(e); }
-      // Re-render using last known colors if available
-      const year = window._curYear || (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : 2024);
-      const ac = window._lastAbbrColors || null;
-      const uc = window._lastUnitColors || null;
-      if (typeof renderSmallStateBoxes === 'function' && ac && uc) renderSmallStateBoxes(year, ac, uc);
-      else if (typeof window.updateAll === 'function') window.updateAll();
+      ElectionMap.setSmallBoxesConfig(patch);
+      syncSmallBoxesConfigRef();
     } catch (e) { console.warn('[smallBoxes] setSmallBoxesConfig error', e); }
   }
   function nudgeSmallBoxes(dx, dy) {
-    const curX = (typeof _smallBoxesConfig.x === 'number') ? _smallBoxesConfig.x : null;
-    if (curX == null) {
-      // Convert from right-anchored to absolute x based on current SVG width
-      try {
-        const svg = d3.select('svg#map');
-        const vb = svg.empty() ? [0, 0, 975, 610] : (svg.attr('viewBox') ? svg.attr('viewBox').split(/\s+/).map(Number) : [0, 0, 975, 610]);
-        const width = vb[2] || 975;
-        _smallBoxesConfig.x = width - (_smallBoxesConfig.right || 8) - (_smallBoxesConfig.boxW || 86);
-      } catch (e) { _smallBoxesConfig.x = 860; }
-    }
-    _smallBoxesConfig.x += (+dx || 0);
-    _smallBoxesConfig.y = (_smallBoxesConfig.y || 0) + (+dy || 0);
-    setSmallBoxesConfig({});
+    try {
+      ElectionMap.nudgeSmallBoxes(dx, dy);
+      syncSmallBoxesConfigRef();
+    } catch (e) { console.warn('[smallBoxes] nudgeSmallBoxes error', e); }
   }
-  try { window.setSmallBoxesConfig = setSmallBoxesConfig; window.nudgeSmallBoxes = nudgeSmallBoxes; } catch (e) { console.warn(e); }
+  try {
+    window.setSmallBoxesConfig = setSmallBoxesConfig;
+    window.nudgeSmallBoxes = nudgeSmallBoxes;
+  } catch (e) { console.warn(e); }
 
-  // Lazily created layer for state labels
-  let stateLabelsLayer = null; // d3 selection of g.state-labels
-  const _labelCache = new Map(); // abbr -> d3 selection for text
-  // Cache for computed visual centers (screen coords) per state abbr
-  const _visualCenterCache = new Map(); // abbr -> {x,y}
-  // Configurable whitelist for which states should use visual-center placement.
-  // Default to a focused set; if emptied, we treat as ALL states using visual center.
-  let _visualCenterStates = new Set(['MI', 'FL', 'LA']);
-  try { window.visualCenterStates = _visualCenterStates; } catch (e) { console.warn(e); }
   function setVisualCenterStates(list) {
     try {
-      if (Array.isArray(list)) _visualCenterStates = new Set(list.map(s => String(s || '').toUpperCase()));
-      else if (list instanceof Set) _visualCenterStates = new Set(Array.from(list).map(s => String(s || '').toUpperCase()));
-      // publish reference for quick tweaking in console
-      try { window.visualCenterStates = _visualCenterStates; } catch (e) { console.warn(e); }
-      // centers depend on geometry, so clear cache
-      try { _visualCenterCache.clear(); } catch (e) { console.warn(e); }
-      // re-render labels
-      try { updateStateLabels(window._curYear || 2024); } catch (e) { console.warn(e); }
-    } catch (e) { /* ignore */ }
+      ElectionMap.setVisualCenterStates(list);
+      try { window.visualCenterStates = ElectionMap._visualCenterStates; } catch (err) { console.warn(err); }
+    } catch (e) { console.warn(e); }
   }
-  try { window.setVisualCenterStates = setVisualCenterStates; } catch (e) { console.warn(e); }
+  try {
+    window.visualCenterStates = ElectionMap._visualCenterStates;
+    window.setVisualCenterStates = setVisualCenterStates;
+  } catch (e) { console.warn(e); }
 
+  function getTotalEvForState(year, abbrOrUnit) {
+    try {
+      const unitStr = (abbrOrUnit != null) ? String(abbrOrUnit) : '';
+      const abbr = unitStr.includes('-') ? unitStr.slice(0, 2) : unitStr;
+      if (!abbr) return null;
+      if (typeof window.getRowsForYear !== 'function') return null;
+      const rows = window.getRowsForYear(year) || [];
+      let sum = 0; let found = false;
+      for (const r of rows) {
+        if (!r || !r.unit || r.unit === 'NATIONAL') continue;
+        const unit = String(r.unit);
+        if (unit === abbr || unit.startsWith(abbr + '-')) {
+          const ev = Number(r.ev);
+          if (isFinite(ev)) { sum += ev; found = true; }
+        }
+      }
+      if (found) return sum;
+      if (window._evByUnitMap && typeof window._evByUnitMap.get === 'function') {
+        const ev = window._evByUnitMap.get(`${year}:${abbr}`);
+        if (isFinite(ev)) return Number(ev);
+      }
+      return null;
+    } catch (e) {
+      console.warn(e);
+      return null;
+    }
+  }
+
+  function getEvLookupForYear(year) {
+    const y = (typeof year === 'number' && isFinite(year)) ? Number(year) : (window._curYear || 2024);
+    return function lookup(unitOrAbbr) {
+      if (!unitOrAbbr) return null;
+      const unit = String(unitOrAbbr);
+      try {
+        if (typeof window.getEvFor === 'function') {
+          const direct = window.getEvFor(y, unit);
+          if (direct != null && isFinite(direct)) return Number(direct);
+        }
+      } catch (e) { console.warn(e); }
+      const abbr = unit.includes('-') ? unit.slice(0, 2) : unit;
+      const total = getTotalEvForState(y, abbr);
+      return (total != null && isFinite(total)) ? Number(total) : null;
+    };
+  }
+
+  function updateStateLabels(year, evLookupOverride) {
+    const y = (typeof year === 'number' && isFinite(year)) ? Number(year) : (window._curYear || 2024);
+    const evLookup = evLookupOverride || getEvLookupForYear(y);
+    ElectionMap.updateStateLabels(y, evLookup);
+  }
+
+  function renderSmallStateBoxes(year, abbrColors, unitColors, evLookupOverride) {
+    const y = (typeof year === 'number' && isFinite(year)) ? Number(year) : (window._curYear || 2024);
+    const evLookup = evLookupOverride || getEvLookupForYear(y);
+    ElectionMap._evLookup = evLookup;
+    ElectionMap.renderSmallStateBoxes(y, abbrColors || window._lastAbbrColors || new Map(), unitColors || window._lastUnitColors || new Map());
+  }
+
+  function refreshMapDecorations(year, abbrColors, unitColors) {
+    const y = (typeof year === 'number' && isFinite(year)) ? Number(year) : (window._curYear || 2024);
+    const evLookup = getEvLookupForYear(y);
+    ElectionMap.refreshDecorations(y, evLookup, abbrColors || window._lastAbbrColors || new Map(), unitColors || window._lastUnitColors || new Map());
+  }
+
+  try {
+    window.updateStateLabels = updateStateLabels;
+    window.renderSmallStateBoxes = renderSmallStateBoxes;
+    window.refreshMapDecorations = refreshMapDecorations;
+  } catch (e) { console.warn(e); }
+
+  try {
+    window.addEventListener('resize', () => {
+      try { if (ElectionMap._visualCenterCache) ElectionMap._visualCenterCache.clear(); } catch (err) { console.warn(err); }
+      try { updateStateLabels(window._curYear || 2024); } catch (err) { console.warn(err); }
+    });
+    window.addEventListener('mapReady', () => {
+      try { if (ElectionMap._visualCenterCache) ElectionMap._visualCenterCache.clear(); } catch (err) { console.warn(err); }
+    });
+  } catch (e) { console.warn(e); }
 
   function _updateActiveTipCoords(evt) {
     if (!_activeTipState.info || !evt) return;
@@ -324,522 +371,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
     window.refreshActiveMapTip = refreshActiveMapTip;
   } catch (e) { console.warn(e); }
 
-
-  // Compute a "visual center" for a GeoJSON Polygon/MultiPolygon feature using
-  // projected screen coordinates and a lightweight polylabel-like search.
-  // Returns {x, y} in SVG coordinate space.
-  function _computeVisualCenter(feature, abbr) {
-    try {
-      if (!feature || !feature.type) return null;
-      if (!window.mapPath || typeof window.mapPath.projection !== 'function') return null;
-      const proj = window.mapPath.projection && window.mapPath.projection();
-      if (typeof proj !== 'function') return null;
-
-      // Project lon/lat ring coordinates to screen coords
-      const projectRings = (rings) => {
-        const out = [];
-        for (const ring of rings) {
-          const pr = [];
-          for (let i = 0; i < ring.length; i++) {
-            const c = ring[i];
-            const p = proj(c);
-            if (p && isFinite(p[0]) && isFinite(p[1])) pr.push([p[0], p[1]]);
-          }
-          if (pr.length >= 3) out.push(pr);
-        }
-        return out;
-      };
-
-      // Flatten to array of polygons, each as [outer, hole1, hole2, ...]
-      const polygons = [];
-      if (feature.type === 'Polygon') {
-        const rings = projectRings(feature.coordinates || []);
-        if (rings.length) polygons.push(rings);
-      } else if (feature.type === 'MultiPolygon') {
-        const polys = feature.coordinates || [];
-        for (const poly of polys) {
-          const rings = projectRings(poly || []);
-          if (rings.length) polygons.push(rings);
-        }
-      } else if (feature.geometry && (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')) {
-        return _computeVisualCenter(feature.geometry, abbr);
-      } else {
-        return null;
-      }
-      if (!polygons.length) return null;
-
-      // Helpers: point-in-ring and point-in-polygon (holes subtract)
-      const pointInRing = (pt, ring) => {
-        let x = pt[0], y = pt[1], inside = false;
-        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-          const xi = ring[i][0], yi = ring[i][1];
-          const xj = ring[j][0], yj = ring[j][1];
-          const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / ((yj - yi) || 1e-12) + xi);
-          if (intersect) inside = !inside;
-        }
-        return inside;
-      };
-      const pointInPoly = (pt, rings) => {
-        if (!rings || !rings.length) return false;
-        if (!pointInRing(pt, rings[0])) return false; // outside outer
-        for (let i = 1; i < rings.length; i++) {
-          if (pointInRing(pt, rings[i])) return false; // in a hole
-        }
-        return true;
-      };
-      // Distance from point to poly edges (min over outer and holes)
-      const distToSegment = (px, py, ax, ay, bx, by) => {
-        const dx = bx - ax, dy = by - ay;
-        if (dx === 0 && dy === 0) return Math.hypot(px - ax, py - ay);
-        let t = ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy);
-        t = Math.max(0, Math.min(1, t));
-        const cx = ax + t * dx, cy = ay + t * dy;
-        return Math.hypot(px - cx, py - cy);
-      };
-      const distToRing = (pt, ring) => {
-        let min = Infinity;
-        for (let i = 0; i < ring.length; i++) {
-          const a = ring[i];
-          const b = ring[(i + 1) % ring.length];
-          const d = distToSegment(pt[0], pt[1], a[0], a[1], b[0], b[1]);
-          if (d < min) min = d;
-        }
-        return min;
-      };
-      const distToPoly = (pt, rings) => {
-        let d = distToRing(pt, rings[0]);
-        for (let i = 1; i < rings.length; i++) {
-          const dd = distToRing(pt, rings[i]);
-          if (dd < d) d = dd;
-        }
-        return d;
-      };
-
-      // Lightweight grid-refinement search per polygon
-      const searchPoly = (rings) => {
-        // bbox of outer ring
-        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        for (const p of rings[0]) { if (p[0] < minX) minX = p[0]; if (p[0] > maxX) maxX = p[0]; if (p[1] < minY) minY = p[1]; if (p[1] > maxY) maxY = p[1]; }
-        // start with coarse step; 5 rounds
-        let step = Math.max(2, Math.max(maxX - minX, maxY - minY) / 8);
-        let best = null, bestD = -1;
-        let left = minX, right = maxX, top = minY, bottom = maxY;
-        for (let round = 0; round < 5; round++) {
-          for (let x = left; x <= right; x += step) {
-            for (let y = top; y <= bottom; y += step) {
-              const cx = x + step / 2, cy = y + step / 2;
-              const pt = [cx, cy];
-              if (!pointInPoly(pt, rings)) continue;
-              const d = distToPoly(pt, rings);
-              if (d > bestD) { bestD = d; best = pt; }
-            }
-          }
-          if (!best) break;
-          // refine around best
-          left = best[0] - step * 1.5;
-          right = best[0] + step * 1.5;
-          top = best[1] - step * 1.5;
-          bottom = best[1] + step * 1.5;
-          step = step / 3;
-          if (step < 1.0) break; // pixel precision is good enough
-        }
-        return { point: best, score: bestD };
-      };
-
-      let bestGlobal = null, bestScore = -1;
-      for (const rings of polygons) {
-        const res = searchPoly(rings);
-        if (res && res.point && res.score > bestScore) { bestScore = res.score; bestGlobal = res.point; }
-      }
-      if (bestGlobal && isFinite(bestGlobal[0]) && isFinite(bestGlobal[1])) {
-        const pt = { x: bestGlobal[0], y: bestGlobal[1] };
-        if (abbr) _visualCenterCache.set(abbr, pt);
-        return pt;
-      }
-      return null;
-    } catch (e) { return null; }
-  }
-
-  // Ensure an overlay group inside the map for small-state boxes
-  function ensureSmallBoxesLayer() {
-    try {
-      const svg = d3.select('svg#map');
-      if (svg.empty()) return null;
-      let layer = svg.select('g.small-state-overlay');
-      if (layer.empty()) {
-        // Insert the overlay above the state paths but below labels
-        layer = svg.append('g').attr('class', 'small-state-overlay');
-        // Give it a pointer cursor for clicks
-        layer.attr('pointer-events', 'auto');
-      }
-      return layer;
-    } catch (e) { return null; }
-  }
-
-  // Render equal-width boxes along the east coast within the map SVG
-  function renderSmallStateBoxes(year, abbrColors, unitColors) {
-    try {
-      const svg = d3.select('svg#map');
-      const layer = ensureSmallBoxesLayer();
-      if (!layer || svg.empty()) return;
-      //console.log('[smallBoxes] render start (svg overlay)', { year, config: _smallBoxesConfig });
-
-      // Requested order
-      const tiny = [
-        { unit: 'ME-AL', label: 'ME-AL' },
-        { unit: 'NE-AL', label: 'NE-AL' },
-        { unit: 'NH', label: 'NH' },
-        { unit: 'VT', label: 'VT' },
-        { unit: 'MA', label: 'MA' },
-        { unit: 'RI', label: 'RI' },
-        { unit: 'CT', label: 'CT' },
-        { unit: 'NJ', label: 'NJ' },
-        { unit: 'DE', label: 'DE' },
-        { unit: 'MD', label: 'MD' },
-        { unit: 'DC', label: 'DC' }
-      ];
-
-      // Resolve color and EV for each box
-      const data = tiny.map(({ unit, label }) => {
-        let color = unitColors.get(unit);
-        if (!color) {
-          const st = unit.slice(0, 2);
-          const entry = abbrColors.get(st);
-          color = entry ? entry.color : '#2f2f2f';
-        }
-        let ev = null;
-        try { if (typeof window.getEvFor === 'function') ev = window.getEvFor(year, unit); } catch (e) { console.warn(e); }
-        if ((ev == null || isNaN(ev)) && typeof window.getRowsForYear === 'function') {
-          const rows = window.getRowsForYear(year) || [];
-          const row = rows.find(r => r.unit === unit || r.unit === label);
-          if (row && isFinite(+row.ev)) ev = +row.ev;
-        }
-        const info = (typeof window.getAdjustedInfo === 'function') ? window.getAdjustedInfo(unit) : null;
-        const marginStr = info && info.marginStr ? info.marginStr : '';
-        return { unit, label, color, ev, marginStr };
-      });
-
-      // Layout: a single column aligned just off the Atlantic coast, between NY/NJ/MD and the right margin.
-      // We place the boxes at a fixed x near the east coast and step y downward. Keep sizes minimal and equal.
-      const vb = svg.attr('viewBox') ? svg.attr('viewBox').split(/\s+/).map(Number) : [0, 0, 975, 610];
-      const width = vb[2] || 975;
-      const height = vb[3] || 610;
-      const boxW = Math.max(40, +(_smallBoxesConfig.boxW || 86));
-      const boxH = Math.max(12, +(_smallBoxesConfig.boxH || 20));
-      const gapY = Math.max(0, +(_smallBoxesConfig.gapY || 4));
-      // Absolute x wins. Otherwise, derive from right margin.
-      const right = +(_smallBoxesConfig.right || 8);
-      const x = (typeof _smallBoxesConfig.x === 'number' && isFinite(_smallBoxesConfig.x))
-        ? _smallBoxesConfig.x
-        : (width - right - boxW);
-      // Start y (tunable)
-      const startY = +(_smallBoxesConfig.y || 120);
-
-      // Clear and re-render
-      layer.selectAll('g.small-box').remove();
-      const groups = layer.selectAll('g.small-box')
-        .data(data, d => d.unit)
-        .join('g')
-        .attr('class', 'small-box');
-
-      groups.each(function (d, i) {
-        const g = d3.select(this);
-        const gx = x;
-        const gy = startY + i * (boxH + gapY);
-        g.attr('transform', `translate(${gx},${gy})`);
-
-        // draw rounded rect with the computed color
-        const isYellowish = d.color && (String(d.color).toLowerCase() === '#c9a400' || String(d.color).toLowerCase() === '#ffd700' || String(d.color).toLowerCase() === 'yellow');
-        const txtColor = isYellowish ? '#000' : '#fff';
-        const smallColor = isYellowish ? '#000' : 'rgba(255,255,255,0.85)';
-
-        g.append('rect')
-          .attr('rx', 5).attr('ry', 5)
-          .attr('width', boxW).attr('height', boxH)
-          .attr('fill', d.color || '#2f2f2f')
-          .attr('stroke', 'rgba(0,0,0,0.4)')
-          .attr('stroke-width', 1);
-
-        // Label and EV inside box
-        const padX = 6, midY = Math.floor(boxH / 2) + 1;
-        g.append('text')
-          .attr('x', padX).attr('y', midY)
-          .attr('dominant-baseline', 'middle')
-          .attr('fill', txtColor)
-          .attr('font-weight', 800)
-          .attr('font-size', 11)
-          .attr('paint-order', 'stroke')
-          .attr('stroke', 'rgba(0,0,0,0.65)')
-          .attr('stroke-width', 2)
-          .attr('stroke-linejoin', 'round')
-          .text(d.label);
-        if (d.ev != null && isFinite(d.ev)) {
-          const evTxt = `${d.ev} EV`;
-          g.append('text')
-            .attr('x', boxW - padX)
-            .attr('y', midY)
-            .attr('text-anchor', 'end')
-            .attr('dominant-baseline', 'middle')
-            .attr('fill', smallColor)
-            .attr('font-weight', 700)
-            .attr('font-size', 10)
-            .attr('paint-order', 'stroke')
-            .attr('stroke', 'rgba(0,0,0,0.6)')
-            .attr('stroke-width', 1.6)
-            .attr('stroke-linejoin', 'round')
-            .text(evTxt);
-        }
-
-        // Tooltip via centralized map tip (works even if boxes move later)
-        const hoverHandler = function (evt) {
-          try {
-            const tipInfo = createUnitTipInfo(d.unit, { label: d.label, evOverride: d.ev });
-            if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
-          } catch (e) { console.warn(e); }
-        };
-        g.on('mouseenter', hoverHandler)
-          .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { console.warn(e); } })
-          .on('mouseleave', function () { try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { console.warn(e); } });
-
-        // Click-through disabled in future mode; only enable for historical/tester pages
-        if (!window._futureMode) {
-          g.style('cursor', 'pointer')
-            .on('click', () => {
-              let abbr = d.unit;
-              if (abbr.endsWith('-AL')) abbr = abbr.slice(0, 2);
-              window.open(`state/${abbr}.html`, '_blank');
-            });
-        } else {
-          g.style('cursor', 'default');
-        }
-      });
-
-      // Keep label layer on top of overlay if exists
-      try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
-      //console.log('[smallBoxes] render done (svg overlay). count:', data.length);
-    } catch (e) { console.warn('[smallBoxes] svg overlay render error', e); }
-  }
-
-  function raiseStateLabelsLayer() {
-    try {
-      if (stateLabelsLayer && !stateLabelsLayer.empty()) stateLabelsLayer.raise();
-      else {
-        const sel = d3.select('svg#map').select('g.state-labels');
-        if (!sel.empty()) sel.raise();
-      }
-    } catch (e) { console.warn(e); }
-  }
-
-  // Recompute visual centers if layout/projection likely changed
-  try {
-    window.addEventListener('resize', function () {
-      try { _visualCenterCache.clear(); } catch (e) { console.warn(e); }
-      try { updateStateLabels(window._curYear || 2024); } catch (e) { console.warn(e); }
-    });
-    window.addEventListener('mapReady', function () {
-      try { _visualCenterCache.clear(); } catch (e) { console.warn(e); }
-    });
-  } catch (e) { console.warn(e); }
-
-  function ensureStateLabelsLayer() {
-    try {
-      try {
-        const svgSel = d3.select('svg#map');
-        //console.log('[labels] ensureStateLabelsLayer enter', { svgExists: !svgSel.empty(), mapGExists: !!window.mapG });
-      } catch (e) { console.warn(e); }
-      if (stateLabelsLayer && !stateLabelsLayer.empty()) return stateLabelsLayer;
-      // Prefer to attach to main map group if exposed; otherwise, to the svg root
-      const svg = d3.select('svg#map');
-      if (svg.empty()) { try { console.warn('[labels] svg#map not found'); } catch (e) { console.warn(e); }; return null; }
-      // Normalize mapG to a proper D3 selection if available
-      let parent = null;
-      try {
-        if (window.mapG) {
-          if (typeof window.mapG.node === 'function') {
-            parent = window.mapG; // already a selection
-          } else if (window.mapG instanceof Element || (window.mapG.nodeType === 1)) {
-            parent = d3.select(window.mapG);
-          }
-        }
-      } catch (e) { parent = null; }
-      if (!parent || parent.empty()) parent = svg;
-      try {
-        //console.log('[labels] parent resolved', { tag: parent.node() && parent.node().tagName, id: parent.attr('id') || '', class: parent.attr('class') || '' });
-      } catch (e) { console.warn(e); }
-      let layer = parent.select('g.state-labels');
-      if (layer.empty()) {
-        layer = parent.append('g').attr('class', 'state-labels').attr('pointer-events', 'none');
-        //try { console.log('[labels] created state-labels layer under', parent.node() === svg.node() ? 'svg#map' : 'mapG'); } catch(e) {}
-      }
-      // keep labels above states/districts
-      try { layer.raise(); } catch (e) { console.warn(e); }
-      stateLabelsLayer = layer;
-      try {
-        const countNow = svg.selectAll('g.state-labels').nodes().length;
-        //console.log('[labels] ensureStateLabelsLayer exit', { layersInSvg: countNow });
-      } catch (e) { console.warn(e); }
-      return layer;
-    } catch (e) { return null; }
-  }
-
-  // Compute total EV for a state abbreviation, summing district/at-large rows as needed
-  function getTotalEvForState(year, abbr) {
-    try {
-      if (typeof window.getRowsForYear !== 'function') return null;
-      const rows = window.getRowsForYear(year) || [];
-      let sum = 0; let found = false;
-      for (const r of rows) {
-        if (!r || !r.unit || r.unit === 'NATIONAL') continue;
-        const u = String(r.unit);
-        if (u === abbr || u.startsWith(abbr + '-')) {
-          const ev = +r.ev || 0;
-          if (isFinite(ev)) { sum += ev; found = true; }
-        }
-      }
-      if (found) return sum;
-      // fallback to single lookup if present in ev map
-      try {
-        const ev = window._evByUnitMap && window._evByUnitMap.get(`${year}:${abbr}`);
-        if (isFinite(ev)) return ev;
-      } catch (e) { console.warn(e); }
-      return null;
-    } catch (e) {
-      console.warn(e);
-      return null;
-    }
-  }
-
-  // Create/update text labels for states for the current year
-  function updateStateLabels(year) {
-    const layer = ensureStateLabelsLayer();
-    if (!layer) return;
-    // Build or update labels for each state path
-    const states = d3.selectAll('path.state');
-    //try { console.log('[labels] updateStateLabels start', { year, stateCount: states.size ? states.size() : states.nodes().length }); } catch(e) {}
-    if (states.empty()) {
-      // Map may not be ready yet; try again shortly
-      try { setTimeout(() => { try { updateStateLabels(year); } catch (e) { console.warn(e); } }, 100); } catch (e) { console.warn(e); }
-      return;
-    }
-    // Extra guard: if the label layer somehow isn't attached, create under svg directly
-    try {
-      if (!stateLabelsLayer || stateLabelsLayer.empty()) {
-        const svg = d3.select('svg#map');
-        stateLabelsLayer = svg.append('g').attr('class', 'state-labels').attr('pointer-events', 'none');
-        console.log('[labels] fallback created state-labels under svg');
-      }
-    } catch (e) { console.warn(e); }
-    states.each(function (d) {
-      try {
-        const node = d3.select(this).node();
-        // derive abbr from FIPS id
-        const id = (d && d.id != null) ? String(d.id).padStart(2, '0') : (node && node.__data__ && node.__data__.id != null ? String(node.__data__.id).padStart(2, '0') : null);
-        if (!id || !(id in ID_TO_ABBR)) return;
-        const abbr = ID_TO_ABBR[id];
-        if (SMALL_STATES.has(abbr)) return; // skip tiny states
-
-        // Compute visual center (polylabel-like) conditionally.
-        // If whitelist is empty -> treat as ALL states using visual center.
-        let cx = null, cy = null;
-        const useVC = (!_visualCenterStates || _visualCenterStates.size === 0 || _visualCenterStates.has(abbr));
-        if (useVC) {
-          try {
-            const cached = _visualCenterCache.get(abbr);
-            if (cached) { cx = cached.x; cy = cached.y; }
-            else if (d && (d.type || (d.geometry && d.geometry.type))) {
-              const geom = (d.type && d.coordinates) ? d : (d.geometry || null);
-              const vc = _computeVisualCenter(geom, abbr);
-              if (vc) { cx = vc.x; cy = vc.y; }
-            }
-          } catch (e) { console.warn(e); }
-        }
-        // Fallbacks: centroid, then bbox center
-        if (cx == null || cy == null) {
-          try {
-            if (window.mapPath && typeof window.mapPath.centroid === 'function' && d) {
-              const c = window.mapPath.centroid(d);
-              if (Array.isArray(c) && c.length === 2 && isFinite(c[0]) && isFinite(c[1])) { cx = c[0]; cy = c[1]; }
-            }
-          } catch (e) { console.warn(e); }
-        }
-        if (cx == null || cy == null) {
-          let bbox;
-          try { bbox = node.getBBox(); } catch (e) { console.warn(e); bbox = null; }
-          if (!bbox) return;
-          cx = bbox.x + bbox.width / 2;
-          cy = bbox.y + bbox.height / 2;
-        }
-
-        // Resolve EV
-        let ev = null;
-        try {
-          ev = (typeof window.getEvFor === 'function') ? window.getEvFor(year, abbr) : null;
-        } catch (e) { console.warn(e); }
-        if (ev == null || !isFinite(ev)) {
-          ev = getTotalEvForState(year, abbr);
-        }
-        if (ev == null || !isFinite(ev)) ev = '';
-
-        // Create or update the label
-        let t = _labelCache.get(abbr);
-        const isNew = (!t || t.empty());
-        if (isNew) {
-          t = layer.append('text')
-            .attr('class', 'state-label')
-            .attr('text-anchor', 'middle')
-            .attr('dominant-baseline', 'middle')
-            .attr('dy', '0');
-          _labelCache.set(abbr, t);
-        }
-        // Two-line label: abbreviation on top, EV on second line
-        const lines = (ev === '' || ev == null) ? [abbr] : [abbr, String(ev)];
-        // Ensure numeric coordinates
-        const fx = (isFinite(cx) ? cx : 0);
-        const fy = (isFinite(cy) ? cy : 0);
-        t.attr('x', fx).attr('y', fy);
-        try {
-          // Clear existing tspans and recreate for predictable layout
-          t.selectAll('tspan').remove();
-          if (lines.length === 1) {
-            t.append('tspan').attr('x', fx).attr('dy', '0').text(lines[0]);
-          } else {
-            // Slight negative dy on first tspan so the pair is visually centered at (x,y)
-            t.append('tspan').attr('x', fx).attr('dy', '-0.45em').text(lines[0]);
-            t.append('tspan').attr('x', fx).attr('dy', '1.3em').text(lines[1]);
-          }
-        } catch (e) {
-          // Fallback: single-line fallback if tspans fail
-          t.text(lines.join(' '));
-        }
-        // TX-only debug logs to verify label creation/update
-        if (abbr === 'TX') {
-          // try {
-          //   console.log('[labels] TX', { created: isNew, cx: Math.round(cx), cy: Math.round(cy), ev: ev });
-          // } catch(e) {}
-          // Optional debug dot at centroid when window._labelDebug is truthy
-          try {
-            if (window._labelDebug) {
-              const dotSel = stateLabelsLayer.selectAll('circle.tx-debug-dot').data([0]);
-              dotSel.join(
-                enter => enter.append('circle').attr('class', 'tx-debug-dot').attr('r', 4).attr('fill', '#ff0').attr('stroke', '#000').attr('stroke-width', 1).attr('cx', fx).attr('cy', fy),
-                update => update.attr('cx', fx).attr('cy', fy),
-                exit => exit.remove()
-              );
-            }
-          } catch (e) { console.warn(e); }
-        }
-      } catch (e) { console.warn(e); }
-    });
-    // keep labels above boundaries and districts
-    try { stateLabelsLayer.raise(); } catch (e) { console.warn(e); }
-    // Post-update: quick presence check without spamming
-    // try {
-    //   const tx = _labelCache.get('TX');
-    //   console.log('[labels] updateStateLabels done', { labelsCount: stateLabelsLayer.selectAll('text.state-label').nodes().length, hasTXLabel: !!tx && !tx.empty() });
-    // } catch(e) {}
-  }
-
-  // Ensure we react immediately when the map signals it's ready, even if data loads later/earlier
   try {
     window.addEventListener('mapReady', function () {
       try {
@@ -989,17 +520,11 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
   try { window.leanStr = leanStr; } catch (e) { console.warn(e); }
 
   function marginToColor(m, isThirdParty = false) {
-    if (isThirdParty) return '#C9A400'; // Yellow for third-party
-    if (m <= -0.20) return '#8B0000';
-    if (m <= -0.10) return '#B22222';
-    if (m <= -0.05) return '#CD5C5C';
-    if (m < -0.01) return '#F08080';
-    if (m < 0) return '#b67d86ff';
-    if (m < 0.01) return '#8aa7baff';
-    if (m < 0.05) return '#87CEFA';
-    if (m < 0.10) return '#6495ED';
-    if (m < 0.20) return '#4169E1';
-    return '#00008B';
+    if (isThirdParty) return '#C9A400';
+    const val = Number(m);
+    if (!isFinite(val)) return '#999';
+    if (val < 0 && val > -0.01) return '#b67d86ff';
+    return siteColorForMargin(val, true);
   }
   try { window.marginToColor = marginToColor; } catch (e) { console.warn(e); }
 
@@ -1378,7 +903,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
       const pvIndex = pvEl ? parseInt(pvEl.value) : 0;
       updateUrl(year, pvIndex, null);
     });
-    // Metric change resets flips and re-renders
     if (flipMetricSel) {
       flipMetricSel.addEventListener('change', () => {
         const yEl = document.getElementById('yearSlider');
@@ -1387,30 +911,25 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
         const pvIdx = pvEl ? parseInt(pvEl.value) : null;
         const hadActive = !!(window._activeFlip && window._activeFlip.year === yNow);
         const prevMode = hadActive ? window._activeFlip.mode : null;
-        // Do not clear the details if open; instead, re-apply same flip mode with new metric
-        if (!hadActive) { try { clearFlips(); } catch (e) { console.warn(e); } }
+        if (!hadActive) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
         updateFlipMetricOptionsForYear();
-        // If a flip is active, re-apply same mode using the new metric
         if (hadActive && prevMode) {
-          try { applyFlip(prevMode); } catch (e) { updateAll(); }
+          try { applyFlip(prevMode); } catch (err) { updateAll(); }
         } else {
           updateAll();
         }
-        // Update URL to include metric
         try {
           const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
           updateUrl(yNow, pvIdx, flipMode);
-        } catch (e) { console.warn(e); }
+        } catch (err) { console.warn(err); }
       });
     }
     pvSlider.addEventListener('input', () => {
-      // Don't clear flips if we're in the middle of applying one
       if (!window._applyingFlip) clearFlips();
-      // moving the slider cancels any PV override and flipped flag
-      try { window._pvOverride = null; } catch (e) { console.warn(e); }
-      // no flipped flag; numeric overrides encode sign directly
+      try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
       updateAll();
-      // Update URL with new PV index
       const yearEl = document.getElementById('yearSlider');
       const year = yearEl ? parseInt(yearEl.value) : null;
       const pvIndex = parseInt(pvSlider.value);
@@ -1418,30 +937,22 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
       updateUrl(year, pvIndex, flipMode);
     });
 
-    let y = 0; for (const k of byYear.keys()) y = Math.max(y, k);
-    // Default selection: prefer 2028 when in future mode (if we have data for it),
-    // otherwise fall back to historical default 2024 when no data found.
+    let y = 0;
+    for (const k of byYear.keys()) y = Math.max(y, k);
     if (window._futureMode) {
       if (byYear.has(2028)) y = 2028;
       else if (y === 0) y = 2024;
-    } else {
-      if (y === 0) y = 2024;
+    } else if (y === 0) {
+      y = 2024;
     }
 
-    // Load from URL parameters if available
     const urlParams = getUrlParams();
     if (urlParams.year && byYear.has(urlParams.year)) {
       y = urlParams.year;
     }
-    // Preselect metric from URL if present
-    try {
-      const sel = document.getElementById('flipMetric');
-      if (sel && urlParams.metric && (urlParams.metric === 'votes' || urlParams.metric === 'margin')) {
-        sel.value = urlParams.metric;
-      }
-    } catch (e) { console.warn(e); }
-
-    // Preselect proportional EV mode from URL if present
+    if (flipMetricSel && urlParams.metric && (urlParams.metric === 'votes' || urlParams.metric === 'margin')) {
+      flipMetricSel.value = urlParams.metric;
+    }
     try {
       const propEvToggle = document.getElementById('propEvToggle');
       if (propEvToggle && urlParams.propEv) {
@@ -1450,61 +961,63 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
     } catch (e) { console.warn(e); }
 
     yearSlider.value = String(y);
-    yearVal.textContent = y;
+    if (yearVal) yearVal.textContent = y;
 
-    buildPvStops(y, {
-      container: pvStops,
-      datalist: pvStopsList,
-      getNatMargin,
-      updateAll
-    });
-    // configure discrete slider bounds based on stops
+    // Populate stop maps for the default year before configuring the slider UI
+    buildPvStops(y);
     const stops = stopsByYear.get(y) || [0];
     pvSlider.min = 0;
     pvSlider.max = Math.max(0, stops.length - 1);
     pvSlider.step = 1;
-    // default to national margin stop if present, otherwise center (0)
-    let defaultIdx = stops.indexOf(getNatMargin(y));
-    if (defaultIdx === -1) defaultIdx = Math.max(0, stops.indexOf(0));
-    if (defaultIdx === -1) defaultIdx = 0;
+    const nat = getNatMargin(y);
+    let defaultIdx = stops.findIndex(v => Math.abs(v - nat) <= STOP_EPS);
+    if (defaultIdx < 0) defaultIdx = stops.findIndex(v => Math.abs(v) <= STOP_EPS);
+    if (defaultIdx < 0) defaultIdx = 0;
 
-    // Override with URL parameter if available
-    // Support three flavors: pv (slider index), pvValue (explicit numeric PV), pvPreset (named preset)
     if (urlParams.pv !== null && Number.isInteger(urlParams.pv) && urlParams.pv >= 0 && urlParams.pv < stops.length) {
       defaultIdx = Math.floor(urlParams.pv);
     } else if (urlParams.pvValue != null && isFinite(urlParams.pvValue)) {
-      // Apply numeric PV override
-      try { window._pvOverride = parseFloat(urlParams.pvValue); } catch (e) { window._pvOverride = null; }
-      // If flipped flag present, negate the override and mark flipped state
-      if (urlParams.pvValue) { try { window._pvOverride = parseFloat(urlParams.pvValue); } catch (e) { console.warn(e); } }
+      try {
+        window._pvOverride = parseFloat(urlParams.pvValue);
+        window._pvPresetName = null;
+      } catch (err) { console.warn(err); }
     } else if (urlParams.pvPreset != null) {
-      // Look up preset by scanning pvPreset select options (match label/value)
       const pvPresetEl = document.getElementById('pvPreset');
       if (pvPresetEl) {
         const want = String(urlParams.pvPreset).toLowerCase();
         let foundVal = null;
+        let foundName = null;
         for (const opt of Array.from(pvPresetEl.options)) {
-          const label = (opt.text || '').split(':')[0].trim().toLowerCase();
-          if (label === want || (opt.text || '').toLowerCase().includes(want) || (opt.value || '').toLowerCase() === want) {
+          const rawLabel = (opt.text || '').split(':')[0].trim();
+          const labelLower = rawLabel.toLowerCase();
+          const valueLower = (opt.value || '').toLowerCase();
+          if (labelLower === want || (opt.text || '').toLowerCase().includes(want) || valueLower === want) {
             foundVal = parseFloat(opt.value);
+            foundName = rawLabel || opt.value || null;
             pvPresetEl.value = opt.value;
             break;
           }
         }
         if (foundVal != null && !isNaN(foundVal)) {
-          try { window._pvOverride = foundVal; } catch (e) { window._pvOverride = null; }
-          if (urlParams.pvValue) { try { window._pvOverride = foundVal; } catch (e) { console.warn(e); } }
+          try {
+            window._pvOverride = foundVal;
+            window._pvPresetName = foundName;
+          } catch (err) { console.warn(err); }
         }
       }
     }
 
+    if (!(typeof window._pvOverride === 'number' && isFinite(window._pvOverride))) {
+      try { window._pvPresetName = null; } catch (err) { console.warn(err); }
+    }
+
     pvSlider.value = String(defaultIdx);
     const curStop = stops[defaultIdx] || 0;
-    const nat = getNatMargin(y);
     const curEff = stopToEff.get(curStop) || (curStop + EPS * (curStop === 0 ? 1 : Math.sign(curStop - nat)));
     const showNatInit = ((!(window._futureMode && y > 2024)) && Math.abs(curStop - nat) < STOP_EPS);
-    pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
-    // set up datalist and stop chips
+    if (pvVal) pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
+
+    // Render stop chips and datalist now that slider/default are aligned
     buildPvStops(y, {
       container: pvStops,
       datalist: pvStopsList,
@@ -1934,7 +1447,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
           d3.select(this).attr('fill', fill);
         }
       });
-      try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
     })();
 
     // color district polygons (ME/NE) if overlay loaded
@@ -1973,7 +1485,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
             } catch (e) { console.warn(e); }
           });
           // after districts update, keep labels above them
-          try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
         } catch (e) { /* ignore */ }
       }
     }
@@ -2239,23 +1750,11 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
       }
     } catch (e) { /* non-fatal */ }
 
-    // Render small-state side boxes (DC, ME-AL, NE-AL, and other tiny states)
+    // Refresh map decorations (state labels + small-state overlay)
     try {
-      // Expose the latest color maps for console inspection
       window._lastAbbrColors = abbrColors;
       window._lastUnitColors = unitColors;
-      //console.log('[smallBoxes] invoking renderSmallStateBoxes', {
-      //  year,
-      //  abbrColors: abbrColors ? abbrColors.size : 0,
-      //  unitColors: unitColors ? unitColors.size : 0
-      //});
-      if (typeof renderSmallStateBoxes === 'function') {
-        renderSmallStateBoxes(year, abbrColors, unitColors);
-      } else if (typeof window.renderSmallStateBoxes === 'function') {
-        window.renderSmallStateBoxes(year, abbrColors, unitColors);
-      } else {
-        console.warn('[smallBoxes] renderSmallStateBoxes not found in scope');
-      }
+      refreshMapDecorations(year, abbrColors, unitColors);
     } catch (e) { console.warn('[smallBoxes] error rendering side boxes', e); }
 
     // Render relative margin deltas panel when container exists
@@ -2388,7 +1887,6 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
     try { updateCandidateInfo(year); } catch (e) { console.warn(e); }
     // Update on-map labels last so they sit on top and have current EV totals
     try { updateStateLabels(year); } catch (e) { console.warn(e); }
-    try { raiseStateLabelsLayer(); } catch (e) { console.warn(e); }
   }
 
   setFlipDependencies({ updateAll, updateUrl });
