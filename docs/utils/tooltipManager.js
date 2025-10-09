@@ -66,28 +66,16 @@ export function formatUnitTooltip(unit, opts) {
         let ev = options.evOverride;
         if (info && info.ev != null && !isNaN(info.ev)) ev = info.ev;
         //console.log('formatUnitTooltip', { unit, info, ev, options });
-        let marginStr = options.marginOverride || '';
-        if (info && info.marginStr) marginStr = info.marginStr;
-        //console.log('formatUnitTooltip marginStr', marginStr);
-        const cappedMarginStr = (function () {
-            if (!marginStr || typeof marginStr !== 'string') return marginStr;
-            const match = marginStr.match(/^([A-Z])\+([\d.]+)$/);
-            if (!match) return marginStr;
-            const prefix = match[1];
-            const value = parseFloat(match[2]);
-            if (!isFinite(value) || value <= 99.9) return marginStr;
-            return `${prefix}+99.9`;
-        })();
+        // Prepare marginStr handling. marginOverride may be a string or a function
+        let marginStr = '';
+        const marginOverride = options.marginOverride;
+        if (typeof marginOverride !== 'undefined' && typeof marginOverride !== 'function') marginStr = marginOverride;
+        // if info provides a static marginStr (string), prefer it for now
+        if (info && info.marginStr && typeof info.marginStr !== 'function') marginStr = info.marginStr;
+        //console.log('formatUnitTooltip marginStr (pre-voteTallies)', marginStr);
 
-        // Build tooltip content with multiple rows
+        // Build tooltip content with multiple rows. We'll assemble rows after computing vote tallies
         const rows = [];
-
-        // First row: Basic info (display name, EV, margin)
-        const basicParts = [];
-        if (display) basicParts.push(display);
-        if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
-        if (cappedMarginStr) basicParts.push(cappedMarginStr);
-        if (basicParts.length) rows.push(basicParts.join(' · '));
 
         // Second row: EV allocation (for proportional mode)
         const evAllocation = (function () {
@@ -139,12 +127,30 @@ export function formatUnitTooltip(unit, opts) {
                 else evParts.push(`O: ${othersTotal}`);
             }
             if (evParts.length) {
+                // we'll push this later in the final assembly so the basic row stays first
                 rows.push(evParts.join(' | '));
             }
         }
-
         // Third row: Vote tallies (for index.html - real elections only)
         const voteTallies = (typeof calculateUnitVoteTallies === 'function') ? calculateUnitVoteTallies(unit) : calculateUnitVoteTallies(unit);
+        // Helper: derive a marginStr from raw vote tallies (leader vs runner-up, percent of two-party)
+        function marginStrFromVoteTallies(vt) {
+            try {
+                const parts = [
+                    { party: 'D', count: vt.D },
+                    { party: 'R', count: vt.R },
+                    { party: 'O', count: vt.O }
+                ].filter(v => isFinite(v.count) && v.count > 0).sort((a, b) => b.count - a.count);
+                if (parts.length < 2) return '';
+                const top = parts[0], second = parts[1];
+                const twoPartyTotal = top.count + second.count;
+                if (!isFinite(twoPartyTotal) || twoPartyTotal <= 0) return '';
+                const pct = (top.count - second.count) / twoPartyTotal * 100;
+                const s = Math.abs(pct).toFixed(1);
+                return `${top.party}+${s}`;
+            } catch (e) { return ''; }
+        }
+
         if (voteTallies) {
             const voteParts = [];
             const formatter = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
@@ -185,7 +191,6 @@ export function formatUnitTooltip(unit, opts) {
 
             // Only add vote row if we have votes to display
             if (voteParts.length) rows.push(voteParts.join(' | '));
-
             // Add vote margin between top and runner-up
             const votes = [
                 { party: 'D', count: voteTallies.D },
@@ -194,12 +199,46 @@ export function formatUnitTooltip(unit, opts) {
             ].filter(v => v.count > 0).sort((a, b) => b.count - a.count);
 
             if (votes.length >= 2) {
-                const margin = votes[0].count - votes[1].count;
-                const marginText = `${frontRunner}+${formatter(margin)} vote${margin !== 1 ? 's' : ''}`;
-                if (window.DEBUG_TOOLTIP) console.log('formatUnitTooltip vote margin', { unit, votes, margin, marginText });
-                rows.push(marginText);
+                const voteMargin = votes[0].count - votes[1].count;
+                const voteMarginText = `${frontRunner}+${formatter(voteMargin)} vote${voteMargin !== 1 ? 's' : ''}`;
+                const pctMargin = ((voteMargin / votes.reduce((acc, v) => acc + v.count, 0)) * 100).toFixed(1);
+                const pctMarginText = `${frontRunner}+${pctMargin}`;
+                if (window.DEBUG_TOOLTIP) console.log('formatUnitTooltip vote margin', { unit, votes, voteMargin: voteMargin, voteMarginText: voteMarginText });
+                console.log('formatUnitTooltip vote margin', { unit, votes, voteMargin: voteMargin, voteMarginText: voteMarginText, pctMargin: pctMargin });
+                console.log('formatUnitTooltip rows', rows);
+                rows.push(voteMarginText);
+                // replace the marginStr with pctMarginText because we have real vote tallies   
+                marginStr = pctMarginText;
+            }
+
+            // If marginStr wasn't provided as a static string, allow a functional override
+            if (typeof options.marginOverride === 'function') {
+                try { marginStr = options.marginOverride(voteTallies) || marginStr; } catch (e) { }
+            }
+            // If still no marginStr, derive it from tallies
+            if (!marginStr || typeof marginStr !== 'string' || marginStr === '') {
+                const derived = marginStrFromVoteTallies(voteTallies);
+                if (derived) marginStr = derived;
             }
         }
+
+        // Now that marginStr may have been updated from vote tallies, clamp large values
+        const cappedMarginStr = (function () {
+            if (!marginStr || typeof marginStr !== 'string') return marginStr;
+            const match = marginStr.match(/^([A-Z])\+([\d.]+)$/);
+            if (!match) return marginStr;
+            const prefix = match[1];
+            const value = parseFloat(match[2]);
+            if (!isFinite(value) || value <= 99.9) return marginStr;
+            return `${prefix}+99.9`;
+        })();
+
+        // First row: Basic info (display name, EV, margin)
+        const basicParts = [];
+        if (display) basicParts.push(display);
+        if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
+        if (cappedMarginStr) basicParts.push(cappedMarginStr);
+        if (basicParts.length) rows.unshift(basicParts.join(' · '));
 
         // Election night reporting info
         const reportingText = (function () {
@@ -409,7 +448,7 @@ export function getAdjustedInfo(unit) {
                     }
                 }
             }
-        } catch (e) { /* non-fatal recompute for AL */ }
+        } catch (e) { console.error('Error recomputing ME/NE at-large margin:', e); }
         // Check if this unit is flipped in the current scenario
         const flipped = (typeof isUnitFlipped === 'function') ? isUnitFlipped(year, keyUnit) : (typeof window.isUnitFlipped === 'function' ? window.isUnitFlipped(year, keyUnit) : false);
         if (flipped) {
@@ -433,7 +472,7 @@ export function getAdjustedInfo(unit) {
                 // if still serialized string, leave as-is and parsing elsewhere will handle it
             }
 
-        } catch (e) { }
+        } catch (e) { console.error('Error building candidate map in getAdjustedInfo:', e); }
 
         return {
             ev,

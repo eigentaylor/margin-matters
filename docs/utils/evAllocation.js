@@ -556,9 +556,11 @@ export function calculateUnitWinnerTakeAllEVs(unit) {
         if (unit === 'AL' && year === 1960) {
             console.log('[EV-TRACE] 1960 AL special case in static row logic', { r, margin, pv, adjMargin, dEV, rEV, oEV });
             if (rEV === 0) {
+                console.log('[EV-TRACE] 1960 AL special case: R EV is 0');
                 return { D: 5, R: 0, O: 6, thirdParties: {} }; // Special fixed split for 1960 AL if not R winner
             }
             else {
+                console.log('[EV-TRACE] 1960 AL R winner-take-all case');
                 return { D: 0, R: 11, O: 0, thirdParties: {} }; // Normal R winner-take-all 
             }
         }
