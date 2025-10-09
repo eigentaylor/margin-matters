@@ -17,6 +17,7 @@ import {
 import './utils/evBreakdownModal.js';
 import ElectionMap from './utils/electionMap.js';
 import { colorForMargin as siteColorForMargin } from './utils/siteState.js';
+import DataLoader, { loadPresidentialMargins as loadPresidentialMarginsData, loadCsv as loadCsvData } from './utils/dataLoader.js';
 import {
   getUnitFinalVoteTotals,
   calculateUnitVoteTallies,
@@ -348,13 +349,46 @@ import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvSto
   function dbg() {//console.log('[tester]', ...arguments); 
   }
 
-  Promise.all([
-    d3.csv('presidential_margins.csv'),
-    d3.csv('electoral_college.csv').catch(() => []),
-    d3.csv('flip_results.csv').catch(() => []),
-    d3.csv('flip_details.csv').catch(() => []),
-    d3.csv('stop_colors.csv').catch(() => [])
-  ]).then(([margins, ec, flipResults, flipDetails, stopColors]) => {
+  const moduleDataLoader = (DataLoader && typeof DataLoader.loadCsv === 'function')
+    ? DataLoader
+    : ((typeof loadCsvData === 'function' || typeof loadPresidentialMarginsData === 'function')
+      ? {
+          loadCsv: loadCsvData,
+          loadPresidentialMargins: loadPresidentialMarginsData
+        }
+      : null);
+
+  function getActiveDataLoader() {
+    if (moduleDataLoader) return moduleDataLoader;
+    if (typeof window !== 'undefined' && window.DataLoader && typeof window.DataLoader.loadCsv === 'function') {
+      return window.DataLoader;
+    }
+    return null;
+  }
+
+  function loadOptionalCsv(loader, path) {
+    const basePromise = (loader && typeof loader.loadCsv === 'function')
+      ? loader.loadCsv(path)
+      : d3.csv(path);
+    return basePromise.catch(() => []);
+  }
+
+  function loadTesterData() {
+    const loader = getActiveDataLoader();
+    const marginsPromise = (loader && typeof loader.loadPresidentialMargins === 'function')
+      ? loader.loadPresidentialMargins()
+      : d3.csv('presidential_margins.csv');
+
+    return Promise.all([
+      marginsPromise,
+      loadOptionalCsv(loader, 'electoral_college.csv'),
+      loadOptionalCsv(loader, 'flip_results.csv'),
+      loadOptionalCsv(loader, 'flip_details.csv'),
+      loadOptionalCsv(loader, 'stop_colors.csv')
+    ]);
+  }
+
+  loadTesterData().then(([margins, ec, flipResults, flipDetails, stopColors]) => {
     (margins || []).forEach(r => {
       const year = +r.year;
       const unit = r.abbr;
