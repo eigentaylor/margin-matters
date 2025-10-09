@@ -1,0 +1,279 @@
+{
+  "year": 2022,
+  "state": "Indiana",
+  "abbr": "IN",
+  "round": "General",
+  "caption": "2022 United States Senate election in Indiana [ 64 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Indiana",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 1859851,
+  "table": {
+    "caption": "2022 United States Senate election in Indiana [ 64 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Todd Young (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas McDermott Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Sceniak",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Todd Young (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,090,165",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas McDermott Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "704,411",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Sceniak",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63,814",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,461",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,859,851",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Todd Young",
+      "party": "Republican",
+      "votes": 1090165,
+      "percent": 58.62
+    },
+    {
+      "candidate": "Thomas McDermott Jr.",
+      "party": "Democratic",
+      "votes": 704411,
+      "percent": 37.87
+    },
+    {
+      "candidate": "James Sceniak",
+      "party": "Libertarian",
+      "votes": 63814,
+      "percent": 3.43
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1461,
+      "percent": 0.08
+    }
+  ]
+}

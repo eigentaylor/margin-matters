@@ -1,0 +1,246 @@
+{
+  "year": 2012,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "United States Senate election in Ohio, 2012 [ 156 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Ohio",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 5449128,
+  "table": {
+    "caption": "United States Senate election in Ohio, 2012 [ 156 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sherrod Brown (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Josh Mandel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Rupert",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sherrod Brown (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,762,766",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Josh Mandel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,435,744",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Rupert",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "250,618",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,449,128",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Sherrod Brown",
+      "party": "Democratic",
+      "votes": 2762766,
+      "percent": 50.7
+    },
+    {
+      "candidate": "Josh Mandel",
+      "party": "Republican",
+      "votes": 2435744,
+      "percent": 44.7
+    },
+    {
+      "candidate": "Scott Rupert",
+      "party": "Independent",
+      "votes": 250618,
+      "percent": 4.6
+    }
+  ]
+}

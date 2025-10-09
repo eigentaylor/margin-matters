@@ -1,0 +1,322 @@
+{
+  "year": 2012,
+  "state": "Florida",
+  "abbr": "FL",
+  "round": "General",
+  "caption": "United States Senate election in Florida, 2012 [ 127 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Florida",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 8189946,
+  "table": {
+    "caption": "United States Senate election in Florida, 2012 [ 127 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Nelson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Connie Mack IV",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Gaylor",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Borgia",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Nelson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,523,451",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Connie Mack IV",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,458,267",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Gaylor",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "126,079",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Borgia",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "82,089",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "60",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.0",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "8,189,946",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bill Nelson",
+      "party": "Democratic",
+      "votes": 4523451,
+      "percent": 55.23
+    },
+    {
+      "candidate": "Connie Mack IV",
+      "party": "Republican",
+      "votes": 3458267,
+      "percent": 42.23
+    },
+    {
+      "candidate": "Bill Gaylor",
+      "party": "Independent",
+      "votes": 126079,
+      "percent": 1.54
+    },
+    {
+      "candidate": "Chris Borgia",
+      "party": "Independent",
+      "votes": 82089,
+      "percent": 1.0
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 60,
+      "percent": 0.0
+    }
+  ]
+}

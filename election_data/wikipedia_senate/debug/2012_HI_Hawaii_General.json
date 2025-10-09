@@ -1,0 +1,203 @@
+{
+  "year": 2012,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "United States Senate election in Hawaii, 2012 [ 55 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Hawaii",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 430483,
+  "table": {
+    "caption": "United States Senate election in Hawaii, 2012 [ 55 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mazie Hirono",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Linda Lingle",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mazie Hirono",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "269,489",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Linda Lingle",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "160,994",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "430,483",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mazie Hirono",
+      "party": "Democratic",
+      "votes": 269489,
+      "percent": 62.6
+    },
+    {
+      "candidate": "Linda Lingle",
+      "party": "Republican",
+      "votes": 160994,
+      "percent": 37.4
+    }
+  ]
+}

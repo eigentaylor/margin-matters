@@ -1,0 +1,218 @@
+{
+  "year": 2004,
+  "state": "Kentucky",
+  "abbr": "KY",
+  "round": "General",
+  "caption": "2004 Kentucky U.S. Senator general election [ 15 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Kentucky",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 1724362,
+  "table": {
+    "caption": "2004 Kentucky U.S. Senator general election [ 15 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Bunning (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Mongiardo",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Bunning (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "873,507",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Mongiardo",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "850,855",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,724,362",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Bunning",
+      "party": "Republican",
+      "votes": 873507,
+      "percent": 50.66
+    },
+    {
+      "candidate": "Daniel Mongiardo",
+      "party": "Democratic",
+      "votes": 850855,
+      "percent": 49.34
+    }
+  ]
+}

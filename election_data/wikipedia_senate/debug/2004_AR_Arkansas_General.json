@@ -1,0 +1,189 @@
+{
+  "year": 2004,
+  "state": "Arkansas",
+  "abbr": "AR",
+  "round": "General",
+  "caption": "Arkansas Senate election 2004",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Arkansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 1039349,
+  "table": {
+    "caption": "Arkansas Senate election 2004",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Blanche Lincoln (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Holt",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Blanche Lincoln (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "580,973",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Holt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "458,036",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "340",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,039,349",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Blanche Lincoln",
+      "party": "Democratic",
+      "votes": 580973,
+      "percent": 55.9
+    },
+    {
+      "candidate": "Jim Holt",
+      "party": "Republican",
+      "votes": 458036,
+      "percent": 44.07
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 340,
+      "percent": 0.03
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "year": 2012,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "United States Senate election in North Dakota, 2012 [ 63 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_North_Dakota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 321144,
+  "table": {
+    "caption": "United States Senate election in North Dakota, 2012 [ 63 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Heidi Heitkamp",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Berg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic–NPL hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Heidi Heitkamp",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "161,337",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−18.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Berg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "158,401",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+19.79%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,406",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "321,144",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Heidi Heitkamp",
+      "party": "Democratic–NPL",
+      "votes": 161337,
+      "percent": 50.24
+    },
+    {
+      "candidate": "Rick Berg",
+      "party": "Republican",
+      "votes": 158401,
+      "percent": 49.32
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1406,
+      "percent": 0.44
+    }
+  ]
+}

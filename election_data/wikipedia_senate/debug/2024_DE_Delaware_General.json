@@ -1,0 +1,246 @@
+{
+  "year": 2024,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "United States Senate election in Delaware, 2024 [ 42 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Delaware",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 500606,
+  "table": {
+    "caption": "United States Senate election in Delaware, 2024 [ 42 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lisa Blunt Rochester",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Hansen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Katz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lisa Blunt Rochester",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "283,298",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Hansen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "197,753",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.69%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Katz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,555",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "500,606",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lisa Blunt Rochester",
+      "party": "Democratic",
+      "votes": 283298,
+      "percent": 56.59
+    },
+    {
+      "candidate": "Eric Hansen",
+      "party": "Republican",
+      "votes": 197753,
+      "percent": 39.5
+    },
+    {
+      "candidate": "Michael Katz",
+      "party": "Independent Party",
+      "votes": 19555,
+      "percent": 3.91
+    }
+  ]
+}

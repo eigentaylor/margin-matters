@@ -1,0 +1,231 @@
+{
+  "year": 2006,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "General election results [ 107 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Pennsylvania",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 4081043,
+  "table": {
+    "caption": "General election results [ 107 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Casey Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Santorum (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Casey Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,392,984",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+13.2%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Santorum (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,684,778",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.1%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3,281",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,081,043",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Casey Jr.",
+      "party": "Democratic",
+      "votes": 2392984,
+      "percent": 58.64
+    },
+    {
+      "candidate": "Rick Santorum",
+      "party": "Republican",
+      "votes": 1684778,
+      "percent": 41.28
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3281,
+      "percent": 0.08
+    }
+  ]
+}

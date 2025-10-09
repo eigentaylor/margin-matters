@@ -1,0 +1,256 @@
+{
+  "year": 2002,
+  "state": "Mississippi",
+  "abbr": "MS",
+  "round": "General",
+  "caption": "General election results [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Mississippi",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thad Cochran (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shawn O'Hara",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thad Cochran (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "533,269",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "84.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shawn O'Hara",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "97,226",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "436,043",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "630,495",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Thad Cochran (incumbent)",
+      "party": "Republican",
+      "votes": 533269,
+      "percent": 84.58
+    },
+    {
+      "candidate": "Shawn O'Hara",
+      "party": "Reform",
+      "votes": 97226,
+      "percent": 15.42
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 436043,
+      "percent": 69.16
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 630495,
+      "percent": null
+    }
+  ]
+}

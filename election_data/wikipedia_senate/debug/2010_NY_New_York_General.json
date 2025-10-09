@@ -1,0 +1,474 @@
+{
+  "year": 2010,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "United States Senate election in New York, 2010 [ 26 ] [ 27 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_New_York",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 4594038,
+  "table": {
+    "caption": "United States Senate election in New York, 2010 [ 26 ] [ 27 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Schumer (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jay Townsend",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jay Townsend",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jay Townsend",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Colia Clark",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Randy Credico",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,686,043",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "183,672",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "177,396",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Schumer (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,047,111",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.89",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jay Townsend",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,238,947",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jay Townsend",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "240,777",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jay Townsend",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,479,724",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.02",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Colia Clark",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42,340",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.62",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Randy Credico",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,863",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.24",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,594,038",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Schumer",
+      "party": "Democratic",
+      "votes": 3047111,
+      "percent": 66.33
+    },
+    {
+      "candidate": "Jay Townsend",
+      "party": "Republican",
+      "votes": 1479724,
+      "percent": 32.21
+    },
+    {
+      "candidate": "Colia Clark",
+      "party": "Green",
+      "votes": 42340,
+      "percent": 0.92
+    },
+    {
+      "candidate": "Randy Credico",
+      "party": "Libertarian",
+      "votes": 24863,
+      "percent": 0.54
+    }
+  ]
+}

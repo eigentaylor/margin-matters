@@ -1,0 +1,289 @@
+{
+  "year": 2010,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "United States Senate election in Kansas, 2010 [ 41 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Kansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 837692,
+  "table": {
+    "caption": "United States Senate election in Kansas, 2010 [ 41 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Moran",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lisa Johnston",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Dann",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Bellis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Moran",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "587,175",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lisa Johnston",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "220,971",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Dann",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,922",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Bellis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,624",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "837,692",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jerry Moran",
+      "party": "Republican",
+      "votes": 587175,
+      "percent": 70.09
+    },
+    {
+      "candidate": "Lisa Johnston",
+      "party": "Democratic",
+      "votes": 220971,
+      "percent": 26.38
+    },
+    {
+      "candidate": "Michael Dann",
+      "party": "Libertarian",
+      "votes": 17922,
+      "percent": 2.14
+    },
+    {
+      "candidate": "Joe Bellis",
+      "party": "Reform",
+      "votes": 11624,
+      "percent": 1.39
+    }
+  ]
+}

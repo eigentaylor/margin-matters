@@ -1,40 +1,40 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1884,AL,92736,59444,762,1444,"{""Benjamin Butler"": 762, ""John St. John"": 610}",153624
-1884,AR,72734,51198,1847,1847,"{""Benjamin Butler"": 1847}",125779
-1884,CA,89288,102369,2965,5331,"{""Benjamin Butler"": 2037, ""John St. John"": 2965}",196988
-1884,CO,27723,36084,1956,2712,"{""Benjamin Butler"": 1956, ""John St. John"": 756}",66519
-1884,CT,67182,65898,2493,4177,"{""Benjamin Butler"": 1684, ""John St. John"": 2493}",137257
-1884,DE,16957,12953,64,74,"{""Benjamin Butler"": 10, ""John St. John"": 64}",29984
-1884,FL,31769,28031,72,190,"{""John St. John"": 72}",59990
-1884,GA,94667,48603,195,340,"{""Benjamin Butler"": 145, ""John St. John"": 195}",143610
-1884,IL,312351,337469,12074,22850,"{""Benjamin Butler"": 10776, ""John St. John"": 12074}",672670
-1884,IN,245005,238489,8810,11838,"{""Benjamin Butler"": 8810, ""John St. John"": 3028}",495332
-1884,IA,177316,197089,1499,2796,"{""John St. John"": 1499}",377201
-1884,KS,90132,154406,16346,21310,"{""Benjamin Butler"": 16346, ""John St. John"": 4495}",265848
-1884,KY,152961,118690,3139,4830,"{""Benjamin Butler"": 1691, ""John St. John"": 3139}",276481
-1884,LA,62594,46347,338,458,"{""Benjamin Butler"": 120, ""John St. John"": 338}",109399
-1884,ME-AL,52153,72217,3955,6121,"{""Benjamin Butler"": 3955, ""John St. John"": 2160}",130491
-1884,MD,96866,85748,2827,3405,"{""Benjamin Butler"": 578, ""John St. John"": 2827}",186019
-1884,MA,122352,146724,24382,34307,"{""Benjamin Butler"": 24382, ""John St. John"": 9923}",303383
-1884,MI,189361,192669,18403,19156,"{""Benjamin Butler"": 753, ""John St. John"": 18403}",401186
-1884,MN,70065,111685,4684,8267,"{""Benjamin Butler"": 3583, ""John St. John"": 4684}",190017
-1884,MS,77653,43035,0,0,{},120688
-1884,MO,236023,203081,2164,2164,"{""John St. John"": 2164}",441268
-1884,NE-AL,54391,76912,2899,2899,"{""John St. John"": 2899}",134202
-1884,NV,5578,7193,26,26,"{""Benjamin Butler"": 26}",12797
-1884,NH,39198,43254,1580,2134,"{""Benjamin Butler"": 554, ""John St. John"": 1580}",84586
-1884,NJ,127798,123440,6159,9683,"{""Benjamin Butler"": 3496, ""John St. John"": 6159}",260921
-1884,NY,563154,562005,25006,42010,"{""Benjamin Butler"": 17004, ""John St. John"": 25006}",1167169
-1884,NC,142905,125021,430,430,"{""John St. John"": 430}",268356
-1884,OH,368280,400082,11069,16248,"{""Benjamin Butler"": 5179, ""John St. John"": 11069}",784610
-1884,OR,24604,26860,726,1218,"{""Benjamin Butler"": 726, ""John St. John"": 492}",52682
-1884,PA,392785,478804,16992,32275,"{""Benjamin Butler"": 16992, ""John St. John"": 15283}",903864
-1884,RI,12391,19030,928,1350,"{""Benjamin Butler"": 422, ""John St. John"": 928}",32771
-1884,SC,69845,21730,0,1237,"{""Other"": 1237}",92812
-1884,TN,133770,124101,1150,2107,"{""Benjamin Butler"": 957, ""John St. John"": 1150}",259978
-1884,TX,225309,93141,3534,6855,"{""Benjamin Butler"": 3321, ""John St. John"": 3534}",325305
-1884,VT,17331,39514,1753,2556,"{""Benjamin Butler"": 785, ""John St. John"": 1753}",59401
-1884,VA,145491,139356,130,130,"{""John St. John"": 130}",284977
-1884,WV,67311,63096,939,1738,"{""Benjamin Butler"": 799, ""John St. John"": 939}",132145
-1884,WI,146453,161135,7649,12247,"{""Benjamin Butler"": 4598, ""John St. John"": 7649}",319835
-1884,NATIONAL,4914482,4856903,150890,288760,"{""Benjamin Butler"": 134294, ""John St. John"": 150890}",10060145
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1884,AL,92736,59444,762,1444,"{""Benjamin Butler"": 762, ""John St. John"": 610}",153624,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,AR,72734,51198,1847,1847,"{""Benjamin Butler"": 1847}",125779,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,CA,89288,102369,2965,5331,"{""Benjamin Butler"": 2037, ""John St. John"": 2965}",196988,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,CO,27723,36084,1956,2712,"{""Benjamin Butler"": 1956, ""John St. John"": 756}",66519,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,CT,67182,65898,2493,4177,"{""Benjamin Butler"": 1684, ""John St. John"": 2493}",137257,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,DE,16957,12953,64,74,"{""Benjamin Butler"": 10, ""John St. John"": 64}",29984,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,FL,31769,28031,72,190,"{""John St. John"": 72}",59990,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,GA,94667,48603,195,340,"{""Benjamin Butler"": 145, ""John St. John"": 195}",143610,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,IL,312351,337469,12074,22850,"{""Benjamin Butler"": 10776, ""John St. John"": 12074}",672670,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,IN,245005,238489,8810,11838,"{""Benjamin Butler"": 8810, ""John St. John"": 3028}",495332,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,IA,177316,197089,1499,2796,"{""John St. John"": 1499}",377201,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,KS,90132,154406,16346,21310,"{""Benjamin Butler"": 16346, ""John St. John"": 4495}",265848,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,KY,152961,118690,3139,4830,"{""Benjamin Butler"": 1691, ""John St. John"": 3139}",276481,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,LA,62594,46347,338,458,"{""Benjamin Butler"": 120, ""John St. John"": 338}",109399,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,ME-AL,52153,72217,3955,6121,"{""Benjamin Butler"": 3955, ""John St. John"": 2160}",130491,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,MD,96866,85748,2827,3405,"{""Benjamin Butler"": 578, ""John St. John"": 2827}",186019,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,MA,122352,146724,24382,34307,"{""Benjamin Butler"": 24382, ""John St. John"": 9923}",303383,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,MI,189361,192669,18403,19156,"{""Benjamin Butler"": 753, ""John St. John"": 18403}",401186,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,MN,70065,111685,4684,8267,"{""Benjamin Butler"": 3583, ""John St. John"": 4684}",190017,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,MS,77653,43035,0,0,{},120688,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,MO,236023,203081,2164,2164,"{""John St. John"": 2164}",441268,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NE-AL,54391,76912,2899,2899,"{""John St. John"": 2899}",134202,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NV,5578,7193,26,26,"{""Benjamin Butler"": 26}",12797,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NH,39198,43254,1580,2134,"{""Benjamin Butler"": 554, ""John St. John"": 1580}",84586,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NJ,127798,123440,6159,9683,"{""Benjamin Butler"": 3496, ""John St. John"": 6159}",260921,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NY,563154,562005,25006,42010,"{""Benjamin Butler"": 17004, ""John St. John"": 25006}",1167169,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NC,142905,125021,430,430,"{""John St. John"": 430}",268356,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,OH,368280,400082,11069,16248,"{""Benjamin Butler"": 5179, ""John St. John"": 11069}",784610,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,OR,24604,26860,726,1218,"{""Benjamin Butler"": 726, ""John St. John"": 492}",52682,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,PA,392785,478804,16992,32275,"{""Benjamin Butler"": 16992, ""John St. John"": 15283}",903864,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,RI,12391,19030,928,1350,"{""Benjamin Butler"": 422, ""John St. John"": 928}",32771,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,SC,69845,21730,0,1237,"{""Other"": 1237}",92812,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,TN,133770,124101,1150,2107,"{""Benjamin Butler"": 957, ""John St. John"": 1150}",259978,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,TX,225309,93141,3534,6855,"{""Benjamin Butler"": 3321, ""John St. John"": 3534}",325305,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,VT,17331,39514,1753,2556,"{""Benjamin Butler"": 785, ""John St. John"": 1753}",59401,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,VA,145491,139356,130,130,"{""John St. John"": 130}",284977,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,WV,67311,63096,939,1738,"{""Benjamin Butler"": 799, ""John St. John"": 939}",132145,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,WI,146453,161135,7649,12247,"{""Benjamin Butler"": 4598, ""John St. John"": 7649}",319835,https://en.wikipedia.org/wiki/1884_United_States_presidential_election
+1884,NATIONAL,4914482,4856903,150890,288760,"{""Benjamin Butler"": 134294, ""John St. John"": 150890}",10060145,https://en.wikipedia.org/wiki/1884_United_States_presidential_election

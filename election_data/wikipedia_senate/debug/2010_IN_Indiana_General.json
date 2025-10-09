@@ -1,0 +1,274 @@
+{
+  "year": 2010,
+  "state": "Indiana",
+  "abbr": "IN",
+  "round": "General",
+  "caption": "2010 United States Senate election in Indiana [ 54 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Indiana",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 1744481,
+  "table": {
+    "caption": "2010 United States Senate election in Indiana [ 54 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Coats",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brad Ellsworth",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rebecca Sink-Burris",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Coats",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "952,116",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+17.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brad Ellsworth",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "697,775",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−21.65%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rebecca Sink-Burris",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "94,330",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "260",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,744,481",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dan Coats",
+      "party": "Republican",
+      "votes": 952116,
+      "percent": 54.58
+    },
+    {
+      "candidate": "Brad Ellsworth",
+      "party": "Democratic",
+      "votes": 697775,
+      "percent": 40.0
+    },
+    {
+      "candidate": "Rebecca Sink-Burris",
+      "party": "Libertarian",
+      "votes": 94330,
+      "percent": 5.41
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 260,
+      "percent": 0.01
+    }
+  ]
+}

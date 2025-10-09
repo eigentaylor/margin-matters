@@ -1,0 +1,611 @@
+{
+  "year": 2020,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "2020 United States Senate election in Tennessee [ 118 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Tennessee",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 12,
+  "table_total_votes": 2959761,
+  "table": {
+    "caption": "2020 United States Senate election in Tennessee [ 118 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Hagerty",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marquita Bradshaw",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elizabeth McLeod",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Yomi Faparusi",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Hooper",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kacey Morgan (withdrawn)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ronnie Henley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Aaron James",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric William Stansberry",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dean Hill",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeffrey Grunau",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Hagerty",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,840,926",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marquita Bradshaw",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,040,691",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elizabeth McLeod",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,652",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Yomi Faparusi",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,727",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Hooper",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,609",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kacey Morgan (withdrawn)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,598",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ronnie Henley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,478",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Aaron James",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,203",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric William Stansberry",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,781",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dean Hill",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,872",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeffrey Grunau",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,160",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "64",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,959,761",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bill Hagerty",
+      "party": "Republican",
+      "votes": 1840926,
+      "percent": 62.2
+    },
+    {
+      "candidate": "Marquita Bradshaw",
+      "party": "Democratic",
+      "votes": 1040691,
+      "percent": 35.16
+    },
+    {
+      "candidate": "Elizabeth McLeod",
+      "party": "Independent",
+      "votes": 16652,
+      "percent": 0.56
+    },
+    {
+      "candidate": "Yomi Faparusi",
+      "party": "Independent",
+      "votes": 10727,
+      "percent": 0.36
+    },
+    {
+      "candidate": "Stephen Hooper",
+      "party": "Independent",
+      "votes": 9609,
+      "percent": 0.32
+    },
+    {
+      "candidate": "Kacey Morgan",
+      "party": "Independent",
+      "votes": 9598,
+      "percent": 0.32
+    },
+    {
+      "candidate": "Ronnie Henley",
+      "party": "Independent",
+      "votes": 8478,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Aaron James",
+      "party": "Independent",
+      "votes": 7203,
+      "percent": 0.29
+    },
+    {
+      "candidate": "Eric William Stansberry",
+      "party": "Independent",
+      "votes": 6781,
+      "percent": 0.23
+    },
+    {
+      "candidate": "Dean Hill",
+      "party": "Independent",
+      "votes": 4872,
+      "percent": 0.16
+    }
+  ]
+}

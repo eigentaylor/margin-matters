@@ -1,0 +1,547 @@
+{
+  "year": 2012,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "United States Senate election in Tennessee, 2012 [ 21 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Tennessee",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table_total_votes": 2321477,
+  "table": {
+    "caption": "United States Senate election in Tennessee, 2012 [ 21 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Corker (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Clayton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Martin Pleasant",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shaun Crowell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kermit Steck",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Higdon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Joseph Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Troy Stephen Scoggin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Gatchell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Corker (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,506,443",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Clayton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "705,882",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−17.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Martin Pleasant",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38,472",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shaun Crowell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,936",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kermit Steck",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,620",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Higdon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,085",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Joseph Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,080",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Troy Stephen Scoggin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,148",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Gatchell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,523",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,288",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,321,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Corker",
+      "party": "Republican",
+      "votes": 1506443,
+      "percent": 64.89
+    },
+    {
+      "candidate": "Mark Clayton",
+      "party": "Democratic",
+      "votes": 705882,
+      "percent": 30.41
+    },
+    {
+      "candidate": "Martin Pleasant",
+      "party": "Green",
+      "votes": 38472,
+      "percent": 1.66
+    },
+    {
+      "candidate": "Shaun Crowell",
+      "party": "Independent",
+      "votes": 20936,
+      "percent": 0.9
+    },
+    {
+      "candidate": "Kermit Steck",
+      "party": "Constitution",
+      "votes": 18620,
+      "percent": 0.8
+    },
+    {
+      "candidate": "James Higdon",
+      "party": "Independent",
+      "votes": 8085,
+      "percent": 0.35
+    },
+    {
+      "candidate": "Michael Joseph Long",
+      "party": "Independent",
+      "votes": 8080,
+      "percent": 0.35
+    },
+    {
+      "candidate": "Troy Stephen Scoggin",
+      "party": "Independent",
+      "votes": 7148,
+      "percent": 0.31
+    },
+    {
+      "candidate": "David Gatchell",
+      "party": "Independent",
+      "votes": 6523,
+      "percent": 0.28
+    },
+    {
+      "candidate": "Write-ins",
+      "party": "n/a",
+      "votes": 1288,
+      "percent": 0.05
+    }
+  ]
+}

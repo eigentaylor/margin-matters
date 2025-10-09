@@ -1,0 +1,246 @@
+{
+  "year": 2014,
+  "state": "Mississippi",
+  "abbr": "MS",
+  "round": "General",
+  "caption": "2014 United States Senate election in Mississippi [ 87 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Mississippi",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 631858,
+  "table": {
+    "caption": "2014 United States Senate election in Mississippi [ 87 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thad Cochran (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Travis Childers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shawn O'Hara",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thad Cochran (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "378,481",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Travis Childers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "239,439",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shawn O'Hara",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,938",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "631,858",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Thad Cochran",
+      "party": "Republican",
+      "votes": 378481,
+      "percent": 59.9
+    },
+    {
+      "candidate": "Travis Childers",
+      "party": "Democratic",
+      "votes": 239439,
+      "percent": 37.89
+    },
+    {
+      "candidate": "Shawn O'Hara",
+      "party": "Reform",
+      "votes": 13938,
+      "percent": 2.21
+    }
+  ]
+}

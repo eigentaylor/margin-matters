@@ -1,0 +1,279 @@
+{
+  "year": 2024,
+  "state": "Maryland",
+  "abbr": "MD",
+  "round": "General",
+  "caption": "2024 United States Senate election in Maryland [ 388 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Maryland",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 3021378,
+  "table": {
+    "caption": "2024 United States Senate election in Maryland [ 388 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Angela Alsobrooks",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Larry Hogan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Scott",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Angela Alsobrooks",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,650,912",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Larry Hogan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,294,344",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+12.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Scott",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69,396",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "6,726",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,021,378",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Angela Alsobrooks",
+      "party": "Democratic",
+      "votes": 1650912,
+      "percent": 54.64
+    },
+    {
+      "candidate": "Larry Hogan",
+      "party": "Republican",
+      "votes": 1294344,
+      "percent": 42.84
+    },
+    {
+      "candidate": "Mike Scott",
+      "party": "Libertarian",
+      "votes": 69396,
+      "percent": 2.3
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 6726,
+      "percent": 0.22
+    }
+  ]
+}

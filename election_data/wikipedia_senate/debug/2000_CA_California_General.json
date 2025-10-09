@@ -1,0 +1,418 @@
+{
+  "year": 2000,
+  "state": "California",
+  "abbr": "CA",
+  "round": "General",
+  "caption": "2000 U.S. Senate election, California [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_California",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "2000 U.S. Senate election, California [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dianne Feinstein (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Campbell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Medea Susan Benjamin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gail Lightfoot",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Diane Beall Templin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jose Luis Olivares Camahort",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian M. Rees",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Invalid or blank votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dianne Feinstein (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,932,522",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Campbell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,886,853",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Medea Susan Benjamin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "326,828",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gail Lightfoot",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "187,718",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "American Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Diane Beall Templin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "134,598",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jose Luis Olivares Camahort",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "96,552",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian M. Rees",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58,537",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Invalid or blank votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "519,233",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "11,142,841",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.92",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dianne Feinstein (incumbent)",
+      "party": "Democratic",
+      "votes": 5932522,
+      "percent": 55.84
+    },
+    {
+      "candidate": "Tom Campbell",
+      "party": "Republican",
+      "votes": 3886853,
+      "percent": 36.59
+    },
+    {
+      "candidate": "Medea Susan Benjamin",
+      "party": "Green",
+      "votes": 326828,
+      "percent": 3.08
+    },
+    {
+      "candidate": "Gail Lightfoot",
+      "party": "Libertarian",
+      "votes": 187718,
+      "percent": 1.77
+    },
+    {
+      "candidate": "Diane Beall Templin",
+      "party": "American Independent",
+      "votes": 134598,
+      "percent": 1.27
+    },
+    {
+      "candidate": "Jose Luis Olivares Camahort",
+      "party": "Reform",
+      "votes": 96552,
+      "percent": 0.91
+    },
+    {
+      "candidate": "Brian M. Rees",
+      "party": "Natural Law",
+      "votes": 58537,
+      "percent": 0.55
+    },
+    {
+      "candidate": "Invalid or blank votes",
+      "party": "Invalid or blank votes",
+      "votes": 519233,
+      "percent": 4.66
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 5192,
+      "percent": 51.92
+    }
+  ]
+}

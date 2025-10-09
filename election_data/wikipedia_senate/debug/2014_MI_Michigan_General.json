@@ -1,0 +1,365 @@
+{
+  "year": 2014,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "2014 United States Senate election in Michigan [ 170 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Michigan",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 3121775,
+  "table": {
+    "caption": "2014 United States Senate election in Michigan [ 170 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gary Peters",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Terri Lynn Land",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Fulner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Matkin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Wahmhoff",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gary Peters",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,704,936",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Terri Lynn Land",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,290,199",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Fulner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62,897",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Matkin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37,529",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Wahmhoff",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,137",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "77",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,121,775",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Gary Peters",
+      "party": "Democratic",
+      "votes": 1704936,
+      "percent": 54.61
+    },
+    {
+      "candidate": "Terri Lynn Land",
+      "party": "Republican",
+      "votes": 1290199,
+      "percent": 41.33
+    },
+    {
+      "candidate": "Jim Fulner",
+      "party": "Libertarian",
+      "votes": 62897,
+      "percent": 2.01
+    },
+    {
+      "candidate": "Richard Matkin",
+      "party": "Constitution",
+      "votes": 37529,
+      "percent": 1.2
+    },
+    {
+      "candidate": "Chris Wahmhoff",
+      "party": "Green",
+      "votes": 26137,
+      "percent": 0.84
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 77,
+      "percent": 0.0
+    }
+  ]
+}

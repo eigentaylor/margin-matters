@@ -1,0 +1,279 @@
+{
+  "year": 2016,
+  "state": "Maryland",
+  "abbr": "MD",
+  "round": "General",
+  "caption": "United States Senate election in Maryland, 2016 [ 166 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Maryland",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 2726170,
+  "table": {
+    "caption": "United States Senate election in Maryland, 2016 [ 166 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Van Hollen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kathy Szeliga",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Margaret Flowers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Van Hollen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,659,907",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kathy Szeliga",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "972,557",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Margaret Flowers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "89,970",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3,736",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,726,170",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chris Van Hollen",
+      "party": "Democratic",
+      "votes": 1659907,
+      "percent": 60.89
+    },
+    {
+      "candidate": "Kathy Szeliga",
+      "party": "Republican",
+      "votes": 972557,
+      "percent": 35.67
+    },
+    {
+      "candidate": "Margaret Flowers",
+      "party": "Green",
+      "votes": 89970,
+      "percent": 3.3
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3736,
+      "percent": 0.14
+    }
+  ]
+}

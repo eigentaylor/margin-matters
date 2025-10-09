@@ -102,25 +102,8 @@
 
 <body>
   <div class="container">
-    <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
-      <button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu"
-        aria-expanded="false"><span></span><span></span><span></span></button>
-      <div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn"
-          href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn"
-          href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn"
-          href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn"
-          href="./presidential_margins.html">Data (CSV)</a><a class="btn" href="./attributions.html">Attributions</a>
-      </div>
-      <script src="./header-toggle.js"></script>
-    </div>
-    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-      <a class="back" href="./index.html">← Back to Map</a>
-      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-    </div>
-    <div class="flex items-center justify-between mb-4" style="margin-top:12px;margin-bottom:12px"><a class="back"
-        href="./index.html">← Back to Map...</span>...</div>
-    <div class="legend">Trends</div>
-    <script src="./header-toggle.js"></script>
+        <div id="header-placeholder"></div>
+        <div id="back-to-map-placeholder"></div>
 
   </div>
   <div class="legend">Trends</div>
@@ -175,9 +158,8 @@
     <div id="notes" style="margin-top:8px;color:var(--muted);font-size:.92rem"></div>
   </div>
 
-  <footer style="margin-top:16px;color:var(--muted)">
-    Trends page (early). This page will expand with embedded controls, a compact table, and accessible keyboard
-    shortcuts....</span></span></footer>
+
+            <div id="footer-placeholder"></div>
   </div>
 
   <div class="tooltip" id="tooltip"></div>
@@ -274,15 +256,11 @@
       });
     })();
   </script>
-  <footer>Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />
-    Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank'
-      rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC
-    BY-SA 4.0).
-    <footer>Site by eigentaylor. Please report any inaccuracies to me through discord: eigentaylor.<br />
-      Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank'
-        rel='noopener noreferrer'>Wikipedia</a>. Available under the Creative Commons Attribution-ShareAlike License (CC
-      BY-SA 4.0).
-      <script src="./last-updated.js"></script>
+
+        <script src="./header.js"></script>
+        <script src="./back-to-map.js"></script>
+        <script src="./footer.js"></script>
+        <script src="./last-updated.js"></script>
 </body>
 
 </html>

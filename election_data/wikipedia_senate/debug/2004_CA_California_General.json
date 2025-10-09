@@ -1,0 +1,436 @@
+{
+  "year": 2004,
+  "state": "California",
+  "abbr": "CA",
+  "round": "General",
+  "caption": "2004 United States Senate election, California [ 10 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_California",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table_total_votes": 5703,
+  "table": {
+    "caption": "2004 United States Senate election, California [ 10 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barbara Boxer (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Jones",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marsha Feinland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James P. \"Jim\" Gray",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don J. Grundmann",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Invalid or blank votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barbara Boxer (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,955,728",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Jones",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,555,922",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.80%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peace and Freedom",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marsha Feinland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "243,846",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James P. \"Jim\" Gray",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "216,522",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.80%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "American Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don J. Grundmann",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "81,244",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "No party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dennis Richter ( write-in )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "No party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Howard Johnson ( write-in )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "No party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Emery Jones ( write-in )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Invalid or blank votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "536,388",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "12,589,703",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Barbara Boxer",
+      "party": "Democratic",
+      "votes": 6955728,
+      "percent": 57.71
+    },
+    {
+      "candidate": "Bill Jones",
+      "party": "Republican",
+      "votes": 4555922,
+      "percent": 37.8
+    },
+    {
+      "candidate": "Marsha Feinland",
+      "party": "Peace and Freedom",
+      "votes": 243846,
+      "percent": 2.02
+    },
+    {
+      "candidate": "James P. \"Jim\" Gray",
+      "party": "Libertarian",
+      "votes": 216522,
+      "percent": 1.8
+    },
+    {
+      "candidate": "Don J. Grundmann",
+      "party": "American Independent",
+      "votes": 81244,
+      "percent": 0.67
+    },
+    {
+      "candidate": "Dennis Richter",
+      "party": "No party",
+      "votes": 43,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Howard Johnson",
+      "party": "No party",
+      "votes": 8,
+      "percent": 0.0
+    },
+    {
+      "candidate": "John Emery Jones",
+      "party": "No party",
+      "votes": 2,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Invalid or blank votes",
+      "party": "Invalid or blank votes",
+      "votes": 536388,
+      "percent": 4.26
+    }
+  ]
+}

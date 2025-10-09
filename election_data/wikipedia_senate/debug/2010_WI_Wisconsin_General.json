@@ -1,0 +1,274 @@
+{
+  "year": 2010,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "General election results [ 48 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Wisconsin",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 2170430,
+  "table": {
+    "caption": "General election results [ 48 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Russ Feingold (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rob Taylor",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,125,999",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Russ Feingold (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,020,958",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rob Taylor",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,473",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "901",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,170,430",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-26.4%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ron Johnson",
+      "party": "Republican",
+      "votes": 1125999,
+      "percent": 51.86
+    },
+    {
+      "candidate": "Russ Feingold",
+      "party": "Democratic",
+      "votes": 1020958,
+      "percent": 47.02
+    },
+    {
+      "candidate": "Rob Taylor",
+      "party": "Constitution",
+      "votes": 23473,
+      "percent": 1.08
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 901,
+      "percent": 0.04
+    }
+  ]
+}

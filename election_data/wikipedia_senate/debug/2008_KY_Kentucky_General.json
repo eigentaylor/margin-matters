@@ -1,0 +1,203 @@
+{
+  "year": 2008,
+  "state": "Kentucky",
+  "abbr": "KY",
+  "round": "General",
+  "caption": "General election results [ 32 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Kentucky",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 1800821,
+  "table": {
+    "caption": "General election results [ 32 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mitch McConnell (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Lunsford",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mitch McConnell (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "953,816",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.7%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Lunsford",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "847,005",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.7%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,800,821",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mitch McConnell",
+      "party": "Republican",
+      "votes": 953816,
+      "percent": 52.97
+    },
+    {
+      "candidate": "Bruce Lunsford",
+      "party": "Democratic",
+      "votes": 847005,
+      "percent": 47.03
+    }
+  ]
+}

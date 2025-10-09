@@ -1,0 +1,210 @@
+{
+  "year": 2002,
+  "state": "Georgia",
+  "abbr": "GA",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Georgia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Saxby Chambliss",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Max Cleland (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Claude Thomas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Saxby Chambliss",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,071,153",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Max Cleland (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "931,857",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Claude Thomas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26,981",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,029,991",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 6,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Saxby Chambliss",
+      "party": "Republican",
+      "votes": 1071153,
+      "percent": 52.77
+    },
+    {
+      "candidate": "Max Cleland (incumbent)",
+      "party": "Democratic",
+      "votes": 931857,
+      "percent": 45.9
+    },
+    {
+      "candidate": "Claude Thomas",
+      "party": "Libertarian",
+      "votes": 26981,
+      "percent": 1.33
+    }
+  ]
+}

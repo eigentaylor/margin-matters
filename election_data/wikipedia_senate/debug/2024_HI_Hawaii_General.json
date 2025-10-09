@@ -1,0 +1,289 @@
+{
+  "year": 2024,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "2024 United States Senate election in Hawaii [ 31 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Hawaii",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 501763,
+  "table": {
+    "caption": "2024 United States Senate election in Hawaii [ 31 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mazie Hirono (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob McDermott",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shelby Billionaire",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Emma Pohlman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mazie Hirono (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "324,194",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob McDermott",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "160,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "We the People",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shelby Billionaire",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,224",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Emma Pohlman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,270",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "501,763",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mazie Hirono",
+      "party": "Democratic",
+      "votes": 324194,
+      "percent": 64.61
+    },
+    {
+      "candidate": "Bob McDermott",
+      "party": "Republican",
+      "votes": 160075,
+      "percent": 31.9
+    },
+    {
+      "candidate": "Shelby Billionaire",
+      "party": "We the People",
+      "votes": 9224,
+      "percent": 1.84
+    },
+    {
+      "candidate": "Emma Pohlman",
+      "party": "Green",
+      "votes": 8270,
+      "percent": 1.65
+    }
+  ]
+}

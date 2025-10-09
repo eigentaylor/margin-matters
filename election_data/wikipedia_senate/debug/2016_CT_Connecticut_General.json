@@ -1,0 +1,444 @@
+{
+  "year": 2016,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "United States Senate election in Connecticut, 2016 [ 36 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Connecticut",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 1596276,
+  "table": {
+    "caption": "United States Senate election in Connecticut, 2016 [ 36 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Blumenthal",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Blumenthal",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Carter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Lion",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeffery Russell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andrew Rule (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John M. Traceski (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "920,766",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "87,948",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,008,714",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Carter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "552,621",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Lion",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,190",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeffery Russell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,713",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andrew Rule (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John M. Traceski (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,596,276",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Blumenthal",
+      "party": "Democratic",
+      "votes": 1008714,
+      "percent": 63.19
+    },
+    {
+      "candidate": "Dan Carter",
+      "party": "Republican",
+      "votes": 552621,
+      "percent": 34.62
+    },
+    {
+      "candidate": "Richard Lion",
+      "party": "Libertarian",
+      "votes": 18190,
+      "percent": 1.14
+    },
+    {
+      "candidate": "Jeffery Russell",
+      "party": "Green",
+      "votes": 16713,
+      "percent": 1.05
+    },
+    {
+      "candidate": "Andrew Rule",
+      "party": "Independent",
+      "votes": 26,
+      "percent": 0.0
+    },
+    {
+      "candidate": "John M. Traceski",
+      "party": "Independent",
+      "votes": 12,
+      "percent": 0.0
+    }
+  ]
+}

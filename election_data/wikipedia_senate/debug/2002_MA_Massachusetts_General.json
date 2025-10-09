@@ -1,0 +1,256 @@
+{
+  "year": 2002,
+  "state": "Massachusetts",
+  "abbr": "MA",
+  "round": "General",
+  "caption": "2002 U.S. Senate election in Massachusetts [ 2 ] [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Massachusetts",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "2002 U.S. Senate election in Massachusetts [ 2 ] [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Kerry (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Cloud",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Randall Forsberg (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Kerry (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,605,976",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "80.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.29",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Cloud",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "369,807",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Randall Forsberg (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,898",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "6,077",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,006,758",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Kerry (incumbent)",
+      "party": "Democratic",
+      "votes": 1605976,
+      "percent": 80.03
+    },
+    {
+      "candidate": "Michael Cloud",
+      "party": "Libertarian",
+      "votes": 369807,
+      "percent": 18.43
+    },
+    {
+      "candidate": "Randall Forsberg (write-in)",
+      "party": "Independent",
+      "votes": 24898,
+      "percent": 1.24
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 6077,
+      "percent": 0.3
+    }
+  ]
+}

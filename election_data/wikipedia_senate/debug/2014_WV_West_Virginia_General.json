@@ -1,0 +1,327 @@
+{
+  "year": 2014,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "2014 United States Senate election in West Virginia [ 72 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_West_Virginia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 453659,
+  "table": {
+    "caption": "2014 United States Senate election in West Virginia [ 72 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shelley Moore Capito",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Natalie Tennant",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Buckley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Henry Baber",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Phil Hudok",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shelley Moore Capito",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "281,820",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+25.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natalie Tennant",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "156,360",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−29.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Buckley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,409",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mountain",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Henry Baber",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,504",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Phil Hudok",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,566",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "453,659",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Shelley Moore Capito",
+      "party": "Republican",
+      "votes": 281820,
+      "percent": 62.12
+    },
+    {
+      "candidate": "Natalie Tennant",
+      "party": "Democratic",
+      "votes": 156360,
+      "percent": 34.47
+    },
+    {
+      "candidate": "John Buckley",
+      "party": "Libertarian",
+      "votes": 7409,
+      "percent": 1.63
+    },
+    {
+      "candidate": "Bob Henry Baber",
+      "party": "Mountain",
+      "votes": 5504,
+      "percent": 1.21
+    },
+    {
+      "candidate": "Phil Hudok",
+      "party": "Constitution",
+      "votes": 2566,
+      "percent": 0.57
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "year": 2006,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "General election results [ 22 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Nevada",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 582572,
+  "table": {
+    "caption": "General election results [ 22 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Ensign (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack Carter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David K. Schumann",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brendan Trainor",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Ensign (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "322,501",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack Carter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "238,796",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "8,232",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David K. Schumann",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,774",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brendan Trainor",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,269",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "83,705",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "582,572",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Ensign",
+      "party": "Republican",
+      "votes": 322501,
+      "percent": 55.36
+    },
+    {
+      "candidate": "Jack Carter",
+      "party": "Democratic",
+      "votes": 238796,
+      "percent": 40.99
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 8232,
+      "percent": 1.41
+    },
+    {
+      "candidate": "David K. Schumann",
+      "party": "Independent American",
+      "votes": 7774,
+      "percent": 1.33
+    },
+    {
+      "candidate": "Brendan Trainor",
+      "party": "Libertarian",
+      "votes": 5269,
+      "percent": 0.9
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 83705,
+      "percent": 14.37
+    }
+  ]
+}

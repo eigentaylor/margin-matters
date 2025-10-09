@@ -1,0 +1,251 @@
+{
+  "year": 2008,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "2008 Rhode Island U.S. Senator general election",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Rhode_Island",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 436818,
+  "table": {
+    "caption": "2008 Rhode Island U.S. Senator general election",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack Reed (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Tingle",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack Reed (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "320,644",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Tingle",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "116,174",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "204,470",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "436,818",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jack Reed",
+      "party": "Democratic",
+      "votes": 320644,
+      "percent": 73.4
+    },
+    {
+      "candidate": "Bob Tingle",
+      "party": "Republican",
+      "votes": 116174,
+      "percent": 26.6
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 204470,
+      "percent": 46.81
+    }
+  ]
+}

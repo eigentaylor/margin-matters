@@ -1,0 +1,332 @@
+{
+  "year": 2008,
+  "state": "Illinois",
+  "abbr": "IL",
+  "round": "General",
+  "caption": "2008 United States Senate election in Illinois [ 1 ] [ 8 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Illinois",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 5329884,
+  "table": {
+    "caption": "2008 United States Senate election in Illinois [ 1 ] [ 8 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dick Durbin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Sauerberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kathy Cummings",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Larry A. Stafford",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chad N. Koppie",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dick Durbin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,615,844",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Sauerberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,520,621",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kathy Cummings",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "119,135",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Larry A. Stafford",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50,224",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chad N. Koppie",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,059",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,329,884",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dick Durbin",
+      "party": "Democratic",
+      "votes": 3615844,
+      "percent": 67.84
+    },
+    {
+      "candidate": "Steve Sauerberg",
+      "party": "Republican",
+      "votes": 1520621,
+      "percent": 28.53
+    },
+    {
+      "candidate": "Kathy Cummings",
+      "party": "Green",
+      "votes": 119135,
+      "percent": 2.24
+    },
+    {
+      "candidate": "Larry A. Stafford",
+      "party": "Libertarian",
+      "votes": 50224,
+      "percent": 0.94
+    },
+    {
+      "candidate": "Chad N. Koppie",
+      "party": "Constitution",
+      "votes": 24059,
+      "percent": 0.45
+    }
+  ]
+}

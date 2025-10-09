@@ -1,0 +1,391 @@
+{
+  "year": 2024,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "2024 United States Senate election in Connecticut [ 31 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Connecticut",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1708259,
+  "table": {
+    "caption": "2024 United States Senate election in Connecticut [ 31 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Murphy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Matthew Corey",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert F. Hyde",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Justin Paglino",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "953,646",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.83",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.97",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,049",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.75",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Murphy (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,000,695",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.58",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.95",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Matthew Corey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "678,256",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.70",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cheaper Gas Groceries",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert F. Hyde",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,879",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.87",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Justin Paglino",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,422",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.84",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.36",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "7",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,708,259",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chris Murphy",
+      "party": "Democratic",
+      "votes": 1000695,
+      "percent": 58.58
+    },
+    {
+      "candidate": "Matthew Corey",
+      "party": "Republican",
+      "votes": 678256,
+      "percent": 39.7
+    },
+    {
+      "candidate": "Robert F. Hyde",
+      "party": "Cheaper Gas Groceries",
+      "votes": 14879,
+      "percent": 0.87
+    },
+    {
+      "candidate": "Justin Paglino",
+      "party": "Green",
+      "votes": 14422,
+      "percent": 0.84
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 7,
+      "percent": 0.0
+    }
+  ]
+}

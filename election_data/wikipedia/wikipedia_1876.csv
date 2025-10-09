@@ -1,40 +1,40 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1876,AL,102989,68708,0,2,"{""Other"": 2}",171699
-1876,AR,58086,38649,211,211,"{""Peter Cooper"": 211}",96946
-1876,CA,75845,78614,47,85,"{""Peter Cooper"": 47}",154544
-1876,CO,0,0,0,0,{},0
-1876,CT,61927,59033,774,1174,"{""Green Smith"": 374, ""Peter Cooper"": 774}",122134
-1876,DE,13381,10752,0,0,{},24133
-1876,FL,22927,23849,0,0,{},46776
-1876,GA,130157,50533,0,0,{},180690
-1876,IL,258611,278232,17207,17384,"{""Peter Cooper"": 17207}",554227
-1876,IN,213526,208011,17233,17374,"{""Green Smith"": 141, ""Peter Cooper"": 17233}",438911
-1876,IA,112121,171326,9431,9431,"{""Peter Cooper"": 9431}",292878
-1876,KS,37902,78324,7770,7908,"{""Green Smith"": 110, ""Peter Cooper"": 7770}",124134
-1876,KY,160060,97568,0,2998,"{""Other"": 2998}",260626
-1876,LA,70508,75315,0,0,{},145823
-1876,ME-AL,49917,66300,0,828,"{""Other"": 828}",117045
-1876,MD,91779,71980,0,0,{},163759
-1876,MA,108777,150064,0,779,"{""Other"": 779}",259620
-1876,MI,141685,166901,9023,9864,"{""Green Smith"": 766, ""Peter Cooper"": 9023}",318450
-1876,MN,48587,72955,2389,2533,"{""Green Smith"": 144, ""Peter Cooper"": 2389}",124075
-1876,MS,112173,52603,0,0,{},164776
-1876,MO,202086,145027,3497,3497,"{""Peter Cooper"": 3497}",350610
-1876,NE-AL,17413,31915,0,0,{},49328
-1876,NV,9308,10383,0,0,{},19691
-1876,NH,38510,41540,0,91,"{""Other"": 91}",80141
-1876,NJ,115962,103517,714,714,"{""Peter Cooper"": 714}",220193
-1876,NY,521949,489207,2369,4347,"{""Green Smith"": 2369, ""Peter Cooper"": 1978}",1015503
-1876,NC,125427,108484,0,0,{},233911
-1876,OH,323182,330698,3057,4769,"{""Green Smith"": 1636, ""Peter Cooper"": 3057}",658649
-1876,OR,14157,15214,510,510,"{""Peter Cooper"": 510}",29881
-1876,PA,366204,384184,7204,8605,"{""Green Smith"": 1318, ""Peter Cooper"": 7204}",758993
-1876,RI,10712,15787,68,128,"{""Green Smith"": 60, ""Peter Cooper"": 68}",26627
-1876,SC,90897,91786,0,0,{},182683
-1876,TN,133177,89566,0,0,{},222743
-1876,TX,104755,44800,0,0,{},149555
-1876,VT,20254,44091,0,208,"{""Other"": 208}",64553
-1876,VA,140770,95518,0,0,{},236288
-1876,WV,56546,41997,1104,1104,"{""Peter Cooper"": 1104}",99647
-1876,WI,123926,130067,1509,3184,"{""Green Smith"": 27, ""Peter Cooper"": 1509}",257177
-1876,NATIONAL,4286808,4034142,83726,97709,"{""Green Smith"": 6945, ""Peter Cooper"": 83726}",8418659
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1876,AL,102989,68708,0,2,"{""Other"": 2}",171699,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,AR,58086,38649,211,211,"{""Peter Cooper"": 211}",96946,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,CA,75845,78614,47,85,"{""Peter Cooper"": 47}",154544,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,CO,0,0,0,0,{},0,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,CT,61927,59033,774,1174,"{""Green Smith"": 374, ""Peter Cooper"": 774}",122134,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,DE,13381,10752,0,0,{},24133,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,FL,22927,23849,0,0,{},46776,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,GA,130157,50533,0,0,{},180690,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,IL,258611,278232,17207,17384,"{""Peter Cooper"": 17207}",554227,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,IN,213526,208011,17233,17374,"{""Green Smith"": 141, ""Peter Cooper"": 17233}",438911,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,IA,112121,171326,9431,9431,"{""Peter Cooper"": 9431}",292878,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,KS,37902,78324,7770,7908,"{""Green Smith"": 110, ""Peter Cooper"": 7770}",124134,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,KY,160060,97568,0,2998,"{""Other"": 2998}",260626,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,LA,70508,75315,0,0,{},145823,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,ME-AL,49917,66300,0,828,"{""Other"": 828}",117045,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,MD,91779,71980,0,0,{},163759,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,MA,108777,150064,0,779,"{""Other"": 779}",259620,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,MI,141685,166901,9023,9864,"{""Green Smith"": 766, ""Peter Cooper"": 9023}",318450,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,MN,48587,72955,2389,2533,"{""Green Smith"": 144, ""Peter Cooper"": 2389}",124075,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,MS,112173,52603,0,0,{},164776,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,MO,202086,145027,3497,3497,"{""Peter Cooper"": 3497}",350610,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NE-AL,17413,31915,0,0,{},49328,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NV,9308,10383,0,0,{},19691,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NH,38510,41540,0,91,"{""Other"": 91}",80141,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NJ,115962,103517,714,714,"{""Peter Cooper"": 714}",220193,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NY,521949,489207,2369,4347,"{""Green Smith"": 2369, ""Peter Cooper"": 1978}",1015503,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NC,125427,108484,0,0,{},233911,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,OH,323182,330698,3057,4769,"{""Green Smith"": 1636, ""Peter Cooper"": 3057}",658649,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,OR,14157,15214,510,510,"{""Peter Cooper"": 510}",29881,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,PA,366204,384184,7204,8605,"{""Green Smith"": 1318, ""Peter Cooper"": 7204}",758993,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,RI,10712,15787,68,128,"{""Green Smith"": 60, ""Peter Cooper"": 68}",26627,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,SC,90897,91786,0,0,{},182683,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,TN,133177,89566,0,0,{},222743,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,TX,104755,44800,0,0,{},149555,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,VT,20254,44091,0,208,"{""Other"": 208}",64553,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,VA,140770,95518,0,0,{},236288,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,WV,56546,41997,1104,1104,"{""Peter Cooper"": 1104}",99647,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,WI,123926,130067,1509,3184,"{""Green Smith"": 27, ""Peter Cooper"": 1509}",257177,https://en.wikipedia.org/wiki/1876_United_States_presidential_election
+1876,NATIONAL,4286808,4034142,83726,97709,"{""Green Smith"": 6945, ""Peter Cooper"": 83726}",8418659,https://en.wikipedia.org/wiki/1876_United_States_presidential_election

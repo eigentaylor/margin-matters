@@ -1,0 +1,418 @@
+{
+  "year": 2016,
+  "state": "Oregon",
+  "abbr": "OR",
+  "round": "General",
+  "caption": "United States Senate election in Oregon, 2016 [ 35 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Oregon",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 1952478,
+  "table": {
+    "caption": "United States Senate election in Oregon, 2016 [ 35 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ronald Wyden (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Callahan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shanti Lewallen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steven Reynolds",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Navickas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Lindsay",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ronald Wyden (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,105,119",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Callahan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "651,106",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shanti Lewallen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61,915",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steven Reynolds",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59,516",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pacific Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Navickas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48,823",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Lindsay",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,941",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.12",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,058",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,952,478",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ronald Wyden",
+      "party": "Democratic",
+      "votes": 1105119,
+      "percent": 56.6
+    },
+    {
+      "candidate": "Mark Callahan",
+      "party": "Republican",
+      "votes": 651106,
+      "percent": 33.35
+    },
+    {
+      "candidate": "Shanti Lewallen",
+      "party": "Working Families",
+      "votes": 61915,
+      "percent": 3.17
+    },
+    {
+      "candidate": "Steven Reynolds",
+      "party": "Independent Party",
+      "votes": 59516,
+      "percent": 3.05
+    },
+    {
+      "candidate": "Eric Navickas",
+      "party": "Pacific Green",
+      "votes": 48823,
+      "percent": 2.5
+    },
+    {
+      "candidate": "Jim Lindsay",
+      "party": "Libertarian",
+      "votes": 23941,
+      "percent": 1.23
+    },
+    {
+      "candidate": "Write-ins",
+      "party": "n/a",
+      "votes": 2058,
+      "percent": 0.1
+    }
+  ]
+}

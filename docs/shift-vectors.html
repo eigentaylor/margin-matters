@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shift Vectors • Margin Matters</title>
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="maintenance-check.js"></script>
+</head>
+
+<body class="shift-vectors-page shift-vectors">
+    <div class="container">
+        <div id="header-placeholder"></div>
+        <div id="back-to-map-placeholder"></div>
+
+        <div class="card page-title">
+            <h1>Shift Vectors</h1>
+            <div class="legend">Explore how each unit's Democratic and Republican vote totals moved between elections.
+                Every
+                point represents a unit's change in raw votes versus the previous presidential election.</div>
+        </div>
+
+        <div class="card">
+
+            <div class="card">
+                <div class="field">
+                    <label>Legend</label>
+                    <div class="legend-block legend-row"
+                        style="display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start;">
+                        <div class="legend-section">
+                            <strong>Points (quadrants)</strong>
+                            <div class="badges">
+                                <span class="badge"><span class="swatch" style="background:var(--quad-blue)"></span>D ▲
+                                    / R ▼</span>
+                                <span class="badge"><span class="swatch" style="background:var(--quad-red)"></span>D ▼ /
+                                    R ▲</span>
+                                <span class="badge"><span class="swatch" style="background:var(--quad-green)"></span>D ▲
+                                    / R ▲</span>
+                                <span class="badge"><span class="swatch" style="background:var(--quad-purple)"></span>D
+                                    ▼ / R ▼</span>
+                                <span class="badge"><span class="swatch"
+                                        style="background:var(--quad-amber)"></span>Near zero / mixed</span>
+                            </div>
+                        </div>
+                        <div class="legend-section">
+                            <strong>Regions (diagonals)</strong>
+                            <div class="badges small">
+                                <span class="badge"><span class="swatch"
+                                        style="background:var(--region-blue)"></span>Turnout ↑, R gain &gt; D
+                                    gain</span>
+                                <span class="badge"><span class="swatch"
+                                        style="background:var(--region-green)"></span>Turnout ↑, D gain &gt; R
+                                    gain</span>
+                                <span class="badge"><span class="swatch"
+                                        style="background:var(--region-amber)"></span>Turnout ↓, R loss &gt; D
+                                    loss</span>
+                                <span class="badge"><span class="swatch"
+                                        style="background:var(--region-purple)"></span>Turnout ↓, D loss &gt; R
+                                    loss</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="legend-note">Regions show whether turnout moved up/down (above/below the
+                        downward diagonal) and whether Democratic or Republican changes dominated (sides of
+                        the upward diagonal).
+                    </div>
+                </div>
+            </div>
+            <div class="status-row" style="margin-top:14px">
+                <span id="statusText" class="loading">Loading presidential margins…</span>
+                <span id="pointSummary" hidden><strong id="pointCount">0</strong> units plotted</span>
+            </div>
+
+            <div class="card chart-card">
+                <svg id="vectorChart" role="img" aria-label="Scatter plot of vote deltas" viewBox="0 0 860 620"
+                    preserveAspectRatio="xMidYMid meet"></svg>
+                <div id="chartNote" class="chart-note">Hover over any point to see the unit and raw vote deltas. Use the
+                    toggles above to change scaling.</div>
+                <div id="noData" class="empty-state" hidden>No vote-change data for this year.</div>
+            </div>
+
+            <div class="controls">
+                <div class="field year-field">
+                    <label for="yearSlider">Year</label>
+                    <div class="slider-row" style="display:flex;width:100%;align-items:center;gap:12px">
+                        <input id="yearSlider" type="range" min="0" max="1" step="1" value="1"
+                            aria-describedby="yearValue" disabled />
+                    </div>
+                    <span id="yearValue" class="badge">Loading…</span>
+                </div>
+                <br>
+                <div class="field" style="text-align:center;">
+                    <label>Scaling</label>
+                    <div class="toggle-row" style="display:flex;width:100%;align-items:center;gap:12px">
+                        <label><input id="logScaleToggle" type="checkbox" checked /> Log scale (symlog)</label>
+                        <label><input id="fixedLengthToggle" type="checkbox" checked /> Normalize lengths</label>
+                        <label><input id="labelToggle" type="checkbox" checked /> Show labels</label>
+                        <label title="Attempt to place labels for every point (may be slow)"><input id="allLabelToggle"
+                                type="checkbox" checked /> Label all points</label>
+                    </div>
+                </div>
+            </div>
+            <div id="explain" class="chart-note" style="margin-top:8px">
+                Here we plot the change in raw Democratic votes (horizontal axis) versus the change in raw
+                Republican
+                votes
+                (vertical axis) for each unit (state or district) between two elections. We have four quadrants:
+                <ul>
+                    <li>The top-right quadrant (green points) represents units where both parties gained votes. This
+                        is
+                        common in high-turnout elections.</li>
+                    <li>The bottom-left quadrant (purple points) represents units where both parties lost votes.
+                        This
+                        can happen in low-turnout elections or when third-party candidates gain traction.</li>
+                    <li>The top-left quadrant (red points) represents units where Democratic votes decreased while
+                        Republican votes increased.</li>
+                    <li>The bottom-right quadrant (blue points) represents units where Democratic votes increased
+                        while
+                        Republican votes decreased. This is often seen in blue wave elections.</li>
+                    <li>Points near the origin (amber points) indicate minimal change in vote totals for both
+                        parties,
+                        suggesting stability or low turnout changes.</li>
+                </ul>
+                There are also four notable regions on the different sides of the diagonal lines. The downward
+                sloping
+                line separates overall turnout increases (above the line) from overall turnout decreases (below the
+                line). The upward sloping line separates units where Democratic vote changes dominate (right of the
+                line) from those where Republican vote changes dominate (left of the line). Thus:
+                <ul>
+                    <li>Above the line sloping downwards, in the blue and green regions, we have units where overall
+                        turnout increased. In the blue region, Republican votes increased more than Democratic
+                        votes,
+                        and vice versa in the green region.</li>
+                    <li>Below the line sloping downwards, in the purple and amber regions, we have units where
+                        overall
+                        turnout decreased. In the purple region, the loss was greater for the Democrats, and in the
+                        amber region, the loss was greater for the Republicans.</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Data panel: collapsed by default on mobile, expands to show sortable table -->
+        <div class="card data-panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div>
+                    <strong>Data</strong>
+                    <div class="legend-note" style="margin-top:6px">Expand to see the raw vote-delta table for the selected year. Tap column headers to sort.</div>
+                </div>
+                <div>
+                    <button id="dataToggle" class="btn" aria-expanded="false">Show table</button>
+                </div>
+            </div>
+
+            <div id="dataPanel" hidden style="margin-top:12px">
+                <div id="dataSummary" class="chart-note">Loading…</div>
+                <div class="table-wrap" style="margin-top:8px">
+                    <table id="shiftDataTable" class="shift-data-table ev-breakdown-table" aria-describedby="dataSummary">
+                        <thead>
+                            <tr>
+                                <th data-key="label" scope="col" class="sortable">Unit</th>
+                                <th data-key="dDelta" scope="col" class="sortable">Δ D</th>
+                                <th data-key="rDelta" scope="col" class="sortable">Δ R</th>
+                                <th data-key="turnout" scope="col" class="sortable">Turnout Δ</th>
+                                <th data-key="totalDelta" scope="col" class="sortable">Total Δ</th>
+                                <th data-key="length" scope="col" class="sortable">Vector length</th>
+                                <th data-key="note" scope="col">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <div id="tooltip" class="tooltip" role="tooltip"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="./utils/dataLoader.js"></script>
+    <script src="./shift-vectors.js"></script>
+    <script src="./header.js"></script>
+    <script src="./back-to-map.js"></script>
+    <script src="./footer.js"></script>
+    <script src="./last-updated.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,299 @@
+{
+  "year": 2000,
+  "state": "New Mexico",
+  "abbr": "NM",
+  "round": "General",
+  "caption": "General election results [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_New_Mexico",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Bingaman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Redmond",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Bingaman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "363,744",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.73%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Redmond",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "225,517",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "265",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "138,227",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "589,526",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeff Bingaman (incumbent)",
+      "party": "Democratic",
+      "votes": 363744,
+      "percent": 61.7
+    },
+    {
+      "candidate": "Bill Redmond",
+      "party": "Republican",
+      "votes": 225517,
+      "percent": 38.25
+    },
+    {
+      "candidate": "265",
+      "party": "Write-ins",
+      "votes": 265,
+      "percent": 0.04
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 138227,
+      "percent": 23.45
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 589526,
+      "percent": null
+    }
+  ]
+}

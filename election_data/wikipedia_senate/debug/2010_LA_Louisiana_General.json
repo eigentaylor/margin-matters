@@ -1,0 +1,621 @@
+{
+  "year": 2010,
+  "state": "Louisiana",
+  "abbr": "LA",
+  "round": "General",
+  "caption": "United States Senate election in Louisiana, 2010 [ 48 ] [ 49 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Louisiana",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 12,
+  "table_total_votes": 1264994,
+  "table": {
+    "caption": "United States Senate election in Louisiana, 2010 [ 48 ] [ 49 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Vitter (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charlie Melançon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Randall Hayes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Brown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Spears",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ernest Wooton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Skip Galan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "William McShan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Lang",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Milton Gordon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tommy LaFargue",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sam Melton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Vitter (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "715,415",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charlie Melançon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "476,572",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Randall Hayes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,957",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.1%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Brown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,973",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Spears",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,190",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ernest Wooton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,167",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Skip Galan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,474",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "William McShan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,879",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Lang",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,734",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Milton Gordon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,810",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tommy LaFargue",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,043",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sam Melton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,780",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.3%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,264,994",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "David Vitter",
+      "party": "Republican",
+      "votes": 715415,
+      "percent": 56.56
+    },
+    {
+      "candidate": "Charlie Melançon",
+      "party": "Democratic",
+      "votes": 476572,
+      "percent": 37.67
+    },
+    {
+      "candidate": "Randall Hayes",
+      "party": "Libertarian",
+      "votes": 13957,
+      "percent": 1.1
+    },
+    {
+      "candidate": "Michael Brown",
+      "party": "Independent",
+      "votes": 9973,
+      "percent": 0.79
+    },
+    {
+      "candidate": "Mike Spears",
+      "party": "Independent",
+      "votes": 9190,
+      "percent": 0.73
+    },
+    {
+      "candidate": "Ernest Wooton",
+      "party": "Independent",
+      "votes": 8167,
+      "percent": 0.65
+    },
+    {
+      "candidate": "Skip Galan",
+      "party": "Independent",
+      "votes": 7474,
+      "percent": 0.59
+    },
+    {
+      "candidate": "William McShan",
+      "party": "Reform",
+      "votes": 5879,
+      "percent": 0.46
+    },
+    {
+      "candidate": "Bob Lang",
+      "party": "Independent",
+      "votes": 5734,
+      "percent": 0.45
+    },
+    {
+      "candidate": "Milton Gordon",
+      "party": "Independent",
+      "votes": 4810,
+      "percent": 0.38
+    }
+  ]
+}

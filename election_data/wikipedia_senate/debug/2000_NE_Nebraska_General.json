@@ -1,0 +1,268 @@
+{
+  "year": 2000,
+  "state": "Nebraska",
+  "abbr": "NE",
+  "round": "General",
+  "caption": "General election results [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Nebraska",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Nelson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don Stenberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Nelson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "353,093",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.78%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don Stenberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "337,977",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.81%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,280",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "15,116",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "692,350",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ben Nelson",
+      "party": "Democratic",
+      "votes": 353093,
+      "percent": 51.0
+    },
+    {
+      "candidate": "Don Stenberg",
+      "party": "Republican",
+      "votes": 337977,
+      "percent": 48.82
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1280,
+      "percent": 0.18
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 15116,
+      "percent": 2.18
+    }
+  ]
+}

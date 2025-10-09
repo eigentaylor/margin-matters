@@ -1,0 +1,236 @@
+{
+  "year": 2022,
+  "state": "Washington",
+  "abbr": "WA",
+  "round": "General",
+  "caption": "2022 United States Senate election in Washington [ 94 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Washington",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 3047900,
+  "table": {
+    "caption": "2022 United States Senate election in Washington [ 94 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patty Murray (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tiffany Smiley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patty Murray (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,741,827",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tiffany Smiley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,299,322",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.64%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "6,751",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,047,900",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Patty Murray",
+      "party": "Democratic",
+      "votes": 1741827,
+      "percent": 57.15
+    },
+    {
+      "candidate": "Tiffany Smiley",
+      "party": "Republican",
+      "votes": 1299322,
+      "percent": 42.63
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 6751,
+      "percent": 0.22
+    }
+  ]
+}

@@ -1,0 +1,517 @@
+{
+  "year": 2012,
+  "state": "New York",
+  "abbr": "NY",
+  "round": "General",
+  "caption": "2012 United States Senate election in New York [ 45 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_New_York",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 6677666,
+  "table": {
+    "caption": "2012 United States Senate election in New York [ 45 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kirsten Gillibrand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kirsten Gillibrand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kirsten Gillibrand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kirsten Gillibrand (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Wendy Long",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Colia Clark",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Edes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Mangelli",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,432,525",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "251,292",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "138,513",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kirsten Gillibrand (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,822,330",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,517,578",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.96%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "241,124",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.81%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Wendy Long",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,758,702",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Colia Clark",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42,591",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Edes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32,002",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Mangelli",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22,041",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "6,677,666",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kirsten Gillibrand",
+      "party": "Democratic",
+      "votes": 4822330,
+      "percent": 72.21
+    },
+    {
+      "candidate": "Wendy Long",
+      "party": "Republican",
+      "votes": 1758702,
+      "percent": 26.34
+    },
+    {
+      "candidate": "Colia Clark",
+      "party": "Green",
+      "votes": 42591,
+      "percent": 0.64
+    },
+    {
+      "candidate": "Chris Edes",
+      "party": "Libertarian",
+      "votes": 32002,
+      "percent": 0.48
+    },
+    {
+      "candidate": "John Mangelli",
+      "party": "Independent",
+      "votes": 22041,
+      "percent": 0.33
+    }
+  ]
+}

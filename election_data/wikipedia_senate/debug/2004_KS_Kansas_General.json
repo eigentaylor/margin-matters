@@ -1,0 +1,337 @@
+{
+  "year": 2004,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "General election results [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Kansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1129022,
+  "table": {
+    "caption": "General election results [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sam Brownback (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lee Jones",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steven A. Rosile",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Cook",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sam Brownback (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "780,863",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lee Jones",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "310,337",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steven A. Rosile",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,842",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Cook",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,980",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "470,526",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,129,022",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Sam Brownback",
+      "party": "Republican",
+      "votes": 780863,
+      "percent": 69.16
+    },
+    {
+      "candidate": "Lee Jones",
+      "party": "Democratic",
+      "votes": 310337,
+      "percent": 27.49
+    },
+    {
+      "candidate": "Steven A. Rosile",
+      "party": "Libertarian",
+      "votes": 21842,
+      "percent": 1.93
+    },
+    {
+      "candidate": "George Cook",
+      "party": "Reform",
+      "votes": 15980,
+      "percent": 1.42
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 470526,
+      "percent": 41.68
+    }
+  ]
+}

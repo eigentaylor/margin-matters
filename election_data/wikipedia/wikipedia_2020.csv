@@ -1,58 +1,58 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-2020,AL,849624,1441170,25176,32488,"{""Jorgensen/Cohen"": 25176, ""Others"": 7312}",2323282
-2020,AK,153778,189951,8897,15801,"{""Jorgensen/Cohen"": 8897, ""Others"": 6904}",359530
-2020,AZ,1672143,1661686,51465,53497,"{""Hawkins/Walker"": 1557, ""Jorgensen/Cohen"": 51465, ""Others"": 475}",3387326
-2020,AR,423932,760647,13133,34490,"{""Hawkins/Walker"": 2980, ""Jorgensen/Cohen"": 13133, ""Others"": 18377}",1219069
-2020,CA,11110639,6006518,187910,384223,"{""Hawkins/Walker"": 81032, ""Jorgensen/Cohen"": 187910, ""Others"": 115281}",17501380
-2020,CO,1804352,1364607,52460,88021,"{""Hawkins/Walker"": 8986, ""Jorgensen/Cohen"": 52460, ""Others"": 26575}",3256980
-2020,CT,1080831,714717,20230,28309,"{""Hawkins/Walker"": 7538, ""Jorgensen/Cohen"": 20230, ""Others"": 541}",1823857
-2020,DE,296268,200603,5000,7475,"{""Hawkins/Walker"": 2139, ""Jorgensen/Cohen"": 5000, ""Others"": 336}",504346
-2020,DC,317323,18586,2036,8447,"{""Hawkins/Walker"": 1726, ""Jorgensen/Cohen"": 2036, ""Others"": 4685}",344356
-2020,FL,5297045,5668731,70324,101680,"{""Hawkins/Walker"": 14721, ""Jorgensen/Cohen"": 70324, ""Others"": 16635}",11067456
-2020,GA,2473633,2461854,62229,64473,"{""Hawkins/Walker"": 1013, ""Jorgensen/Cohen"": 62229, ""Others"": 1231}",4999960
-2020,HI,366130,196864,5539,11475,"{""Hawkins/Walker"": 3822, ""Jorgensen/Cohen"": 5539, ""Others"": 2114}",574469
-2020,ID,287021,554119,16404,26794,"{""Hawkins/Walker"": 407, ""Jorgensen/Cohen"": 16404, ""Others"": 9983}",867934
-2020,IL,3471915,2446891,66544,114938,"{""Hawkins/Walker"": 30494, ""Jorgensen/Cohen"": 66544, ""Others"": 17900}",6033744
-2020,IN,1242498,1729857,58901,60855,"{""Hawkins/Walker"": 989, ""Jorgensen/Cohen"": 58901, ""Others"": 965}",3033210
-2020,IA,759061,897672,19637,34138,"{""Hawkins/Walker"": 3075, ""Jorgensen/Cohen"": 19637, ""Others"": 11426}",1690871
-2020,KS,570323,771406,30574,32257,"{""Hawkins/Walker"": 669, ""Jorgensen/Cohen"": 30574, ""Others"": 1014}",1373986
-2020,KY,772474,1326646,26234,37648,"{""Hawkins/Walker"": 716, ""Jorgensen/Cohen"": 26234, ""Others"": 10698}",2136768
-2020,LA,856034,1255776,21645,36252,"{""Jorgensen/Cohen"": 21645, ""Others"": 14607}",2148062
-2020,ME-AL,435072,360737,14152,23652,"{""Hawkins/Walker"": 8230, ""Jorgensen/Cohen"": 14152, ""Others"": 1270}",819461
-2020,ME-01,266376,164045,7343,12691,"{""Hawkins/Walker"": 4654, ""Jorgensen/Cohen"": 7343, ""Others"": 694}",443112
-2020,ME-02,168696,196692,6809,10961,"{""Hawkins/Walker"": 3576, ""Jorgensen/Cohen"": 6809, ""Others"": 576}",376349
-2020,MD,1985023,976414,33488,75593,"{""Hawkins/Walker"": 15799, ""Jorgensen/Cohen"": 33488, ""Others"": 26306}",3037030
-2020,MA,2382202,1167202,47013,81998,"{""Hawkins/Walker"": 18658, ""Jorgensen/Cohen"": 47013, ""Others"": 16327}",3631402
-2020,MI,2804040,2649852,60381,85410,"{""Hawkins/Walker"": 13718, ""Jorgensen/Cohen"": 60381, ""Others"": 11311}",5539302
-2020,MN,1717077,1484065,34976,76029,"{""Hawkins/Walker"": 10033, ""Jorgensen/Cohen"": 34976, ""Others"": 31020}",3277171
-2020,MS,539398,756764,8026,17597,"{""Hawkins/Walker"": 1498, ""Jorgensen/Cohen"": 8026, ""Others"": 8073}",1313759
-2020,MO,1253014,1718736,41205,54212,"{""Hawkins/Walker"": 8283, ""Jorgensen/Cohen"": 41205, ""Others"": 4724}",3025962
-2020,MT,244786,343602,15252,15286,"{""Jorgensen/Cohen"": 15252, ""Others"": 34}",603674
-2020,NE-AL,374583,556846,20283,24954,"{""Jorgensen/Cohen"": 20283, ""Others"": 4671}",956383
-2020,NE-01,132261,180290,7495,9335,"{""Jorgensen/Cohen"": 7495, ""Others"": 1840}",321886
-2020,NE-02,176468,154377,6909,8821,"{""Jorgensen/Cohen"": 6909, ""Others"": 1912}",339666
-2020,NE-03,65854,222179,5879,6798,"{""Jorgensen/Cohen"": 5879, ""Others"": 919}",294831
-2020,NV,703486,669890,14783,32000,"{""Jorgensen/Cohen"": 14783, ""Others"": 17217}",1405376
-2020,NH,424937,365660,13236,15608,"{""Hawkins/Walker"": 217, ""Jorgensen/Cohen"": 13236, ""Others"": 2155}",806205
-2020,NJ,2608400,1883313,31677,57744,"{""Hawkins/Walker"": 14202, ""Jorgensen/Cohen"": 31677, ""Others"": 11865}",4549457
-2020,NM,501614,401894,12585,20457,"{""Hawkins/Walker"": 4426, ""Jorgensen/Cohen"": 12585, ""Others"": 3446}",923965
-2020,NY,5244886,3251997,60383,119978,"{""Hawkins/Walker"": 32832, ""Jorgensen/Cohen"": 60383, ""Others"": 26763}",8616861
-2020,NC,2684292,2758775,48678,81737,"{""Hawkins/Walker"": 12195, ""Jorgensen/Cohen"": 48678, ""Others"": 20864}",5524804
-2020,ND,115042,235751,9371,11231,"{""Jorgensen/Cohen"": 9371, ""Others"": 1860}",362024
-2020,OH,2679165,3154834,67569,88203,"{""Hawkins/Walker"": 18812, ""Jorgensen/Cohen"": 67569, ""Others"": 1822}",5922202
-2020,OK,503890,1020280,24731,36529,"{""Jorgensen/Cohen"": 24731, ""Others"": 11798}",1560699
-2020,OR,1340383,958448,41582,75490,"{""Hawkins/Walker"": 11831, ""Jorgensen/Cohen"": 41582, ""Others"": 22077}",2374321
-2020,PA,3458229,3377674,79380,101073,"{""Hawkins/Walker"": 1282, ""Jorgensen/Cohen"": 79380, ""Others"": 20411}",6936976
-2020,RI,307486,199922,5053,10349,"{""Jorgensen/Cohen"": 5053, ""Others"": 5296}",517757
-2020,SC,1091541,1385103,27916,36685,"{""Hawkins/Walker"": 6907, ""Jorgensen/Cohen"": 27916, ""Others"": 1862}",2513329
-2020,SD,150471,261043,11095,11095,"{""Jorgensen/Cohen"": 11095}",422609
-2020,TN,1143711,1852475,29877,57665,"{""Hawkins/Walker"": 4545, ""Jorgensen/Cohen"": 29877, ""Others"": 23243}",3053851
-2020,TX,5259126,5890347,126243,165583,"{""Hawkins/Walker"": 33396, ""Jorgensen/Cohen"": 126243, ""Others"": 5944}",11315056
-2020,UT,560282,865140,38447,62867,"{""Hawkins/Walker"": 5053, ""Jorgensen/Cohen"": 38447, ""Others"": 19367}",1488289
-2020,VT,242820,112704,3608,11904,"{""Hawkins/Walker"": 1310, ""Jorgensen/Cohen"": 3608, ""Others"": 6986}",367428
-2020,VA,2413568,1962430,64761,84526,"{""Jorgensen/Cohen"": 64761, ""Others"": 19765}",4460524
-2020,WA,2369612,1584651,80500,133368,"{""Hawkins/Walker"": 18289, ""Jorgensen/Cohen"": 80500, ""Others"": 34579}",4087631
-2020,WV,235984,545382,10687,13365,"{""Hawkins/Walker"": 2599, ""Jorgensen/Cohen"": 10687, ""Others"": 79}",794731
-2020,WI,1630866,1610184,38491,56991,"{""Hawkins/Walker"": 1089, ""Jorgensen/Cohen"": 38491, ""Others"": 17411}",3298041
-2020,WY,73491,193559,5768,9715,"{""Jorgensen/Cohen"": 5768, ""Others"": 3947}",276765
-2020,NATIONAL,81283501,74223975,1865535,2922155,"{""Hawkins/Walker"": 407068, ""Jorgensen/Cohen"": 1865535, ""Others"": 649552}",158429631
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+2020,AL,849624,1441170,25176,32488,"{""Jorgensen/Cohen"": 25176, ""Others"": 7312}",2323282,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,AK,153778,189951,8897,15801,"{""Jorgensen/Cohen"": 8897, ""Others"": 6904}",359530,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,AZ,1672143,1661686,51465,53497,"{""Hawkins/Walker"": 1557, ""Jorgensen/Cohen"": 51465, ""Others"": 475}",3387326,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,AR,423932,760647,13133,34490,"{""Hawkins/Walker"": 2980, ""Jorgensen/Cohen"": 13133, ""Others"": 18377}",1219069,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,CA,11110639,6006518,187910,384223,"{""Hawkins/Walker"": 81032, ""Jorgensen/Cohen"": 187910, ""Others"": 115281}",17501380,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,CO,1804352,1364607,52460,88021,"{""Hawkins/Walker"": 8986, ""Jorgensen/Cohen"": 52460, ""Others"": 26575}",3256980,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,CT,1080831,714717,20230,28309,"{""Hawkins/Walker"": 7538, ""Jorgensen/Cohen"": 20230, ""Others"": 541}",1823857,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,DE,296268,200603,5000,7475,"{""Hawkins/Walker"": 2139, ""Jorgensen/Cohen"": 5000, ""Others"": 336}",504346,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,DC,317323,18586,2036,8447,"{""Hawkins/Walker"": 1726, ""Jorgensen/Cohen"": 2036, ""Others"": 4685}",344356,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,FL,5297045,5668731,70324,101680,"{""Hawkins/Walker"": 14721, ""Jorgensen/Cohen"": 70324, ""Others"": 16635}",11067456,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,GA,2473633,2461854,62229,64473,"{""Hawkins/Walker"": 1013, ""Jorgensen/Cohen"": 62229, ""Others"": 1231}",4999960,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,HI,366130,196864,5539,11475,"{""Hawkins/Walker"": 3822, ""Jorgensen/Cohen"": 5539, ""Others"": 2114}",574469,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,ID,287021,554119,16404,26794,"{""Hawkins/Walker"": 407, ""Jorgensen/Cohen"": 16404, ""Others"": 9983}",867934,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,IL,3471915,2446891,66544,114938,"{""Hawkins/Walker"": 30494, ""Jorgensen/Cohen"": 66544, ""Others"": 17900}",6033744,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,IN,1242498,1729857,58901,60855,"{""Hawkins/Walker"": 989, ""Jorgensen/Cohen"": 58901, ""Others"": 965}",3033210,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,IA,759061,897672,19637,34138,"{""Hawkins/Walker"": 3075, ""Jorgensen/Cohen"": 19637, ""Others"": 11426}",1690871,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,KS,570323,771406,30574,32257,"{""Hawkins/Walker"": 669, ""Jorgensen/Cohen"": 30574, ""Others"": 1014}",1373986,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,KY,772474,1326646,26234,37648,"{""Hawkins/Walker"": 716, ""Jorgensen/Cohen"": 26234, ""Others"": 10698}",2136768,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,LA,856034,1255776,21645,36252,"{""Jorgensen/Cohen"": 21645, ""Others"": 14607}",2148062,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,ME-AL,435072,360737,14152,23652,"{""Hawkins/Walker"": 8230, ""Jorgensen/Cohen"": 14152, ""Others"": 1270}",819461,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,ME-01,266376,164045,7343,12691,"{""Hawkins/Walker"": 4654, ""Jorgensen/Cohen"": 7343, ""Others"": 694}",443112,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,ME-02,168696,196692,6809,10961,"{""Hawkins/Walker"": 3576, ""Jorgensen/Cohen"": 6809, ""Others"": 576}",376349,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MD,1985023,976414,33488,75593,"{""Hawkins/Walker"": 15799, ""Jorgensen/Cohen"": 33488, ""Others"": 26306}",3037030,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MA,2382202,1167202,47013,81998,"{""Hawkins/Walker"": 18658, ""Jorgensen/Cohen"": 47013, ""Others"": 16327}",3631402,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MI,2804040,2649852,60381,85410,"{""Hawkins/Walker"": 13718, ""Jorgensen/Cohen"": 60381, ""Others"": 11311}",5539302,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MN,1717077,1484065,34976,76029,"{""Hawkins/Walker"": 10033, ""Jorgensen/Cohen"": 34976, ""Others"": 31020}",3277171,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MS,539398,756764,8026,17597,"{""Hawkins/Walker"": 1498, ""Jorgensen/Cohen"": 8026, ""Others"": 8073}",1313759,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MO,1253014,1718736,41205,54212,"{""Hawkins/Walker"": 8283, ""Jorgensen/Cohen"": 41205, ""Others"": 4724}",3025962,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,MT,244786,343602,15252,15286,"{""Jorgensen/Cohen"": 15252, ""Others"": 34}",603674,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NE-AL,374583,556846,20283,24954,"{""Jorgensen/Cohen"": 20283, ""Others"": 4671}",956383,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NE-01,132261,180290,7495,9335,"{""Jorgensen/Cohen"": 7495, ""Others"": 1840}",321886,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NE-02,176468,154377,6909,8821,"{""Jorgensen/Cohen"": 6909, ""Others"": 1912}",339666,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NE-03,65854,222179,5879,6798,"{""Jorgensen/Cohen"": 5879, ""Others"": 919}",294831,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NV,703486,669890,14783,32000,"{""Jorgensen/Cohen"": 14783, ""Others"": 17217}",1405376,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NH,424937,365660,13236,15608,"{""Hawkins/Walker"": 217, ""Jorgensen/Cohen"": 13236, ""Others"": 2155}",806205,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NJ,2608400,1883313,31677,57744,"{""Hawkins/Walker"": 14202, ""Jorgensen/Cohen"": 31677, ""Others"": 11865}",4549457,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NM,501614,401894,12585,20457,"{""Hawkins/Walker"": 4426, ""Jorgensen/Cohen"": 12585, ""Others"": 3446}",923965,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NY,5244886,3251997,60383,119978,"{""Hawkins/Walker"": 32832, ""Jorgensen/Cohen"": 60383, ""Others"": 26763}",8616861,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NC,2684292,2758775,48678,81737,"{""Hawkins/Walker"": 12195, ""Jorgensen/Cohen"": 48678, ""Others"": 20864}",5524804,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,ND,115042,235751,9371,11231,"{""Jorgensen/Cohen"": 9371, ""Others"": 1860}",362024,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,OH,2679165,3154834,67569,88203,"{""Hawkins/Walker"": 18812, ""Jorgensen/Cohen"": 67569, ""Others"": 1822}",5922202,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,OK,503890,1020280,24731,36529,"{""Jorgensen/Cohen"": 24731, ""Others"": 11798}",1560699,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,OR,1340383,958448,41582,75490,"{""Hawkins/Walker"": 11831, ""Jorgensen/Cohen"": 41582, ""Others"": 22077}",2374321,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,PA,3458229,3377674,79380,101073,"{""Hawkins/Walker"": 1282, ""Jorgensen/Cohen"": 79380, ""Others"": 20411}",6936976,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,RI,307486,199922,5053,10349,"{""Jorgensen/Cohen"": 5053, ""Others"": 5296}",517757,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,SC,1091541,1385103,27916,36685,"{""Hawkins/Walker"": 6907, ""Jorgensen/Cohen"": 27916, ""Others"": 1862}",2513329,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,SD,150471,261043,11095,11095,"{""Jorgensen/Cohen"": 11095}",422609,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,TN,1143711,1852475,29877,57665,"{""Hawkins/Walker"": 4545, ""Jorgensen/Cohen"": 29877, ""Others"": 23243}",3053851,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,TX,5259126,5890347,126243,165583,"{""Hawkins/Walker"": 33396, ""Jorgensen/Cohen"": 126243, ""Others"": 5944}",11315056,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,UT,560282,865140,38447,62867,"{""Hawkins/Walker"": 5053, ""Jorgensen/Cohen"": 38447, ""Others"": 19367}",1488289,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,VT,242820,112704,3608,11904,"{""Hawkins/Walker"": 1310, ""Jorgensen/Cohen"": 3608, ""Others"": 6986}",367428,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,VA,2413568,1962430,64761,84526,"{""Jorgensen/Cohen"": 64761, ""Others"": 19765}",4460524,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,WA,2369612,1584651,80500,133368,"{""Hawkins/Walker"": 18289, ""Jorgensen/Cohen"": 80500, ""Others"": 34579}",4087631,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,WV,235984,545382,10687,13365,"{""Hawkins/Walker"": 2599, ""Jorgensen/Cohen"": 10687, ""Others"": 79}",794731,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,WI,1630866,1610184,38491,56991,"{""Hawkins/Walker"": 1089, ""Jorgensen/Cohen"": 38491, ""Others"": 17411}",3298041,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,WY,73491,193559,5768,9715,"{""Jorgensen/Cohen"": 5768, ""Others"": 3947}",276765,https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+2020,NATIONAL,81283501,74223975,1865535,2922155,"{""Hawkins/Walker"": 407068, ""Jorgensen/Cohen"": 1865535, ""Others"": 649552}",158429631,https://en.wikipedia.org/wiki/2020_United_States_presidential_election

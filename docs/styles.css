@@ -7,6 +7,19 @@
   --border: #2a2a2a
 }
 
+/* Shift Vectors - region color variables and legend tweaks */
+:root {
+  --region-blue: #3b82f6;
+  --region-green: #10b981;
+  --region-amber: #f59e0b;
+  --region-purple: #8b5cf6;
+}
+
+.shift-vectors .legend-block { display: block; }
+.shift-vectors .legend-section { margin-bottom: 6px; }
+.shift-vectors .badges.small .badge { font-size: 0.86em; padding: 6px 8px; }
+.shift-vectors .legend-note { font-size: 0.9em; color: rgba(255,255,255,0.72); margin-top:6px; }
+
 * {
   box-sizing: border-box
 }
@@ -71,6 +84,32 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 8px
+}
+
+.dataset-switch {
+  margin-bottom: 16px;
+}
+
+.dataset-switch select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #1b1b1b;
+  color: var(--fg);
+}
+
+.dataset-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dataset-section {
+  display: none;
+}
+
+.dataset-section.is-active {
+  display: block;
 }
 
 /* Make small-links buttons a consistent size and center their content */
@@ -799,6 +838,98 @@ body.has-prop-ev-toggle {
   accent-color: var(--accent)
 }
 
+/* Dual-range year slider used on state pages and trend viewer */
+.dual-range-slider {
+  position: relative;
+  height: 28px;
+  display: block;
+}
+
+.dual-range-slider .slider-track {
+  position: absolute;
+  inset: 0 0 0 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  background: #0f0f0f;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  pointer-events: none; /* important: track should not catch clicks */
+}
+
+.dual-range-slider .slider-range {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.9), rgba(244, 114, 182, 0.9));
+  border-radius: 6px;
+  left: 0;
+  width: 0;
+  pointer-events: none; /* important: decorative only */
+  z-index: 1;
+}
+
+.dual-range-slider .slider-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Put max on top by default so right-side clicks hit the max thumb */
+.slider-input--min { z-index: 2; }
+.slider-input--max { z-index: 3; }
+
+.dual-range-slider .slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #222;
+}
+
+.dual-range-slider .slider-input::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #222;
+}
+
+/* Hide native thumbs but keep inputs for value/storage; we'll use custom thumbs */
+.dual-range-slider .slider-input::-webkit-slider-thumb { opacity: 0; width: 0; height: 0; }
+.dual-range-slider .slider-input::-moz-range-thumb { opacity: 0; width: 0; height: 0; }
+.dual-range-slider .slider-input { pointer-events: none; }
+
+/* Custom thumb visuals */
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  z-index: 10;
+  cursor: grab;
+}
+.slider-thumb:active { cursor: grabbing; }
+.slider-thumb.thumb-start { background: linear-gradient(180deg,#fff,#e6f7ff); }
+.slider-thumb.thumb-end { background: linear-gradient(180deg,#fff,#ffe6f0); }
+
+/* While a slider thumb is being dragged we add a body class (`slider-dragging`).
+   Force a grabbing cursor for the whole document during that interaction to
+   avoid flicker when the pointer briefly leaves the thumb element. */
+body.slider-dragging,
+body.slider-dragging * {
+  cursor: grabbing !important;
+}
+
 .pv-tools label {
   color: var(--muted)
 }
@@ -1428,3 +1559,191 @@ body.has-prop-ev-toggle {
   padding-top: 14px;
   font-weight: 700
 }
+
+/* ===== shift-vectors page specific styles (migrated from shift-vectors.html) ===== */
+:root {
+  --bg: #0b0b0b;
+  --fg: #f5f5f5;
+  --muted: #a5a5a5;
+  --accent: #66b3ff;
+  --card: #141414;
+  --border: #2a2a2a;
+  --plot-grid: rgba(255, 255, 255, 0.08);
+  --plot-zero: rgba(255, 255, 255, 0.25);
+  --plot-circle: rgba(102, 179, 255, 0.2);
+  --plot-circle-stroke: rgba(102, 179, 255, 0.5);
+  --quad-blue: #60a5fa;
+  --quad-red: #f87171;
+  --quad-green: #34d399;
+  --quad-amber: #fbbf24;
+  --quad-purple: #c084fc;
+  --quad-muted: #9ca3af;
+}
+
+body.shift-vectors-page {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.shift-vectors .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.shift-vectors .card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.shift-vectors .legend { color: var(--muted); }
+.shift-vectors .page-title { display:flex; flex-direction:column; gap:6px }
+.shift-vectors .page-title h1 { font-size:1.65rem; margin:0 }
+.shift-vectors .controls { display:grid; gap:16px }
+@media (min-width:720px) { .shift-vectors .controls { grid-template-columns: repeat(2, minmax(0,1fr)); align-items:end } }
+@media (min-width:1024px) { .shift-vectors .controls { grid-template-columns: repeat(3, minmax(0,1fr)) } }
+
+/* Mobile-first: stack chart above controls and table for small screens */
+@media (max-width: 720px) {
+  .shift-vectors .chart-card { order: 0; }
+  .shift-vectors .controls { order: 1; }
+  .shift-vectors .data-panel { order: 2; }
+  .shift-vectors .card { padding: 12px }
+  /* larger touch targets */
+  .shift-vectors .toggle-row label, .shift-vectors .badge, .shift-vectors .btn { padding: 10px 12px }
+  .shift-vectors .chart-card { min-height: 360px }
+}
+
+/* Data panel styles */
+.shift-vectors .data-panel .btn { min-width: 120px }
+.shift-vectors #dataPanel { transition: max-height 0.28s ease, opacity 0.2s ease }
+.shift-vectors .shift-data-table th, .shift-vectors .shift-data-table td { font-size: 0.92rem; padding: 8px 10px }
+.shift-vectors .shift-data-table thead th.sortable { cursor: pointer }
+.shift-vectors .shift-data-table thead th.sorted-asc::after, .shift-vectors .shift-data-table thead th.sorted-desc::after { margin-left: 6px; opacity: 0.85 }
+
+/* Make table rows easier to tap on mobile */
+.shift-vectors .shift-data-table tbody tr { touch-action: manipulation }
+.shift-vectors .shift-data-table tbody tr td { padding: 12px 10px }
+
+/* small screens: let table take full width and allow scrolling horizontally */
+@media (max-width: 520px) {
+  .shift-vectors .table-wrap { overflow-x: auto }
+  .shift-vectors .shift-data-table th, .shift-vectors .shift-data-table td { white-space: nowrap }
+}
+.shift-vectors .field { display:flex; flex-direction:column; gap:8px }
+.shift-vectors .field label { font-size:0.9rem; color:var(--muted) }
+.shift-vectors .slider-row { display:flex; align-items:center; gap:12px }
+.shift-vectors .toggle-row { display:flex; gap:16px; flex-wrap:wrap; align-items:center }
+.shift-vectors .toggle-row label { display:inline-flex; gap:8px; align-items:center; font-size:0.92rem; color:var(--muted); cursor:pointer }
+.shift-vectors .metrics { display:flex; gap:18px; flex-wrap:wrap; font-size:0.9rem; color:var(--muted) }
+.shift-vectors .chart-card { position:relative; overflow:hidden }
+.shift-vectors #vectorChart { width:100%; height:100%; min-height:420px; display:block }
+.shift-vectors .empty-state { display:none; text-align:center; font-size:1rem; padding:24px 0; color:var(--muted) }
+.shift-vectors .tooltip { position:fixed; pointer-events:none; background:rgba(17,17,17,0.95); border:1px solid var(--border); padding:8px 10px; border-radius:8px; color:var(--fg); font-size:0.92rem; line-height:1.4; opacity:0; transform:translateY(-6px); transition:opacity 0.1s ease, transform 0.1s ease; box-shadow:0 8px 16px rgba(0,0,0,0.45); z-index:20; max-width:42ch; max-width:420px; white-space:normal; word-wrap:break-word; overflow-wrap:break-word; }
+.shift-vectors .tooltip.visible { opacity:1; transform:translateY(0) }
+.shift-vectors .tooltip-note { margin-top:6px; font-size:0.82rem; color:var(--muted) }
+.shift-vectors .tooltip .arrow { font-weight:700; margin-right:6px }
+.shift-vectors .tooltip .pct { color: rgba(255,255,255,0.78); font-weight:600 }
+.shift-vectors .chart-note { margin-top:10px; font-size:0.9rem; color:var(--muted) }
+.shift-vectors .loading { font-size:0.95rem; color:var(--muted) }
+.shift-vectors .axis text { fill:var(--muted); font-size:0.75rem }
+.shift-vectors .axis path, .shift-vectors .axis line { stroke:var(--plot-grid) }
+.shift-vectors .axis-label { fill:var(--muted); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em }
+.shift-vectors .zero-line { stroke:var(--plot-zero); stroke-width:1.4; stroke-dasharray:4 4 }
+.shift-vectors .unit-circle { fill:var(--plot-circle); stroke:var(--plot-circle-stroke); stroke-width:1.2 }
+.shift-vectors .point { stroke:rgba(11,11,11,0.85); stroke-width:1; cursor:pointer }
+.shift-vectors .point:hover, .shift-vectors .point.active { stroke-width:2; stroke:#fff }
+.shift-vectors .badge { display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:999px; padding:4px 10px }
+.shift-vectors .badge .swatch { width:10px; height:10px; border-radius:3px }
+.shift-vectors .badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; color:var(--muted) }
+.shift-vectors .status-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; font-size:0.9rem; color:var(--muted) }
+.shift-vectors input[type="range"] { accent-color: var(--accent) }
+
+/* Make the Year slider span the full width of the controls area and expand */
+.shift-vectors .controls .field:first-child {
+  /* span all columns so the slider can be very wide */
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.shift-vectors .controls .field:first-child .slider-row {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+.shift-vectors #yearSlider {
+  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* stronger explicit rules for the year-field wrapper to avoid selector timing issues */
+.shift-vectors .year-field { grid-column: 1 / -1; display:flex; align-items:center; gap:12px }
+.shift-vectors .year-field .slider-row { flex:1 1 0; min-width:0; display:flex; align-items:center }
+.shift-vectors .year-field .badge { margin-left: 12px }
+
+/* Make the year slider visually larger: taller track and larger thumb */
+.shift-vectors #yearSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px; /* overall control height */
+  background: transparent; /* track drawn via pseudo-elements */
+}
+
+.shift-vectors #yearSlider::-webkit-slider-runnable-track {
+  height: 10px;
+  background: linear-gradient(90deg, rgba(102,179,255,0.2), rgba(255,255,255,0.06));
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.shift-vectors #yearSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  margin-top: -5px; /* center thumb over track */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.shift-vectors #yearSlider::-moz-range-track {
+  height: 10px;
+  background: linear-gradient(90deg, rgba(102,179,255,0.2), rgba(255,255,255,0.06));
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.shift-vectors #yearSlider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Focus styles for accessibility */
+.shift-vectors #yearSlider:focus {
+  outline: none;
+}
+.shift-vectors #yearSlider:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 6px rgba(102,179,255,0.12);
+}
+
+/* small label styling for the SVG label groups */
+.shift-vectors .labels .lbl { font-size:11px; fill:#fff; pointer-events:none }
+.shift-vectors .labels .box { fill: rgba(0,0,0,0.6); stroke: rgba(255,255,255,0.06); rx:6; ry:6 }
+.shift-vectors .labels .leader { stroke: rgba(255,255,255,0.6); stroke-width:1; opacity:0.85 }
+
+/* allow label group to receive pointer events so hover handlers can trigger tooltips;
+   keep individual decorative children non-interactive so they don't block other elements */
+.shift-vectors .labels .label { pointer-events: auto; }
+.shift-vectors .labels .box { pointer-events: auto; }
+.shift-vectors .labels .lbl,
+.shift-vectors .labels .leader { pointer-events: none; }
+
+/* end shift-vectors specific styles */

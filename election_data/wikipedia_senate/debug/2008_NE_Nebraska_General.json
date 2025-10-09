@@ -1,0 +1,322 @@
+{
+  "year": 2008,
+  "state": "Nebraska",
+  "abbr": "NE",
+  "round": "General",
+  "caption": "2008 United States Senate election in Nebraska [ 17 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Nebraska",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 792511,
+  "table": {
+    "caption": "2008 United States Senate election in Nebraska [ 17 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Johanns",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Kleeb",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kelly Rosberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Larrick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Johanns",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "455,854",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−25.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Kleeb",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "317,456",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+25.42%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nebraska",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kelly Rosberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,438",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Larrick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,763",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "138,398",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−50.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "792,511",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike Johanns",
+      "party": "Republican",
+      "votes": 455854,
+      "percent": 57.52
+    },
+    {
+      "candidate": "Scott Kleeb",
+      "party": "Democratic",
+      "votes": 317456,
+      "percent": 40.06
+    },
+    {
+      "candidate": "Kelly Rosberg",
+      "party": "Nebraska",
+      "votes": 11438,
+      "percent": 1.44
+    },
+    {
+      "candidate": "Steve Larrick",
+      "party": "Green",
+      "votes": 7763,
+      "percent": 0.98
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 138398,
+      "percent": 17.46
+    }
+  ]
+}

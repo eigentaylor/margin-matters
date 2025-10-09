@@ -1,0 +1,246 @@
+{
+  "year": 2012,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "United States Senate election in West Virginia, 2012 [ 29 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_West_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 660212,
+  "table": {
+    "caption": "United States Senate election in West Virginia, 2012 [ 29 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Manchin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Raese",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Henry Baber",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Manchin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "399,908",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Raese",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "240,787",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mountain",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Henry Baber",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,517",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.96%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "660,212",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joe Manchin",
+      "party": "Democratic",
+      "votes": 399908,
+      "percent": 60.57
+    },
+    {
+      "candidate": "John Raese",
+      "party": "Republican",
+      "votes": 240787,
+      "percent": 36.47
+    },
+    {
+      "candidate": "Bob Henry Baber",
+      "party": "Mountain",
+      "votes": 19517,
+      "percent": 2.96
+    }
+  ]
+}

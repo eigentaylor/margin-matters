@@ -1,0 +1,355 @@
+{
+  "year": 2014,
+  "state": "Nebraska",
+  "abbr": "NE",
+  "round": "General",
+  "caption": "2014 United States Senate election in Nebraska [ 84 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Nebraska",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 540337,
+  "table": {
+    "caption": "2014 United States Senate election in Nebraska [ 84 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Sasse",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dave Domina",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Jenkins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Todd Watson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Sasse",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "347,636",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dave Domina",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "170,127",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Jenkins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,868",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Todd Watson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,260",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "446",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "177,509",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "540,337",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ben Sasse",
+      "party": "Republican",
+      "votes": 347636,
+      "percent": 64.34
+    },
+    {
+      "candidate": "Dave Domina",
+      "party": "Democratic",
+      "votes": 170127,
+      "percent": 31.49
+    },
+    {
+      "candidate": "Jim Jenkins",
+      "party": "Independent",
+      "votes": 15868,
+      "percent": 2.94
+    },
+    {
+      "candidate": "Todd Watson",
+      "party": "Independent",
+      "votes": 6260,
+      "percent": 1.16
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 446,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 177509,
+      "percent": 32.85
+    }
+  ]
+}

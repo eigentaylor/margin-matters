@@ -1,0 +1,289 @@
+{
+  "year": 2020,
+  "state": "Idaho",
+  "abbr": "ID",
+  "round": "General",
+  "caption": "United States Senate election in Idaho, 2020 [ 31 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Idaho",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 859827,
+  "table": {
+    "caption": "United States Senate election in Idaho, 2020 [ 31 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Risch (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paulette Jordan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Natalie Fleming",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ray Writz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Risch (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "538,446",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paulette Jordan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "285,864",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.42%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natalie Fleming",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,329",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ray Writz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,188",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "859,827",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Risch",
+      "party": "Republican",
+      "votes": 538446,
+      "percent": 62.62
+    },
+    {
+      "candidate": "Paulette Jordan",
+      "party": "Democratic",
+      "votes": 285864,
+      "percent": 33.25
+    },
+    {
+      "candidate": "Natalie Fleming",
+      "party": "Independent",
+      "votes": 25329,
+      "percent": 2.95
+    },
+    {
+      "candidate": "Ray Writz",
+      "party": "Constitution",
+      "votes": 10188,
+      "percent": 1.18
+    }
+  ]
+}

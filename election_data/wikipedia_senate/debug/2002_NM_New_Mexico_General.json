@@ -1,0 +1,256 @@
+{
+  "year": 2002,
+  "state": "New Mexico",
+  "abbr": "NM",
+  "round": "General",
+  "caption": "General election results [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_New_Mexico",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pete Domenici (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gloria Tristani",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pete Domenici (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "314,301",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gloria Tristani",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "169,039",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "145,262",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "483,340",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Pete Domenici (incumbent)",
+      "party": "Republican",
+      "votes": 314301,
+      "percent": 65.03
+    },
+    {
+      "candidate": "Gloria Tristani",
+      "party": "Democratic",
+      "votes": 169039,
+      "percent": 34.97
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 145262,
+      "percent": 30.05
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 483340,
+      "percent": null
+    }
+  ]
+}

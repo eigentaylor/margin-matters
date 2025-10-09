@@ -168,21 +168,8 @@
 
 <body>
   <div class="container">
-    <div class="card site-header" style="display:flex;justify-content:space-between;align-items:center;padding:8px">
-      <button class="header-toggle" id="headerToggle" aria-label="Toggle navigation menu"
-        aria-expanded="false"><span></span><span></span><span></span></button>
-      <div class="small-links" id="headerNav"><a class="btn" href="./index.html">Home</a><a class="btn"
-          href="./state-pages.html">State Pages</a><a class="btn" href="./paths2028.html">2028 Paths</a><a class="btn"
-          href="./ranker.html">Ranker</a><a class="btn" href="./trend-viewer.html">Trend Viewer</a><a class="btn"
-          href="./future.html">"""Future"""</a><a class="btn" href="./methods.html">Methods</a><a class="btn"
-          href="./presidential_margins.html">Data (CSV)</a><a class="btn" href="./attributions.html">Attributions</a>
-      </div>
-      <script src="./header-toggle.js"></script>
-    </div>
-    <div style="margin-top:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-      <a class="back" href="./index.html">← Back to Map</a>
-      <div class="legend" style="font-size:0.85rem" data-last-updated>Last updated: ...</div>
-    </div>
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
     <div class="legend">Trend Viewer</div>
 
     <div class="card" style="margin-bottom:12px">
@@ -201,7 +188,7 @@
                 <option value="preset3">Maine (ME + districts)</option>
                 <option value="preset4">Nebraska (NE + districts)</option>
               </select>
-              <!--<button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>-->
+              <button id="resetBtn" class="btn btn-dark" title="Reset to defaults">Reset</button>
             </div>
           </div>
           <div id="stateChips" class="state-chips" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
@@ -214,18 +201,26 @@
           </select>
         </div>
         <div class="field">
-          <label>Year range</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input id="startYear" type="number" style="width:100px" value="1916" step="4" min="1916" max="2024" />
-            <span style="color:var(--muted)">to</span>
-            <input id="endYear" type="number" style="width:100px" value="2024" step="4" min="1916" max="2024" />
+          <label for="year-range-slider">Year range</label>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="font-size:0.9rem"><span id="year-range-display">1864-2024</span></label>
+            <div class="dual-range-slider" id="yearSlider">
+              <div class="slider-track"></div>
+              <div class="slider-range" id="slider-range"></div>
+              <input id="startYear" type="range" class="slider-input" value="1864" step="4" min="1864" max="2020" />
+              <input id="endYear" type="range" class="slider-input" value="2024" step="4" min="1868" max="2024" />
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--muted);">
+              <span id="year-range-min-label">1864</span>
+              <span id="year-range-max-label">2024</span>
+            </div>
           </div>
         </div>
         <div class="field">
           <label for="chartSel">Chart type</label>
           <select id="chartSel" class="select-dark">
-            <option value="auto" selected>Auto</option>
-            <option value="line">Line</option>
+            <option value="auto">Auto</option>
+            <option value="line" selected>Line</option>
             <option value="bar">Bar</option>
           </select>
         </div>
@@ -269,24 +264,14 @@
       <div id="chart"></div>
       <div id="notes" style="margin-top:8px;color:var(--muted);font-size:.92rem"></div>
     </div>
-
-
-
-
-
-    <footer>
-      Site by eigentaylor.<br />
-      Please report any inaccuracies to me through discord: eigentaylor.<br />
-      Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank'
-        rel='noopener noreferrer'>Wikipedia</a>.<br />
-      Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0). <span data-last-updated>Last
-        updated: ...</span>
-    </footer>
+  <div id="footer-placeholder"></div>
+  </div>
   </div>
 
   <div class="tooltip" id="tooltip"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="./utils/dataLoader.js"></script>
   <script src="./utils/siteState.js"></script>
   <script src="./trend-viewer.js"></script>
   <script>
@@ -301,6 +286,9 @@
       });
     })();
   </script>
+  <script src="./header.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./footer.js"></script>
   <script src="./last-updated.js"></script>
 </body>
 

@@ -1,0 +1,423 @@
+{
+  "year": 2008,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "General election results [ 31 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Michigan",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 4848620,
+  "table": {
+    "caption": "General election results [ 31 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Carl Levin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack Hoogendyk",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scotty Boman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Harley Mikkelson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Nikitin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Doug Dern",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Carl Levin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,038,386",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack Hoogendyk",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,641,070",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scotty Boman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "76,347",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Harley Mikkelson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43,440",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "U.S. Taxpayers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Nikitin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30,827",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Doug Dern",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,550",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,397,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,848,620",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Carl Levin",
+      "party": "Democratic",
+      "votes": 3038386,
+      "percent": 62.66
+    },
+    {
+      "candidate": "Jack Hoogendyk",
+      "party": "Republican",
+      "votes": 1641070,
+      "percent": 33.85
+    },
+    {
+      "candidate": "Scotty Boman",
+      "party": "Libertarian",
+      "votes": 76347,
+      "percent": 1.57
+    },
+    {
+      "candidate": "Harley Mikkelson",
+      "party": "Green",
+      "votes": 43440,
+      "percent": 0.9
+    },
+    {
+      "candidate": "Michael Nikitin",
+      "party": "U.S. Taxpayers",
+      "votes": 30827,
+      "percent": 0.64
+    },
+    {
+      "candidate": "Doug Dern",
+      "party": "Natural Law",
+      "votes": 18550,
+      "percent": 0.38
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 1397316,
+      "percent": 28.82
+    }
+  ]
+}

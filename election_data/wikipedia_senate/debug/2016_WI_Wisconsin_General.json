@@ -1,0 +1,279 @@
+{
+  "year": 2016,
+  "state": "Wisconsin",
+  "abbr": "WI",
+  "round": "General",
+  "caption": "2016 United States Senate election in Wisconsin [ 111 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Wisconsin",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 2948741,
+  "table": {
+    "caption": "2016 United States Senate election in Wisconsin [ 111 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Johnson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Russ Feingold",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Phil Anderson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Johnson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,479,471",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.69%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Russ Feingold",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,380,335",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Phil Anderson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "87,531",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,404",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,948,741",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ron Johnson",
+      "party": "Republican",
+      "votes": 1479471,
+      "percent": 50.17
+    },
+    {
+      "candidate": "Russ Feingold",
+      "party": "Democratic",
+      "votes": 1380335,
+      "percent": 46.81
+    },
+    {
+      "candidate": "Phil Anderson",
+      "party": "Libertarian",
+      "votes": 87531,
+      "percent": 2.97
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1404,
+      "percent": 0.05
+    }
+  ]
+}

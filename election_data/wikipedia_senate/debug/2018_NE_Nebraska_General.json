@@ -1,0 +1,312 @@
+{
+  "year": 2018,
+  "state": "Nebraska",
+  "abbr": "NE",
+  "round": "General",
+  "caption": "2018 United States Senate election in Nebraska [ 45 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Nebraska",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 698883,
+  "table": {
+    "caption": "2018 United States Senate election in Nebraska [ 45 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Deb Fischer ( inc. )",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jane Raybould",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Schultz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Deb Fischer ( inc. )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "403,151",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jane Raybould",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "269,917",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Schultz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,349",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.63",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "466",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "133,234",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "698,883",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Deb Fischer",
+      "party": "Republican",
+      "votes": 403151,
+      "percent": 57.69
+    },
+    {
+      "candidate": "Jane Raybould",
+      "party": "Democratic",
+      "votes": 269917,
+      "percent": 38.62
+    },
+    {
+      "candidate": "Jim Schultz",
+      "party": "Libertarian",
+      "votes": 25349,
+      "percent": 3.63
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 466,
+      "percent": 0.07
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 133234,
+      "percent": 19.06
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "year": 2022,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "2022 United States Senate election in Kansas [ 40 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Kansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 1004956,
+  "table": {
+    "caption": "2022 United States Senate election in Kansas [ 40 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Moran (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Holland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Graham",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Moran (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "602,976",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Holland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "372,214",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.80%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Graham",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,766",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.96%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,004,956",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jerry Moran",
+      "party": "Republican",
+      "votes": 602976,
+      "percent": 60.0
+    },
+    {
+      "candidate": "Mark Holland",
+      "party": "Democratic",
+      "votes": 372214,
+      "percent": 37.04
+    },
+    {
+      "candidate": "David Graham",
+      "party": "Libertarian",
+      "votes": 29766,
+      "percent": 2.96
+    }
+  ]
+}

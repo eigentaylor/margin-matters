@@ -1,0 +1,279 @@
+{
+  "year": 2012,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "United States Senate election in Missouri, 2012 [ 96 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Missouri",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 2725793,
+  "table": {
+    "caption": "United States Senate election in Missouri, 2012 [ 96 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Claire McCaskill (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Todd Akin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jonathan Dine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Claire McCaskill (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,494,125",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Todd Akin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,066,159",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jonathan Dine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "165,468",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "41",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,725,793",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Claire McCaskill",
+      "party": "Democratic",
+      "votes": 1494125,
+      "percent": 54.81
+    },
+    {
+      "candidate": "Todd Akin",
+      "party": "Republican",
+      "votes": 1066159,
+      "percent": 39.11
+    },
+    {
+      "candidate": "Jonathan Dine",
+      "party": "Libertarian",
+      "votes": 165468,
+      "percent": 6.07
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 41,
+      "percent": 0.01
+    }
+  ]
+}

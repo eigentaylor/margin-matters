@@ -1,0 +1,327 @@
+{
+  "year": 2006,
+  "state": "Maryland",
+  "abbr": "MD",
+  "round": "General",
+  "caption": "Maryland United States Senate election results, 2006 [ 68 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Maryland",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1781139,
+  "table": {
+    "caption": "Maryland United States Senate election results, 2006 [ 68 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Cardin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Steele",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin Zeese",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Cardin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "965,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54.21",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.0",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Steele",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "787,182",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.19",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.5",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin Zeese",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27,564",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.55",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "916",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.05",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "178,295",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,781,139",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ben Cardin",
+      "party": "Democratic",
+      "votes": 965477,
+      "percent": 54.21
+    },
+    {
+      "candidate": "Michael Steele",
+      "party": "Republican",
+      "votes": 787182,
+      "percent": 44.19
+    },
+    {
+      "candidate": "Kevin Zeese",
+      "party": "Green",
+      "votes": 27564,
+      "percent": 1.55
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 916,
+      "percent": 0.05
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 178295,
+      "percent": 100.0
+    }
+  ]
+}

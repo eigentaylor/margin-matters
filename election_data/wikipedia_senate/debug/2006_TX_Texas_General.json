@@ -1,0 +1,294 @@
+{
+  "year": 2006,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "United States Senate election in Texas, 2006 [ 16 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Texas",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 4314663,
+  "table": {
+    "caption": "United States Senate election in Texas, 2006 [ 16 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kay Bailey Hutchison (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barbara Ann Radnofsky",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Jameson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kay Bailey Hutchison (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,661,789",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.69",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.65",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barbara Ann Radnofsky",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,555,202",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.04",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.69",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Jameson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "97,672",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.26",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.10",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,106,587",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25.7",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,314,663",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kay Bailey Hutchison",
+      "party": "Republican",
+      "votes": 2661789,
+      "percent": 61.69
+    },
+    {
+      "candidate": "Barbara Ann Radnofsky",
+      "party": "Democratic",
+      "votes": 1555202,
+      "percent": 36.04
+    },
+    {
+      "candidate": "Scott Jameson",
+      "party": "Libertarian",
+      "votes": 97672,
+      "percent": 2.26
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 1106587,
+      "percent": 25.7
+    }
+  ]
+}

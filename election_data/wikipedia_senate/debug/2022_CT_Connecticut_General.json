@@ -1,0 +1,305 @@
+{
+  "year": 2022,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "2022 United States Senate election in Connecticut [ 59 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Connecticut",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 1259887,
+  "table": {
+    "caption": "2022 United States Senate election in Connecticut [ 59 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Blumenthal",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Blumenthal",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Leora Levy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "701,175",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "22,689",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "723,864",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-5.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Leora Levy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "535,943",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.92%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "80",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,259,887",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Blumenthal",
+      "party": "Democratic",
+      "votes": 723864,
+      "percent": 57.45
+    },
+    {
+      "candidate": "Leora Levy",
+      "party": "Republican",
+      "votes": 535943,
+      "percent": 42.54
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 80,
+      "percent": 0.0
+    }
+  ]
+}

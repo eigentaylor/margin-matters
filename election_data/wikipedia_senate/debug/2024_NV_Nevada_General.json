@@ -1,0 +1,322 @@
+{
+  "year": 2024,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "2024 United States Senate election in Nevada [ 159 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Nevada",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1464728,
+  "table": {
+    "caption": "2024 United States Senate election in Nevada [ 159 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jacky Rosen (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sam Brown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Janine Hansen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Cunningham",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jacky Rosen (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "701,105",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sam Brown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "677,046",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "44,380",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Janine Hansen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Cunningham",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,881",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,464,728",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jacky Rosen",
+      "party": "Democratic",
+      "votes": 701105,
+      "percent": 47.87
+    },
+    {
+      "candidate": "Sam Brown",
+      "party": "Republican",
+      "votes": 677046,
+      "percent": 46.22
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 44380,
+      "percent": 3.03
+    },
+    {
+      "candidate": "Janine Hansen",
+      "party": "Independent American",
+      "votes": 21316,
+      "percent": 1.46
+    },
+    {
+      "candidate": "Chris Cunningham",
+      "party": "Libertarian",
+      "votes": 20881,
+      "percent": 1.43
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "year": 2008,
+  "state": "Arkansas",
+  "abbr": "AR",
+  "round": "General",
+  "caption": "2008 United States Senate election in Arkansas [ 12 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Arkansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 1011754,
+  "table": {
+    "caption": "2008 United States Senate election in Arkansas [ 12 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Pryor (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rebekah Kennedy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Pryor (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "804,678",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "79.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rebekah Kennedy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "207,076",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,011,754",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Pryor",
+      "party": "Democratic",
+      "votes": 804678,
+      "percent": 79.53
+    },
+    {
+      "candidate": "Rebekah Kennedy",
+      "party": "Green",
+      "votes": 207076,
+      "percent": 20.47
+    }
+  ]
+}

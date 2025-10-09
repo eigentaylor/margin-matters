@@ -1,0 +1,375 @@
+{
+  "year": 2016,
+  "state": "Iowa",
+  "abbr": "IA",
+  "round": "General",
+  "caption": "United States Senate election in Iowa, 2016 [ 69 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Iowa",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 1541036,
+  "table": {
+    "caption": "United States Senate election in Iowa, 2016 [ 69 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Grassley (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patty Judge",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles Aldrich",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Hennager",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Luick-Thrams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Grassley (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "926,007",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patty Judge",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "549,460",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles Aldrich",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41,794",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Hennager",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,649",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Luick-Thrams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,441",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,541,036",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Grassley",
+      "party": "Republican",
+      "votes": 926007,
+      "percent": 60.09
+    },
+    {
+      "candidate": "Patty Judge",
+      "party": "Democratic",
+      "votes": 549460,
+      "percent": 35.66
+    },
+    {
+      "candidate": "Charles Aldrich",
+      "party": "Libertarian",
+      "votes": 41794,
+      "percent": 2.71
+    },
+    {
+      "candidate": "Jim Hennager",
+      "party": "Independent",
+      "votes": 17649,
+      "percent": 1.15
+    },
+    {
+      "candidate": "Michael Luick-Thrams",
+      "party": "Independent",
+      "votes": 4441,
+      "percent": 0.29
+    },
+    {
+      "candidate": "Write-ins",
+      "party": "n/a",
+      "votes": 1685,
+      "percent": 0.11
+    }
+  ]
+}

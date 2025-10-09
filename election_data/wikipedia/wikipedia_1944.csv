@@ -1,50 +1,50 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1944,AL,198918,44540,190,1285,"{""Norman Thomas"": 190, ""Other"": 1095}",244743
-1944,AZ,80926,56287,0,421,"{""Other"": 421}",137634
-1944,AR,148965,63551,438,438,"{""Norman Thomas"": 438}",212954
-1944,CA,1988564,1512965,2515,19346,"{""Norman Thomas"": 2515, ""Other"": 16831}",3520875
-1944,CO,234331,268731,1977,1977,"{""Norman Thomas"": 1977}",505039
-1944,CT,435146,390527,5097,6317,"{""Norman Thomas"": 5097, ""Other"": 1220}",831990
-1944,DE,68166,56747,154,448,"{""Norman Thomas"": 154, ""Other"": 294}",125361
-1944,FL,339377,143215,0,0,{},482592
-1944,GA,268187,59880,6,42,"{""Norman Thomas"": 6, ""Other"": 36}",328109
-1944,ID,107399,100137,282,785,"{""Norman Thomas"": 282, ""Other"": 503}",208321
-1944,IL,2079479,1939314,180,17268,"{""Norman Thomas"": 180, ""Other"": 17088}",4036061
-1944,IN,781403,875891,2223,14797,"{""Norman Thomas"": 2223, ""Other"": 12574}",1672091
-1944,IA,499876,547267,1511,5456,"{""Norman Thomas"": 1511, ""Other"": 3945}",1052599
-1944,KS,287458,442096,1613,4222,"{""Norman Thomas"": 1613, ""Other"": 2609}",733776
-1944,KY,472589,392448,535,2884,"{""Norman Thomas"": 535, ""Other"": 2349}",867921
-1944,LA,281564,67750,0,69,"{""Other"": 69}",349383
-1944,ME-AL,140631,155434,0,335,"{""Other"": 335}",296400
-1944,MD,315490,292949,0,0,{},608439
-1944,MA,1035296,921350,0,4019,"{""Other"": 4019}",1960665
-1944,MI,1106899,1084423,4598,13901,"{""Norman Thomas"": 4598, ""Other"": 9303}",2205223
-1944,MN,589864,527416,5073,8249,"{""Norman Thomas"": 5073, ""Other"": 3176}",1125529
-1944,MS,168479,11601,0,0,{},180080
-1944,MO,807804,761524,1751,3146,"{""Norman Thomas"": 1751, ""Other"": 1395}",1572474
-1944,MT,112556,93163,1296,1636,"{""Norman Thomas"": 1296, ""Other"": 340}",207355
-1944,NE-AL,233246,329880,0,0,{},563126
-1944,NV,29623,24611,0,0,{},54234
-1944,NH,119663,109916,46,46,"{""Norman Thomas"": 46}",229625
-1944,NJ,987874,961335,3358,14552,"{""Norman Thomas"": 3358, ""Other"": 11194}",1963761
-1944,NM,81389,70688,0,148,"{""Other"": 148}",152225
-1944,NY,3304238,2987647,10553,24905,"{""Norman Thomas"": 10553, ""Other"": 14352}",6316790
-1944,NC,527399,263155,0,0,{},790554
-1944,ND,100144,118535,943,1492,"{""Norman Thomas"": 943, ""Other"": 549}",220171
-1944,OH,1570763,1582293,0,0,{},3153056
-1944,OK,401549,319424,0,1663,"{""Other"": 1663}",722636
-1944,OR,248635,225365,3785,6147,"{""Norman Thomas"": 3785, ""Other"": 2362}",480147
-1944,PA,1940479,1835054,11721,19260,"{""Norman Thomas"": 11721, ""Other"": 7539}",3794793
-1944,RI,175356,123487,0,433,"{""Other"": 433}",299276
-1944,SC,90601,4610,7799,8164,"{""No Candidate (Southern Democrat)"": 7799, ""Other"": 365}",103375
-1944,SD,96711,135365,0,0,{},232076
-1944,TN,308707,200311,792,1674,"{""Norman Thomas"": 792, ""Other"": 882}",510692
-1944,TX,821605,191425,135439,137301,"{""No Candidate (Southern Democrat)"": 135439, ""Norman Thomas"": 594, ""Other"": 1268}",1150331
-1944,UT,150088,97891,340,340,"{""Norman Thomas"": 340}",248319
-1944,VT,53820,71527,0,14,"{""Other"": 14}",125361
-1944,VA,242276,145243,417,966,"{""Norman Thomas"": 417, ""Other"": 549}",388485
-1944,WA,486774,361689,3824,7865,"{""Norman Thomas"": 3824, ""Other"": 4041}",856328
-1944,WV,392777,322819,0,0,{},715596
-1944,WI,650413,674532,13205,14207,"{""Norman Thomas"": 13205, ""Other"": 1002}",1339152
-1944,WY,49419,51921,0,0,{},101340
-1944,NATIONAL,25612916,22017929,143238,346218,"{""No Candidate (Southern Democrat)"": 143238, ""Norman Thomas"": 79017, ""Other"": 123963}",47977063
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1944,AL,198918,44540,190,1285,"{""Norman Thomas"": 190, ""Other"": 1095}",244743,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,AZ,80926,56287,0,421,"{""Other"": 421}",137634,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,AR,148965,63551,438,438,"{""Norman Thomas"": 438}",212954,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,CA,1988564,1512965,2515,19346,"{""Norman Thomas"": 2515, ""Other"": 16831}",3520875,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,CO,234331,268731,1977,1977,"{""Norman Thomas"": 1977}",505039,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,CT,435146,390527,5097,6317,"{""Norman Thomas"": 5097, ""Other"": 1220}",831990,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,DE,68166,56747,154,448,"{""Norman Thomas"": 154, ""Other"": 294}",125361,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,FL,339377,143215,0,0,{},482592,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,GA,268187,59880,6,42,"{""Norman Thomas"": 6, ""Other"": 36}",328109,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,ID,107399,100137,282,785,"{""Norman Thomas"": 282, ""Other"": 503}",208321,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,IL,2079479,1939314,180,17268,"{""Norman Thomas"": 180, ""Other"": 17088}",4036061,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,IN,781403,875891,2223,14797,"{""Norman Thomas"": 2223, ""Other"": 12574}",1672091,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,IA,499876,547267,1511,5456,"{""Norman Thomas"": 1511, ""Other"": 3945}",1052599,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,KS,287458,442096,1613,4222,"{""Norman Thomas"": 1613, ""Other"": 2609}",733776,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,KY,472589,392448,535,2884,"{""Norman Thomas"": 535, ""Other"": 2349}",867921,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,LA,281564,67750,0,69,"{""Other"": 69}",349383,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,ME-AL,140631,155434,0,335,"{""Other"": 335}",296400,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MD,315490,292949,0,0,{},608439,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MA,1035296,921350,0,4019,"{""Other"": 4019}",1960665,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MI,1106899,1084423,4598,13901,"{""Norman Thomas"": 4598, ""Other"": 9303}",2205223,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MN,589864,527416,5073,8249,"{""Norman Thomas"": 5073, ""Other"": 3176}",1125529,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MS,168479,11601,0,0,{},180080,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MO,807804,761524,1751,3146,"{""Norman Thomas"": 1751, ""Other"": 1395}",1572474,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,MT,112556,93163,1296,1636,"{""Norman Thomas"": 1296, ""Other"": 340}",207355,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NE-AL,233246,329880,0,0,{},563126,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NV,29623,24611,0,0,{},54234,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NH,119663,109916,46,46,"{""Norman Thomas"": 46}",229625,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NJ,987874,961335,3358,14552,"{""Norman Thomas"": 3358, ""Other"": 11194}",1963761,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NM,81389,70688,0,148,"{""Other"": 148}",152225,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NY,3304238,2987647,10553,24905,"{""Norman Thomas"": 10553, ""Other"": 14352}",6316790,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NC,527399,263155,0,0,{},790554,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,ND,100144,118535,943,1492,"{""Norman Thomas"": 943, ""Other"": 549}",220171,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,OH,1570763,1582293,0,0,{},3153056,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,OK,401549,319424,0,1663,"{""Other"": 1663}",722636,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,OR,248635,225365,3785,6147,"{""Norman Thomas"": 3785, ""Other"": 2362}",480147,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,PA,1940479,1835054,11721,19260,"{""Norman Thomas"": 11721, ""Other"": 7539}",3794793,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,RI,175356,123487,0,433,"{""Other"": 433}",299276,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,SC,90601,4610,7799,8164,"{""No Candidate (Southern Democrat)"": 7799, ""Other"": 365}",103375,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,SD,96711,135365,0,0,{},232076,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,TN,308707,200311,792,1674,"{""Norman Thomas"": 792, ""Other"": 882}",510692,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,TX,821605,191425,135439,137301,"{""No Candidate (Southern Democrat)"": 135439, ""Norman Thomas"": 594, ""Other"": 1268}",1150331,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,UT,150088,97891,340,340,"{""Norman Thomas"": 340}",248319,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,VT,53820,71527,0,14,"{""Other"": 14}",125361,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,VA,242276,145243,417,966,"{""Norman Thomas"": 417, ""Other"": 549}",388485,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,WA,486774,361689,3824,7865,"{""Norman Thomas"": 3824, ""Other"": 4041}",856328,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,WV,392777,322819,0,0,{},715596,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,WI,650413,674532,13205,14207,"{""Norman Thomas"": 13205, ""Other"": 1002}",1339152,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,WY,49419,51921,0,0,{},101340,https://en.wikipedia.org/wiki/1944_United_States_presidential_election
+1944,NATIONAL,25612916,22017929,143238,346218,"{""No Candidate (Southern Democrat)"": 143238, ""Norman Thomas"": 79017, ""Other"": 123963}",47977063,https://en.wikipedia.org/wiki/1944_United_States_presidential_election

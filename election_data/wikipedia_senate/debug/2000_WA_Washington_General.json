@@ -1,0 +1,240 @@
+{
+  "year": 2000,
+  "state": "Washington",
+  "abbr": "WA",
+  "round": "General",
+  "caption": "General election results [ 12 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Washington",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results [ 12 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maria Cantwell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Slade Gorton (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Jared",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maria Cantwell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,199,437",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Slade Gorton (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,197,208",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Jared",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64,734",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.6%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,461,379",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+761,206",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Maria Cantwell",
+      "party": "Democratic",
+      "votes": 1199437,
+      "percent": 48.73
+    },
+    {
+      "candidate": "Slade Gorton (incumbent)",
+      "party": "Republican",
+      "votes": 1197208,
+      "percent": 48.64
+    },
+    {
+      "candidate": "Jeff Jared",
+      "party": "Libertarian",
+      "votes": 64734,
+      "percent": 2.63
+    }
+  ]
+}

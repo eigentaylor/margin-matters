@@ -1,0 +1,385 @@
+{
+  "year": 2002,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "General election results [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Delaware",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "General election results [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Biden (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Raymond J. Clatworthy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maurice Barros",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Raymond T. Buranello",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert E. Mattson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Biden (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "135,253",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Raymond J. Clatworthy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "94,793",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maurice Barros",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "996",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Raymond T. Buranello",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "922",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert E. Mattson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "350",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "40,460",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "232,314",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Joe Biden (incumbent)",
+      "party": "Democratic",
+      "votes": 135253,
+      "percent": 58.22
+    },
+    {
+      "candidate": "Raymond J. Clatworthy",
+      "party": "Republican",
+      "votes": 94793,
+      "percent": 40.8
+    },
+    {
+      "candidate": "Maurice Barros",
+      "party": "Independent Party",
+      "votes": 996,
+      "percent": 0.43
+    },
+    {
+      "candidate": "Raymond T. Buranello",
+      "party": "Libertarian",
+      "votes": 922,
+      "percent": 0.4
+    },
+    {
+      "candidate": "Robert E. Mattson",
+      "party": "Natural Law",
+      "votes": 350,
+      "percent": 0.15
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 40460,
+      "percent": 17.42
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 232314,
+      "percent": null
+    }
+  ]
+}

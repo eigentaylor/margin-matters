@@ -1,0 +1,386 @@
+{
+  "year": 2006,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "2006 United States Senate election in Michigan",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Michigan",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 3780142,
+  "table": {
+    "caption": "2006 United States Senate election in Michigan",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Debbie Stabenow (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Bouchard",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Leonard Schwartz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Sole",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dennis FitzSimons",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Debbie Stabenow (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,151,278",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Bouchard",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,559,597",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Leonard Schwartz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27,012",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Sole",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23,890",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dennis FitzSimons",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,341",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "591,681",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15.6%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,780,142",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Debbie Stabenow",
+      "party": "Democratic",
+      "votes": 2151278,
+      "percent": 56.91
+    },
+    {
+      "candidate": "Mike Bouchard",
+      "party": "Republican",
+      "votes": 1559597,
+      "percent": 41.26
+    },
+    {
+      "candidate": "Leonard Schwartz",
+      "party": "Libertarian",
+      "votes": 27012,
+      "percent": 0.72
+    },
+    {
+      "candidate": "David Sole",
+      "party": "Green",
+      "votes": 23890,
+      "percent": 0.63
+    },
+    {
+      "candidate": "Dennis FitzSimons",
+      "party": "Constitution",
+      "votes": 18341,
+      "percent": 0.48
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 591681,
+      "percent": 15.6
+    },
+    {
+      "candidate": "Democratic hold",
+      "party": "Democratic hold",
+      "votes": 0,
+      "percent": 7.0
+    }
+  ]
+}

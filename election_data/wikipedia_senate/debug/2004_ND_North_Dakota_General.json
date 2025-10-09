@@ -1,0 +1,178 @@
+{
+  "year": 2004,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "2004 United States Senate election, North Dakota",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_North_Dakota",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 310696,
+  "table": {
+    "caption": "2004 United States Senate election, North Dakota",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Byron Dorgan (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Liffrig",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic–NPL hold",
+        "colspan": 4,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Byron Dorgan (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "149,936",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Liffrig",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "98,553",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "310,696",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Byron Dorgan",
+      "party": "Democratic–NPL",
+      "votes": 149936,
+      "percent": 68.28
+    },
+    {
+      "candidate": "Mike Liffrig",
+      "party": "Republican",
+      "votes": 98553,
+      "percent": 31.72
+    }
+  ]
+}

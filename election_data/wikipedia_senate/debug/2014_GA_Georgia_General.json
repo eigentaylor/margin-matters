@@ -1,0 +1,246 @@
+{
+  "year": 2014,
+  "state": "Georgia",
+  "abbr": "GA",
+  "round": "General",
+  "caption": "United States Senate election in Georgia, 2014 [ 243 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Georgia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 2567761,
+  "table": {
+    "caption": "United States Senate election in Georgia, 2014 [ 243 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Perdue",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michelle Nunn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Amanda Swafford",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Perdue",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,358,088",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michelle Nunn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,160,811",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Amanda Swafford",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48,862",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,567,761",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "David Perdue",
+      "party": "Republican",
+      "votes": 1358088,
+      "percent": 52.89
+    },
+    {
+      "candidate": "Michelle Nunn",
+      "party": "Democratic",
+      "votes": 1160811,
+      "percent": 45.21
+    },
+    {
+      "candidate": "Amanda Swafford",
+      "party": "Libertarian",
+      "votes": 48862,
+      "percent": 1.9
+    }
+  ]
+}

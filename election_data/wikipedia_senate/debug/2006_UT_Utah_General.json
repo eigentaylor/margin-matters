@@ -1,0 +1,423 @@
+{
+  "year": 2006,
+  "state": "Utah",
+  "abbr": "UT",
+  "round": "General",
+  "caption": "General election results [ 11 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Utah",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 571252,
+  "table": {
+    "caption": "General election results [ 11 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Orrin Hatch (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pete Ashdown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Bradley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roger Price",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dave Seely",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Julian Hatch",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Orrin Hatch (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "356,238",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pete Ashdown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "177,459",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Bradley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,526",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Personal Choice",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roger Price",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,089",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dave Seely",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,428",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Julian Hatch",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,512",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "178,779",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "571,252",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Orrin Hatch",
+      "party": "Republican",
+      "votes": 356238,
+      "percent": 62.36
+    },
+    {
+      "candidate": "Pete Ashdown",
+      "party": "Democratic",
+      "votes": 177459,
+      "percent": 31.06
+    },
+    {
+      "candidate": "Scott Bradley",
+      "party": "Constitution",
+      "votes": 21526,
+      "percent": 3.77
+    },
+    {
+      "candidate": "Roger Price",
+      "party": "Personal Choice",
+      "votes": 9089,
+      "percent": 1.59
+    },
+    {
+      "candidate": "Dave Seely",
+      "party": "Libertarian",
+      "votes": 4428,
+      "percent": 0.78
+    },
+    {
+      "candidate": "Julian Hatch",
+      "party": "Green",
+      "votes": 2512,
+      "percent": 0.44
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 178779,
+      "percent": 31.3
+    }
+  ]
+}

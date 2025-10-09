@@ -1,0 +1,375 @@
+{
+  "year": 2024,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "2024 United States Senate election in Michigan [ 283 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Michigan",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 5577183,
+  "table": {
+    "caption": "2024 United States Senate election in Michigan [ 283 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elissa Slotkin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Rogers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joseph Solis-Mullen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Douglas Marsh",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dave Stein",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Doug Dern",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elissa Slotkin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,712,686",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Rogers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,693,680",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joseph Solis-Mullen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56,697",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Douglas Marsh",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53,978",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dave Stein",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41,363",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Doug Dern",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,779",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,577,183",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Elissa Slotkin",
+      "party": "Democratic",
+      "votes": 2712686,
+      "percent": 48.64
+    },
+    {
+      "candidate": "Mike Rogers",
+      "party": "Republican",
+      "votes": 2693680,
+      "percent": 48.3
+    },
+    {
+      "candidate": "Joseph Solis-Mullen",
+      "party": "Libertarian",
+      "votes": 56697,
+      "percent": 1.02
+    },
+    {
+      "candidate": "Douglas Marsh",
+      "party": "Green",
+      "votes": 53978,
+      "percent": 0.97
+    },
+    {
+      "candidate": "Dave Stein",
+      "party": "Constitution",
+      "votes": 41363,
+      "percent": 0.74
+    },
+    {
+      "candidate": "Doug Dern",
+      "party": "Natural Law",
+      "votes": 18779,
+      "percent": 0.34
+    }
+  ]
+}

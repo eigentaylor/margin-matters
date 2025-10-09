@@ -1,0 +1,322 @@
+{
+  "year": 2014,
+  "state": "Minnesota",
+  "abbr": "MN",
+  "round": "General",
+  "caption": "United States Senate election in Minnesota, 2014 [ 89 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Minnesota",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1981528,
+  "table": {
+    "caption": "United States Senate election in Minnesota, 2014 [ 89 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Al Franken (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike McFadden",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Carlson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Heather Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic (DFL) hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Al Franken (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,053,205",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike McFadden",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "850,227",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Carlson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,530",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−12.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Heather Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "881",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,981,528",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL) hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Al Franken",
+      "party": "Democratic (DFL)",
+      "votes": 1053205,
+      "percent": 53.15
+    },
+    {
+      "candidate": "Mike McFadden",
+      "party": "Republican",
+      "votes": 850227,
+      "percent": 42.91
+    },
+    {
+      "candidate": "Steve Carlson",
+      "party": "Independence",
+      "votes": 47530,
+      "percent": 2.4
+    },
+    {
+      "candidate": "Heather Johnson",
+      "party": "Libertarian",
+      "votes": 29685,
+      "percent": 1.5
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 881,
+      "percent": 0.04
+    }
+  ]
+}

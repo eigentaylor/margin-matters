@@ -1,0 +1,289 @@
+{
+  "year": 2010,
+  "state": "Arizona",
+  "abbr": "AZ",
+  "round": "General",
+  "caption": "2010 United States Senate election in Arizona [ 91 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Arizona",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 1702326,
+  "table": {
+    "caption": "2010 United States Senate election in Arizona [ 91 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John McCain (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rodney Glassman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Nolan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Joslyn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John McCain (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,005,615",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−17.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rodney Glassman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "592,011",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Nolan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "80,097",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Joslyn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,603",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,702,326",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John McCain",
+      "party": "Republican",
+      "votes": 1005615,
+      "percent": 59.07
+    },
+    {
+      "candidate": "Rodney Glassman",
+      "party": "Democratic",
+      "votes": 592011,
+      "percent": 34.78
+    },
+    {
+      "candidate": "David Nolan",
+      "party": "Libertarian",
+      "votes": 80097,
+      "percent": 4.71
+    },
+    {
+      "candidate": "Jerry Joslyn",
+      "party": "Green",
+      "votes": 24603,
+      "percent": 1.45
+    }
+  ]
+}

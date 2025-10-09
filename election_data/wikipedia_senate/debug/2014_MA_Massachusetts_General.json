@@ -1,0 +1,236 @@
+{
+  "year": 2014,
+  "state": "Massachusetts",
+  "abbr": "MA",
+  "round": "General",
+  "caption": "United States Senate election in Massachusetts, 2014 [ 41 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Massachusetts",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 2084972,
+  "table": {
+    "caption": "United States Senate election in Massachusetts, 2014 [ 41 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ed Markey (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Herr",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ed Markey (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,289,944",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Herr",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "791,950",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3,078",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,084,972",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ed Markey",
+      "party": "Democratic",
+      "votes": 1289944,
+      "percent": 61.87
+    },
+    {
+      "candidate": "Brian Herr",
+      "party": "Republican",
+      "votes": 791950,
+      "percent": 37.98
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3078,
+      "percent": 0.15
+    }
+  ]
+}

@@ -1,0 +1,337 @@
+{
+  "year": 2010,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "United States Senate election in Oklahoma, 2010 [ 20 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Oklahoma",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1017151,
+  "table": {
+    "caption": "United States Senate election in Oklahoma, 2010 [ 20 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Coburn (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Rogers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Wallace",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ronald F. Dwyer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Coburn (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "718,482",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+17.87%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Rogers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "265,814",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−15.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Wallace",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,048",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ronald F. Dwyer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,807",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "452,668",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,017,151",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Coburn",
+      "party": "Republican",
+      "votes": 718482,
+      "percent": 70.64
+    },
+    {
+      "candidate": "Jim Rogers",
+      "party": "Democratic",
+      "votes": 265814,
+      "percent": 26.13
+    },
+    {
+      "candidate": "Stephen Wallace",
+      "party": "Independent",
+      "votes": 25048,
+      "percent": 2.46
+    },
+    {
+      "candidate": "Ronald F. Dwyer",
+      "party": "Independent",
+      "votes": 7807,
+      "percent": 0.77
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 452668,
+      "percent": 44.5
+    }
+  ]
+}

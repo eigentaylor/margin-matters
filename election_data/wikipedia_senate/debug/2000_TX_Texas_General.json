@@ -1,0 +1,342 @@
+{
+  "year": 2000,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "2000 United States Senate election in Texas [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Texas",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2000 United States Senate election in Texas [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kay Bailey Hutchison (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gene Kelly",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Douglas S. Sandage",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mary J. Ruwart",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kay Bailey Hutchison (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,078,954",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gene Kelly",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,025,024",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Douglas S. Sandage",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "91,329",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mary J. Ruwart",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72,657",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,053,930",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+10.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "6,267,964",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kay Bailey Hutchison (Incumbent)",
+      "party": "Republican",
+      "votes": 4078954,
+      "percent": 65.08
+    },
+    {
+      "candidate": "Gene Kelly",
+      "party": "Democratic",
+      "votes": 2025024,
+      "percent": 32.31
+    },
+    {
+      "candidate": "Douglas S. Sandage",
+      "party": "Green",
+      "votes": 91329,
+      "percent": 1.46
+    },
+    {
+      "candidate": "Mary J. Ruwart",
+      "party": "Libertarian",
+      "votes": 72657,
+      "percent": 1.16
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 2053930,
+      "percent": 32.77
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 6267964,
+      "percent": null
+    }
+  ]
+}

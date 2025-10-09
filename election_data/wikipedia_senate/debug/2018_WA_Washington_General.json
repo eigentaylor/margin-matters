@@ -1,0 +1,203 @@
+{
+  "year": 2018,
+  "state": "Washington",
+  "abbr": "WA",
+  "round": "General",
+  "caption": "United States Senate election in Washington, 2018 [ 37 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Washington",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 3086168,
+  "table": {
+    "caption": "United States Senate election in Washington, 2018 [ 37 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maria Cantwell (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Susan Hutchison",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maria Cantwell (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,803,364",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Susan Hutchison",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,282,804",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,086,168",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Maria Cantwell",
+      "party": "Democratic",
+      "votes": 1803364,
+      "percent": 58.43
+    },
+    {
+      "candidate": "Susan Hutchison",
+      "party": "Republican",
+      "votes": 1282804,
+      "percent": 41.57
+    }
+  ]
+}

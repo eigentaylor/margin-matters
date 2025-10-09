@@ -1,0 +1,274 @@
+{
+  "year": 2024,
+  "state": "Arizona",
+  "abbr": "AZ",
+  "round": "General",
+  "caption": "2024 United States Senate election in Arizona [ 262 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Arizona",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 3348814,
+  "table": {
+    "caption": "2024 United States Senate election in Arizona [ 262 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ruben Gallego",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kari Lake",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eduardo Heredia Quintana",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ruben Gallego",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,676,335",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kari Lake",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,595,761",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eduardo Heredia Quintana",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75,868",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.27%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "850",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,348,814",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Independent",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ruben Gallego",
+      "party": "Democratic",
+      "votes": 1676335,
+      "percent": 50.06
+    },
+    {
+      "candidate": "Kari Lake",
+      "party": "Republican",
+      "votes": 1595761,
+      "percent": 47.65
+    },
+    {
+      "candidate": "Eduardo Heredia Quintana",
+      "party": "Green",
+      "votes": 75868,
+      "percent": 2.27
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 850,
+      "percent": 0.02
+    }
+  ]
+}

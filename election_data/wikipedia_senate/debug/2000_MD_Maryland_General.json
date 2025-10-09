@@ -1,0 +1,283 @@
+{
+  "year": 2000,
+  "state": "Maryland",
+  "abbr": "MD",
+  "round": "General",
+  "caption": "General election results [ 6 ] [ 7 ] [ 8 ] [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Maryland",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "General election results [ 6 ] [ 7 ] [ 8 ] [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Sarbanes (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Rappaport",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write Ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Corrogan R. Vaughn (Write In)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 4,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Sarbanes (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,230,013",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Rappaport",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "715,178",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Other",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write Ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,594",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Corrogan R. Vaughn (Write In)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "113",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,946,898",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Paul Sarbanes (incumbent)",
+      "party": "Democratic",
+      "votes": 1230013,
+      "percent": 63.18
+    },
+    {
+      "candidate": "Paul Rappaport",
+      "party": "Republican",
+      "votes": 715178,
+      "percent": 36.73
+    },
+    {
+      "candidate": "Write Ins",
+      "party": "Other",
+      "votes": 1594,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Corrogan R. Vaughn (Write In)",
+      "party": "Independent",
+      "votes": 113,
+      "percent": 0.01
+    }
+  ]
+}

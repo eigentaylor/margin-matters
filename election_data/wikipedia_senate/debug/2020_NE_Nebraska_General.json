@@ -1,0 +1,355 @@
+{
+  "year": 2020,
+  "state": "Nebraska",
+  "abbr": "NE",
+  "round": "General",
+  "caption": "United States Senate election in Nebraska, 2020 [ 39 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Nebraska",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 930012,
+  "table": {
+    "caption": "United States Senate election in Nebraska, 2020 [ 39 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Sasse ( inc. )",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Janicek",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Preston Love Jr. (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gene Siadek",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Sasse ( inc. )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "583,507",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "62.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Janicek",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "227,191",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Preston Love Jr. (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58,411",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gene Siadek",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55,115",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "5,788",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "356,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "930,012",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ben Sasse",
+      "party": "Republican",
+      "votes": 583507,
+      "percent": 62.74
+    },
+    {
+      "candidate": "Chris Janicek",
+      "party": "Democratic",
+      "votes": 227191,
+      "percent": 24.43
+    },
+    {
+      "candidate": "Preston Love Jr.",
+      "party": "Democratic",
+      "votes": 58411,
+      "percent": 6.28
+    },
+    {
+      "candidate": "Gene Siadek",
+      "party": "Libertarian",
+      "votes": 55115,
+      "percent": 5.93
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 5788,
+      "percent": 0.62
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 356316,
+      "percent": 38.31
+    }
+  ]
+}

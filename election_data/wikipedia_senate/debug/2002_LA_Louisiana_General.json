@@ -1,0 +1,256 @@
+{
+  "year": 2002,
+  "state": "Louisiana",
+  "abbr": "LA",
+  "round": "General",
+  "caption": "Louisiana United States Senate election runoff, December 7, 2002",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Louisiana",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table": {
+    "caption": "Louisiana United States Senate election runoff, December 7, 2002",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mary Landrieu (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Suzanne Haik Terrell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mary Landrieu (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "638,654",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Suzanne Haik Terrell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "596,642",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.53%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "42,012",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,235,296",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mary Landrieu (incumbent)",
+      "party": "Democratic",
+      "votes": 638654,
+      "percent": 51.7
+    },
+    {
+      "candidate": "Suzanne Haik Terrell",
+      "party": "Republican",
+      "votes": 596642,
+      "percent": 48.3
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 42012,
+      "percent": 3.4
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1235296,
+      "percent": 100.0
+    }
+  ]
+}

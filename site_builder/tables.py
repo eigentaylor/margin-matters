@@ -120,6 +120,8 @@ def describe_column(col: str) -> str:
         return 'Name of the highest-vote third-party / other candidate in that state and year.'
     if k == 'top_third_party_share':
         return 'Vote share percentage of the top-performing third-party candidate.'
+    if k == 'source_url':
+        return 'URL of the source for this data (usually Wikipedia).'
     if 'pct' in k:
         return 'Percentage share of the vote.'
     if 'delta' in k:
@@ -130,6 +132,14 @@ def describe_column(col: str) -> str:
         return 'The national presidential margin for that year, including third-party votes ((D_total - R_total)/total_votes).'
     if 'relative_margin' in k:
         return 'The presidential margin relative to the national presidential margin (Margin - Nat. Margin).'
+    if 'd_candidate' in k:
+        return 'Name of the Democratic candidate.'
+    if 'r_candidate' in k:
+        return 'Name of the Republican candidate.'
+    if 'class' in k:
+        return 'Senate class (I, II, or III) for this race.'
+    if 'sen_margin' in k:
+        return 'Senate margin between the two major-party candidates, including third-party votes ((D - R)/total).'
     if 'abbr' in k:
         return 'State or unit abbreviation.'
     if 'total_votes' in k:
@@ -248,7 +258,17 @@ def render_table(rows: List[Dict], cols: List[str], two_party: bool = False) -> 
                     else:
                         cell = f'<span class="cell-inner"><span class="raw">{raw_esc}</span><span class="delta"></span></span>'
                 else:
-                    cell = esc(raw_val)
+                    # If this is a source URL column, render it as a hyperlink
+                    if c in ("source_url", "source"):
+                        url = (r.get(c, "") or "").strip()
+                        if url:
+                            href = esc(url)
+                            # Visible text should be 'Wikipedia' as requested
+                            cell = f'<a href="{href}" target="_blank" rel="noopener noreferrer">Wikipedia</a>'
+                        else:
+                            cell = ""
+                    else:
+                        cell = esc(raw_val)
             cells.append(f"<td>{cell}</td>")
         body += "<tr>" + "".join(cells) + "</tr>"
     body += "</tbody>"

@@ -1,0 +1,236 @@
+{
+  "year": 2020,
+  "state": "Wyoming",
+  "abbr": "WY",
+  "round": "General",
+  "caption": "United States Senate election in Wyoming, 2020 [ 59 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Wyoming",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 271937,
+  "table": {
+    "caption": "United States Senate election in Wyoming, 2020 [ 59 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cynthia Lummis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Merav Ben-David",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cynthia Lummis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "198,100",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Merav Ben-David",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72,766",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,071",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "271,937",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Cynthia Lummis",
+      "party": "Republican",
+      "votes": 198100,
+      "percent": 72.85
+    },
+    {
+      "candidate": "Merav Ben-David",
+      "party": "Democratic",
+      "votes": 72766,
+      "percent": 26.76
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1071,
+      "percent": 0.39
+    }
+  ]
+}

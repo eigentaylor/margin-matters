@@ -1,0 +1,236 @@
+{
+  "year": 2012,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "United States Senate election in Rhode Island, 2012 [ 31 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Rhode_Island",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 418189,
+  "table": {
+    "caption": "United States Senate election in Rhode Island, 2012 [ 31 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sheldon Whitehouse (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barry Hinckley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sheldon Whitehouse (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "271,034",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barry Hinckley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "146,222",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "933",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "418,189",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Sheldon Whitehouse",
+      "party": "Democratic",
+      "votes": 271034,
+      "percent": 64.81
+    },
+    {
+      "candidate": "Barry Hinckley",
+      "party": "Republican",
+      "votes": 146222,
+      "percent": 34.97
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 933,
+      "percent": 0.22
+    }
+  ]
+}

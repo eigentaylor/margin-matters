@@ -1,0 +1,324 @@
+{
+  "year": 2002,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "2002 United States Senate election in New Jersey",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_New_Jersey",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2002 United States Senate election in New Jersey",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Frank Lautenberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Doug Forrester",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Glick",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elizabeth Macron",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Greg Pason",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Frank Lautenberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,138,193",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Doug Forrester",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "928,439",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.95%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Glick",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,308",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elizabeth Macron",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,558",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Norman E. Wahner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,404",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Greg Pason",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,702",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,112,604",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Frank Lautenberg",
+      "party": "Democratic",
+      "votes": 1138193,
+      "percent": 53.88
+    },
+    {
+      "candidate": "Doug Forrester",
+      "party": "Republican",
+      "votes": 928439,
+      "percent": 43.95
+    },
+    {
+      "candidate": "Ted Glick",
+      "party": "Green",
+      "votes": 24308,
+      "percent": 1.15
+    },
+    {
+      "candidate": "Elizabeth Macron",
+      "party": "Libertarian",
+      "votes": 12558,
+      "percent": 0.59
+    },
+    {
+      "candidate": "Norman E. Wahner",
+      "party": "Conservative",
+      "votes": 6404,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Greg Pason",
+      "party": "Socialist",
+      "votes": 2702,
+      "percent": 0.13
+    }
+  ]
+}

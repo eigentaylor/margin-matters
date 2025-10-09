@@ -1,0 +1,269 @@
+{
+  "year": 2000,
+  "state": "Virginia",
+  "abbr": "VA",
+  "round": "General",
+  "caption": "United States Senate election in Virginia, 2000 [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "United States Senate election in Virginia, 2000 [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Allen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Robb (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Allen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,420,460",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Robb (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,296,093",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,748",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "124,367",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,718,301",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 6,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "George Allen",
+      "party": "Republican",
+      "votes": 1420460,
+      "percent": 52.26
+    },
+    {
+      "candidate": "Chuck Robb (incumbent)",
+      "party": "Democratic",
+      "votes": 1296093,
+      "percent": 47.68
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1748,
+      "percent": 0.06
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 124367,
+      "percent": 4.58
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 2718301,
+      "percent": null
+    }
+  ]
+}

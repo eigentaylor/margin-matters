@@ -8,7 +8,8 @@
         Site by eigentaylor.<br />
         Please report any inaccuracies to me through discord: eigentaylor.<br />
         Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>.<br />
-        Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0). ${extraText}<br /><span data-last-updated>Last updated: ...</span>
+        Available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 4.0). ${extraText}<br /><span data-last-updated>Last updated: ...</span><br />
+        Note: Senate data is new and is still being vetted; please report any issues you find!<br />
       </footer>
     `;
 

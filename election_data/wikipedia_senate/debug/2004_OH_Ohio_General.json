@@ -1,0 +1,216 @@
+{
+  "year": 2004,
+  "state": "Ohio",
+  "abbr": "OH",
+  "round": "General",
+  "caption": "2004 United States Senate election, Ohio [ 25 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Ohio",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 5426196,
+  "table": {
+    "caption": "2004 United States Senate election, Ohio [ 25 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Voinovich (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Fingerhut",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Helen Meyers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 4,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Voinovich (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,464,651",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Fingerhut",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,961,249",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Helen Meyers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "296",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,426,196",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "George Voinovich",
+      "party": "Republican",
+      "votes": 3464651,
+      "percent": 63.85
+    },
+    {
+      "candidate": "Eric Fingerhut",
+      "party": "Democratic",
+      "votes": 1961249,
+      "percent": 36.14
+    },
+    {
+      "candidate": "Helen Meyers",
+      "party": "Independent",
+      "votes": 296,
+      "percent": 0.01
+    }
+  ]
+}

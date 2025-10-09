@@ -1,0 +1,413 @@
+{
+  "year": 2004,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "General election results [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Nevada",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 810068,
+  "table": {
+    "caption": "General election results [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Harry Reid (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Ziser",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas L. Hurst",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David K. Schumann",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gary Marinch",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Harry Reid (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "494,805",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+13.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Ziser",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "284,640",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−12.63%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "12,968",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas L. Hurst",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,559",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.69%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American Party (Nevada)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David K. Schumann",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,001",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gary Marinch",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,095",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "210,165",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+25.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "810,068",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Harry Reid",
+      "party": "Democratic",
+      "votes": 494805,
+      "percent": 61.08
+    },
+    {
+      "candidate": "Richard Ziser",
+      "party": "Republican",
+      "votes": 284640,
+      "percent": 35.14
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 12968,
+      "percent": 1.6
+    },
+    {
+      "candidate": "Thomas L. Hurst",
+      "party": "Libertarian",
+      "votes": 9559,
+      "percent": 1.18
+    },
+    {
+      "candidate": "David K. Schumann",
+      "party": "Independent American Party (Nevada)",
+      "votes": 6001,
+      "percent": 0.74
+    },
+    {
+      "candidate": "Gary Marinch",
+      "party": "Natural Law",
+      "votes": 2095,
+      "percent": 0.26
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 210165,
+      "percent": 25.94
+    }
+  ]
+}

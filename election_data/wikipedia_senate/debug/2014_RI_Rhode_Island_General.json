@@ -1,0 +1,236 @@
+{
+  "year": 2014,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "United States Senate election in Rhode Island, 2014 [ 21 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Rhode_Island",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 316898,
+  "table": {
+    "caption": "United States Senate election in Rhode Island, 2014 [ 21 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack Reed (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Zaccaria",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack Reed (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "223,675",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Zaccaria",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "92,684",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.65%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "539",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "316,898",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jack Reed",
+      "party": "Democratic",
+      "votes": 223675,
+      "percent": 70.58
+    },
+    {
+      "candidate": "Mark Zaccaria",
+      "party": "Republican",
+      "votes": 92684,
+      "percent": 29.25
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 539,
+      "percent": 0.17
+    }
+  ]
+}

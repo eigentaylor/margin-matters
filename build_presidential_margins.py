@@ -72,6 +72,7 @@ NOTES = {
     (1912, None): "In 1912, the main opposition to Wilson (D) was Theodore Roosevelt of the Progressive Party (Bull Moose), who we consider the de facto Republican candidate for margin purposes, with Taft as a third-party candidate.",
     (1948, 'AL'): "In 1948, Truman was not on the ballot in Alabama; the Democratic column represents a Dixiecrat slate. We copy the third-party votes to the D_votes column to reflect that this still indicates a Democratic-leaning outcome.",
     (1960, 'AL'): "Voters in Alabama voted for electors individually, with 5 pledged to Kennedy (D) and 6 unpledged; we count D_votes and T_votes based on the highest vote-getting elector in each category, as Wikipedia does.",
+    (2024, 'NE-01'): "NE-01 is the only electoral unit which had a more democratic raw margin compared to 2020. This is likely due in part to the redrawing of the district to include more of Omaha's suburbs.",
 }
 
 def safe_int(x):
@@ -109,6 +110,8 @@ def main():
             # New: total third-party votes and per-candidate breakdown
             r2['third_party_votes'] = safe_int(r.get('third_party_votes', 0))
             r2['third_party_results'] = r.get('third_party_results', '')
+            # preserve source URL from wikipedia scraper if present
+            r2['source_url'] = r.get('source_url', '')
             r2['top_third_party_share'] = r2['T_votes'] / r2['total_votes'] if r2['total_votes'] > 0 else 0.0
             # capture electoral_votes if present
             r2['electoral_votes'] = safe_int(r.get('electoral_votes', 0))
@@ -292,6 +295,7 @@ def main():
             out = {
                 'year': year,
                 'abbr': abbr,
+                'source_url': r.get('source_url', ''),
                 'D_votes': r['D_votes'],
                 'D_share': r['D_votes'] / r['total_votes'] if r['total_votes'] > 0 else 0.0,
                 'R_votes': r['R_votes'],
@@ -479,7 +483,8 @@ def main():
         'two_party_margin_str', 'two_party_margin_delta_str',
         'two_party_national_margin_str', 'two_party_national_margin_delta_str',
         'two_party_relative_margin_str', 'two_party_relative_margin_delta_str',
-        'special_case_notes'
+        'special_case_notes',
+        'source_url',
     ]
 
     with open(outfile, 'w', newline='', encoding='utf-8') as f:

@@ -1,0 +1,322 @@
+{
+  "year": 2022,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "2022 United States Senate election in Missouri [ 204 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Missouri",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 2069130,
+  "table": {
+    "caption": "2022 United States Senate election in Missouri [ 204 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Schmitt",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Trudy Busch Valentine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jonathan Dine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Venable",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Schmitt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,146,966",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Trudy Busch Valentine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "872,694",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jonathan Dine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34,821",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Venable",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,608",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "41",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,069,130",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Eric Schmitt",
+      "party": "Republican",
+      "votes": 1146966,
+      "percent": 55.43
+    },
+    {
+      "candidate": "Trudy Busch Valentine",
+      "party": "Democratic",
+      "votes": 872694,
+      "percent": 42.18
+    },
+    {
+      "candidate": "Jonathan Dine",
+      "party": "Libertarian",
+      "votes": 34821,
+      "percent": 1.68
+    },
+    {
+      "candidate": "Paul Venable",
+      "party": "Constitution",
+      "votes": 14608,
+      "percent": 0.71
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 41,
+      "percent": 0.0
+    }
+  ]
+}

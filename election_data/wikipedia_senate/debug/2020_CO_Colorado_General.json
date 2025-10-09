@@ -1,0 +1,327 @@
+{
+  "year": 2020,
+  "state": "Colorado",
+  "abbr": "CO",
+  "round": "General",
+  "caption": "United States Senate election in Colorado, 2020 [ 174 ] [ 175 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Colorado",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 3235659,
+  "table": {
+    "caption": "United States Senate election in Colorado, 2020 [ 174 ] [ 175 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Hickenlooper",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cory Gardner (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Raymon Doane",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Doyle",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Evans",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Hickenlooper",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,731,114",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cory Gardner (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,429,492",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Raymon Doane",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56,262",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Approval Voting",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Doyle",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,820",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Unity",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Evans",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,971",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,235,659",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Hickenlooper",
+      "party": "Democratic",
+      "votes": 1731114,
+      "percent": 53.5
+    },
+    {
+      "candidate": "Cory Gardner",
+      "party": "Republican",
+      "votes": 1429492,
+      "percent": 44.18
+    },
+    {
+      "candidate": "Raymon Doane",
+      "party": "Libertarian",
+      "votes": 56262,
+      "percent": 1.74
+    },
+    {
+      "candidate": "Daniel Doyle",
+      "party": "Approval Voting",
+      "votes": 9820,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Stephen Evans",
+      "party": "Unity",
+      "votes": 8971,
+      "percent": 0.28
+    }
+  ]
+}

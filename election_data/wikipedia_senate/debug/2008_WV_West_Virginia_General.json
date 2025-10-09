@@ -1,0 +1,203 @@
+{
+  "year": 2008,
+  "state": "West Virginia",
+  "abbr": "WV",
+  "round": "General",
+  "caption": "General election results [ 6 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_West_Virginia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 702189,
+  "table": {
+    "caption": "General election results [ 6 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jay Rockefeller (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jay Wolfe",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jay Rockefeller (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "447,560",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "63.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.63%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jay Wolfe",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "254,629",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.63%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "702,189",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jay Rockefeller",
+      "party": "Democratic",
+      "votes": 447560,
+      "percent": 63.74
+    },
+    {
+      "candidate": "Jay Wolfe",
+      "party": "Republican",
+      "votes": 254629,
+      "percent": 36.26
+    }
+  ]
+}

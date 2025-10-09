@@ -1,0 +1,441 @@
+{
+  "year": 2000,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "General election results [ 17 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Nevada",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table": {
+    "caption": "General election results [ 17 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Ensign",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edward M. Bernstein",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kathryn Rusco",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J.J. Johnson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ernie Berghof",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Grutzmacher",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Ensign",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "330,687",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+14.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edward M. Bernstein",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "238,260",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−11.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "11,503",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.92%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-1.40%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kathryn Rusco",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,286",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J.J. Johnson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,395",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ernie Berghof",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,540",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Citizens First Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Grutzmacher",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,579",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "92,427",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "600,250",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 6,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Ensign",
+      "party": "Republican",
+      "votes": 330687,
+      "percent": 55.09
+    },
+    {
+      "candidate": "Edward M. Bernstein",
+      "party": "Democratic",
+      "votes": 238260,
+      "percent": 39.69
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 11503,
+      "percent": 1.92
+    },
+    {
+      "candidate": "Kathryn Rusco",
+      "party": "Green",
+      "votes": 10286,
+      "percent": 1.71
+    },
+    {
+      "candidate": "J.J. Johnson",
+      "party": "Libertarian",
+      "votes": 5395,
+      "percent": 0.9
+    },
+    {
+      "candidate": "Ernie Berghof",
+      "party": "Independent American",
+      "votes": 2540,
+      "percent": 0.42
+    },
+    {
+      "candidate": "Bill Grutzmacher",
+      "party": "Citizens First Party",
+      "votes": 1579,
+      "percent": 0.26
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 92427,
+      "percent": 15.4
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 600250,
+      "percent": null
+    }
+  ]
+}

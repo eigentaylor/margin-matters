@@ -1,0 +1,236 @@
+{
+  "year": 2024,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "2024 United States Senate election in Rhode Island [ 37 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Rhode_Island",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 491948,
+  "table": {
+    "caption": "2024 United States Senate election in Rhode Island [ 37 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sheldon Whitehouse (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patricia Morgan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sheldon Whitehouse (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "294,665",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patricia Morgan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "196,039",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,244",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "491,948",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Sheldon Whitehouse",
+      "party": "Democratic",
+      "votes": 294665,
+      "percent": 59.9
+    },
+    {
+      "candidate": "Patricia Morgan",
+      "party": "Republican",
+      "votes": 196039,
+      "percent": 39.85
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1244,
+      "percent": 0.25
+    }
+  ]
+}

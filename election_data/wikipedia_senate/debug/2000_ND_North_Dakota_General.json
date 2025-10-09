@@ -1,0 +1,218 @@
+{
+  "year": 2000,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "General election results [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_North_Dakota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kent Conrad (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Duane Sand",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kent Conrad (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "176,470",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.37",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Duane Sand",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "111,069",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.63",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "287,539",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.71",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kent Conrad (incumbent)",
+      "party": "Democratic–NPL",
+      "votes": 176470,
+      "percent": 61.37
+    },
+    {
+      "candidate": "Duane Sand",
+      "party": "Republican",
+      "votes": 111069,
+      "percent": 38.63
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 287539,
+      "percent": 61.71
+    }
+  ]
+}

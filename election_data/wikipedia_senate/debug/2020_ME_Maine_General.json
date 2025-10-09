@@ -1,0 +1,322 @@
+{
+  "year": 2020,
+  "state": "Maine",
+  "abbr": "ME",
+  "round": "General",
+  "caption": "United States Senate election in Maine, 2020 [ 167 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Maine",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 819183,
+  "table": {
+    "caption": "United States Senate election in Maine, 2020 [ 167 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Susan Collins (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sara Gideon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lisa Savage",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Max Linn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Susan Collins (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "417,645",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−17.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sara Gideon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "347,223",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+10.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lisa Savage",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40,579",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Max Linn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,508",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "228",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "819,183",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Susan Collins",
+      "party": "Republican",
+      "votes": 417645,
+      "percent": 50.98
+    },
+    {
+      "candidate": "Sara Gideon",
+      "party": "Democratic",
+      "votes": 347223,
+      "percent": 42.39
+    },
+    {
+      "candidate": "Lisa Savage",
+      "party": "Independent",
+      "votes": 40579,
+      "percent": 4.95
+    },
+    {
+      "candidate": "Max Linn",
+      "party": "Independent",
+      "votes": 13508,
+      "percent": 1.65
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 228,
+      "percent": 0.03
+    }
+  ]
+}

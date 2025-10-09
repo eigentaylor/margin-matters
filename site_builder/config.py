@@ -3,6 +3,7 @@ import datetime
 
 # Paths
 CSV_PATH = Path("presidential_margins.csv")
+SENATE_CSV_PATH = Path("senate_margins.csv")
 OUT_DIR = Path("docs")
 STATE_DIR = OUT_DIR / "state"
 UNIT_DIR = OUT_DIR / "unit"

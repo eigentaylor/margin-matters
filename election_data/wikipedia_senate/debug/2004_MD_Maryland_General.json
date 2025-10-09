@@ -1,0 +1,380 @@
+{
+  "year": 2004,
+  "state": "Maryland",
+  "abbr": "MD",
+  "round": "General",
+  "caption": "United States Senate election in Maryland, 2004 [ 5 ] [ 6 ] [ 7 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Maryland",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 2321931,
+  "table": {
+    "caption": "United States Senate election in Maryland, 2004 [ 5 ] [ 6 ] [ 7 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barbara A. Mikulski (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "E. J. Pipkin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Maria Allwine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas Trump",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barbara A. Mikulski (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,504,691",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "E. J. Pipkin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "783,055",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Maria Allwine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,816",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas Trump",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,009",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "360",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "721,636",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,321,931",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Barbara A. Mikulski",
+      "party": "Democratic",
+      "votes": 1504691,
+      "percent": 64.8
+    },
+    {
+      "candidate": "E. J. Pipkin",
+      "party": "Republican",
+      "votes": 783055,
+      "percent": 33.72
+    },
+    {
+      "candidate": "Maria Allwine",
+      "party": "Green",
+      "votes": 24816,
+      "percent": 1.07
+    },
+    {
+      "candidate": "Thomas Trump",
+      "party": "Constitution",
+      "votes": 9009,
+      "percent": 0.39
+    },
+    {
+      "candidate": "360",
+      "party": "Write-ins",
+      "votes": 360,
+      "percent": 0.02
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 721636,
+      "percent": 31.08
+    }
+  ]
+}

@@ -1,0 +1,408 @@
+{
+  "year": 2016,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "United States Senate election in Nevada, 2016 [ 123 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Nevada",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 1108294,
+  "table": {
+    "caption": "United States Senate election in Nevada, 2016 [ 123 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Catherine Cortez Masto",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Heck",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Jones",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas Sawyer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tony Gumina",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jarrod Williams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Catherine Cortez Masto",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "521,994",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.19%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Heck",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "495,079",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "42,257",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Jones",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,128",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas Sawyer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,208",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tony Gumina",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,740",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jarrod Williams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,888",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,108,294",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Catherine Cortez Masto",
+      "party": "Democratic",
+      "votes": 521994,
+      "percent": 47.1
+    },
+    {
+      "candidate": "Joe Heck",
+      "party": "Republican",
+      "votes": 495079,
+      "percent": 44.67
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 42257,
+      "percent": 3.81
+    },
+    {
+      "candidate": "Tom Jones",
+      "party": "Independent American",
+      "votes": 17128,
+      "percent": 1.55
+    },
+    {
+      "candidate": "Thomas Sawyer",
+      "party": "Independent",
+      "votes": 14208,
+      "percent": 1.28
+    },
+    {
+      "candidate": "Tony Gumina",
+      "party": "Independent",
+      "votes": 10740,
+      "percent": 0.97
+    },
+    {
+      "candidate": "Jarrod Williams",
+      "party": "Independent",
+      "votes": 6888,
+      "percent": 0.62
+    }
+  ]
+}

@@ -1,0 +1,321 @@
+{
+  "year": 2002,
+  "state": "Nebraska",
+  "abbr": "NE",
+  "round": "General",
+  "caption": "2002 United States Senate election in Nebraska [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Nebraska",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "2002 United States Senate election in Nebraska [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Hagel ( inc. )",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charlie A. Matulka",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John J. Graziano",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Phil Chase",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Hagel ( inc. )",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "397,438",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "82.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+25.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charlie A. Matulka",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70,290",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−27.96%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John J. Graziano",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,423",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Phil Chase",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,066",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.05%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "—",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "327,148",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+53.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "480,217",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Hagel ( inc. )",
+      "party": "Republican",
+      "votes": 397438,
+      "percent": 82.76
+    },
+    {
+      "candidate": "Charlie A. Matulka",
+      "party": "Democratic",
+      "votes": 70290,
+      "percent": 14.64
+    },
+    {
+      "candidate": "John J. Graziano",
+      "party": "Libertarian",
+      "votes": 7423,
+      "percent": 1.55
+    },
+    {
+      "candidate": "Phil Chase",
+      "party": "Independent",
+      "votes": 5066,
+      "percent": 1.05
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 327148,
+      "percent": 68.13
+    }
+  ]
+}

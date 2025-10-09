@@ -1,0 +1,264 @@
+{
+  "year": 2000,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "General election results [ 2 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Hawaii",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 2 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Akaka (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Carroll",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lauri A. Clegg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lloyd Jeffrey Mallan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Porter",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Akaka (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "251,215",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72.68%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Carroll",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "84,701",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lauri A. Clegg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,220",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lloyd Jeffrey Mallan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,127",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.90%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Porter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,360",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.68%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Daniel Akaka (Incumbent)",
+      "party": "Democratic",
+      "votes": 251215,
+      "percent": 72.68
+    },
+    {
+      "candidate": "John Carroll",
+      "party": "Republican",
+      "votes": 84701,
+      "percent": 24.51
+    },
+    {
+      "candidate": "Lauri A. Clegg",
+      "party": "Natural Law",
+      "votes": 4220,
+      "percent": 1.21
+    },
+    {
+      "candidate": "Lloyd Jeffrey Mallan",
+      "party": "Libertarian",
+      "votes": 3127,
+      "percent": 0.9
+    },
+    {
+      "candidate": "David Porter",
+      "party": "Constitution",
+      "votes": 2360,
+      "percent": 0.68
+    }
+  ]
+}

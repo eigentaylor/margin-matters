@@ -1,0 +1,418 @@
+{
+  "year": 2014,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "United States Senate election in New Jersey, 2014 [ 83 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_New_Jersey",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 1869535,
+  "table": {
+    "caption": "United States Senate election in New Jersey, 2014 [ 83 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cory Booker (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Bell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joseph Baratelli",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hank Schroeder",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Boss",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eugene Martin Lavergne",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Antonio N. Sabas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cory Booker (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,043,866",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.92%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Bell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "791,297",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.69%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joseph Baratelli",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,721",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hank Schroeder",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,704",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Boss",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,513",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eugene Martin Lavergne",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,890",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Antonio N. Sabas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,544",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,869,535",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Cory Booker",
+      "party": "Democratic",
+      "votes": 1043866,
+      "percent": 55.84
+    },
+    {
+      "candidate": "Jeff Bell",
+      "party": "Republican",
+      "votes": 791297,
+      "percent": 42.33
+    },
+    {
+      "candidate": "Joseph Baratelli",
+      "party": "Libertarian",
+      "votes": 16721,
+      "percent": 0.89
+    },
+    {
+      "candidate": "Hank Schroeder",
+      "party": "Independent",
+      "votes": 5704,
+      "percent": 0.31
+    },
+    {
+      "candidate": "Jeff Boss",
+      "party": "Independent",
+      "votes": 4513,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Eugene Martin Lavergne",
+      "party": "Independent",
+      "votes": 3890,
+      "percent": 0.21
+    },
+    {
+      "candidate": "Antonio N. Sabas",
+      "party": "Independent",
+      "votes": 3544,
+      "percent": 0.19
+    }
+  ]
+}

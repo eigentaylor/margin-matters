@@ -1,0 +1,332 @@
+{
+  "year": 2020,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "2020 United States Senate election in Texas [ 190 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Texas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 11144040,
+  "table": {
+    "caption": "2020 United States Senate election in Texas [ 190 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Cornyn (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "MJ Hegar",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kerry McKennon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Collins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ricardo Turullols-Bonilla (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Cornyn (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,962,983",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "MJ Hegar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,888,764",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kerry McKennon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "209,722",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Collins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "81,893",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ricardo Turullols-Bonilla (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "678",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "11,144,040",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Cornyn",
+      "party": "Republican",
+      "votes": 5962983,
+      "percent": 53.51
+    },
+    {
+      "candidate": "MJ Hegar",
+      "party": "Democratic",
+      "votes": 4888764,
+      "percent": 43.87
+    },
+    {
+      "candidate": "Kerry McKennon",
+      "party": "Libertarian",
+      "votes": 209722,
+      "percent": 1.88
+    },
+    {
+      "candidate": "David Collins",
+      "party": "Green",
+      "votes": 81893,
+      "percent": 0.73
+    },
+    {
+      "candidate": "Ricardo Turullols-Bonilla",
+      "party": "Independent",
+      "votes": 678,
+      "percent": 0.01
+    }
+  ]
+}

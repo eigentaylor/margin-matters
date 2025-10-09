@@ -1,0 +1,332 @@
+{
+  "year": 2014,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "2014 United States Senate election in Texas [ 72 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Texas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 4648358,
+  "table": {
+    "caption": "2014 United States Senate election in Texas [ 72 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Cornyn (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Alameel",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rebecca Paddock",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Emily Sanchez",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mohammed Tahiro (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Cornyn (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,861,531",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Alameel",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,597,387",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−8.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rebecca Paddock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "133,751",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Emily Sanchez",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "54,701",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mohammed Tahiro (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "998",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,648,358",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Cornyn",
+      "party": "Republican",
+      "votes": 2861531,
+      "percent": 61.56
+    },
+    {
+      "candidate": "David Alameel",
+      "party": "Democratic",
+      "votes": 1597387,
+      "percent": 34.36
+    },
+    {
+      "candidate": "Rebecca Paddock",
+      "party": "Libertarian",
+      "votes": 133751,
+      "percent": 2.88
+    },
+    {
+      "candidate": "Emily Sanchez",
+      "party": "Green",
+      "votes": 54701,
+      "percent": 1.18
+    },
+    {
+      "candidate": "Mohammed Tahiro",
+      "party": "Independent",
+      "votes": 998,
+      "percent": 0.02
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "year": 2012,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "United States Senate election in Delaware, 2012 [ 20 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Delaware",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 399606,
+  "table": {
+    "caption": "United States Senate election in Delaware, 2012 [ 20 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Carper (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin Wade",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alex Pires",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andrew Groff",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Carper (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "265,415",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin Wade",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "115,700",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alex Pires",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,300",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andrew Groff",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,191",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "399,606",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Carper",
+      "party": "Democratic",
+      "votes": 265415,
+      "percent": 66.42
+    },
+    {
+      "candidate": "Kevin Wade",
+      "party": "Republican",
+      "votes": 115700,
+      "percent": 28.95
+    },
+    {
+      "candidate": "Alex Pires",
+      "party": "Independent Party",
+      "votes": 15300,
+      "percent": 3.83
+    },
+    {
+      "candidate": "Andrew Groff",
+      "party": "Green",
+      "votes": 3191,
+      "percent": 0.8
+    }
+  ]
+}

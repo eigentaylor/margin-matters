@@ -1,0 +1,198 @@
+{
+  "year": 2008,
+  "state": "New Mexico",
+  "abbr": "NM",
+  "round": "General",
+  "caption": "2008 United States Senate election in New Mexico [ 35 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_New_Mexico",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table_total_votes": 823650,
+  "table": {
+    "caption": "2008 United States Senate election in New Mexico [ 35 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Udall",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Pearce",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Udall",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "505,128",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+26.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Pearce",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "318,522",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−26.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "823,650",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Udall",
+      "party": "Democratic",
+      "votes": 505128,
+      "percent": 61.33
+    },
+    {
+      "candidate": "Steve Pearce",
+      "party": "Republican",
+      "votes": 318522,
+      "percent": 38.67
+    }
+  ]
+}

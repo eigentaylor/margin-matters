@@ -1,0 +1,332 @@
+{
+  "year": 2022,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "2022 United States Senate election in Hawaii [ 27 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Hawaii",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 408517,
+  "table": {
+    "caption": "2022 United States Senate election in Hawaii [ 27 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brian Schatz (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob McDermott",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Feena Bonoan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Emma Jane Pohlman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Decker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brian Schatz (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "290,894",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–2.40%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob McDermott",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "106,358",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.80%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Feena Bonoan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,915",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "–0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Emma Jane Pohlman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,142",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Aloha ʻĀina",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Decker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,208",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "408,517",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Brian Schatz",
+      "party": "Democratic",
+      "votes": 290894,
+      "percent": 71.21
+    },
+    {
+      "candidate": "Bob McDermott",
+      "party": "Republican",
+      "votes": 106358,
+      "percent": 26.04
+    },
+    {
+      "candidate": "Feena Bonoan",
+      "party": "Libertarian",
+      "votes": 4915,
+      "percent": 1.2
+    },
+    {
+      "candidate": "Emma Jane Pohlman",
+      "party": "Green",
+      "votes": 4142,
+      "percent": 1.01
+    },
+    {
+      "candidate": "Dan Decker",
+      "party": "Aloha ʻĀina",
+      "votes": 2208,
+      "percent": 0.54
+    }
+  ]
+}

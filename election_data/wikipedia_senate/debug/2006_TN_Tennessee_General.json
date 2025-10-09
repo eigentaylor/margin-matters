@@ -1,0 +1,515 @@
+{
+  "year": 2006,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "United States Senate election in Tennessee, 2006 [ 109 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Tennessee",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table_total_votes": 1833695,
+  "table": {
+    "caption": "United States Senate election in Tennessee, 2006 [ 109 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Corker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Harold Ford, Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ed Choate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Gatchell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Emory \"Bo\" Heyward",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "H. Gary Keplinger",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Lugo",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Corker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "929,911",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−14.39",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Harold Ford, Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "879,976",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.78",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ed Choate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,831",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Gatchell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,746",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Emory \"Bo\" Heyward",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,580",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "H. Gary Keplinger",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,033",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Lugo",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,589",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "49,935",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,833,695",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-14.39",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Corker",
+      "party": "Republican",
+      "votes": 929911,
+      "percent": 50.71
+    },
+    {
+      "candidate": "Harold Ford, Jr.",
+      "party": "Democratic",
+      "votes": 879976,
+      "percent": 47.99
+    },
+    {
+      "candidate": "Ed Choate",
+      "party": "Independent",
+      "votes": 10831,
+      "percent": 0.59
+    },
+    {
+      "candidate": "David Gatchell",
+      "party": "Independent",
+      "votes": 3746,
+      "percent": 0.2
+    },
+    {
+      "candidate": "Emory \"Bo\" Heyward",
+      "party": "Independent",
+      "votes": 3580,
+      "percent": 0.2
+    },
+    {
+      "candidate": "H. Gary Keplinger",
+      "party": "Independent",
+      "votes": 3033,
+      "percent": 0.17
+    },
+    {
+      "candidate": "Chris Lugo",
+      "party": "Green",
+      "votes": 2589,
+      "percent": 0.14
+    },
+    {
+      "candidate": "29",
+      "party": "Write-in",
+      "votes": 29,
+      "percent": 0.0
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 49935,
+      "percent": 2.72
+    },
+    {
+      "candidate": "Republican hold",
+      "party": "Republican hold",
+      "votes": 0,
+      "percent": -14.39
+    }
+  ]
+}

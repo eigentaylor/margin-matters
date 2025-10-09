@@ -1,0 +1,245 @@
+{
+  "year": 2002,
+  "state": "South Dakota",
+  "abbr": "SD",
+  "round": "General",
+  "caption": "General election results [ 6 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_South_Dakota",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results [ 6 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Johnson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Thune",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kurt Evans",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Johnson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "167,481",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Thune",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "166,957",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kurt Evans",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,070",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "334,438",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tim Johnson (incumbent)",
+      "party": "Democratic",
+      "votes": 167481,
+      "percent": 49.62
+    },
+    {
+      "candidate": "John Thune",
+      "party": "Republican",
+      "votes": 166957,
+      "percent": 49.47
+    },
+    {
+      "candidate": "Kurt Evans",
+      "party": "Libertarian",
+      "votes": 3070,
+      "percent": 0.91
+    }
+  ]
+}

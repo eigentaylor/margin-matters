@@ -1,50 +1,50 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1932,AL,207910,34675,2030,2769,"{""Other"": 739, ""Thomas/Maurer"": 2030}",245354
-1932,AZ,79264,36104,2618,2883,"{""Other"": 265, ""Thomas/Maurer"": 2618}",118251
-1932,AR,189602,28467,1269,2493,"{""Other"": 1224, ""Thomas/Maurer"": 1269}",220562
-1932,CA,1324157,847902,63299,95907,"{""Other"": 32608, ""Thomas/Maurer"": 63299}",2267966
-1932,CO,250877,189617,13591,17202,"{""Other"": 3611, ""Thomas/Maurer"": 13591}",457696
-1932,CT,281632,288420,20480,24131,"{""Other"": 3651, ""Thomas/Maurer"": 20480}",594183
-1932,DE,54319,57073,1376,1509,"{""Other"": 133, ""Thomas/Maurer"": 1376}",112901
-1932,FL,206307,69170,775,775,"{""Thomas/Maurer"": 775}",276252
-1932,GA,234118,19863,461,1609,"{""Other"": 1148, ""Thomas/Maurer"": 461}",255590
-1932,ID,109479,71417,526,5729,"{""Other"": 5203, ""Thomas/Maurer"": 526}",186625
-1932,IL,1882304,1432756,67258,92866,"{""Other"": 25608, ""Thomas/Maurer"": 67258}",3407926
-1932,IN,862054,677184,21388,37689,"{""Other"": 16301, ""Thomas/Maurer"": 21388}",1576927
-1932,IA,598019,414433,20467,24235,"{""Other"": 3768, ""Thomas/Maurer"": 20467}",1036687
-1932,KS,424204,349498,18276,18276,"{""Thomas/Maurer"": 18276}",791978
-1932,KY,580574,394716,3853,7773,"{""Other"": 3920, ""Thomas/Maurer"": 3853}",983063
-1932,LA,249418,18853,0,533,"{""Other"": 533}",268804
-1932,ME-AL,128907,166631,2489,2906,"{""Other"": 417, ""Thomas/Maurer"": 2489}",298444
-1932,MD,314314,184184,10489,12556,"{""Other"": 2067, ""Thomas/Maurer"": 10489}",511054
-1932,MA,800148,736959,34305,43007,"{""Other"": 8702, ""Thomas/Maurer"": 34305}",1580114
-1932,MI,871700,739894,39205,53171,"{""Other"": 13966, ""Thomas/Maurer"": 39205}",1664765
-1932,MN,600806,363959,25476,38078,"{""Other"": 12602, ""Thomas/Maurer"": 25476}",1002843
-1932,MS,140168,5180,686,686,"{""Thomas/Maurer"": 686}",146034
-1932,MO,1025406,564713,16374,19775,"{""Other"": 3401, ""Thomas/Maurer"": 16374}",1609894
-1932,MT,127286,78078,7891,11115,"{""Other"": 3224, ""Thomas/Maurer"": 7891}",216479
-1932,NE-AL,359082,201177,9876,9878,"{""Other"": 2, ""Thomas/Maurer"": 9876}",570137
-1932,NV,28756,12674,0,0,{},41430
-1932,NH,100680,103629,947,1211,"{""Other"": 264, ""Thomas/Maurer"": 947}",205520
-1932,NJ,806394,775406,42988,47707,"{""Other"": 4719, ""Thomas/Maurer"": 42988}",1629507
-1932,NM,95089,54217,1776,2300,"{""Other"": 524, ""Thomas/Maurer"": 1776}",151606
-1932,NY,2534959,1937963,177397,215692,"{""Other"": 38295, ""Thomas/Maurer"": 177397}",4688614
-1932,NC,497566,208344,5591,5591,"{""Thomas/Maurer"": 5591}",711501
-1932,ND,178350,71772,3521,6168,"{""Other"": 2647, ""Thomas/Maurer"": 3521}",256290
-1932,OH,1301695,1227319,64094,80714,"{""Other"": 16620, ""Thomas/Maurer"": 64094}",2609728
-1932,OK,516468,188165,0,0,{},704633
-1932,OR,213871,136019,15450,18918,"{""Other"": 3468, ""Thomas/Maurer"": 15450}",368808
-1932,PA,1295948,1453540,91223,109689,"{""Other"": 18466, ""Thomas/Maurer"": 91223}",2859177
-1932,RI,146604,115266,3138,4300,"{""Other"": 1162, ""Thomas/Maurer"": 3138}",266170
-1932,SC,102347,1978,82,82,"{""Thomas/Maurer"": 82}",104407
-1932,SD,183515,99212,1551,5711,"{""Other"": 4160, ""Thomas/Maurer"": 1551}",288438
-1932,TN,259473,126752,1796,4031,"{""Other"": 2235, ""Thomas/Maurer"": 1796}",390256
-1932,TX,760348,97959,4450,5119,"{""Other"": 669, ""Thomas/Maurer"": 4450}",863426
-1932,UT,116750,84795,4087,5033,"{""Other"": 946, ""Thomas/Maurer"": 4087}",206578
-1932,VT,56266,78984,1533,1730,"{""Other"": 197, ""Thomas/Maurer"": 1533}",136980
-1932,VA,203979,89637,2382,4326,"{""Other"": 1944, ""Thomas/Maurer"": 2382}",297942
-1932,WA,353260,208645,17080,52909,"{""Other"": 35829, ""Thomas/Maurer"": 17080}",614814
-1932,WV,405124,330731,5133,7919,"{""Other"": 2786, ""Thomas/Maurer"": 5133}",743774
-1932,WI,707410,347741,53379,59657,"{""Other"": 6278, ""Thomas/Maurer"": 53379}",1114808
-1932,WY,54370,39583,2829,3009,"{""Other"": 180, ""Thomas/Maurer"": 2829}",96962
-1932,NATIONAL,22821277,15761254,884885,1169367,"{""Other"": 284482, ""Thomas/Maurer"": 884885}",39751898
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1932,AL,207910,34675,2030,2769,"{""Other"": 739, ""Thomas/Maurer"": 2030}",245354,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,AZ,79264,36104,2618,2883,"{""Other"": 265, ""Thomas/Maurer"": 2618}",118251,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,AR,189602,28467,1269,2493,"{""Other"": 1224, ""Thomas/Maurer"": 1269}",220562,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,CA,1324157,847902,63299,95907,"{""Other"": 32608, ""Thomas/Maurer"": 63299}",2267966,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,CO,250877,189617,13591,17202,"{""Other"": 3611, ""Thomas/Maurer"": 13591}",457696,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,CT,281632,288420,20480,24131,"{""Other"": 3651, ""Thomas/Maurer"": 20480}",594183,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,DE,54319,57073,1376,1509,"{""Other"": 133, ""Thomas/Maurer"": 1376}",112901,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,FL,206307,69170,775,775,"{""Thomas/Maurer"": 775}",276252,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,GA,234118,19863,461,1609,"{""Other"": 1148, ""Thomas/Maurer"": 461}",255590,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,ID,109479,71417,526,5729,"{""Other"": 5203, ""Thomas/Maurer"": 526}",186625,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,IL,1882304,1432756,67258,92866,"{""Other"": 25608, ""Thomas/Maurer"": 67258}",3407926,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,IN,862054,677184,21388,37689,"{""Other"": 16301, ""Thomas/Maurer"": 21388}",1576927,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,IA,598019,414433,20467,24235,"{""Other"": 3768, ""Thomas/Maurer"": 20467}",1036687,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,KS,424204,349498,18276,18276,"{""Thomas/Maurer"": 18276}",791978,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,KY,580574,394716,3853,7773,"{""Other"": 3920, ""Thomas/Maurer"": 3853}",983063,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,LA,249418,18853,0,533,"{""Other"": 533}",268804,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,ME-AL,128907,166631,2489,2906,"{""Other"": 417, ""Thomas/Maurer"": 2489}",298444,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MD,314314,184184,10489,12556,"{""Other"": 2067, ""Thomas/Maurer"": 10489}",511054,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MA,800148,736959,34305,43007,"{""Other"": 8702, ""Thomas/Maurer"": 34305}",1580114,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MI,871700,739894,39205,53171,"{""Other"": 13966, ""Thomas/Maurer"": 39205}",1664765,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MN,600806,363959,25476,38078,"{""Other"": 12602, ""Thomas/Maurer"": 25476}",1002843,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MS,140168,5180,686,686,"{""Thomas/Maurer"": 686}",146034,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MO,1025406,564713,16374,19775,"{""Other"": 3401, ""Thomas/Maurer"": 16374}",1609894,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,MT,127286,78078,7891,11115,"{""Other"": 3224, ""Thomas/Maurer"": 7891}",216479,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NE-AL,359082,201177,9876,9878,"{""Other"": 2, ""Thomas/Maurer"": 9876}",570137,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NV,28756,12674,0,0,{},41430,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NH,100680,103629,947,1211,"{""Other"": 264, ""Thomas/Maurer"": 947}",205520,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NJ,806394,775406,42988,47707,"{""Other"": 4719, ""Thomas/Maurer"": 42988}",1629507,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NM,95089,54217,1776,2300,"{""Other"": 524, ""Thomas/Maurer"": 1776}",151606,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NY,2534959,1937963,177397,215692,"{""Other"": 38295, ""Thomas/Maurer"": 177397}",4688614,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NC,497566,208344,5591,5591,"{""Thomas/Maurer"": 5591}",711501,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,ND,178350,71772,3521,6168,"{""Other"": 2647, ""Thomas/Maurer"": 3521}",256290,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,OH,1301695,1227319,64094,80714,"{""Other"": 16620, ""Thomas/Maurer"": 64094}",2609728,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,OK,516468,188165,0,0,{},704633,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,OR,213871,136019,15450,18918,"{""Other"": 3468, ""Thomas/Maurer"": 15450}",368808,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,PA,1295948,1453540,91223,109689,"{""Other"": 18466, ""Thomas/Maurer"": 91223}",2859177,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,RI,146604,115266,3138,4300,"{""Other"": 1162, ""Thomas/Maurer"": 3138}",266170,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,SC,102347,1978,82,82,"{""Thomas/Maurer"": 82}",104407,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,SD,183515,99212,1551,5711,"{""Other"": 4160, ""Thomas/Maurer"": 1551}",288438,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,TN,259473,126752,1796,4031,"{""Other"": 2235, ""Thomas/Maurer"": 1796}",390256,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,TX,760348,97959,4450,5119,"{""Other"": 669, ""Thomas/Maurer"": 4450}",863426,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,UT,116750,84795,4087,5033,"{""Other"": 946, ""Thomas/Maurer"": 4087}",206578,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,VT,56266,78984,1533,1730,"{""Other"": 197, ""Thomas/Maurer"": 1533}",136980,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,VA,203979,89637,2382,4326,"{""Other"": 1944, ""Thomas/Maurer"": 2382}",297942,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,WA,353260,208645,17080,52909,"{""Other"": 35829, ""Thomas/Maurer"": 17080}",614814,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,WV,405124,330731,5133,7919,"{""Other"": 2786, ""Thomas/Maurer"": 5133}",743774,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,WI,707410,347741,53379,59657,"{""Other"": 6278, ""Thomas/Maurer"": 53379}",1114808,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,WY,54370,39583,2829,3009,"{""Other"": 180, ""Thomas/Maurer"": 2829}",96962,https://en.wikipedia.org/wiki/1932_United_States_presidential_election
+1932,NATIONAL,22821277,15761254,884885,1169367,"{""Other"": 284482, ""Thomas/Maurer"": 884885}",39751898,https://en.wikipedia.org/wiki/1932_United_States_presidential_election

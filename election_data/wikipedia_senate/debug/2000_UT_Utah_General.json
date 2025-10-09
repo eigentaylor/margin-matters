@@ -1,0 +1,342 @@
+{
+  "year": 2000,
+  "state": "Utah",
+  "abbr": "UT",
+  "round": "General",
+  "caption": "General election results [ 1 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Utah",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "General election results [ 1 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Orrin Hatch (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott N. Howell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Carlton Edward Bowen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Dexter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Orrin Hatch (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "504,803",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott N. Howell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "242,569",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Carlton Edward Bowen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,938",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Dexter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,394",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "262,234",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "769,704",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Orrin Hatch (Incumbent)",
+      "party": "Republican",
+      "votes": 504803,
+      "percent": 65.58
+    },
+    {
+      "candidate": "Scott N. Howell",
+      "party": "Democratic",
+      "votes": 242569,
+      "percent": 31.51
+    },
+    {
+      "candidate": "Carlton Edward Bowen",
+      "party": "Independent American",
+      "votes": 11938,
+      "percent": 1.55
+    },
+    {
+      "candidate": "Jim Dexter",
+      "party": "Libertarian",
+      "votes": 10394,
+      "percent": 1.35
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 262234,
+      "percent": 34.07
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 769704,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "year": 2018,
+  "state": "Michigan",
+  "abbr": "MI",
+  "round": "General",
+  "caption": "2018 United States Senate election in Michigan [ 153 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Michigan",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 4237271,
+  "table": {
+    "caption": "2018 United States Senate election in Michigan [ 153 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Debbie Stabenow (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John James",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marcia Squier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Huffman III",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Howard Wilhelm",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Debbie Stabenow (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,214,478",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John James",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,938,818",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.76%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.78%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marcia Squier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40,204",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Huffman III",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27,251",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Howard Wilhelm",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,502",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "18",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "<0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,237,271",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Debbie Stabenow",
+      "party": "Democratic",
+      "votes": 2214478,
+      "percent": 52.26
+    },
+    {
+      "candidate": "John James",
+      "party": "Republican",
+      "votes": 1938818,
+      "percent": 45.76
+    },
+    {
+      "candidate": "Marcia Squier",
+      "party": "Green",
+      "votes": 40204,
+      "percent": 0.95
+    },
+    {
+      "candidate": "George Huffman III",
+      "party": "Constitution",
+      "votes": 27251,
+      "percent": 0.65
+    },
+    {
+      "candidate": "John Howard Wilhelm",
+      "party": "Natural Law",
+      "votes": 16502,
+      "percent": 0.39
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 18,
+      "percent": 0.01
+    }
+  ]
+}

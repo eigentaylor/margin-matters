@@ -1,0 +1,236 @@
+{
+  "year": 2010,
+  "state": "Alabama",
+  "abbr": "AL",
+  "round": "General",
+  "caption": "2010 United States Senate election in Alabama [ 14 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Alabama",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 1485499,
+  "table": {
+    "caption": "2010 United States Senate election in Alabama [ 14 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Shelby (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "William G. Barnes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Shelby (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "968,181",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "William G. Barnes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "515,619",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "34.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,699",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,485,499",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Shelby",
+      "party": "Republican",
+      "votes": 968181,
+      "percent": 65.18
+    },
+    {
+      "candidate": "William G. Barnes",
+      "party": "Democratic",
+      "votes": 515619,
+      "percent": 34.71
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1699,
+      "percent": 0.11
+    }
+  ]
+}

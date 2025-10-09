@@ -1,0 +1,246 @@
+{
+  "year": 2016,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2016 United States Senate election in North Carolina [ 163 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_North_Carolina",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 4691133,
+  "table": {
+    "caption": "2016 United States Senate election in North Carolina [ 163 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Burr (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Deborah Ross",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sean Haugh",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Burr (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,395,376",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.75%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Deborah Ross",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,128,165",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.32%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sean Haugh",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "167,592",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.48%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,691,133",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Burr",
+      "party": "Republican",
+      "votes": 2395376,
+      "percent": 51.06
+    },
+    {
+      "candidate": "Deborah Ross",
+      "party": "Democratic",
+      "votes": 2128165,
+      "percent": 45.37
+    },
+    {
+      "candidate": "Sean Haugh",
+      "party": "Libertarian",
+      "votes": 167592,
+      "percent": 3.57
+    }
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "year": 2006,
+  "state": "Minnesota",
+  "abbr": "MN",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Minnesota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 2202772,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Amy Klobuchar",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Kennedy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Fitzgerald",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Cavlan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Powers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Amy Klobuchar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,278,849",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Kennedy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "835,653",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37.94%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Fitzgerald",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "71,194",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Cavlan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,714",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Powers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,408",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "954",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "443,196",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.2%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,202,772",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL) hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Amy Klobuchar",
+      "party": "Democratic (DFL)",
+      "votes": 1278849,
+      "percent": 58.06
+    },
+    {
+      "candidate": "Mark Kennedy",
+      "party": "Republican",
+      "votes": 835653,
+      "percent": 37.94
+    },
+    {
+      "candidate": "Robert Fitzgerald",
+      "party": "Independence",
+      "votes": 71194,
+      "percent": 3.23
+    },
+    {
+      "candidate": "Michael Cavlan",
+      "party": "Green",
+      "votes": 10714,
+      "percent": 0.49
+    },
+    {
+      "candidate": "Ben Powers",
+      "party": "Constitution",
+      "votes": 5408,
+      "percent": 0.25
+    },
+    {
+      "candidate": "954",
+      "party": "Write-ins",
+      "votes": 954,
+      "percent": null
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 443196,
+      "percent": 20.2
+    }
+  ]
+}

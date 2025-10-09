@@ -1,0 +1,241 @@
+{
+  "year": 2006,
+  "state": "Montana",
+  "abbr": "MT",
+  "round": "General",
+  "caption": "2006 United States Senate election in Montana [ 56 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Montana",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 406505,
+  "table": {
+    "caption": "2006 United States Senate election in Montana [ 56 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jon Tester",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Conrad Burns (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stan Jones",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jon Tester",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "199,845",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.92%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conrad Burns (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "196,283",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stan Jones",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,377",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "406,505",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jon Tester",
+      "party": "Democratic",
+      "votes": 199845,
+      "percent": 49.16
+    },
+    {
+      "candidate": "Conrad Burns",
+      "party": "Republican",
+      "votes": 196283,
+      "percent": 48.29
+    },
+    {
+      "candidate": "Stan Jones",
+      "party": "Libertarian",
+      "votes": 10377,
+      "percent": 2.55
+    }
+  ]
+}

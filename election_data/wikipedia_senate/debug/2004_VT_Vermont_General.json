@@ -1,0 +1,466 @@
+{
+  "year": 2004,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "General election results [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Vermont",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table_total_votes": 307208,
+  "table": {
+    "caption": "General election results [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patrick Leahy (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack McMullen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cris Ericson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Craig Hill",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Keith Stern",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Mitchell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patrick Leahy (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "216,972",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack McMullen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75,398",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cris Ericson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,486",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Craig Hill",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,999",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Keith Stern",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,300",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Liberty Union",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Mitchell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "879",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "174",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "141,574",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.68%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "307,208",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Patrick Leahy",
+      "party": "Democratic",
+      "votes": 216972,
+      "percent": 70.63
+    },
+    {
+      "candidate": "Jack McMullen",
+      "party": "Republican",
+      "votes": 75398,
+      "percent": 24.54
+    },
+    {
+      "candidate": "Cris Ericson",
+      "party": "Independent",
+      "votes": 6486,
+      "percent": 2.11
+    },
+    {
+      "candidate": "Craig Hill",
+      "party": "Green",
+      "votes": 3999,
+      "percent": 1.3
+    },
+    {
+      "candidate": "Keith Stern",
+      "party": "Independent",
+      "votes": 3300,
+      "percent": 1.07
+    },
+    {
+      "candidate": "Ben Mitchell",
+      "party": "Liberty Union",
+      "votes": 879,
+      "percent": 0.29
+    },
+    {
+      "candidate": "Write-ins",
+      "party": "Write-in",
+      "votes": 174,
+      "percent": 0.06
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 141574,
+      "percent": 46.08
+    }
+  ]
+}

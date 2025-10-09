@@ -1,0 +1,322 @@
+{
+  "year": 2012,
+  "state": "Maryland",
+  "abbr": "MD",
+  "round": "General",
+  "caption": "2012 United States Senate election in Maryland [ 34 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Maryland",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 2633234,
+  "table": {
+    "caption": "2012 United States Senate election in Maryland [ 34 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ben Cardin (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dan Bongino",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rob Sobhani",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dean Ahmad",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ben Cardin (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,474,028",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dan Bongino",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "693,291",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "26.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−17.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rob Sobhani",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "430,934",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dean Ahmad",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32,252",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,729",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,633,234",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ben Cardin",
+      "party": "Democratic",
+      "votes": 1474028,
+      "percent": 55.98
+    },
+    {
+      "candidate": "Dan Bongino",
+      "party": "Republican",
+      "votes": 693291,
+      "percent": 26.33
+    },
+    {
+      "candidate": "Rob Sobhani",
+      "party": "Independent",
+      "votes": 430934,
+      "percent": 16.37
+    },
+    {
+      "candidate": "Dean Ahmad",
+      "party": "Libertarian",
+      "votes": 32252,
+      "percent": 1.22
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2729,
+      "percent": 0.1
+    }
+  ]
+}

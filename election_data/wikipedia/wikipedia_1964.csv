@@ -1,53 +1,53 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1964,AL,210732,479085,210732,0,"{""Unpledged Electors"": 210732}",689817
-1964,AK,44329,22930,0,0,{},67259
-1964,AZ,237753,242535,0,482,"{""Other"": 482}",480770
-1964,AR,314197,243264,0,2965,"{""Other"": 2965}",560426
-1964,CA,4171877,2879108,0,6601,"{""Other"": 6601}",7057586
-1964,CO,476024,296767,0,4195,"{""Other"": 4195}",776986
-1964,CT,826269,390996,0,1313,"{""Other"": 1313}",1218578
-1964,DE,122704,78078,0,538,"{""Other"": 538}",201320
-1964,DC,169796,28801,0,0,{},198597
-1964,FL,948540,905941,0,0,{},1854481
-1964,GA,522557,616584,0,195,"{""Other"": 195}",1139336
-1964,HI,163249,44022,0,0,{},207271
-1964,ID,148920,143557,0,0,{},292477
-1964,IL,2796833,1905946,0,62,"{""Other"": 62}",4702841
-1964,IN,1170848,911118,0,9640,"{""Other"": 9640}",2091606
-1964,IA,733030,449148,0,2361,"{""Other"": 2361}",1184539
-1964,KS,464028,386579,0,7294,"{""Other"": 7294}",857901
-1964,KY,669659,372977,0,3469,"{""Other"": 3469}",1046105
-1964,LA,387068,509225,0,0,{},896293
-1964,ME-AL,262264,118701,0,256,"{""Other"": 256}",381221
-1964,MD,730912,385495,0,50,"{""Other"": 50}",1116457
-1964,MA,1786422,549727,0,8649,"{""Other"": 8649}",2344798
-1964,MI,2136615,1060152,0,6335,"{""Other"": 6335}",3203102
-1964,MN,991117,559624,0,3721,"{""Other"": 3721}",1554462
-1964,MS,52618,356528,0,0,{},409146
-1964,MO,1164344,653535,0,0,{},1817879
-1964,MT,164246,113032,0,1350,"{""Other"": 1350}",278628
-1964,NE-AL,307307,276847,0,0,{},584154
-1964,NV,79339,56094,0,0,{},135433
-1964,NH,184064,104029,0,0,{},288093
-1964,NJ,1867671,963843,0,15256,"{""Other"": 15256}",2846770
-1964,NM,194017,131838,0,1760,"{""Other"": 1760}",327615
-1964,NY,4913156,2243559,0,9300,"{""Other"": 9300}",7166015
-1964,NC,800139,624844,0,0,{},1424983
-1964,ND,149784,108207,0,398,"{""Other"": 398}",258389
-1964,OH,2498331,1470865,0,0,{},3969196
-1964,OK,519834,412665,0,0,{},932499
-1964,OR,501017,282779,0,2509,"{""Other"": 2509}",786305
-1964,PA,3130954,1673657,0,18079,"{""Other"": 18079}",4822690
-1964,RI,315463,74615,0,13,"{""Other"": 13}",390091
-1964,SC,215700,309048,0,8,"{""Other"": 8}",524756
-1964,SD,163010,130108,0,0,{},293118
-1964,TN,634947,508965,0,34,"{""Other"": 34}",1143946
-1964,TX,1663185,958566,0,5060,"{""Other"": 5060}",2626811
-1964,UT,219628,180682,0,0,{},400310
-1964,VT,108127,54942,0,20,"{""Other"": 20}",163089
-1964,VA,558038,481334,0,2895,"{""Other"": 3107}",1042267
-1964,WA,779881,470366,0,8309,"{""Other"": 8309}",1258556
-1964,WV,538087,253953,0,0,{},792040
-1964,WI,1050424,638495,0,2896,"{""Other"": 2896}",1691815
-1964,WY,80718,61998,0,0,{},142716
-1964,NATIONAL,43129040,27175754,210732,336957,"{""Other"": 336957, ""Unpledged Electors"": 210732}",70641751
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1964,AL,210732,479085,210732,0,"{""Unpledged Electors"": 210732}",689817,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,AK,44329,22930,0,0,{},67259,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,AZ,237753,242535,0,482,"{""Other"": 482}",480770,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,AR,314197,243264,0,2965,"{""Other"": 2965}",560426,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,CA,4171877,2879108,0,6601,"{""Other"": 6601}",7057586,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,CO,476024,296767,0,4195,"{""Other"": 4195}",776986,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,CT,826269,390996,0,1313,"{""Other"": 1313}",1218578,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,DE,122704,78078,0,538,"{""Other"": 538}",201320,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,DC,169796,28801,0,0,{},198597,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,FL,948540,905941,0,0,{},1854481,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,GA,522557,616584,0,195,"{""Other"": 195}",1139336,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,HI,163249,44022,0,0,{},207271,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,ID,148920,143557,0,0,{},292477,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,IL,2796833,1905946,0,62,"{""Other"": 62}",4702841,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,IN,1170848,911118,0,9640,"{""Other"": 9640}",2091606,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,IA,733030,449148,0,2361,"{""Other"": 2361}",1184539,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,KS,464028,386579,0,7294,"{""Other"": 7294}",857901,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,KY,669659,372977,0,3469,"{""Other"": 3469}",1046105,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,LA,387068,509225,0,0,{},896293,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,ME-AL,262264,118701,0,256,"{""Other"": 256}",381221,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MD,730912,385495,0,50,"{""Other"": 50}",1116457,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MA,1786422,549727,0,8649,"{""Other"": 8649}",2344798,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MI,2136615,1060152,0,6335,"{""Other"": 6335}",3203102,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MN,991117,559624,0,3721,"{""Other"": 3721}",1554462,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MS,52618,356528,0,0,{},409146,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MO,1164344,653535,0,0,{},1817879,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,MT,164246,113032,0,1350,"{""Other"": 1350}",278628,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NE-AL,307307,276847,0,0,{},584154,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NV,79339,56094,0,0,{},135433,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NH,184064,104029,0,0,{},288093,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NJ,1867671,963843,0,15256,"{""Other"": 15256}",2846770,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NM,194017,131838,0,1760,"{""Other"": 1760}",327615,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NY,4913156,2243559,0,9300,"{""Other"": 9300}",7166015,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NC,800139,624844,0,0,{},1424983,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,ND,149784,108207,0,398,"{""Other"": 398}",258389,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,OH,2498331,1470865,0,0,{},3969196,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,OK,519834,412665,0,0,{},932499,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,OR,501017,282779,0,2509,"{""Other"": 2509}",786305,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,PA,3130954,1673657,0,18079,"{""Other"": 18079}",4822690,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,RI,315463,74615,0,13,"{""Other"": 13}",390091,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,SC,215700,309048,0,8,"{""Other"": 8}",524756,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,SD,163010,130108,0,0,{},293118,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,TN,634947,508965,0,34,"{""Other"": 34}",1143946,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,TX,1663185,958566,0,5060,"{""Other"": 5060}",2626811,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,UT,219628,180682,0,0,{},400310,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,VT,108127,54942,0,20,"{""Other"": 20}",163089,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,VA,558038,481334,0,2895,"{""Other"": 3107}",1042267,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,WA,779881,470366,0,8309,"{""Other"": 8309}",1258556,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,WV,538087,253953,0,0,{},792040,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,WI,1050424,638495,0,2896,"{""Other"": 2896}",1691815,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,WY,80718,61998,0,0,{},142716,https://en.wikipedia.org/wiki/1964_United_States_presidential_election
+1964,NATIONAL,43129040,27175754,210732,336957,"{""Other"": 336957, ""Unpledged Electors"": 210732}",70641751,https://en.wikipedia.org/wiki/1964_United_States_presidential_election

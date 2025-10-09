@@ -1,0 +1,279 @@
+{
+  "year": 2016,
+  "state": "Pennsylvania",
+  "abbr": "PA",
+  "round": "General",
+  "caption": "United States Senate election in Pennsylvania, 2016 [ 218 ] [ 219 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Pennsylvania",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 6058511,
+  "table": {
+    "caption": "United States Senate election in Pennsylvania, 2016 [ 218 ] [ 219 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pat Toomey (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Katie McGinty",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edward T. Clifford III",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pat Toomey (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,951,702",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.72%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Katie McGinty",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,865,012",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edward T. Clifford III",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "235,142",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "6,655",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "6,058,511",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Pat Toomey",
+      "party": "Republican",
+      "votes": 2951702,
+      "percent": 48.72
+    },
+    {
+      "candidate": "Katie McGinty",
+      "party": "Democratic",
+      "votes": 2865012,
+      "percent": 47.29
+    },
+    {
+      "candidate": "Edward T. Clifford III",
+      "party": "Libertarian",
+      "votes": 235142,
+      "percent": 3.88
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 6655,
+      "percent": 0.11
+    }
+  ]
+}

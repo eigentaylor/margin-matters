@@ -1,0 +1,299 @@
+{
+  "year": 2002,
+  "state": "Idaho",
+  "abbr": "ID",
+  "round": "General",
+  "caption": "General election results [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Idaho",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table": {
+    "caption": "General election results [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Larry Craig (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alan Blinken",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Donovan Bramwell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Larry Craig (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "266,215",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alan Blinken",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "132,975",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Donovan Bramwell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,354",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.29%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "133,240",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "408,544",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Larry Craig (incumbent)",
+      "party": "Republican",
+      "votes": 266215,
+      "percent": 65.16
+    },
+    {
+      "candidate": "Alan Blinken",
+      "party": "Democratic",
+      "votes": 132975,
+      "percent": 32.55
+    },
+    {
+      "candidate": "Donovan Bramwell",
+      "party": "Libertarian",
+      "votes": 9354,
+      "percent": 2.29
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 133240,
+      "percent": 32.61
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 408544,
+      "percent": null
+    }
+  ]
+}

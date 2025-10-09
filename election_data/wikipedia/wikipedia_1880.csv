@@ -1,40 +1,40 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1880,AL,91185,56221,4642,4642,"{""James Weaver"": 4642}",152048
-1880,AR,60775,42436,4079,4079,"{""James Weaver"": 4079}",107290
-1880,CA,80442,80348,3394,3531,"{""James Weaver"": 3394, ""John Phelps"": 6, ""Neal Dow"": 61}",164321
-1880,CO,24647,27450,1435,1449,"{""James Weaver"": 1435}",53546
-1880,CT,64415,67071,868,1316,"{""James Weaver"": 868, ""Neal Dow"": 409}",132802
-1880,DE,15275,14133,120,120,"{""James Weaver"": 120}",29528
-1880,FL,27964,23654,0,0,{},51618
-1880,GA,102470,54086,0,0,{},156556
-1880,IL,277321,318037,26358,26954,"{""James Weaver"": 26358, ""John Phelps"": 153, ""Neal Dow"": 443}",622312
-1880,IN,225522,232164,12986,12986,"{""James Weaver"": 12986}",470672
-1880,IA,105845,183927,32701,33726,"{""James Weaver"": 32701, ""John Phelps"": 433, ""Neal Dow"": 592}",323498
-1880,KS,59801,121549,19851,19876,"{""James Weaver"": 19851, ""Neal Dow"": 25}",201226
-1880,KY,149068,106306,11499,11730,"{""James Weaver"": 11499, ""Neal Dow"": 258}",267104
-1880,LA,65067,38637,439,439,"{""James Weaver"": 439}",104143
-1880,ME-AL,65171,74056,4480,4676,"{""James Weaver"": 4480, ""John Phelps"": 142, ""Neal Dow"": 93}",143903
-1880,MD,93706,78515,818,818,"{""James Weaver"": 818}",173039
-1880,MA,111690,165205,4548,5230,"{""James Weaver"": 4548, ""Neal Dow"": 682}",282125
-1880,MI,131597,185341,34895,35839,"{""James Weaver"": 34895, ""John Phelps"": 2, ""Neal Dow"": 942}",352777
-1880,MN,53315,93903,3267,3553,"{""James Weaver"": 3267, ""Neal Dow"": 286}",150771
-1880,MS,75750,34854,5797,5797,"{""James Weaver"": 5797}",116401
-1880,MO,208609,153567,35135,38135,"{""James Weaver"": 35135}",400311
-1880,NE-AL,28523,54979,3950,3950,"{""James Weaver"": 3950}",87452
-1880,NV,9613,8732,0,0,{},18345
-1880,NH,40794,44852,528,708,"{""James Weaver"": 528, ""Neal Dow"": 180}",86354
-1880,NJ,122565,120555,2617,2808,"{""James Weaver"": 2617, ""Neal Dow"": 191}",245928
-1880,NY,534511,555544,12373,13890,"{""James Weaver"": 12373, ""John Phelps"": 75, ""Neal Dow"": 1517}",1103945
-1880,NC,124208,115874,1126,1126,"{""James Weaver"": 1126}",241208
-1880,OH,340821,375048,6456,9098,"{""James Weaver"": 6456, ""Neal Dow"": 2616}",724967
-1880,OR,19955,20619,245,245,"{""James Weaver"": 245}",40819
-1880,PA,407428,444704,20668,22651,"{""James Weaver"": 20668, ""John Phelps"": 44, ""Neal Dow"": 1939}",874783
-1880,RI,10779,18195,236,261,"{""James Weaver"": 236, ""Neal Dow"": 20}",29235
-1880,SC,112312,58071,566,566,"{""James Weaver"": 566}",170949
-1880,TN,129191,107677,5917,5960,"{""James Weaver"": 5917, ""Neal Dow"": 43}",242828
-1880,TX,156428,57893,27405,27405,"{""James Weaver"": 27405}",241726
-1880,VT,18316,45567,1215,1320,"{""James Weaver"": 1215, ""John Phelps"": 105}",65203
-1880,VA,128083,83533,0,0,{},211616
-1880,WV,57391,46243,9079,9079,"{""James Weaver"": 9079}",112713
-1880,WI,114649,144400,7986,8146,"{""James Weaver"": 7986, ""John Phelps"": 91, ""Neal Dow"": 69}",267195
-1880,NATIONAL,4444976,4454433,308649,320068,"{""James Weaver"": 308649, ""John Phelps"": 1045, ""Neal Dow"": 10364}",9219477
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1880,AL,91185,56221,4642,4642,"{""James Weaver"": 4642}",152048,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,AR,60775,42436,4079,4079,"{""James Weaver"": 4079}",107290,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,CA,80442,80348,3394,3531,"{""James Weaver"": 3394, ""John Phelps"": 6, ""Neal Dow"": 61}",164321,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,CO,24647,27450,1435,1449,"{""James Weaver"": 1435}",53546,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,CT,64415,67071,868,1316,"{""James Weaver"": 868, ""Neal Dow"": 409}",132802,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,DE,15275,14133,120,120,"{""James Weaver"": 120}",29528,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,FL,27964,23654,0,0,{},51618,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,GA,102470,54086,0,0,{},156556,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,IL,277321,318037,26358,26954,"{""James Weaver"": 26358, ""John Phelps"": 153, ""Neal Dow"": 443}",622312,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,IN,225522,232164,12986,12986,"{""James Weaver"": 12986}",470672,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,IA,105845,183927,32701,33726,"{""James Weaver"": 32701, ""John Phelps"": 433, ""Neal Dow"": 592}",323498,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,KS,59801,121549,19851,19876,"{""James Weaver"": 19851, ""Neal Dow"": 25}",201226,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,KY,149068,106306,11499,11730,"{""James Weaver"": 11499, ""Neal Dow"": 258}",267104,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,LA,65067,38637,439,439,"{""James Weaver"": 439}",104143,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,ME-AL,65171,74056,4480,4676,"{""James Weaver"": 4480, ""John Phelps"": 142, ""Neal Dow"": 93}",143903,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,MD,93706,78515,818,818,"{""James Weaver"": 818}",173039,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,MA,111690,165205,4548,5230,"{""James Weaver"": 4548, ""Neal Dow"": 682}",282125,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,MI,131597,185341,34895,35839,"{""James Weaver"": 34895, ""John Phelps"": 2, ""Neal Dow"": 942}",352777,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,MN,53315,93903,3267,3553,"{""James Weaver"": 3267, ""Neal Dow"": 286}",150771,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,MS,75750,34854,5797,5797,"{""James Weaver"": 5797}",116401,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,MO,208609,153567,35135,38135,"{""James Weaver"": 35135}",400311,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NE-AL,28523,54979,3950,3950,"{""James Weaver"": 3950}",87452,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NV,9613,8732,0,0,{},18345,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NH,40794,44852,528,708,"{""James Weaver"": 528, ""Neal Dow"": 180}",86354,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NJ,122565,120555,2617,2808,"{""James Weaver"": 2617, ""Neal Dow"": 191}",245928,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NY,534511,555544,12373,13890,"{""James Weaver"": 12373, ""John Phelps"": 75, ""Neal Dow"": 1517}",1103945,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NC,124208,115874,1126,1126,"{""James Weaver"": 1126}",241208,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,OH,340821,375048,6456,9098,"{""James Weaver"": 6456, ""Neal Dow"": 2616}",724967,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,OR,19955,20619,245,245,"{""James Weaver"": 245}",40819,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,PA,407428,444704,20668,22651,"{""James Weaver"": 20668, ""John Phelps"": 44, ""Neal Dow"": 1939}",874783,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,RI,10779,18195,236,261,"{""James Weaver"": 236, ""Neal Dow"": 20}",29235,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,SC,112312,58071,566,566,"{""James Weaver"": 566}",170949,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,TN,129191,107677,5917,5960,"{""James Weaver"": 5917, ""Neal Dow"": 43}",242828,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,TX,156428,57893,27405,27405,"{""James Weaver"": 27405}",241726,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,VT,18316,45567,1215,1320,"{""James Weaver"": 1215, ""John Phelps"": 105}",65203,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,VA,128083,83533,0,0,{},211616,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,WV,57391,46243,9079,9079,"{""James Weaver"": 9079}",112713,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,WI,114649,144400,7986,8146,"{""James Weaver"": 7986, ""John Phelps"": 91, ""Neal Dow"": 69}",267195,https://en.wikipedia.org/wiki/1880_United_States_presidential_election
+1880,NATIONAL,4444976,4454433,308649,320068,"{""James Weaver"": 308649, ""John Phelps"": 1045, ""Neal Dow"": 10364}",9219477,https://en.wikipedia.org/wiki/1880_United_States_presidential_election

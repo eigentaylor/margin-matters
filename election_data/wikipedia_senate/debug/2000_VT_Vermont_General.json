@@ -1,0 +1,514 @@
+{
+  "year": 2000,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "United States Senate election in Vermont, 2000 [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Vermont",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table": {
+    "caption": "United States Senate election in Vermont, 2000 [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Jeffords (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ed Flanagan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles W. Russell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Hubbard",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Billy Greer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hugh Douglas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jerry Levy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Jeffords (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "189,133",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+15.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ed Flanagan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73,352",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−15.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles W. Russell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,079",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.49%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Hubbard",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,366",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Grassroots",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Billy Greer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,889",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.69%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hugh Douglas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,843",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Liberty Union",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jerry Levy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "361",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "115,781",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+30.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "288,500",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Jeffords (Incumbent)",
+      "party": "Republican",
+      "votes": 189133,
+      "percent": 65.56
+    },
+    {
+      "candidate": "Ed Flanagan",
+      "party": "Democratic",
+      "votes": 73352,
+      "percent": 25.43
+    },
+    {
+      "candidate": "Charles W. Russell",
+      "party": "Constitution",
+      "votes": 10079,
+      "percent": 3.49
+    },
+    {
+      "candidate": "Rick Hubbard",
+      "party": "Independent",
+      "votes": 5366,
+      "percent": 1.86
+    },
+    {
+      "candidate": "Billy Greer",
+      "party": "Grassroots",
+      "votes": 4889,
+      "percent": 1.69
+    },
+    {
+      "candidate": "Hugh Douglas",
+      "party": "Libertarian",
+      "votes": 3843,
+      "percent": 1.33
+    },
+    {
+      "candidate": "Jerry Levy",
+      "party": "Liberty Union",
+      "votes": 1477,
+      "percent": 0.51
+    },
+    {
+      "candidate": "361",
+      "party": "Write-ins",
+      "votes": 361,
+      "percent": 0.13
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 115781,
+      "percent": 40.13
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 288500,
+      "percent": null
+    }
+  ]
+}

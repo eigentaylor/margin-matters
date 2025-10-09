@@ -1,0 +1,236 @@
+{
+  "year": 2024,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "2024 United States Senate election in North Dakota [ 31 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_North_Dakota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 364327,
+  "table": {
+    "caption": "2024 United States Senate election in North Dakota [ 31 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin Cramer (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Katrina Christiansen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin Cramer (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "241,569",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Katrina Christiansen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "121,602",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.89%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,156",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "364,327",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kevin Cramer",
+      "party": "Republican",
+      "votes": 241569,
+      "percent": 66.31
+    },
+    {
+      "candidate": "Katrina Christiansen",
+      "party": "Democratic–NPL",
+      "votes": 121602,
+      "percent": 33.38
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1156,
+      "percent": 0.32
+    }
+  ]
+}

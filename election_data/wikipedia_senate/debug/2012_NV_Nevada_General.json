@@ -1,0 +1,279 @@
+{
+  "year": 2012,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "United States Senate election in Nevada, 2012 [ 67 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_Nevada",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 997805,
+  "table": {
+    "caption": "United States Senate election in Nevada, 2012 [ 67 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dean Heller (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Shelley Berkley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Lory VanDerBeek",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dean Heller (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "457,656",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "45.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Shelley Berkley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "446,080",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Lory VanDerBeek",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48,792",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "45,277",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "997,805",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Dean Heller",
+      "party": "Republican",
+      "votes": 457656,
+      "percent": 45.87
+    },
+    {
+      "candidate": "Shelley Berkley",
+      "party": "Democratic",
+      "votes": 446080,
+      "percent": 44.71
+    },
+    {
+      "candidate": "David Lory VanDerBeek",
+      "party": "Independent American",
+      "votes": 48792,
+      "percent": 4.89
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 45277,
+      "percent": 4.54
+    }
+  ]
+}

@@ -1,0 +1,370 @@
+{
+  "year": 2014,
+  "state": "Colorado",
+  "abbr": "CO",
+  "round": "General",
+  "caption": "United States Senate election in Colorado, 2014 [ 111 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Colorado",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 2041020,
+  "table": {
+    "caption": "United States Senate election in Colorado, 2014 [ 111 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cory Gardner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Udall (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gaylon Kent",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Steve Shogan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Raúl Acosta",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Hammons",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cory Gardner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "983,891",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.72%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Udall (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "944,203",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gaylon Kent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52,876",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Steve Shogan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29,472",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Raúl Acosta",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,151",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Unity",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Hammons",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,427",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,041,020",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Cory Gardner",
+      "party": "Republican",
+      "votes": 983891,
+      "percent": 48.21
+    },
+    {
+      "candidate": "Mark Udall",
+      "party": "Democratic",
+      "votes": 944203,
+      "percent": 46.26
+    },
+    {
+      "candidate": "Gaylon Kent",
+      "party": "Libertarian",
+      "votes": 52876,
+      "percent": 2.59
+    },
+    {
+      "candidate": "Steve Shogan",
+      "party": "Independent",
+      "votes": 29472,
+      "percent": 1.44
+    },
+    {
+      "candidate": "Raúl Acosta",
+      "party": "Independent",
+      "votes": 24151,
+      "percent": 1.18
+    },
+    {
+      "candidate": "Bill Hammons",
+      "party": "Unity",
+      "votes": 6427,
+      "percent": 0.32
+    }
+  ]
+}

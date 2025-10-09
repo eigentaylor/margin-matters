@@ -1,0 +1,246 @@
+{
+  "year": 2020,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "United States Senate election in Kansas, 2020 [ 140 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Kansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 1367755,
+  "table": {
+    "caption": "United States Senate election in Kansas, 2020 [ 140 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roger Marshall",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barbara Bollier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jason Buckley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roger Marshall",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "727,962",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barbara Bollier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "571,530",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jason Buckley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68,263",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.99%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.67%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,367,755",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Roger Marshall",
+      "party": "Republican",
+      "votes": 727962,
+      "percent": 53.22
+    },
+    {
+      "candidate": "Barbara Bollier",
+      "party": "Democratic",
+      "votes": 571530,
+      "percent": 41.79
+    },
+    {
+      "candidate": "Jason Buckley",
+      "party": "Libertarian",
+      "votes": 68263,
+      "percent": 4.99
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "year": 2022,
+  "state": "Alabama",
+  "abbr": "AL",
+  "round": "General",
+  "caption": "2022 United States Senate election in Alabama [ 180 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Alabama",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 1414238,
+  "table": {
+    "caption": "2022 United States Senate election in Alabama [ 180 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Katie Britt",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Will Boyd",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Sophocleus",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Katie Britt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "942,154",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.62%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.66%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Will Boyd",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "436,746",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.99%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Sophocleus",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32,879",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,459",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,414,238",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Katie Britt",
+      "party": "Republican",
+      "votes": 942154,
+      "percent": 66.62
+    },
+    {
+      "candidate": "Will Boyd",
+      "party": "Democratic",
+      "votes": 436746,
+      "percent": 30.88
+    },
+    {
+      "candidate": "John Sophocleus",
+      "party": "Libertarian",
+      "votes": 32879,
+      "percent": 2.32
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2459,
+      "percent": 0.17
+    }
+  ]
+}

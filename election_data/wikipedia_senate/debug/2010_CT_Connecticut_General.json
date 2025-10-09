@@ -1,0 +1,391 @@
+{
+  "year": 2010,
+  "state": "Connecticut",
+  "abbr": "CT",
+  "round": "General",
+  "caption": "United States Senate election in Connecticut, 2010 [ 102 ] [ 103 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Connecticut",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1153115,
+  "table": {
+    "caption": "United States Senate election in Connecticut, 2010 [ 102 ] [ 103 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Blumenthal",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Blumenthal",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Linda E. McMahon",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Warren B. Mosler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Mertens",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "605,204",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−13.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30,836",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Total",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Blumenthal",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "636,040",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-11.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Linda E. McMahon",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "498,341",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Warren B. Mosler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,275",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Connecticut for Lieberman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Mertens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,735",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "724",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,153,115",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Richard Blumenthal",
+      "party": "Democratic",
+      "votes": 636040,
+      "percent": 55.16
+    },
+    {
+      "candidate": "Linda E. McMahon",
+      "party": "Republican",
+      "votes": 498341,
+      "percent": 43.22
+    },
+    {
+      "candidate": "Warren B. Mosler",
+      "party": "Independent",
+      "votes": 11275,
+      "percent": 0.98
+    },
+    {
+      "candidate": "John Mertens",
+      "party": "Connecticut for Lieberman",
+      "votes": 6735,
+      "percent": 0.58
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 724,
+      "percent": 0.06
+    }
+  ]
+}

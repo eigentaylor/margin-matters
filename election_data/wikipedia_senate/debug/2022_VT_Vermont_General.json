@@ -1,0 +1,494 @@
+{
+  "year": 2022,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "2022 United States Senate election in Vermont [ 80 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Vermont",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 9,
+  "table_total_votes": 287100,
+  "table": {
+    "caption": "2022 United States Senate election in Vermont [ 80 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Peter Welch",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gerald Malloy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dawn Marie Ellis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Natasha Diamondstone-Kohout",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kerry Patrick Raheb",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Coester",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Duke",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cris Ericson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peter Welch",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "196,575",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gerald Malloy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "80,468",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dawn Marie Ellis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,752",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.96%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green Mountain",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natasha Diamondstone-Kohout",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,574",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kerry Patrick Raheb",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,532",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Coester",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,273",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Duke",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,209",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cris Ericson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,105",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "612",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "287,100",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Peter Welch",
+      "party": "Democratic",
+      "votes": 196575,
+      "percent": 68.47
+    },
+    {
+      "candidate": "Gerald Malloy",
+      "party": "Republican",
+      "votes": 80468,
+      "percent": 28.03
+    },
+    {
+      "candidate": "Dawn Marie Ellis",
+      "party": "Independent",
+      "votes": 2752,
+      "percent": 0.96
+    },
+    {
+      "candidate": "Natasha Diamondstone-Kohout",
+      "party": "Green Mountain",
+      "votes": 1574,
+      "percent": 0.55
+    },
+    {
+      "candidate": "Kerry Patrick Raheb",
+      "party": "Independent",
+      "votes": 1532,
+      "percent": 0.53
+    },
+    {
+      "candidate": "Mark Coester",
+      "party": "Independent",
+      "votes": 1273,
+      "percent": 0.44
+    },
+    {
+      "candidate": "Stephen Duke",
+      "party": "Independent",
+      "votes": 1209,
+      "percent": 0.42
+    },
+    {
+      "candidate": "Cris Ericson",
+      "party": "Independent",
+      "votes": 1105,
+      "percent": 0.38
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 612,
+      "percent": 0.21
+    }
+  ]
+}

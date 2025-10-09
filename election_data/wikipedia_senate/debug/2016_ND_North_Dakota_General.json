@@ -1,0 +1,322 @@
+{
+  "year": 2016,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "United States Senate election in North Dakota, 2016 [ 17 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_North_Dakota",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 342501,
+  "table": {
+    "caption": "United States Senate election in North Dakota, 2016 [ 17 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Hoeven (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eliot Glassheim",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Marquette",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Germalic",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Hoeven (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "268,788",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "78.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.40%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eliot Glassheim",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58,116",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.20%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Marquette",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,556",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Germalic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,675",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "366",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "342,501",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Hoeven",
+      "party": "Republican",
+      "votes": 268788,
+      "percent": 78.48
+    },
+    {
+      "candidate": "Eliot Glassheim",
+      "party": "Democratic–NPL",
+      "votes": 58116,
+      "percent": 16.97
+    },
+    {
+      "candidate": "Robert Marquette",
+      "party": "Libertarian",
+      "votes": 10556,
+      "percent": 3.08
+    },
+    {
+      "candidate": "James Germalic",
+      "party": "Independent",
+      "votes": 4675,
+      "percent": 1.36
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 366,
+      "percent": 0.11
+    }
+  ]
+}

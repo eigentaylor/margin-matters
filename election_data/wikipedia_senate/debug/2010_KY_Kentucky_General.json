@@ -1,0 +1,246 @@
+{
+  "year": 2010,
+  "state": "Kentucky",
+  "abbr": "KY",
+  "round": "General",
+  "caption": "United States Senate election in Kentucky, 2010 [ 182 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Kentucky",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 1356096,
+  "table": {
+    "caption": "United States Senate election in Kentucky, 2010 [ 182 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rand Paul",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack Conway",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Billy Ray Wilson (write-in)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rand Paul",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "755,706",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack Conway",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "600,052",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.09%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Billy Ray Wilson (write-in)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "338",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,356,096",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Rand Paul",
+      "party": "Republican",
+      "votes": 755706,
+      "percent": 55.73
+    },
+    {
+      "candidate": "Jack Conway",
+      "party": "Democratic",
+      "votes": 600052,
+      "percent": 44.25
+    },
+    {
+      "candidate": "Billy Ray Wilson",
+      "party": "Independent",
+      "votes": 338,
+      "percent": 0.02
+    }
+  ]
+}

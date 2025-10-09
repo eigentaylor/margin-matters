@@ -1,0 +1,279 @@
+{
+  "year": 2024,
+  "state": "Indiana",
+  "abbr": "IN",
+  "round": "General",
+  "caption": "2024 United States Senate election in Indiana [ 66 ] [ 67 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Indiana",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 2829897,
+  "table": {
+    "caption": "2024 United States Senate election in Indiana [ 66 ] [ 67 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Banks",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Valerie McCray",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Andrew Horning",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Banks",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,659,416",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Valerie McCray",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,097,061",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.07%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Andrew Horning",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "73,233",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.59%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "187",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,829,897",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Banks",
+      "party": "Republican",
+      "votes": 1659416,
+      "percent": 58.64
+    },
+    {
+      "candidate": "Valerie McCray",
+      "party": "Democratic",
+      "votes": 1097061,
+      "percent": 38.77
+    },
+    {
+      "candidate": "Andrew Horning",
+      "party": "Libertarian",
+      "votes": 73233,
+      "percent": 2.59
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 187,
+      "percent": 0.0
+    }
+  ]
+}

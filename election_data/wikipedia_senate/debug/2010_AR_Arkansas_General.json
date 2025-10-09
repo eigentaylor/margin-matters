@@ -1,0 +1,317 @@
+{
+  "year": 2010,
+  "state": "Arkansas",
+  "abbr": "AR",
+  "round": "General",
+  "caption": "United States Senate election in Arkansas, 2010 [ 66 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Arkansas",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 779957,
+  "table": {
+    "caption": "United States Senate election in Arkansas, 2010 [ 66 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Boozman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Blanche Lincoln (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Trevor Drown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Gray",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Boozman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "451,618",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+13.83%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Blanche Lincoln (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "288,156",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−18.95%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Trevor Drown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,234",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.24%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Gray",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,430",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.85%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "519",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "779,957",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Boozman",
+      "party": "Republican",
+      "votes": 451618,
+      "percent": 57.9
+    },
+    {
+      "candidate": "Blanche Lincoln",
+      "party": "Democratic",
+      "votes": 288156,
+      "percent": 36.95
+    },
+    {
+      "candidate": "Trevor Drown",
+      "party": "Libertarian",
+      "votes": 25234,
+      "percent": 3.24
+    },
+    {
+      "candidate": "John Gray",
+      "party": "Green",
+      "votes": 14430,
+      "percent": 1.85
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 519,
+      "percent": 0.07
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "year": 2018,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "United States Senate election in Rhode Island, 2018 [ 22 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Rhode_Island",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 376738,
+  "table": {
+    "caption": "United States Senate election in Rhode Island, 2018 [ 22 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sheldon Whitehouse (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Flanders",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sheldon Whitehouse (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "231,477",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Flanders",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "144,421",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "38.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.36%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "840",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "376,738",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Sheldon Whitehouse",
+      "party": "Democratic",
+      "votes": 231477,
+      "percent": 61.44
+    },
+    {
+      "candidate": "Robert Flanders",
+      "party": "Republican",
+      "votes": 144421,
+      "percent": 38.33
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 840,
+      "percent": 0.22
+    }
+  ]
+}

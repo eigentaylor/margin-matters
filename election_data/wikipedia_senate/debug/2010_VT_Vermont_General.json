@@ -1,0 +1,466 @@
+{
+  "year": 2010,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "United States Senate election in Vermont, 2010 [ 18 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Vermont",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table_total_votes": 235065,
+  "table": {
+    "caption": "United States Senate election in Vermont, 2010 [ 18 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Patrick Leahy (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Len Britton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Freilich",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Cris Ericson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Stephen Cain",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Peter Diamondstone",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Johenry Nunes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Patrick Leahy (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "151,281",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Len Britton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "72,699",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.38%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Freilich",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,544",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marijuana",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Cris Ericson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,731",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.16%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Stephen Cain",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,356",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Peter Diamondstone",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,433",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.61%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Johenry Nunes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,021",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "78,528",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "235,065",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Patrick Leahy",
+      "party": "Democratic",
+      "votes": 151281,
+      "percent": 64.36
+    },
+    {
+      "candidate": "Len Britton",
+      "party": "Republican",
+      "votes": 72699,
+      "percent": 30.93
+    },
+    {
+      "candidate": "Daniel Freilich",
+      "party": "Independent",
+      "votes": 3544,
+      "percent": 1.51
+    },
+    {
+      "candidate": "Cris Ericson",
+      "party": "Marijuana",
+      "votes": 2731,
+      "percent": 1.16
+    },
+    {
+      "candidate": "Stephen Cain",
+      "party": "Independent",
+      "votes": 2356,
+      "percent": 1.0
+    },
+    {
+      "candidate": "Peter Diamondstone",
+      "party": "Socialist",
+      "votes": 1433,
+      "percent": 0.61
+    },
+    {
+      "candidate": "Johenry Nunes",
+      "party": "Independent",
+      "votes": 1021,
+      "percent": 0.43
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 78528,
+      "percent": 33.43
+    }
+  ]
+}

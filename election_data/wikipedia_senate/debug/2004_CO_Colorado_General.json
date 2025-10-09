@@ -1,0 +1,466 @@
+{
+  "year": 2004,
+  "state": "Colorado",
+  "abbr": "CO",
+  "round": "General",
+  "caption": "General election results [ 43 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Colorado",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table_total_votes": 2107472,
+  "table": {
+    "caption": "General election results [ 43 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ken Salazar",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pete Coors",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Douglas Campbell",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Richard Randall",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John R. Harris",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Victor Good",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Finn Gotaas",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ken Salazar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,081,188",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+16.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pete Coors",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "980,668",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−15.96%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Douglas Campbell",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,783",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Richard Randall",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,160",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John R. Harris",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,442",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.40%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Victor Good",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,481",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Finn Gotaas",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,750",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "100,520",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−22.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,107,472",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ken Salazar",
+      "party": "Democratic",
+      "votes": 1081188,
+      "percent": 51.3
+    },
+    {
+      "candidate": "Pete Coors",
+      "party": "Republican",
+      "votes": 980668,
+      "percent": 46.53
+    },
+    {
+      "candidate": "Douglas Campbell",
+      "party": "Constitution",
+      "votes": 18783,
+      "percent": 0.89
+    },
+    {
+      "candidate": "Richard Randall",
+      "party": "Libertarian",
+      "votes": 10160,
+      "percent": 0.48
+    },
+    {
+      "candidate": "John R. Harris",
+      "party": "Independent",
+      "votes": 8442,
+      "percent": 0.4
+    },
+    {
+      "candidate": "Victor Good",
+      "party": "Reform",
+      "votes": 6481,
+      "percent": 0.31
+    },
+    {
+      "candidate": "Finn Gotaas",
+      "party": "Independent",
+      "votes": 1750,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 100520,
+      "percent": 4.77
+    }
+  ]
+}

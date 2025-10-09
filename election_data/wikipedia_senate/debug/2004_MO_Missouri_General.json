@@ -1,0 +1,337 @@
+{
+  "year": 2004,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "General election results [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Missouri",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 2706402,
+  "table": {
+    "caption": "General election results [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kit Bond (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nancy Farmer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kevin Tull",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Don Griffin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kit Bond (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,518,089",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.42%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nancy Farmer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,158,261",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.80%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.97%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kevin Tull",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,648",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.30%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Don Griffin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,404",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.38%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "359,828",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,706,402",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kit Bond",
+      "party": "Republican",
+      "votes": 1518089,
+      "percent": 56.09
+    },
+    {
+      "candidate": "Nancy Farmer",
+      "party": "Democratic",
+      "votes": 1158261,
+      "percent": 42.8
+    },
+    {
+      "candidate": "Kevin Tull",
+      "party": "Libertarian",
+      "votes": 19648,
+      "percent": 0.73
+    },
+    {
+      "candidate": "Don Griffin",
+      "party": "Constitution",
+      "votes": 10404,
+      "percent": 0.38
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 359828,
+      "percent": 13.3
+    }
+  ]
+}

@@ -1,0 +1,584 @@
+{
+  "year": 2012,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "United States Senate election in New Jersey, 2012 [ 59 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2012_United_States_Senate_election_in_New_Jersey",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 11,
+  "table_total_votes": 3376649,
+  "table": {
+    "caption": "United States Senate election in New Jersey, 2012 [ 59 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Menendez (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Kyrillos",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kenneth R. Kaplan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ken Wolski",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gwen Diakos",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J. David Dranikoff",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Inder \"Andy\" Soni",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert \"Turk\" Turkavage",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Greg Pason",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eugene M. LaVergne",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daryl Brooks",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Menendez (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,987,680",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.50%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Kyrillos",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,329,534",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.97%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kenneth R. Kaplan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,803",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ken Wolski",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,801",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gwen Diakos",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,359",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J. David Dranikoff",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,834",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Inder \"Andy\" Soni",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,593",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert \"Turk\" Turkavage",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,532",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Greg Pason",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,249",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eugene M. LaVergne",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,198",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daryl Brooks",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,066",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,376,649",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Menendez",
+      "party": "Democratic",
+      "votes": 1987680,
+      "percent": 58.87
+    },
+    {
+      "candidate": "Joe Kyrillos",
+      "party": "Republican",
+      "votes": 1329534,
+      "percent": 39.37
+    },
+    {
+      "candidate": "Kenneth R. Kaplan",
+      "party": "Libertarian",
+      "votes": 16803,
+      "percent": 0.5
+    },
+    {
+      "candidate": "Ken Wolski",
+      "party": "Green",
+      "votes": 15801,
+      "percent": 0.47
+    },
+    {
+      "candidate": "Gwen Diakos",
+      "party": "Independent",
+      "votes": 9359,
+      "percent": 0.28
+    },
+    {
+      "candidate": "J. David Dranikoff",
+      "party": "Independent",
+      "votes": 3834,
+      "percent": 0.11
+    },
+    {
+      "candidate": "Inder \"Andy\" Soni",
+      "party": "Independent",
+      "votes": 3593,
+      "percent": 0.11
+    },
+    {
+      "candidate": "Robert \"Turk\" Turkavage",
+      "party": "Independent",
+      "votes": 3532,
+      "percent": 0.1
+    },
+    {
+      "candidate": "Greg Pason",
+      "party": "Socialist",
+      "votes": 2249,
+      "percent": 0.07
+    },
+    {
+      "candidate": "Eugene M. LaVergne",
+      "party": "Independent",
+      "votes": 2198,
+      "percent": 0.07
+    }
+  ]
+}

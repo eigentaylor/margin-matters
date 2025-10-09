@@ -1,0 +1,227 @@
+{
+  "year": 2004,
+  "state": "Hawaii",
+  "abbr": "HI",
+  "round": "General",
+  "caption": "Generale election results",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Hawaii",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": null,
+  "table": {
+    "caption": "Generale election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daniel Inouye (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Campbell Cavasso",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Brewer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lloyd Jeffrey Mallan",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daniel Inouye (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "313,629",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "75.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Campbell Cavasso",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "87,172",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.99%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Brewer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,269",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lloyd Jeffrey Mallan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,277",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Daniel Inouye",
+      "party": "Democratic",
+      "votes": 313629,
+      "percent": 75.51
+    },
+    {
+      "candidate": "Campbell Cavasso",
+      "party": "Republican",
+      "votes": 87172,
+      "percent": 20.99
+    },
+    {
+      "candidate": "Jim Brewer",
+      "party": "Independent",
+      "votes": 9269,
+      "percent": 2.23
+    },
+    {
+      "candidate": "Lloyd Jeffrey Mallan",
+      "party": "Libertarian",
+      "votes": 5277,
+      "percent": 1.27
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "year": 2008,
+  "state": "North Carolina",
+  "abbr": "NC",
+  "round": "General",
+  "caption": "2008 United States Senate election in North Carolina [ 56 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_North_Carolina",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 4271970,
+  "table": {
+    "caption": "2008 United States Senate election in North Carolina [ 56 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kay Hagan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elizabeth Dole (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Cole",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kay Hagan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,249,311",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "52.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.7%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elizabeth Dole (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,887,510",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.4%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Cole",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "133,430",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.1%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,719",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,271,970",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kay Hagan",
+      "party": "Democratic",
+      "votes": 2249311,
+      "percent": 52.65
+    },
+    {
+      "candidate": "Elizabeth Dole",
+      "party": "Republican",
+      "votes": 1887510,
+      "percent": 44.18
+    },
+    {
+      "candidate": "Chris Cole",
+      "party": "Libertarian",
+      "votes": 133430,
+      "percent": 3.17
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1719,
+      "percent": 0.0
+    }
+  ]
+}

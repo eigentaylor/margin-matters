@@ -1,0 +1,332 @@
+{
+  "year": 2002,
+  "state": "Alabama",
+  "abbr": "AL",
+  "round": "General",
+  "caption": "2002 United States Senate election, Alabama [ 9 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Alabama",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table": {
+    "caption": "2002 United States Senate election, Alabama [ 9 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Sessions (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Susan Parker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Allen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Sessions (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "792,561",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "58.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+6.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Susan Parker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "538,878",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.63%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Allen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,234",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,350",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "253,683",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,353,023",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeff Sessions (incumbent)",
+      "party": "Republican",
+      "votes": 792561,
+      "percent": 58.58
+    },
+    {
+      "candidate": "Susan Parker",
+      "party": "Democratic",
+      "votes": 538878,
+      "percent": 39.83
+    },
+    {
+      "candidate": "Jeff Allen",
+      "party": "Libertarian",
+      "votes": 20234,
+      "percent": 1.5
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1350,
+      "percent": 0.1
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 253683,
+      "percent": 18.75
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 1353023,
+      "percent": null
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "year": 2000,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "2000 United States Senate election in Missouri [ 51 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Missouri",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "2000 United States Senate election in Missouri [ 51 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mel Carnahan †",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Ashcroft (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Evaline Taylor",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Grant Samuel Stauffer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Hugh Foley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles Dockins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mel Carnahan †",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,191,812",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Ashcroft (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,142,852",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Evaline Taylor",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,612",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Grant Samuel Stauffer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,198",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Hugh Foley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,166",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles Dockins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,933",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "13",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,361,586",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 6,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mel Carnahan †",
+      "party": "Democratic",
+      "votes": 1191812,
+      "percent": 50.46
+    },
+    {
+      "candidate": "John Ashcroft (incumbent)",
+      "party": "Republican",
+      "votes": 1142852,
+      "percent": 48.39
+    },
+    {
+      "candidate": "Evaline Taylor",
+      "party": "Green",
+      "votes": 10612,
+      "percent": 0.45
+    },
+    {
+      "candidate": "Grant Samuel Stauffer",
+      "party": "Libertarian",
+      "votes": 10198,
+      "percent": 0.43
+    },
+    {
+      "candidate": "Hugh Foley",
+      "party": "Reform",
+      "votes": 4166,
+      "percent": 0.18
+    },
+    {
+      "candidate": "Charles Dockins",
+      "party": "Natural Law",
+      "votes": 1933,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 13,
+      "percent": 0.0
+    }
+  ]
+}

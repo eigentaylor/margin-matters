@@ -1,0 +1,408 @@
+{
+  "year": 2008,
+  "state": "Minnesota",
+  "abbr": "MN",
+  "round": "General",
+  "caption": "2008 United States Senate election in Minnesota: Certified Results after election contest [ 10 ] [ 7 ] [ 91 ] [ 92 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Minnesota",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 2887646,
+  "table": {
+    "caption": "2008 United States Senate election in Minnesota: Certified Results after election contest [ 10 ] [ 7 ] [ 91 ] [ 92 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Al Franken",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Norm Coleman (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dean Barkley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles Aldrich",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Niemackl",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Al Franken",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,212,629",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.994%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.35%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Norm Coleman (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,212,317",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.983%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dean Barkley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "437,505",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15.151%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+13.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles Aldrich",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13,923",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Niemackl",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,907",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.21%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "2,365",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Plurality",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "312",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.011%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,887,646",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic (DFL) gain from Republican",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Al Franken",
+      "party": "Democratic (DFL)",
+      "votes": 1212629,
+      "percent": 41.994
+    },
+    {
+      "candidate": "Norm Coleman",
+      "party": "Republican",
+      "votes": 1212317,
+      "percent": 41.983
+    },
+    {
+      "candidate": "Dean Barkley",
+      "party": "Independence",
+      "votes": 437505,
+      "percent": 15.151
+    },
+    {
+      "candidate": "Charles Aldrich",
+      "party": "Libertarian",
+      "votes": 13923,
+      "percent": 0.48
+    },
+    {
+      "candidate": "James Niemackl",
+      "party": "Constitution",
+      "votes": 8907,
+      "percent": 0.31
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 2365,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Plurality",
+      "party": "Plurality",
+      "votes": 312,
+      "percent": 0.011
+    }
+  ]
+}

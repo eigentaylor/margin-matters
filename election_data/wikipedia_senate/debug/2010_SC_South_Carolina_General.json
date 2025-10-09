@@ -1,0 +1,337 @@
+{
+  "year": 2010,
+  "state": "South Carolina",
+  "abbr": "SC",
+  "round": "General",
+  "caption": "United States Senate election in South Carolina, 2010 [ 8 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_South_Carolina",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1318794,
+  "table": {
+    "caption": "United States Senate election in South Carolina, 2010 [ 8 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim DeMint (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alvin Greene",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Clements",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-in",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim DeMint (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "810,771",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.81%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alvin Greene",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "364,598",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−16.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Clements",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "121,472",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.95%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,953",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.58%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "446,173",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+24.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,318,794",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-18.88%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim DeMint",
+      "party": "Republican",
+      "votes": 810771,
+      "percent": 61.48
+    },
+    {
+      "candidate": "Alvin Greene",
+      "party": "Democratic",
+      "votes": 364598,
+      "percent": 27.65
+    },
+    {
+      "candidate": "Tom Clements",
+      "party": "Green",
+      "votes": 121472,
+      "percent": 9.21
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 21953,
+      "percent": 1.66
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 446173,
+      "percent": 33.83
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "year": 2024,
+  "state": "Massachusetts",
+  "abbr": "MA",
+  "round": "General",
+  "caption": "2024 United States Senate election in Massachusetts [ 79 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2024_United_States_Senate_election_in_Massachusetts",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 3413329,
+  "table": {
+    "caption": "2024 United States Senate election in Massachusetts [ 79 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Elizabeth Warren (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Deaton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Elizabeth Warren (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,041,668",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "59.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.53",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Deaton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,365,440",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "40.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.83",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "6,221",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.08",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,413,329",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Elizabeth Warren",
+      "party": "Democratic",
+      "votes": 2041668,
+      "percent": 59.81
+    },
+    {
+      "candidate": "John Deaton",
+      "party": "Republican",
+      "votes": 1365440,
+      "percent": 40.0
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 6221,
+      "percent": 0.18
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "year": 2020,
+  "state": "Rhode Island",
+  "abbr": "RI",
+  "round": "General",
+  "caption": "United States Senate election in Rhode Island, 2020 [ 16 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2020_United_States_Senate_election_in_Rhode_Island",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 494262,
+  "table": {
+    "caption": "United States Senate election in Rhode Island, 2020 [ 16 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jack Reed (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Allen Waters",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jack Reed (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "328,574",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "66.48%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Allen Waters",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "164,855",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "833",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "494,262",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jack Reed",
+      "party": "Democratic",
+      "votes": 328574,
+      "percent": 66.48
+    },
+    {
+      "candidate": "Allen Waters",
+      "party": "Republican",
+      "votes": 164855,
+      "percent": 33.35
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 833,
+      "percent": 0.17
+    }
+  ]
+}

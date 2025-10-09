@@ -1,0 +1,332 @@
+{
+  "year": 2014,
+  "state": "Oklahoma",
+  "abbr": "OK",
+  "round": "General",
+  "caption": "United States Senate election in Oklahoma, 2014 [ 28 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Oklahoma",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 820733,
+  "table": {
+    "caption": "United States Senate election in Oklahoma, 2014 [ 28 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Inhofe (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Matt Silverstein",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joan Farr",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ray Woods",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Aaron DeLozier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Inhofe (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "558,166",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+11.33%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Matt Silverstein",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "234,307",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−10.63%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joan Farr",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,554",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ray Woods",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,913",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Aaron DeLozier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,793",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "820,733",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jim Inhofe",
+      "party": "Republican",
+      "votes": 558166,
+      "percent": 68.01
+    },
+    {
+      "candidate": "Matt Silverstein",
+      "party": "Democratic",
+      "votes": 234307,
+      "percent": 28.55
+    },
+    {
+      "candidate": "Joan Farr",
+      "party": "Independent",
+      "votes": 10554,
+      "percent": 1.28
+    },
+    {
+      "candidate": "Ray Woods",
+      "party": "Independent",
+      "votes": 9913,
+      "percent": 1.21
+    },
+    {
+      "candidate": "Aaron DeLozier",
+      "party": "Independent",
+      "votes": 7793,
+      "percent": 0.95
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "year": 2010,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "United States Senate election in New Hampshire, 2010 [ 77 ] [ 78 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_New_Hampshire",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 454710,
+  "table": {
+    "caption": "United States Senate election in New Hampshire, 2010 [ 77 ] [ 78 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kelly Ayotte",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Paul Hodes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chris Booth",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ken Blevens",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kelly Ayotte",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "273,218",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Paul Hodes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "167,545",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.85%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chris Booth",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,194",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ken Blevens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,753",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "454,710",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kelly Ayotte",
+      "party": "Republican",
+      "votes": 273218,
+      "percent": 60.09
+    },
+    {
+      "candidate": "Paul Hodes",
+      "party": "Democratic",
+      "votes": 167545,
+      "percent": 36.85
+    },
+    {
+      "candidate": "Chris Booth",
+      "party": "Independent",
+      "votes": 9194,
+      "percent": 2.02
+    },
+    {
+      "candidate": "Ken Blevens",
+      "party": "Libertarian",
+      "votes": 4753,
+      "percent": 1.04
+    }
+  ]
+}

@@ -1,0 +1,537 @@
+{
+  "year": 2018,
+  "state": "Vermont",
+  "abbr": "VT",
+  "round": "General",
+  "caption": "United States Senate election in Vermont, 2018",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Vermont",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 10,
+  "table_total_votes": 272330,
+  "table": {
+    "caption": "United States Senate election in Vermont, 2018",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bernie Sanders (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lawrence Zupan",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Brad J. Peacock",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Russell Beste",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edward S. Gilbert, Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Folasade Adeluola",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Reid Kane",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jon Svitavsky",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Busa",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Independent hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bernie Sanders (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "183,649",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lawrence Zupan",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "74,815",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Brad J. Peacock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,665",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Russell Beste",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,763",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.02%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edward S. Gilbert, Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,244",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.82%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Folasade Adeluola",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,979",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Liberty Union",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reid Kane",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,171",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.43%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jon Svitavsky",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,130",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Busa",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "914",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "294",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "272,330",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bernie Sanders",
+      "party": "Independent",
+      "votes": 183649,
+      "percent": 67.44
+    },
+    {
+      "candidate": "Lawrence Zupan",
+      "party": "Republican",
+      "votes": 74815,
+      "percent": 27.47
+    },
+    {
+      "candidate": "Brad J. Peacock",
+      "party": "Independent",
+      "votes": 3665,
+      "percent": 1.35
+    },
+    {
+      "candidate": "Russell Beste",
+      "party": "Independent",
+      "votes": 2763,
+      "percent": 1.02
+    },
+    {
+      "candidate": "Edward S. Gilbert, Jr.",
+      "party": "Independent",
+      "votes": 2244,
+      "percent": 0.82
+    },
+    {
+      "candidate": "Folasade Adeluola",
+      "party": "Independent",
+      "votes": 1979,
+      "percent": 0.73
+    },
+    {
+      "candidate": "Reid Kane",
+      "party": "Liberty Union",
+      "votes": 1171,
+      "percent": 0.43
+    },
+    {
+      "candidate": "Jon Svitavsky",
+      "party": "Independent",
+      "votes": 1130,
+      "percent": 0.42
+    },
+    {
+      "candidate": "Bruce Busa",
+      "party": "Independent",
+      "votes": 914,
+      "percent": 0.34
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 294,
+      "percent": 0.11
+    }
+  ]
+}

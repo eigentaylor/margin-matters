@@ -1,0 +1,279 @@
+{
+  "year": 2018,
+  "state": "Virginia",
+  "abbr": "VA",
+  "round": "General",
+  "caption": "United States Senate election in Virginia, 2018 [ 135 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Virginia",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 3351373,
+  "table": {
+    "caption": "United States Senate election in Virginia, 2018 [ 135 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Kaine (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Corey Stewart",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Matt Waters",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Kaine (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,910,370",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Corey Stewart",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,374,313",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Matt Waters",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61,565",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.84%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "5,125",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,351,373",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tim Kaine",
+      "party": "Democratic",
+      "votes": 1910370,
+      "percent": 57.0
+    },
+    {
+      "candidate": "Corey Stewart",
+      "party": "Republican",
+      "votes": 1374313,
+      "percent": 41.01
+    },
+    {
+      "candidate": "Matt Waters",
+      "party": "Libertarian",
+      "votes": 61565,
+      "percent": 1.84
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 5125,
+      "percent": 0.15
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "year": 2018,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "2018 United States Senate election in Texas [ 249 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2018_United_States_Senate_election_in_Texas",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 8371655,
+  "table": {
+    "caption": "2018 United States Senate election in Texas [ 249 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Cruz (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Beto O'Rourke",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Neal Dikeman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Cruz (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,260,553",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.57%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Beto O'Rourke",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,045,632",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Neal Dikeman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65,470",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.78%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.28%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "8,371,655",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ted Cruz",
+      "party": "Republican",
+      "votes": 4260553,
+      "percent": 50.89
+    },
+    {
+      "candidate": "Beto O'Rourke",
+      "party": "Democratic",
+      "votes": 4045632,
+      "percent": 48.33
+    },
+    {
+      "candidate": "Neal Dikeman",
+      "party": "Libertarian",
+      "votes": 65470,
+      "percent": 0.78
+    }
+  ]
+}

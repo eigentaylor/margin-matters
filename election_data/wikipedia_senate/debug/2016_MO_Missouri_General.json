@@ -1,0 +1,365 @@
+{
+  "year": 2016,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "2016 United States Senate election in Missouri [ 97 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_Missouri",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 2802641,
+  "table": {
+    "caption": "2016 United States Senate election in Missouri [ 97 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roy Blunt (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jason Kander",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jonathan Dine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Johnathan McFarland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Fred Ryman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roy Blunt (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,378,458",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jason Kander",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,300,200",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.39%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+5.76%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jonathan Dine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67,738",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Johnathan McFarland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "30,743",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Fred Ryman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,407",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "95",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,802,641",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Roy Blunt",
+      "party": "Republican",
+      "votes": 1378458,
+      "percent": 49.18
+    },
+    {
+      "candidate": "Jason Kander",
+      "party": "Democratic",
+      "votes": 1300200,
+      "percent": 46.39
+    },
+    {
+      "candidate": "Jonathan Dine",
+      "party": "Libertarian",
+      "votes": 67738,
+      "percent": 2.42
+    },
+    {
+      "candidate": "Johnathan McFarland",
+      "party": "Green",
+      "votes": 30743,
+      "percent": 1.1
+    },
+    {
+      "candidate": "Fred Ryman",
+      "party": "Constitution",
+      "votes": 25407,
+      "percent": 0.91
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 95,
+      "percent": 0.03
+    }
+  ]
+}

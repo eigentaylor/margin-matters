@@ -1,0 +1,332 @@
+{
+  "year": 2022,
+  "state": "Idaho",
+  "abbr": "ID",
+  "round": "General",
+  "caption": "2022 United States Senate election in Idaho [ 35 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Idaho",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 590890,
+  "table": {
+    "caption": "2022 United States Senate election in Idaho [ 35 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Crapo (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "David Roth",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Cleveland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ray Writz",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Idaho Sierra Law",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Crapo (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "358,539",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.45%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "David Roth",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "169,808",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.74%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Cleveland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49,917",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8.45%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ray Writz",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,500",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.44%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−4.70%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Idaho Sierra Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,126",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "590,890",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike Crapo",
+      "party": "Republican",
+      "votes": 358539,
+      "percent": 60.68
+    },
+    {
+      "candidate": "David Roth",
+      "party": "Democratic",
+      "votes": 169808,
+      "percent": 28.74
+    },
+    {
+      "candidate": "Scott Cleveland",
+      "party": "Independent",
+      "votes": 49917,
+      "percent": 8.45
+    },
+    {
+      "candidate": "Ray Writz",
+      "party": "Constitution",
+      "votes": 8500,
+      "percent": 1.44
+    },
+    {
+      "candidate": "Idaho Sierra Law",
+      "party": "Libertarian",
+      "votes": 4126,
+      "percent": 0.7
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+{
+  "year": 2008,
+  "state": "Virginia",
+  "abbr": "VA",
+  "round": "General",
+  "caption": "2008 United States Senate election in Virginia [ 58 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Virginia",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 3643294,
+  "table": {
+    "caption": "2008 United States Senate election in Virginia [ 58 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Warner",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Gilmore",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Glenda Parker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Redpath",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Warner",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,369,327",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "65.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+65.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Gilmore",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,228,830",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "33.73%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−48.84%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent Greens",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Glenda Parker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "21,690",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Redpath",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,269",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "3,178",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,643,294",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Warner",
+      "party": "Democratic",
+      "votes": 2369327,
+      "percent": 65.03
+    },
+    {
+      "candidate": "Jim Gilmore",
+      "party": "Republican",
+      "votes": 1228830,
+      "percent": 33.73
+    },
+    {
+      "candidate": "Glenda Parker",
+      "party": "Independent Greens",
+      "votes": 21690,
+      "percent": 0.6
+    },
+    {
+      "candidate": "Bill Redpath",
+      "party": "Libertarian",
+      "votes": 20269,
+      "percent": 0.56
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 3178,
+      "percent": 0.09
+    }
+  ]
+}

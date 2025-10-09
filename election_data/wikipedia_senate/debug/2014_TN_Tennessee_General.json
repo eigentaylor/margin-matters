@@ -1,0 +1,648 @@
+{
+  "year": 2014,
+  "state": "Tennessee",
+  "abbr": "TN",
+  "round": "General",
+  "caption": "2014 United States Senate election in Tennessee [ 101 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Tennessee",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 13,
+  "table_total_votes": 1374065,
+  "table": {
+    "caption": "2014 United States Senate election in Tennessee [ 101 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lamar Alexander (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gordon Ball",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joe Wilmoth",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Martin Pleasant",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Emerson, Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Danny Page",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Tyler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joshua James",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bartholomew J. Phillips",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edmund L. Gauthier",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Eric Schechter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Choudhury Salekin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lamar Alexander (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "850,087",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−3.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gordon Ball",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "437,848",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "31.87%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joe Wilmoth",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36,088",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Martin Pleasant",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12,570",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Emerson, Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,157",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Danny Page",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,713",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Tyler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,759",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joshua James",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,678",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.41%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bartholomew J. Phillips",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,386",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edmund L. Gauthier",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,314",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Eric Schechter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,673",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Choudhury Salekin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "787",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "5",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,374,065",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Lamar Alexander",
+      "party": "Republican",
+      "votes": 850087,
+      "percent": 61.87
+    },
+    {
+      "candidate": "Gordon Ball",
+      "party": "Democratic",
+      "votes": 437848,
+      "percent": 31.87
+    },
+    {
+      "candidate": "Joe Wilmoth",
+      "party": "Constitution",
+      "votes": 36088,
+      "percent": 2.63
+    },
+    {
+      "candidate": "Martin Pleasant",
+      "party": "Green",
+      "votes": 12570,
+      "percent": 0.91
+    },
+    {
+      "candidate": "Tom Emerson, Jr.",
+      "party": "Independent",
+      "votes": 11157,
+      "percent": 0.81
+    },
+    {
+      "candidate": "Danny Page",
+      "party": "Independent",
+      "votes": 7713,
+      "percent": 0.56
+    },
+    {
+      "candidate": "Rick Tyler",
+      "party": "Independent",
+      "votes": 5759,
+      "percent": 0.42
+    },
+    {
+      "candidate": "Joshua James",
+      "party": "Independent",
+      "votes": 5678,
+      "percent": 0.41
+    },
+    {
+      "candidate": "Bartholomew J. Phillips",
+      "party": "Independent",
+      "votes": 2386,
+      "percent": 0.17
+    },
+    {
+      "candidate": "Edmund L. Gauthier",
+      "party": "Independent",
+      "votes": 2314,
+      "percent": 0.17
+    }
+  ]
+}

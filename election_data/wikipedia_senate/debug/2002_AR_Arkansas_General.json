@@ -1,0 +1,172 @@
+{
+  "year": 2002,
+  "state": "Arkansas",
+  "abbr": "AR",
+  "round": "General",
+  "caption": "2002 United States Senate election in Arkansas [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Arkansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 2,
+  "table": {
+    "caption": "2002 United States Senate election in Arkansas [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Pryor",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Hutchinson (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Pryor",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "435,347",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.86%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Hutchinson (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "372,909",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "808,256",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Pryor",
+      "party": "Democratic",
+      "votes": 435347,
+      "percent": 53.86
+    },
+    {
+      "candidate": "Tim Hutchinson (incumbent)",
+      "party": "Republican",
+      "votes": 372909,
+      "percent": 46.14
+    }
+  ]
+}

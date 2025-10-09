@@ -1,0 +1,428 @@
+{
+  "year": 2002,
+  "state": "Alaska",
+  "abbr": "AK",
+  "round": "General",
+  "caption": "2002 United States Senate election in Alaska [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Alaska",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 8,
+  "table": {
+    "caption": "2002 United States Senate election in Alaska [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ted Stevens (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Frank Vondersaar",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Sykes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Dore",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Leonard Karpinski",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ted Stevens (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "179,438",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "78.17%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Frank Vondersaar",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,133",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Sykes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,608",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−5.29%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independence",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Dore",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,724",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Leonard Karpinski",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,354",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "291",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "155,305",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "67.66%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.47%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "229,548",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ted Stevens (Incumbent)",
+      "party": "Republican",
+      "votes": 179438,
+      "percent": 78.17
+    },
+    {
+      "candidate": "Frank Vondersaar",
+      "party": "Democratic",
+      "votes": 24133,
+      "percent": 10.51
+    },
+    {
+      "candidate": "Jim Sykes",
+      "party": "Green",
+      "votes": 16608,
+      "percent": 7.24
+    },
+    {
+      "candidate": "Jim Dore",
+      "party": "Independence",
+      "votes": 6724,
+      "percent": 2.93
+    },
+    {
+      "candidate": "Leonard Karpinski",
+      "party": "Libertarian",
+      "votes": 2354,
+      "percent": 1.03
+    },
+    {
+      "candidate": "291",
+      "party": "Write-ins",
+      "votes": 291,
+      "percent": 0.13
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 155305,
+      "percent": 67.66
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 229548,
+      "percent": null
+    }
+  ]
+}

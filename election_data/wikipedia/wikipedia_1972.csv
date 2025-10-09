@@ -1,55 +1,55 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1972,AL,256923,728701,11918,20469,"{""John Schmitz"": 11918}",1006093
-1972,AK,32967,55349,6903,6903,"{""John Schmitz"": 6903}",95219
-1972,AZ,198540,402812,21208,52153,"{""John Schmitz"": 21208}",653505
-1972,AR,198899,445751,3016,3016,"{""John Schmitz"": 3016}",647666
-1972,CA,3475847,4602096,232554,289919,"{""John Hospers"": 980, ""John Schmitz"": 232554}",8367862
-1972,CO,329980,597189,17269,26715,"{""John Hospers"": 1111, ""John Schmitz"": 17269}",953884
-1972,CT,555498,810763,17239,18016,"{""John Schmitz"": 17239}",1384277
-1972,DE,92283,140357,2638,2876,"{""John Schmitz"": 2638}",235516
-1972,DC,127627,35226,0,568,"{""Other"": 568}",163421
-1972,FL,718117,1857759,0,7407,"{""Other"": 7407}",2583283
-1972,GA,289529,881496,812,3747,"{""John Schmitz"": 812}",1174772
-1972,HI,101409,168865,0,0,{},270274
-1972,ID,80826,199384,28869,30169,"{""John Schmitz"": 28869}",310379
-1972,IL,1913472,2788179,2471,21585,"{""John Schmitz"": 2471}",4723236
-1972,IN,708568,1405154,0,11807,"{""Other"": 11807}",2125529
-1972,IA,496206,706207,22056,23531,"{""John Schmitz"": 22056}",1225944
-1972,KS,270287,619812,21808,25996,"{""John Schmitz"": 21808}",916095
-1972,KY,371159,676446,17627,19894,"{""John Schmitz"": 17627}",1067499
-1972,LA,298142,686852,52099,66497,"{""John Schmitz"": 52099}",1051491
-1972,ME-AL,160584,256458,117,229,"{""John Hospers"": 1, ""John Schmitz"": 117}",417271
-1972,ME-01,85028,135388,0,0,{},220416
-1972,ME-02,75556,121120,0,0,{},196676
-1972,MD,505781,829305,18726,18726,"{""John Schmitz"": 18726}",1353812
-1972,MA,1332540,1112078,2877,14138,"{""John Hospers"": 43, ""John Schmitz"": 2877}",2458756
-1972,MI,1459435,1961721,63321,69169,"{""John Schmitz"": 63321}",3490325
-1972,MN,802346,898269,31407,41037,"{""John Schmitz"": 31407}",1741652
-1972,MS,126782,505125,11598,14056,"{""John Schmitz"": 11598}",645963
-1972,MO,698531,1154058,0,0,{},1852589
-1972,MT,120197,183976,13430,13430,"{""John Schmitz"": 13430}",317603
-1972,NE-AL,169991,406298,0,0,{},576289
-1972,NV,66016,115750,0,0,{},181766
-1972,NH,116435,213724,3386,3896,"{""John Schmitz"": 3386}",334055
-1972,NJ,1102211,1845502,34378,49516,"{""John Schmitz"": 34378}",2997229
-1972,NM,141084,235606,8767,9241,"{""John Schmitz"": 8767}",385931
-1972,NY,2951084,4192778,0,17968,"{""Other"": 17968}",7161830
-1972,NC,438705,1054889,25018,25018,"{""John Schmitz"": 25018}",1518612
-1972,ND,100384,174109,5646,6021,"{""John Schmitz"": 5646}",280514
-1972,OH,1558889,2441827,80067,94071,"{""John Schmitz"": 80067}",4094787
-1972,OK,247147,759025,23728,23728,"{""John Schmitz"": 23728}",1029900
-1972,OR,392760,486686,46211,48500,"{""John Schmitz"": 46211}",927946
-1972,PA,1796951,2714521,70593,80633,"{""John Schmitz"": 70593}",4592105
-1972,RI,194645,220383,25,780,"{""John Hospers"": 2, ""John Schmitz"": 25}",415808
-1972,SC,189270,478427,10166,10183,"{""John Schmitz"": 10166}",677880
-1972,SD,139945,166476,0,994,"{""Other"": 994}",307415
-1972,TN,357293,813147,30373,30742,"{""John Schmitz"": 30373}",1201182
-1972,TX,1154291,2298896,7098,19527,"{""John Schmitz"": 7098}",3472714
-1972,UT,126284,323643,28549,28549,"{""John Schmitz"": 28549}",478476
-1972,VT,68174,117149,0,1624,"{""Other"": 1624}",186947
-1972,VA,438887,988493,19721,29639,"{""John Schmitz"": 19721}",1457019
-1972,WA,568334,837135,58906,65378,"{""John Hospers"": 1537, ""John Schmitz"": 58906}",1470847
-1972,WV,277435,484964,0,0,{},762399
-1972,WI,810174,989430,47525,53286,"{""John Schmitz"": 47525}",1852890
-1972,WY,44358,100464,748,748,"{""John Schmitz"": 748}",145570
-1972,NATIONAL,29173222,47168710,1100868,1402095,"{""John Hospers"": 3674, ""John Schmitz"": 1100868}",77744027
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1972,AL,256923,728701,11918,20469,"{""John Schmitz"": 11918}",1006093,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,AK,32967,55349,6903,6903,"{""John Schmitz"": 6903}",95219,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,AZ,198540,402812,21208,52153,"{""John Schmitz"": 21208}",653505,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,AR,198899,445751,3016,3016,"{""John Schmitz"": 3016}",647666,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,CA,3475847,4602096,232554,289919,"{""John Hospers"": 980, ""John Schmitz"": 232554}",8367862,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,CO,329980,597189,17269,26715,"{""John Hospers"": 1111, ""John Schmitz"": 17269}",953884,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,CT,555498,810763,17239,18016,"{""John Schmitz"": 17239}",1384277,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,DE,92283,140357,2638,2876,"{""John Schmitz"": 2638}",235516,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,DC,127627,35226,0,568,"{""Other"": 568}",163421,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,FL,718117,1857759,0,7407,"{""Other"": 7407}",2583283,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,GA,289529,881496,812,3747,"{""John Schmitz"": 812}",1174772,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,HI,101409,168865,0,0,{},270274,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,ID,80826,199384,28869,30169,"{""John Schmitz"": 28869}",310379,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,IL,1913472,2788179,2471,21585,"{""John Schmitz"": 2471}",4723236,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,IN,708568,1405154,0,11807,"{""Other"": 11807}",2125529,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,IA,496206,706207,22056,23531,"{""John Schmitz"": 22056}",1225944,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,KS,270287,619812,21808,25996,"{""John Schmitz"": 21808}",916095,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,KY,371159,676446,17627,19894,"{""John Schmitz"": 17627}",1067499,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,LA,298142,686852,52099,66497,"{""John Schmitz"": 52099}",1051491,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,ME-AL,160584,256458,117,229,"{""John Hospers"": 1, ""John Schmitz"": 117}",417271,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,ME-01,85028,135388,0,0,{},220416,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,ME-02,75556,121120,0,0,{},196676,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MD,505781,829305,18726,18726,"{""John Schmitz"": 18726}",1353812,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MA,1332540,1112078,2877,14138,"{""John Hospers"": 43, ""John Schmitz"": 2877}",2458756,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MI,1459435,1961721,63321,69169,"{""John Schmitz"": 63321}",3490325,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MN,802346,898269,31407,41037,"{""John Schmitz"": 31407}",1741652,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MS,126782,505125,11598,14056,"{""John Schmitz"": 11598}",645963,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MO,698531,1154058,0,0,{},1852589,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,MT,120197,183976,13430,13430,"{""John Schmitz"": 13430}",317603,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NE-AL,169991,406298,0,0,{},576289,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NV,66016,115750,0,0,{},181766,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NH,116435,213724,3386,3896,"{""John Schmitz"": 3386}",334055,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NJ,1102211,1845502,34378,49516,"{""John Schmitz"": 34378}",2997229,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NM,141084,235606,8767,9241,"{""John Schmitz"": 8767}",385931,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NY,2951084,4192778,0,17968,"{""Other"": 17968}",7161830,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NC,438705,1054889,25018,25018,"{""John Schmitz"": 25018}",1518612,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,ND,100384,174109,5646,6021,"{""John Schmitz"": 5646}",280514,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,OH,1558889,2441827,80067,94071,"{""John Schmitz"": 80067}",4094787,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,OK,247147,759025,23728,23728,"{""John Schmitz"": 23728}",1029900,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,OR,392760,486686,46211,48500,"{""John Schmitz"": 46211}",927946,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,PA,1796951,2714521,70593,80633,"{""John Schmitz"": 70593}",4592105,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,RI,194645,220383,25,780,"{""John Hospers"": 2, ""John Schmitz"": 25}",415808,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,SC,189270,478427,10166,10183,"{""John Schmitz"": 10166}",677880,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,SD,139945,166476,0,994,"{""Other"": 994}",307415,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,TN,357293,813147,30373,30742,"{""John Schmitz"": 30373}",1201182,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,TX,1154291,2298896,7098,19527,"{""John Schmitz"": 7098}",3472714,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,UT,126284,323643,28549,28549,"{""John Schmitz"": 28549}",478476,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,VT,68174,117149,0,1624,"{""Other"": 1624}",186947,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,VA,438887,988493,19721,29639,"{""John Schmitz"": 19721}",1457019,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,WA,568334,837135,58906,65378,"{""John Hospers"": 1537, ""John Schmitz"": 58906}",1470847,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,WV,277435,484964,0,0,{},762399,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,WI,810174,989430,47525,53286,"{""John Schmitz"": 47525}",1852890,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,WY,44358,100464,748,748,"{""John Schmitz"": 748}",145570,https://en.wikipedia.org/wiki/1972_United_States_presidential_election
+1972,NATIONAL,29173222,47168710,1100868,1402095,"{""John Hospers"": 3674, ""John Schmitz"": 1100868}",77744027,https://en.wikipedia.org/wiki/1972_United_States_presidential_election

@@ -1,0 +1,418 @@
+{
+  "year": 2008,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "2008 United States Senate election in New Jersey",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_New_Jersey",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 3482445,
+  "table": {
+    "caption": "2008 United States Senate election in New Jersey",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Frank Lautenberg (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dick Zimmer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daryl Mikell Brooks",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jason Scheurer",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J.M. Carter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeff Boss",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sara Lobman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Frank Lautenberg (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,951,218",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dick Zimmer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,461,025",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "41.95%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daryl Mikell Brooks",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20,920",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jason Scheurer",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,810",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.54%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.05",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J.M. Carter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,935",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeff Boss",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "10,345",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sara Lobman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9,187",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,482,445",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Frank Lautenberg",
+      "party": "Democratic",
+      "votes": 1951218,
+      "percent": 56.03
+    },
+    {
+      "candidate": "Dick Zimmer",
+      "party": "Republican",
+      "votes": 1461025,
+      "percent": 41.95
+    },
+    {
+      "candidate": "Daryl Mikell Brooks",
+      "party": "Independent",
+      "votes": 20920,
+      "percent": 0.6
+    },
+    {
+      "candidate": "Jason Scheurer",
+      "party": "Libertarian",
+      "votes": 18810,
+      "percent": 0.54
+    },
+    {
+      "candidate": "J.M. Carter",
+      "party": "Independent",
+      "votes": 15935,
+      "percent": 0.46
+    },
+    {
+      "candidate": "Jeff Boss",
+      "party": "Independent",
+      "votes": 10345,
+      "percent": 0.3
+    },
+    {
+      "candidate": "Sara Lobman",
+      "party": "Socialist Workers",
+      "votes": 9187,
+      "percent": 0.26
+    }
+  ]
+}

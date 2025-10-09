@@ -1,0 +1,423 @@
+{
+  "year": 2004,
+  "state": "Iowa",
+  "abbr": "IA",
+  "round": "General",
+  "caption": "United States Senate election in Iowa, 2004 [ 3 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Iowa",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table_total_votes": 1479228,
+  "table": {
+    "caption": "United States Senate election in Iowa, 2004 [ 3 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Chuck Grassley (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Arthur A. Small",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Christy Ann Welty",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daryl A. Northrop",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edwin Fruit",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Chuck Grassley (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,038,175",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "70.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.77%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Arthur A. Small",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "412,365",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "27.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.62%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Christy Ann Welty",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,218",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daryl A. Northrop",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,121",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.75%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edwin Fruit",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,874",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "475",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "625,810",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "42.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.39%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,479,228",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Chuck Grassley",
+      "party": "Republican",
+      "votes": 1038175,
+      "percent": 70.18
+    },
+    {
+      "candidate": "Arthur A. Small",
+      "party": "Democratic",
+      "votes": 412365,
+      "percent": 27.88
+    },
+    {
+      "candidate": "Christy Ann Welty",
+      "party": "Libertarian",
+      "votes": 15218,
+      "percent": 1.03
+    },
+    {
+      "candidate": "Daryl A. Northrop",
+      "party": "Green",
+      "votes": 11121,
+      "percent": 0.75
+    },
+    {
+      "candidate": "Edwin Fruit",
+      "party": "Socialist Workers",
+      "votes": 1874,
+      "percent": 0.13
+    },
+    {
+      "candidate": "475",
+      "party": "Write-ins",
+      "votes": 475,
+      "percent": 0.03
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 625810,
+      "percent": 42.31
+    }
+  ]
+}

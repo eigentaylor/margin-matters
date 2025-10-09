@@ -3,7 +3,7 @@ import shutil
 import re
 from pathlib import Path
 
-from .config import CSV_PATH, OUT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
+from .config import CSV_PATH, SENATE_CSV_PATH, OUT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
 from .io_utils import ensure_dirs, write_text, read_csv
 from .pages import build_pages, make_data_page
 from .templates import FAVICON_SVG
@@ -24,6 +24,19 @@ def build_site():
                 shutil.copy2(item, PLOTS_DST / item.name)
 
     rows = read_csv(CSV_PATH)
+    try:
+        senate_rows = read_csv(SENATE_CSV_PATH)
+    except FileNotFoundError:
+        senate_rows = []
+
+    senate_abbr_remap = {
+        "ME": "ME-AL",
+        "NE": "NE-AL",
+    }
+    for row in senate_rows:
+        abbr = str(row.get("abbr", "")).upper()
+        if abbr in senate_abbr_remap:
+            row["abbr"] = senate_abbr_remap[abbr]
     
     # Add computed margin_breakdown column to each row
     for row in rows:
@@ -44,8 +57,23 @@ def build_site():
                 row["margin_breakdown"] = ""
         else:
             row["margin_breakdown"] = ""
+
+    for row in senate_rows:
+        d_share = row.get("D_share", None)
+        r_share = row.get("R_share", None)
+        third_share = row.get("top_third_party_share", None)
+        try:
+            d_pct = float(d_share) * 100 if d_share is not None else None
+            r_pct = float(r_share) * 100 if r_share is not None else None
+            third_pct = float(third_share) * 100 if third_share is not None else 0.0
+            if d_pct is not None and r_pct is not None:
+                row["margin_breakdown"] = f"({d_pct:.1f}%, {r_pct:.1f}%, {third_pct:.1f}%)"
+            else:
+                row["margin_breakdown"] = ""
+        except (ValueError, TypeError):
+            row["margin_breakdown"] = ""
     
-    states = build_pages(rows)
+    states = build_pages(rows, senate_rows)
     # # Build State Pages index
     # try:
     #     make_state_pages(states)
@@ -56,6 +84,12 @@ def build_site():
         shutil.copy2(CSV_PATH, OUT_DIR / "presidential_margins.csv")
     except Exception:
         pass
+
+    if senate_rows:
+        try:
+            shutil.copy2(SENATE_CSV_PATH, OUT_DIR / "senate_margins.csv")
+        except Exception:
+            pass
 
     try:
         make_data_page(rows)

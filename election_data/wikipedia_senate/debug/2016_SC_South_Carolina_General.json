@@ -1,0 +1,332 @@
+{
+  "year": 2016,
+  "state": "South Carolina",
+  "abbr": "SC",
+  "round": "General",
+  "caption": "United States Senate election in South Carolina, 2016 [ 26 ] [ 27 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2016_United_States_Senate_election_in_South_Carolina",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 2049893,
+  "table": {
+    "caption": "United States Senate election in South Carolina, 2016 [ 26 ] [ 27 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tim Scott (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas Dixon [ 28 ]",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bill Bledsoe [ 29 ]",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Scarborough",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Write-ins",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tim Scott (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,241,609",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.57%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas Dixon [ 28 ]",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "757,022",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.93%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bill Bledsoe [ 29 ]",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "37,482",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Scarborough",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,923",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.17%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-ins",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,857",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.05%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,049,893",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tim Scott",
+      "party": "Republican",
+      "votes": 1241609,
+      "percent": 60.57
+    },
+    {
+      "candidate": "Thomas Dixon",
+      "party": "Democratic",
+      "votes": 757022,
+      "percent": 36.93
+    },
+    {
+      "candidate": "Bill Bledsoe",
+      "party": "Libertarian",
+      "votes": 37482,
+      "percent": 1.83
+    },
+    {
+      "candidate": "Michael Scarborough",
+      "party": "American",
+      "votes": 11923,
+      "percent": 0.58
+    },
+    {
+      "candidate": "Write-ins",
+      "party": "n/a",
+      "votes": 1857,
+      "percent": 0.09
+    }
+  ]
+}

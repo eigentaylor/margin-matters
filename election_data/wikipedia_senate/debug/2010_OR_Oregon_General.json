@@ -1,0 +1,320 @@
+{
+  "year": 2010,
+  "state": "Oregon",
+  "abbr": "OR",
+  "round": "General",
+  "caption": "General election results [ 33 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Oregon",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 1442588,
+  "table": {
+    "caption": "General election results [ 33 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ronald Wyden (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Huffman",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Cronk",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marc Delphine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Staggenborg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ronald Wyden (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "825,507",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Huffman",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "566,199",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.25%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Working Families",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Cronk",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,940",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.31%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marc Delphine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,028",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.11%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Progressive",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Staggenborg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,466",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,448",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,442,588",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 4,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Ronald Wyden",
+      "party": "Democratic",
+      "votes": 825507,
+      "percent": 57.22
+    },
+    {
+      "candidate": "Jim Huffman",
+      "party": "Republican",
+      "votes": 566199,
+      "percent": 39.25
+    },
+    {
+      "candidate": "Bruce Cronk",
+      "party": "Working Families",
+      "votes": 18940,
+      "percent": 1.31
+    },
+    {
+      "candidate": "Marc Delphine",
+      "party": "Libertarian",
+      "votes": 16028,
+      "percent": 1.11
+    },
+    {
+      "candidate": "Rick Staggenborg",
+      "party": "Progressive",
+      "votes": 14466,
+      "percent": 1.0
+    },
+    {
+      "candidate": "1,448",
+      "party": "Write-in",
+      "votes": 1448,
+      "percent": 0.1
+    }
+  ]
+}

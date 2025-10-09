@@ -1,0 +1,552 @@
+{
+  "year": 2006,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "United States Senate election in New Jersey, 2006 [ 121 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_New_Jersey",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 11,
+  "table_total_votes": 2250070,
+  "table": {
+    "caption": "United States Senate election in New Jersey, 2006 [ 121 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Menendez (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Thomas Kean, Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Len Flynn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Edward Forchion",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J.M. Carter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "N. Leonard Smith",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Daryl Brooks",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Angela Lariscy",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gregory Pason",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Menendez (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,200,843",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "53.37%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Thomas Kean, Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "997,775",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.76%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Len Flynn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "14,637",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.65%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.41%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marijuana",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Edward Forchion",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11,593",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J.M. Carter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,918",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N. Leonard Smith",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,243",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Daryl Brooks",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,138",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.23%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Angela Lariscy",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,433",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.15%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.03",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gregory Pason",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,490",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "203,068",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "9.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,250,070",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.47%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.26%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Bob Menendez",
+      "party": "Democratic",
+      "votes": 1200843,
+      "percent": 53.37
+    },
+    {
+      "candidate": "Thomas Kean, Jr.",
+      "party": "Republican",
+      "votes": 997775,
+      "percent": 44.34
+    },
+    {
+      "candidate": "Len Flynn",
+      "party": "Libertarian",
+      "votes": 14637,
+      "percent": 0.65
+    },
+    {
+      "candidate": "Edward Forchion",
+      "party": "Marijuana",
+      "votes": 11593,
+      "percent": 0.52
+    },
+    {
+      "candidate": "J.M. Carter",
+      "party": "Independent",
+      "votes": 7918,
+      "percent": 0.35
+    },
+    {
+      "candidate": "N. Leonard Smith",
+      "party": "Independent",
+      "votes": 6243,
+      "percent": 0.28
+    },
+    {
+      "candidate": "Daryl Brooks",
+      "party": "Independent",
+      "votes": 5138,
+      "percent": 0.23
+    },
+    {
+      "candidate": "Angela Lariscy",
+      "party": "Socialist Workers",
+      "votes": 3433,
+      "percent": 0.15
+    },
+    {
+      "candidate": "Gregory Pason",
+      "party": "Socialist",
+      "votes": 2490,
+      "percent": 0.11
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 203068,
+      "percent": 9.03
+    }
+  ]
+}

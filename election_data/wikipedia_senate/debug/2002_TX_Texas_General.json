@@ -1,0 +1,353 @@
+{
+  "year": 2002,
+  "state": "Texas",
+  "abbr": "TX",
+  "round": "General",
+  "caption": "General election results [ 13 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Texas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "General election results [ 13 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "John Cornyn",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Ron Kirk",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Jameson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roy Williams",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James W. Wright",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "John Cornyn",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,496,243",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Ron Kirk",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,955,758",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.61%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Jameson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35,538",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roy Williams",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,051",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.55%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James W. Wright",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,422",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "540,485",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11.97%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.13%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "4,514,012",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "John Cornyn",
+      "party": "Republican",
+      "votes": 2496243,
+      "percent": 55.3
+    },
+    {
+      "candidate": "Ron Kirk",
+      "party": "Democratic",
+      "votes": 1955758,
+      "percent": 43.33
+    },
+    {
+      "candidate": "Scott Jameson",
+      "party": "Libertarian",
+      "votes": 35538,
+      "percent": 0.79
+    },
+    {
+      "candidate": "Roy Williams",
+      "party": "Green",
+      "votes": 25051,
+      "percent": 0.55
+    },
+    {
+      "candidate": "James W. Wright",
+      "party": "Write-in",
+      "votes": 1422,
+      "percent": 0.03
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 540485,
+      "percent": 11.97
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 4514012,
+      "percent": null
+    }
+  ]
+}

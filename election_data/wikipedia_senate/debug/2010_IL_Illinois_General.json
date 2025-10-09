@@ -1,0 +1,317 @@
+{
+  "year": 2010,
+  "state": "Illinois",
+  "abbr": "IL",
+  "round": "General",
+  "caption": "United States Senate election in Illinois, 2010 [ 59 ] [ 60 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Illinois",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 3704473,
+  "table": {
+    "caption": "United States Senate election in Illinois, 2010 [ 59 ] [ 60 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Kirk",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alexi Giannoulias",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "LeAlan Jones",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Michael Labno",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Kirk",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,778,698",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+20.96%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alexi Giannoulias",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,719,478",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "46.42%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−23.55%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "LeAlan Jones",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "117,914",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.18%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Michael Labno",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "87,247",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.01%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,136",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-0.03%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,704,473",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mark Kirk",
+      "party": "Republican",
+      "votes": 1778698,
+      "percent": 48.01
+    },
+    {
+      "candidate": "Alexi Giannoulias",
+      "party": "Democratic",
+      "votes": 1719478,
+      "percent": 46.42
+    },
+    {
+      "candidate": "LeAlan Jones",
+      "party": "Green",
+      "votes": 117914,
+      "percent": 3.18
+    },
+    {
+      "candidate": "Michael Labno",
+      "party": "Libertarian",
+      "votes": 87247,
+      "percent": 2.36
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1136,
+      "percent": 0.03
+    }
+  ]
+}

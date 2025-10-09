@@ -1,0 +1,236 @@
+{
+  "year": 2014,
+  "state": "New Hampshire",
+  "abbr": "NH",
+  "round": "General",
+  "caption": "United States Senate election in New Hampshire, 2014 [ 109 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_New_Hampshire",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table_total_votes": 488159,
+  "table": {
+    "caption": "United States Senate election in New Hampshire, 2014 [ 109 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jeanne Shaheen (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Brown",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jeanne Shaheen (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "251,184",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "51.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.16%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Brown",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "235,347",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.21%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.93%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "1,628",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.33%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "488,159",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jeanne Shaheen",
+      "party": "Democratic",
+      "votes": 251184,
+      "percent": 51.46
+    },
+    {
+      "candidate": "Scott Brown",
+      "party": "Republican",
+      "votes": 235347,
+      "percent": 48.21
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 1628,
+      "percent": 0.33
+    }
+  ]
+}

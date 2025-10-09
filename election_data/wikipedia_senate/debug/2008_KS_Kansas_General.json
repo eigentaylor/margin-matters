@@ -1,0 +1,337 @@
+{
+  "year": 2008,
+  "state": "Kansas",
+  "abbr": "KS",
+  "round": "General",
+  "caption": "General election results [ 16 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2008_United_States_Senate_election_in_Kansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 1210690,
+  "table": {
+    "caption": "General election results [ 16 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pat Roberts (Incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Slattery",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Randall Hodgkinson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Joseph L. Martin",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pat Roberts (Incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "727,121",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "60.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−22.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Slattery",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "441,399",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "36.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+36.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Randall Hodgkinson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "25,727",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−6.98%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Joseph L. Martin",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,443",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.36%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.02%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "285,722",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "23.60%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−49.82%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,210,690",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Pat Roberts",
+      "party": "Republican",
+      "votes": 727121,
+      "percent": 60.06
+    },
+    {
+      "candidate": "Jim Slattery",
+      "party": "Democratic",
+      "votes": 441399,
+      "percent": 36.46
+    },
+    {
+      "candidate": "Randall Hodgkinson",
+      "party": "Libertarian",
+      "votes": 25727,
+      "percent": 2.12
+    },
+    {
+      "candidate": "Joseph L. Martin",
+      "party": "Reform",
+      "votes": 16443,
+      "percent": 1.36
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 285722,
+      "percent": 23.6
+    }
+  ]
+}

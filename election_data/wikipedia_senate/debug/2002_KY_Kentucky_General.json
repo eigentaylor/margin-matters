@@ -1,0 +1,235 @@
+{
+  "year": 2002,
+  "state": "Kentucky",
+  "abbr": "KY",
+  "round": "General",
+  "caption": "General election results [ 4 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2002_United_States_Senate_election_in_Kentucky",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 3,
+  "table": {
+    "caption": "General election results [ 4 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mitch McConnell (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lois Combs Weinberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mitch McConnell (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "731,679",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64.68%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+9.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lois Combs Weinberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "399,634",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.52%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "332,045",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.35%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+16.74%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,131,313",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mitch McConnell (incumbent)",
+      "party": "Republican",
+      "votes": 731679,
+      "percent": 64.68
+    },
+    {
+      "candidate": "Lois Combs Weinberg",
+      "party": "Democratic",
+      "votes": 399634,
+      "percent": 35.32
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 332045,
+      "percent": 29.35
+    }
+  ]
+}

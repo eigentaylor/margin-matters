@@ -1,0 +1,610 @@
+{
+  "year": 2000,
+  "state": "New Jersey",
+  "abbr": "NJ",
+  "round": "General",
+  "caption": "General election results [ 44 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_New_Jersey",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 12,
+  "table": {
+    "caption": "General election results [ 44 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jon Corzine",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bob Franks",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Afran",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Pat DiNizio",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Emerson Ellett",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dennis A. Breen",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J.M. Carter",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lorraine LaNeve",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Gregory Pason",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nancy Rosenstock",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "George Gostigian",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jon Corzine",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,511,237",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "50.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.18",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bob Franks",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,420,267",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.10%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Afran",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32,841",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Reform",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Pat DiNizio",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "19,312",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Emerson Ellett",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,241",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.24%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+.44%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dennis A. Breen",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,061",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Trust in God",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J.M. Carter",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,657",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.19%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Conservative",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lorraine LaNeve",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,836",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.13%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Gregory Pason",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,365",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.35",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Socialist Workers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nancy Rosenstock",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,309",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.11%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "God Bless Jersey",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "George Gostigian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,536",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "90,970",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−.26%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,015,662",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Jon Corzine",
+      "party": "Democratic",
+      "votes": 1511237,
+      "percent": 50.11
+    },
+    {
+      "candidate": "Bob Franks",
+      "party": "Republican",
+      "votes": 1420267,
+      "percent": 47.1
+    },
+    {
+      "candidate": "Bruce Afran",
+      "party": "Green",
+      "votes": 32841,
+      "percent": 1.09
+    },
+    {
+      "candidate": "Pat DiNizio",
+      "party": "Reform",
+      "votes": 19312,
+      "percent": 0.64
+    },
+    {
+      "candidate": "Emerson Ellett",
+      "party": "Libertarian",
+      "votes": 7241,
+      "percent": 0.24
+    },
+    {
+      "candidate": "Dennis A. Breen",
+      "party": "Independent",
+      "votes": 6061,
+      "percent": 0.2
+    },
+    {
+      "candidate": "J.M. Carter",
+      "party": "Trust in God",
+      "votes": 5657,
+      "percent": 0.19
+    },
+    {
+      "candidate": "Lorraine LaNeve",
+      "party": "Conservative",
+      "votes": 3836,
+      "percent": 0.13
+    },
+    {
+      "candidate": "Gregory Pason",
+      "party": "Socialist",
+      "votes": 3365,
+      "percent": 0.11
+    },
+    {
+      "candidate": "Nancy Rosenstock",
+      "party": "Socialist Workers",
+      "votes": 3309,
+      "percent": 0.11
+    }
+  ]
+}

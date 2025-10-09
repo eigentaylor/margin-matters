@@ -1,0 +1,294 @@
+{
+  "year": 2004,
+  "state": "Georgia",
+  "abbr": "GA",
+  "round": "General",
+  "caption": "2004 United States Senate election, Georgia [ 11 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2004_United_States_Senate_election_in_Georgia",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 3220951,
+  "table": {
+    "caption": "2004 United States Senate election, Georgia [ 11 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Johnny Isakson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Denise Majette",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Allen Buckley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Johnny Isakson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,864,205",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "57.88%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+19.97%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Denise Majette",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,287,695",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−18.22%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Allen Buckley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "69,051",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+2.14%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "576,510",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17.90%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "3,220,951",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Johnny Isakson",
+      "party": "Republican",
+      "votes": 1864205,
+      "percent": 57.88
+    },
+    {
+      "candidate": "Denise Majette",
+      "party": "Democratic",
+      "votes": 1287695,
+      "percent": 39.98
+    },
+    {
+      "candidate": "Allen Buckley",
+      "party": "Libertarian",
+      "votes": 69051,
+      "percent": 2.14
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 576510,
+      "percent": 17.9
+    }
+  ]
+}

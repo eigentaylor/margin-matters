@@ -1,0 +1,317 @@
+{
+  "year": 2006,
+  "state": "Missouri",
+  "abbr": "MO",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_Missouri",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 2128459,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Claire McCaskill",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Jim Talent (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Frank Gilmour",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lydia Lewis",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Claire McCaskill",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,055,255",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "49.58%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+0.91%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Jim Talent (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,006,941",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47.31%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−2.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Frank Gilmour",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "47,792",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.25%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.27%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Progressive Party",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lydia Lewis",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "18,383",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.86%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "88",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "2,128,459",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Claire McCaskill",
+      "party": "Democratic",
+      "votes": 1055255,
+      "percent": 49.58
+    },
+    {
+      "candidate": "Jim Talent",
+      "party": "Republican",
+      "votes": 1006941,
+      "percent": 47.31
+    },
+    {
+      "candidate": "Frank Gilmour",
+      "party": "Libertarian",
+      "votes": 47792,
+      "percent": 2.25
+    },
+    {
+      "candidate": "Lydia Lewis",
+      "party": "Progressive Party",
+      "votes": 18383,
+      "percent": 0.86
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 88,
+      "percent": 0.0
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+{
+  "year": 2014,
+  "state": "Arkansas",
+  "abbr": "AR",
+  "round": "General",
+  "caption": "United States Senate election in Arkansas, 2014 [ 90 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2014_United_States_Senate_election_in_Arkansas",
+  "class": "II",
+  "race_type": "regular",
+  "parsed_rows": 5,
+  "table_total_votes": 847505,
+  "table": {
+    "caption": "United States Senate election in Arkansas, 2014 [ 90 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Cotton",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Pryor (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Nathan LaFrance",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark Swaney",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Cotton",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "478,819",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "56.50%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Pryor (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "334,174",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.43%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−40.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Nathan LaFrance",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "17,210",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2.03%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Green",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark Swaney",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "16,797",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.98%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−18.49%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "505",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.06%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "847,505",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican gain from Democratic",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Cotton",
+      "party": "Republican",
+      "votes": 478819,
+      "percent": 56.5
+    },
+    {
+      "candidate": "Mark Pryor",
+      "party": "Democratic",
+      "votes": 334174,
+      "percent": 39.43
+    },
+    {
+      "candidate": "Nathan LaFrance",
+      "party": "Libertarian",
+      "votes": 17210,
+      "percent": 2.03
+    },
+    {
+      "candidate": "Mark Swaney",
+      "party": "Green",
+      "votes": 16797,
+      "percent": 1.98
+    },
+    {
+      "candidate": "Write-in",
+      "party": "Write-in",
+      "votes": 505,
+      "percent": 0.06
+    }
+  ]
+}

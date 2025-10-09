@@ -1,0 +1,294 @@
+{
+  "year": 2010,
+  "state": "Utah",
+  "abbr": "UT",
+  "round": "General",
+  "caption": "United States Senate election in Utah, 2010 [ 38 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Utah",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 4,
+  "table_total_votes": 633801,
+  "table": {
+    "caption": "United States Senate election in Utah, 2010 [ 38 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mike Lee",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sam Granato",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Scott Bradley",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mike Lee",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "390,179",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "61.56%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−7.18%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sam Granato",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "207,685",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "32.77%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+4.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Scott Bradley",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "35,937",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5.67%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.78%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "182,494",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "28.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "633,801",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Mike Lee",
+      "party": "Republican",
+      "votes": 390179,
+      "percent": 61.56
+    },
+    {
+      "candidate": "Sam Granato",
+      "party": "Democratic",
+      "votes": 207685,
+      "percent": 32.77
+    },
+    {
+      "candidate": "Scott Bradley",
+      "party": "Constitution",
+      "votes": 35937,
+      "percent": 5.67
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 182494,
+      "percent": 28.79
+    }
+  ]
+}

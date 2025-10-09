@@ -1,0 +1,365 @@
+{
+  "year": 2022,
+  "state": "Nevada",
+  "abbr": "NV",
+  "round": "General",
+  "caption": "2022 United States Senate election in Nevada [ 181 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Nevada",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 1020850,
+  "table": {
+    "caption": "2022 United States Senate election in Nevada [ 181 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Catherine Cortez Masto (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Adam Laxalt",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barry Lindemann",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Neil Scott",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Barry Rubinson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Democratic hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Catherine Cortez Masto (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "498,316",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.81%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+1.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Adam Laxalt",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "490,388",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.04%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+3.37%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "None of These Candidates",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "12,441",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.22%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "-2.59%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barry Lindemann",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "8,075",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.79%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Neil Scott",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "6,422",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.63%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent American",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Barry Rubinson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "5,208",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.51%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.04%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "1,020,850",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.0%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Catherine Cortez Masto",
+      "party": "Democratic",
+      "votes": 498316,
+      "percent": 48.81
+    },
+    {
+      "candidate": "Adam Laxalt",
+      "party": "Republican",
+      "votes": 490388,
+      "percent": 48.04
+    },
+    {
+      "candidate": "None of These Candidates",
+      "party": "None of These Candidates",
+      "votes": 12441,
+      "percent": 1.22
+    },
+    {
+      "candidate": "Barry Lindemann",
+      "party": "Independent",
+      "votes": 8075,
+      "percent": 0.79
+    },
+    {
+      "candidate": "Neil Scott",
+      "party": "Libertarian",
+      "votes": 6422,
+      "percent": 0.63
+    },
+    {
+      "candidate": "Barry Rubinson",
+      "party": "Independent American",
+      "votes": 5208,
+      "percent": 0.51
+    }
+  ]
+}

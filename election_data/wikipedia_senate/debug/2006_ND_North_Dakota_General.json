@@ -1,0 +1,343 @@
+{
+  "year": 2006,
+  "state": "North Dakota",
+  "abbr": "ND",
+  "round": "General",
+  "caption": "General election results",
+  "source_url": "https://en.wikipedia.org/wiki/2006_United_States_Senate_election_in_North_Dakota",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 6,
+  "table_total_votes": 218154,
+  "table": {
+    "caption": "General election results",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kent Conrad (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Dwight Grotberg",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Roland Riemers",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "James Germalic",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kent Conrad (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "150,146",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "68.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+7.46%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Dwight Grotberg",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "64,417",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−9.10%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Roland Riemers",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,194",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.01%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "James Germalic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,395",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.64%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "n/a",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "85,729",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "39.30%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+16.56%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "218,154",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "44.5%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic–NPL hold",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+8.3",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Kent Conrad",
+      "party": "Democratic–NPL",
+      "votes": 150146,
+      "percent": 68.83
+    },
+    {
+      "candidate": "Dwight Grotberg",
+      "party": "Republican",
+      "votes": 64417,
+      "percent": 29.53
+    },
+    {
+      "candidate": "Roland Riemers",
+      "party": "Independent",
+      "votes": 2194,
+      "percent": 1.01
+    },
+    {
+      "candidate": "James Germalic",
+      "party": "Independent",
+      "votes": 1395,
+      "percent": 0.64
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 85729,
+      "percent": 39.3
+    },
+    {
+      "candidate": "Democratic–NPL hold",
+      "party": "Democratic–NPL hold",
+      "votes": 0,
+      "percent": 8.3
+    }
+  ]
+}

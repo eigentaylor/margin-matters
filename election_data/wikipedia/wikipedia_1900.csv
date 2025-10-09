@@ -1,47 +1,47 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1900,AL,97129,55612,4188,6951,"{""John Woolley"": 2763, ""Wharton"": 4188}",159692
-1900,AR,81142,44800,972,1924,"{""John Woolley"": 584, ""Wharton"": 972}",127866
-1900,CA,124985,164755,7554,12578,"{""John Woolley"": 5024, ""Joseph F. Malloney"": 7554}",302318
-1900,CO,122733,93072,3790,5603,"{""John Woolley"": 3790, ""Joseph F. Malloney"": 684, ""Wharton"": 389}",221408
-1900,CT,74014,102572,1617,3609,"{""John Woolley"": 1617, ""Joseph F. Malloney"": 908}",180195
-1900,DE,18852,22535,546,602,"{""John Woolley"": 546}",41989
-1900,FL,28273,7355,2244,4021,"{""John Woolley"": 2244, ""Wharton"": 1143}",39649
-1900,GA,81180,34260,4568,5970,"{""John Woolley"": 1402, ""Wharton"": 4568}",121410
-1900,ID,29414,27198,857,1302,"{""John Woolley"": 857, ""Wharton"": 445}",57914
-1900,IL,503061,597985,17626,30851,"{""John Woolley"": 17626, ""Joseph F. Malloney"": 1373, ""Wharton"": 1141}",1131897
-1900,IN,309584,336063,13718,18447,"{""John Woolley"": 13718, ""Joseph F. Malloney"": 663, ""Wharton"": 1438}",664094
-1900,IA,209265,307808,9502,13282,"{""John Woolley"": 9502, ""Joseph F. Malloney"": 259, ""Wharton"": 613}",530355
-1900,KS,162601,185955,3605,5210,"{""John Woolley"": 3605}",353766
-1900,KY,235126,227132,2890,6007,"{""John Woolley"": 2890, ""Joseph F. Malloney"": 390, ""Wharton"": 1961}",468265
-1900,LA,53668,14234,0,4,"{""Other"": 4}",67906
-1900,ME-AL,36822,65412,2581,3459,"{""John Woolley"": 2581}",105693
-1900,MD,122238,136185,4574,6011,"{""John Woolley"": 4574, ""Joseph F. Malloney"": 388}",264434
-1900,MA,156997,238866,6202,18941,"{""John Woolley"": 6202, ""Joseph F. Malloney"": 2599}",414804
-1900,MI,211685,316269,11859,16425,"{""John Woolley"": 11859, ""Joseph F. Malloney"": 837, ""Wharton"": 903}",544379
-1900,MN,112901,190461,8555,12949,"{""John Woolley"": 8555, ""Joseph F. Malloney"": 1329}",316311
-1900,MS,51706,5707,1642,1642,"{""Wharton"": 1642}",59055
-1900,MO,351922,314092,5965,17642,"{""John Woolley"": 5965, ""Joseph F. Malloney"": 1294, ""Wharton"": 4244}",683656
-1900,MT,37311,25409,306,1136,"{""John Woolley"": 306, ""Joseph F. Malloney"": 119}",63856
-1900,NE-AL,114013,121835,3655,5582,"{""John Woolley"": 3655, ""Wharton"": 1104}",241430
-1900,NV,6347,3849,0,0,{},10196
-1900,NH,35489,54799,1270,2076,"{""John Woolley"": 1270}",92364
-1900,NJ,164808,221707,7183,14535,"{""John Woolley"": 7183, ""Joseph F. Malloney"": 2074, ""Wharton"": 669}",401050
-1900,NY,678462,822013,22077,47567,"{""John Woolley"": 22077, ""Joseph F. Malloney"": 12621}",1548042
-1900,NC,157733,132997,990,1788,"{""John Woolley"": 990, ""Wharton"": 798}",292518
-1900,ND,20531,35898,731,1362,"{""John Woolley"": 731, ""Wharton"": 111}",57791
-1900,OH,474882,543918,10203,21273,"{""John Woolley"": 10203, ""Joseph F. Malloney"": 1688, ""Wharton"": 251}",1040073
-1900,OR,32810,46172,2536,4269,"{""John Woolley"": 2536, ""Wharton"": 269}",83251
-1900,PA,424232,712665,27908,36313,"{""John Woolley"": 27908, ""Joseph F. Malloney"": 2936, ""Wharton"": 638}",1173210
-1900,RI,19812,33784,1529,2952,"{""John Woolley"": 1529, ""Joseph F. Malloney"": 1423}",56548
-1900,SC,47233,3579,0,0,{},50812
-1900,SD,39544,54530,1542,2050,"{""John Woolley"": 1542, ""Wharton"": 339}",96124
-1900,TN,145240,123108,3844,5512,"{""John Woolley"": 3844, ""Wharton"": 1322}",273860
-1900,TX,267432,130641,20981,25633,"{""John Woolley"": 2644, ""Joseph F. Malloney"": 162, ""Wharton"": 20981}",423706
-1900,UT,45006,47139,209,1044,"{""John Woolley"": 209, ""Joseph F. Malloney"": 106}",93189
-1900,VT,12849,42569,383,794,"{""John Woolley"": 383, ""Wharton"": 367}",56212
-1900,VA,146079,115769,2130,2360,"{""John Woolley"": 2130, ""Joseph F. Malloney"": 167, ""Wharton"": 63}",264208
-1900,WA,44833,57456,2363,5235,"{""John Woolley"": 2363, ""Joseph F. Malloney"": 866}",107524
-1900,WV,98807,119829,1628,2160,"{""John Woolley"": 1628, ""Wharton"": 246}",220796
-1900,WI,159163,265760,10027,17578,"{""John Woolley"": 10027, ""Joseph F. Malloney"": 503}",442501
-1900,WY,10164,14482,20,41,"{""Wharton"": 20}",24687
-1900,NATIONAL,6370932,7228864,210867,397633,"{""John Woolley"": 210867, ""Joseph F. Malloney"": 40943, ""Wharton"": 50989}",13997429
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1900,AL,97129,55612,4188,6951,"{""John Woolley"": 2763, ""Wharton"": 4188}",159692,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,AR,81142,44800,972,1924,"{""John Woolley"": 584, ""Wharton"": 972}",127866,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,CA,124985,164755,7554,12578,"{""John Woolley"": 5024, ""Joseph F. Malloney"": 7554}",302318,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,CO,122733,93072,3790,5603,"{""John Woolley"": 3790, ""Joseph F. Malloney"": 684, ""Wharton"": 389}",221408,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,CT,74014,102572,1617,3609,"{""John Woolley"": 1617, ""Joseph F. Malloney"": 908}",180195,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,DE,18852,22535,546,602,"{""John Woolley"": 546}",41989,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,FL,28273,7355,2244,4021,"{""John Woolley"": 2244, ""Wharton"": 1143}",39649,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,GA,81180,34260,4568,5970,"{""John Woolley"": 1402, ""Wharton"": 4568}",121410,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,ID,29414,27198,857,1302,"{""John Woolley"": 857, ""Wharton"": 445}",57914,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,IL,503061,597985,17626,30851,"{""John Woolley"": 17626, ""Joseph F. Malloney"": 1373, ""Wharton"": 1141}",1131897,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,IN,309584,336063,13718,18447,"{""John Woolley"": 13718, ""Joseph F. Malloney"": 663, ""Wharton"": 1438}",664094,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,IA,209265,307808,9502,13282,"{""John Woolley"": 9502, ""Joseph F. Malloney"": 259, ""Wharton"": 613}",530355,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,KS,162601,185955,3605,5210,"{""John Woolley"": 3605}",353766,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,KY,235126,227132,2890,6007,"{""John Woolley"": 2890, ""Joseph F. Malloney"": 390, ""Wharton"": 1961}",468265,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,LA,53668,14234,0,4,"{""Other"": 4}",67906,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,ME-AL,36822,65412,2581,3459,"{""John Woolley"": 2581}",105693,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MD,122238,136185,4574,6011,"{""John Woolley"": 4574, ""Joseph F. Malloney"": 388}",264434,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MA,156997,238866,6202,18941,"{""John Woolley"": 6202, ""Joseph F. Malloney"": 2599}",414804,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MI,211685,316269,11859,16425,"{""John Woolley"": 11859, ""Joseph F. Malloney"": 837, ""Wharton"": 903}",544379,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MN,112901,190461,8555,12949,"{""John Woolley"": 8555, ""Joseph F. Malloney"": 1329}",316311,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MS,51706,5707,1642,1642,"{""Wharton"": 1642}",59055,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MO,351922,314092,5965,17642,"{""John Woolley"": 5965, ""Joseph F. Malloney"": 1294, ""Wharton"": 4244}",683656,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,MT,37311,25409,306,1136,"{""John Woolley"": 306, ""Joseph F. Malloney"": 119}",63856,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NE-AL,114013,121835,3655,5582,"{""John Woolley"": 3655, ""Wharton"": 1104}",241430,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NV,6347,3849,0,0,{},10196,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NH,35489,54799,1270,2076,"{""John Woolley"": 1270}",92364,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NJ,164808,221707,7183,14535,"{""John Woolley"": 7183, ""Joseph F. Malloney"": 2074, ""Wharton"": 669}",401050,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NY,678462,822013,22077,47567,"{""John Woolley"": 22077, ""Joseph F. Malloney"": 12621}",1548042,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NC,157733,132997,990,1788,"{""John Woolley"": 990, ""Wharton"": 798}",292518,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,ND,20531,35898,731,1362,"{""John Woolley"": 731, ""Wharton"": 111}",57791,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,OH,474882,543918,10203,21273,"{""John Woolley"": 10203, ""Joseph F. Malloney"": 1688, ""Wharton"": 251}",1040073,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,OR,32810,46172,2536,4269,"{""John Woolley"": 2536, ""Wharton"": 269}",83251,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,PA,424232,712665,27908,36313,"{""John Woolley"": 27908, ""Joseph F. Malloney"": 2936, ""Wharton"": 638}",1173210,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,RI,19812,33784,1529,2952,"{""John Woolley"": 1529, ""Joseph F. Malloney"": 1423}",56548,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,SC,47233,3579,0,0,{},50812,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,SD,39544,54530,1542,2050,"{""John Woolley"": 1542, ""Wharton"": 339}",96124,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,TN,145240,123108,3844,5512,"{""John Woolley"": 3844, ""Wharton"": 1322}",273860,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,TX,267432,130641,20981,25633,"{""John Woolley"": 2644, ""Joseph F. Malloney"": 162, ""Wharton"": 20981}",423706,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,UT,45006,47139,209,1044,"{""John Woolley"": 209, ""Joseph F. Malloney"": 106}",93189,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,VT,12849,42569,383,794,"{""John Woolley"": 383, ""Wharton"": 367}",56212,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,VA,146079,115769,2130,2360,"{""John Woolley"": 2130, ""Joseph F. Malloney"": 167, ""Wharton"": 63}",264208,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,WA,44833,57456,2363,5235,"{""John Woolley"": 2363, ""Joseph F. Malloney"": 866}",107524,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,WV,98807,119829,1628,2160,"{""John Woolley"": 1628, ""Wharton"": 246}",220796,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,WI,159163,265760,10027,17578,"{""John Woolley"": 10027, ""Joseph F. Malloney"": 503}",442501,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,WY,10164,14482,20,41,"{""Wharton"": 20}",24687,https://en.wikipedia.org/wiki/1900_United_States_presidential_election
+1900,NATIONAL,6370932,7228864,210867,397633,"{""John Woolley"": 210867, ""Joseph F. Malloney"": 40943, ""Wharton"": 50989}",13997429,https://en.wikipedia.org/wiki/1900_United_States_presidential_election

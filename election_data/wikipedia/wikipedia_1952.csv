@@ -1,50 +1,50 @@
-year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes
-1952,AL,275075,149231,1814,1814,"{""Stuart Hamblen"": 1814}",426120
-1952,AZ,108528,152042,0,0,{},260570
-1952,AR,226300,177155,886,1345,"{""Eric Hass"": 1, ""Stuart Hamblen"": 886}",404800
-1952,CA,2257646,3035587,24692,48370,"{""Eric Hass"": 273, ""Stuart Hamblen"": 16117, ""Vincent Hallinan"": 24692}",5341603
-1952,CO,245504,379782,1919,4817,"{""Eric Hass"": 352, ""Vincent Hallinan"": 1919}",630103
-1952,CT,481649,611012,1466,4250,"{""Eric Hass"": 535, ""Vincent Hallinan"": 1466}",1096911
-1952,DE,83315,90059,242,651,"{""Eric Hass"": 242, ""Stuart Hamblen"": 234, ""Vincent Hallinan"": 155}",174025
-1952,FL,444950,544036,0,351,"{""Other"": 351}",989337
-1952,GA,456823,198979,0,1,"{""Other"": 1}",655803
-1952,ID,95081,180707,443,443,"{""Vincent Hallinan"": 443}",276231
-1952,IL,2013920,2457327,9363,9811,"{""Eric Hass"": 9363}",4481058
-1952,IN,801530,1136259,15335,17536,"{""Eric Hass"": 979, ""Stuart Hamblen"": 15335, ""Vincent Hallinan"": 1222}",1955325
-1952,IA,451513,808906,5085,8354,"{""Eric Hass"": 139, ""Stuart Hamblen"": 2882, ""Vincent Hallinan"": 5085}",1268773
-1952,KS,273296,616302,6038,6568,"{""Stuart Hamblen"": 6038}",896166
-1952,KY,495729,495029,1161,2390,"{""Eric Hass"": 893, ""Stuart Hamblen"": 1161, ""Vincent Hallinan"": 336}",993148
-1952,LA,345027,306925,0,0,{},651952
-1952,ME-AL,118806,232353,332,627,"{""Eric Hass"": 156, ""Vincent Hallinan"": 332}",351786
-1952,MD,395337,499424,7313,7313,"{""Vincent Hallinan"": 7313}",902074
-1952,MA,1083525,1292325,4636,7548,"{""Eric Hass"": 1957, ""Stuart Hamblen"": 886, ""Vincent Hallinan"": 4636}",2383398
-1952,MI,1230657,1551529,10331,16406,"{""Eric Hass"": 1495, ""Stuart Hamblen"": 10331, ""Vincent Hallinan"": 3922}",2798592
-1952,MN,608458,763211,2666,7814,"{""Eric Hass"": 2383, ""Stuart Hamblen"": 2147, ""Vincent Hallinan"": 2666}",1379483
-1952,MS,172566,112966,0,0,{},285532
-1952,MO,929830,959429,987,2803,"{""Eric Hass"": 169, ""Stuart Hamblen"": 885, ""Vincent Hallinan"": 987}",1892062
-1952,MT,106213,157394,723,1430,"{""Stuart Hamblen"": 548, ""Vincent Hallinan"": 723}",265037
-1952,NE-AL,188057,421603,0,0,{},609660
-1952,NV,31688,50502,0,0,{},82190
-1952,NH,106663,166287,0,0,{},272950
-1952,NJ,1015902,1374613,5815,29039,"{""Eric Hass"": 5815, ""Stuart Hamblen"": 989, ""Vincent Hallinan"": 5589}",2419554
-1952,NM,105661,132170,297,777,"{""Eric Hass"": 35, ""Stuart Hamblen"": 297, ""Vincent Hallinan"": 225}",238608
-1952,NY,3104601,3952815,64211,70825,"{""Eric Hass"": 1560, ""Vincent Hallinan"": 64211}",7128241
-1952,NC,652803,558107,0,0,{},1210910
-1952,ND,76694,191712,344,1721,"{""Stuart Hamblen"": 302, ""Vincent Hallinan"": 344}",270127
-1952,OH,1600367,2100391,0,0,{},3700758
-1952,OK,430939,518045,0,0,{},948984
-1952,OR,270579,420815,3665,3665,"{""Vincent Hallinan"": 3665}",695059
-1952,PA,2146269,2415789,8951,18911,"{""Eric Hass"": 1377, ""Stuart Hamblen"": 8951, ""Vincent Hallinan"": 4222}",4580969
-1952,RI,203293,210935,187,270,"{""Eric Hass"": 83, ""Vincent Hallinan"": 187}",414498
-1952,SC,173004,168082,0,0,{},341086
-1952,SD,90426,203857,0,0,{},294283
-1952,TN,443710,446147,1432,2696,"{""Stuart Hamblen"": 1432, ""Vincent Hallinan"": 885}",892553
-1952,TX,969228,1102878,1983,3840,"{""Stuart Hamblen"": 1983, ""Vincent Hallinan"": 294}",2075946
-1952,UT,135364,194190,0,0,{},329554
-1952,VT,43355,109717,282,485,"{""Vincent Hallinan"": 282}",153557
-1952,VA,268677,349037,1160,1975,"{""Eric Hass"": 1160, ""Vincent Hallinan"": 311}",619689
-1952,WA,492845,599107,2460,10756,"{""Eric Hass"": 633, ""Vincent Hallinan"": 2460}",1102708
-1952,WV,453578,419970,0,0,{},873548
-1952,WI,622175,979744,2174,5451,"{""Eric Hass"": 770, ""Vincent Hallinan"": 2174}",1607370
-1952,WY,47934,81047,194,270,"{""Eric Hass"": 36, ""Stuart Hamblen"": 194}",129251
-1952,NATIONAL,27375090,34075529,140746,301323,"{""Eric Hass"": 30406, ""Stuart Hamblen"": 73412, ""Vincent Hallinan"": 140746}",61751942
+year,abbr,D_votes,R_votes,T_votes,third_party_votes,third_party_results,total_votes,source_url
+1952,AL,275075,149231,1814,1814,"{""Stuart Hamblen"": 1814}",426120,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,AZ,108528,152042,0,0,{},260570,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,AR,226300,177155,886,1345,"{""Eric Hass"": 1, ""Stuart Hamblen"": 886}",404800,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,CA,2257646,3035587,24692,48370,"{""Eric Hass"": 273, ""Stuart Hamblen"": 16117, ""Vincent Hallinan"": 24692}",5341603,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,CO,245504,379782,1919,4817,"{""Eric Hass"": 352, ""Vincent Hallinan"": 1919}",630103,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,CT,481649,611012,1466,4250,"{""Eric Hass"": 535, ""Vincent Hallinan"": 1466}",1096911,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,DE,83315,90059,242,651,"{""Eric Hass"": 242, ""Stuart Hamblen"": 234, ""Vincent Hallinan"": 155}",174025,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,FL,444950,544036,0,351,"{""Other"": 351}",989337,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,GA,456823,198979,0,1,"{""Other"": 1}",655803,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,ID,95081,180707,443,443,"{""Vincent Hallinan"": 443}",276231,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,IL,2013920,2457327,9363,9811,"{""Eric Hass"": 9363}",4481058,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,IN,801530,1136259,15335,17536,"{""Eric Hass"": 979, ""Stuart Hamblen"": 15335, ""Vincent Hallinan"": 1222}",1955325,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,IA,451513,808906,5085,8354,"{""Eric Hass"": 139, ""Stuart Hamblen"": 2882, ""Vincent Hallinan"": 5085}",1268773,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,KS,273296,616302,6038,6568,"{""Stuart Hamblen"": 6038}",896166,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,KY,495729,495029,1161,2390,"{""Eric Hass"": 893, ""Stuart Hamblen"": 1161, ""Vincent Hallinan"": 336}",993148,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,LA,345027,306925,0,0,{},651952,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,ME-AL,118806,232353,332,627,"{""Eric Hass"": 156, ""Vincent Hallinan"": 332}",351786,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MD,395337,499424,7313,7313,"{""Vincent Hallinan"": 7313}",902074,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MA,1083525,1292325,4636,7548,"{""Eric Hass"": 1957, ""Stuart Hamblen"": 886, ""Vincent Hallinan"": 4636}",2383398,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MI,1230657,1551529,10331,16406,"{""Eric Hass"": 1495, ""Stuart Hamblen"": 10331, ""Vincent Hallinan"": 3922}",2798592,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MN,608458,763211,2666,7814,"{""Eric Hass"": 2383, ""Stuart Hamblen"": 2147, ""Vincent Hallinan"": 2666}",1379483,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MS,172566,112966,0,0,{},285532,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MO,929830,959429,987,2803,"{""Eric Hass"": 169, ""Stuart Hamblen"": 885, ""Vincent Hallinan"": 987}",1892062,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,MT,106213,157394,723,1430,"{""Stuart Hamblen"": 548, ""Vincent Hallinan"": 723}",265037,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NE-AL,188057,421603,0,0,{},609660,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NV,31688,50502,0,0,{},82190,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NH,106663,166287,0,0,{},272950,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NJ,1015902,1374613,5815,29039,"{""Eric Hass"": 5815, ""Stuart Hamblen"": 989, ""Vincent Hallinan"": 5589}",2419554,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NM,105661,132170,297,777,"{""Eric Hass"": 35, ""Stuart Hamblen"": 297, ""Vincent Hallinan"": 225}",238608,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NY,3104601,3952815,64211,70825,"{""Eric Hass"": 1560, ""Vincent Hallinan"": 64211}",7128241,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NC,652803,558107,0,0,{},1210910,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,ND,76694,191712,344,1721,"{""Stuart Hamblen"": 302, ""Vincent Hallinan"": 344}",270127,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,OH,1600367,2100391,0,0,{},3700758,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,OK,430939,518045,0,0,{},948984,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,OR,270579,420815,3665,3665,"{""Vincent Hallinan"": 3665}",695059,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,PA,2146269,2415789,8951,18911,"{""Eric Hass"": 1377, ""Stuart Hamblen"": 8951, ""Vincent Hallinan"": 4222}",4580969,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,RI,203293,210935,187,270,"{""Eric Hass"": 83, ""Vincent Hallinan"": 187}",414498,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,SC,173004,168082,0,0,{},341086,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,SD,90426,203857,0,0,{},294283,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,TN,443710,446147,1432,2696,"{""Stuart Hamblen"": 1432, ""Vincent Hallinan"": 885}",892553,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,TX,969228,1102878,1983,3840,"{""Stuart Hamblen"": 1983, ""Vincent Hallinan"": 294}",2075946,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,UT,135364,194190,0,0,{},329554,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,VT,43355,109717,282,485,"{""Vincent Hallinan"": 282}",153557,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,VA,268677,349037,1160,1975,"{""Eric Hass"": 1160, ""Vincent Hallinan"": 311}",619689,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,WA,492845,599107,2460,10756,"{""Eric Hass"": 633, ""Vincent Hallinan"": 2460}",1102708,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,WV,453578,419970,0,0,{},873548,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,WI,622175,979744,2174,5451,"{""Eric Hass"": 770, ""Vincent Hallinan"": 2174}",1607370,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,WY,47934,81047,194,270,"{""Eric Hass"": 36, ""Stuart Hamblen"": 194}",129251,https://en.wikipedia.org/wiki/1952_United_States_presidential_election
+1952,NATIONAL,27375090,34075529,140746,301323,"{""Eric Hass"": 30406, ""Stuart Hamblen"": 73412, ""Vincent Hallinan"": 140746}",61751942,https://en.wikipedia.org/wiki/1952_United_States_presidential_election

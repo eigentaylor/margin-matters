@@ -1,0 +1,574 @@
+{
+  "year": 2010,
+  "state": "Florida",
+  "abbr": "FL",
+  "round": "General",
+  "caption": "2010 United States Senate election in Florida [ 216 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2010_United_States_Senate_election_in_Florida",
+  "class": "III",
+  "race_type": "regular",
+  "parsed_rows": 11,
+  "table_total_votes": 5411106,
+  "table": {
+    "caption": "2010 United States Senate election in Florida [ 216 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Marco Antonio Rubio",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Charles Joseph Crist Jr.",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Kendrick Brett Meek",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Alexander Snitker",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Sue Askeland",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Rick Tyler",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bernie DeCastro",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Lewis Jerome Armstrong",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bobbie Bean",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Bruce Riggs",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Total votes",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Republican hold",
+        "colspan": 5,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Marco Antonio Rubio",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "2,645,743",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "48.89%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−0.54%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Charles Joseph Crist Jr.",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,607,549",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "29.71%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "+29.71%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Kendrick Brett Meek",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,092,936",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "20.20%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−28.12%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Alexander Snitker",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "24,850",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.46%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Sue Askeland",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "15,340",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.28%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Rick Tyler",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "7,394",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.14%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bernie DeCastro",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,792",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.09%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Lewis Jerome Armstrong",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,443",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bobbie Bean",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "4,301",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.08%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Independent",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Bruce Riggs",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "3,647",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.07%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Write-in",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "108",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±0.00%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Total votes",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "5,411,106",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "100.00%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican hold",
+          "colspan": 5,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Marco Antonio Rubio",
+      "party": "Republican",
+      "votes": 2645743,
+      "percent": 48.89
+    },
+    {
+      "candidate": "Charles Joseph Crist Jr.",
+      "party": "Independent",
+      "votes": 1607549,
+      "percent": 29.71
+    },
+    {
+      "candidate": "Kendrick Brett Meek",
+      "party": "Democratic",
+      "votes": 1092936,
+      "percent": 20.2
+    },
+    {
+      "candidate": "Alexander Snitker",
+      "party": "Libertarian",
+      "votes": 24850,
+      "percent": 0.46
+    },
+    {
+      "candidate": "Sue Askeland",
+      "party": "Independent",
+      "votes": 15340,
+      "percent": 0.28
+    },
+    {
+      "candidate": "Rick Tyler",
+      "party": "Independent",
+      "votes": 7394,
+      "percent": 0.14
+    },
+    {
+      "candidate": "Bernie DeCastro",
+      "party": "Constitution",
+      "votes": 4792,
+      "percent": 0.09
+    },
+    {
+      "candidate": "Lewis Jerome Armstrong",
+      "party": "Independent",
+      "votes": 4443,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Bobbie Bean",
+      "party": "Independent",
+      "votes": 4301,
+      "percent": 0.08
+    },
+    {
+      "candidate": "Bruce Riggs",
+      "party": "Independent",
+      "votes": 3647,
+      "percent": 0.07
+    }
+  ]
+}

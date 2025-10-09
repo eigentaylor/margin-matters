@@ -1,0 +1,385 @@
+{
+  "year": 2000,
+  "state": "Delaware",
+  "abbr": "DE",
+  "round": "General",
+  "caption": "General election results [ 5 ]",
+  "source_url": "https://en.wikipedia.org/wiki/2000_United_States_Senate_election_in_Delaware",
+  "class": "I",
+  "race_type": "regular",
+  "parsed_rows": 7,
+  "table": {
+    "caption": "General election results [ 5 ]",
+    "headers": [
+      {
+        "text": "Party",
+        "colspan": 2,
+        "rowspan": 1
+      },
+      {
+        "text": "Candidate",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Votes",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "±%",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Tom Carper",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "William Roth (incumbent)",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "J. Burke Morrison",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Mark E. Dankof",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Robert Mattson",
+        "colspan": 1,
+        "rowspan": 1
+      },
+      {
+        "text": "Majority",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Turnout",
+        "colspan": 3,
+        "rowspan": 1
+      },
+      {
+        "text": "Swing",
+        "colspan": 1,
+        "rowspan": 1
+      }
+    ],
+    "sample_rows": [
+      [
+        {
+          "text": "Party",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Candidate",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Votes",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "±%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Tom Carper",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "181,566",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "55.53%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "13.04",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Republican",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "William Roth (incumbent)",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "142,891",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "43.70%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "12.12",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Libertarian",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "J. Burke Morrison",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,103",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.34%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1.36",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Constitution",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Mark E. Dankof",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "1,044",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.32%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Natural Law",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Robert Mattson",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "389",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "0.12%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "N/A",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Majority",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "38,675",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "11.83%",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "−1.51%",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "Turnout",
+          "colspan": 3,
+          "rowspan": 1
+        },
+        {
+          "text": "326,993",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ],
+      [
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "Democratic gain from Republican",
+          "colspan": 2,
+          "rowspan": 1
+        },
+        {
+          "text": "Swing",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        },
+        {
+          "text": "",
+          "colspan": 1,
+          "rowspan": 1
+        }
+      ]
+    ]
+  },
+  "rows_preview": [
+    {
+      "candidate": "Tom Carper",
+      "party": "Democratic",
+      "votes": 181566,
+      "percent": 55.53
+    },
+    {
+      "candidate": "William Roth (incumbent)",
+      "party": "Republican",
+      "votes": 142891,
+      "percent": 43.7
+    },
+    {
+      "candidate": "J. Burke Morrison",
+      "party": "Libertarian",
+      "votes": 1103,
+      "percent": 0.34
+    },
+    {
+      "candidate": "Mark E. Dankof",
+      "party": "Constitution",
+      "votes": 1044,
+      "percent": 0.32
+    },
+    {
+      "candidate": "Robert Mattson",
+      "party": "Natural Law",
+      "votes": 389,
+      "percent": 0.12
+    },
+    {
+      "candidate": "Majority",
+      "party": "Majority",
+      "votes": 38675,
+      "percent": 11.83
+    },
+    {
+      "candidate": "Turnout",
+      "party": "Turnout",
+      "votes": 326993,
+      "percent": null
+    }
+  ]
+}
