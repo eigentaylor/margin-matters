@@ -7,15 +7,19 @@ import { isUnitFlipped } from './flipScenarios.js';
 import { lastNameFrom, getUnitCandidateLastNames, deriveCandidateNames } from './candidateNames.js';
 
 export function _ensureTip() {
-    return document.getElementById('mapTip') || null;
+    const tip = document.getElementById('mapTip') || null;
+    try { if (!tip) console.debug('[tooltipManager] _ensureTip: #mapTip not found'); } catch (e) { }
+    return tip;
 }
 export function _placeTipAt(evt) {
     const tip = _ensureTip(); if (!tip) return;
     const wrap = _getMapWrap();
     const wr = wrap.getBoundingClientRect();
     const offsetX = 12, offsetY = 12;
-    let x = evt.clientX - wr.left + offsetX;
-    let y = evt.clientY - wr.top + offsetY;
+    const clientX = (evt && evt.clientX != null) ? evt.clientX : (evt && evt.client && evt.clientX != null ? evt.client.clientX : null);
+    const clientY = (evt && evt.clientY != null) ? evt.clientY : (evt && evt.client && evt.client.clientY != null ? evt.client.clientY : null);
+    let x = (clientX != null ? (clientX - wr.left + offsetX) : 0);
+    let y = (clientY != null ? (clientY - wr.top + offsetY) : 0);
     // Clamp within container
     const prev = tip.style.display;
     if (prev === 'none') tip.style.display = 'block';
@@ -24,11 +28,12 @@ export function _placeTipAt(evt) {
     const pad = 6;
     x = Math.max(pad, Math.min(wr.width - pad, x));
     y = Math.max(pad, Math.min(wr.height - pad, y));
+    try { console.debug('[tooltipManager] _placeTipAt', { clientX: clientX, clientY: clientY, wrapRect: { left: wr.left, top: wr.top, width: wr.width, height: wr.height }, final: { x, y } }); } catch (e) { }
     tip.style.left = x + 'px';
     tip.style.top = y + 'px';
 }
 export function showMapTip(evt, text) {
-    //console.log('showMapTip called with:', evt, text);
+    try { console.debug('[tooltipManager] showMapTip called', { evt: evt && { clientX: evt.clientX, clientY: evt.clientY }, textSnippet: (text ? (String(text).slice(0, 120)) : text) }); } catch (e) { }
     try {
         const tip = _ensureTip(); if (!tip) return;
         // Handle multi-line tooltips by converting newlines to <br> tags
@@ -40,6 +45,7 @@ export function showMapTip(evt, text) {
 }
 export function hideMapTip() {
     try {
+        try { console.debug('[tooltipManager] hideMapTip called'); } catch (e) { }
         const tip = _ensureTip();
         if (tip) tip.style.display = 'none';
     } catch (e) { }
