@@ -4,6 +4,53 @@ import { isUnitFlipped } from "./flipScenarios.js";
 // These are intentionally conservative and read other project helpers from
 // the global window (e.g. getRowsForYear, getEvFor, _curYear, _curPv).
 
+export function getNatMargin(year, sourceMap) {
+    try {
+        const y = (typeof year === 'number' && isFinite(year)) ? Number(year) : parseInt(year, 10);
+        if (!isFinite(y)) return 0;
+
+        let map = sourceMap;
+        if (!map && typeof window !== 'undefined' && window._byYearMap instanceof Map) {
+            map = window._byYearMap;
+        }
+
+        let rows = null;
+        if (map && typeof map.get === 'function') {
+            rows = map.get(y) || [];
+        } else if (typeof window !== 'undefined' && typeof window.getRowsForYear === 'function') {
+            rows = window.getRowsForYear(y) || [];
+        }
+
+        if (!rows || rows.length === 0) return 0;
+
+        for (const r of rows) {
+            if (!r) continue;
+            const unit = r.unit;
+            if (unit === 'NATIONAL' || unit === 'NAT') {
+                const nmVal = Number(r.nm);
+                if (isFinite(nmVal)) return nmVal;
+                const alt = Number(r.national_margin);
+                if (isFinite(alt)) return alt;
+                break;
+            }
+        }
+
+        let sum = 0;
+        let count = 0;
+        for (const r of rows) {
+            if (!r) continue;
+            const nmVal = Number(r.nm);
+            if (isFinite(nmVal)) {
+                sum += nmVal;
+                count += 1;
+            }
+        }
+        return count > 0 ? (sum / count) : 0;
+    } catch (e) {
+        return 0;
+    }
+}
+
 export function totalVotesFromRow(row) {
     const direct = +row.total;
     if (isFinite(direct) && direct > 0) return direct;
@@ -344,6 +391,8 @@ export function calculateUnitVoteTallies(unit) {
 // as globals instead of importing the module.
 try {
     if (typeof window !== 'undefined') {
+        try { window.getNatMargin = getNatMargin; } catch (e) { }
+        try { window._getNatMargin = getNatMargin; } catch (e) { }
         try { window.calculateUnitProportionalEVs = calculateUnitProportionalEVs; } catch (e) { }
         try { window.calculateUnitWinnerTakeAllEVs = calculateUnitWinnerTakeAllEVs; } catch (e) { }
         try { window.calculateUnitVoteTallies = calculateUnitVoteTallies; } catch (e) { }
