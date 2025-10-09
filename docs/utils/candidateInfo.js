@@ -1,5 +1,5 @@
 'use strict';
-
+import { getAllEvAllocations } from "./evAllocation";
 // Extracted from docs/tester.js: updateCandidateInfo
 // Responsible for updating the candidate names and special notes sections
 // for the selected year. Relies on global helpers (getRowsForYear, getAllEvAllocations)

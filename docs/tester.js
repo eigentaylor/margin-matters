@@ -1,6 +1,6 @@
 'use strict';
 import {
-  PV_CAP, EPS, STOP_EPS, STOP_KEY_PREC, ID_TO_ABBR, SMALL_STATES,
+  EPS, STOP_EPS, ID_TO_ABBR, SMALL_STATES,
   getStateName, idToAbbr
 } from './utils/constants.js';
 import {
@@ -26,6 +26,7 @@ import {
 } from './utils/flipScenarios.js';
 import { parsePvText, clampPv, applyPvOverride } from './utils/pvTools.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
+import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvStops.js';
 
 (function () {
   // Check if proportional EV mode is enabled
@@ -1074,12 +1075,7 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
   // expose for tooltip/helper access outside closure
   window._byYearMap = byYear;
   window._evByUnitMap = evByUnit;
-  // Mapping of stop -> effective test value (average of adjacent stops)
-  const stopToEff = new Map();
-  // Mapping of stop -> array of units that share that stop
-  const stopToUnits = new Map();
-  // Per-year stops array
-  const stopsByYear = new Map();
+  // Mapping of stops maintained via pvStops module
   // Remap for known label mismatches between GeoJSON and CSV keys
   const UNIT_REMAP = {};
 
@@ -1361,186 +1357,6 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
     return n ? sum / n : 0;
   }
 
-  function buildPvStops(year, container, datalist) {
-    const cap = PV_CAP;
-    // clear any prior mappings
-    stopToEff.clear();
-    stopToUnits.clear();
-
-    // Build from stop_colors.csv when available
-    const byYearStops = (window._stopColorsByYear && window._stopColorsByYear.get(year)) || null;
-    const effByYearStops = (window._stopEffByYear && window._stopEffByYear.get(year)) || null;
-    const nat = (window._futureMode && year > 2024) ? 0 : getNatMargin(year);
-
-    try {
-      //console.log('[stops] buildPvStops start', { year, hasStopColors: !!byYearStops, stopColorKeys: byYearStops ? byYearStops.size : 0, hasEff: !!effByYearStops });
-      if (byYearStops) {
-        const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
-        //console.log('[stops] raw stop keys (sample)', sampleKeys);
-      }
-    } catch (e) { console.warn(e); }
-
-    // Always include EVEN and (unless forced to 0 by future) Actual
-    const stopsSet = new Set([0]);
-    stopToEff.set(0, 0 + EPS);
-    if (!(window._futureMode && year > 2024) && isFinite(nat) && Math.abs(nat) <= cap) {
-      stopsSet.add(nat);
-      stopToEff.set(nat, nat);
-    }
-
-    // If CSV has entries, collect all distinct stop keys and map to numeric and effective
-    if (byYearStops && effByYearStops && byYearStops.size > 0) {
-      // stop_key strings -> parse to number for ordering
-      //try { console.log('[stops] preliminary sorted stops', stops); } catch(e) {}
-      const keys = Array.from(byYearStops.keys());
-      for (const k of keys) {
-        const v = parseFloat(k);
-        if (!isFinite(v) || Math.abs(v) > cap) continue;
-        stopsSet.add(v);
-        // Map effective from CSV when present; otherwise default to D-nudge
-        const eff = effByYearStops.has(k) ? effByYearStops.get(k) : (v + EPS);
-        stopToEff.set(v, eff);
-        // Also record which units share this stop (for chips label coloring); fall back to all units mapped for the key
-        const unitsMap = byYearStops.get(k);
-        if (unitsMap && typeof unitsMap.forEach === 'function') {
-          const list = [];
-          unitsMap.forEach((_, unit) => list.push(unit));
-          if (list.length) stopToUnits.set(v, list);
-        }
-      }
-    } else {
-      // Fallback: if CSV missing for this year, keep a minimal set of stops only (EVEN + Actual)
-      // This avoids recomputing complex thresholds in JS, per user's request.
-    }
-
-    const stops = Array.from(stopsSet).sort((a, b) => a - b);
-    // Append PV presets (if any) as extra discrete stops at the end so each preset
-    // becomes an integer slider index. We keep original numeric stops sorted, then
-    // add presets in the order they appear in the preset select.
-    const presetStops = [];
-    try {
-      const presetEl = document.getElementById && document.getElementById('pvPreset');
-      if (presetEl && presetEl.options && presetEl.options.length) {
-        const existing = stops.slice();
-        const almostEqual = (a, b, eps = 1e-9) => Math.abs(a - b) <= eps;
-        for (const opt of Array.from(presetEl.options)) {
-          try {
-            const val = parseFloat(opt.value);
-            if (isFinite(val)) {
-              // skip blank/default options
-              if (!opt.value || String(opt.value).trim() === '') continue;
-              // skip duplicates already in stops
-              let found = false;
-              for (const s of existing) { if (almostEqual(s, val)) { found = true; break; } }
-              for (const s of presetStops) { if (almostEqual(s, val)) { found = true; break; } }
-              if (!found && Math.abs(val) <= cap) {
-                presetStops.push(val);
-                // annotate stopToUnits so UI can show preset label
-                const name = (opt.text || opt.label || '').split(':')[0].trim();
-                const pvUnits = stopToUnits.get(val) || [];
-                pvUnits.push(`PRESET:${name || String(val)}`);
-                stopToUnits.set(val, pvUnits);
-                // set effective mapping
-                if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
-              }
-            }
-          } catch (e) { console.warn(e); }
-        }
-      }
-    } catch (e) { console.warn(e); }
-    // Keep slider stops as the base numeric stops only. Preset stops will be rendered
-    // as separate chips that set a numeric PV override (window._pvOverride) when clicked.
-    const allStops = stops.slice();
-    try {
-      const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s) || []).length }));
-      //console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
-    } catch (e) { console.warn(e); }
-    // Ensure every base stop has an effective value (keep any precomputed ones).
-    for (let i = 0; i < allStops.length; i++) {
-      const s = allStops[i];
-      if (!stopToEff.has(s)) stopToEff.set(s, s + EPS);
-    }
-    // store only the base numeric stops for the slider; presets are separate
-    stopsByYear.set(year, allStops);
-    if (datalist) {
-      // Only include base numeric stops in datalist
-      datalist.innerHTML = allStops.map(v => `<option value="${(v * 100).toFixed(1)}"></option>`).join('');
-      const s = document.getElementById('pvSlider');
-      if (s) s.setAttribute('list', 'pvStopsList');
-    }
-    if (container) {
-      const nat = (window._futureMode && year > 2024) ? 0 : getNatMargin(year);
-      // Render main stops and presets on a separate line. Main stops first (sorted),
-      // then presets on a new line so they visually stand apart. Preset chips colored
-      // blue for positive (D) and red for negative (R).
-      const mainHtml = stops.map((v, i) => {
-        const isEven = Math.abs(v) < 1e-12;
-        const isNat = ((!(window._futureMode && year > 2024)) && Math.abs(v - nat) < 1e-12);
-        const unitsRaw = (stopToUnits.get(v) || []).filter(u => u !== 'NATIONAL' && u !== 'NAT');
-        for (let j = 0; j < unitsRaw.length; j++) { if (unitsRaw[j] && unitsRaw[j].startsWith('PRESET:')) unitsRaw[j] = unitsRaw[j].replace(/^PRESET:/, ''); }
-        const units = (isEven || isNat) ? '' : unitsRaw.slice(0, 3).map(u => u.slice(0, 5)).join(',');
-        const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
-        const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
-        // Determine color same as before
-        let bgColor = '#0d0d0dff';
-        if (!isEven) {
-          const key = Number(v).toFixed(STOP_KEY_PREC);
-          const byStopCsv = byYearStops && byYearStops.get(key);
-          if (byStopCsv) {
-            const winners = [];
-            const colors = [];
-            const unitsList = unitsRaw && unitsRaw.length ? unitsRaw : Array.from(byStopCsv.keys());
-            unitsList.forEach(u => { const info = byStopCsv.get(u); if (info) { winners.push(info.winner); colors.push(info.color_css || ''); } });
-            if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
-            else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
-            else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
-            else if (colors.length) bgColor = colors[0];
-          } else {
-            // No CSV color info for this stop; keep neutral color
-          }
-        }
-        const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
-        const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
-        const smallColor = isYellowish ? '#000' : 'var(--muted)';
-        return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`;
-      }).join('');
-      // Preset chips: render on their own line
-      const presetHtml = presetStops.map((v, pi) => {
-        const idx = pi; // index into presetStops array
-        const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
-        const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
-        const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
-        const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
-        // store numeric value on attribute so click handler sets an override instead of slider index
-        const name = null; // placeholder if we want to show preset name
-        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name || ''}">${label}</span>`;
-      }).join('');
-      container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
-      container.querySelectorAll('span.btn').forEach((el) => {
-        el.addEventListener('click', () => {
-          // Changing PV stop should reset any active flips
-          try { clearFlips(); } catch (e) { console.warn(e); }
-          const pvValAttr = el.getAttribute('data-pv');
-          if (pvValAttr != null) {
-            // This is a preset chip: set numeric PV override instead of changing slider index
-            const val = parseFloat(pvValAttr);
-            if (!isNaN(val)) {
-              try { window._pvOverride = val; window._pvPresetName = el.getAttribute('data-name') || null; } catch (e) { console.warn(e); }
-              try { updateAll(); } catch (e) { console.warn(e); }
-              //try { console.log('[stops] preset chip click -> set PV override', { year, val }); } catch(e) {}
-            }
-          } else {
-            // Regular stop chip: set slider index
-            const i = Number(el.getAttribute('data-idx'));
-            const s = document.getElementById('pvSlider');
-            try { window._pvOverride = null; } catch (e) { console.warn(e); }
-            if (s) { s.value = String(i); updateAll(); }
-          }
-        });
-      });
-    }
-  }
-
   function init() {
     const yearSlider = document.getElementById('yearSlider');
     const pvSlider = document.getElementById('pvSlider');
@@ -1636,7 +1452,12 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
     yearSlider.value = String(y);
     yearVal.textContent = y;
 
-    buildPvStops(y, pvStops, pvStopsList);
+    buildPvStops(y, {
+      container: pvStops,
+      datalist: pvStopsList,
+      getNatMargin,
+      updateAll
+    });
     // configure discrete slider bounds based on stops
     const stops = stopsByYear.get(y) || [0];
     pvSlider.min = 0;
@@ -1684,7 +1505,12 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
     const showNatInit = ((!(window._futureMode && y > 2024)) && Math.abs(curStop - nat) < STOP_EPS);
     pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
     // set up datalist and stop chips
-    buildPvStops(y, pvStops, pvStopsList);
+    buildPvStops(y, {
+      container: pvStops,
+      datalist: pvStopsList,
+      getNatMargin,
+      updateAll
+    });
     // Initialize metric select with available metrics for current year
     updateFlipMetricOptionsForYear();
 
@@ -1775,7 +1601,12 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
       if (window._prevYear !== year) {
         const pvStops = document.getElementById('pvStops');
         const pvStopsList = document.getElementById('pvStopsList');
-        buildPvStops(year, pvStops, pvStopsList);
+        buildPvStops(year, {
+          container: pvStops,
+          datalist: pvStopsList,
+          getNatMargin,
+          updateAll
+        });
         const stopsNow = stopsByYear.get(year) || [0];
         const natNow = getNatMargin(year);
         let idx = stopsNow.findIndex(v => Math.abs(v - natNow) <= STOP_EPS);
@@ -1832,7 +1663,12 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
       el.textContent = out;
     })();
 
-    buildPvStops(year, document.getElementById('pvStops'), document.getElementById('pvStopsList'));
+    buildPvStops(year, {
+      container: document.getElementById('pvStops'),
+      datalist: document.getElementById('pvStopsList'),
+      getNatMargin,
+      updateAll
+    });
 
     const arr = byYear.get(year) || [];
     const abbrColors = new Map();
