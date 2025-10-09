@@ -97,8 +97,16 @@ export function formatUnitTooltip(unit, opts) {
         })();
         if (evAllocation) {
             const evParts = [];
-            if (evAllocation.D > 0) evParts.push(`D: ${evAllocation.D}`);
-            if (evAllocation.R > 0) evParts.push(`R: ${evAllocation.R}`);
+            // Try to get candidate last names for labels (prefer derived names, then per-unit map)
+            const evCandidateNames = (function () {
+                try {
+                    const names = deriveCandidateNames(info, unit);
+                    if (names && typeof names === 'object') return names;
+                } catch (e) { }
+                try { return getUnitCandidateLastNames(unit); } catch (e) { return { D: 'D', R: 'R', O: 'O' }; }
+            })();
+            if (evAllocation.D > 0) evParts.push(`${(evCandidateNames && evCandidateNames.D) || 'D'}: ${evAllocation.D}`);
+            if (evAllocation.R > 0) evParts.push(`${(evCandidateNames && evCandidateNames.R) || 'R'}: ${evAllocation.R}`);
             // Aggregate any "Other" EVs: include traditional O plus any detailed thirdParty allocations
             const detailed = evAllocation.thirdParties || {};
             let othersTotal = (evAllocation.O || 0);
@@ -123,8 +131,8 @@ export function formatUnitTooltip(unit, opts) {
                         }
                     }
                 } catch (e) { }
-                if (topThirdLabel) evParts.push(`${topThirdLabel}: ${othersTotal}`);
-                else evParts.push(`O: ${othersTotal}`);
+                const thirdLabel = topThirdLabel || (evCandidateNames && evCandidateNames.O) || 'O';
+                evParts.push(`${thirdLabel}: ${othersTotal}`);
             }
             if (evParts.length) {
                 // we'll push this later in the final assembly so the basic row stays first
@@ -228,47 +236,19 @@ export function formatUnitTooltip(unit, opts) {
         // Now that marginStr may have been updated from vote tallies, clamp large values
         const cappedMarginStr = (function () {
             if (!marginStr || typeof marginStr !== 'string') return marginStr;
-            const match = marginStr.match(/^([A-Z])\+([\d.]+)$/);
-            if (!match) return marginStr;
-            const prefix = match[1];
-            const value = parseFloat(match[2]);
+            // match a trailing +number portion, with optional decimal
+            const m = marginStr.match(/(.*)\+([\d.]+)\s*$/);
+            if (!m) return marginStr;
+            const prefix = m[1];
+            const value = parseFloat(m[2]);
             if (!isFinite(value) || value <= 99.9) return marginStr;
             return `${prefix}+99.9`;
         })();
 
-        // First row: Basic info (display name or candidate, EV, margin)
-        // If we have candidate names, prefer showing the leading candidate (with party for D/R)
-        let candidateLabel = null;
-        try {
-            const names = (function () {
-                try {
-                    const n = deriveCandidateNames(info, unit);
-                    if (n && typeof n === 'object') return n;
-                } catch (e) { }
-                try { return getUnitCandidateLastNames(unit); } catch (e) { return null; }
-            })();
-            const maxVotes = voteTallies ? Math.max(voteTallies.D, voteTallies.R, voteTallies.O) : null;
-            let frontRunner = null;
-            if (voteTallies && isFinite(maxVotes)) {
-                if (voteTallies.D === maxVotes) frontRunner = 'D';
-                else if (voteTallies.R === maxVotes) frontRunner = 'R';
-                else if (voteTallies.O === maxVotes) frontRunner = 'O';
-            } else if (info) {
-                if (info.dCandidate) frontRunner = 'D';
-                else if (info.rCandidate) frontRunner = 'R';
-            }
-            if (frontRunner) {
-                const name = (names && names[frontRunner]) || (info && ((frontRunner === 'D' && info.dCandidate) || (frontRunner === 'R' && info.rCandidate))) || (info && info.candidates && info.candidates[frontRunner] && info.candidates[frontRunner].name) || null;
-                console.log
-                if (name) {
-                    candidateLabel = (frontRunner === 'O') ? String(name) : `${String(name)} (${frontRunner})`;
-                }
-            }
-        } catch (e) { }
-
+        // First row: Basic info (display name, EV, margin)
+        // Keep showing the unit/display name first; marginStr will include candidate label when available
         const basicParts = [];
-        if (candidateLabel) basicParts.push(candidateLabel);
-        else if (display) basicParts.push(display);
+        if (display) basicParts.push(display);
         if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
         if (cappedMarginStr) basicParts.push(cappedMarginStr);
         if (basicParts.length) rows.unshift(basicParts.join(' · '));
