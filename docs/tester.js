@@ -355,9 +355,9 @@ import { createTesterInitializer } from './utils/testerInit.js';
     ? DataLoader
     : ((typeof loadCsvData === 'function' || typeof loadPresidentialMarginsData === 'function')
       ? {
-          loadCsv: loadCsvData,
-          loadPresidentialMargins: loadPresidentialMarginsData
-        }
+        loadCsv: loadCsvData,
+        loadPresidentialMargins: loadPresidentialMarginsData
+      }
       : null);
 
   function getActiveDataLoader() {
