@@ -184,6 +184,37 @@ export function calculateUnitProportionalEVs(unit, opts) {
     } catch (e) { return null; }
 }
 
+// Winner-take-all EV allocator: returns all EVs to the party with the
+// highest vote tally according to calculateUnitVoteTallies / getUnitFinalVoteTotals.
+export function calculateUnitWinnerTakeAllEVs(unit, opts) {
+    try {
+        const year = (opts && isFinite(opts.year)) ? opts.year : (typeof window._curYear === 'number' ? window._curYear : null);
+        if (!year) return null;
+        const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+        const ev = (typeof window.getEvFor === 'function') ? window.getEvFor(year, keyUnit) : null;
+        if (!isFinite(ev) || ev <= 0) return null;
+
+        // Prefer election-night/raw tallies when available via calculateUnitVoteTallies
+        let tallies = null;
+        try { if (typeof calculateUnitVoteTallies === 'function') tallies = calculateUnitVoteTallies(unit); } catch (e) { tallies = null; }
+        if (!tallies) {
+            const totals = getUnitFinalVoteTotals(unit, { year, pv: (opts && opts.pv != null) ? opts.pv : (typeof window._curPv === 'number' ? window._curPv : 0) });
+            if (totals) tallies = { D: Math.round(Math.max(0, totals.dVotes || 0)), R: Math.round(Math.max(0, totals.rVotes || 0)), O: Math.round(Math.max(0, totals.topThirdVotes || 0)), total: Math.round(totals.totalVotes || 0) };
+        }
+        if (!tallies) return null;
+
+        // Determine winner (highest share). In ties, prefer D then R then O deterministically.
+        const d = Number(tallies.D || 0);
+        const r = Number(tallies.R || 0);
+        const o = Number(tallies.O || 0);
+        let alloc = { D: 0, R: 0, O: 0, thirdParties: {} };
+        if (d >= r && d >= o) alloc.D = ev;
+        else if (r >= d && r >= o) alloc.R = ev;
+        else alloc.O = ev;
+        return alloc;
+    } catch (e) { return null; }
+}
+
 export function calculateUnitVoteTallies(unit) {
     try {
         // Defer to the getUnitFinalVoteTotals and election-night snapshot when present
@@ -283,3 +314,16 @@ export function calculateUnitVoteTallies(unit) {
         return { D: dRounded, R: rRounded, O: oRounded, total: dRounded + rRounded + oRounded };
     } catch (e) { return null; }
 }
+
+// Backwards-compatibility: expose functions to the global `window` so
+// legacy code (tooltipManager.js and other inline scripts) can call them
+// as globals instead of importing the module.
+try {
+    if (typeof window !== 'undefined') {
+        try { window.calculateUnitProportionalEVs = calculateUnitProportionalEVs; } catch (e) { }
+        try { window.calculateUnitWinnerTakeAllEVs = calculateUnitWinnerTakeAllEVs; } catch (e) { }
+        try { window.calculateUnitVoteTallies = calculateUnitVoteTallies; } catch (e) { }
+        try { window.getUnitFinalVoteTotals = getUnitFinalVoteTotals; } catch (e) { }
+        try { window.totalVotesFromRow = totalVotesFromRow; } catch (e) { }
+    }
+} catch (e) { }

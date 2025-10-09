@@ -437,7 +437,7 @@ export function getAdjustedInfo(unit) {
             margin: m,
             marginStr: (function () {
                 if (!isFinite(m)) return '';
-                if (Math.abs(m) < 0.000005) return 'EVEN';
+                //if (Math.abs(m) < 0.000005) return 'EVEN';
 
                 // Check for third-party scenario (yellow window) for any year
                 {
