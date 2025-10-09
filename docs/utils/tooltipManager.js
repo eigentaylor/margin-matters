@@ -157,13 +157,8 @@ export function formatUnitTooltip(unit, opts) {
 
             // Find the party with the highest vote tally
             const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
-            const frontRunner = (function () {
-                if (voteTallies.D === maxVotes) return 'D';
-                if (voteTallies.R === maxVotes) return 'R';
-                if (voteTallies.O === maxVotes) return 'O';
-                return null;
-            })();
 
+            // Candidate name lookup (prefer derived names, then last-name map)
             const displayNames = true; // show candidate last names when available
             const candidateNames = (function () {
                 if (!displayNames) return { D: 'D', R: 'R', O: 'O' };
@@ -173,6 +168,16 @@ export function formatUnitTooltip(unit, opts) {
                 } catch (e) { }
                 try { return getUnitCandidateLastNames(unit); } catch (e) { return { D: 'D', R: 'R', O: 'O' }; }
             })();
+
+            // Determine front-runner party key and build a human-friendly leader label
+            const frontRunnerParty = (voteTallies.D === maxVotes) ? 'D' : (voteTallies.R === maxVotes) ? 'R' : (voteTallies.O === maxVotes) ? 'O' : null;
+            let leaderLabel = frontRunnerParty || null;
+            if (frontRunnerParty) {
+                const nm = (candidateNames && candidateNames[frontRunnerParty]) ||
+                    (info && ((frontRunnerParty === 'D' && info.dCandidate) || (frontRunnerParty === 'R' && info.rCandidate))) ||
+                    (info && info.candidates && info.candidates[frontRunnerParty] && info.candidates[frontRunnerParty].name) || null;
+                if (nm) leaderLabel = (frontRunnerParty === 'O') ? String(nm) : `${String(nm)} (${frontRunnerParty})`;
+            }
 
             // Only display parties with votes, add star to the highest
             if (voteTallies.D > 0) {
@@ -200,14 +205,12 @@ export function formatUnitTooltip(unit, opts) {
 
             if (votes.length >= 2) {
                 const voteMargin = votes[0].count - votes[1].count;
-                const voteMarginText = `${frontRunner}+${formatter(voteMargin)} vote${voteMargin !== 1 ? 's' : ''}`;
+                const voteMarginText = `${leaderLabel}+${formatter(voteMargin)} vote${voteMargin !== 1 ? 's' : ''}`;
                 const pctMargin = ((voteMargin / votes.reduce((acc, v) => acc + v.count, 0)) * 100).toFixed(1);
-                const pctMarginText = `${frontRunner}+${pctMargin}`;
+                const pctMarginText = `${leaderLabel}+${pctMargin}`;
                 if (window.DEBUG_TOOLTIP) console.log('formatUnitTooltip vote margin', { unit, votes, voteMargin: voteMargin, voteMarginText: voteMarginText });
-                console.log('formatUnitTooltip vote margin', { unit, votes, voteMargin: voteMargin, voteMarginText: voteMarginText, pctMargin: pctMargin });
-                console.log('formatUnitTooltip rows', rows);
                 rows.push(voteMarginText);
-                // replace the marginStr with pctMarginText because we have real vote tallies   
+                // replace the marginStr with pctMarginText because we have real vote tallies
                 marginStr = pctMarginText;
             }
 
@@ -233,9 +236,39 @@ export function formatUnitTooltip(unit, opts) {
             return `${prefix}+99.9`;
         })();
 
-        // First row: Basic info (display name, EV, margin)
+        // First row: Basic info (display name or candidate, EV, margin)
+        // If we have candidate names, prefer showing the leading candidate (with party for D/R)
+        let candidateLabel = null;
+        try {
+            const names = (function () {
+                try {
+                    const n = deriveCandidateNames(info, unit);
+                    if (n && typeof n === 'object') return n;
+                } catch (e) { }
+                try { return getUnitCandidateLastNames(unit); } catch (e) { return null; }
+            })();
+            const maxVotes = voteTallies ? Math.max(voteTallies.D, voteTallies.R, voteTallies.O) : null;
+            let frontRunner = null;
+            if (voteTallies && isFinite(maxVotes)) {
+                if (voteTallies.D === maxVotes) frontRunner = 'D';
+                else if (voteTallies.R === maxVotes) frontRunner = 'R';
+                else if (voteTallies.O === maxVotes) frontRunner = 'O';
+            } else if (info) {
+                if (info.dCandidate) frontRunner = 'D';
+                else if (info.rCandidate) frontRunner = 'R';
+            }
+            if (frontRunner) {
+                const name = (names && names[frontRunner]) || (info && ((frontRunner === 'D' && info.dCandidate) || (frontRunner === 'R' && info.rCandidate))) || (info && info.candidates && info.candidates[frontRunner] && info.candidates[frontRunner].name) || null;
+                console.log
+                if (name) {
+                    candidateLabel = (frontRunner === 'O') ? String(name) : `${String(name)} (${frontRunner})`;
+                }
+            }
+        } catch (e) { }
+
         const basicParts = [];
-        if (display) basicParts.push(display);
+        if (candidateLabel) basicParts.push(candidateLabel);
+        else if (display) basicParts.push(display);
         if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
         if (cappedMarginStr) basicParts.push(cappedMarginStr);
         if (basicParts.length) rows.unshift(basicParts.join(' · '));
