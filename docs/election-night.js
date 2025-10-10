@@ -1818,6 +1818,8 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       .filter(st => st && st.calledAt == null && st.latestMetrics && st.latestMetrics.reporting > EPS)
       .map(st => {
         const metrics = st.latestMetrics;
+        // extract a numeric margin for scoring; prefer countedMargin, fall back to margin
+        const rawMargin = isFinite(metrics.countedMargin) ? metrics.countedMargin : (isFinite(metrics.margin) ? metrics.margin : 0);
         return {
           unitKey: st.unitKey,
           displayLabel: formatUnitLabel(st.unitKey),
@@ -1825,14 +1827,30 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
           reporting: isFinite(metrics.reporting) ? metrics.reporting : 0,
           remainingVotes: isFinite(metrics.remainingVotes) ? Math.max(0, Math.round(metrics.remainingVotes)) : null,
           leader: metrics.leader,
+          margin: rawMargin,
           marginStr: metrics.countedMarginStr,
-          ev: st.ev || 0
+          ev: isFinite(st.ev) ? st.ev : 0
         };
       })
       .sort((a, b) => {
+        // scoring formula: ev / ((|CONF_THRESHOLD - confidence| + EPS) * (|margin| + EPS))
+        const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+        const score = x => {
+          const conf = (x && isFinite(x.confidence)) ? x.confidence : 0;
+          const margin = (x && isFinite(x.margin)) ? Math.abs(x.margin) : 0;
+          const denom = (Math.abs(threshold - conf) + EPS) * (margin + EPS);
+          return isFinite(x.ev) && x.ev > 0 && denom > 0 ? x.ev / denom : 0;
+        };
+        const sa = score(a);
+        const sb = score(b);
+        if (Math.abs(sb - sa) > EPS) return sb - sa;
+        // tie-breaker: higher reporting first
+        const repDiff = (b.reporting || 0) - (a.reporting || 0);
+        if (Math.abs(repDiff) > EPS) return repDiff;
+        // final tie-breaker: higher confidence
         const confDiff = (b.confidence || 0) - (a.confidence || 0);
         if (Math.abs(confDiff) > EPS) return confDiff;
-        return (b.reporting || 0) - (a.reporting || 0);
+        return (a.displayLabel || '').localeCompare(b.displayLabel || '');
       });
 
     const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
