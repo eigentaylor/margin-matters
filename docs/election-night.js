@@ -65,6 +65,10 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
   // Display update interval for throttling expensive UI work
   const DISPLAY_UPDATE_INTERVAL = 2; // minutes between display updates (counting is continuous)
+  // Reporting jump debug threshold (fraction, e.g. 0.12 = 12 percentage points)
+  const REPORTING_JUMP_THRESHOLD = 0.12;
+  // Maximum reporting step when densifying schedules (fraction, e.g. 0.005 = 0.5%)
+  const MAX_SCHEDULE_REPORT_STEP = 0.005;
 
   // Load constants from shared file if present, otherwise fall back to
   // the inline definitions for backwards compatibility.
@@ -179,10 +183,19 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     // Initialize debug logs for ME/NE coloring and calls
     try {
       if (typeof window !== 'undefined') {
+        // Feature flags: color/call logs are OFF by default to avoid huge log files.
+        // Set `window.ENABLE_EN_COLOR_CALL_LOG = true` in the console to enable.
+        window.ENABLE_EN_COLOR_CALL_LOG = window.ENABLE_EN_COLOR_CALL_LOG || false;
         window._enColorLog = window._enColorLog || [];
         window._enCallLog = window._enCallLog || [];
+        window._enReportingJumps = window._enReportingJumps || [];
         window.getElectionNightLogs = function () {
-          return { colorLog: (window._enColorLog || []).slice(), callLog: (window._enCallLog || []).slice() };
+          const out = { reportingJumps: (window._enReportingJumps || []).slice() };
+          if (window.ENABLE_EN_COLOR_CALL_LOG) {
+            out.colorLog = (window._enColorLog || []).slice();
+            out.callLog = (window._enCallLog || []).slice();
+          }
+          return out;
         };
         window.downloadElectionNightLogs = function (filename) {
           try {
@@ -246,7 +259,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
 
     if (elements.toggle) {
       elements.toggle.addEventListener('click', () => {
-        console.log('ELECTION NIGHT TOGGLE CLICK');
+        //console.log('ELECTION NIGHT TOGGLE CLICK');
         if (!state.prepared) {
           prepareSimulation();
           startSimulation();
@@ -1074,7 +1087,44 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       last.reporting = 1;
     }
 
-    return refined;
+    // Densify reporting steps so that reporting never jumps by more than
+    // MAX_SCHEDULE_REPORT_STEP between adjacent control points. This creates
+    // additional interpolated control points when necessary to make counting
+    // appear continuous and avoid large single-step increases.
+    try {
+      const outDensified = [];
+      for (let i = 0; i < refined.length; i++) {
+        const cur = refined[i];
+        if (!cur) continue;
+        if (outDensified.length === 0) {
+          outDensified.push({ ...cur });
+          continue;
+        }
+        const prev = outDensified[outDensified.length - 1];
+        const repDiff = Math.max(0, (cur.reporting || 0) - (prev.reporting || 0));
+        if (repDiff <= MAX_SCHEDULE_REPORT_STEP + EPS) {
+          outDensified.push({ ...cur });
+          continue;
+        }
+        // Insert necessary segments
+        const segments = Math.max(2, Math.ceil(repDiff / MAX_SCHEDULE_REPORT_STEP));
+        for (let s = 1; s <= segments; s++) {
+          const ratio = s / segments;
+          const t = prev.time + (cur.time - prev.time) * ratio;
+          const r = clamp01((prev.reporting || 0) + repDiff * ratio);
+          outDensified.push({ time: Math.min(endTime, Math.max(startTime, t)), reporting: r });
+        }
+      }
+      // Ensure final point is exact
+      if (outDensified.length) {
+        const lastOut = outDensified[outDensified.length - 1];
+        lastOut.time = endTime;
+        lastOut.reporting = 1;
+      }
+      return outDensified;
+    } catch (e) {
+      return refined;
+    }
   }
 
   /**
@@ -1098,7 +1148,18 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     state.snapshot.clear();
 
     state.stateData.forEach(st => {
-      const metrics = computeMetrics(st, timeMinutes, phaseName);
+  const prevMetrics = st.latestMetrics || null;
+  const metrics = computeMetrics(st, timeMinutes, phaseName);
+      // Log large reporting jumps for debugging
+      try {
+        if (typeof window !== 'undefined' && window._enReportingJumps && prevMetrics && isFinite(prevMetrics.reporting) && isFinite(metrics.reporting)) {
+          const diff = Math.abs(metrics.reporting - prevMetrics.reporting);
+          if (diff >= REPORTING_JUMP_THRESHOLD) {
+            window._enReportingJumps.push({ time: timeMinutes, unit: st.unitKey, prevReporting: prevMetrics.reporting, newReporting: metrics.reporting, diff });
+            if (window.DEBUG_ELECTION_NIGHT) console.warn('[EN-REPORT-JUMP]', st.unitKey, prevMetrics.reporting, '->', metrics.reporting, 'diff', diff);
+          }
+        }
+      } catch (e) { /* ignore logging errors */ }
       st.latestMetrics = metrics;
 
       if (!st.calledAt) {
@@ -1239,7 +1300,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   }
 
   function computeMetrics(st, timeMinutes, phaseName) {
-    // Compute the current reporting fraction for this unit
+    // Compute the current reporting fraction for this unit (schedule is now densified)
     const reporting = computeReportingFraction(st, timeMinutes);
     const thirdPartyDominant = !!st.thirdPartyDominant;
     const totalThirdShare = st.thirdPartyShare;
@@ -1535,8 +1596,10 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
           confidence: st.callRecord.confidence,
           marginStr: st.callRecord.marginStr
         };
-        window._enCallLog = window._enCallLog || [];
-        window._enCallLog.push(entry);
+        if (window.ENABLE_EN_COLOR_CALL_LOG) {
+          window._enCallLog = window._enCallLog || [];
+          window._enCallLog.push(entry);
+        }
         if (window.DEBUG_ELECTION_NIGHT) console.log('[EN-CALL]', entry);
       }
     } catch (e) { console.warn('EN call log failed', e); }
@@ -2050,8 +2113,10 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
             colorMargin: metrics && metrics.colorMargin
           };
           if (typeof window !== 'undefined') {
-            window._enColorLog = window._enColorLog || [];
-            window._enColorLog.push(entry);
+            if (window.ENABLE_EN_COLOR_CALL_LOG) {
+              window._enColorLog = window._enColorLog || [];
+              window._enColorLog.push(entry);
+            }
             if (window.DEBUG_ELECTION_NIGHT) console.log('[EN-COLOR]', entry);
           }
         } catch (e) { console.warn('EN color log failed', e); }
@@ -2141,27 +2206,13 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     }
     if (!isFinite(timeMinutes)) return 0;
     if (timeMinutes <= st.startTime) return 0;
-
-    const schedule = Array.isArray(st.reportingSchedule) ? st.reportingSchedule : null;
-    if (schedule && schedule.length) {
-      let reporting = 0;
-      for (let i = 0; i < schedule.length; i++) {
-        const entry = schedule[i];
-        if (!entry) continue;
-        const entryTime = isFinite(entry.time) ? entry.time : st.startTime;
-        if (timeMinutes + EPS < entryTime) break;
-        const nextReporting = isFinite(entry.reporting) ? entry.reporting : reporting;
-        reporting = Math.max(0, Math.min(1, nextReporting));
-      }
-      if (timeMinutes >= st.startTime + st.duration - EPS) reporting = 1;
-
-      return reporting;
-    }
-
+    // Count at a constant rate between startTime and startTime+duration.
+    // The schedule generation is no longer used for display; instead
+    // the unit progresses linearly from 0 -> 1 over `st.duration`.
+    if (!isFinite(st.duration) || st.duration <= 0) return 1;
     if (timeMinutes >= st.startTime + st.duration) return 1;
     const normalized = (timeMinutes - st.startTime) / st.duration;
-    const eased = normalized * normalized * (3 - 2 * normalized);
-    return clamp01(eased);
+    return clamp01(normalized);
   }
 
   function updateToggleLabel() {
