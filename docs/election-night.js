@@ -719,6 +719,12 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
+  // Per-unit ease and jitter parameters (deterministic per-unit)
+  // Make easePower scale with closeness: closer races (closeness->1)
+  // should have a stronger ease-out (larger power) to build tension.
+  // Base 2.0, add up to 1.5 from closeness, plus a tiny RNG offset.
+  const easePower = 2.0 + (closeness || 0) * 1.5 + rng() * 0.5; // ~2.0..4.0
+  const reportJitter = (rng() - 0.5) * 0.04; // ±0.02 max per-unit jitter
       let callDeadline = startTime + MIN_CALL_DELAY + closeness * EXTRA_CALL_WINDOW + jitter;
       callDeadline = Math.max(startTime + 10, Math.min(callDeadline, startTime + duration - 10));
 
@@ -806,6 +812,8 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
         aliases,
         pvWeight: isAtLarge ? 0 : 1,
         closeness,
+        easePower,
+        reportJitter,
         targetMetrics,
         callLeader: null,
         misCallLogged: false,
@@ -2211,8 +2219,20 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     // the unit progresses linearly from 0 -> 1 over `st.duration`.
     if (!isFinite(st.duration) || st.duration <= 0) return 1;
     if (timeMinutes >= st.startTime + st.duration) return 1;
-    const normalized = (timeMinutes - st.startTime) / st.duration;
-    return clamp01(normalized);
+    let normalized = (timeMinutes - st.startTime) / st.duration;
+    normalized = clamp01(normalized);
+    // Apply ease-out so counting slows near the end: easeOut(n) = 1 - (1 - n)^power
+    const power = (st && isFinite(st.easePower)) ? Math.max(1, st.easePower) : 2.0;
+    const eased = 1 - Math.pow(1 - normalized, power);
+    // Apply tiny deterministic jitter that vanishes at 0 and 1: jitter * n * (1-n)
+    const jitterParam = (st && isFinite(st.reportJitter)) ? st.reportJitter : 0;
+    const jitterTerm = jitterParam * normalized * (1 - normalized);
+    const reported = clamp01(eased + jitterTerm);
+    // Never allow reported to reach 1.0 before the endTime
+    if (timeMinutes < st.startTime + st.duration - EPS && reported >= 1 - EPS) {
+      return 1 - EPS;
+    }
+    return reported;
   }
 
   function updateToggleLabel() {
