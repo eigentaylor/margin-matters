@@ -63,16 +63,8 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
   // Tiny epsilon used when forcing flips to avoid exact zero margins
   const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
-  // Display update and close race constants
+  // Display update interval for throttling expensive UI work
   const DISPLAY_UPDATE_INTERVAL = 2; // minutes between display updates (counting is continuous)
-  const CLOSE_RACE_THRESHOLD = 0.005; // margin threshold (0.5%) to consider a race "extremely close"
-  const CLOSE_RACE_SLOWDOWN_START = 0.85; // start slowing down at 85% reporting for close races
-  const CLOSE_RACE_SLOWDOWN_FACTOR = 0.3; // slow down to 30% of normal speed for close races
-  // Batch scheduling constraints used for reporting schedule generation
-  const BATCH_MIN_GAP = 1; // minimum minutes between reported batches
-  const BATCH_MAX_GAP = 3; // nominal maximum minutes between batches (used as cap)
-  const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
-  const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
 
   // Load constants from shared file if present, otherwise fall back to
   // the inline definitions for backwards compatibility.
@@ -227,6 +219,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
 
     if (elements.toggle) {
       elements.toggle.addEventListener('click', () => {
+        console.log('ELECTION NIGHT TOGGLE CLICK');
         if (!state.prepared) {
           prepareSimulation();
           startSimulation();
@@ -683,17 +676,6 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
       let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
 
-      // Extend duration for extremely close races to accommodate the slowdown
-      // This ensures the slowdown actually adds real time rather than just manipulating display
-      if (Math.abs(adjustedMargin) <= CLOSE_RACE_THRESHOLD) {
-        // Calculate how much extra time is needed based on the slowdown
-        // The slowdown starts at CLOSE_RACE_SLOWDOWN_START (85%) and affects the final 15%
-        // With CLOSE_RACE_SLOWDOWN_FACTOR of 0.3, the final 15% takes ~3.3x longer
-        const slowdownMultiplier = Math.pow(1 / CLOSE_RACE_SLOWDOWN_FACTOR, 0.5);
-        const affectedPortion = (1 - CLOSE_RACE_SLOWDOWN_START);
-        duration = duration * (1 + affectedPortion * (slowdownMultiplier - 1));
-      }
-
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
@@ -788,8 +770,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
         misCallLogged: false,
         thirdPartyDominant,
         reportingSchedule,
-        rngSeed,
-        finalMargin: finalMarginTwoParty // Store final margin for slowdown logic
+        rngSeed
       });
     });
 
@@ -2066,18 +2047,6 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
         reporting = Math.max(0, Math.min(1, nextReporting));
       }
       if (timeMinutes >= st.startTime + st.duration - EPS) reporting = 1;
-
-      // Apply slowdown for extremely close races near the end
-      // This creates more tension by slowing down the final counts
-      if (isFinite(st.finalMargin) && Math.abs(st.finalMargin) <= CLOSE_RACE_THRESHOLD) {
-        if (reporting >= CLOSE_RACE_SLOWDOWN_START && reporting < 1) {
-          // Slow down the effective reporting percentage
-          // Map the range [CLOSE_RACE_SLOWDOWN_START, 1] to a slower progression
-          const remainingProgress = (reporting - CLOSE_RACE_SLOWDOWN_START) / (1 - CLOSE_RACE_SLOWDOWN_START);
-          const slowedProgress = Math.pow(remainingProgress, 1 / CLOSE_RACE_SLOWDOWN_FACTOR);
-          reporting = CLOSE_RACE_SLOWDOWN_START + slowedProgress * (1 - CLOSE_RACE_SLOWDOWN_START);
-        }
-      }
 
       return reporting;
     }
