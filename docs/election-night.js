@@ -176,6 +176,33 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
    * This function runs on DOMContentLoaded.
    */
   function init() {
+    // Initialize debug logs for ME/NE coloring and calls
+    try {
+      if (typeof window !== 'undefined') {
+        window._enColorLog = window._enColorLog || [];
+        window._enCallLog = window._enCallLog || [];
+        window.getElectionNightLogs = function () {
+          return { colorLog: (window._enColorLog || []).slice(), callLog: (window._enCallLog || []).slice() };
+        };
+        window.downloadElectionNightLogs = function (filename) {
+          try {
+            const out = window.getElectionNightLogs();
+            const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename || `election-night-logs-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => { try { document.body.removeChild(a); URL.revokeObjectURL(url); } catch (e) { } }, 5000);
+            return true;
+          } catch (e) {
+            console.error('downloadElectionNightLogs failed', e);
+            return false;
+          }
+        };
+      }
+    } catch (e) { console.warn('Failed to initialize EN debug logs', e); }
     elements.toggle = document.getElementById('enToggle');
     elements.reset = document.getElementById('enReset');
     elements.speed = document.getElementById('enSpeed');
@@ -720,6 +747,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
         leader: finalLeader,
         margin: finalMarginTwoParty,
         marginStr: finalMarginStr,
+        colorMargin: finalMarginTwoParty,
         countedMargin,
         countedMarginStr,
         color: finalColor,
@@ -1096,7 +1124,8 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
         displayColor = NEUTRAL_COLOR;
       }
       if (!isCalled && metrics.reporting > 0) {
-        if (metrics.margin != null && Math.abs(metrics.margin) < 0.01) {
+        const marginForLight = (metrics.colorMargin != null) ? metrics.colorMargin : metrics.margin;
+        if (marginForLight != null && Math.abs(marginForLight) < 0.01) {
           displayColor = BRIGHT_TOSSUP_COLOR;
         } else {
           displayColor = blendColors(metrics.color, '#cccccc', UNCALLED_BRIGHTEN);
@@ -1223,6 +1252,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     let margin = null;
     let marginStr = '';
     let color;
+    let statsForLeader = null;
 
     // If a third party dominates the unit, we don't run the two-party
     // bias model and instead show the final shares directly until reporting
@@ -1234,7 +1264,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       leader = reporting > 0 ? 'O' : null;
       margin = 0;
       marginStr = leader ? 'Other lead' : '';
-      color = st.targetMetrics && st.targetMetrics.color ? st.targetMetrics.color : THIRD_PARTY_COLOR;
+      color = null; // assigned after stats using third-party fallback
     } else {
       const bias = logisticBias(st.biasParams, reporting, phaseName);
       const rawD = st.dTwoPartyFinal * Math.max(0.15, bias);
@@ -1249,21 +1279,18 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       rShare = st.twoPartyShare * rShareBlend;
       oShare = totalThirdShare;
       // prefer actual counted vote totals when available (stats computed below)
-      const statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
+      statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
       leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
       margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
       if (leader === 'O') marginStr = 'Other lead';
       else marginStr = (reporting > 0) ? formatLean(margin) : '';
-      const baseColor = leader === 'O'
-        ? THIRD_PARTY_COLOR
-        : safeMarginToColor(margin || 0, leader === 'O');
-      const intensity = Math.pow(Math.max(0, Math.min(1, reporting)), 0.7);
-      color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
     }
 
     // Given the current shares and reporting fraction compute vote totals
     // and how many votes remain.
-    const stats = computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
+    const stats = statsForLeader || computeVoteStats(st, reporting, dShare, rShare, oShare, topThirdShare);
+    const countedTwoParty = (stats.dCounted + stats.rCounted);
+    const countedTwoPartyMargin = countedTwoParty > EPS ? ((stats.dCounted - stats.rCounted) / countedTwoParty) : null;
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
@@ -1274,6 +1301,23 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     // remaining ballots.
     const confidence = calculateConfidence(st, stats);
 
+    let colorMargin = countedTwoPartyMargin;
+    if (colorMargin == null && countedMargin != null) colorMargin = countedMargin;
+    if (colorMargin == null && isFinite(margin)) colorMargin = margin;
+    if (leader === 'O' && colorMargin == null) colorMargin = 0;
+
+    if (!color) {
+      if (leader === 'O') {
+        color = (st.targetMetrics && st.targetMetrics.color) ? st.targetMetrics.color : THIRD_PARTY_COLOR;
+      } else {
+        const baseColor = safeMarginToColor((colorMargin || 0), false);
+        const intensity = Math.pow(Math.max(0, Math.min(1, reporting)), 0.7);
+        color = intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, Math.min(1, intensity));
+      }
+    }
+
+    const colorMarginForResult = colorMargin;
+
     let result = {
       reporting,
       leader,
@@ -1281,6 +1325,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       marginStr,
       countedMargin,
       countedMarginStr,
+      colorMargin: colorMarginForResult,
       color,
       dShare,
       rShare,
@@ -1297,7 +1342,27 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     };
 
     if (st.targetMetrics && reporting >= 1 - EPS) {
-      result = { ...result, ...st.targetMetrics };
+      // When a unit is fully reported we normally merge the target/final
+      // metrics. However, we must NOT allow a previously-stored baseline
+      // color to overwrite the color computed from actual counted votes
+      // when those counted votes are available. The user expectation is
+      // that coloring should prefer raw/count tallies if present.
+      try {
+        const computedColor = result.color;
+        const computedColorMargin = result.colorMargin;
+        const computedCountedVotes = isFinite(result.countedVotes) ? result.countedVotes : 0;
+
+        // Merge target metrics but preserve computed color/colorMargin when
+        // there are counted votes (i.e. raw data is available).
+        result = { ...result, ...st.targetMetrics };
+        if (computedCountedVotes > EPS) {
+          result.color = computedColor;
+          result.colorMargin = computedColorMargin;
+        }
+      } catch (e) {
+        // Fallback to simple merge if anything goes wrong
+        result = { ...result, ...st.targetMetrics };
+      }
     }
 
     return result;
@@ -1457,6 +1522,24 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
+    try {
+      const unit = st && st.unitKey ? st.unitKey : null;
+      const abbr = unit && unit.length >= 2 ? unit.slice(0, 2) : null;
+      if (abbr === 'ME' || abbr === 'NE') {
+        const entry = {
+          time: st.callRecord.time,
+          unit: st.unitKey,
+          leader: st.callRecord.leader,
+          actualWinner: st.callRecord.actualWinner,
+          reporting: st.callRecord.reporting,
+          confidence: st.callRecord.confidence,
+          marginStr: st.callRecord.marginStr
+        };
+        window._enCallLog = window._enCallLog || [];
+        window._enCallLog.push(entry);
+        if (window.DEBUG_ELECTION_NIGHT) console.log('[EN-CALL]', entry);
+      }
+    } catch (e) { console.warn('EN call log failed', e); }
     triggerTipRefresh();
   }
 
@@ -1950,6 +2033,30 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   }
 
   function applyColor(st, color, metrics) {
+    try {
+      // Log ME/NE coloring for debugging
+      const unit = st && st.unitKey ? st.unitKey : null;
+      const abbr = unit && unit.length >= 2 ? unit.slice(0, 2) : null;
+      if (abbr === 'ME' || abbr === 'NE') {
+        try {
+          const entry = {
+            time: state.currentTime,
+            unit: unit,
+            abbr: abbr,
+            color: color,
+            reporting: metrics && metrics.reporting,
+            leader: metrics && metrics.leader,
+            margin: metrics && metrics.countedMargin,
+            colorMargin: metrics && metrics.colorMargin
+          };
+          if (typeof window !== 'undefined') {
+            window._enColorLog = window._enColorLog || [];
+            window._enColorLog.push(entry);
+            if (window.DEBUG_ELECTION_NIGHT) console.log('[EN-COLOR]', entry);
+          }
+        } catch (e) { console.warn('EN color log failed', e); }
+      }
+    } catch (e) { }
     st.pathSelections.forEach(sel => {
       if (!sel) return;
       try { sel.attr('fill', color); }
