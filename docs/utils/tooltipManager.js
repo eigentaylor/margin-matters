@@ -6,6 +6,57 @@ import { leanStr } from './formatters.js';
 import { isUnitFlipped } from './flipScenarios.js';
 import { lastNameFrom, getUnitCandidateLastNames, deriveCandidateNames } from './candidateNames.js';
 
+// Helper used by formatUnitTooltip to pick sensible candidate last names
+function resolveCandidateNames(infoObj, unitKey) {
+    try {
+        // 1) If info contains explicit candidates object, derive from that
+        if (infoObj && infoObj.candidates && typeof infoObj.candidates === 'object') {
+            const candObj = infoObj.candidates || {};
+            const out = { D: 'D', R: 'R', O: 'O' };
+            try {
+                if (candObj.D && candObj.D.name) {
+                    const ln = lastNameFrom(String(candObj.D.name)); if (ln) out.D = ln;
+                }
+                if (candObj.R && candObj.R.name) {
+                    const ln = lastNameFrom(String(candObj.R.name)); if (ln) out.R = ln;
+                }
+                if (candObj.O && candObj.O.name) {
+                    const ln = lastNameFrom(String(candObj.O.name)); if (ln) out.O = ln;
+                }
+            } catch (e) { }
+            return out;
+        }
+        // 2) Prefer simple per-party fields on info (dCandidate/rCandidate)
+        if (infoObj) {
+            const out = { D: 'D', R: 'R', O: 'O' };
+            try {
+                if (infoObj.dCandidate) {
+                    const ln = lastNameFrom(String(infoObj.dCandidate)); if (ln) out.D = ln;
+                }
+                if (infoObj.rCandidate) {
+                    const ln = lastNameFrom(String(infoObj.rCandidate)); if (ln) out.R = ln;
+                }
+                if (infoObj.thirdPartyResults && typeof infoObj.thirdPartyResults === 'object') {
+                    const entries = Object.entries(infoObj.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+                    if (entries.length) {
+                        entries.sort((a, b) => b.votes - a.votes);
+                        const top = entries[0]; if (top && top.name) { const ln = lastNameFrom(String(top.name)); if (ln) out.O = ln; }
+                    }
+                }
+            } catch (e) { }
+            // If this produced anything other than placeholders, return it
+            if (out.D !== 'D' || out.R !== 'R' || out.O !== 'O') return out;
+        }
+        // 3) Try the shared CSV helper that reads parsed rows
+        try {
+            const csvNames = getUnitCandidateLastNames(unitKey);
+            if (csvNames && typeof csvNames === 'object') return csvNames;
+        } catch (e) { }
+    } catch (e) { }
+    // Fallback placeholders
+    return { D: 'D', R: 'R', O: 'O' };
+}
+
 export function _ensureTip() {
     const tip = document.getElementById('mapTip') || null;
     try { if (!tip) console.debug('[tooltipManager] _ensureTip: #mapTip not found'); } catch (e) { }
@@ -28,12 +79,12 @@ export function _placeTipAt(evt) {
     const pad = 6;
     x = Math.max(pad, Math.min(wr.width - pad, x));
     y = Math.max(pad, Math.min(wr.height - pad, y));
-    try { console.debug('[tooltipManager] _placeTipAt', { clientX: clientX, clientY: clientY, wrapRect: { left: wr.left, top: wr.top, width: wr.width, height: wr.height }, final: { x, y } }); } catch (e) { }
+    // try { console.debug('[tooltipManager] _placeTipAt', { clientX: clientX, clientY: clientY, wrapRect: { left: wr.left, top: wr.top, width: wr.width, height: wr.height }, final: { x, y } }); } catch (e) { }
     tip.style.left = x + 'px';
     tip.style.top = y + 'px';
 }
 export function showMapTip(evt, text) {
-    try { console.debug('[tooltipManager] showMapTip called', { evt: evt && { clientX: evt.clientX, clientY: evt.clientY }, textSnippet: (text ? (String(text).slice(0, 120)) : text) }); } catch (e) { }
+    //try { console.debug('[tooltipManager] showMapTip called', { evt: evt && { clientX: evt.clientX, clientY: evt.clientY }, textSnippet: (text ? (String(text).slice(0, 120)) : text) }); } catch (e) { }
     try {
         const tip = _ensureTip(); if (!tip) return;
         // Handle multi-line tooltips by converting newlines to <br> tags
@@ -45,7 +96,7 @@ export function showMapTip(evt, text) {
 }
 export function hideMapTip() {
     try {
-        try { console.debug('[tooltipManager] hideMapTip called'); } catch (e) { }
+        //try { console.debug('[tooltipManager] hideMapTip called'); } catch (e) { }
         const tip = _ensureTip();
         if (tip) tip.style.display = 'none';
     } catch (e) { }
@@ -103,14 +154,57 @@ export function formatUnitTooltip(unit, opts) {
         })();
         if (evAllocation) {
             const evParts = [];
-            // Try to get candidate last names for labels (prefer derived names, then per-unit map)
-            const evCandidateNames = (function () {
+            // Resolve candidate last names for labels (prefer snapshot/info, then derived helpers, then CSV map)
+            function resolveCandidateNames(infoObj, unitKey) {
                 try {
-                    const names = deriveCandidateNames(info, unit);
-                    if (names && typeof names === 'object') return names;
+                    // 1) If info contains explicit candidates object, derive from that
+                    if (infoObj && infoObj.candidates && typeof infoObj.candidates === 'object') {
+                        const candObj = infoObj.candidates || {};
+                        const out = { D: 'D', R: 'R', O: 'O' };
+                        try {
+                            if (candObj.D && candObj.D.name) {
+                                const ln = lastNameFrom(String(candObj.D.name)); if (ln) out.D = ln;
+                            }
+                            if (candObj.R && candObj.R.name) {
+                                const ln = lastNameFrom(String(candObj.R.name)); if (ln) out.R = ln;
+                            }
+                            if (candObj.O && candObj.O.name) {
+                                const ln = lastNameFrom(String(candObj.O.name)); if (ln) out.O = ln;
+                            }
+                        } catch (e) { }
+                        return out;
+                    }
+                    // 2) Prefer simple per-party fields on info (dCandidate/rCandidate)
+                    if (infoObj) {
+                        const out = { D: 'D', R: 'R', O: 'O' };
+                        try {
+                            if (infoObj.dCandidate) {
+                                const ln = lastNameFrom(String(infoObj.dCandidate)); if (ln) out.D = ln;
+                            }
+                            if (infoObj.rCandidate) {
+                                const ln = lastNameFrom(String(infoObj.rCandidate)); if (ln) out.R = ln;
+                            }
+                            if (infoObj.thirdPartyResults && typeof infoObj.thirdPartyResults === 'object') {
+                                const entries = Object.entries(infoObj.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+                                if (entries.length) {
+                                    entries.sort((a, b) => b.votes - a.votes);
+                                    const top = entries[0]; if (top && top.name) { const ln = lastNameFrom(String(top.name)); if (ln) out.O = ln; }
+                                }
+                            }
+                        } catch (e) { }
+                        // If this produced anything other than placeholders, return it
+                        if (out.D !== 'D' || out.R !== 'R' || out.O !== 'O') return out;
+                    }
+                    // 3) Try the shared CSV helper that reads parsed rows
+                    try {
+                        const csvNames = getUnitCandidateLastNames(unitKey);
+                        if (csvNames && typeof csvNames === 'object') return csvNames;
+                    } catch (e) { }
                 } catch (e) { }
-                try { return getUnitCandidateLastNames(unit); } catch (e) { return { D: 'D', R: 'R', O: 'O' }; }
-            })();
+                // Fallback placeholders
+                return { D: 'D', R: 'R', O: 'O' };
+            }
+            const evCandidateNames = resolveCandidateNames(info, unit);
             if (evAllocation.D > 0) evParts.push(`${(evCandidateNames && evCandidateNames.D) || 'D'}: ${evAllocation.D}`);
             if (evAllocation.R > 0) evParts.push(`${(evCandidateNames && evCandidateNames.R) || 'R'}: ${evAllocation.R}`);
             // Aggregate any "Other" EVs: include traditional O plus any detailed thirdParty allocations
@@ -172,25 +266,31 @@ export function formatUnitTooltip(unit, opts) {
             // Find the party with the highest vote tally
             const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
 
-            // Candidate name lookup (prefer derived names, then last-name map)
+            // Candidate name lookup (use the resolver to prefer snapshot/info values)
             const displayNames = true; // show candidate last names when available
-            const candidateNames = (function () {
-                if (!displayNames) return { D: 'D', R: 'R', O: 'O' };
-                try {
-                    const names = deriveCandidateNames(info, unit);
-                    if (names && typeof names === 'object') return names;
-                } catch (e) { }
-                try { return getUnitCandidateLastNames(unit); } catch (e) { return { D: 'D', R: 'R', O: 'O' }; }
-            })();
+            const candidateNames = displayNames ? resolveCandidateNames(info, unit) : { D: 'D', R: 'R', O: 'O' };
 
             // Determine front-runner party key and build a human-friendly leader label
             const frontRunnerParty = (voteTallies.D === maxVotes) ? 'D' : (voteTallies.R === maxVotes) ? 'R' : (voteTallies.O === maxVotes) ? 'O' : null;
             let leaderLabel = frontRunnerParty || null;
             if (frontRunnerParty) {
-                const nm = (candidateNames && candidateNames[frontRunnerParty]) ||
-                    (info && ((frontRunnerParty === 'D' && info.dCandidate) || (frontRunnerParty === 'R' && info.rCandidate))) ||
-                    (info && info.candidates && info.candidates[frontRunnerParty] && info.candidates[frontRunnerParty].name) || null;
-                if (nm) leaderLabel = (frontRunnerParty === 'O') ? String(nm) : `${String(nm)} (${frontRunnerParty})`;
+                // Prefer explicit candidate info from the snapshot/info object
+                // (dCandidate/rCandidate or info.candidates[name]) before using the
+                // derived/fallback `candidateNames` map which may contain placeholders
+                // like 'D'/'R'. This prevents results like "R (R)" when a real
+                // candidate name is available on the info object.
+                const nm = (info && ((frontRunnerParty === 'D' && info.dCandidate) || (frontRunnerParty === 'R' && info.rCandidate))) ||
+                    (info && info.candidates && info.candidates[frontRunnerParty] && info.candidates[frontRunnerParty].name) ||
+                    (candidateNames && candidateNames[frontRunnerParty]) || null;
+                if (nm) {
+                    // Only use the candidate name when it's a real name, not a placeholder like 'D' or 'R'
+                    const nmStr = String(nm);
+                    if (nmStr && nmStr.length > 1 && nmStr !== frontRunnerParty) {
+                        leaderLabel = (frontRunnerParty === 'O') ? nmStr : `${nmStr} (${frontRunnerParty})`;
+                    } else {
+                        leaderLabel = frontRunnerParty;
+                    }
+                }
             }
 
             // Only display parties with votes, add star to the highest

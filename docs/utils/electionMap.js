@@ -304,7 +304,7 @@ const ElectionMap = {
     const self = ElectionMap;
     groups.each(function (d, i) {
       const g = d3.select(this); const gx = x; const gy = startY + i * (boxH + gapY); g.attr('transform', `translate(${gx},${gy})`);
-      try { console.debug('[ElectionMap] creating small box', { unit: d.unit, color: d.color, ev: d.ev, index: i }); } catch (e) { }
+      //try { console.debug('[ElectionMap] creating small box', { unit: d.unit, color: d.color, ev: d.ev, index: i }); } catch (e) { }
       const isY = d.color && /ffd700|c9a400|yellow/i.test(d.color); const txtColor = isY ? '#000' : '#fff'; const smallColor = isY ? '#000' : 'rgba(255,255,255,0.85)';
       g.append('rect')
         .attr('rx', 5).attr('ry', 5).attr('width', boxW).attr('height', boxH)
@@ -346,7 +346,7 @@ const ElectionMap = {
         })
         .on('mouseenter', function (evt) {
           try {
-            try { console.debug('[ElectionMap] small-box mouseenter', { unit: d.unit, isDistrict, hasStateMouseenter: !!(self._handlers.state && typeof self._handlers.state.mouseenter === 'function'), hasDistrictMouseenter: !!(self._handlers.district && typeof self._handlers.district.mouseenter === 'function'), showMapTipAvailable: typeof window.showMapTip === 'function' }); } catch (e) { }
+            //try { console.debug('[ElectionMap] small-box mouseenter', { unit: d.unit, isDistrict, hasStateMouseenter: !!(self._handlers.state && typeof self._handlers.state.mouseenter === 'function'), hasDistrictMouseenter: !!(self._handlers.district && typeof self._handlers.district.mouseenter === 'function'), showMapTipAvailable: typeof window.showMapTip === 'function' }); } catch (e) { }
             if (isDistrict && self._handlers.district && typeof self._handlers.district.mouseenter === 'function') {
               self._handlers.district.mouseenter(evt, d.unit);
             } else if (self._handlers.state && typeof self._handlers.state.mouseenter === 'function') {
@@ -355,13 +355,13 @@ const ElectionMap = {
               // Fallback: directly build and show a tooltip so small boxes work even when no handlers were registered
               try {
                 const unitOrAbbr = isDistrict ? d.unit : d.unit.replace(/-AL$/, '');
-                console.debug('[ElectionMap] small-box fallback mouseenter building tip for', unitOrAbbr);
+                //console.debug('[ElectionMap] small-box fallback mouseenter building tip for', unitOrAbbr);
                 const tipInfo = (typeof createUnitTipInfo === 'function') ? createUnitTipInfo(unitOrAbbr, { label: unitOrAbbr }) : null;
                 if (tipInfo) {
                   tipInfo.clientX = evt && evt.clientX != null ? evt.clientX : null;
                   tipInfo.clientY = evt && evt.clientY != null ? evt.clientY : null;
                   const txt = tipInfo.getText();
-                  console.debug('[ElectionMap] small-box fallback showMapTip', { unit: unitOrAbbr, textSnippet: (txt ? txt.slice(0, 120) : txt) });
+                  //console.debug('[ElectionMap] small-box fallback showMapTip', { unit: unitOrAbbr, textSnippet: (txt ? txt.slice(0, 120) : txt) });
                   if (typeof window.showMapTip === 'function') window.showMapTip(evt, txt, tipInfo);
                 } else {
                   if (typeof window.showMapTip === 'function') window.showMapTip(evt, String(unitOrAbbr));
@@ -383,7 +383,7 @@ const ElectionMap = {
           })
           .on('mouseleave', function (evt) {
             try {
-              try { console.debug('[ElectionMap] small-box mouseleave', { unit: d.unit, hasStateMouseleave: !!(self._handlers.state && typeof self._handlers.state.mouseleave === 'function') }); } catch (e) { }
+              //try { console.debug('[ElectionMap] small-box mouseleave', { unit: d.unit, hasStateMouseleave: !!(self._handlers.state && typeof self._handlers.state.mouseleave === 'function') }); } catch (e) { }
               if (self._handlers.state && typeof self._handlers.state.mouseleave === 'function') {
                 self._handlers.state.mouseleave(evt);
               } else {

@@ -1,5 +1,38 @@
+import { getStateName } from './utils/constants.js';
+import { leanStr, formatLeader, formatMarginText, formatReportingText, formatConfidenceText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
+import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/mathUtils.js';
+import { getUnitCandidateLastNames } from './utils/candidateNames.js';
+import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
+import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
+
 (function () {
   'use strict';
+
+  const clampMargin = typeof sharedClampMargin === 'function'
+    ? sharedClampMargin
+    : (value => {
+      if (!isFinite(value)) return 0;
+      const LIMIT = 1 - 1e-9;
+      if (value > LIMIT) return LIMIT;
+      if (value < -LIMIT) return -LIMIT;
+      return value;
+    });
+
+  const clamp01 = typeof sharedClamp01 === 'function'
+    ? sharedClamp01
+    : (x => (isFinite(x) ? Math.max(0, Math.min(1, x)) : 0));
+
+  const clampByte = typeof sharedClampByte === 'function'
+    ? sharedClampByte
+    : (v => Math.max(0, Math.min(255, v | 0)));
+
+  const formatLean = value => {
+    if (!isFinite(value)) return 'ERROR';
+    if (typeof leanStr === 'function') return leanStr(value);
+    const pct = (Math.abs(value) * 100).toFixed(1);
+    return `${value > 0 ? 'D' : 'R'}+${pct}`;
+  };
 
   // election-night simulator
   // This script builds a reproducible, time-based simulation of how
@@ -84,26 +117,6 @@
     { name: 'Final', start: toMinutesWithOffset('25:00'), end: toMinutesWithOffset('28:00') }
   ];
 
-  // Mapping of two-letter state abbreviations to their full names used
-  // when formatting labels for the UI and call log.
-  const STATE_NAMES = {
-    AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut',
-    DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois',
-    IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts',
-    MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada',
-    NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota',
-    OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota',
-    TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia',
-    WI: 'Wisconsin', WY: 'Wyoming'
-  };
-
-  function clampMargin(value) {
-    if (!isFinite(value)) return 0;
-    const LIMIT = 1 - 1e-9;
-    if (value > LIMIT) return LIMIT;
-    if (value < -LIMIT) return -LIMIT;
-    return value;
-  }
 
   // Runtime simulation state. This object stores everything needed to
   // keep the simulation consistent across frames: whether it's prepared,
@@ -625,7 +638,8 @@
         totals = window.getUnitFinalVoteTotals(unit, { year, pv: pvValue });
       }
 
-      const fallbackTotal = totalFromRow(row);
+      const fallbackTotalRaw = totalVotesFromRow(row);
+      const fallbackTotal = (isFinite(fallbackTotalRaw) && fallbackTotalRaw > 0) ? fallbackTotalRaw : 1;
       const hasFallbackTotal = isFinite(fallbackTotal) && fallbackTotal > 0;
       if (!totals && !hasFallbackTotal) return;
 
@@ -1143,6 +1157,48 @@
         topThirdShare: metrics.topThirdShare,
         totalThirdShare: metrics.totalThirdShare
       };
+      // Attach candidate metadata when available (from parsed CSV rows)
+      try {
+        const year = state.year || getSelectedYear();
+        if (typeof window.getRowsForYear === 'function') {
+          const rows = window.getRowsForYear(year) || [];
+          // Prefer exact unitKey match (ME-AL/NE-AL or state/district), fall back to abbr
+          const rowMatch = rows.find(r => r && (r.unit === st.unitKey || r.unit === st.abbr));
+          if (rowMatch) {
+            // preserve original CSV fields if present
+            if (rowMatch.dCandidate) snapshot.dCandidate = rowMatch.dCandidate;
+            if (rowMatch.rCandidate) snapshot.rCandidate = rowMatch.rCandidate;
+            if (rowMatch.thirdPartyResults) snapshot.thirdPartyResults = rowMatch.thirdPartyResults;
+            // Also expose a small candidates object for downstream consumers
+            snapshot.candidates = snapshot.candidates || {};
+            if (rowMatch.dCandidate) snapshot.candidates.D = { name: rowMatch.dCandidate };
+            if (rowMatch.rCandidate) snapshot.candidates.R = { name: rowMatch.rCandidate };
+            // If top third-party present, include as O
+            try {
+              if (rowMatch.thirdPartyResults && typeof rowMatch.thirdPartyResults === 'object') {
+                const entries = Object.entries(rowMatch.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+                if (entries.length) {
+                  entries.sort((a, b) => b.votes - a.votes);
+                  snapshot.candidates.O = { name: entries[0].name };
+                }
+              }
+            } catch (e) { }
+          }
+        }
+      } catch (e) { }
+      // If we didn't get candidate names above, try the shared helper fallback
+      try {
+        if ((!snapshot.candidates || Object.keys(snapshot.candidates).length === 0) && typeof getUnitCandidateLastNames === 'function') {
+          const names = getUnitCandidateLastNames(st.unitKey) || getUnitCandidateLastNames(st.abbr) || null;
+          if (names && typeof names === 'object') {
+            snapshot.candidates = snapshot.candidates || {};
+            if (names.D) { snapshot.candidates.D = { name: names.D }; snapshot.dCandidate = names.D; }
+            if (names.R) { snapshot.candidates.R = { name: names.R }; snapshot.rCandidate = names.R; }
+            if (names.O) { snapshot.candidates.O = { name: names.O }; }
+          }
+        }
+      } catch (e) { }
+
       st.aliases.forEach(alias => state.snapshot.set(alias, snapshot));
       state.snapshot.set(st.unitKey, snapshot);
       maybeEmitMiscall(st, metrics, timeMinutes);
@@ -2082,65 +2138,7 @@
     console.warn('Unknown leader code', code);
     return 'No call';
   }
-
-  function formatMarginText(marginStr, leader) {
-    if (marginStr === 'None') return 'None';
-    if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';
-    return marginStr;
-  }
-
-  function formatReportingText(reporting) {
-    if (reporting == null || reporting <= 0) return '0% reporting';
-    return `${(reporting * 100).toFixed(1)}% reporting`;
-  }
-
-  function formatConfidenceText(confidence) {
-    if (!isFinite(confidence)) return 'Confidence —';
-    return `Confidence ${(confidence * 100).toFixed(0)}%`;
-  }
-
-  function formatEvAllocationsForLog(callAlloc, finalAlloc) {
-    const toParts = alloc => {
-      if (!alloc) return [];
-      const parts = [];
-      if (alloc.D) parts.push(`D ${alloc.D}`);
-      if (alloc.R) parts.push(`R ${alloc.R}`);
-      if (alloc.O) parts.push(`O ${alloc.O}`);
-      return parts;
-    };
-    const callParts = toParts(callAlloc);
-    const finalParts = toParts(finalAlloc);
-    if (!callParts.length && !finalParts.length) return '';
-    const callText = callParts.length ? callParts.join(' | ') : '';
-    const finalText = finalParts.length ? finalParts.join(' | ') : '';
-    if (callText && finalText && callText !== finalText) {
-      return `EV ${callText} → ${finalText}`;
-    }
-    const text = finalText || callText;
-    return text ? `EV ${text}` : '';
-  }
-
-  function formatLean(value) {
-    if (!isFinite(value)) return 'ERROR';
-    if (typeof window.leanStr === 'function') return window.leanStr(value);
-    //if (Math.abs(value) < 0.00005) return 'EVEN';
-    const pct = (Math.abs(value) * 100).toFixed(1);
-    return `${value > 0 ? 'D' : 'R'}+${pct}`;
-  }
-
-  function formatUnitLabel(unit) {
-    if (/^[A-Z]{2}$/.test(unit)) return STATE_NAMES[unit] || unit;
-    if (/-AL$/.test(unit)) {
-      const abbr = unit.slice(0, 2);
-      return `${STATE_NAMES[abbr] || abbr} at-large`;
-    }
-    if (/(ME|NE)-0[1-9]$/.test(unit)) {
-      const abbr = unit.slice(0, 2);
-      const district = unit.slice(3);
-      return `${STATE_NAMES[abbr] || abbr} ${district}`;
-    }
-    return unit;
-  }
+  // format helper functions moved to ./utils/formatters.js
 
   function getCurrentPv() {
     if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) return window._pvOverride;
@@ -2232,94 +2230,8 @@
     });
     return total > 0 ? total : 538;
   }
+  // color helpers moved to ./utils/colorUtils.js
 
-  function totalFromRow(row) {
-    const direct = +row.total;
-    if (isFinite(direct) && direct > 0) return direct;
-    const sum = (+row.dVotes || 0) + (+row.rVotes || 0) + (+row.tVotes || 0);
-    return sum > 0 ? sum : 1;
-  }
-
-  function clamp01(x) {
-    if (!isFinite(x)) return 0;
-    return Math.max(0, Math.min(1, x));
-  }
-
-  function clampByte(v) {
-    return Math.max(0, Math.min(255, v | 0));
-  }
-
-  function hexToRgb(hex) {
-    if (!hex) return [47, 47, 47];
-    let cleaned = hex.replace('#', '');
-    if (cleaned.length === 8) cleaned = cleaned.slice(0, 6);
-    if (cleaned.length === 3) cleaned = cleaned.split('').map(c => c + c).join('');
-    if (cleaned.length !== 6) return [47, 47, 47];
-    const num = parseInt(cleaned, 16);
-    return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
-  }
-
-  function rgbToHex(r, g, b) {
-    return '#' + [r, g, b].map(v => clampByte(v).toString(16).padStart(2, '0')).join('');
-  }
-
-  function blendColors(a, b, t) {
-    const rgbA = hexToRgb(a);
-    const rgbB = hexToRgb(b);
-    const blended = [
-      Math.round(rgbA[0] + (rgbB[0] - rgbA[0]) * t),
-      Math.round(rgbA[1] + (rgbB[1] - rgbA[1]) * t),
-      Math.round(rgbA[2] + (rgbB[2] - rgbA[2]) * t)
-    ];
-    return rgbToHex(blended[0], blended[1], blended[2]);
-  }
-
-  function safeMarginToColor(margin, isThird) {
-    if (isThird) return THIRD_PARTY_COLOR;
-    if (typeof window.marginToColor === 'function') return window.marginToColor(margin, false);
-    if (margin <= -0.20) return '#8B0000';
-    if (margin <= -0.10) return '#B22222';
-    if (margin <= -0.05) return '#CD5C5C';
-    if (margin < 0) return '#F08080';
-    if (margin < 0.05) return '#87CEFA';
-    if (margin < 0.10) return '#6495ED';
-    if (margin < 0.20) return '#4169E1';
-    return '#00008B';
-  }
-
-  function hashCode(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = Math.imul(31, h) + str.charCodeAt(i) | 0;
-    }
-    return h >>> 0;
-  }
-
-  function mulberry32(a) {
-    return function () {
-      let t = a += 0x6D2B79F5;
-      t = Math.imul(t ^ (t >>> 15), t | 1);
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
-  function randn(rng) {
-    let u = 0, v = 0;
-    while (u === 0) u = rng();
-    while (v === 0) v = rng();
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
-
-  function randStudentT4(rng) {
-    const z = randn(rng);
-    let v = 0;
-    for (let i = 0; i < 4; i++) {
-      const g = randn(rng);
-      v += g * g;
-    }
-    return z / Math.sqrt(v / 4);
-  }
 
   window.resetElectionNightSimulation = function (restorePv = true) {
     resetSimulation(restorePv);
