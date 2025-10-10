@@ -74,9 +74,11 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   const MIN_BATCH_COUNT = 12; // minimum number of batches to generate for a unit
   const MAX_BATCH_COUNT = 28; // maximum number of batches to generate for a unit
 
-  // Known poll-closing times (PT) grouped by states. Used to set when
-  // counting should realistically start for each state.
-  const POLL_CLOSINGS = {
+  // Load constants from shared file if present, otherwise fall back to
+  // the inline definitions for backwards compatibility.
+  const _EXT = (typeof window !== 'undefined' && window.ELECTION_NIGHT_CONSTANTS) || {};
+
+  const POLL_CLOSINGS = _EXT.POLL_CLOSINGS || {
     '15:00': ['KY', 'IN', 'PR'],
     '16:00': ['VT', 'VA', 'SC', 'GA'],
     '16:30': ['NC', 'OH', 'WV'],
@@ -88,10 +90,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     '22:00': ['AK', 'HI']
   };
 
-  // Relative counting speeds by state. Values >1 count faster than
-  // average, values <1 are slower. Used when estimating reporting
-  // duration for each state.
-  const STATE_COUNTING_SPEEDS = {
+  const STATE_COUNTING_SPEEDS = _EXT.STATE_COUNTING_SPEEDS || {
     AL: 1.1, AK: 0.7, AZ: 0.9, AR: 1.0, CA: 0.7, CO: 0.9, CT: 0.9, DE: 1.0,
     DC: 1.0, FL: 1.2, GA: 1.1, HI: 0.6, ID: 1.3, IL: 1.1, IN: 1.1, IA: 1.2,
     KS: 1.0, KY: 1.0, LA: 1.0, ME: 0.8, MD: 1.0, MA: 0.9, MI: 1.0, MN: 0.9,
@@ -101,21 +100,22 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     WA: 0.8, WV: 0.9, WI: 1.0, WY: 0.7
   };
 
-  // States where mail/absentee ballots are common and reporting tends to
-  // be delayed or front-loaded differently. Affects reporting schedule
-  // shapes when generating batches.
-  const MAIL_HEAVY_STATES = new Set(['AZ', 'CA', 'CO', 'HI', 'NV', 'NJ', 'NY', 'OR', 'UT', 'VT', 'WA', 'MI', 'PA', 'WI', 'MN']);
+  const MAIL_HEAVY_STATES = new Set(_EXT.MAIL_HEAVY_STATES || ['AZ', 'CA', 'CO', 'HI', 'NV', 'NJ', 'NY', 'OR', 'UT', 'VT', 'WA', 'MI', 'PA', 'WI', 'MN']);
 
-  // Named phases of election night used to tune heuristics such as the
-  // phase dampener in the bias model. Times are converted to minutes
-  // (with an offset) so we can compare against the simulation clock.
-  const PHASES = [
-    { name: 'Early', start: toMinutesWithOffset('19:00'), end: toMinutesWithOffset('20:30') },
-    { name: 'Mid', start: toMinutesWithOffset('20:30'), end: toMinutesWithOffset('22:00') },
-    { name: 'Central', start: toMinutesWithOffset('22:00'), end: toMinutesWithOffset('23:30') },
-    { name: 'Late', start: toMinutesWithOffset('23:30'), end: toMinutesWithOffset('25:00') },
-    { name: 'Final', start: toMinutesWithOffset('25:00'), end: toMinutesWithOffset('28:00') }
+  // Convert PHASES time strings to minute offsets using toMinutesWithOffset
+  const _PHASES_RAW = _EXT.PHASES || [
+    { name: 'Early', start: '19:00', end: '20:30' },
+    { name: 'Mid', start: '20:30', end: '22:00' },
+    { name: 'Central', start: '22:00', end: '23:30' },
+    { name: 'Late', start: '23:30', end: '25:00' },
+    { name: 'Final', start: '25:00', end: '28:00' }
   ];
+
+  const PHASES = _PHASES_RAW.map(p => ({
+    name: p.name,
+    start: typeof p.start === 'string' ? toMinutesWithOffset(p.start) : p.start,
+    end: typeof p.end === 'string' ? toMinutesWithOffset(p.end) : p.end
+  }));
 
 
   // Runtime simulation state. This object stores everything needed to
