@@ -39,6 +39,25 @@ Features added to tester.js don't carry over to election-night.js due to code du
 
 **Impact**: Eliminates duplicate `clampMargin` in both files
 
+### ✅ Phase 1.5: Shared Vote Math & ME/NE At-Large Aggregation (Complete)
+**Status**: ✓ Modules created, wired into tester and election-night flows
+
+**Created**:
+- `docs/utils/voteMath.js` – common helpers for PV-adjusted vote totals (e.g. `computePvAdjustedBreakdown`)
+- `docs/utils/atLargeAggregator.js` – aggregates ME/NE district data into statewide at-large results, updates PV stops, and honors flip scenarios
+
+**Key Integrations**:
+- `docs/utils/unitInfo.js` now delegates ME/NE totals to the aggregator, ensuring tooltips and EV calculators reflect district rollups
+- `docs/utils/testerUpdate.js` and `docs/tester.js` call into the new module so map colors, small boxes, and PV summaries stay in sync
+- `docs/election-night.js` prepares aggregated data before building the simulation snapshot, fixing discrepancies with the election-night view
+
+**Behavior Improvements**:
+- ME-AL (1972+) and NE-AL (1992+) always mirror the summed district outcomes, including active flip scenarios
+- PV stop metadata now inherits the aggregated winners/colors, preventing mismatches on the slider
+- Third-party-dominant results propagate correctly to statewide colors when districts deliver that outcome
+
+**Testing**: Manual verification via tester page and election-night simulator; no automated coverage yet
+
 ## Next Steps
 
 ### Phase 2: EV Allocation Module (High Value)

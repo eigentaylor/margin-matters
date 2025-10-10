@@ -24,6 +24,8 @@ export function createUpdateAll(deps) {
     updateStateLabels,
     refreshMapDecorations,
     dbg,
+    shouldAggregateAtLarge,
+    getAtLargeAdjustedTotals,
     idToAbbr,
     d3
   } = deps;
@@ -124,10 +126,6 @@ export function createUpdateAll(deps) {
     let dEV = 0; let rEV = 0; let oEV = 0;
 
     const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
-    const vtByUnit = new Map();
-    if (activeFlip && Array.isArray(activeFlip.units)) {
-      activeFlip.units.forEach(u => vtByUnit.set(u.unit, Math.max(0, +u.votes_to_flip || 0)));
-    }
 
     if (activeFlip && window._activeFlip && window._activeFlip.year === year) {
       console.log('Active flip debug:', {
@@ -140,10 +138,17 @@ export function createUpdateAll(deps) {
       const unit = r && r.unit;
       if (!unit || unit === 'NATIONAL') return;
       const flipped = isUnitFlipped(year, unit);
-      let m = (year === 1876 && unit === 'CO') ? (+r.rm || 0) : ((+r.rm || 0) + pv);
-      if (flipped) {
-        m = (m > 0 ? -EPS : EPS);
+      let baseMargin = (year === 1876 && unit === 'CO') ? (+r.rm || 0) : ((+r.rm || 0) + pv);
+      if (typeof shouldAggregateAtLarge === 'function' && typeof getAtLargeAdjustedTotals === 'function' && shouldAggregateAtLarge(year, unit)) {
+        const aggregated = getAtLargeAdjustedTotals(year, unit, { pv, useActiveFlip: true });
+        if (aggregated && isFinite(aggregated.twoPartyMargin)) {
+          baseMargin = aggregated.twoPartyMargin;
+        }
       }
+      if (flipped) {
+        baseMargin = (baseMargin > 0 ? -EPS : EPS);
+      }
+      let m = baseMargin;
 
       let ev = evByUnit.get(`${year}:${unit}`);
       if (ev == null || isNaN(ev)) {
@@ -288,43 +293,28 @@ export function createUpdateAll(deps) {
       }
     });
 
-    adjustAtLargeFromDistricts(year, arr, abbrColors, unitColors, vtByUnit, pvState.pv);
+  adjustAtLargeFromDistricts(year, abbrColors, unitColors, pvState.pv);
 
     return { arr, abbrColors, unitColors, unitParties, dEV, rEV, oEV };
   }
 
-  function adjustAtLargeFromDistricts(year, rows, abbrColors, unitColors, vtByUnit, pv) {
+  function adjustAtLargeFromDistricts(year, abbrColors, unitColors, pv) {
+    if (typeof shouldAggregateAtLarge !== 'function' || typeof getAtLargeAdjustedTotals !== 'function') return;
     const states = ['ME', 'NE'];
     for (const st of states) {
-      const districtUnits = (st === 'ME') ? ['ME-01', 'ME-02'] : ['NE-01', 'NE-02', 'NE-03'];
-      const haveAll = districtUnits.every(u => rows.some(r => r && r.unit === u));
-      if (!haveAll) continue;
-      let dSum = 0; let rSum = 0;
-      for (const du of districtUnits) {
-        const row = rows.find(x => x && x.unit === du);
-        if (!row) continue;
-        let d0 = +row.dVotes || 0;
-        let r0 = +row.rVotes || 0;
-        const vt = vtByUnit.get(du) || 0;
-        const flipped = isUnitFlipped(year, du);
-        if (flipped) {
-          if (d0 >= r0) { d0 = Math.max(0, d0 - vt); r0 = r0 + vt; }
-          else { d0 = d0 + vt; r0 = Math.max(0, r0 - vt); }
-        }
-        dSum += d0; rSum += r0;
+      const atLargeUnit = `${st}-AL`;
+      if (!shouldAggregateAtLarge(year, atLargeUnit)) continue;
+      const totals = getAtLargeAdjustedTotals(year, atLargeUnit, { pv, useActiveFlip: true });
+      if (!totals) continue;
+      let margin = totals.twoPartyMargin;
+      if (isUnitFlipped(year, atLargeUnit)) {
+        margin = margin > 0 ? -EPS : EPS;
       }
-      const twoTot = dSum + rSum;
-      if (twoTot <= 0) continue;
-      let m = (dSum - rSum) / twoTot;
-      const alUnit = st + '-AL';
-      if (isUnitFlipped(year, alUnit)) {
-        m = (m > 0 ? -1e-6 : 1e-6);
-      }
-      const color = marginToColor(m);
-      unitColors.set(alUnit, color);
+      const color = marginToColor(margin, totals.thirdPartyDominant);
+      unitColors.set(atLargeUnit, color);
       const prev = abbrColors.get(st);
-      if (!prev || Math.abs(m) >= Math.abs(prev.m)) {
-        abbrColors.set(st, { m, color });
+      if (!prev || totals.thirdPartyDominant || Math.abs(margin) >= Math.abs(prev.m)) {
+        abbrColors.set(st, { m: margin, color });
       }
     }
   }

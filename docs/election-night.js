@@ -5,6 +5,7 @@ import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/
 import { getUnitCandidateLastNames } from './utils/candidateNames.js';
 import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
+import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 
 (function () {
   'use strict';
@@ -360,6 +361,8 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   function prepareSimulation() {
     const year = getSelectedYear();
     if (!year) return;
+
+    try { prepareAtLargeData(); } catch (e) { /* non-fatal */ }
 
     state.prevPvOverride = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
     state.prevPvSliderValue = getPvSliderValue();

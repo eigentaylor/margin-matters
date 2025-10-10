@@ -38,6 +38,7 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { buildPvStops, stopToEff, stopToUnits, stopsByYear } from './utils/pvStops.js';
 import { createTesterInitializer } from './utils/testerInit.js';
 import { createUpdateAll } from './utils/testerUpdate.js';
+import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } from './utils/atLargeAggregator.js';
 
 (function () {
   // Check if proportional EV mode is enabled
@@ -473,6 +474,13 @@ import { createUpdateAll } from './utils/testerUpdate.js';
       });
     } catch (e) { console.warn(e); }
 
+    prepareAtLargeData({
+      byYear,
+      stopColorsByYear: window._stopColorsByYear,
+      stopEffByYear: window._stopEffByYear,
+      colorForMargin: marginToColor
+    });
+
     // expose simple accessors
     window.getRowsForYear = function (y) { try { return byYear.get(y) || []; } catch (e) { return []; } };
     window.getEvFor = function (y, u) { try { return evByUnit.get(`${y}:${u}`); } catch (e) { return null; } };
@@ -666,6 +674,8 @@ import { createUpdateAll } from './utils/testerUpdate.js';
     refreshMapDecorations,
     dbg,
     idToAbbr,
+    shouldAggregateAtLarge,
+    getAtLargeAdjustedTotals,
     d3: (typeof d3 !== 'undefined') ? d3 : null
   });
 
