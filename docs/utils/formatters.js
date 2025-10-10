@@ -32,9 +32,16 @@ export function formatMarginText(marginStr, leader) {
     return marginStr;
 }
 
-export function formatReportingText(reporting) {
+export function formatReportingText(reporting, remainingVotes) {
     if (reporting == null || reporting <= 0) return '0% reporting';
-    return `${(reporting * 100).toFixed(1)}% reporting`;
+    const value = Number(reporting);
+    if (!isFinite(value) || value < 0) return '0% reporting';
+    const pct = Math.max(0, Math.min(100, value * 100));
+    // If remainingVotes provided and is numeric, use it to decide 100% and append votes-left
+    const rem = (remainingVotes != null && isFinite(remainingVotes)) ? Math.max(0, Math.round(remainingVotes)) : null;
+    const base = (rem === 0) ? '100.0% counted' : `${pct.toFixed(1)}% counted`;
+    if (rem != null && rem > 0) return `${base} (${rem.toLocaleString('en-US')} votes left)`;
+    return base;
 }
 
 export function formatConfidenceText(confidence) {

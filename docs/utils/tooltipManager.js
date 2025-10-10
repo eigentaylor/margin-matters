@@ -279,12 +279,17 @@ export function formatUnitTooltip(unit, opts) {
                 // derived/fallback `candidateNames` map which may contain placeholders
                 // like 'D'/'R'. This prevents results like "R (R)" when a real
                 // candidate name is available on the info object.
-                const nm = (info && ((frontRunnerParty === 'D' && info.dCandidate) || (frontRunnerParty === 'R' && info.rCandidate))) ||
+                const rawName = (info && ((frontRunnerParty === 'D' && info.dCandidate) || (frontRunnerParty === 'R' && info.rCandidate))) ||
                     (info && info.candidates && info.candidates[frontRunnerParty] && info.candidates[frontRunnerParty].name) ||
                     (candidateNames && candidateNames[frontRunnerParty]) || null;
-                if (nm) {
-                    // Only use the candidate name when it's a real name, not a placeholder like 'D' or 'R'
-                    const nmStr = String(nm);
+                if (rawName) {
+                    // Prefer last name only for tooltip brevity. Use lastNameFrom when possible
+                    let shortName = null;
+                    try {
+                        const maybe = String(rawName);
+                        shortName = lastNameFrom(maybe) || null;
+                    } catch (e) { shortName = null; }
+                    const nmStr = shortName || String(rawName);
                     if (nmStr && nmStr.length > 1 && nmStr !== frontRunnerParty) {
                         leaderLabel = (frontRunnerParty === 'O') ? nmStr : `${nmStr} (${frontRunnerParty})`;
                     } else {
@@ -366,8 +371,17 @@ export function formatUnitTooltip(unit, opts) {
             const value = Number(info.reporting);
             if (!isFinite(value) || value < 0) return '';
             const pct = Math.max(0, Math.min(100, value * 100));
-            const label = (pct >= 99.95) ? '100.0% counted' : `${pct.toFixed(1)}% counted`;
-            return label;
+            // Prefer using explicit remainingVotes when available on the info/snapshot
+            const remaining = (info.remainingVotes != null && isFinite(info.remainingVotes)) ? Math.max(0, Math.round(info.remainingVotes)) : null;
+            // Only display 100.0% when there are truly no votes remaining
+            let baseLabel;
+            if (remaining === 0) baseLabel = '100.0% counted';
+            else baseLabel = `${pct.toFixed(1)}% counted`;
+            // Append votes-left suffix when remainingVotes is provided and > 0
+            if (remaining != null && remaining > 0) {
+                return `${baseLabel} (${remaining.toLocaleString('en-US')} votes left)`;
+            }
+            return baseLabel;
         })();
         if (reportingText) rows.push(reportingText);
 

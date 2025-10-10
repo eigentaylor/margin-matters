@@ -64,7 +64,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
   // Tiny epsilon used when forcing flips to avoid exact zero margins
   const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
   // Display update interval for throttling expensive UI work
-  const DISPLAY_UPDATE_INTERVAL = 2; // minutes between display updates (counting is continuous)
+  const DISPLAY_UPDATE_INTERVAL = 1; // minutes between display updates (counting is continuous)
   // Reporting jump debug threshold (fraction, e.g. 0.12 = 12 percentage points)
   const REPORTING_JUMP_THRESHOLD = 0.12;
   // Maximum reporting step when densifying schedules (fraction, e.g. 0.005 = 0.5%)
@@ -719,12 +719,12 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
       const jitter = (rng() - 0.5) * 24;
-  // Per-unit ease and jitter parameters (deterministic per-unit)
-  // Make easePower scale with closeness: closer races (closeness->1)
-  // should have a stronger ease-out (larger power) to build tension.
-  // Base 2.0, add up to 1.5 from closeness, plus a tiny RNG offset.
-  const easePower = 2.0 + (closeness || 0) * 1.5 + rng() * 0.5; // ~2.0..4.0
-  const reportJitter = (rng() - 0.5) * 0.04; // ±0.02 max per-unit jitter
+      // Per-unit ease and jitter parameters (deterministic per-unit)
+      // Make easePower scale with closeness: closer races (closeness->1)
+      // should have a stronger ease-out (larger power) to build tension.
+      // Base 2.0, add up to 1.5 from closeness, plus a tiny RNG offset.
+      const easePower = 2.0 + (closeness || 0) * 1.5 + rng() * 0.5; // ~2.0..4.0
+      const reportJitter = (rng() - 0.5) * 0.04; // ±0.02 max per-unit jitter
       let callDeadline = startTime + MIN_CALL_DELAY + closeness * EXTRA_CALL_WINDOW + jitter;
       callDeadline = Math.max(startTime + 10, Math.min(callDeadline, startTime + duration - 10));
 
@@ -1156,8 +1156,8 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     state.snapshot.clear();
 
     state.stateData.forEach(st => {
-  const prevMetrics = st.latestMetrics || null;
-  const metrics = computeMetrics(st, timeMinutes, phaseName);
+      const prevMetrics = st.latestMetrics || null;
+      const metrics = computeMetrics(st, timeMinutes, phaseName);
       // Log large reporting jumps for debugging
       try {
         if (typeof window !== 'undefined' && window._enReportingJumps && prevMetrics && isFinite(prevMetrics.reporting) && isFinite(metrics.reporting)) {
@@ -1823,6 +1823,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
           displayLabel: formatUnitLabel(st.unitKey),
           confidence: isFinite(metrics.confidence) ? metrics.confidence : 0,
           reporting: isFinite(metrics.reporting) ? metrics.reporting : 0,
+          remainingVotes: isFinite(metrics.remainingVotes) ? Math.max(0, Math.round(metrics.remainingVotes)) : null,
           leader: metrics.leader,
           marginStr: metrics.countedMarginStr,
           ev: st.ev || 0
@@ -1868,7 +1869,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
         else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
       }
       const leaderText = formatLeader(record.leader);
-      const reportingText = formatReportingText(record.reporting);
+      const reportingText = formatReportingText(record.reporting, record.remainingVotes);
       const marginText = formatMarginText(record.marginStr, record.leader);
       const confidenceText = formatConfidenceText(record.confidence);
       const evText = formatEvAllocationsForLog(record.evAllocations, record.finalAllocations);
@@ -2039,7 +2040,13 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
             }
             const confPct = Math.max(0, Math.min(100, Math.round((candidate.confidence || 0) * 100)));
             infoParts.push(`Confidence ${confPct}%`);
-            infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
+            // Use shared formatter so votes-left is shown when available
+            try {
+              const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
+              infoParts.push(repText);
+            } catch (e) {
+              infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
+            }
             card.textContent = `${label} – ${infoParts.join(' · ')}`;
             cardsContainer.appendChild(card);
           });
@@ -2228,9 +2235,10 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
     const jitterParam = (st && isFinite(st.reportJitter)) ? st.reportJitter : 0;
     const jitterTerm = jitterParam * normalized * (1 - normalized);
     const reported = clamp01(eased + jitterTerm);
-    // Never allow reported to reach 1.0 before the endTime
-    if (timeMinutes < st.startTime + st.duration - EPS && reported >= 1 - EPS) {
-      return 1 - EPS;
+    // Never allow reported to reach 1.0 before the endTime. Cap at 0.999 until end.
+    const CAP_BEFORE_END = 0.999;
+    if (timeMinutes < st.startTime + st.duration - EPS && reported >= CAP_BEFORE_END) {
+      return CAP_BEFORE_END;
     }
     return reported;
   }
