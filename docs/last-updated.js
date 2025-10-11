@@ -1,8 +1,12 @@
 // Load and inject the last updated timestamp from last-updated.json
 (function () {
   // Try a set of likely relative prefixes and accept only valid JSON responses.
+  // Try parent-relative prefixes first so nested pages (e.g. docs/state/*)
+  // will find the file at a higher level without first requesting
+  // ./last-updated.json (which causes noisy 404s).
   const candidates = [
-    './', '../', '../../', '../../../', '../../../../',
+    '../', '../../', '../../../', '../../../../',
+    './',
     '/docs/', '/' // try absolute roots as last resort
   ];
 
