@@ -220,8 +220,8 @@
       <div id="enLogUncalled" class="en-log-uncalled"></div>
     </div>
 
-  <script defer type="module" src="tester.js"></script>
-  <script defer type="module" src="election-night.js"></script>
+  <script type="module" src="tester.js"></script>
+  <script type="module" src="election-night.js"></script>
     <script>
       // Lightweight PV tools wiring (reuses tester.js globals where possible)
       (function () {
@@ -331,46 +331,41 @@
             .on("mouseover", function (event, d) {
               const sel = d3.select(this);
               const cur = sel.attr('fill') || '#2f2f2f';
-              // stash the original fill so we can restore it on mouseout
               sel.attr('data-orig-fill', cur);
-              try {
-                const hex = (cur && cur[0] === '#') ? cur.slice(1) : cur;
-                const r = parseInt(hex.slice(0, 2), 16) || 0;
-                const g = parseInt(hex.slice(2, 4), 16) || 0;
-                const b = parseInt(hex.slice(4, 6), 16) || 0;
-                // if it's already yellow (1968 plurality), keep yellow; else if the color is redder than bluer, use bright red, otherwise bright blue
-                const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
-                const highlight = isYellow ? '#FFD700' : ((r > b) ? '#ff6666' : '#66b3ff');
-                sel.attr('fill', highlight);
-              } catch (e) {
-                sel.attr('fill', '#66b3ff');
-              }
-              // show tooltip
+              try { sel.attr('fill', '#A0A0A0'); } catch (e) { }
+
+              // If tooltipManager is available (from modularized utils), prefer using it
               try {
                 const abbr = FIPS_TO_ABBR[String(d.id).padStart(2, "0")];
-                if (abbr) {
-                  const info = (window.getAdjustedInfo ? window.getAdjustedInfo(abbr) : null) || {};
-                  const ev = (info && info.ev != null) ? info.ev : '';
-                  const marginStr = (info && info.marginStr) ? info.marginStr : '';
-                  tip.textContent = abbr + (ev !== '' ? ` · ${ev} EV` : '') + (marginStr ? ` · ${marginStr}` : '');
-                  tip.style.display = 'block';
-                  // position right away
-                  const rect = this.ownerSVGElement.getBoundingClientRect();
-                  const x = event.clientX - rect.left;
-                  const y = event.clientY - rect.top;
-                  tip.style.left = (rect.left + x) + 'px';
-                  tip.style.top = (rect.top + y) + 'px';
+                if (abbr && typeof window.createUnitTipInfo === 'function' && typeof window.showMapTip === 'function') {
+                  const tipInfo = window.createUnitTipInfo(abbr, { label: abbr });
+                  // showMapTip wrapper used by tester.js will set active tip and start the poll
+                  window.showMapTip(event, tipInfo.getText(), tipInfo);
+                  return;
                 }
+              } catch (e) { }
+
+              // Fallback: minimal tooltip behavior (legacy)
+              try {
+                const tipEl = document.getElementById('mapTip');
+                const abbr = FIPS_TO_ABBR[String(d.id).padStart(2, "0")];
+                if (!tipEl || !abbr) return;
+                tipEl.style.position = 'fixed';
+                tipEl.style.pointerEvents = 'none';
+                tipEl.style.zIndex = 9999;
+                tipEl.textContent = abbr;
+                tipEl.style.display = 'block';
+                tipEl.style.left = (event.clientX + 8) + 'px';
+                tipEl.style.top = (event.clientY + 8) + 'px';
               } catch (e) { }
             })
             .on("mousemove", function (event, d) {
               try {
-                if (!tip || tip.style.display === 'none') return;
-                const rect = this.ownerSVGElement.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                tip.style.left = (rect.left + x) + 'px';
-                tip.style.top = (rect.top + y) + 'px';
+                const tipEl = document.getElementById('mapTip');
+                if (!tipEl || tipEl.style.display === 'none') return;
+                // position using viewport coords so it follows the cursor reliably
+                tipEl.style.left = (event.clientX + 8) + 'px';
+                tipEl.style.top = (event.clientY + 8) + 'px';
               } catch (e) { }
             })
             .on("mouseout", function () {
@@ -378,7 +373,10 @@
               const orig = sel.attr('data-orig-fill') || '#2f2f2f';
               sel.attr('fill', orig);
               sel.attr('data-orig-fill', null);
-              if (tip) tip.style.display = 'none';
+              try {
+                const tipEl = document.getElementById('mapTip');
+                if (tipEl) tipEl.style.display = 'none';
+              } catch (e) { }
             })
             .on("click", (event, d) => {
               const abbr = FIPS_TO_ABBR[String(d.id).padStart(2, "0")];

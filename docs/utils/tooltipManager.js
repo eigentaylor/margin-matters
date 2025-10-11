@@ -69,17 +69,43 @@ export function _placeTipAt(evt) {
     const offsetX = 12, offsetY = 12;
     const clientX = (evt && evt.clientX != null) ? evt.clientX : (evt && evt.client && evt.clientX != null ? evt.client.clientX : null);
     const clientY = (evt && evt.clientY != null) ? evt.clientY : (evt && evt.client && evt.client.clientY != null ? evt.client.clientY : null);
+    // Compute preferred placement depending on tooltip positioning mode.
+    // If tooltip is fixed, place using viewport/client coordinates. Otherwise place relative to the map-wrap container.
+    const prevDisplay = tip.style.display;
+    if (prevDisplay === 'none') tip.style.display = 'block';
+    const tr = tip.getBoundingClientRect();
+    // Determine computed position style (fallback to inline style if computed not available)
+    let computedPos = 'absolute';
+    try {
+        const cs = window.getComputedStyle ? window.getComputedStyle(tip) : null;
+        if (cs && cs.position) computedPos = cs.position;
+        else if (tip.style && tip.style.position) computedPos = tip.style.position;
+    } catch (e) { }
+    const pad = 6;
+
+    if (prevDisplay === 'none') tip.style.display = prevDisplay;
+
+    if (computedPos === 'fixed') {
+        // Use client coordinates directly and clamp to viewport
+        let x = (clientX != null ? (clientX + offsetX) : 0);
+        let y = (clientY != null ? (clientY + offsetY) : 0);
+        const vpW = (document.documentElement && document.documentElement.clientWidth) ? document.documentElement.clientWidth : window.innerWidth || 0;
+        const vpH = (document.documentElement && document.documentElement.clientHeight) ? document.documentElement.clientHeight : window.innerHeight || 0;
+        // Clamp using tooltip size so it doesn't overflow viewport
+        x = Math.max(pad, Math.min(Math.max(0, vpW - pad - tr.width), x));
+        y = Math.max(pad, Math.min(Math.max(0, vpH - pad - tr.height), y));
+        tip.style.left = x + 'px';
+        tip.style.top = y + 'px';
+        return;
+    }
+
+    // Default: container-relative positioning (absolute within map-wrap)
     let x = (clientX != null ? (clientX - wr.left + offsetX) : 0);
     let y = (clientY != null ? (clientY - wr.top + offsetY) : 0);
-    // Clamp within container
-    const prev = tip.style.display;
-    if (prev === 'none') tip.style.display = 'block';
-    const tr = tip.getBoundingClientRect();
-    if (prev === 'none') tip.style.display = 'none';
-    const pad = 6;
-    x = Math.max(pad, Math.min(wr.width - pad, x));
-    y = Math.max(pad, Math.min(wr.height - pad, y));
-    // try { console.debug('[tooltipManager] _placeTipAt', { clientX: clientX, clientY: clientY, wrapRect: { left: wr.left, top: wr.top, width: wr.width, height: wr.height }, final: { x, y } }); } catch (e) { }
+    // Clamp within container using tooltip size
+    x = Math.max(pad, Math.min(Math.max(0, wr.width - pad - tr.width), x));
+    y = Math.max(pad, Math.min(Math.max(0, wr.height - pad - tr.height), y));
+    // try { console.debug('[tooltipManager] _placeTipAt', { clientX: clientX, clientY: clientY, wrapRect: { left: wr.left, top: wr.top, width: wr.width, height: wr.height }, final: { x, y }, pos: computedPos }); } catch (e) { }
     tip.style.left = x + 'px';
     tip.style.top = y + 'px';
 }
@@ -414,7 +440,13 @@ export const _activeTipState = {
 };
 export function moveMapTip(evt) { try { _placeTipAt(evt); } catch (e) { } }
 
-export function _setActiveTip(info) { _activeTipState.info = info || null; }
+export function _setActiveTip(info) {
+    try {
+        _activeTipState.info = info || null;
+        if (info) _startActiveTipPoll(info);
+        else _stopActiveTipPoll();
+    } catch (e) { _activeTipState.info = info || null; }
+}
 export function refreshActiveMapTip() {
     try {
         const info = _activeTipState.info;
@@ -429,6 +461,82 @@ export function refreshActiveMapTip() {
         showMapTip(coords, text);
     } catch (e) { }
 }
+
+// Active-tip poller: keep trying to refresh the active tooltip until
+// richer data becomes available or the tip is cleared by hideMapTip.
+let _activeTipPoll = null;
+let _activeTipPollAttempts = 0;
+const _ACTIVE_TIP_POLL_INTERVAL = 150; // ms
+const _ACTIVE_TIP_POLL_MAX = 400; // ~60s safety cap
+
+function _stopActiveTipPoll() {
+    try {
+        if (_activeTipPoll) {
+            clearInterval(_activeTipPoll);
+            _activeTipPoll = null;
+        }
+        _activeTipPollAttempts = 0;
+    } catch (e) { }
+}
+
+function _isInfoDetailed(info) {
+    try {
+        if (!info) return false;
+        // If info has a unit property, prefer checking getAdjustedInfo
+        const unit = info.unit || null;
+        if (unit && typeof window.getAdjustedInfo === 'function') {
+            try {
+                const adj = window.getAdjustedInfo(unit);
+                if (!adj) return false;
+                // Consider detailed if we have an EV, a margin string, reporting, or candidate metadata
+                if ((adj.ev != null && adj.ev !== '') || (adj.marginStr && String(adj.marginStr).trim() !== '') || adj.reporting > 0 || adj.called || adj.dCandidate || adj.rCandidate) return true;
+            } catch (e) { }
+        }
+        // Otherwise fallback to checking whether info.getText() returns more than a single token (abbr)
+        if (typeof info.getText === 'function') {
+            try {
+                const txt = String(info.getText() || '');
+                if (!txt) return false;
+                // if tooltip contains newline or 'EV' or '%' or 'vote' or 'Called' it's likely detailed
+                if (txt.indexOf('\n') >= 0) return true;
+                const checkWords = ['EV', '%', 'vote', 'Called', 'Confidence', 'counted'];
+                for (const w of checkWords) if (txt.indexOf(w) >= 0) return true;
+            } catch (e) { }
+        }
+        return false;
+    } catch (e) { return false; }
+}
+
+function _startActiveTipPoll(info) {
+    try {
+        _stopActiveTipPoll();
+        if (!info) return;
+        _activeTipPollAttempts = 0;
+        // If info already looks detailed, do nothing
+        if (_isInfoDetailed(info)) return;
+        _activeTipPoll = setInterval(() => {
+            _activeTipPollAttempts++;
+            // Stop if tip cleared
+            if (!_activeTipState.info) return _stopActiveTipPoll();
+            // If info replaced, stop (will be restarted by new set)
+            if (_activeTipState.info !== info) return _stopActiveTipPoll();
+            // If data now available, refresh and stop polling
+            try {
+                if (_isInfoDetailed(info)) {
+                    try { refreshActiveMapTip(); } catch (e) { }
+                    return _stopActiveTipPoll();
+                }
+            } catch (e) { }
+            // Safety cap to avoid infinite polling; if reached, keep polling but reset attempts counter
+            if (_activeTipPollAttempts >= _ACTIVE_TIP_POLL_MAX) {
+                // Do one final refresh attempt and then reset attempts (don't permanently stop)
+                try { refreshActiveMapTip(); } catch (e) { }
+                _activeTipPollAttempts = 0;
+            }
+        }, _ACTIVE_TIP_POLL_INTERVAL);
+    } catch (e) { }
+}
+
 
 // Expose helper to get candidate last names for a unit (D, R, top third-party O)
 // Candidate name helpers moved to docs/utils/candidateNames.js
