@@ -4,3 +4,4 @@
 /__pycache__
 docs/possibilities.bayes.js
 node_modules/
+/.venv
