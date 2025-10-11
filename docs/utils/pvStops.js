@@ -68,10 +68,10 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
             if (!opt.value || String(opt.value).trim() === '') continue;
             let found = false;
             for (const s of existing) { if (almostEqual(s, val)) { found = true; break; } }
-            for (const s of presetStops) { if (almostEqual(s, val)) { found = true; break; } }
+            for (const s of presetStops) { if (almostEqual(s.val, val)) { found = true; break; } }
             if (!found && Math.abs(val) <= cap) {
-              presetStops.push(val);
               const name = (opt.text || opt.label || '').split(':')[0].trim();
+              presetStops.push({ val, name });
               const pvUnits = stopToUnits.get(val) || [];
               pvUnits.push(`PRESET:${name || String(val)}`);
               stopToUnits.set(val, pvUnits);
@@ -190,14 +190,16 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`;
     }).join('');
 
-    const presetHtml = presetStops.map((v, pi) => {
-      const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
-      const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
-      const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
-      const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
-      const name = null;
-      return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name || ''}">${label}</span>`;
-    }).join('');
+    const presetHtml = presetStops.map((ps, pi) => {
+        const v = ps.val;
+        const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
+        const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
+        const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
+        const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
+        const name = ps.name || '';
+        const text = name ? `${name} ${label}` : label;
+        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name}">${text}</span>`;
+      }).join('');
 
     container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
     container.querySelectorAll('span.btn').forEach((el) => {
