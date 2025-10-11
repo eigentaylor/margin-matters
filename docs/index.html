@@ -168,20 +168,7 @@
               </div>
               <div style="display:flex;flex-direction:column;gap:6px">
                 <label class="legend" for="pvPreset">Presets</label>
-                <select id="pvPreset" class="btn" style="min-width:220px">
-                  <option value="">Select preset…</option>
-                  <option value="0.005">Gore: D+0.5</option>
-                  <option value="0.021">Clinton: D+2.1</option>
-                  <option value="-0.016">Trump: R+1.6</option>
-                  <option value="0.045">Biden: D+4.5</option>
-                  <option value="0.075">Obama: D+7.5</option>
-                  <option value="0.085">William Clinton: D+8.5</option>
-                  <option value="-0.118">Grant: R+11.8</option>
-                  <option value="-0.154">Eisenhower: R+15.4</option>
-                  <option value="-0.182">Reagan: R+18.2</option>
-                  <option value="0.226">Johnson: D+22.6</option>
-                  <option value="-0.231">Nixon: R+23.1</option>
-                </select>
+                <select id="pvPreset" class="btn" style="min-width:220px"></select>
               </div>
               <div style="display:flex;gap:8px;align-items:center">
                 <button id="pvApply" class="btn">Apply PV</button>
@@ -222,12 +209,14 @@
       <div id="enLogUncalled" class="en-log-uncalled"></div>
     </div>
 
+  <script src="./pv-presets.js"></script>
   <script type="module" src="tester.js"></script>
   <script type="module" src="election-night.js"></script>
     <script>
       // Lightweight PV tools wiring (reuses tester.js globals where possible)
       (function () {
         function parsePvText(txt) {
+    
           if (!txt) return null;
           txt = String(txt).trim().toUpperCase();
           if (txt === 'EVEN' || txt === '0' || txt === 'D+0' || txt === 'R+0') return 0;
