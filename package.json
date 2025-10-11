@@ -1,12 +1,31 @@
 {
+  "name": "margin-matters",
+  "version": "1.0.0",
+  "description": "Tools and site sources for margin-matters",
+  "private": true,
+  "scripts": {
+    "start": "npx http-server docs -c-1 -p 8080",
+    "serve": "npx http-server -c-1 -p 8080",
+    "lint": "npx eslint 'docs/**/*.js' 'site_builder/**/*.js' --ext .js",
+    "lint:fix": "npx eslint 'docs/**/*.js' 'site_builder/**/*.js' --ext .js --fix"
+  },
   "devDependencies": {
-    "@eslint/css": "^0.12.0",
-    "@eslint/js": "^9.37.0",
-    "@eslint/json": "^0.13.2",
-    "@eslint/markdown": "^7.4.0",
-    "eslint": "^9.37.0",
-    "globals": "^16.4.0",
-    "jscodeshift": "^17.3.0",
-    "typescript-eslint": "^8.46.0"
+    "eslint": "^8.50.0",
+    "http-server": "^14.1.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": ["warn"],
+      "no-console": "off"
+    }
   }
 }

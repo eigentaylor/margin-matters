@@ -1,5 +1,5 @@
 /*
-Interactive Explorer for state-trends
+Interactive Explorer for margin-matters
 - Loads docs/presidential_margins.csv (already published for the site)
 - Lets user choose state + measure family and renders an animated chart
 - Keeps to plain D3 for portability (no bundler)
