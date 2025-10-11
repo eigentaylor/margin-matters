@@ -113,11 +113,10 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 # Tie or very close - use the side of the stop relative to national
                 side = 1 if (s - nat) >= 0 else -1
                 winner = 'D' if side >= 0 else 'R'
-
+            # Use canonical palette for CSV exports to ensure consistent colors
             color_name = 'BLUE' if winner == 'D' else ('RED' if winner == 'R' else 'YELLOW')
-            color_css = params.COLORS.get(winner, 'transparent')
-            if color_css == 'deepskyblue':
-                color_css = 'blue' # darker blue for visibility
+            CANON = {'D': '#1e4bd1', 'R': '#b22222', 'T': '#C9A400'}
+            color_css = CANON.get(winner) or params.COLORS.get(winner, 'transparent')
             
             out.append({
                 'year': year,

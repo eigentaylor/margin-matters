@@ -57,7 +57,7 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   const stops = Array.from(stopsSet).sort((a, b) => a - b);
   const presetStops = [];
   try {
-  const presetEl = doc && doc.getElementById && doc.getElementById('pvPreset');
+    const presetEl = doc && doc.getElementById && doc.getElementById('pvPreset');
     if (presetEl && presetEl.options && presetEl.options.length) {
       const existing = stops.slice();
       const almostEqual = (a, b, eps = 1e-9) => Math.abs(a - b) <= eps;
@@ -97,8 +97,8 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   stopsByYear.set(year, allStops);
   if (datalist) {
     datalist.innerHTML = allStops.map(v => `<option value="${(v * 100).toFixed(1)}"></option>`).join('');
-  const sliderEl = doc && doc.getElementById ? doc.getElementById('pvSlider') : null;
-  if (sliderEl) sliderEl.setAttribute('list', 'pvStopsList');
+    const sliderEl = doc && doc.getElementById ? doc.getElementById('pvSlider') : null;
+    if (sliderEl) sliderEl.setAttribute('list', 'pvStopsList');
   }
 
   if (container) {
@@ -112,6 +112,7 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
       const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
       let bgColor = '#0d0d0dff';
+      const CANON = { BLUE: '#1e4bd1', RED: '#b22222', YELLOW: '#C9A400' };
       // helper to find the closest CSV key when numeric rounding differs
       const findKeyForValue = (map, val) => {
         if (!map || typeof map.keys !== 'function') return null;
@@ -139,31 +140,44 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           }
         }
         if (byStopCsv) {
-          // Prefer the explicit color_css from the stop_colors CSV. Use the first
-          // non-empty color found for this stop as a straightforward, reliable
-          // source for the button background.
+          // Prefer canonical color by winner if present in CSV entries. This
+          // avoids inconsistent light/dark shades and ensures a uniform palette.
           try {
-            let found = null;
+            let hasT = false, hasD = false, hasR = false;
+            let firstCss = null;
             byStopCsv.forEach((info) => {
-              if (info && info.color_css) {
-                if (!found) found = info.color_css;
+              if (!firstCss && info && info.color_css) firstCss = info.color_css;
+              if (info && info.winner) {
+                const w = String(info.winner).toUpperCase();
+                if (w === 'T' || w === 'O') hasT = true;
+                else if (w === 'D') hasD = true;
+                else if (w === 'R') hasR = true;
               }
             });
-            if (found) {
-              bgColor = found; // console.debug('[stops] using CSV color for stop', { year, stop: v, key, color: found });
+            if (hasT) bgColor = CANON.YELLOW;
+            else if (hasD) bgColor = CANON.BLUE;
+            else if (hasR) bgColor = CANON.RED;
+            else if (firstCss) {
+              // Fallback: try to infer canonical color from CSS string
+              const s = String(firstCss).toLowerCase();
+              if (s.includes('blue')) bgColor = CANON.BLUE;
+              else if (s.includes('red')) bgColor = CANON.RED;
+              else if (s.includes('yel') || s.includes('gold')) bgColor = CANON.YELLOW;
+              else bgColor = firstCss;
             } else {
-              // No explicit CSV color found for this stop key — emit debug info
               try {
                 const entries = [];
                 if (byStopCsv && typeof byStopCsv.forEach === 'function') {
                   byStopCsv.forEach((val, k) => entries.push([k, val]));
                 }
-                console.debug('[stops][debug] no CSV color for stop', { year, stop: v, key, unitsRaw, csvEntries: entries, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
+                console.debug('[stops][debug] no CSV color/winner for stop', { year, stop: v, key, unitsRaw, csvEntries: entries, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
               } catch (e2) { console.warn('[stops][debug] error preparing CSV debug', e2); }
             }
           } catch (e) { console.warn(e); }
         }
       }
+      // If this stop represents the Actual (nat) and is not EVEN, prefer red/blue
+      // based on national margin for clearer
       const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
       // If we've fallen back to the default color, log context to help debugging
       if (bgColor === '#0d0d0dff') {
