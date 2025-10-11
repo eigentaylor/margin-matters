@@ -301,28 +301,92 @@ function ensureStopYearMap(map, year) {
   return map.get(year);
 }
 
+function normalizeWinnerCode(totals) {
+  if (!totals || !totals.winner) return null;
+  const w = String(totals.winner).toUpperCase();
+  if (w === 'O') return 'T';
+  return w === 'D' || w === 'R' || w === 'T' ? w : null;
+}
+
+function getMarginValue(totals) {
+  if (!totals || totals.twoPartyMargin == null) return null;
+  const m = Number(totals.twoPartyMargin);
+  return Number.isFinite(m) ? m : null;
+}
+
+function shouldAttachAtLargeStop(totalsBelow, totalsAt, totalsAbove) {
+  const winners = [normalizeWinnerCode(totalsBelow), normalizeWinnerCode(totalsAt), normalizeWinnerCode(totalsAbove)].filter(Boolean);
+  if (winners.length >= 2) {
+    const unique = new Set(winners);
+    if (unique.size > 1) return true;
+  }
+
+  const margins = [getMarginValue(totalsBelow), getMarginValue(totalsAt), getMarginValue(totalsAbove)];
+  const nearZero = margins.some(m => m != null && Math.abs(m) <= STOP_EPS * 2);
+  if (nearZero) return true;
+
+  const pairs = [
+    [margins[0], margins[1]],
+    [margins[1], margins[2]],
+    [margins[0], margins[2]]
+  ];
+  for (const [a, b] of pairs) {
+    if (a == null || b == null) continue;
+    if (Math.abs(a) <= STOP_EPS * 2 || Math.abs(b) <= STOP_EPS * 2) return true;
+    if (a * b < 0) return true;
+  }
+
+  const thirdPartyDominant = [totalsBelow, totalsAt, totalsAbove].some(t => t && t.thirdPartyDominant);
+  if (thirdPartyDominant && winners.length > 0) {
+    const unique = new Set(winners);
+    if (unique.size > 1) return true;
+  }
+
+  return false;
+}
+
 function updateStopMetadata(year, config, stopColorsByYear, stopEffByYear, colorForMargin, rows, natMargin) {
   if (!(stopColorsByYear instanceof Map)) return;
   const byStop = ensureStopYearMap(stopColorsByYear, year);
   if (!(byStop instanceof Map)) return;
   const effByStop = stopEffByYear instanceof Map ? ensureStopYearMap(stopEffByYear, year) : null;
+  const delta = Math.max(STOP_EPS * 10, 0.00005);
 
   byStop.forEach((unitsMap, stopKey) => {
+    if (!(unitsMap instanceof Map)) {
+      unitsMap = new Map();
+      byStop.set(stopKey, unitsMap);
+    }
+    unitsMap.delete(config.atLarge);
+
     const pvVal = effByStop && effByStop.has(stopKey) ? effByStop.get(stopKey) : Number(stopKey);
     if (!isFinite(pvVal)) return;
-    const totals = getAtLargeAdjustedTotals(year, config.atLarge, {
+
+    const totalsAt = getAtLargeAdjustedTotals(year, config.atLarge, {
       pv: pvVal,
       useActiveFlip: false,
       rowsOverride: rows,
       natMarginOverride: natMargin
     });
-    if (!totals) return;
-    const entry = buildStopEntry(totals, colorForMargin);
+    const totalsBelow = getAtLargeAdjustedTotals(year, config.atLarge, {
+      pv: pvVal - delta,
+      useActiveFlip: false,
+      rowsOverride: rows,
+      natMarginOverride: natMargin
+    });
+    const totalsAbove = getAtLargeAdjustedTotals(year, config.atLarge, {
+      pv: pvVal + delta,
+      useActiveFlip: false,
+      rowsOverride: rows,
+      natMarginOverride: natMargin
+    });
+
+    const include = shouldAttachAtLargeStop(totalsBelow, totalsAt, totalsAbove);
+    if (!include) return;
+
+    const entryTotals = totalsAt || totalsAbove || totalsBelow;
+    const entry = buildStopEntry(entryTotals, colorForMargin);
     if (!entry) return;
-    if (!(unitsMap instanceof Map)) {
-      unitsMap = new Map();
-      byStop.set(stopKey, unitsMap);
-    }
     unitsMap.set(config.atLarge, entry);
   });
 
