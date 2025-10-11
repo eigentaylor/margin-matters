@@ -1,0 +1,6 @@
+{
+    // Use the workspace virtual environment's Python interpreter
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+    // Auto-activate the selected Python environment in new terminals
+    "python.terminal.activateEnvironment": true
+}
