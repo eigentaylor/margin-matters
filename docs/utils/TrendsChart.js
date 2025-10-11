@@ -41,7 +41,7 @@
   // controls: show presidential margins overlay (only visible for senate dataset)
   const controls = d3.select(rootEl).append('div').attr('class', 'trends-controls').style('margin','6px 0');
   const presLabel = controls.append('label').style('font-size','13px').style('color','#666').style('display', 'none');
-  const presCheckbox = presLabel.append('input').attr('type','checkbox').attr('class','show-pres-checkbox').style('margin-right','6px').property('checked', true);
+  const presCheckbox = presLabel.append('input').attr('type','checkbox').attr('class','show-pres-checkbox').style('margin-right','6px');
   presLabel.append('span').text('Show presidential margins');
   // control: split senate series by class (I/II/III) - only for senate dataset
   const classLabel = controls.append('label').style('font-size','13px').style('color','#666').style('display', 'none').style('margin-left','12px');
@@ -162,8 +162,27 @@
         color: winnerColor(parseNum(r.pres_margin), r.color)
       })).filter(d=>d.value!=null && d.year>=start && d.year<=end) : [];
       // presidential margins series (optional overlay)
-  const showPres = (props && props.showPres!=null) ? !!props.showPres : !!presCheckbox.property('checked');
+  // determine whether to show presidential overlay. Never show when viewing the presidential
+  // dataset itself (that would be redundant and can cause confusing overlays).
   const showSplit = (props && props.splitByClass!=null) ? !!props.splitByClass : !!classCheckbox.property('checked');
+  // compute local showPres flag, but override to false when viewing the presidential dataset
+  let showPres = (props && props.showPres!=null) ? !!props.showPres : !!presCheckbox.property('checked');
+  try {
+    // if dataset is explicitly presidential, force showPres to false
+    const dsForPres = props && props.dataset ? String(props.dataset) : null;
+    if (dsForPres === 'presidential') {
+      // ensure we don't draw a presidential overlay on the presidential dataset
+      // (and keep the control hidden as well)
+      if (presLabel) presLabel.style('display', 'none');
+      if (classLabel) classLabel.style('display', 'none');
+      // override
+      // prefer explicit props.showPres if provided; otherwise always false for presidential dataset
+      // force local flag false
+      showPres = false;
+    }
+  } catch (e) {
+    // ignore
+  }
       let dataP = [];
       if (showPres) {
         // Prefer explicit presidential dataset passed in props (use NATIONAL rows)
@@ -200,6 +219,23 @@
       const years = Array.from(new Set([...dataS.map(d=>d.year), ...dataN.map(d=>d.year), ...dataP.map(d=>d.year)])).sort((a,b)=>a-b);
       x.domain(years);
       const values = [...dataS.map(d=>d.value), ...dataN.map(d=>d.value), ...dataP.map(d=>d.value)];
+      // guard: if there are no numeric values, avoid NaNs and a broken chart
+      if (!values.length) {
+        // clear existing series/points and draw empty axes
+        seriesG.selectAll('*').remove();
+        pointsG.selectAll('*').remove();
+        const yMin = -0.5, yMax = 0.5;
+        let pad = (yMax - yMin) || 0.1; pad *= 0.15;
+        y.domain([yMin - pad, yMax + pad]).nice();
+        x.domain(years);
+        const xA_empty = d3.axisBottom(x).tickValues(years).tickFormat(d3.format('d'));
+        const yA_empty = d3.axisLeft(y).ticks(8).tickFormat(v=>fmt(v, rel, delta));
+        xAxisG.attr('transform', `translate(0,${innerH})`).call(xA_empty);
+        yAxisG.call(yA_empty);
+        zeroG.selectAll('*').remove();
+        zeroG.append('line').attr('x1',0).attr('x2',innerW).attr('y1',y(0)).attr('y2',y(0)).attr('stroke',color.axis).attr('stroke-dasharray','5 5');
+        return;
+      }
       const yMin = d3.min(values);
       const yMax = d3.max(values);
       let pad = (yMax - yMin) || 0.1; pad *= 0.15;
