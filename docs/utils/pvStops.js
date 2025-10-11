@@ -112,21 +112,65 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
       const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
       let bgColor = '#0d0d0dff';
+      // helper to find the closest CSV key when numeric rounding differs
+      const findKeyForValue = (map, val) => {
+        if (!map || typeof map.keys !== 'function') return null;
+        let best = null; let bestDiff = Infinity;
+        for (const k of map.keys()) {
+          const num = Number(k);
+          if (!isFinite(num)) continue;
+          const diff = Math.abs(num - val);
+          if (diff < bestDiff) { bestDiff = diff; best = k; }
+        }
+        // allow small tolerance for matching (covers small nudge/effective pv differences)
+        const TOL = 0.00025; // 0.025% absolute margin
+        return (bestDiff <= TOL) ? best : null;
+      };
       if (!isEven) {
         const key = Number(v).toFixed(STOP_KEY_PREC);
-        const byStopCsv = byYearStops && byYearStops.get(key);
+        let byStopCsv = byYearStops && byYearStops.get(key);
+        // if exact key lookup failed, try fuzzy-match on numeric keys
+        if (!byStopCsv && byYearStops) {
+          const alt = findKeyForValue(byYearStops, v);
+          if (alt) {
+            byStopCsv = byYearStops.get(alt);
+            // override key for better debug messages
+            // (keep original key variable for deterministic output where needed)
+          }
+        }
         if (byStopCsv) {
-          const winners = [];
-          const colors = [];
-          const unitsList = unitsRaw && unitsRaw.length ? unitsRaw : Array.from(byStopCsv.keys());
-          unitsList.forEach(u => { const info = byStopCsv.get(u); if (info) { winners.push(info.winner); colors.push(info.color_css || ''); } });
-          if (winners.includes('T')) bgColor = (colors[winners.indexOf('T')] || 'yellow');
-          else if (winners.includes('D')) bgColor = (colors[winners.indexOf('D')] || 'deepskyblue');
-          else if (winners.includes('R')) bgColor = (colors[winners.indexOf('R')] || 'red');
-          else if (colors.length) bgColor = colors[0];
+          // Prefer the explicit color_css from the stop_colors CSV. Use the first
+          // non-empty color found for this stop as a straightforward, reliable
+          // source for the button background.
+          try {
+            let found = null;
+            byStopCsv.forEach((info) => {
+              if (info && info.color_css) {
+                if (!found) found = info.color_css;
+              }
+            });
+            if (found) {
+              bgColor = found; // console.debug('[stops] using CSV color for stop', { year, stop: v, key, color: found });
+            } else {
+              // No explicit CSV color found for this stop key — emit debug info
+              try {
+                const entries = [];
+                if (byStopCsv && typeof byStopCsv.forEach === 'function') {
+                  byStopCsv.forEach((val, k) => entries.push([k, val]));
+                }
+                console.debug('[stops][debug] no CSV color for stop', { year, stop: v, key, unitsRaw, csvEntries: entries, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
+              } catch (e2) { console.warn('[stops][debug] error preparing CSV debug', e2); }
+            }
+          } catch (e) { console.warn(e); }
         }
       }
       const isYellowish = (bgColor && bgColor.toLowerCase && (bgColor.toLowerCase() === '#c9a400' || bgColor.toLowerCase() === '#ffd700' || bgColor.toLowerCase() === 'yellow'));
+      // If we've fallen back to the default color, log context to help debugging
+      if (bgColor === '#0d0d0dff') {
+        try {
+          console.debug('[stops][debug] final bgColor is default', { year, stop: v, key: Number(v).toFixed(STOP_KEY_PREC), unitsRaw, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
+        } catch (e) { /* ignore */ }
+      }
       const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
       const smallColor = isYellowish ? '#000' : 'var(--muted)';
       return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`;
