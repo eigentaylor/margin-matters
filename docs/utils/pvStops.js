@@ -170,7 +170,7 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
                 if (byStopCsv && typeof byStopCsv.forEach === 'function') {
                   byStopCsv.forEach((val, k) => entries.push([k, val]));
                 }
-                console.debug('[stops][debug] no CSV color/winner for stop', { year, stop: v, key, unitsRaw, csvEntries: entries, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
+                //console.debug('[stops][debug] no CSV color/winner for stop', { year, stop: v, key, unitsRaw, csvEntries: entries, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
               } catch (e2) { console.warn('[stops][debug] error preparing CSV debug', e2); }
             }
           } catch (e) { console.warn(e); }
@@ -182,8 +182,8 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       // If we've fallen back to the default color, log context to help debugging
       if (bgColor === '#0d0d0dff') {
         try {
-          console.debug('[stops][debug] final bgColor is default', { year, stop: v, key: Number(v).toFixed(STOP_KEY_PREC), unitsRaw, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
-        } catch (e) { /* ignore */ }
+          //console.debug('[stops][debug] final bgColor is default', { year, stop: v, key: Number(v).toFixed(STOP_KEY_PREC), unitsRaw, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
+        } catch (e) { console.warn('[stops][debug] error preparing final default color debug', e); }
       }
       const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
       const smallColor = isYellowish ? '#000' : 'var(--muted)';
