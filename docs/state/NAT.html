@@ -24,8 +24,8 @@
           <label style="display: flex; align-items: center; gap: 4px;">
             <input type="checkbox" id="chart-twoparty"> Two-party margins
           </label>
-          <label style="display: flex; align-items: center; gap: 4px;">
-            <input type="checkbox" id="chart-relative"> Relative margins
+          <label style="display: none; align-items: center; gap: 4px;">
+            <input type="checkbox" id="chart-relative" disabled> Relative margins
           </label>
           <label style="display: flex; align-items: center; gap: 4px;">
             <input type="checkbox" id="chart-delta"> Show deltas
@@ -709,6 +709,21 @@ window.__collectViewStateForUrl = function() {
     if (chartRelativeEl) chartRelativeEl.checked = !!initialRelative;
     if (chartDeltaEl) chartDeltaEl.checked = !!initialDelta;
     if (chartThirdEl) chartThirdEl.checked = !!initialThird;
+
+    // Disable / hide the "Relative margins" control on the national page because
+    // relative margins make every unit effectively 0 for NATIONAL/NAT and are
+    // therefore not useful on the national overview.
+    try {
+      const up = String(pageStateAbbr || '').toUpperCase();
+      if (up === 'NAT' || up === 'NATIONAL') {
+        if (chartRelativeEl) {
+          chartRelativeEl.checked = false;
+          chartRelativeEl.disabled = true;
+          const lab = chartRelativeEl.closest && chartRelativeEl.closest('label');
+          if (lab) lab.style.display = 'none';
+        }
+      }
+    } catch (e) { /* non-fatal */ }
   }
 
   function getStateCandidates() {
