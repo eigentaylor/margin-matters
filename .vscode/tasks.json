@@ -6,7 +6,7 @@
 			"type": "shell",
 			"command": "python",
 			"args": [
-				"e:\\coding projects\\state-trends\\build_flip_results.py"
+				"e:\\coding projects\\margin-matters\\build_flip_results.py"
 			],
 			"isBackground": false,
 			"problemMatcher": [],
@@ -17,7 +17,7 @@
 			"type": "shell",
 			"command": "python",
 			"args": [
-				"e:\\coding projects\\state-trends\\build_site.py"
+				"e:\\coding projects\\margin-matters\\build_site.py"
 			],
 			"isBackground": false,
 			"problemMatcher": [
@@ -30,7 +30,7 @@
 			"type": "shell",
 			"command": "python",
 			"args": [
-				"e:\\coding projects\\state-trends\\build_site.py"
+				"e:\\coding projects\\margin-matters\\build_site.py"
 			],
 			"isBackground": false,
 			"group": "build"

@@ -2,7 +2,7 @@ import csv
 import json
 from math import floor
 
-CSV_PATH = r"e:\coding projects\state-trends\docs\presidential_margins.csv"
+CSV_PATH = r"e:\coding projects\margin-matters\docs\presidential_margins.csv"
 
 
 def parse_int(v):
