@@ -772,7 +772,9 @@ export function getAdjustedInfo(unit) {
             candidates: (Object.keys(candMap).length ? candMap : undefined),
             dCandidate: r.dCandidate || null,
             rCandidate: r.rCandidate || null,
-            thirdPartyResults: r.thirdPartyResults || null
+            thirdPartyResults: r.thirdPartyResults || null,
+            // For senate mode, include winner party information
+            winner_party: r.winner_party || null
         };
     } catch (e) { return null; }
 }
