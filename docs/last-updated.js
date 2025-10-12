@@ -37,8 +37,18 @@
     const parts = location.pathname.split('/').filter(Boolean);
     if (parts.length > 0) {
       const repoRoot = '/' + parts[0] + '/';
+      // Prefer the repo root (deployed GitHub Pages for project pages
+      // typically expose site files at /<repo>/...). Try both the
+      // repo-root-relative and an absolute-origin URL so we land on
+      // https://<user>.github.io/<repo>/last-updated.json when hosted.
       candidates.push(repoRoot + 'docs/');
       candidates.push(repoRoot);
+      try {
+        const originRepo = location.origin + repoRoot;
+        candidates.push(originRepo);
+      } catch (e) {
+        // ignore
+      }
     }
   } catch (e) {}
 
