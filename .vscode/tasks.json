@@ -32,7 +32,10 @@
 			"args": [
 				"eslint",
 				"docs/**/*.js",
-				"--color"
+				"--ignore-pattern",
+				"docs/_archive/**",
+				"--color",
+				"--fix"
 			],
 			"isBackground": false,
 			"problemMatcher": [],
