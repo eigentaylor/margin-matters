@@ -6,6 +6,8 @@
   // site root (e.g. https://user.github.io/) which often 404s for
   // project pages hosted under a subpath.
   const candidates = [];
+  candidates.push('https://eigentaylor.github.io/margin-matters/');
+  candidates.push('');
 
   // 1) Parent-relative attempts to handle nested pages first
   candidates.push('../', '../../', '../../../', '../../../../');
