@@ -48,6 +48,7 @@ const locationHref = (globalObj && globalObj.location && globalObj.location.href
 const baseUrl = scriptUrl ? normalizeBase(scriptUrl) : normalizeBase(locationHref);
 
 const defaultPresidentialPath = (() => {
+  console.log('scriptUrl:', scriptUrl, 'baseUrl:', baseUrl);
   if (scriptUrl) return toAbsolute('../presidential_margins.csv', scriptUrl);
   if (baseUrl) return toAbsolute('presidential_margins.csv', baseUrl);
   return 'presidential_margins.csv';
