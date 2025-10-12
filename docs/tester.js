@@ -377,11 +377,27 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
     return basePromise.catch(() => []);
   }
 
+  function isSenateMode() {
+    // Detect if we're on senate.html page
+    try {
+      if (typeof window !== 'undefined' && window.location) {
+        const pathname = window.location.pathname || '';
+        return pathname.includes('senate.html');
+      }
+    } catch (e) { }
+    return false;
+  }
+
   function loadTesterData() {
     const loader = getActiveDataLoader();
-    const marginsPromise = (loader && typeof loader.loadPresidentialMargins === 'function')
-      ? loader.loadPresidentialMargins()
-      : d3.csv('presidential_margins.csv');
+    const isSenatePage = isSenateMode();
+    
+    // Use senate_margins.csv for senate page, presidential_margins.csv otherwise
+    const marginsPromise = isSenatePage
+      ? d3.csv('senate_margins.csv')
+      : ((loader && typeof loader.loadPresidentialMargins === 'function')
+        ? loader.loadPresidentialMargins()
+        : d3.csv('presidential_margins.csv'));
 
     return Promise.all([
       marginsPromise,
@@ -710,6 +726,9 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
   window._getNatMargin = getNatMargin;
   window._STOP_EPS = STOP_EPS;
   window.updateUrl = updateUrl;
+  
+  // Expose senate mode flag for tooltips and EV bar
+  window._senateMode = isSenateMode();
 
   // Expose proportional EV allocation for use in modal
   window.allocateProportionalEVs = allocateProportionalEVs;

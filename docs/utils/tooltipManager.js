@@ -160,8 +160,12 @@ export function formatUnitTooltip(unit, opts) {
         // Build tooltip content with multiple rows. We'll assemble rows after computing vote tallies
         const rows = [];
 
-        // Second row: EV allocation (for proportional mode)
+        // Second row: EV allocation (for proportional mode) or Senator info (for senate mode)
+        const isSenateMode = !!(window._senateMode);
         const evAllocation = (function () {
+            // In senate mode, skip EV allocation and show senator info instead
+            if (isSenateMode) return null;
+            
             const electionNightActive = !!window._electionNightActive;
             const reportingVal = (info && info.reporting != null) ? Number(info.reporting) : null;
             const fullyCounted = (reportingVal != null && isFinite(reportingVal)) ? (reportingVal >= 0.999) : false;
@@ -178,7 +182,19 @@ export function formatUnitTooltip(unit, opts) {
             }
             return wta;
         })();
-        if (evAllocation) {
+        
+        // In senate mode, display senator information based on election results
+        if (isSenateMode && info) {
+            const senatorParts = [];
+            // Get winner party from the info object
+            const winnerParty = info.winner_party || info.winnerParty;
+            if (winnerParty) {
+                senatorParts.push(`${winnerParty}: 1`);
+            }
+            if (senatorParts.length) {
+                rows.push(senatorParts.join(' | '));
+            }
+        } else if (evAllocation) {
             const evParts = [];
             // Resolve candidate last names for labels (prefer snapshot/info, then derived helpers, then CSV map)
             function resolveCandidateNames(infoObj, unitKey) {
