@@ -212,6 +212,9 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
             page = page.replace("%RELATIVE_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
             page = page.replace("%RELATIVE_DISABLED%", "")
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
+        # Include other-pages dropdown script on state pages
+        other_js = "<script src='../other-pages.js'></script>" if True else ""
+        page = page.replace("%OTHER_PAGES_JS%", other_js)
         write_text(STATE_DIR / f"{st[:2]}.html", page)
 
     # District/unit pages
@@ -301,6 +304,9 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
         page = page.replace("%RELATIVE_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
         page = page.replace("%RELATIVE_DISABLED%", "")
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
+        # Include other-pages dropdown script on unit pages
+        other_js = "<script src='../other-pages.js'></script>" if True else ""
+        page = page.replace("%OTHER_PAGES_JS%", other_js)
         write_text(UNIT_DIR / f"{unit}.html", page)
 
     # NATIONAL page
@@ -459,6 +465,9 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
     page = page.replace("%RELATIVE_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
     page = page.replace("%RELATIVE_DISABLED%", " disabled")
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
+    # Include other-pages on national page too
+    other_js = "<script src='../other-pages.js'></script>"
+    page = page.replace("%OTHER_PAGES_JS%", other_js)
     write_text(STATE_DIR / f"NAT.html", page)
 
     return states

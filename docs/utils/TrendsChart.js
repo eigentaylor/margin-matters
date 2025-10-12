@@ -45,7 +45,7 @@
     presLabel.append('span').text('Show presidential margins');
     // control: split senate series by class (I/II/III) - only for senate dataset
     const classLabel = controls.append('label').style('font-size', '13px').style('color', '#666').style('display', 'none').style('margin-left', '12px');
-    const classCheckbox = classLabel.append('input').attr('type', 'checkbox').attr('class', 'split-class-checkbox').style('margin-right', '6px').property('checked', false);
+    const classCheckbox = classLabel.append('input').attr('type', 'checkbox').attr('class', 'split-class-checkbox').style('margin-right', '6px').property('checked', true);
     classLabel.append('span').text('Split by Senate class');
 
     // keep last props so control can trigger redraws

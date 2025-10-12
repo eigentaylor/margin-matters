@@ -682,6 +682,7 @@ PAGE_HTML = r"""<!doctype html>
 <script src="../back-to-map.js"></script>
 <script src="../footer.js"></script>
 <script src="../last-updated.js"></script>
+<script src="../other-pages.js"></script>
 </body>
 </html>
 """
