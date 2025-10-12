@@ -390,15 +390,41 @@ export function createUpdateAll(deps) {
     const rPct = totalEV ? (totals.rEV / totalEV) * 100 : 0;
 
     const segments = [
-      { el: refs.evFillD, pct: dPct, value: totals.dEV },
-      { el: refs.evFillU, pct: uPct, value: uEV },
-      { el: refs.evFillO, pct: oPct, value: otherEV },
-      { el: refs.evFillR, pct: rPct, value: totals.rEV }
+      { el: refs.evFillD, pct: dPct, value: totals.dEV, code: '' },
+      { el: refs.evFillU, pct: uPct, value: uEV, code: 'U' },
+      { el: refs.evFillO, pct: oPct, value: otherEV, code: '' },
+      { el: refs.evFillR, pct: rPct, value: totals.rEV, code: '' }
     ];
     let offset = 0;
     const activeSegs = [];
     const TRANS_MS = 360;
     const TRANS_EASE = 'cubic-bezier(0.22,0.61,0.36,1)';
+    // Helper: choose readable text color (black/white) from an rgb/hex background
+    function readableTextColor(bg) {
+      try {
+        const tmp = document.createElement('div');
+        tmp.style.color = bg || '#000';
+        document.body.appendChild(tmp);
+        const cs = getComputedStyle(tmp).color || 'rgb(0,0,0)';
+        document.body.removeChild(tmp);
+        const m = cs.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (!m) return '#fff';
+        const r = Number(m[1]), g = Number(m[2]), b = Number(m[3]);
+        const lum = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255);
+        return lum > 0.55 ? '#000' : '#fff';
+      } catch (e) { return '#fff'; }
+    }
+
+    // Parent container for floating labels (the EV bar)
+    const parentBar = (refs.evFillD && refs.evFillD.parentElement) || null;
+    // Clean up any stale floating labels from previous runs so they don't persist
+    try {
+      if (parentBar) {
+        const stale = Array.from(parentBar.querySelectorAll('.ev-global-label'));
+        stale.forEach(n => { try { n.parentElement && n.parentElement.removeChild(n); } catch (e) { /* ignore */ } });
+      }
+    } catch (e) { /* ignore cleanup errors */ }
+
     segments.forEach(seg => {
       if (!seg.el) return;
       const visible = seg.value > EPS;
@@ -427,6 +453,70 @@ export function createUpdateAll(deps) {
         seg.el.style.right = 'auto';
         seg.el.style.width = widthPct;
       }
+
+      // Create/update in-bar label
+      try {
+        seg.el.style.position = seg.el.style.position || 'absolute';
+        let lbl = seg.el.querySelector('.ev-seg-label');
+        if (!lbl) {
+          lbl = document.createElement('div');
+          lbl.className = 'ev-seg-label';
+          lbl.style.position = 'absolute';
+          lbl.style.left = '50%';
+          lbl.style.top = '50%';
+          lbl.style.transform = 'translate(-50%, -50%)';
+          lbl.style.pointerEvents = 'none';
+          lbl.style.fontSize = '0.85rem';
+          lbl.style.fontWeight = '600';
+          lbl.style.whiteSpace = 'nowrap';
+          lbl.style.padding = '0 6px';
+          lbl.style.lineHeight = '1';
+          seg.el.appendChild(lbl);
+        }
+        const labelText = `${seg.code} ${seg.value}`;
+        lbl.textContent = labelText;
+        const showLabelPct = 3.0;
+        const centerPct = offset + (Math.max(0, seg.pct) / 2);
+
+        // Floating label above the bar (one per code, attached to parent)
+        let floatLbl = null;
+        if (parentBar) floatLbl = parentBar.querySelector(`.ev-global-label[data-code="${seg.code}"]`);
+
+        if (seg.pct >= showLabelPct) {
+          const bg = seg.el.style.backgroundColor || getComputedStyle(seg.el).backgroundColor || '#000';
+          lbl.style.color = readableTextColor(bg);
+          lbl.style.display = '';
+          if (floatLbl) floatLbl.style.display = 'none';
+        } else {
+          // small segment => hide in-bar label and show floating label
+          if (lbl) lbl.style.display = 'none';
+          try {
+            if (!floatLbl && parentBar) {
+              floatLbl = document.createElement('div');
+              floatLbl.className = 'ev-global-label';
+              floatLbl.setAttribute('data-code', seg.code || 'X');
+              floatLbl.style.position = 'absolute';
+              floatLbl.style.top = '-22px';
+              floatLbl.style.transform = 'translate(-50%, 0)';
+              floatLbl.style.pointerEvents = 'none';
+              floatLbl.style.fontSize = '0.78rem';
+              floatLbl.style.fontWeight = '600';
+              floatLbl.style.whiteSpace = 'nowrap';
+              floatLbl.style.padding = '2px 6px';
+              floatLbl.style.borderRadius = '8px';
+              floatLbl.style.boxShadow = '0 1px 2px rgba(0,0,0,0.3)';
+              floatLbl.style.background = 'rgba(0,0,0,0.65)';
+              floatLbl.style.color = '#fff';
+              parentBar.appendChild(floatLbl);
+            }
+            if (floatLbl) {
+              floatLbl.textContent = labelText;
+              floatLbl.style.left = `${centerPct.toFixed(3)}%`;
+              floatLbl.style.display = '';
+            }
+          } catch (ee) { console.warn(ee); }
+        }
+      } catch (e) { console.warn(e); }
       offset += Math.max(0, seg.pct);
       activeSegs.push(seg.el);
     });
@@ -446,7 +536,10 @@ export function createUpdateAll(deps) {
     if (otherEV > 0) parts.push(`O ${otherEV}`);
     parts.push(`R ${totals.rEV}`);
     const summary = (uEV > 0 || otherEV > 0) ? parts.join(' | ') : `${totals.dEV} - ${totals.rEV}`;
-    if (refs.evText) refs.evText.textContent = summary;
+    // Hide the central overlay text to avoid covering the midline; labels are now inside segments
+    if (refs.evText) {
+      try { refs.evText.style.display = 'none'; refs.evText.setAttribute && refs.evText.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
+    }
     if (refs.flipEC) refs.flipEC.textContent = summary;
   }
 
