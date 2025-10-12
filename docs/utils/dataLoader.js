@@ -118,6 +118,7 @@ function loadCsv(path, options = {}) {
 
 function loadPresidentialMargins(options = {}) {
   const targetPath = resolvePath(options.path, defaultPresidentialPath);
+  console.log('Loading presidential margins from:', targetPath);
   return loadCsv(targetPath, { parser: options.parser, force: options.force });
 }
 
