@@ -6,12 +6,22 @@
   "scripts": {
     "start": "npx http-server docs -c-1 -p 8080",
     "serve": "npx http-server -c-1 -p 8080",
-    "lint": "npx eslint 'docs/**/*.js' 'site_builder/**/*.js' --ext .js",
-    "lint:fix": "npx eslint 'docs/**/*.js' 'site_builder/**/*.js' --ext .js --fix"
+    "lint": "npx eslint 'docs/**/*.js' 'site_builder/**/*.js' --color",
+    "lint:fix": "npx eslint 'docs/**/*.js' 'site_builder/**/*.js' --color --fix",
+    "lint:docs": "npx eslint 'docs/**/*.js' --color"
   },
   "devDependencies": {
-    "eslint": "^8.50.0",
-    "http-server": "^14.1.1"
+    "@eslint/css": "^0.13.0",
+    "@eslint/js": "^8.57.1",
+    "@eslint/json": "^0.13.2",
+    "@eslint/markdown": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "eslint": "^8.57.1",
+    "globals": "^16.4.0",
+    "http-server": "^14.1.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0"
   },
   "eslintConfig": {
     "env": {
@@ -24,7 +34,9 @@
       "sourceType": "module"
     },
     "rules": {
-      "no-unused-vars": ["warn"],
+      "no-unused-vars": [
+        "warn"
+      ],
       "no-console": "off"
     }
   }
