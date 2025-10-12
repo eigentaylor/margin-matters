@@ -13,6 +13,7 @@
 <body>
   <div class="container" style="text-align: center;">
     <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
     <div class="legend" style="margin-top:12px;text-align:left">U.S. Presidential Election State Results 1864-2024</div>
     <div class="card">
       <div class="legend" style="text-align:left">Browse all state pages on the <a href="./state-pages.html">State
@@ -209,14 +210,14 @@
       <div id="enLogUncalled" class="en-log-uncalled"></div>
     </div>
 
-  <script src="./pv-presets.js"></script>
-  <script type="module" src="tester.js"></script>
-  <script type="module" src="election-night.js"></script>
+    <script src="./pv-presets.js"></script>
+    <script type="module" src="tester.js"></script>
+    <script type="module" src="election-night.js"></script>
     <script>
       // Lightweight PV tools wiring (reuses tester.js globals where possible)
       (function () {
         function parsePvText(txt) {
-    
+
           if (!txt) return null;
           txt = String(txt).trim().toUpperCase();
           if (txt === 'EVEN' || txt === '0' || txt === 'D+0' || txt === 'R+0') return 0;
