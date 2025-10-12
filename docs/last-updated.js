@@ -58,6 +58,7 @@
 
   // 5) As a last, less-favored fallback, try absolute '/docs/' but avoid
   // probing the absolute site root '/' which commonly causes noisy 404s.
+  candidates.push('/margin-matters/');
   candidates.push('/docs/');
 
   async function tryFetch(prefix) {
