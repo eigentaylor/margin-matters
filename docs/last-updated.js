@@ -21,12 +21,16 @@
       const u = new URL(scriptEl.src, location.href);
       // scriptDir ends with '/'
       const scriptDir = u.pathname.replace(/[^/]+$/, '');
-      // Example: /<repo>/docs/
-      candidates.push(scriptDir);
-      // Try scriptDir + 'last-updated.json' by pushing the dir (fetch code appends filename)
-      // Also try the parent of scriptDir (one level up) so docs/state pages work
-      const parentDir = scriptDir.replace(/[^/]+\/$/, '').replace(/[^/]+$/, '') + '/';
-      if (parentDir && parentDir !== scriptDir) candidates.push(parentDir);
+      // Avoid pushing the bare origin root '/' as a candidate because
+      // that will probe https://<origin>/last-updated.json which is
+      // often a 404 for project pages. Only push scriptDir if it's not '/'.
+      if (scriptDir && scriptDir !== '/') {
+        // Example: /<repo>/docs/
+        candidates.push(scriptDir);
+        // Also try the parent of scriptDir (one level up) so docs/state pages work
+        const parentDir = scriptDir.replace(/[^/]+\/$/, '').replace(/[^/]+$/, '') + '/';
+        if (parentDir && parentDir !== scriptDir && parentDir !== '/') candidates.push(parentDir);
+      }
     }
   } catch (e) {
     // ignore URL parsing problems
