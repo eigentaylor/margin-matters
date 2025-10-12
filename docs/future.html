@@ -181,18 +181,7 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <label class="legend" for="pvPreset">Presets</label>
-              <select id="pvPreset" class="btn" style="min-width:220px">
-                <option value="">Select preset…</option>
-                <option value="0.005">Gore: D+0.5</option>
-                <option value="-0.016">Trump: R+1.6</option>
-                <option value="0.021">Clinton: D+2.1</option>
-                <option value="0.045">Biden: D+4.5</option>
-                <option value="0.075">Obama: D+7.5</option>
-                <option value="0.085">William Clinton: D+8.5</option>
-                <option value="-0.182">Reagan: R+18.2</option>
-                <option value="0.226">Johnson: D+22.6</option>
-                <option value="-0.231">Nixon: R+23.1</option>
-              </select>
+              <select id="pvPreset" class="btn" style="min-width:220px"></select>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
               <button id="pvApply" class="btn">Apply PV</button>
@@ -267,11 +256,15 @@
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   <!-- Flag future mode before loading tester.js to adjust stops/labels and default PV behavior -->
   <script>window._futureMode = true;</script>
+  <!-- Centralized PV presets -->
+  <script src="./pv-presets.js"></script>
   <!-- Reuse the same map logic and PV stops/EV bar from tester.js -->
-  <script src="./tester.js"></script>
-  <script src="./election-night.js"></script>
+  <script type="module" src="./tester.js"></script>
+  <script type="module" src="./election-night.js"></script>
   <!-- Page driver that generates future margins and plugs into tester.js state -->
   <script src="./future.js"></script>
+  <!-- Centralized PV presets -->
+  <script src="./pv-presets.js"></script>
 
   <div id="enLogPanel" aria-live="polite" aria-label="Election night call log">
     <div class="en-log-header">Call log</div>

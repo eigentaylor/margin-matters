@@ -1,5 +1,6 @@
+'use strict';
+
 // Shared site state helpers for query strings, sharing, and formatting
-(function(global){
   const DEFAULTS = {
     yearStart: 1864,
     yearEnd: new Date().getFullYear(),
@@ -12,7 +13,8 @@
   };
 
   function parseQuery(qs){
-    const q = new URLSearchParams(qs || window.location.search);
+    const search = (qs != null) ? qs : ((typeof window !== 'undefined' && window.location) ? window.location.search : '');
+    const q = new URLSearchParams(search);
     const statesStr = q.get('states') || '';
     const yearStart = +(q.get('yearStart') || DEFAULTS.yearStart);
     const yearEnd = +(q.get('yearEnd') || DEFAULTS.yearEnd);
@@ -40,8 +42,12 @@
     if (next.smooth != null) q.set('smooth', String(next.smooth));
     if (next.overlay) q.set('overlay', next.overlay);
     if (Array.isArray(next.states) && next.states.length) q.set('states', next.states.join(','));
-    const url = `${location.pathname}?${q.toString()}`;
-    history.replaceState(null, '', url);
+    const loc = (typeof window !== 'undefined' && window.location) ? window.location : (typeof location !== 'undefined' ? location : { pathname: '' });
+    const hist = (typeof window !== 'undefined' && window.history) ? window.history : (typeof history !== 'undefined' ? history : null);
+    const url = `${loc.pathname}?${q.toString()}`;
+    if (hist && typeof hist.replaceState === 'function') {
+      hist.replaceState(null, '', url);
+    }
     return next;
   }
 
@@ -54,15 +60,19 @@
       if (Array.isArray(v)) q.set(k, v.join(','));
       else q.set(k, String(v));
     });
-    const url = `${location.pathname}?${q.toString()}`;
-    history.pushState(next, '', url);
+    const loc = (typeof window !== 'undefined' && window.location) ? window.location : (typeof location !== 'undefined' ? location : { pathname: '' });
+    const hist = (typeof window !== 'undefined' && window.history) ? window.history : (typeof history !== 'undefined' ? history : null);
+    const url = `${loc.pathname}?${q.toString()}`;
+    if (hist && typeof hist.pushState === 'function') {
+      hist.pushState(next, '', url);
+    }
     return next;
   }
 
   function debounce(fn, ms){
     let t=null; return function(){
-      const ctx=this, args=arguments; clearTimeout(t);
-      t=setTimeout(()=>fn.apply(ctx,args), ms||100);
+      clearTimeout(t);
+      t=setTimeout(() => fn.apply(this, arguments), ms || 100);
     };
   }
 
@@ -102,24 +112,40 @@
   ];
 
   function copyCurrentUrl(){
-    const txt = window.location.href;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(()=>{
+    const href = (typeof window !== 'undefined' && window.location) ? window.location.href : '';
+    if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(href).then(()=>{
         // no-op; could toast
       }).catch(()=>{});
     }
-    return txt;
+    return href;
   }
 
-  global.SiteState = {
-    DEFAULTS,
-    parseQuery,
-    updateQuery,
-    setAndPushState,
-    debounce,
-    formatMargin,
-    colorForMargin,
-    eraPresets,
-    copyCurrentUrl
-  };
-})(window);
+const SiteState = {
+  DEFAULTS,
+  parseQuery,
+  updateQuery,
+  setAndPushState,
+  debounce,
+  formatMargin,
+  colorForMargin,
+  eraPresets,
+  copyCurrentUrl
+};
+
+if (typeof window !== 'undefined') {
+  window.SiteState = SiteState;
+}
+
+export default SiteState;
+export {
+  DEFAULTS,
+  parseQuery,
+  updateQuery,
+  setAndPushState,
+  debounce,
+  formatMargin,
+  colorForMargin,
+  eraPresets,
+  copyCurrentUrl
+};

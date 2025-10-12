@@ -1,0 +1,10 @@
+# Ignore archived/generated docs
+# Patterns without leading slash are more portable across environments
+docs/_archive/**
+docs/_archive
+
+_archive/
+
+node_modules/
+dist/
+build/

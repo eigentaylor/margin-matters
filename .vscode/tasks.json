@@ -26,6 +26,22 @@
 			"group": "build"
 		},
 		{
+			"label": "Lint docs JS",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"eslint",
+				"docs/**/*.js",
+				"--ignore-pattern",
+				"docs/_archive/**",
+				"--color",
+				"--fix"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
 			"label": "Build site with new PV totals",
 			"type": "shell",
 			"command": "python",
