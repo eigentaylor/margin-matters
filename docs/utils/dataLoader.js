@@ -51,7 +51,7 @@ const defaultPresidentialPath = (() => {
   console.log('scriptUrl:', scriptUrl, 'baseUrl:', baseUrl);
   if (scriptUrl) return toAbsolute('../presidential_margins.csv', scriptUrl);
   if (baseUrl) return toAbsolute('presidential_margins.csv', baseUrl);
-  return 'presidential_margins.csv';
+  return '/margin-matters/presidential_margins.csv';
 })();
 
 const defaultSenatePath = (() => {
