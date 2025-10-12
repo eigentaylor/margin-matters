@@ -63,6 +63,7 @@
 
   async function tryFetch(prefix) {
     try {
+      console.log('Trying last-updated.json fetch at:', prefix + 'last-updated.json');
       const res = await fetch(prefix + 'last-updated.json', { cache: 'no-store' });
       if (!res.ok) return null;
       const text = await res.text();
