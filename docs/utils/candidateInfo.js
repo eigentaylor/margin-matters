@@ -29,104 +29,131 @@ export function updateCandidateInfo(year) {
   const rCandidate = nationalRow.rCandidate || '';
 
   // Build base candidate line
-  let candidateHtml = '';
-  if (dCandidate || rCandidate) {
-    candidateHtml = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
-  }
+  const isElectionNight = typeof window !== 'undefined' && window._electionNightActive;
+  const formatEvCount = (value, liveMode) => {
+    const suffix = liveMode ? (value === 1 ? 'EV called' : 'EVs called') : (value === 1 ? 'EV' : 'EVs');
+    return `${value} ${suffix}`;
+  };
 
-  // Attempt to enumerate third parties that received EVs for this year.
-  try {
-    let allocations = null;
+  let totalDEv = 0;
+  let totalREv = 0;
+  let totalOtherEV = 0;
+  const thirdPartyMap = new Map();
+
+  if (isElectionNight) {
     try {
-      if (typeof getAllEvAllocations === 'function') allocations = getAllEvAllocations();
-      //console.log('allocations:', allocations);
-    } catch (e) { console.warn(e); }
-    if (!allocations) {
-      try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch (e) { console.warn(e); }
+      const snapshot = (typeof window !== 'undefined') ? window._electionNightSnapshot : null;
+      if (snapshot && typeof snapshot.forEach === 'function') {
+        const seen = new WeakSet();
+        snapshot.forEach(entry => {
+          if (!entry || seen.has(entry)) return;
+          seen.add(entry);
+          const alloc = entry.evCalledAllocations || null;
+          if (!alloc) return;
+          totalDEv += alloc.D || 0;
+          totalREv += alloc.R || 0;
+          const other = alloc.O || 0;
+          if (other > 0) {
+            let label = 'Other';
+            try {
+              if (entry.candidates && entry.candidates.O && entry.candidates.O.name) {
+                label = entry.candidates.O.name;
+              } else if (entry.thirdPartyResults && typeof entry.thirdPartyResults === 'object') {
+                const entries = Object.entries(entry.thirdPartyResults)
+                  .filter(([, votes]) => (votes || 0) > 0)
+                  .sort((a, b) => (b[1] || 0) - (a[1] || 0));
+                if (entries.length && entries[0][0]) label = entries[0][0];
+              }
+            } catch (err) { /* ignore naming issues */ }
+            thirdPartyMap.set(label, (thirdPartyMap.get(label) || 0) + other);
+          }
+        });
+      }
+      totalOtherEV = Array.from(thirdPartyMap.values()).reduce((sum, v) => sum + v, 0);
+      if (totalOtherEV > 0 && thirdPartyMap.size === 0) {
+        thirdPartyMap.set('Other', totalOtherEV);
+      }
+    } catch (err) {
+      console.warn('Failed to compute live EV tallies for candidate info', err);
     }
-    const thirdPartiesWithEVs = new Map(); // Map of name -> total EV count
-    let totalOtherEV = 0;
-    if (allocations && Array.isArray(allocations)) {
-      allocations.forEach(a => {
-        //console.log('a:', a);
-        totalOtherEV += (a.oEV || 0);
-        // add any detailed third-party allocations
-        if (a.thirdPartyEVs && typeof a.thirdPartyEVs === 'object') {
-          //console.log('detailed third party EVs', a.thirdPartyEVs, 'a:', a);
-          Object.keys(a.thirdPartyEVs).forEach(name => {
-            const v = a.thirdPartyEVs[name] || 0;
-            if (v > 0) {
-              thirdPartiesWithEVs.set(name, (thirdPartiesWithEVs.get(name) || 0) + v);
-            }
-          });
-        }
-      });
-    }
-
-    // Fallback: if allocations weren't available or yielded nothing, scan rows for any
-    // per-row thirdPartyResults (votes) to discover third-party names. This allows
-    // candidate area to show names even if the allocation helper isn't ready yet.
-    if ((thirdPartiesWithEVs.size === 0) && (!allocations || !Array.isArray(allocations) || allocations.length === 0)) {
+  } else {
+    try {
+      let allocations = null;
       try {
-        rows.forEach(r => {
-          if (!r) return;
-          // r.thirdPartyResults holds per-row third-party vote counts (if present)
-          if (r.thirdPartyResults && typeof r.thirdPartyResults === 'object') {
-            Object.keys(r.thirdPartyResults).forEach(name => {
-              const v = r.thirdPartyResults[name] || 0;
-              // We don't know EVs here, but presence of votes indicates the party existed in this unit
-              if (v > 0) thirdPartiesWithEVs.set(name, (thirdPartiesWithEVs.get(name) || 0));
+        if (typeof getAllEvAllocations === 'function') allocations = getAllEvAllocations();
+      } catch (e) { console.warn(e); }
+      if (!allocations) {
+        try { if (typeof window.getAllEvAllocations === 'function') allocations = window.getAllEvAllocations(); } catch (e) { console.warn(e); }
+      }
+
+      if (allocations && Array.isArray(allocations)) {
+        allocations.forEach(a => {
+          totalDEv += a.dEV || 0;
+          totalREv += a.rEV || 0;
+          const other = a.oEV || 0;
+          totalOtherEV += other;
+          if (a.thirdPartyEVs && typeof a.thirdPartyEVs === 'object') {
+            Object.keys(a.thirdPartyEVs).forEach(name => {
+              const v = a.thirdPartyEVs[name] || 0;
+              if (v > 0) {
+                thirdPartyMap.set(name, (thirdPartyMap.get(name) || 0) + v);
+              }
             });
           }
         });
-      } catch (e) { /* ignore fallback failures */ }
-    }
-
-    // If there are Other EVs but no detailed names, track as generic "Other"
-    if (totalOtherEV > 0 && thirdPartiesWithEVs.size === 0) {
-      thirdPartiesWithEVs.set('Other', totalOtherEV);
-    }
-
-    if (candidateHtml) {
-      // Compute major-party EV totals (if allocations are available)
-      let totalDEv = 0, totalREv = 0;
-      try {
-        if (allocations && Array.isArray(allocations)) {
-          totalDEv = allocations.reduce((s, a) => s + (a.dEV || 0), 0);
-          totalREv = allocations.reduce((s, a) => s + (a.rEV || 0), 0);
-        }
-      } catch (e) { console.warn(e); }
-
-      // If we have EV totals, render first line with fixed-space layout so names don't jump
-      if ((totalDEv > 0 || totalREv > 0) && (dCandidate || rCandidate)) {
-        // left and right columns use inline-blocks with a min-width so changing names don't reflow
-        const left = `${dCandidate} (D) <span style="font-variant-numeric:tabular-nums">(${totalDEv} ${totalDEv === 1 ? 'EV' : 'EVs'})</span>`;
-        const right = `<span style="font-variant-numeric:tabular-nums">(${totalREv} ${totalREv === 1 ? 'EV' : 'EVs'})</span> ${rCandidate} (R)`;
-        candidateHtml = `${year}: <span style="display:inline-block;min-width:260px;white-space:nowrap">${left}</span><span style="display:inline-block;width:48px;text-align:center">vs</span><span style="display:inline-block;min-width:260px;white-space:nowrap;text-align:right">${right}</span>`;
       }
 
-      if (thirdPartiesWithEVs.size > 0) {
-        // Format: "Candidate Name (X EVs)"
-        const thirdPartyLines = Array.from(thirdPartiesWithEVs.entries())
-          .sort((a, b) => b[1] - a[1]) // Sort by EV count descending
-          .map(([name, evCount]) => `${name} (${evCount} ${evCount === 1 ? 'EV' : 'EVs'})`);
-        candidateHtml += '<br>' + thirdPartyLines.join(', ');
+      if ((thirdPartyMap.size === 0) && (!allocations || !Array.isArray(allocations) || allocations.length === 0)) {
+        try {
+          rows.forEach(r => {
+            if (!r || !r.thirdPartyResults || typeof r.thirdPartyResults !== 'object') return;
+            Object.keys(r.thirdPartyResults).forEach(name => {
+              const v = r.thirdPartyResults[name] || 0;
+              if (v > 0) thirdPartyMap.set(name, (thirdPartyMap.get(name) || 0));
+            });
+          });
+        } catch (e) { /* ignore fallback failures */ }
       }
-      candidateNamesEl.innerHTML = candidateHtml;
+
+      if (totalOtherEV > 0 && thirdPartyMap.size === 0) {
+        thirdPartyMap.set('Other', totalOtherEV);
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  try {
+    const thirdPartyLines = Array.from(thirdPartyMap.entries())
+      .filter(([, ev]) => ev > 0)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, ev]) => `${name} (${formatEvCount(ev, isElectionNight)})`);
+
+    let outputHtml = '';
+    if (dCandidate || rCandidate) {
+      const leftSegment = dCandidate
+        ? `<span style="display:inline-block;min-width:260px;white-space:nowrap">${dCandidate} (D) <span style="font-variant-numeric:tabular-nums">(${formatEvCount(totalDEv, isElectionNight)})</span></span>`
+        : '';
+      const rightSegment = rCandidate
+        ? `<span style="display:inline-block;min-width:260px;white-space:nowrap;text-align:right"><span style="font-variant-numeric:tabular-nums">(${formatEvCount(totalREv, isElectionNight)})</span> ${rCandidate} (R)</span>`
+        : '';
+      const middleSegment = (dCandidate && rCandidate) ? '<span style="display:inline-block;width:48px;text-align:center">vs</span>' : '';
+      const segments = [leftSegment, middleSegment, rightSegment].filter(Boolean).join('');
+      outputHtml = segments ? `${year}: ${segments}` : `${year}: ${dCandidate || rCandidate}`;
+    }
+
+    if (thirdPartyLines.length > 0) {
+      if (outputHtml) outputHtml += '<br>' + thirdPartyLines.join(', ');
+      else outputHtml = `${year}: ` + thirdPartyLines.join(', ');
+    }
+
+    if (outputHtml) {
+      candidateNamesEl.innerHTML = outputHtml;
     } else {
-      // No major-party names available, but maybe show third parties only
-      if (thirdPartiesWithEVs.size > 0) {
-        const thirdPartyLines = Array.from(thirdPartiesWithEVs.entries())
-          .sort((a, b) => b[1] - a[1])
-          .map(([name, evCount]) => `${name} (${evCount} ${evCount === 1 ? 'EV' : 'EVs'})`);
-        candidateNamesEl.innerHTML = `${year}: ` + thirdPartyLines.join(', ');
-      } else {
-        candidateNamesEl.textContent = '';
-      }
+      candidateNamesEl.textContent = '';
     }
   } catch (e) {
     console.warn(e);
-    // Fallback to original simple text when something goes wrong
     if (dCandidate || rCandidate) {
       candidateNamesEl.textContent = `${year}: ${dCandidate} (D) vs ${rCandidate} (R)`;
     } else {

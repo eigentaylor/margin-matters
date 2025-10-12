@@ -309,9 +309,9 @@ export function calculateUnitVoteTallies(unit) {
                 }
                 else { console.log('calculateUnitVoteTallies: no matching row found for', unit); }
             }
-            else {
-                console.log('calculateUnitVoteTallies: PV not equal to natMargin, using adjusted totals for', unit, { pv, natMargin }, 'diff: (pv - natMargin) =', (pv - natMargin));
-            }
+            // else {
+            //     console.log('calculateUnitVoteTallies: PV not equal to natMargin, using adjusted totals for', unit, { pv, natMargin }, 'diff: (pv - natMargin) =', (pv - natMargin));
+            // }
         } catch (e) { console.warn(e); }
 
         const dRounded = Math.round(Math.max(0, totals.dVotes || 0));

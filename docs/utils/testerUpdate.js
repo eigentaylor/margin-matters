@@ -293,7 +293,7 @@ export function createUpdateAll(deps) {
       }
     });
 
-  adjustAtLargeFromDistricts(year, abbrColors, unitColors, pvState.pv);
+    adjustAtLargeFromDistricts(year, abbrColors, unitColors, pvState.pv);
 
     return { arr, abbrColors, unitColors, unitParties, dEV, rEV, oEV };
   }
@@ -376,24 +376,53 @@ export function createUpdateAll(deps) {
   }
 
   function updateEvSummary(refs, totals, year) {
-    let totalEV = 538;
+    let override = null;
     try {
-      const t = window._totalEvByYear && window._totalEvByYear.get(year);
-      if (isFinite(t) && t > 0) totalEV = t;
+      if (typeof window !== 'undefined' && window._evSummaryOverride && typeof window._evSummaryOverride === 'object') {
+        override = window._evSummaryOverride;
+      }
+    } catch (e) { /* ignore */ }
+
+    const hasOverride = override && (
+      override.dEV != null || override.rEV != null || override.oEV != null || override.uEV != null
+    );
+
+    if (typeof window !== 'undefined' && window._electionNightActive && !hasOverride) {
+      return;
+    }
+
+    const totalsSource = hasOverride ? {
+      dEV: Number.isFinite(+override.dEV) ? +override.dEV : 0,
+      rEV: Number.isFinite(+override.rEV) ? +override.rEV : 0,
+      oEV: Number.isFinite(+override.oEV) ? +override.oEV : 0,
+      uEV: Number.isFinite(+override.uEV) ? +override.uEV : null
+    } : totals;
+
+    let totalEV = (hasOverride && Number.isFinite(+override.totalEV) && +override.totalEV > 0)
+      ? +override.totalEV
+      : 538;
+    try {
+      if (!hasOverride) {
+        const t = window._totalEvByYear && window._totalEvByYear.get(year);
+        if (isFinite(t) && t > 0) totalEV = t;
+      }
     } catch (e) { console.warn(e); }
 
-    const otherEV = totals.oEV || 0;
-    const uEV = Math.max(0, totalEV - (totals.dEV + totals.rEV + otherEV));
-    const dPct = totalEV ? (totals.dEV / totalEV) * 100 : 0;
+    const otherEV = totalsSource.oEV || 0;
+    const computedUEV = Math.max(0, totalEV - ((totalsSource.dEV || 0) + (totalsSource.rEV || 0) + otherEV));
+    const uEV = totalsSource.uEV != null && Number.isFinite(+totalsSource.uEV)
+      ? Math.max(0, +totalsSource.uEV)
+      : computedUEV;
+    const dPct = totalEV ? ((totalsSource.dEV || 0) / totalEV) * 100 : 0;
     const uPct = totalEV ? (uEV / totalEV) * 100 : 0;
     const oPct = totalEV ? (otherEV / totalEV) * 100 : 0;
-    const rPct = totalEV ? (totals.rEV / totalEV) * 100 : 0;
+    const rPct = totalEV ? ((totalsSource.rEV || 0) / totalEV) * 100 : 0;
 
     const segments = [
-      { el: refs.evFillD, pct: dPct, value: totals.dEV, code: '' },
-      { el: refs.evFillU, pct: uPct, value: uEV, code: 'U' },
-      { el: refs.evFillO, pct: oPct, value: otherEV, code: '' },
-      { el: refs.evFillR, pct: rPct, value: totals.rEV, code: '' }
+      { el: refs.evFillD, pct: dPct, value: totalsSource.dEV || 0, code: 'D' },
+      { el: refs.evFillU, pct: uPct, value: uEV, code: 'Uncalled' },
+      { el: refs.evFillO, pct: oPct, value: otherEV, code: 'O' },
+      { el: refs.evFillR, pct: rPct, value: totalsSource.rEV || 0, code: 'R' }
     ];
     let offset = 0;
     const activeSegs = [];
@@ -475,6 +504,7 @@ export function createUpdateAll(deps) {
         }
         const labelText = `${seg.code} ${seg.value}`;
         lbl.textContent = labelText;
+        const hasPositive = Number(seg.value) > 0;
         const showLabelPct = 3.0;
         const centerPct = offset + (Math.max(0, seg.pct) / 2);
 
@@ -487,32 +517,44 @@ export function createUpdateAll(deps) {
           lbl.style.color = readableTextColor(bg);
           lbl.style.display = '';
           if (floatLbl) floatLbl.style.display = 'none';
+        } else if (seg.pct <= EPS) {
+          console.log('Segment too small to show anything', seg);
+          // segment too small to show anything
+          if (lbl) lbl.style.display = 'none';
+          if (floatLbl) floatLbl.style.display = 'none';
         } else {
-          // small segment => hide in-bar label and show floating label
+          // small segment => hide in-bar label and show floating label (only for strictly positive values)
           if (lbl) lbl.style.display = 'none';
           try {
-            if (!floatLbl && parentBar) {
-              floatLbl = document.createElement('div');
-              floatLbl.className = 'ev-global-label';
-              floatLbl.setAttribute('data-code', seg.code || 'X');
-              floatLbl.style.position = 'absolute';
-              floatLbl.style.top = '-22px';
-              floatLbl.style.transform = 'translate(-50%, 0)';
-              floatLbl.style.pointerEvents = 'none';
-              floatLbl.style.fontSize = '0.78rem';
-              floatLbl.style.fontWeight = '600';
-              floatLbl.style.whiteSpace = 'nowrap';
-              floatLbl.style.padding = '2px 6px';
-              floatLbl.style.borderRadius = '8px';
-              floatLbl.style.boxShadow = '0 1px 2px rgba(0,0,0,0.3)';
-              floatLbl.style.background = 'rgba(0,0,0,0.65)';
-              floatLbl.style.color = '#fff';
-              parentBar.appendChild(floatLbl);
-            }
-            if (floatLbl) {
-              floatLbl.textContent = labelText;
-              floatLbl.style.left = `${centerPct.toFixed(3)}%`;
-              floatLbl.style.display = '';
+            if (!hasPositive) {
+              // ensure any existing floating label for this code is removed/hidden
+              if (floatLbl) {
+                try { floatLbl.style.display = 'none'; } catch (e) { /* ignore */ }
+              }
+            } else {
+              if (!floatLbl && parentBar) {
+                floatLbl = document.createElement('div');
+                floatLbl.className = 'ev-global-label';
+                floatLbl.setAttribute('data-code', seg.code || 'X');
+                floatLbl.style.position = 'absolute';
+                floatLbl.style.top = '-22px';
+                floatLbl.style.transform = 'translate(-50%, 0)';
+                floatLbl.style.pointerEvents = 'none';
+                floatLbl.style.fontSize = '0.78rem';
+                floatLbl.style.fontWeight = '600';
+                floatLbl.style.whiteSpace = 'nowrap';
+                floatLbl.style.padding = '2px 6px';
+                floatLbl.style.borderRadius = '8px';
+                floatLbl.style.boxShadow = '0 1px 2px rgba(0,0,0,0.3)';
+                floatLbl.style.background = 'rgba(0,0,0,0.65)';
+                floatLbl.style.color = '#fff';
+                parentBar.appendChild(floatLbl);
+              }
+              if (floatLbl) {
+                floatLbl.textContent = labelText;
+                floatLbl.style.left = `${centerPct.toFixed(3)}%`;
+                try { floatLbl.style.display = 'block'; } catch (e) { floatLbl.style.display = ''; }
+              }
             }
           } catch (ee) { console.warn(ee); }
         }
@@ -531,11 +573,14 @@ export function createUpdateAll(deps) {
       }
     }
 
-    const parts = [`D ${totals.dEV}`];
+    const dDisplay = totalsSource.dEV || 0;
+    const rDisplay = totalsSource.rEV || 0;
+    const oDisplay = otherEV || 0;
+    const parts = [`D ${dDisplay}`];
     if (uEV > 0) parts.push(`U ${uEV}`);
-    if (otherEV > 0) parts.push(`O ${otherEV}`);
-    parts.push(`R ${totals.rEV}`);
-    const summary = (uEV > 0 || otherEV > 0) ? parts.join(' | ') : `${totals.dEV} - ${totals.rEV}`;
+    if (oDisplay > 0) parts.push(`O ${oDisplay}`);
+    parts.push(`R ${rDisplay}`);
+    const summary = (uEV > 0 || oDisplay > 0) ? parts.join(' | ') : `${dDisplay} - ${rDisplay}`;
     // Hide the central overlay text to avoid covering the midline; labels are now inside segments
     if (refs.evText) {
       try { refs.evText.style.display = 'none'; refs.evText.setAttribute && refs.evText.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
@@ -611,14 +656,14 @@ export function createUpdateAll(deps) {
       const bellwetherChips = (bellwetherList.length === 0)
         ? '<span class="muted">No bellwether states within 5.0 pp.</span>'
         : bellwetherList.map(r => {
-            const row = rowsMap.get(r.unit) || {};
-            const displayM = (row && isFinite(+row.rm)) ? (+row.rm || 0) + pv : r.relToNat + (getNatMargin(year) || 0);
-            const bg = marginToColor(displayM);
-            const txt = textColorFor(bg);
-            const small = smallColorFor(txt);
-            const relTxt = ((r.relToNat > 0) ? 'D+' : 'R+') + (Math.abs(r.relToNat) * 100).toFixed(1);
-            return `<span class="btn" style="padding:4px 6px;background-color:${bg};color:${txt}">${r.unit} · <small style="color:${small}">${relTxt}</small> · ${r.ev} EV</span>`;
-          }).join('');
+          const row = rowsMap.get(r.unit) || {};
+          const displayM = (row && isFinite(+row.rm)) ? (+row.rm || 0) + pv : r.relToNat + (getNatMargin(year) || 0);
+          const bg = marginToColor(displayM);
+          const txt = textColorFor(bg);
+          const small = smallColorFor(txt);
+          const relTxt = ((r.relToNat > 0) ? 'D+' : 'R+') + (Math.abs(r.relToNat) * 100).toFixed(1);
+          return `<span class="btn" style="padding:4px 6px;background-color:${bg};color:${txt}">${r.unit} · <small style="color:${small}">${relTxt}</small> · ${r.ev} EV</span>`;
+        }).join('');
 
       const bellwetherStateLegend = '<div class="legend" style="margin-bottom:6px">Bellwether states (within 5.0 pp of national margin — i.e. close to the national popular vote, not necessarily close to flipping)</div>' +
         '<div style="display:flex;flex-wrap:wrap;gap:8px">' + bellwetherChips + '</div>';

@@ -1,5 +1,6 @@
 import { getStateName } from './utils/constants.js';
 import { leanStr, formatLeader, formatMarginText, formatReportingText, formatConfidenceText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/mathUtils.js';
 import { getUnitCandidateLastNames } from './utils/candidateNames.js';
@@ -361,6 +362,20 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   function prepareSimulation() {
     const year = getSelectedYear();
     if (!year) return;
+    // Mark election-night active immediately so any code paths that call
+    // updateAll() during preparation will not overwrite the live EV bar.
+    try { window._electionNightActive = true; } catch (e) { /* ignore */ }
+    try {
+      const totalPool = state.totalEvPool || 538;
+      window._evSummaryOverride = {
+        dEV: 0,
+        rEV: 0,
+        oEV: 0,
+        uEV: totalPool,
+        totalEV: totalPool,
+        updatedAt: Date.now()
+      };
+    } catch (e) { /* ignore */ }
 
     try { prepareAtLargeData(); } catch (e) { /* non-fatal */ }
 
@@ -390,7 +405,15 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 
     state.year = year;
 
-    window._electionNightActive = true;
+    // If a proportional EV toggle exists, save its previous state and disable it during election night
+    try {
+      const prop = document.getElementById('propEvToggle');
+      if (prop) {
+        state._prevPropEv = { exists: true, checked: !!prop.checked, disabled: !!prop.disabled };
+        prop.checked = false;
+        prop.disabled = true;
+      }
+    } catch (e) { /* ignore */ }
     // Show the call log panel when the election-night simulation is prepared
     try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) { }
     state.snapshot = new Map();
@@ -535,8 +558,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.running = false;
     state.prepared = false;
     state.stateData = [];
-    state.snapshot = new Map();
-    window._electionNightSnapshot = null;
+  state.snapshot = new Map();
+  window._electionNightSnapshot = null;
+  try { window._evSummaryOverride = null; } catch (e) { /* ignore */ }
     window._electionNightActive = false;
     state.currentTime = 0;
     state.lastTimestamp = null;
@@ -584,6 +608,17 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (typeof window.updateAll === 'function') {
       try { window.updateAll(); } catch (e) { }
     }
+
+    // Restore proportional EV toggle state if we saved it previously
+    try {
+      const prop = document.getElementById('propEvToggle');
+      if (prop && state._prevPropEv && state._prevPropEv.exists) {
+        prop.checked = !!state._prevPropEv.checked;
+        prop.disabled = !!state._prevPropEv.disabled;
+      }
+      // clear saved state
+      state._prevPropEv = null;
+    } catch (e) { /* ignore */ }
 
     if (state.prevUnitColors) {
       window._lastUnitColors = new Map(state.prevUnitColors);
@@ -1183,10 +1218,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
 
-      if (metrics.reporting >= 1 - EPS && st.evAllocations) {
-        if (!st.evCalledAllocations) {
-          st.evCalledAllocations = { ...st.evAllocations };
-        } else if (st.callLeader && st.callLeader === st.winner) {
+      if (metrics.reporting >= 1 - EPS && st.evAllocations && isCalled) {
+        if (!st.evCalledAllocations || st.callLeader === st.winner) {
           st.evCalledAllocations = { ...st.evAllocations };
         }
       }
@@ -1205,8 +1238,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
       applyColor(st, displayColor, metrics);
 
-      const evAllocation = st.evCalledAllocations || (metrics.reporting >= 1 - EPS ? st.evAllocations : null);
-      if (evAllocation) {
+  const evAllocation = isCalled ? (st.evCalledAllocations || null) : null;
+  if (evAllocation) {
         dEV += evAllocation.D || 0;
         rEV += evAllocation.R || 0;
         oEV += evAllocation.O || 0;
@@ -1290,10 +1323,26 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 
     window._electionNightSnapshot = state.snapshot;
 
+    try {
+      const totalPool = state.totalEvPool || 538;
+      const uEV = Math.max(0, totalPool - (dEV + rEV + oEV));
+      window._evSummaryOverride = {
+        dEV,
+        rEV,
+        oEV,
+        uEV,
+        totalEV: totalPool,
+        updatedAt: Date.now()
+      };
+    } catch (e) { /* ignore */ }
+
     updateEvDisplay(dEV, rEV, oEV);
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
+    try {
+      updateCandidateInfo(state.year || getSelectedYear());
+    } catch (e) { console.warn('Failed to update candidate info during election night', e); }
 
     // Update EV breakdown table during election night if modal is open
     if (typeof window.updateEvBreakdownTable === 'function') {
@@ -1670,11 +1719,32 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     const txt = document.getElementById('evText');
 
     const segments = [
-      { el: dEl, pct: dPct, value: dEV },
-      { el: uEl, pct: uPct, value: uEV },
-      { el: oEl, pct: oPct, value: oEV },
-      { el: rEl, pct: rPct, value: rEV }
+      { el: dEl, pct: dPct, value: dEV, code: 'D' },
+      { el: uEl, pct: uPct, value: uEV, code: 'U' },
+      { el: oEl, pct: oPct, value: oEV, code: 'O' },
+      { el: rEl, pct: rPct, value: rEV, code: 'R' }
     ];
+
+    const parentBar = dEl ? dEl.parentElement : null;
+    const showLabelPct = 3;
+    const readableTextColor = colorStr => {
+      try {
+        const test = document.createElement('div');
+        test.style.color = colorStr || '#000';
+        document.body.appendChild(test);
+        const computed = getComputedStyle(test).color || 'rgb(0,0,0)';
+        document.body.removeChild(test);
+        const m = computed.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (!m) return '#fff';
+        const r = Number(m[1]);
+        const g = Number(m[2]);
+        const b = Number(m[3]);
+        const lum = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255);
+        return lum > 0.55 ? '#000' : '#fff';
+      } catch (e) {
+        return '#fff';
+      }
+    };
 
     let leftOffset = 0;
     let rightOffset = 0;
@@ -1693,6 +1763,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         try { seg.el.style.transition = 'none'; seg.el.style.willChange = 'auto'; } catch (e) { }
         seg.el.style.width = '0%';
         seg.el.style.display = 'none';
+        seg.centerPct = 0;
         return;
       }
 
@@ -1704,18 +1775,24 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       } catch (e) { }
 
       const anchor = (seg.el.dataset && seg.el.dataset.anchor) || '';
-      const widthPct = `${seg.pct.toFixed(3)}%`;
+      const widthPct = `${Math.max(0, seg.pct).toFixed(3)}%`;
       if (anchor === 'right') {
+        const start = rightOffset;
+        const center = 100 - start - (Math.max(0, seg.pct) / 2);
+        seg.centerPct = Math.max(0, Math.min(100, center));
         seg.el.style.left = 'auto';
-        seg.el.style.right = `${rightOffset.toFixed(3)}%`;
+        seg.el.style.right = `${start.toFixed(3)}%`;
         seg.el.style.width = widthPct;
-        rightOffset += seg.pct;
+        rightOffset += Math.max(0, seg.pct);
         rightActive.push(seg.el);
       } else {
-        seg.el.style.left = `${leftOffset.toFixed(3)}%`;
+        const start = leftOffset;
+        const center = start + (Math.max(0, seg.pct) / 2);
+        seg.centerPct = Math.max(0, Math.min(100, center));
+        seg.el.style.left = `${start.toFixed(3)}%`;
         seg.el.style.right = 'auto';
         seg.el.style.width = widthPct;
-        leftOffset += seg.pct;
+        leftOffset += Math.max(0, seg.pct);
         leftActive.push(seg.el);
       }
     });
@@ -1737,6 +1814,76 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         lastRight.style.borderTopLeftRadius = lastRight.style.borderBottomLeftRadius = '9px';
       }
     }
+
+    segments.forEach(seg => {
+      if (!seg.el) return;
+      const value = Number.isFinite(seg.value) ? seg.value : 0;
+      const labelText = `${seg.code} ${value}`;
+      let lbl = seg.el.querySelector('.ev-seg-label');
+      if (!lbl) {
+        try {
+          lbl = document.createElement('div');
+          lbl.className = 'ev-seg-label';
+          lbl.style.position = 'absolute';
+          lbl.style.left = '50%';
+          lbl.style.top = '50%';
+          lbl.style.transform = 'translate(-50%, -50%)';
+          lbl.style.pointerEvents = 'none';
+          lbl.style.fontSize = '0.85rem';
+          lbl.style.fontWeight = '600';
+          lbl.style.whiteSpace = 'nowrap';
+          lbl.style.padding = '0 6px';
+          lbl.style.lineHeight = '1';
+          seg.el.appendChild(lbl);
+        } catch (e) {
+          lbl = null;
+        }
+      }
+      if (lbl) {
+        if (seg.pct >= showLabelPct) {
+          lbl.textContent = labelText;
+          try {
+            const bg = seg.el.style.backgroundColor || getComputedStyle(seg.el).backgroundColor || '#000';
+            lbl.style.color = readableTextColor(bg);
+          } catch (e) { }
+          lbl.style.display = '';
+        } else {
+          lbl.style.display = 'none';
+        }
+      }
+
+      if (!parentBar) return;
+      let floatLbl = parentBar.querySelector(`.ev-global-label[data-code="${seg.code}"]`);
+      if (!floatLbl && seg.pct < showLabelPct) {
+        try {
+          floatLbl = document.createElement('div');
+          floatLbl.className = 'ev-global-label';
+          floatLbl.setAttribute('data-code', seg.code);
+          floatLbl.style.position = 'absolute';
+          floatLbl.style.top = '-22px';
+          floatLbl.style.transform = 'translate(-50%, 0)';
+          floatLbl.style.pointerEvents = 'none';
+          floatLbl.style.fontSize = '0.78rem';
+          floatLbl.style.fontWeight = '600';
+          floatLbl.style.whiteSpace = 'nowrap';
+          floatLbl.style.padding = '2px 6px';
+          floatLbl.style.borderRadius = '8px';
+          floatLbl.style.boxShadow = '0 1px 2px rgba(0,0,0,0.3)';
+          floatLbl.style.background = 'rgba(0,0,0,0.65)';
+          floatLbl.style.color = '#fff';
+          parentBar.appendChild(floatLbl);
+        } catch (e) { floatLbl = null; }
+      }
+      if (floatLbl) {
+        if (seg.pct < showLabelPct && seg.value > EPS) {
+          floatLbl.textContent = labelText;
+          floatLbl.style.left = `${(seg.centerPct || 0).toFixed(3)}%`;
+          try { floatLbl.style.display = 'block'; } catch (e) { floatLbl.style.display = ''; }
+        } else {
+          try { floatLbl.style.display = 'none'; } catch (e) { floatLbl.style.display = ''; }
+        }
+      }
+    });
 
     if (txt) {
       const parts = [`D ${dEV}`];

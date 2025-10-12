@@ -319,6 +319,11 @@ hr {
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.8);
 }
 
+/* Floating EV labels are hidden by default; scripts explicitly show them when needed */
+.ev-global-label {
+  display: none;
+}
+
 /* State label styling: keep map label stroke and sizing across site builds */
 .state-label {
   fill: #fff;
