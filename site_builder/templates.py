@@ -26,8 +26,8 @@ PAGE_HTML = r"""<!doctype html>
           <label style="display: flex; align-items: center; gap: 4px;">
             <input type="checkbox" id="chart-twoparty"> Two-party margins
           </label>
-          <label style="display: flex; align-items: center; gap: 4px;">
-            <input type="checkbox" id="chart-relative"> Relative margins
+          <label style="%RELATIVE_LABEL_STYLE%">
+            <input type="checkbox" id="chart-relative"%RELATIVE_DISABLED%> Relative margins
           </label>
           <label style="display: flex; align-items: center; gap: 4px;">
             <input type="checkbox" id="chart-delta"> Show deltas

@@ -204,6 +204,13 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
             .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
             .replace("%AVAILABLE_DATASETS%", available_datasets_value)
         )
+        # Hide/disable the relative margins chart control for national page when generating
+        if str(st).upper() in ("NAT", "NATIONAL"):
+            page = page.replace("%RELATIVE_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
+            page = page.replace("%RELATIVE_DISABLED%", " disabled")
+        else:
+            page = page.replace("%RELATIVE_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
+            page = page.replace("%RELATIVE_DISABLED%", "")
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(STATE_DIR / f"{st[:2]}.html", page)
 
@@ -290,6 +297,9 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
             .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
             .replace("%AVAILABLE_DATASETS%", "presidential")
         )
+        # Unit pages should have the relative control visible and enabled by default
+        page = page.replace("%RELATIVE_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
+        page = page.replace("%RELATIVE_DISABLED%", "")
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         write_text(UNIT_DIR / f"{unit}.html", page)
 
@@ -445,6 +455,9 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
         .replace("%DELTA_TOGGLE_JS%", ENHANCED_TOGGLE_JS)
         .replace("%AVAILABLE_DATASETS%", available_datasets_value)
     )
+    # National page: hide & disable relative margins control
+    page = page.replace("%RELATIVE_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
+    page = page.replace("%RELATIVE_DISABLED%", " disabled")
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     write_text(STATE_DIR / f"NAT.html", page)
 
