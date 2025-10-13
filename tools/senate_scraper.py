@@ -52,8 +52,8 @@ def serialize_table_structure(tbl: Tag) -> Dict:
         'sample_rows': rows_out
     }
 
-GLOBAL_MIN_YEAR = 2000   # start with 2000. we can push earlier, but formatting gets messy pre-1970s
-GLOBAL_MAX_YEAR = 2024
+GLOBAL_MIN_YEAR = 2022   # start with 2022. we can push earlier, but formatting gets messy pre-1970s
+GLOBAL_MAX_YEAR = 2025
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -759,7 +759,7 @@ def default_years() -> List[int]:
     return list(range(end if end % 2 == 0 else end-1, start-1, -2))
 
 def main():
-    RELIABLE_START = 2004
+    RELIABLE_START = 2022
     
     print("Which years would you like to scrape?")
     print(f"1) Recent reliable window ({RELIABLE_START}–2024, even years)")
@@ -768,7 +768,7 @@ def main():
     choice = input("Enter choice (1/2/3): ").strip()
 
     if choice == "1":
-        years = list(range(2024, RELIABLE_START-1, -2))
+        years = list(range(2025, RELIABLE_START-1, -1))
     elif choice == "2":
         years = default_years()
     elif choice == "3":

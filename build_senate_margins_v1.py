@@ -13,12 +13,6 @@ INFILE_RELATIVE = os.path.join("election_data", "wikipedia_senate", "wikipedia_s
 OUTFILE = "senate_margins.csv"
 DOCS_OUTFILE = os.path.join("docs", "senate_margins.csv")
 
-# Legacy per-candidate CSV (1976-2020)
-LEGACY_SENATE_CSV = os.path.join("election_data", "1976-2020-senate.csv")
-
-# Use legacy source for years < YEAR_CUTOFF, and wikipedia combined for years >= YEAR_CUTOFF
-YEAR_CUTOFF = 2022
-
 
 def safe_int(value) -> int:
     """Convert a value to int, falling back to 0."""
@@ -64,77 +58,6 @@ def parse_results(raw_results: str) -> Dict[str, Dict[str, Optional[float]]]:
     except Exception:
         pass
     return {}
-
-
-def convert_legacy_senate_rows(legacy_rows: List[Dict[str, str]], max_year_exclusive: int = 2022) -> List[Dict[str, str]]:
-    """Convert legacy per-candidate senate CSV rows into the combined-row format.
-
-    Groups by year + state_po + (district if present) + special flag so multiple races in a state/year are kept separate.
-    Returns rows with fields matching the wikipedia combined CSV consumer: year, state, abbr, class, race_type,
-    round, caption, source_url, total_votes, results (JSON string), runner_up, winner.
-    """
-    grouped: Dict[Tuple[int, str, str, str], List[Dict[str, str]]] = {}
-    for r in legacy_rows:
-        year = safe_int(r.get("year"))
-        if year >= max_year_exclusive:
-            continue
-        abbr = r.get("state_po") or r.get("state") or ""
-        district = (r.get("district") or "").strip()
-        special = str(r.get("special") or "").strip()
-        key = (year, abbr, district or "statewide", special or "")
-        grouped.setdefault(key, []).append(r)
-
-    out_rows: List[Dict[str, str]] = []
-    for (year, abbr, district, special), group in grouped.items():
-        # pick a representative state name
-        state_name = group[0].get("state") or ""
-        # determine total votes: use the max totalvotes found in rows
-        total_votes = 0
-        for r in group:
-            try:
-                tv = int(float(r.get("totalvotes") or 0))
-            except Exception:
-                tv = 0
-            if tv > total_votes:
-                total_votes = tv
-
-        results: Dict[str, Dict[str, Optional[float]]] = {}
-        for r in group:
-            name = (r.get("candidate") or "").strip()
-            if name == "":
-                continue
-            try:
-                votes = int(float(r.get("candidatevotes") or 0))
-            except Exception:
-                votes = 0
-            party = r.get("party_detailed") or r.get("party_simplified") or r.get("party") or ""
-            pct = None
-            if total_votes:
-                pct = float(votes) / float(total_votes) if total_votes else None
-            results[name] = {"votes": votes, "party": party, "pct": pct}
-
-        # runner_up/winner can be left for the existing logic to compute; include winner if easy
-        winner_name = ""
-        if results:
-            winner_name = max(results.items(), key=lambda kv: safe_int(kv[1].get("votes")))[0]
-
-        row: Dict[str, str] = {
-            "year": str(year),
-            "state": state_name,
-            "abbr": abbr,
-            "class": "",
-            "race_type": "special" if special.lower() in ("true", "1") else "regular",
-            "round": (group[0].get("stage") or "gen").title(),
-            "caption": "",
-            "source_url": "",
-            "total_votes": str(total_votes),
-            "results": json.dumps(results, ensure_ascii=False),
-            "runner_up": "",
-            "winner": winner_name,
-        }
-        out_rows.append(row)
-
-    return out_rows
 
 
 def aggregate_vote_totals(results: Dict[str, Dict[str, Optional[float]]]) -> Tuple[int, int, int, Dict[str, Dict[str, Optional[float]]]]:
@@ -629,27 +552,15 @@ def write_output(entries: List[Dict[str, object]], national_rows: List[Dict[str,
 def main() -> None:
     root = os.path.dirname(__file__)
     infile = os.path.join(root, INFILE_RELATIVE)
-    legacy_infile = os.path.join(root, LEGACY_SENATE_CSV)
     outfile_path = os.path.join(root, OUTFILE)
     docs_outfile_path = os.path.join(root, DOCS_OUTFILE)
-    rows: List[Dict[str, str]] = []
 
-    # Load legacy per-candidate CSV for years before YEAR_CUTOFF
-    if os.path.exists(legacy_infile):
-        with open(legacy_infile, newline="", encoding="utf-8") as fh:
-            reader = csv.DictReader(fh)
-            legacy_rows_raw = list(reader)
-        rows.extend(convert_legacy_senate_rows(legacy_rows_raw, max_year_exclusive=YEAR_CUTOFF))
-    else:
-        print(f"Warning: legacy senate CSV not found: {legacy_infile}")
-
-    # Load wikipedia combined CSV for recent years (>= YEAR_CUTOFF)
     if not os.path.exists(infile):
         raise FileNotFoundError(f"Input file not found: {infile}")
+
     with open(infile, newline="", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
-        wiki_rows = [r for r in list(reader) if safe_int(r.get("year")) >= YEAR_CUTOFF]
-    rows.extend(wiki_rows)
+        rows = list(reader)
 
     entries = build_base_entries(rows)
     national_stats = compute_national_stats(entries)
