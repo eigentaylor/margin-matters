@@ -66,6 +66,34 @@ def parse_results(raw_results: str) -> Dict[str, Dict[str, Optional[float]]]:
     return {}
 
 
+def compute_senate_class(year: int) -> str:
+    """Compute the Senate class (1,2,3) for a given election year.
+
+    This uses the typical 6-year cycle: Class 1 seats up in years 2018, 2012, 2006... (i.e., years where (year - 2018) % 6 == 0)
+    Class 2 seats up in 2020, 2014, 2008... (year where (year - 2020) % 6 == 0)
+    Class 3 seats up in 2022, 2016, 2010... (year where (year - 2022) % 6 == 0)
+
+    If none match, returns empty string.
+    """
+    try:
+        y = int(year)
+    except Exception:
+        raise ValueError("Year must be an integer")
+    class_label = ""
+    if y % 6 == 2:
+        class_label = "I" # e.g., 2024, 2018, 2012, 2006, 2000
+    elif y % 6 == 4:
+        class_label = "II"   # e.g., 2020, 2014, 2008, 2002
+    elif y % 6 == 0:
+        class_label = "III"  # e.g., 2022, 2016, 2010, 2004
+    else:
+        if y == 2021: # GA special
+            class_label = "II"
+        else:
+            raise ValueError(f"Year {year} does not correspond to a Senate election year")
+    return class_label
+
+
 def convert_legacy_senate_rows(legacy_rows: List[Dict[str, str]], max_year_exclusive: int = 2022) -> List[Dict[str, str]]:
     """Convert legacy per-candidate senate CSV rows into the combined-row format.
 
@@ -75,12 +103,16 @@ def convert_legacy_senate_rows(legacy_rows: List[Dict[str, str]], max_year_exclu
     """
     grouped: Dict[Tuple[int, str, str, str], List[Dict[str, str]]] = {}
     for r in legacy_rows:
+        if r.get("stage") == 'runoff':
+            continue # skip runoffs for now
         year = safe_int(r.get("year"))
         if year >= max_year_exclusive:
             continue
         abbr = r.get("state_po") or r.get("state") or ""
         district = (r.get("district") or "").strip()
         special = str(r.get("special") or "").strip()
+        if special.lower() in ("true", "1"):
+            continue # skip special elections for now
         key = (year, abbr, district or "statewide", special or "")
         grouped.setdefault(key, []).append(r)
 
@@ -120,9 +152,9 @@ def convert_legacy_senate_rows(legacy_rows: List[Dict[str, str]], max_year_exclu
 
         row: Dict[str, str] = {
             "year": str(year),
-            "state": state_name,
+            "state": state_name.title(),
             "abbr": abbr,
-            "class": "",
+            "class": compute_senate_class(year),
             "race_type": "special" if special.lower() in ("true", "1") else "regular",
             "round": (group[0].get("stage") or "gen").title(),
             "caption": "",
