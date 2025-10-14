@@ -36,7 +36,12 @@ class LaplaceAnalyzer {
   laplaceProb(deltas, N, deltaThresh) {
     if (!deltas.length || N <= 0) return null;
     const recent = deltas.slice(-N);
-    const k = recent.filter(d => d > deltaThresh).length;
+    // default direction is 'left' (count deltas > threshold). Caller may pass 'right' to invert.
+    const direction = arguments.length >= 4 ? arguments[3] : 'left';
+    const k = recent.filter(d => {
+      if (!Number.isFinite(d)) return false;
+      return direction === 'left' ? d > deltaThresh : d < deltaThresh;
+    }).length;
     return (k + 1) / (N + 2);
   }
 
@@ -79,7 +84,8 @@ class LaplaceAnalyzer {
       deltaThresh = -0.005,
       windowSizes = [3, 4, 5, 6, 7],
       lambda = 0.25,
-      weightType = 'linear'
+      weightType = 'linear',
+      trendDir = 'left'
     } = options;
 
     // Filter data to valid years and exclude national aggregates
@@ -127,7 +133,7 @@ class LaplaceAnalyzer {
       const deltas = rows.map(r => r.delta).filter(d => Number.isFinite(d));
       const probsByN = {};
       windowSizes.forEach(N => {
-        probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh);
+        probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
       });
 
       // Weighted average across available windows
@@ -209,6 +215,7 @@ class LaplaceAnalyzer {
     lambda: document.getElementById('lambda'),
     lambdaVal: document.getElementById('lambdaVal'),
     weightType: document.getElementById('weightType'),
+    trendDir: document.getElementById('trendDir'),
     runBtn: document.getElementById('runBtn'),
     downloadBtn: document.getElementById('downloadBtn'),
     // topN removed — always show all units
@@ -253,20 +260,47 @@ class LaplaceAnalyzer {
     }
   }
 
+  function wireTrendDirection() {
+    const opEl = document.getElementById('deltaOp');
+    if (!els.trendDir) return;
+    const updateOp = () => {
+      const val = els.trendDir.value === 'left' ? '>' : '<';
+      if (opEl) opEl.textContent = val;
+    };
+    els.trendDir.addEventListener('change', () => {
+      // Flip the delta threshold sign so the magnitude is preserved but the comparison direction is inverted
+      if (els.deltaThresh) {
+        const curr = parseFloat(els.deltaThresh.value) || 0;
+        const flipped = -curr;
+        // Set the slider value and trigger its input handler to update the displayed value
+        els.deltaThresh.value = String(flipped);
+        try {
+          els.deltaThresh.dispatchEvent(new Event('input', { bubbles: true }));
+        } catch (e) {
+          // ignore if dispatching events isn't supported in this environment
+        }
+      }
+      updateOp();
+      runAnalysis();
+    });
+    updateOp();
+  }
+
   function setStatus(msg) {
     els.status.textContent = msg || '';
   }
 
   function renderTable(results, windowSizes) {
+    const dirLabel = (els.trendDir && els.trendDir.value === 'right') ? 'right' : 'left';
     const cols = [
       { key: '__rank', label: 'Rank' },
       { key: 'abbr', label: 'Unit' },
       // use relative_margin_numeric as the sortable key; display string comes from relative_margin
       { key: 'relative_margin_numeric', label: 'Last rel. margin' },
-      { key: 'p_weighted', label: 'P(left | weighted)', fmt: v => LaplaceAnalyzer.formatProb(v) },
+      { key: 'p_weighted', label: `P(${dirLabel} | weighted)`, fmt: v => LaplaceAnalyzer.formatProb(v) },
       ...windowSizes.map(N => ({
         key: `N${N}`,
-        label: `P(left | N=${N})`,
+        label: `P(${dirLabel} | N=${N})`,
         fmt: v => LaplaceAnalyzer.formatProb(v)
       }))
     ];
@@ -452,6 +486,7 @@ class LaplaceAnalyzer {
     const windowSizes = parseWindowSizes(els.windowSizes.value);
     const lambda = parseFloat(els.lambda.value);
     const weightType = els.weightType.value === 'linear' ? 'linear' : 'exponential';
+    const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
     lastWindows = windowSizes.length ? windowSizes : [3, 4, 5, 6];
 
     const t0 = performance.now();
@@ -461,7 +496,8 @@ class LaplaceAnalyzer {
       deltaThresh: Number.isFinite(deltaThresh) ? deltaThresh : -0.005,
       windowSizes: lastWindows,
       lambda: Number.isFinite(lambda) ? lambda : 0.25,
-      weightType
+      weightType,
+      trendDir
     });
     const dt = performance.now() - t0;
 
