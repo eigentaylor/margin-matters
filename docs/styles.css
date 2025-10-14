@@ -843,6 +843,71 @@ body.has-prop-ev-toggle {
   accent-color: var(--accent)
 }
 
+/* Consistent slider visuals for PV tools and controls (match shift-vectors year slider) */
+.pv-tools .field label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pv-tools input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  margin-top: 6px;
+}
+
+.pv-tools input[type="range"]::-webkit-slider-runnable-track {
+  height: 10px;
+  background: linear-gradient(90deg, rgba(102,179,255,0.12), rgba(255,255,255,0.04));
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.pv-tools input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  margin-top: -4px; /* center thumb over track */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.pv-tools input[type="range"]::-moz-range-track {
+  height: 10px;
+  background: linear-gradient(90deg, rgba(102,179,255,0.12), rgba(255,255,255,0.04));
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.pv-tools input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.pv-tools input[type="range"]:focus {
+  outline: none;
+}
+
+.pv-tools input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 8px rgba(102,179,255,0.08);
+}
+
+.pv-tools .muted {
+  font-variant-numeric: tabular-nums;
+  min-width: 5ch;
+  text-align: right;
+}
+
 /* Dual-range year slider used on state pages and trend viewer */
 .dual-range-slider {
   position: relative;
