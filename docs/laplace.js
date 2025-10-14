@@ -249,12 +249,24 @@ class LaplaceAnalyzer {
       update();
     }
     if (els.absThresh && els.absThreshVal) {
-      const update = () => { els.absThreshVal.textContent = Number(els.absThresh.value).toFixed(2); };
+      const update = () => {
+        const v = Number(els.absThresh.value);
+        // display as percentage (e.g., 0.15 -> 15%)
+        els.absThreshVal.textContent = isFinite(v) ? (v * 100).toFixed(1) + '%' : '';
+      };
       els.absThresh.addEventListener('input', update);
       update();
     }
     if (els.deltaThresh && els.deltaThreshVal) {
-      const update = () => { els.deltaThreshVal.textContent = Number(els.deltaThresh.value).toFixed(4); };
+      const update = () => {
+        const v = Number(els.deltaThresh.value);
+        // prefer Formatters.leanStr if available for clearer D+/R+ display
+        if (typeof window !== 'undefined' && window.Formatters && typeof window.Formatters.leanStr === 'function') {
+          els.deltaThreshVal.textContent = window.Formatters.leanStr(v);
+        } else {
+          els.deltaThreshVal.textContent = isFinite(v) ? v.toFixed(4) : '';
+        }
+      };
       els.deltaThresh.addEventListener('input', update);
       update();
     }
@@ -504,7 +516,17 @@ class LaplaceAnalyzer {
     lastResults = results;
     renderTable(results, lastWindows);
 
-    setStatus(`Analyzed ${results.length} units in ${dt.toFixed(1)} ms • endYear=${endYear} • abs≤${absThresh} • Δ>${deltaThresh} • windows=[${lastWindows.join(', ')}] • ${weightType}, λ=${lambda}`);
+    // Format thresholds for status display
+    const absDisplay = Number.isFinite(absThresh) ? (absThresh * 100).toFixed(1) + '%' : String(absThresh);
+    const operator = trendDir === 'right' ? '<' : '>';
+    let deltaDisplay;
+    if (typeof window !== 'undefined' && window.Formatters && typeof window.Formatters.leanStr === 'function') {
+      deltaDisplay = window.Formatters.leanStr(deltaThresh);
+    } else {
+      deltaDisplay = Number.isFinite(deltaThresh) ? deltaThresh.toFixed(4) : String(deltaThresh);
+    }
+
+    setStatus(`Analyzed ${results.length} units in ${dt.toFixed(1)} ms • endYear=${endYear} • abs≤${absDisplay} • Δ${operator}${deltaDisplay} • windows=[${lastWindows.join(', ')}] • ${weightType}, λ=${lambda}`);
   }
 
   function downloadCSV() {
