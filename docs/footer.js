@@ -4,7 +4,7 @@
     const extraText = extraNote ? extraNote + ' ' : '';
 
     const footerHTML = `
-      <footer>
+      <footer class="center">
         Site by eigentaylor.<br />
         Please report any inaccuracies to me through discord: eigentaylor.<br />
         Data (possibly incorrectly scraped) from <a href='https://en.wikipedia.org/' target='_blank' rel='noopener noreferrer'>Wikipedia</a>.<br />
