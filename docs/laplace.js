@@ -244,7 +244,10 @@ class LaplaceAnalyzer {
   // Update display spans when sliders change
   function wireSliders() {
     if (els.lambda && els.lambdaVal) {
-      const update = () => { els.lambdaVal.textContent = Number(els.lambda.value).toFixed(2); };
+      const update = () => {
+        els.lambdaVal.textContent = Number(els.lambda.value).toFixed(2);
+        updateWeightFormula();
+      };
       els.lambda.addEventListener('input', update);
       update();
     }
@@ -272,6 +275,23 @@ class LaplaceAnalyzer {
     }
   }
 
+  // Wire weightType and windowSizes to update the formula and re-run analysis where sensible
+  if (els.weightType) {
+    els.weightType.addEventListener('change', () => {
+      updateWeightFormula();
+      // re-run to apply new weighting
+      runAnalysis();
+    });
+  }
+  if (els.windowSizes) {
+    // update formula as the user types and re-run when they finish (change)
+    els.windowSizes.addEventListener('input', updateWeightFormula);
+    els.windowSizes.addEventListener('change', () => {
+      updateWeightFormula();
+      runAnalysis();
+    });
+  }
+
   function wireTrendDirection() {
     const opEl = document.getElementById('deltaOp');
     if (!els.trendDir) return;
@@ -296,6 +316,20 @@ class LaplaceAnalyzer {
       runAnalysis();
     });
     updateOp();
+  }
+
+  function updateWeightFormula() {
+    const formulaEl = document.getElementById('weightFormula');
+    if (!formulaEl) return;
+    const wt = els.weightType && els.weightType.value ? els.weightType.value : 'linear';
+    const lambda = Number(els.lambda && els.lambda.value ? els.lambda.value : 0.25);
+    const windowSizes = parseWindowSizes(els.windowSizes.value);
+    const minN = windowSizes.length ? Math.min(...windowSizes) : 3;
+    if (wt === 'exponential') {
+      formulaEl.textContent = `Weight(N) = exp(-${lambda} * (N - ${minN}))`;
+    } else {
+      formulaEl.textContent = `Weight(N) = 1 / (1 + ${lambda} * (N - ${minN}))`;
+    }
   }
 
   function setStatus(msg) {
