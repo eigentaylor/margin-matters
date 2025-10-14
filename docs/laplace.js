@@ -202,9 +202,12 @@ class LaplaceAnalyzer {
   const els = {
     endYear: document.getElementById('endYear'),
     absThresh: document.getElementById('absThresh'),
+    absThreshVal: document.getElementById('absThreshVal'),
     deltaThresh: document.getElementById('deltaThresh'),
+    deltaThreshVal: document.getElementById('deltaThreshVal'),
     windowSizes: document.getElementById('windowSizes'),
     lambda: document.getElementById('lambda'),
+    lambdaVal: document.getElementById('lambdaVal'),
     weightType: document.getElementById('weightType'),
     runBtn: document.getElementById('runBtn'),
     downloadBtn: document.getElementById('downloadBtn'),
@@ -229,6 +232,25 @@ class LaplaceAnalyzer {
       .map(s => parseInt(s.trim(), 10))
       .filter(n => Number.isFinite(n) && n > 0)
       .sort((a, b) => a - b);
+  }
+
+  // Update display spans when sliders change
+  function wireSliders() {
+    if (els.lambda && els.lambdaVal) {
+      const update = () => { els.lambdaVal.textContent = Number(els.lambda.value).toFixed(2); };
+      els.lambda.addEventListener('input', update);
+      update();
+    }
+    if (els.absThresh && els.absThreshVal) {
+      const update = () => { els.absThreshVal.textContent = Number(els.absThresh.value).toFixed(2); };
+      els.absThresh.addEventListener('input', update);
+      update();
+    }
+    if (els.deltaThresh && els.deltaThreshVal) {
+      const update = () => { els.deltaThreshVal.textContent = Number(els.deltaThresh.value).toFixed(4); };
+      els.deltaThresh.addEventListener('input', update);
+      update();
+    }
   }
 
   function setStatus(msg) {
@@ -411,8 +433,9 @@ class LaplaceAnalyzer {
   function runAnalysis() {
     if (!analyzer) return;
     const endYear = parseInt(els.endYear.value, 10) || 2024;
-    const absThresh = parseFloat(els.absThresh.value);
-    const deltaThresh = parseFloat(els.deltaThresh.value);
+  // sliders provide string values; parse as numbers
+  const absThresh = parseFloat(els.absThresh.value);
+  const deltaThresh = parseFloat(els.deltaThresh.value);
     const windowSizes = parseWindowSizes(els.windowSizes.value);
     const lambda = parseFloat(els.lambda.value);
     const weightType = els.weightType.value === 'linear' ? 'linear' : 'exponential';
@@ -453,6 +476,8 @@ class LaplaceAnalyzer {
   // Wire up events
   els.runBtn.addEventListener('click', runAnalysis);
   els.downloadBtn.addEventListener('click', downloadCSV);
+  // initialize slider wiring
+  wireSliders();
   // topN removed: no event listener needed
 
   // Auto-run once ready
