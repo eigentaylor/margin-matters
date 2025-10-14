@@ -293,6 +293,14 @@ class LaplaceAnalyzer {
       const vaRaw = a[key];
       const vbRaw = b[key];
 
+      // Special-case alphabetical sorting for unit/abbr column (case-insensitive)
+      if (key === 'abbr') {
+        const sa = String(a.abbr || '').toLowerCase();
+        const sb = String(b.abbr || '').toLowerCase();
+        const cmp = sa.localeCompare(sb);
+        return direction === 'asc' ? cmp : -cmp;
+      }
+
       // Null/undefined handling
       if (vaRaw == null && vbRaw == null) return 0;
       if (vaRaw == null) return 1;

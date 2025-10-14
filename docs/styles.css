@@ -914,6 +914,19 @@ body.has-prop-ev-toggle {
   text-align: right;
 }
 
+/* Ensure all table text in pv-tools (e.g., laplace) is centered */
+.pv-tools .table-wrap table,
+.pv-tools .table-wrap table th,
+.pv-tools .table-wrap table td {
+  text-align: center !important;
+}
+
+/* Make sure even the first sticky column is centered inside pv-tools tables */
+.pv-tools .table-wrap table th:first-child,
+.pv-tools .table-wrap table td:first-child {
+  text-align: center !important;
+}
+
 /* Dual-range year slider used on state pages and trend viewer */
 .dual-range-slider {
   position: relative;
