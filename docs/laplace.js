@@ -219,6 +219,9 @@ class LaplaceAnalyzer {
   /** cached last results for download */
   let lastResults = [];
   let lastWindows = [3, 4, 5, 6];
+  // Sort state: key and direction (asc/desc)
+  let sortKey = 'p_weighted';
+  let sortDir = 'desc';
 
   function parseWindowSizes(text) {
     return text
@@ -246,9 +249,72 @@ class LaplaceAnalyzer {
     ];
 
     const limited = results; // always show all units
+    // Ensure results are sorted according to current sort state before rendering
+    function parseDisplayMargin(str) {
+      if (!str || typeof str !== 'string') return NaN;
+      str = str.trim();
+      if (str === 'EVEN' || str === '—') return 0;
+      const pct = str.match(/^(-?\d+(?:\.\d+)?)%$/);
+      if (pct) return parseFloat(pct[1]) / 100;
+      const m = str.match(/^([DR])?\+?(-?\d+(?:\.\d+)?)/i);
+      if (m) {
+        const party = (m[1] || '').toUpperCase();
+        const val = parseFloat(m[2]);
+        if (!Number.isFinite(val)) return NaN;
+        if (party === 'R') return -Math.abs(val) / 100;
+        return val / 100;
+      }
+      return NaN;
+    }
+
+    function compareRows(a, b, key, direction) {
+      const vaRaw = a[key];
+      const vbRaw = b[key];
+
+      // Null/undefined handling
+      if (vaRaw == null && vbRaw == null) return 0;
+      if (vaRaw == null) return 1;
+      if (vbRaw == null) return -1;
+
+      let vaNum = Number(vaRaw);
+      let vbNum = Number(vbRaw);
+      if (!Number.isFinite(vaNum)) {
+        if (key === 'relative_margin_numeric') {
+          vaNum = Number(a.relative_margin_numeric);
+        }
+        if (!Number.isFinite(vaNum)) vaNum = parseDisplayMargin(a.relative_margin);
+      }
+      if (!Number.isFinite(vbNum)) {
+        if (key === 'relative_margin_numeric') {
+          vbNum = Number(b.relative_margin_numeric);
+        }
+        if (!Number.isFinite(vbNum)) vbNum = parseDisplayMargin(b.relative_margin);
+      }
+
+      if (Number.isFinite(vaNum) && Number.isFinite(vbNum)) {
+        const cmp = vaNum - vbNum;
+        return direction === 'asc' ? cmp : -cmp;
+      }
+
+      const sa = String(vaRaw);
+      const sb = String(vbRaw);
+      const cmp = sa.localeCompare(sb);
+      return direction === 'asc' ? cmp : -cmp;
+    }
+
+    // Apply current sort state to results (in-place)
+    if (sortKey) {
+      results.sort((a, b) => compareRows(a, b, sortKey, sortDir));
+    }
+
     const thead = `
       <thead>
-        <tr>${cols.map(c => `<th data-key="${c.key}" class="sortable">${c.label}</th>`).join('')}</tr>
+        <tr>${cols.map(c => {
+        const active = c.key === sortKey;
+        const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+        const attr = active ? ` data-sort="${sortDir}"` : '';
+        return `<th data-key="${c.key}" class="sortable"${attr}>${c.label}${arrow}</th>`;
+      }).join('')}</tr>
       </thead>
     `;
     const tbody = `
@@ -291,80 +357,21 @@ class LaplaceAnalyzer {
       });
     });
 
-    // Sorting: attach handlers to header cells
+    // Sorting: attach handlers to header cells and toggle global sort state
     const headerCells = els.tableContainer.querySelectorAll('thead th.sortable');
     headerCells.forEach(th => {
       th.style.cursor = 'pointer';
       th.addEventListener('click', () => {
         const key = th.getAttribute('data-key');
-        // Determine current sort direction and toggle
-        const currently = th.getAttribute('data-sort') || '';
-        const newDir = currently === 'asc' ? 'desc' : 'asc';
-
-        // Clear sort attributes on all headers
-        headerCells.forEach(h => h.removeAttribute('data-sort'));
-        th.setAttribute('data-sort', newDir);
-
-        // Sort lastResults in place — prefer numeric comparison for margin fields
-        function parseDisplayMargin(str) {
-          if (!str || typeof str !== 'string') return NaN;
-          str = str.trim();
-          if (str === 'EVEN' || str === '—') return 0;
-          // Percent like "3.4%"
-          const pct = str.match(/^(-?\d+(?:\.\d+)?)%$/);
-          if (pct) return parseFloat(pct[1]) / 100;
-          // D+7.2 or R+7.2 or +7.2 or -7.2
-          const m = str.match(/^([DR])?\+?(-?\d+(?:\.\d+)?)/i);
-          if (m) {
-            const party = (m[1] || '').toUpperCase();
-            const val = parseFloat(m[2]);
-            if (!Number.isFinite(val)) return NaN;
-            // party D implies positive (Dem margin), R implies negative (Republican advantage)
-            if (party === 'R') return -Math.abs(val) / 100;
-            return val / 100;
-          }
-          return NaN;
+        if (sortKey === key) {
+          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortKey = key;
+          // sensible default directions: ascending for names, descending for probabilities
+          sortDir = key === 'abbr' ? 'asc' : 'desc';
         }
 
-        lastResults.sort((a, b) => {
-          const vaRaw = a[key];
-          const vbRaw = b[key];
-
-          // Null/undefined handling
-          if (vaRaw == null && vbRaw == null) return 0;
-          if (vaRaw == null) return 1;
-          if (vbRaw == null) return -1;
-
-          // Special-case relative_margin_numeric to use numeric values or parse display string
-          let vaNum = Number(vaRaw);
-          let vbNum = Number(vbRaw);
-          if (!Number.isFinite(vaNum)) {
-            // try named numeric field for margins
-            if (key === 'relative_margin_numeric') {
-              vaNum = Number(a.relative_margin_numeric);
-            }
-            if (!Number.isFinite(vaNum)) vaNum = parseDisplayMargin(a.relative_margin);
-          }
-          if (!Number.isFinite(vbNum)) {
-            if (key === 'relative_margin_numeric') {
-              vbNum = Number(b.relative_margin_numeric);
-            }
-            if (!Number.isFinite(vbNum)) vbNum = parseDisplayMargin(b.relative_margin);
-          }
-
-          if (Number.isFinite(vaNum) && Number.isFinite(vbNum)) {
-            const cmp = vaNum - vbNum;
-            return newDir === 'asc' ? cmp : -cmp;
-          }
-
-          // Fallback to string comparison
-          const sa = String(vaRaw);
-          const sb = String(vbRaw);
-          const cmp = sa.localeCompare(sb);
-          return newDir === 'asc' ? cmp : -cmp;
-        });
-
-        // Re-render table with sorted results
+        // Re-render using the global sort state (renderTable will sort before building HTML)
         renderTable(lastResults, windowSizes);
       });
     });
