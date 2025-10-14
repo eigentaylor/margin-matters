@@ -332,11 +332,11 @@ class LaplaceAnalyzer {
     const thead = `
       <thead>
         <tr>${cols.map(c => {
-        const active = c.key === sortKey;
-        const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
-        const attr = active ? ` data-sort="${sortDir}"` : '';
-        return `<th data-key="${c.key}" class="sortable"${attr}>${c.label}${arrow}</th>`;
-      }).join('')}</tr>
+      const active = c.key === sortKey;
+      const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+      const attr = active ? ` data-sort="${sortDir}"` : '';
+      return `<th data-key="${c.key}" class="sortable"${attr}>${c.label}${arrow}</th>`;
+    }).join('')}</tr>
       </thead>
     `;
     const tbody = `
@@ -433,9 +433,9 @@ class LaplaceAnalyzer {
   function runAnalysis() {
     if (!analyzer) return;
     const endYear = parseInt(els.endYear.value, 10) || 2024;
-  // sliders provide string values; parse as numbers
-  const absThresh = parseFloat(els.absThresh.value);
-  const deltaThresh = parseFloat(els.deltaThresh.value);
+    // sliders provide string values; parse as numbers
+    const absThresh = parseFloat(els.absThresh.value);
+    const deltaThresh = parseFloat(els.deltaThresh.value);
     const windowSizes = parseWindowSizes(els.windowSizes.value);
     const lambda = parseFloat(els.lambda.value);
     const weightType = els.weightType.value === 'linear' ? 'linear' : 'exponential';

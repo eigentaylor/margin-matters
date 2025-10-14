@@ -179,6 +179,12 @@ img.plot {
   max-height: 80vh
 }
 
+/* For pv-tools pages (like laplace), allow table to expand fully and let the page scroll instead */
+.pv-tools .table-wrap {
+  max-height: none;
+  overflow: visible;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
