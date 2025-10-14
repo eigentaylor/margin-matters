@@ -259,6 +259,7 @@ class LaplaceAnalyzer {
 
   function renderTable(results, windowSizes) {
     const cols = [
+      { key: '__rank', label: 'Rank' },
       { key: 'abbr', label: 'Unit' },
       // use relative_margin_numeric as the sortable key; display string comes from relative_margin
       { key: 'relative_margin_numeric', label: 'Last rel. margin' },
@@ -340,6 +341,8 @@ class LaplaceAnalyzer {
     const thead = `
       <thead>
         <tr>${cols.map(c => {
+      // Render rank column as non-sortable
+      if (c.key === '__rank') return `<th>${c.label}</th>`;
       const active = c.key === sortKey;
       const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
       const attr = active ? ` data-sort="${sortDir}"` : '';
@@ -350,8 +353,10 @@ class LaplaceAnalyzer {
     const tbody = `
       <tbody>
         ${limited
-        .map(r => {
+        .map((r, idx) => {
           const tds = cols.map(c => {
+            // Rank column uses the current index + 1 (1-based)
+            if (c.key === '__rank') return `<td class="rank">${idx + 1}</td>`;
             const raw = r[c.key];
             let val;
             if (c.key === 'relative_margin_numeric') {
