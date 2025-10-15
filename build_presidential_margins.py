@@ -252,6 +252,7 @@ def main():
             prev_two_party_relative = None
             prev_two_party_national = None
             prev_row = None
+            median_raw_delta = None
 
             # prev state pres: look up previous year row for same abbr
             prev_years = [y for y in years_sorted if y < year]
@@ -358,6 +359,7 @@ def main():
                 'third_party_relative_share_str': utils.lean_str(third_party_relative, third_party=True) if third_party_relative is not None else '0.0',
                 # color will be assigned below based on the winner
                 'color': None,
+                'median_delta_dist': None, # calculated later
                 'special_case_notes': NOTES.get((year, abbr), '') or NOTES.get((year, None), ''),
             }
             # Determine winner and color
@@ -459,7 +461,26 @@ def main():
                 print(f"Warning: failed to parse third_party_results for {year} {abbr}: {r.get('third_party_results', '')}")
                 out['top_third_party'] = 'None'
             out_rows.append(out)
-
+        # calculate distances from median margin delta for the year
+        deltas = [safe_float(r['pres_margin_delta']) for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None]
+        if deltas:
+            deltas_sorted = sorted(deltas)
+            n = len(deltas_sorted)
+            if n % 2 == 1:
+                median = deltas_sorted[n // 2]
+            else:
+                median = (deltas_sorted[n // 2 - 1] + deltas_sorted[n // 2]) / 2
+            # assign distance from median to each row for this year
+            for r in out_rows:
+                if r['year'] == year and r['pres_margin_delta'] is not None:
+                    try:
+                        delta_val = safe_float(r['pres_margin_delta'])
+                        r['median_margin_delta'] = median
+                        r['median_delta_dist'] = delta_val - median
+                        r['median_delta_dist_str'] = utils.lean_str(r['median_delta_dist'])
+                    except Exception:
+                        r['median_delta_dist'] = None 
+                        r['median_delta_dist_str'] = '0'
     # write CSV
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'electoral_votes', 'T_votes',
@@ -469,6 +490,7 @@ def main():
         'D_delta', 'R_delta', 'total_delta',
         'pres_margin', 'pres_margin_delta',
         'national_margin', 'national_margin_delta',
+        'median_margin_delta',
         'relative_margin', 'relative_margin_delta',
         'third_party_share', 'third_party_national_share', 'third_party_relative_share',
         'two_party_margin', 'two_party_margin_delta',
@@ -476,6 +498,7 @@ def main():
         'two_party_relative_margin', 'two_party_relative_margin_delta',
         'color',
         'pres_margin_str', 'pres_margin_delta_str',
+        'median_delta_dist', 'median_delta_dist_str',
         'national_margin_str', 'national_margin_delta_str',
         'relative_margin_str', 'relative_margin_delta_str',
         'top_third_party_share_str',
