@@ -507,7 +507,7 @@ class LaplaceAnalyzer {
         td.className = 'state-details';
         td.innerHTML = `
           <div><strong>${abbr}</strong></div>
-          <div class="muted">Deltas (most recent ${recentEntries.length}, most-recent-first):</div>
+          <div class="muted">Relative deltas (most recent ${recentEntries.length}):</div>
           <div style="margin-top:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
             ${recentEntries.length ? formatted.join('<br/> ') : '—'}
           </div>
