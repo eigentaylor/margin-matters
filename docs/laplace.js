@@ -131,9 +131,9 @@ class LaplaceAnalyzer {
     // Calculate probabilities for each unit
     const results = [];
     Object.entries(byUnit).forEach(([unit, rows]) => {
-  const deltas = rows.map(r => r.delta).filter(d => Number.isFinite(d));
-  // Keep years aligned with string deltas
-  const deltas_str_all = rows.map(r => ({ year: r.year, val: r.delta_str ?? (Number.isFinite(r.delta) ? r.delta.toFixed(4) : '—') }));
+      const deltas = rows.map(r => r.delta).filter(d => Number.isFinite(d));
+      // Keep years aligned with string deltas
+      const deltas_str_all = rows.map(r => ({ year: r.year, val: r.delta_str ?? (Number.isFinite(r.delta) ? r.delta.toFixed(4) : '—') }));
       const probsByN = {};
       windowSizes.forEach(N => {
         probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
@@ -458,23 +458,35 @@ class LaplaceAnalyzer {
     `;
 
     els.tableContainer.innerHTML = `<table>${thead}${tbody}</table>`;
-    // Set up row click handlers: show chronological deltas (string form), up to the largest N
+    // Set up row click handlers: insert a details <tr> directly under the clicked row
+    let openDetailsRow = null;
     Array.from(els.tableContainer.querySelectorAll('tbody tr')).forEach(tr => {
       tr.addEventListener('click', () => {
         const abbr = tr.getAttribute('data-abbr');
         const row = results.find(x => x.abbr === abbr);
         if (!row) return;
+
+        // If a details row is already open for this row, remove it (toggle)
+        if (openDetailsRow && openDetailsRow.previousSibling === tr) {
+          openDetailsRow.remove();
+          openDetailsRow = null;
+          return;
+        }
+
+        // Remove existing details row if open elsewhere
+        if (openDetailsRow) {
+          openDetailsRow.remove();
+          openDetailsRow = null;
+        }
+
         const deltas = row.deltas ?? [];
-  const deltas_str = row.deltas_str ?? [];
-  const maxN = Math.max(...(windowSizes && windowSizes.length ? windowSizes : [3]));
+        const deltas_str = row.deltas_str ?? [];
+        const maxN = Math.max(...(windowSizes && windowSizes.length ? windowSizes : [3]));
 
-  // We want the most recent maxN entries. deltas_str entries are objects {year, val} in chronological order
-  const startIndex = Math.max(0, deltas_str.length - maxN);
-  const recentEntries = deltas_str.slice(startIndex).reverse(); // reverse so most-recent-first
-  // Align numeric array: take last maxN numeric deltas and reverse for most-recent-first
-  const recentNum = deltas.slice(-maxN).reverse();
+        const startIndex = Math.max(0, deltas_str.length - maxN);
+        const recentEntries = deltas_str.slice(startIndex).reverse();
+        const recentNum = deltas.slice(-maxN).reverse();
 
-        // Determine successes based on current delta threshold and trend direction
         const deltaThresh = parseFloat(els.deltaThresh.value);
         const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
         const isSuccess = (v) => {
@@ -485,20 +497,26 @@ class LaplaceAnalyzer {
         const formatted = recentEntries.map((entry, i) => {
           const s = `${entry.year}: ${entry.val}`;
           const num = recentNum[i];
-          if (isSuccess(num)) {
-            return `<strong>★ ${s}</strong>`;
-          }
-          return s;
+          return isSuccess(num) ? `<strong class="success">${s} ★</strong>` : `${s}`;
         });
 
-        els.stateDetails.style.display = 'block';
-        els.stateDetails.innerHTML = `
-          <strong>${abbr}</strong>
+        // Create a details row spanning the full table width
+        const detailsTr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.setAttribute('colspan', String(cols.length));
+        td.className = 'state-details';
+        td.innerHTML = `
+          <div><strong>${abbr}</strong></div>
           <div class="muted">Deltas (most recent ${recentEntries.length}, most-recent-first):</div>
           <div style="margin-top:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
-            ${recentEntries.length ? formatted.join(', ') : '—'}
+            ${recentEntries.length ? formatted.join('<br/> ') : '—'}
           </div>
         `;
+        detailsTr.appendChild(td);
+
+        // Insert after the clicked row
+        tr.parentNode.insertBefore(detailsTr, tr.nextSibling);
+        openDetailsRow = detailsTr;
       });
     });
 
