@@ -184,6 +184,47 @@ img.plot {
   max-height: none;
   overflow: visible;
 }
+/* Mobile: avoid tables expanding the page horizontally. Make table scroll inside the card. */
+@media (max-width: 640px) {
+  /* Ensure the outer container can scroll horizontally without breaking the viewport */
+  .pv-tools .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Make the table layout more compact on small screens */
+  .pv-tools .table-wrap table {
+    min-width: 600px; /* allow internal scrolling while keeping readable columns */
+    font-size: 14px;
+  }
+
+  /* Reduce control spacing and font sizes in pv-tools for mobile */
+  .pv-tools .controls .field {
+    padding: 6px 0;
+  }
+  .pv-tools .controls label { font-size: 0.92rem; }
+
+  /* Make table cells wrap where sensible and keep nowrap cells from forcing width */
+  .pv-tools .table-wrap table td,
+  .pv-tools .table-wrap table th {
+    white-space: nowrap;
+    padding: 6px 8px;
+  }
+
+  /* Allow the rank and abbr columns to stay visible but keep them compact */
+  .pv-tools .table-wrap table td.rank { width: 36px; text-align: center; }
+
+  /* Actions row: wrap buttons to avoid overflow */
+  .pv-tools .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Ensure status text can break to next line */
+  .pv-tools .actions .summary { flex: 1 1 100%; min-width: 0; }
+}
 
 table {
   width: 100%;

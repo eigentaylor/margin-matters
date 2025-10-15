@@ -117,7 +117,8 @@ class LaplaceAnalyzer {
       if (!byUnit[unit]) byUnit[unit] = [];
       byUnit[unit].push({
         year: parseInt(row.year),
-        delta: parseFloat(row.relative_margin_delta)
+        delta: parseFloat(row.relative_margin_delta),
+        delta_str: row.relative_margin_delta_str != null ? String(row.relative_margin_delta_str) : (row.relative_margin_delta != null ? String(row.relative_margin_delta) : '')
       });
     });
 
@@ -130,7 +131,9 @@ class LaplaceAnalyzer {
     // Calculate probabilities for each unit
     const results = [];
     Object.entries(byUnit).forEach(([unit, rows]) => {
-      const deltas = rows.map(r => r.delta).filter(d => Number.isFinite(d));
+  const deltas = rows.map(r => r.delta).filter(d => Number.isFinite(d));
+  // Keep years aligned with string deltas
+  const deltas_str_all = rows.map(r => ({ year: r.year, val: r.delta_str ?? (Number.isFinite(r.delta) ? r.delta.toFixed(4) : '—') }));
       const probsByN = {};
       windowSizes.forEach(N => {
         probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
@@ -154,7 +157,8 @@ class LaplaceAnalyzer {
         relative_margin_numeric: parseFloat(endYearRow?.relative_margin ?? NaN),
         p_weighted: weightedProb,
         ...probsByN,
-        deltas
+        deltas,
+        deltas_str: deltas_str_all,
       });
     });
 
@@ -454,19 +458,45 @@ class LaplaceAnalyzer {
     `;
 
     els.tableContainer.innerHTML = `<table>${thead}${tbody}</table>`;
-    // Set up row click handlers
+    // Set up row click handlers: show chronological deltas (string form), up to the largest N
     Array.from(els.tableContainer.querySelectorAll('tbody tr')).forEach(tr => {
       tr.addEventListener('click', () => {
         const abbr = tr.getAttribute('data-abbr');
         const row = results.find(x => x.abbr === abbr);
         if (!row) return;
         const deltas = row.deltas ?? [];
+  const deltas_str = row.deltas_str ?? [];
+  const maxN = Math.max(...(windowSizes && windowSizes.length ? windowSizes : [3]));
+
+  // We want the most recent maxN entries. deltas_str entries are objects {year, val} in chronological order
+  const startIndex = Math.max(0, deltas_str.length - maxN);
+  const recentEntries = deltas_str.slice(startIndex).reverse(); // reverse so most-recent-first
+  // Align numeric array: take last maxN numeric deltas and reverse for most-recent-first
+  const recentNum = deltas.slice(-maxN).reverse();
+
+        // Determine successes based on current delta threshold and trend direction
+        const deltaThresh = parseFloat(els.deltaThresh.value);
+        const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
+        const isSuccess = (v) => {
+          if (!Number.isFinite(v)) return false;
+          return trendDir === 'left' ? v > deltaThresh : v < deltaThresh;
+        };
+
+        const formatted = recentEntries.map((entry, i) => {
+          const s = `${entry.year}: ${entry.val}`;
+          const num = recentNum[i];
+          if (isSuccess(num)) {
+            return `<strong>★ ${s}</strong>`;
+          }
+          return s;
+        });
+
         els.stateDetails.style.display = 'block';
         els.stateDetails.innerHTML = `
           <strong>${abbr}</strong>
-          <div class="muted">Deltas (chronological):</div>
+          <div class="muted">Deltas (most recent ${recentEntries.length}, most-recent-first):</div>
           <div style="margin-top:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
-            ${deltas.length ? deltas.map(d => (Number.isFinite(d) ? d.toFixed(4) : '—')).join(', ') : '—'}
+            ${recentEntries.length ? formatted.join(', ') : '—'}
           </div>
         `;
       });
