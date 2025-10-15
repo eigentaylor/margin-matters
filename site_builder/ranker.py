@@ -18,6 +18,7 @@ METRICS = [
     "two_party_margin_delta",
     "two_party_relative_margin",
     "two_party_relative_margin_delta",
+    "median_delta_dist",
     "third_party_share",
     "third_party_relative_share",
 ]
@@ -107,10 +108,11 @@ def make_page(payload: dict) -> str:
         "relative_margin_delta": "Relative margin delta",
         "two_party_margin": "Two-party margin",
         "two_party_margin_delta": "Two-party margin delta",
-        "two_party_relative_margin": "Two-party relative margin",
-        "two_party_relative_margin_delta": "Two-party relative delta",
-        "third_party_share": "Third-party share",
-        "third_party_relative_share": "Third-party share minus national",
+    "two_party_relative_margin": "Two-party relative margin",
+    "two_party_relative_margin_delta": "Two-party relative delta",
+    "median_delta_dist": "Median delta distance",
+    "third_party_share": "Third-party share",
+    "third_party_relative_share": "Third-party share minus national",
     }
 
     payload_json = json.dumps(payload, separators=(",", ":"))
@@ -131,6 +133,7 @@ def make_page(payload: dict) -> str:
       const yearMin = data.years[0]; const yearMax = data.years[data.years.length-1];
 
       function buildMetricKey(){
+        if(base==='median_delta_dist') return 'median_delta_dist';
         if(base==='third_party_share') return relative ? 'third_party_relative_share' : 'third_party_share';
         if(twoParty){ if(relative && delta) return 'two_party_relative_margin_delta';
           if(relative) return 'two_party_relative_margin'; if(delta) return 'two_party_margin_delta'; return 'two_party_margin'; }
@@ -149,16 +152,17 @@ def make_page(payload: dict) -> str:
       }
 
       function metricDisplayName(){
+        if(base==='median_delta_dist') return 'Median delta distance';
         if(base==='third_party_share') return 'Third-party share' + (relative ? ' (relative)' : '');
         let s = twoParty ? 'Two-party margin' : 'State margin'; if(delta) s += ' (delta)'; if(relative) s += ' (relative)'; return s; }
 
       function renderControls(){
         $('#year-val').textContent = selectedYear; const slider = $('#year'); slider.min=yearMin; slider.max=yearMax; slider.step=4; slider.value=selectedYear;
-        $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option>'; $('#metric').value = base;
+        $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option><option value="median_delta_dist">Median delta distance</option>'; $('#metric').value = base;
         $('#two').checked = twoParty; $('#rel').checked = relative; $('#delt').checked = delta; $('#abs').checked = useAbs; $('#reverse').checked = reverse;
-        const hideChecks = base==='third_party_share';
-        const twoEl = $('#two'); if(twoEl && twoEl.parentElement){ twoEl.parentElement.style.display = hideChecks ? 'none' : ''; if(hideChecks){ twoEl.checked = false; twoParty = false; } }
-        const deltEl = $('#delt'); if(deltEl && deltEl.parentElement){ const disableDelta = hideChecks || (selectedYear === yearMin); deltEl.parentElement.style.display = hideChecks ? 'none' : ''; deltEl.disabled = disableDelta; if(disableDelta){ deltEl.checked=false; delta=false; } }
+        const twoEl = $('#two'); if(twoEl && twoEl.parentElement){ const hideTwo = base!=='margin'; twoEl.parentElement.style.display = hideTwo ? 'none' : ''; if(hideTwo){ twoEl.checked=false; twoParty=false; } }
+        const relEl = $('#rel'); if(relEl && relEl.parentElement){ const hideRel = base==='median_delta_dist'; relEl.parentElement.style.display = hideRel ? 'none' : ''; if(hideRel){ relEl.checked=false; relative=false; } }
+        const deltEl = $('#delt'); if(deltEl && deltEl.parentElement){ const hideDelta = base!=='margin'; const disableDelta = hideDelta || (selectedYear === yearMin); deltEl.parentElement.style.display = hideDelta ? 'none' : ''; deltEl.disabled = disableDelta; if(disableDelta){ deltEl.checked=false; delta=false; } }
         const nameEl = $('#metric-name'); if(nameEl) nameEl.textContent = metricDisplayName(); }
 
       function compute(){
@@ -180,6 +184,12 @@ def make_page(payload: dict) -> str:
             label = niceStr(abbr, metricKey, rec);
             if (relative){ const rel = rec['third_party_relative_share']; if (rel != null && !isNaN(rel)) label += ' (Raw: ' + niceStr(abbr, 'third_party_share', rec) + ')'; }
             else { const raw = rec['third_party_share']; if (raw != null && !isNaN(raw)) label += ' (Relative: ' + niceStr(abbr, 'third_party_relative_share', rec) + ')'; }
+          } else if (base === 'median_delta_dist') {
+            // Show the median distance and append the raw pres/two-party delta for context
+            label = niceStr(abbr, metricKey, rec);
+            const rawKey = twoParty ? 'two_party_margin_delta' : 'pres_margin_delta';
+            const raw = rec[rawKey];
+            if (raw != null && !isNaN(raw)) label += ' (Raw: ' + niceStr(abbr, rawKey, rec) + ')';
           } else { label = niceStr(abbr, metricKey, rec); }
           rows.push({abbr, val, rec, label, sortKey: key});
         });
@@ -189,7 +199,7 @@ def make_page(payload: dict) -> str:
         return rows;
       }
 
-      function rowColorClass(val){ if(!String(buildMetricKey()).includes('margin')) return 'bg-purple-600 border-purple-300'; if(val>0) return 'bg-blue-600 border-blue-300'; if(val<0) return 'bg-rose-600 border-rose-300'; return 'bg-slate-600 border-slate-300'; }
+    function rowColorClass(val){ const key = buildMetricKey(); if(!String(key).includes('margin') && key!=='median_delta_dist') return 'bg-purple-600 border-purple-300'; if(val>0) return 'bg-blue-600 border-blue-300'; if(val<0) return 'bg-rose-600 border-rose-300'; return 'bg-slate-600 border-slate-300'; }
 
       function renderList(){ const rows = compute(); const list = $('#results'); if(!rows.length){ list.innerHTML = '<div class="text-sm text-slate-400">No data for this selection.</div>'; return; }
         list.innerHTML = rows.map((r,i)=> (
