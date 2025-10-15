@@ -248,20 +248,41 @@
           if (pvApply) pvApply.addEventListener('click', () => { const v = parsePvText(pvText && pvText.value); if (v == null) return; applyPvOverride(v); if (pvText) pvText.value = (v >= 0 ? `D+${(v * 100).toFixed(1)}` : `R+${(Math.abs(v) * 100).toFixed(1)}`); try { if (typeof updateUrl === 'function') { const yEl = document.getElementById('yearSlider'); const y = yEl ? parseInt(yEl.value) : null; const pvEl = document.getElementById('pvSlider'); const pvIdx = pvEl ? parseInt(pvEl.value) : null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch (e) { } });
           if (pvPreset) pvPreset.addEventListener('change', () => { const v = parseFloat(pvPreset.value); if (!isNaN(v)) { if (pvText) pvText.value = (v >= 0 ? `D+${(v * 100).toFixed(1)}` : `R+${(Math.abs(v) * 100).toFixed(1)}`); applyPvOverride(v); try { if (typeof updateUrl === 'function') { const yEl = document.getElementById('yearSlider'); const y = yEl ? parseInt(yEl.value) : null; const pvEl = document.getElementById('pvSlider'); const pvIdx = pvEl ? parseInt(pvEl.value) : null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch (e) { } } });
           if (pvFlip) pvFlip.addEventListener('click', () => {
-            let cur = 0;
-            if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
-            else {
-              const yearEl = document.getElementById('yearSlider'); const y = yearEl ? parseInt(yearEl.value) : 2024;
-              const pvEl = document.getElementById('pvSlider');
-              const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
-              const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0;
-              cur = stopVal;
-            }
-            // toggle flipped state
-            // Apply numeric negation of current PV override/slider value
-            applyPvOverride(-cur);
-            if (pvText) pvText.value = (cur <= 0 ? `D+${(Math.abs(cur) * 100).toFixed(1)}` : `R+${(Math.abs(cur) * 100).toFixed(1)}`);
-            try { if (typeof updateUrl === 'function') { const yEl = document.getElementById('yearSlider'); const y = yEl ? parseInt(yEl.value) : null; const pvEl = document.getElementById('pvSlider'); const pvIdx = pvEl ? parseInt(pvEl.value) : null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch (e) { }
+              if (typeof window._pvFlipInProgress !== 'undefined' && window._pvFlipInProgress) {
+                // try { console.log('pvFlip: ignored (already in progress)'); } catch (e) { }
+                return;
+              }
+              window._pvFlipInProgress = true;
+              try {
+                const pvTextRaw = (document.getElementById('pvText')) ? document.getElementById('pvText').value : null;
+                var cur = null;
+                if (pvTextRaw && pvTextRaw.length) {
+                  cur = parsePvText(pvTextRaw);
+                }
+                if (cur === null || typeof cur === 'undefined' || isNaN(cur)) {
+                  if (typeof window._pvOverride !== 'undefined' && window._pvOverride !== null) {
+                    cur = window._pvOverride;
+                  } else {
+                    const yearEl = document.getElementById('yearSlider'); const y = yearEl ? parseInt(yearEl.value) : 2024;
+                    const pvEl = document.getElementById('pvSlider');
+                    const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
+                    const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0;
+                    cur = stopVal;
+                  }
+                }
+                const flipped = -cur;
+                // try { console.log('pvFlip clicked (index)', { pvTextRaw: pvTextRaw, cur: cur, flipped: flipped }); } catch (e) { }
+                window._pvPresetName = null;
+                applyPvOverride(flipped);
+                if (pvText) {
+                  if (Math.abs(flipped) < 1e-12) pvText.value = 'EVEN';
+                  else if (flipped >= 0) pvText.value = `D+${(flipped * 100).toFixed(1)}`;
+                  else pvText.value = `R+${(Math.abs(flipped) * 100).toFixed(1)}`;
+                }
+                try { if (typeof updateUrl === 'function') { const yEl = document.getElementById('yearSlider'); const y = yEl ? parseInt(yEl.value) : null; const pvEl = document.getElementById('pvSlider'); const pvIdx = pvEl ? parseInt(pvEl.value) : null; const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(y, pvIdx, flipMode); } } catch (e) { }
+              } finally {
+                setTimeout(function () { try { window._pvFlipInProgress = false; } catch (e) { } }, 0);
+              }
           });
           if (pvClear) pvClear.addEventListener('click', () => { window._pvOverride = null; if (pvText) pvText.value = ''; if (typeof window.updateAll === 'function') window.updateAll(); });
           // Ensure moving the PV slider cancels any override/preset so slider takes immediate effect

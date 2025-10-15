@@ -1007,17 +1007,29 @@
     });
     if (pvFlip) pvFlip.addEventListener('click', () => {
       let cur = 0;
-      if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
-      else {
-        const yearEl = document.getElementById('yearSlider'); const y = yearEl ? parseInt(yearEl.value) : 2028;
-        const pvEl = document.getElementById('pvSlider');
-        const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
-        const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0;
-        cur = stopVal;
-      }
-      // Flip by applying numeric negation
-      applyPvOverride(-cur);
-      if (pvText) pvText.value = (cur <= 0 ? `D+${(Math.abs(cur) * 100).toFixed(1)}` : `R+${(Math.abs(cur) * 100).toFixed(1)}`);
+      try {
+        const parsed = (pvText && typeof pvText.value === 'string') ? (typeof parsePvText === 'function' ? parsePvText(pvText.value) : null) : null;
+        if (parsed != null && isFinite(parsed)) cur = parsed;
+        else if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
+        else {
+          const yearEl = document.getElementById('yearSlider'); const y = yearEl ? parseInt(yearEl.value) : 2028;
+          const pvEl = document.getElementById('pvSlider');
+          const stops = (window._stopsByYear && window._stopsByYear.get(y)) || [0];
+          const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0;
+          cur = stopVal;
+        }
+      } catch (e) { /* ignore */ }
+  const flipped = -cur;
+  // try { console.log('pvFlip clicked (future)', { pvTextRaw: (pvText && pvText.value) ? pvText.value : null, cur, flipped }); } catch (e) { }
+  try { window._pvPresetName = null; } catch (e) { }
+      applyPvOverride(flipped);
+      try {
+        if (pvText) {
+          if (Math.abs(flipped) < 1e-12) pvText.value = 'EVEN';
+          else if (flipped >= 0) pvText.value = `D+${(flipped * 100).toFixed(1)}`;
+          else pvText.value = `R+${(Math.abs(flipped) * 100).toFixed(1)}`;
+        }
+      } catch (e) { }
       const yEl = document.getElementById('yearSlider'); const y = yEl ? parseInt(yEl.value) : null; const seed = parseInt(seedInput.value) || 0;
       updateUrl({ seed, year: y });
     });

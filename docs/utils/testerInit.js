@@ -229,22 +229,53 @@ export function createTesterInitializer(deps) {
     const pvFlipBtn = document.getElementById('pvFlip');
     if (pvFlipBtn) {
       pvFlipBtn.addEventListener('click', () => {
+        if (typeof window._pvFlipInProgress !== 'undefined' && window._pvFlipInProgress) {
+          // try { console.log('pvFlip: ignored (already in progress)'); } catch (e) { }
+          return;
+        }
+        window._pvFlipInProgress = true;
         let cur = 0;
         try {
-          if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) cur = window._pvOverride;
-          else {
+          // Prefer explicit pvText if available (user-entered value)
+          const pvTextEl = document.getElementById('pvText');
+          const parsed = (pvTextEl && typeof pvTextEl.value === 'string') ? (typeof parsePvText === 'function' ? parsePvText(pvTextEl.value) : null) : null;
+          if (parsed != null && isFinite(parsed)) {
+            cur = parsed;
+          } else if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) {
+            cur = window._pvOverride;
+          } else {
             const yearEl = document.getElementById('yearSlider'); const y = yearEl ? parseInt(yearEl.value) : 2024;
             const pvEl = document.getElementById('pvSlider');
             const stops = (stopsByYear && stopsByYear.get(y)) || [0];
             const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0; cur = stopVal;
           }
         } catch (e) { console.warn(e); }
-        applyPvOverride(-cur);
+        const flipped = -cur;
+        try {
+          const pvTextRaw = (typeof document !== 'undefined' && document.getElementById('pvText')) ? document.getElementById('pvText').value : null;
+          // console.log('pvFlip clicked (testerInit)', { pvTextRaw, cur, flipped });
+        } catch (e) { /* ignore */ }
+        finally {
+          setTimeout(() => { try { window._pvFlipInProgress = false; } catch (e) { } }, 0);
+        }
+        try { window._pvPresetName = null; } catch (e) { /* ignore */ }
+        try { applyPvOverride(flipped); } catch (e) { console.warn(e); }
+
+        // Update the PV text input so the UI reflects the flipped value immediately
+        try {
+          const pvText = document.getElementById('pvText');
+          if (pvText) {
+            if (Math.abs(flipped) < 1e-12) pvText.value = 'EVEN';
+            else if (flipped >= 0) pvText.value = `D+${(flipped * 100).toFixed(1)}`;
+            else pvText.value = `R+${(Math.abs(flipped) * 100).toFixed(1)}`;
+          }
+        } catch (e) { /* ignore */ }
+
         const yearEl = document.getElementById('yearSlider');
         const year = yearEl ? parseInt(yearEl.value) : null;
         const pvIndex = document.getElementById('pvSlider') ? parseInt(document.getElementById('pvSlider').value) : null;
         const flipMode = window._activeFlip ? window._activeFlip.mode : null;
-        updateUrl(year, pvIndex, flipMode);
+        try { updateUrl(year, pvIndex, flipMode); } catch (e) { console.warn(e); }
       });
     }
 
