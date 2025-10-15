@@ -55,11 +55,53 @@ class LaplaceAnalyzer {
    * @returns {number|null}
    */
   laplaceProbMedianDist(medianDists, N, direction = 'left') {
+    // Backwards-compatible: allow calling as (medianDists, N, direction)
+    // New signature will be (medianDists, presDists, N, direction)
     if (!Array.isArray(medianDists) || N <= 0) return null;
-    const recent = medianDists.slice(-N).filter(d => Number.isFinite(d));
-    if (!recent.length) return null;
-    const k = recent.filter(d => (direction === 'left' ? d >= 0 : d <= 0)).length;
-    return (k + 1) / (recent.length + 2);
+    // If presDists wasn't supplied, arguments[1] may actually be N (old call); handle both forms
+    let presDists = null;
+    let useN = N;
+    let dir = direction;
+    if (arguments.length === 3) {
+      // called as (medianDists, N, direction)
+      useN = arguments[1];
+      dir = arguments[2] || 'left';
+    } else if (arguments.length >= 4) {
+      // called as (medianDists, presDists, N, direction)
+      presDists = arguments[1];
+      useN = arguments[2];
+      dir = arguments[3] || 'left';
+    }
+
+    // Walk the last useN entries in chronological order and consider only finite median values
+    const len = medianDists.length;
+    const start = Math.max(0, len - useN);
+    const considered = [];
+    for (let i = start; i < len; i++) {
+      const m = medianDists[i];
+      if (!Number.isFinite(m)) continue;
+      const p = Array.isArray(presDists) ? presDists[i] : NaN;
+      considered.push({ m, p });
+    }
+    if (!considered.length) return null;
+    const k = considered.filter(item => LaplaceAnalyzer.medianEntrySuccess(item.m, item.p, dir)).length;
+    return (k + 1) / (considered.length + 2);
+  }
+
+  /**
+   * Determine whether a single entry counts as a success under median-mode rules.
+   * - If median > 0: counts as 'left' success
+   * - If median < 0: counts as 'right' success
+   * - If median === 0: use raw pres margin delta (pres) sign to decide (pres>0 => left, pres<0 => right)
+   * Returns true if entry counts as a success for the requested direction, false otherwise.
+   */
+  static medianEntrySuccess(median, pres, direction = 'left') {
+    if (!Number.isFinite(median)) return false;
+    if (median > 0) return direction === 'left';
+    if (median < 0) return direction === 'right';
+    // median === 0: fall back to raw pres margin delta
+    if (!Number.isFinite(pres)) return false;
+    return direction === 'left' ? pres > 0 : pres < 0;
   }
 
   /**
@@ -103,7 +145,7 @@ class LaplaceAnalyzer {
       lambda = 0.25,
       weightType = 'linear',
       trendDir = 'left',
-      medianMode = false
+      medianMode = true
     } = options;
 
     // Filter data to valid years and exclude national aggregates
@@ -170,9 +212,8 @@ class LaplaceAnalyzer {
       const probsByN = {};
       windowSizes.forEach(N => {
         if (medianMode) {
-          // For median mode we need median delta distances
-          //const alignedM = rows.map(r => Number.isFinite(Number(r.median_delta_dist)) ? Number(r.median_delta_dist) : NaN);
-          probsByN[`N${N}`] = this.laplaceProbMedianDist(medians_all, N, trendDir);
+          // For median mode we need median delta distances and raw pres margin deltas (aligned arrays)
+          probsByN[`N${N}`] = this.laplaceProbMedianDist(medians_all, rows.map(r => Number.isFinite(parseFloat(r.pres_margin_delta)) ? parseFloat(r.pres_margin_delta) : NaN), N, trendDir);
         } else {
           probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
         }
@@ -557,7 +598,11 @@ class LaplaceAnalyzer {
         const medians_recent = medians_all.slice(-maxN).reverse();
         const medianStrs_recent = medianStrs_all.slice(-maxN).reverse();
 
-        const formatted = recentEntries.map((entry, i) => {
+  // prepare pres_recent aligned with medians for fallback when median === 0
+  const pres_all = row.pres_margin_deltas ?? [];
+  const pres_recent = pres_all.slice(-maxN).reverse();
+
+  const formatted = recentEntries.map((entry, i) => {
           // entry: { year, val, pres_val } where val is the relative delta string and pres_val is pres_margin_delta_str
           const year = entry.year;
           const presDeltaStr = entry.pres_val || entry.val || ''; // prefer raw pres margin delta string
@@ -568,8 +613,9 @@ class LaplaceAnalyzer {
 
           if (medianModeOn) {
             const medianNum = Number.isFinite(medians_recent[i]) ? medians_recent[i] : NaN;
+            const presNum = Number.isFinite(pres_recent[i]) ? pres_recent[i] : NaN;
             if (Number.isFinite(medianNum)) {
-              success = trendDir === 'left' ? medianNum >= 0 : medianNum <= 0;
+              success = LaplaceAnalyzer.medianEntrySuccess(medianNum, presNum, trendDir);
             }
             metricLabel = 'median_dist';
             metricValue = medianStrs_recent[i] || '';
