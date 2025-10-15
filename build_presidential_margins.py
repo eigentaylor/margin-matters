@@ -1,6 +1,7 @@
 import csv
 import os
 from collections import defaultdict
+import numpy as np
 from params import COLORS
 import utils
 import json
@@ -462,14 +463,17 @@ def main():
                 out['top_third_party'] = 'None'
             out_rows.append(out)
         # calculate distances from median margin delta for the year
-        deltas = [safe_float(r['pres_margin_delta']) for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None]
+        deltas = [safe_float(r['pres_margin_delta']) for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and r['abbr'] not in ['NATIONAL']]
         if deltas:
             deltas_sorted = sorted(deltas)
-            n = len(deltas_sorted)
-            if n % 2 == 1:
-                median = deltas_sorted[n // 2]
-            else:
-                median = (deltas_sorted[n // 2 - 1] + deltas_sorted[n // 2]) / 2
+            median = np.median(deltas_sorted)
+            median_states = [r['abbr'] for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and safe_float(r['pres_margin_delta']) == median]
+            if len(median_states) == 0:
+                # find the two closest to median if exact match not found
+                shifted_deltas = [d - median for d in deltas_sorted]
+                closest = sorted(shifted_deltas, key=abs)[:2]
+                median_states = [r['abbr'] for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and safe_float(r['pres_margin_delta']) - median in closest]
+            print(f"Year {year} median pres_margin_delta: {median:.6f} with {len(median_states)} states: {', '.join(median_states)}")
             # assign distance from median to each row for this year
             for r in out_rows:
                 if r['year'] == year and r['pres_margin_delta'] is not None:
@@ -478,9 +482,12 @@ def main():
                         r['median_margin_delta'] = median
                         r['median_delta_dist'] = delta_val - median
                         r['median_delta_dist_str'] = utils.lean_str(r['median_delta_dist'])
+                        
                     except Exception:
+                        print(f"Warning: failed to compute median delta distance for {year} {r['abbr']}")
                         r['median_delta_dist'] = None 
                         r['median_delta_dist_str'] = '0'
+        
     # write CSV
     fieldnames = [
         'year', 'abbr', 'D_votes', 'R_votes', 'electoral_votes', 'T_votes',
