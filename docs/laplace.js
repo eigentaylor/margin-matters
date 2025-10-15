@@ -38,11 +38,28 @@ class LaplaceAnalyzer {
     const recent = deltas.slice(-N);
     // default direction is 'left' (count deltas > threshold). Caller may pass 'right' to invert.
     const direction = arguments.length >= 4 ? arguments[3] : 'left';
+    // If deltaThresh is null, caller intends to use median-mode (comparison values are booleans or are handled externally)
     const k = recent.filter(d => {
       if (!Number.isFinite(d)) return false;
       return direction === 'left' ? d > deltaThresh : d < deltaThresh;
     }).length;
     return (k + 1) / (N + 2);
+  }
+
+  /**
+   * Calculate Laplace probability using the sign of median_delta_dist values.
+   * Counts entries where median_delta_dist >= 0 (or <= 0 for 'right') in the last N years.
+   * @param {Array<number>} medianDists - Array of median_delta_dist numeric values (chronological)
+   * @param {number} N
+   * @param {string} direction - 'left' means positive is success, 'right' means negative is success
+   * @returns {number|null}
+   */
+  laplaceProbMedianDist(medianDists, N, direction = 'left') {
+    if (!Array.isArray(medianDists) || N <= 0) return null;
+    const recent = medianDists.slice(-N).filter(d => Number.isFinite(d));
+    if (!recent.length) return null;
+    const k = recent.filter(d => (direction === 'left' ? d >= 0 : d <= 0)).length;
+    return (k + 1) / (recent.length + 2);
   }
 
   /**
@@ -85,7 +102,8 @@ class LaplaceAnalyzer {
       windowSizes = [3, 4, 5, 6, 7],
       lambda = 0.25,
       weightType = 'linear',
-      trendDir = 'left'
+      trendDir = 'left',
+      medianMode = false
     } = options;
 
     // Filter data to valid years and exclude national aggregates
@@ -118,7 +136,12 @@ class LaplaceAnalyzer {
       byUnit[unit].push({
         year: parseInt(row.year),
         delta: parseFloat(row.relative_margin_delta),
-        delta_str: row.relative_margin_delta_str != null ? String(row.relative_margin_delta_str) : (row.relative_margin_delta != null ? String(row.relative_margin_delta) : '')
+        delta_str: row.relative_margin_delta_str != null ? String(row.relative_margin_delta_str) : (row.relative_margin_delta != null ? String(row.relative_margin_delta) : ''),
+        // raw presidential margin delta (two-party or full margin depending on CSV)
+        pres_margin_delta: row.pres_margin_delta != null ? parseFloat(row.pres_margin_delta) : NaN,
+        pres_margin_delta_str: row.pres_margin_delta_str != null ? String(row.pres_margin_delta_str) : '',
+        median_delta_dist: row.median_delta_dist != null ? row.median_delta_dist : '',
+        median_delta_dist_str: row.median_delta_dist_str != null ? String(row.median_delta_dist_str) : ''
       });
     });
 
@@ -132,11 +155,27 @@ class LaplaceAnalyzer {
     const results = [];
     Object.entries(byUnit).forEach(([unit, rows]) => {
       const deltas = rows.map(r => r.delta).filter(d => Number.isFinite(d));
-      // Keep years aligned with string deltas
-      const deltas_str_all = rows.map(r => ({ year: r.year, val: r.delta_str ?? (Number.isFinite(r.delta) ? r.delta.toFixed(4) : '—') }));
+      // collect median distance values (if present in the source CSV)
+      // keep medians aligned with rows (may contain NaN for missing)
+      const medians_all = rows.map(r => {
+        const raw = r.median_delta_dist;
+        return Number.isFinite(Number(raw)) ? Number(raw) : NaN;
+      });
+      // Keep years aligned with string deltas and also include pres_margin_delta strings
+      const deltas_str_all = rows.map(r => ({
+        year: r.year,
+        val: r.delta_str ?? (Number.isFinite(r.delta) ? r.delta.toFixed(4) : '—'),
+        pres_val: r.pres_margin_delta_str ?? (Number.isFinite(r.pres_margin_delta) ? r.pres_margin_delta.toFixed(4) : '')
+      }));
       const probsByN = {};
       windowSizes.forEach(N => {
-        probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
+        if (medianMode) {
+          // For median mode we need median delta distances
+          //const alignedM = rows.map(r => Number.isFinite(Number(r.median_delta_dist)) ? Number(r.median_delta_dist) : NaN);
+          probsByN[`N${N}`] = this.laplaceProbMedianDist(medians_all, N, trendDir);
+        } else {
+          probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
+        }
       });
 
       // Weighted average across available windows
@@ -158,7 +197,13 @@ class LaplaceAnalyzer {
         p_weighted: weightedProb,
         ...probsByN,
         deltas,
+        medians_all,
         deltas_str: deltas_str_all,
+        // expose pres delta values/strings so details can display raw pres margins
+        pres_margin_deltas: rows.map(r => Number.isFinite(parseFloat(r.pres_margin_delta)) ? parseFloat(r.pres_margin_delta) : NaN),
+        pres_margin_delta_str: rows.map(r => r.pres_margin_delta_str ?? ''),
+        // include median strings (if available) aligned with rows
+        median_delta_dist_str: rows.map(r => r.median_delta_dist_str ?? ''),
       });
     });
 
@@ -215,6 +260,7 @@ class LaplaceAnalyzer {
     absThreshVal: document.getElementById('absThreshVal'),
     deltaThresh: document.getElementById('deltaThresh'),
     deltaThreshVal: document.getElementById('deltaThreshVal'),
+    medianMode: document.getElementById('medianMode'),
     windowSizes: document.getElementById('windowSizes'),
     lambda: document.getElementById('lambda'),
     lambdaVal: document.getElementById('lambdaVal'),
@@ -276,6 +322,21 @@ class LaplaceAnalyzer {
       };
       els.deltaThresh.addEventListener('input', update);
       update();
+    }
+
+    // medianMode: hide delta threshold UI when enabled
+    if (els.medianMode) {
+      const hideShow = () => {
+        const medianOn = !!els.medianMode.checked;
+        const container = els.deltaThresh && els.deltaThresh.parentNode;
+        if (container) container.style.display = medianOn ? 'none' : '';
+      };
+      els.medianMode.addEventListener('change', () => {
+        hideShow();
+        runAnalysis();
+      });
+      // initialize
+      try { hideShow(); } catch (e) { }
     }
   }
 
@@ -487,17 +548,44 @@ class LaplaceAnalyzer {
         const recentEntries = deltas_str.slice(startIndex).reverse();
         const recentNum = deltas.slice(-maxN).reverse();
 
-        const deltaThresh = parseFloat(els.deltaThresh.value);
+        const medianModeOn = els.medianMode && els.medianMode.checked;
         const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
-        const isSuccess = (v) => {
-          if (!Number.isFinite(v)) return false;
-          return trendDir === 'left' ? v > deltaThresh : v < deltaThresh;
-        };
+
+        // Prepare aligned median arrays for the recent window (chronological order -> we reverse for display)
+        const medians_all = row.medians_all ?? [];
+        const medianStrs_all = row.median_delta_dist_str ?? [];
+        const medians_recent = medians_all.slice(-maxN).reverse();
+        const medianStrs_recent = medianStrs_all.slice(-maxN).reverse();
 
         const formatted = recentEntries.map((entry, i) => {
-          const s = `${entry.year}: ${entry.val}`;
+          // entry: { year, val, pres_val } where val is the relative delta string and pres_val is pres_margin_delta_str
+          const year = entry.year;
+          const presDeltaStr = entry.pres_val || entry.val || ''; // prefer raw pres margin delta string
           const num = recentNum[i];
-          return isSuccess(num) ? `<strong class="success">${s} ★</strong>` : `${s}`;
+          let success = false;
+          let metricLabel = '';
+          let metricValue = '';
+
+          if (medianModeOn) {
+            const medianNum = Number.isFinite(medians_recent[i]) ? medians_recent[i] : NaN;
+            if (Number.isFinite(medianNum)) {
+              success = trendDir === 'left' ? medianNum >= 0 : medianNum <= 0;
+            }
+            metricLabel = 'median_dist';
+            metricValue = medianStrs_recent[i] || '';
+          } else {
+            const deltaThresh = parseFloat(els.deltaThresh.value);
+            if (Number.isFinite(num)) {
+              success = trendDir === 'left' ? num > deltaThresh : num < deltaThresh;
+            }
+            metricLabel = 'relative';
+            // for relative mode, metric value should be the relative delta (entry.val) or numeric
+            metricValue = entry.val || (Number.isFinite(num) ? num.toFixed(4) : '');
+          }
+
+          const metricNote = metricValue ? ` (${metricLabel}: ${metricValue})` : '';
+          const s = `${year}: ${presDeltaStr}`;
+          return success ? `<strong class="success">${s}${metricNote} ★</strong>` : `${s}${metricNote}`;
         });
 
         // Create a details row spanning the full table width
@@ -507,7 +595,7 @@ class LaplaceAnalyzer {
         td.className = 'state-details';
         td.innerHTML = `
           <div><strong>${abbr}</strong></div>
-          <div class="muted">Relative deltas (most recent ${recentEntries.length}):</div>
+          <div class="muted">${medianModeOn ? 'Delta distance from median delta (most recent)' : 'Relative deltas (most recent ' + recentEntries.length + ')'}:</div>
           <div style="margin-top:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
             ${recentEntries.length ? formatted.join('<br/> ') : '—'}
           </div>
@@ -583,6 +671,7 @@ class LaplaceAnalyzer {
     const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
     lastWindows = windowSizes.length ? windowSizes : [3, 4, 5, 6];
 
+    const medianModeOn = !!(els.medianMode && els.medianMode.checked);
     const t0 = performance.now();
     const results = analyzer.analyze({
       endYear,
@@ -591,7 +680,8 @@ class LaplaceAnalyzer {
       windowSizes: lastWindows,
       lambda: Number.isFinite(lambda) ? lambda : 0.25,
       weightType,
-      trendDir
+      trendDir,
+      medianMode: medianModeOn
     });
     const dt = performance.now() - t0;
 
@@ -608,7 +698,7 @@ class LaplaceAnalyzer {
       deltaDisplay = Number.isFinite(deltaThresh) ? deltaThresh.toFixed(4) : String(deltaThresh);
     }
 
-    setStatus(`Analyzed ${results.length} units in ${dt.toFixed(1)} ms • endYear=${endYear} • abs≤${absDisplay} • Δ${operator}${deltaDisplay} • windows=[${lastWindows.join(', ')}] • ${weightType}, λ=${lambda}`);
+    setStatus(`Analyzed ${results.length} units in ${dt.toFixed(1)} ms • endYear=${endYear} • abs≤${absDisplay} • ${medianModeOn ? 'median-mode' : `Δ${operator}${deltaDisplay}`} • windows=[${lastWindows.join(', ')}] • ${weightType}, λ=${lambda}`);
   }
 
   function downloadCSV() {

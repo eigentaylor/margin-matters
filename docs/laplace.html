@@ -41,6 +41,11 @@
           <input id="deltaThresh" type="range" min="-0.01" max="0.01" step="0.0005" value="-0.005" />
         </div>
         <div class="field">
+          <label for="medianMode">Median delta comparison mode</label>
+          <input id="medianMode" type="checkbox" checked title="When enabled, use the per-unit median delta distance instead of an absolute delta threshold" />
+          <div id="medianModeHelp" class="muted" style="font-size:0.9rem;">When enabled, the delta threshold slider is hidden and success is determined by comparing a unit's delta to that year's median delta distance (field: median_delta_dist).</div>
+        </div>
+        <div class="field">
           <label for="windowSizes">Window sizes (comma-separated)</label>
           <input id="windowSizes" type="text" value="3,4,5,6" />
         </div>
