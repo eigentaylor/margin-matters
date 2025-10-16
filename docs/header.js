@@ -19,6 +19,7 @@
           <a class="btn" href="${prefix}/laplace.html">Laplace Rule</a>
           <a class="btn" href="${prefix}/future.html">"""Future"""</a>
           <a class="btn" href="${prefix}/methods.html">Methods</a>
+          <a class="btn" href="${prefix}/changelog.html">Changelog</a>
           <a class="btn" href="${prefix}/presidential_margins.html">Data (CSV)</a>
           <a class="btn" href="${prefix}/attributions.html">Attributions</a>
         </div>
