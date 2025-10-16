@@ -191,6 +191,43 @@
           </div>
         </div>
 
+        <!-- Laplace sampling details (populated when endpoint method = laplace) -->
+        <div class="card" id="laplacePanel" style="background:transparent;border-color:var(--border);display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="legend" style="margin-bottom:6px">Laplace endpoint sampling details</div>
+            <button id="laplaceToggle" class="btn">Show</button>
+          </div>
+          <div id="laplaceContent"
+            style="margin-top:8px;display:none;max-height:320px;overflow:auto;font-size:0.9rem;color:var(--muted)">
+          </div>
+        </div>
+
+        <!-- Model options: endpoint and slope method selectors used by future.js -->
+        <div class="card" style="background:transparent;border-color:var(--border)">
+          <div class="legend" style="margin-bottom:6px">Model options</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="endpointSelect">Endpoint method</label>
+              <select id="endpointSelect" class="btn" style="min-width:160px">
+                <option value="slope">Slope (trend)</option>
+                <option value="laplace" selected>Laplace (sign + tail)</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="slopeMethod">Slope method</label>
+              <select id="slopeMethod" class="btn" style="min-width:160px">
+                <option value="ols" selected>OLS</option>
+                <option value="wls">WLS</option>
+                <option value="loess">LOESS</option>
+                <option value="poly2">Poly (deg 2)</option>
+                <option value="poly3">Poly (deg 3)</option>
+              </select>
+            </div>
+          </div>
+          <div class="legend" style="font-size:0.85rem;color:var(--muted)">Choose endpoint model and slope calculation
+            (used when generating futures).</div>
+        </div>
+
         <div id="closeStates" class="legend"></div>
 
         <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">

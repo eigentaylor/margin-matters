@@ -177,6 +177,166 @@
     });
     return out; // Map abbr -> {intercept, slope}
   }
+  // ---- Model A: Laplace/Beta direction-of-trend endpoint builder ----
+  // Uses sign counts of past cycles (2000→2024) + heavy-tailed magnitude,
+  // plus a one-factor national shock and vote-weighted recentring.
+  function buildTargetsLaplace(dfAll, rng, opts) {
+    const yearsAhead = (opts && opts.years_ahead) || 24;
+    const soft_delta_L = (opts && opts.soft_delta_L) || 0.33;
+    const hist = dfAll.filter(r => r.year >= 2000 && r.year <= 2024);
+
+    // 1) per-state 2024 base + votes
+    const base2024 = dfAll
+      .filter(r => r.year === 2024)
+      .map(r => ({ abbr: r.abbr, rel2024: +r.relative_margin || 0, total_votes: +r.total_votes || 0 }));
+
+    // 2) per-state historical step sigma (already have a helper, reuse it if present; else inline)
+    const sigMap = (typeof stateSigma === 'function')
+      ? stateSigma(hist)
+      : (function inlineSigma(h) {
+        const by = new Map();
+        h.sort((a, b) => a.abbr.localeCompare(b.abbr) || a.year - b.year);
+        h.forEach(r => { if (!by.has(r.abbr)) by.set(r.abbr, []); by.get(r.abbr).push(+r.relative_margin || 0); });
+        const out = new Map();
+        by.forEach((vals, a) => {
+          const deltas = []; for (let i = 1; i < vals.length; i++) deltas.push(vals[i] - vals[i - 1]);
+          const m = deltas.reduce((s, v) => s + v, 0) / (deltas.length || 1);
+          const v = deltas.reduce((s, v) => s + (v - m) * (v - m), 0) / (deltas.length || 1);
+          out.set(a, Math.sqrt(v || 0) || 0.02);
+        });
+        return out;
+      })(hist);
+
+    // 3) prepare per-abbr ordered margins and change series (deltas) for windowed Laplace
+    const perMargins = (function () {
+      const by = new Map();
+      const sorted = [...hist].sort((a, b) => a.abbr.localeCompare(b.abbr) || a.year - b.year);
+      sorted.forEach(r => { if (!by.has(r.abbr)) by.set(r.abbr, []); by.get(r.abbr).push(+r.relative_margin || 0); });
+      return by;
+    })();
+
+    // function to get delta series (year-to-year changes) for an abbr
+    function deltasForAbbr(a) {
+      const arr = perMargins.get(a) || [];
+      const deltas = [];
+      for (let i = 1; i < arr.length; i++) deltas.push(arr[i] - arr[i - 1]);
+      return deltas;
+    }
+
+    // 4) PCA loadings for a shared one-factor national shock (use first factor)
+    const { loadMap, k } = (typeof pcaLoadings === 'function') ? pcaLoadings(hist, 3) : { loadMap: new Map(), k: 0 };
+
+    // heavy-tail draws
+    function rand_t_df4() {
+      const Z = randn(rng);
+      let V = 0; for (let i = 0; i < 4; i++) { const z = randn(rng); V += z * z; }
+      return Z / Math.sqrt(V / 4);
+    }
+
+  // knobs
+  const c_scale = (opts && opts.c_scale) || 1.15; // magnitude multiplier (diffusive intuition)
+  const gamma = (opts && opts.gamma) || 0.30;     // shared-shock mix
+  const sigmaG = (opts && opts.sigmaG) || 0.06;   // scale of national shock (t4)
+
+  // Laplace window-weighting options (defaults mirror laplace.js suggestion)
+  const windowSizes = (opts && opts.windowSizes) || [3, 4, 5, 6];
+  const lambda = (opts && Number.isFinite(opts.lambda)) ? opts.lambda : 0.25;
+  const weightType = (opts && opts.weightType) ? opts.weightType : 'linear';
+  const minN = Math.min(...windowSizes);
+  const weightForN = n => (weightType === 'exponential') ? Math.exp(-lambda * (n - minN)) : (1 / (1 + lambda * (n - minN)));
+
+    // 5) sample raw deltas per state and record metadata for debugging/inspection
+    const deltas = [];
+    for (const row of base2024) {
+      const a = row.abbr;
+      // compute delta series and per-window Laplace probabilities
+      const deltasSeries = deltasForAbbr(a);
+      const probsByN = {}; const weightsByN = {};
+      let num = 0, den = 0;
+      for (const N of windowSizes) {
+        if (deltasSeries.length >= N) {
+          const recent = deltasSeries.slice(-N);
+          const k = recent.filter(d => d > 0).length; // count of left-moving deltas
+          const pN = (k + 1) / (N + 2);
+          const w = weightForN(N);
+          probsByN[`N${N}`] = pN; weightsByN[`N${N}`] = w;
+          num += pN * w; den += w;
+        } else {
+          // mark as unavailable
+          probsByN[`N${N}`] = null; weightsByN[`N${N}`] = null;
+        }
+      }
+  // compute full-history counts (U/D) for fallback and diagnostics
+  const fullArr = perMargins.get(a) || [];
+  let U = 0, D = 0; for (let i = 1; i < fullArr.length; i++) { const dd = fullArr[i] - fullArr[i - 1]; if (dd > 0) U++; else if (dd < 0) D++; }
+
+  // If no windows had sufficient data, fall back to full-history rule-of-succession
+      let pLeftWeighted = null;
+      if (den > 0) pLeftWeighted = num / den; else {
+        // use full history sign counts as fallback
+        const arr = perMargins.get(a) || [];
+        let U = 0, D = 0; for (let i = 1; i < arr.length; i++) { const d = arr[i] - arr[i - 1]; if (d > 0) U++; else if (d < 0) D++; }
+        pLeftWeighted = (U + 1) / (U + D + 2);
+      }
+
+      // direction draw based on weighted pLeft
+      const S = (rng() < pLeftWeighted) ? +1 : -1;
+
+      // magnitude (half-t): scale from per-state sigma * sqrt(yearsAhead/4)
+      const sigma_i = sigMap.get(a) || 0.02;
+      const s_i = c_scale * sigma_i * Math.sqrt(yearsAhead / 4);
+      const M = Math.abs(rand_t_df4()) * s_i;
+
+      // base delta
+      let delta = S * M;
+
+      // shared national/regional factor using first PCA loading
+      const Li = loadMap.get(a) || [];
+      const l1 = (Li && Li.length) ? Li[0] : 0;
+      const G = rand_t_df4() * sigmaG;
+      const combined = (1 - gamma) * delta + gamma * l1 * G;
+
+  // store metadata per-state for later inspection
+  deltas.push({ abbr: a, raw_delta: combined, pLeft: pLeftWeighted, pLeftByN: probsByN, pLeftWeights: weightsByN, signDraw: S, M, s_i, sigma_i, l1, G, counts: { U, D } });
+    }
+
+    // 6) recentre by 2024 votes
+    const w = base2024.map(b => b.total_votes || 0);
+    const mu = (function wavg(vals, wts) {
+      let S = 0, W = 0; for (let i = 0; i < vals.length; i++) { S += vals[i] * (wts[i] || 0); W += (wts[i] || 0); }
+      return W ? S / W : 0;
+    })(deltas.map(d => d.raw_delta), w);
+    deltas.forEach(d => { d.centered = d.raw_delta - mu; });
+
+    // 7) soft-squash and return merged records (attach laplace_meta for inspection)
+    const out = [];
+    for (const base of base2024) {
+      const d = deltas.find(x => x.abbr === base.abbr) || { raw_delta: 0, centered: 0, pLeft: 0, counts: { U: 0, D: 0 }, signDraw: 0, M: 0, s_i: 0, sigma_i: 0, l1: 0, G: 0 };
+      const shift = softclip(d.centered, soft_delta_L);
+        out.push({
+        abbr: base.abbr,
+        rel_2024: base.rel2024,
+        rel_2048_target: base.rel2024 + shift,
+        total_votes: base.total_votes,
+        laplace_meta: {
+          pLeft: d.pLeft,
+          pLeftByN: d.pLeftByN || null,
+          pLeftWeights: d.pLeftWeights || null,
+          counts: d.counts,
+          signDraw: d.signDraw,
+          raw_delta: d.raw_delta,
+          centered_delta: d.centered,
+          shift: shift,
+          M: d.M,
+          s_i: d.s_i,
+          sigma_i: d.sigma_i,
+          l1: d.l1,
+          G: d.G
+        }
+      });
+    }
+    return out;
+  }
 
   function buildTargets(dfAll, rng, yearsAhead = 24, shrink = 0.8, soft_delta_L = 0.33, slopeOpts) {
     const hist = dfAll.filter(r => r.year >= 2000 && r.year <= 2024);
@@ -230,9 +390,15 @@
   function humpEarly(u) { return Math.exp(-Math.pow((u - 0.35) / 0.20, 2)); }
 
   function simulatePaths(dfAll, rng, opts) {
-    const { soft_delta_L = 0.33, soft_value_L = 0.95, years_ahead = 24, shrink = 0.8, n_steps = 240, beta = 0.8, alpha = 0.45, kappa = 0.25, global_scale = 1.05, k_factors = 3, slopeOptions = null } = (opts || {});
+    const { soft_delta_L = 0.33, soft_value_L = 0.95, years_ahead = 24, shrink = 0.8, n_steps = 240, beta = 0.8, alpha = 0.45, kappa = 0.25, global_scale = 1.05, k_factors = 3, slopeOptions = null,
+  endpointMethod = 'laplace',     // NEW: 'slope' | 'laplace' (default to laplace)
+      laplaceOptions = {}           // optional knobs for Model A if endpointMethod='laplace'
+    } = (opts || {});
     const hist = dfAll.filter(r => r.year >= 2000 && r.year <= 2024);
-    const merged = buildTargets(dfAll, rng, years_ahead, shrink, soft_delta_L, slopeOptions || { method: 'ols', refYear: 2024 });
+    //const merged = buildTargets(dfAll, rng, years_ahead, shrink, soft_delta_L, slopeOptions || { method: 'ols', refYear: 2024 });
+    const merged = (endpointMethod === 'laplace')
+      ? buildTargetsLaplace(dfAll, rng, { years_ahead, soft_delta_L, ...laplaceOptions })
+      : buildTargets(dfAll, rng, years_ahead, shrink, soft_delta_L, slopeOptions || { method: 'ols', refYear: 2024 });
     const base = new Map(merged.map(r => [r.abbr, r.rel_2024]));
     const { loadMap, k } = pcaLoadings(hist, k_factors);
     const sig = stateSigma(hist);
@@ -246,6 +412,8 @@
     const out = new Map(); // abbr -> { rel_2024, rel_2048_target, 2028: v, ... }
     merged.forEach(row => {
       const a = row.abbr; const y0 = row.rel_2024; const yT = row.rel_2048_target; const total = yT - y0;
+      // preserve laplace metadata if present on the merged row
+      const rowLapMeta = row.laplace_meta;
       const sigma0 = sig.get(a) || 0.02; const sigma = global_scale * sigma0;
       const step_std = dt.map((d, i) => Math.sqrt(d) * sigma * (1.0 + kappa * humpEarly(t_grid[i + 1])));
       const Li = loadMap.get(a) || (k ? Array.from({ length: k }, (_, j) => j === 0 ? 1 : 0) : []);
@@ -261,6 +429,7 @@
       const straight = t_grid.slice(1).map(u => y0 + total * u);
       const path = straight.map((v, i) => v + B[i]);
       const rec = { abbr: a, rel_2024: y0, rel_2048_target: yT };
+  if (rowLapMeta) rec.laplace_meta = rowLapMeta;
       function nearestIdx(u) {
         let bestI = 1, bestD = 1e9; for (let i = 0; i < t_grid.length; i++) { const d = Math.abs(t_grid[i] - u); if (d < bestD) { bestD = d; bestI = i; } }
         return Math.max(1, Math.min(bestI, n_steps)) - 1; // index for path[]
@@ -314,11 +483,11 @@
       if (isFinite(rec[2024])) rec.rel_2024 = rec[2024];
       if (isFinite(rec[2048])) rec.rel_2048_target = rec[2048];
       // Debug: log district composition and computed at-large values for 2024
-      try {
-        const dbgVals = dists.map((d, i) => ({ dist: d, ev: (totals2024.get(d) || 0), rel2024: (outMap.get(d) || {}).rel_2024 }));
-        console.log(`[future] applyAtLarge ${prefix}: districts=`, dbgVals);
-        console.log(`[future] applyAtLarge ${prefix}: computed AL rel_2024=`, rec[2024]);
-      } catch (e) { }
+      // try {
+      //   const dbgVals = dists.map((d, i) => ({ dist: d, ev: (totals2024.get(d) || 0), rel2024: (outMap.get(d) || {}).rel_2024 }));
+      //   console.log(`[future] applyAtLarge ${prefix}: districts=`, dbgVals);
+      //   console.log(`[future] applyAtLarge ${prefix}: computed AL rel_2024=`, rec[2024]);
+      // } catch (e) { }
       outMap.set(`${prefix}-AL`, rec);
     }
     setAL('ME'); setAL('NE');
@@ -450,6 +619,11 @@
     console.log('[future] loadHistorical completed, filtered rows:', filtered.length);
     // Build slope options from URL (if any)
     const params = getUrlParams();
+    // Default to 'laplace' when no URL param is specified; allow explicit 'slope' via ?endpoint=slope
+    let endpointMethod = 'laplace';
+    if (params && params.endpoint) {
+      endpointMethod = (String(params.endpoint).toLowerCase() === 'laplace') ? 'laplace' : 'slope';
+    }
     let slopeOptions = { method: 'ols', refYear: 2024 };
     if (params && params.method) {
       const m = String(params.method).toLowerCase();
@@ -466,8 +640,31 @@
         }
       }
     }
-    const paths = simulatePaths(filtered, rng, { slopeOptions }); // Map abbr -> record with future years
+    const paths = simulatePaths(filtered, rng, {
+      slopeOptions,
+      endpointMethod,
+      laplaceOptions: {               // optional: tweak Model A defaults if you want
+        c_scale: 1.15,                // magnitude multiplier
+        gamma: 0.30,                  // factor mix
+        sigmaG: 0.06                  // national t(4) shock scale
+      },
+    }); // Map abbr -> record with future years
     console.log('[future] simulatePaths completed, paths size:', paths.size);
+    // If endpointMethod was laplace, collect laplace metadata from the merged targets (buildTargetsLaplace)
+    try {
+      console.log('[future] endpointMethod:', endpointMethod);
+      if (endpointMethod === 'laplace') {
+        // buildTargetsLaplace previously returned merged array but simulatePaths used it internally; however
+        // buildTargetsLaplace would have computed laplace_meta on each element if used directly. We can reconstruct
+        // a simple map of rel_2048_target and laplace_meta by iterating the 'paths' Map and pulling laplace_meta if present.
+        const lapMeta = new Map();
+        paths.forEach((rec, abbr) => { if (rec && rec.laplace_meta) lapMeta.set(abbr, rec.laplace_meta); });
+        window._laplaceMeta = lapMeta; // Map abbr -> meta
+        console.log('[future] laplace metadata collected, size:', lapMeta.size);
+      } else {
+        window._laplaceMeta = null;
+      }
+    } catch (e) { console.warn('[future] failed to set laplace metadata', e); }
     // plug into tester.js global maps
     const BY = buildFutureDataset(filtered, paths, margins, evByUnit);
     console.log('[future] buildFutureDataset completed');
@@ -497,29 +694,43 @@
       window._totalEvByYear.set(Y, tot || 538);
     });
 
-    // Debug: inspect 2024 data loading and margins
+    // Update laplace panel visibility if present
     try {
-      const rows2024 = BY.get(2024) || [];
-      const nonNat = rows2024.filter(r => r && r.unit !== 'NATIONAL');
-      const undefRm = nonNat.filter(r => !isFinite(r.rm)).length;
-      const zeroRm = nonNat.filter(r => isFinite(r.rm) && Math.abs(r.rm) < 1e-12).length;
-      const sample = ['PA', 'WI', 'MI', 'AZ', 'GA', 'NV'].map(u => nonNat.find(r => r.unit === u)).filter(Boolean);
-      console.log('[future] 2024 rows:', rows2024.length, 'nonNat:', nonNat.length, 'undef rm:', undefRm, 'zero rm:', zeroRm);
-      console.log('[future] 2024 NATIONAL row:', rows2024.find(r => r.unit === 'NATIONAL'));
-      console.log('[future] 2024 sample states:', sample);
-    } catch (e) { console.warn('[future] debug 2024 inspection failed', e); }
+      const lp = document.getElementById('laplacePanel');
+      if (lp) {
+        if (endpointMethod === 'laplace' && window._laplaceMeta && window._laplaceMeta.size > 0) {
+          lp.style.display = '';
+        } else {
+          lp.style.display = 'none';
+        }
+      }
+      // if visible and content area is shown, refresh it
+      const lc = document.getElementById('laplaceContent'); if (lc && lc.style.display !== 'none') renderLaplaceMeta();
+    } catch (e) { }
+
+    // Debug: inspect 2024 data loading and margins
+    // try {
+    //   const rows2024 = BY.get(2024) || [];
+    //   const nonNat = rows2024.filter(r => r && r.unit !== 'NATIONAL');
+    //   const undefRm = nonNat.filter(r => !isFinite(r.rm)).length;
+    //   const zeroRm = nonNat.filter(r => isFinite(r.rm) && Math.abs(r.rm) < 1e-12).length;
+    //   const sample = ['PA', 'WI', 'MI', 'AZ', 'GA', 'NV'].map(u => nonNat.find(r => r.unit === u)).filter(Boolean);
+    //   console.log('[future] 2024 rows:', rows2024.length, 'nonNat:', nonNat.length, 'undef rm:', undefRm, 'zero rm:', zeroRm);
+    //   console.log('[future] 2024 NATIONAL row:', rows2024.find(r => r.unit === 'NATIONAL'));
+    //   console.log('[future] 2024 sample states:', sample);
+    // } catch (e) { console.warn('[future] debug 2024 inspection failed', e); }
 
     // Debug: show ME/NE EV composition for 2024 and total EVs for verification
-    try {
-      const rows2024 = BY.get(2024) || [];
-      const units = new Map(rows2024.map(r => [r.unit, r]));
-      const me01 = units.get('ME-01'); const me02 = units.get('ME-02'); const meAL = units.get('ME-AL');
-      const ne01 = units.get('NE-01'); const ne02 = units.get('NE-02'); const ne03 = units.get('NE-03'); const neAL = units.get('NE-AL');
-      console.log('[future] ME 2024 EVs: ME-01 ev=', me01 && me01.ev, 'ME-02 ev=', me02 && me02.ev, 'ME-AL ev=', meAL && meAL.ev);
-      console.log('[future] NE 2024 EVs: NE-01 ev=', ne01 && ne01.ev, 'NE-02 ev=', ne02 && ne02.ev, 'NE-03 ev=', ne03 && ne03.ev, 'NE-AL ev=', neAL && neAL.ev);
-      const totalEV = rows2024.reduce((s, r) => s + (+r.ev || 0), 0);
-      console.log('[future] 2024 total EV sum from BY:', totalEV);
-    } catch (e) { console.warn('[future] debug ME/NE EV inspection failed', e); }
+    // try {
+    //   const rows2024 = BY.get(2024) || [];
+    //   const units = new Map(rows2024.map(r => [r.unit, r]));
+    //   const me01 = units.get('ME-01'); const me02 = units.get('ME-02'); const meAL = units.get('ME-AL');
+    //   const ne01 = units.get('NE-01'); const ne02 = units.get('NE-02'); const ne03 = units.get('NE-03'); const neAL = units.get('NE-AL');
+    //   console.log('[future] ME 2024 EVs: ME-01 ev=', me01 && me01.ev, 'ME-02 ev=', me02 && me02.ev, 'ME-AL ev=', meAL && meAL.ev);
+    //   console.log('[future] NE 2024 EVs: NE-01 ev=', ne01 && ne01.ev, 'NE-02 ev=', ne02 && ne02.ev, 'NE-03 ev=', ne03 && ne03.ev, 'NE-AL ev=', neAL && neAL.ev);
+    //   const totalEV = rows2024.reduce((s, r) => s + (+r.ev || 0), 0);
+    //   console.log('[future] 2024 total EV sum from BY:', totalEV);
+    // } catch (e) { console.warn('[future] debug ME/NE EV inspection failed', e); }
 
     // Allocation debug: for each year, list each unit, its rm, ev and which party wins those EVs; aggregate per-year totals
     try {
@@ -536,19 +747,19 @@
           else { tieEV += ev; }
           return { unit, year: Y, rm, ev, winner };
         });
-        console.log(`[future] allocation ${Y}: totals D=${demEV} R=${repEV} TIE=${tieEV}`);
+        //console.log(`[future] allocation ${Y}: totals D=${demEV} R=${repEV} TIE=${tieEV}`);
         // Also print ME/NE AL winners explicitly if present
         const meal = allocations.find(a => a.unit === 'ME-AL'); const neal = allocations.find(a => a.unit === 'NE-AL');
-        if (meal) console.log(`[future] ${Y} ME-AL: rm=${meal.rm} ev=${meal.ev} winner=${meal.winner}`);
-        if (neal) console.log(`[future] ${Y} NE-AL: rm=${neal.rm} ev=${neal.ev} winner=${neal.winner}`);
+        // if (meal) console.log(`[future] ${Y} ME-AL: rm=${meal.rm} ev=${meal.ev} winner=${meal.winner}`);
+        // if (neal) console.log(`[future] ${Y} NE-AL: rm=${neal.rm} ev=${neal.ev} winner=${neal.winner}`);
         // For verbosity, only log allocations for small list of battleground units
         const sampleUnits = ['ME-AL', 'NE-AL', 'ME-02', 'NE-02', 'PA', 'WI', 'MI', 'AZ', 'GA', 'NV'];
         const sampleAlloc = allocations.filter(a => sampleUnits.includes(a.unit));
-        if (sampleAlloc.length) console.log(`[future] ${Y} sample allocations:`, sampleAlloc);
+        //if (sampleAlloc.length) console.log(`[future] ${Y} sample allocations:`, sampleAlloc);
       });
     } catch (e) { console.warn('[future] allocation debug failed', e); }
 
-    console.log('[future] About to start synthetic stop generation');
+    //console.log('[future] About to start synthetic stop generation');
 
     // --- Generate synthetic stops for future years (no stop_colors.csv rows exist) ---
     try {
@@ -562,8 +773,8 @@
         if (window._stopEffByYear.has(year)) window._stopEffByYear.delete(year);
       });
 
-      console.log('[future] Starting synthetic stop generation for future years');
-      console.log('[future] Future years to process:', years.filter(y => y > 2024));
+      // console.log('[future] Starting synthetic stop generation for future years');
+      // console.log('[future] Future years to process:', years.filter(y => y > 2024));
 
       // Helper to record a stop/unit
       function recordStop(year, s, eff, unit, winner, color) {
@@ -577,16 +788,16 @@
         // Preserve first effective mapping; subsequent units share
         if (!effMap.has(key) && isFinite(eff)) effMap.set(key, eff);
         byStop.get(key).set(unit, { winner, color_css: color, color_name: (winner === 'D' ? 'BLUE' : winner === 'R' ? 'RED' : 'YELLOW') });
-        console.log('[future] recorded stop', { year, key, eff, unit, winner });
+        //console.log('[future] recorded stop', { year, key, eff, unit, winner });
       }
       function sign(x) { return x > 0 ? 1 : (x < 0 ? -1 : 0); }
       // Basic color chooser (aligned roughly with tester.js palette extremes)
       function colorForWinner(w) { return (w === 'D') ? '#4169E1' : (w === 'R' ? '#B22222' : '#C9A400'); }
       // For each future year > 2024, create a stop at -rm per unit (flip point) and any third-party window boundaries
       years.filter(y => y > 2024).forEach(year => {
-        console.log('[future] Processing year', year);
+        // console.log('[future] Processing year', year);
         const rows = BY.get(year) || [];
-        console.log('[future] Year', year, 'has', rows.length, 'rows');
+        // console.log('[future] Year', year, 'has', rows.length, 'rows');
         const nat = 0; // future national margin locked to 0
         let stopCount = 0;
         // EVEN / Actual (0) handled by tester.js automatically; we add unit stops
@@ -627,23 +838,23 @@
             }
           }
         });
-        console.log('[future] Year', year, 'generated', stopCount, 'stops');
+        //console.log('[future] Year', year, 'generated', stopCount, 'stops');
         const finalStopCount = window._stopColorsByYear.get(year) ? window._stopColorsByYear.get(year).size : 0;
-        console.log('[future] Year', year, 'final stop count in map:', finalStopCount);
+        //console.log('[future] Year', year, 'final stop count in map:', finalStopCount);
       });
-      console.log('[future] synthetic stops generated for future years');
+      //console.log('[future] synthetic stops generated for future years');
 
       // Debug: check final state of maps
       years.filter(y => y > 2024).forEach(year => {
         const byYear = window._stopColorsByYear.get(year);
         const effByYear = window._stopEffByYear.get(year);
-        console.log('[future] Final state for year', year, ':', {
-          hasStops: !!byYear,
-          stopCount: byYear ? byYear.size : 0,
-          hasEff: !!effByYear,
-          effCount: effByYear ? effByYear.size : 0,
-          sampleKeys: byYear ? Array.from(byYear.keys()).slice(0, 5) : []
-        });
+        // console.log('[future] Final state for year', year, ':', {
+        //   hasStops: !!byYear,
+        //   stopCount: byYear ? byYear.size : 0,
+        //   hasEff: !!effByYear,
+        //   effCount: effByYear ? effByYear.size : 0,
+        //   sampleKeys: byYear ? Array.from(byYear.keys()).slice(0, 5) : []
+        // });
       });
     } catch (e) { console.warn('[future] failed to generate synthetic future stops', e); }
   }
@@ -659,6 +870,8 @@
   function getUrlParams() {
     const p = new URLSearchParams(location.search);
     const out = { seed: p.get('seed') ? parseInt(p.get('seed')) : null, year: p.get('year') ? parseInt(p.get('year')) : null, pv: null, pvValue: null, pvPreset: null };
+    const endpoint = p.get('endpoint'); // 'slope' | 'laplace'
+    if (endpoint) out.endpoint = endpoint.toLowerCase();
     // Optional slope options: method=ols|wls|loess|poly2|poly3; slopeBW, slopeTau, slopePower
     const method = p.get('method');
     if (method) out.method = method;
@@ -754,8 +967,20 @@
       // method select
       const methodWrap = document.createElement('div'); methodWrap.style.display = 'flex'; methodWrap.style.flexDirection = 'column'; methodWrap.style.minWidth = '160px';
       const methodTop = document.createElement('div'); methodTop.style.display = 'flex'; methodTop.style.alignItems = 'center';
-      const methodLabel = makeLabel('Slope method:'); const methodSel = document.createElement('select'); methodSel.id = 'slopeMethod';['ols', 'wls', 'loess', 'poly2', 'poly3'].forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.toUpperCase(); methodSel.appendChild(o); });
-      if (params && params.method) methodSel.value = params.method; methodTop.appendChild(methodLabel); methodTop.appendChild(methodSel);
+      const methodLabel = makeLabel('Slope method:');
+      // If a slopeMethod select already exists in the page (static HTML), reuse it instead of creating a duplicate
+      let methodSel = document.getElementById('slopeMethod');
+      if (!methodSel) {
+        methodSel = document.createElement('select'); methodSel.id = 'slopeMethod';
+        ['ols', 'wls', 'loess', 'poly2', 'poly3'].forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.toUpperCase(); methodSel.appendChild(o); });
+      } else {
+        // ensure expected options exist if the static select was minimal
+        if (!methodSel.options || methodSel.options.length === 0) {
+          ['ols', 'wls', 'loess', 'poly2', 'poly3'].forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v.toUpperCase(); methodSel.appendChild(o); });
+        }
+      }
+      if (params && params.method) methodSel.value = params.method;
+      methodTop.appendChild(methodLabel); methodTop.appendChild(methodSel);
       const methodHelp = document.createElement('div'); methodHelp.style.fontSize = '11px'; methodHelp.style.color = '#666'; methodHelp.style.marginTop = '2px'; methodHelp.textContent = 'OLS: linear trend. WLS: recent years weighted. LOESS: local slope near RefYr. POLY2/3: global polynomial.';
       methodSel.title = 'Choose slope estimation method. OLS is the default.';
       methodWrap.appendChild(methodTop); methodWrap.appendChild(methodHelp);
@@ -828,6 +1053,35 @@
       });
     })();
 
+    // Wire model-level controls (endpoint method + slope method) so changes update URL and regenerate
+    (function wireModelControls() {
+      const endpointSelect = document.getElementById('endpointSelect');
+      const slopeSelect = document.getElementById('slopeMethod');
+  // initialize from URL params if present; default to laplace when no param provided
+  try { if (endpointSelect) endpointSelect.value = (params && params.endpoint) ? params.endpoint : 'laplace'; } catch (e) { }
+      try { if (slopeSelect && params && params.method) slopeSelect.value = params.method; } catch (e) { }
+
+      async function onModelChange() {
+        const p = {};
+        if (endpointSelect && endpointSelect.value) p.endpoint = endpointSelect.value;
+        if (slopeSelect && slopeSelect.value) p.method = slopeSelect.value;
+        // Preserve existing seed/year/pv when updating model params
+        try {
+          const s = parseInt(seedInput && seedInput.value) || null;
+          if (s != null) p.seed = s;
+          const y = document.getElementById('yearSlider'); if (y) p.year = parseInt(y.value);
+          const pv = document.getElementById('pvSlider'); if (pv) p.pv = parseInt(pv.value);
+        } catch (e) { }
+        updateUrl(p);
+        const seedVal = parseInt(seedInput && seedInput.value) || (params.seed || null) || 0;
+        await runWithSeed(seedVal);
+        if (typeof window.updateAll === 'function') window.updateAll();
+      }
+
+      if (endpointSelect) endpointSelect.addEventListener('change', onModelChange);
+      if (slopeSelect) slopeSelect.addEventListener('change', onModelChange);
+    })();
+
     // apply URL year/pv BEFORE running seed generation
     if (params.year && yearSlider) {
       yearSlider.value = String(params.year);
@@ -853,30 +1107,30 @@
 
     await runWithSeed(seed);
 
-    console.log('[future] After runWithSeed - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
-    console.log('[future] After runWithSeed - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
-    console.log('[future] Before updateAll - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
-    console.log('[future] Before updateAll - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+    // console.log('[future] After runWithSeed - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+    // console.log('[future] After runWithSeed - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+    // console.log('[future] Before updateAll - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+    // console.log('[future] Before updateAll - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
 
     if (typeof window.updateAll === 'function') {
       window.updateAll();
-      console.log('[future] After updateAll - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
-      console.log('[future] After updateAll - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+      // console.log('[future] After updateAll - year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+      // console.log('[future] After updateAll - pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
 
       // updateAll() resets sliders, so reapply URL params after it runs
       let needsSecondUpdate = false;
       if (params.year && yearSlider) {
         yearSlider.value = String(params.year);
-        console.log('[future] Re-set year slider to URL year after updateAll:', params.year);
+        //console.log('[future] Re-set year slider to URL year after updateAll:', params.year);
         needsSecondUpdate = true;
       }
       if (params.pv != null && pvSlider) {
         pvSlider.value = String(params.pv);
-        console.log('[future] Re-set PV slider to URL pv after updateAll:', params.pv);
+        //console.log('[future] Re-set PV slider to URL pv after updateAll:', params.pv);
         needsSecondUpdate = true;
       } else if (params.pvValue != null) {
         window._pvOverride = clampPv(params.pvValue);
-        console.log('[future] Re-set PV override to URL pvValue after updateAll:', params.pvValue);
+        //console.log('[future] Re-set PV override to URL pvValue after updateAll:', params.pvValue);
         needsSecondUpdate = true;
       }
 
@@ -894,18 +1148,18 @@
           window.updateAll();
         }
 
-        console.log('[future] Final year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
-        console.log('[future] Final pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
+        // console.log('[future] Final year slider value:', yearSlider ? yearSlider.value : 'no yearSlider');
+        // console.log('[future] Final pv slider value:', pvSlider ? pvSlider.value : 'no pvSlider');
 
         // Debug: check what PV value is actually being used
-        try {
-          const year = parseInt(yearSlider.value);
-          const pvIndex = parseInt(pvSlider.value);
-          console.log('[future] Debug - year:', year, 'pvIndex:', pvIndex);
-          console.log('[future] Debug - window._curYear:', window._curYear);
-          console.log('[future] Debug - window._curPv:', window._curPv);
-          console.log('[future] Debug - window._pvOverride:', window._pvOverride);
-        } catch (e) { console.warn('[future] Debug failed:', e); }
+        // try {
+        //   const year = parseInt(yearSlider.value);
+        //   const pvIndex = parseInt(pvSlider.value);
+        //   console.log('[future] Debug - year:', year, 'pvIndex:', pvIndex);
+        //   console.log('[future] Debug - window._curYear:', window._curYear);
+        //   console.log('[future] Debug - window._curPv:', window._curPv);
+        //   console.log('[future] Debug - window._pvOverride:', window._pvOverride);
+        // } catch (e) { console.warn('[future] Debug failed:', e); }
       }
     }
 
@@ -1019,9 +1273,9 @@
           cur = stopVal;
         }
       } catch (e) { /* ignore */ }
-  const flipped = -cur;
-  // try { console.log('pvFlip clicked (future)', { pvTextRaw: (pvText && pvText.value) ? pvText.value : null, cur, flipped }); } catch (e) { }
-  try { window._pvPresetName = null; } catch (e) { }
+      const flipped = -cur;
+      // try { console.log('pvFlip clicked (future)', { pvTextRaw: (pvText && pvText.value) ? pvText.value : null, cur, flipped }); } catch (e) { }
+      try { window._pvPresetName = null; } catch (e) { }
       applyPvOverride(flipped);
       try {
         if (pvText) {
@@ -1041,5 +1295,124 @@
       updateUrl({ seed, year: y });
       if (typeof window.updateAll === 'function') window.updateAll();
     });
+
+    // Laplace panel toggle and render helper
+    const laplacePanel = document.getElementById('laplacePanel');
+    const laplaceToggle = document.getElementById('laplaceToggle');
+    const laplaceContent = document.getElementById('laplaceContent');
+    console.log('[future] laplacePanel:', laplacePanel, 'laplaceToggle:', laplaceToggle, 'laplaceContent:', laplaceContent);
+    // Sort state for laplace table (preserved between renders)
+    let laplaceSortKey = 'pWeighted';
+    let laplaceSortDir = 'desc'; // 'asc' | 'desc'
+
+    function renderLaplaceMeta() {
+      try {
+        if (!laplaceContent) return console.warn('[future] renderLaplaceMeta - no laplaceContent element');
+        console.log('[future] renderLaplaceMeta called. window:', window);
+        const meta = window._laplaceMeta;
+        console.log('[future] renderLaplaceMeta - meta:', meta);
+        if (!meta || meta.size === 0) {
+          laplaceContent.innerHTML = '<div>No Laplace metadata available for this run.</div>';
+          return;
+        }
+        // Build rows array from meta Map
+        const entries = Array.from(meta.keys()).map(abbr => ({ abbr, m: meta.get(abbr) }));
+
+        function getNumericForKey(m, key) {
+          if (!m) return NaN;
+          if (key === 'pWeighted') return Number.isFinite(m.pLeft) ? m.pLeft : (Number.isFinite(m.pLeftWeighted) ? m.pLeftWeighted : NaN);
+          if (/^N\d+$/.test(key)) {
+            const v = m.pLeftByN && (m.pLeftByN[key] != null ? m.pLeftByN[key] : m.pLeftByN[key]);
+            return Number.isFinite(v) ? v : NaN;
+          }
+          if (key === 'abbr') return String(m && m.abbr ? m.abbr : '');
+          if (key === 'sign') return Number.isFinite(m && m.signDraw) ? m.signDraw : (Number.isFinite(m && m.S) ? m.S : 0);
+          if (key === 'raw_delta') return Number.isFinite(m && m.raw_delta) ? m.raw_delta : (Number.isFinite(m && m.rawDelta) ? m.rawDelta : NaN);
+          if (key === 'centered_delta') return Number.isFinite(m && m.centered) ? m.centered : (Number.isFinite(m && m.centered_delta) ? m.centered_delta : NaN);
+          if (key === 'shift') return Number.isFinite(m && m.shift) ? m.shift : NaN;
+          return NaN;
+        }
+
+        // sort entries according to laplaceSortKey/Dir
+        entries.sort((a, b) => {
+          const ka = getNumericForKey(a.m, laplaceSortKey);
+          const kb = getNumericForKey(b.m, laplaceSortKey);
+          const na = isFinite(ka) ? ka : (laplaceSortKey === 'abbr' ? (a.abbr || '') : -Infinity);
+          const nb = isFinite(kb) ? kb : (laplaceSortKey === 'abbr' ? (b.abbr || '') : -Infinity);
+          if (laplaceSortKey === 'abbr') {
+            const cmp = String(na).localeCompare(String(nb));
+            return laplaceSortDir === 'asc' ? cmp : -cmp;
+          }
+          const diff = na - nb;
+          return laplaceSortDir === 'asc' ? diff : -diff;
+        });
+
+        // build HTML table header with data-key attributes for sorting
+        const headerHtml = `<thead><tr>` +
+          `<th data-key="abbr" style="text-align:left;padding:6px;cursor:pointer">Unit</th>` +
+          `<th data-key="pWeighted" style="text-align:right;padding:6px;cursor:pointer">pWeighted</th>` +
+          `<th data-key="N3" style="text-align:right;padding:6px;cursor:pointer">p[N=3]</th>` +
+          `<th data-key="N4" style="text-align:right;padding:6px;cursor:pointer">p[N=4]</th>` +
+          `<th data-key="N5" style="text-align:right;padding:6px;cursor:pointer">p[N=5]</th>` +
+          `<th data-key="N6" style="text-align:right;padding:6px;cursor:pointer">p[N=6]</th>` +
+          `<th data-key="sign" style="text-align:right;padding:6px;cursor:pointer">sign</th>` +
+          `<th data-key="raw_delta" style="text-align:right;padding:6px;cursor:pointer">rawΔ</th>` +
+          `<th data-key="centered_delta" style="text-align:right;padding:6px;cursor:pointer">centeredΔ</th>` +
+          `<th data-key="shift" style="text-align:right;padding:6px;cursor:pointer">shift</th>` +
+          `</tr></thead>`;
+
+        const bodyRows = entries.map(({ abbr, m }) => {
+          const pN3 = (m.pLeftByN && m.pLeftByN.N3 != null) ? m.pLeftByN.N3 : (m.pLeftByN && m.pLeftByN['N3'] != null ? m.pLeftByN['N3'] : null);
+          const pN4 = (m.pLeftByN && m.pLeftByN.N4 != null) ? m.pLeftByN.N4 : (m.pLeftByN && m.pLeftByN['N4'] != null ? m.pLeftByN['N4'] : null);
+          const pN5 = (m.pLeftByN && m.pLeftByN.N5 != null) ? m.pLeftByN.N5 : (m.pLeftByN && m.pLeftByN['N5'] != null ? m.pLeftByN['N5'] : null);
+          const pN6 = (m.pLeftByN && m.pLeftByN.N6 != null) ? m.pLeftByN.N6 : (m.pLeftByN && m.pLeftByN['N6'] != null ? m.pLeftByN['N6'] : null);
+          const pWeightedVal = Number.isFinite(m.pLeft) ? m.pLeft : (Number.isFinite(m.pLeftWeighted) ? m.pLeftWeighted : 0);
+          const signVal = (m.signDraw || m.sign || m.S || 0);
+          const raw = (m.raw_delta || m.rawDelta || 0);
+          const centered = (m.centered_delta || m.centered || 0);
+          const shift = (m.shift || 0);
+          return `<tr>` +
+            `<td style="padding:6px;border-top:1px solid #222">${abbr}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${pWeightedVal.toFixed(3)}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN3!=null? pN3.toFixed(3): '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN4!=null? pN4.toFixed(3): '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN5!=null? pN5.toFixed(3): '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN6!=null? pN6.toFixed(3): '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${signVal}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${raw.toFixed(3)}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${centered.toFixed(3)}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${shift.toFixed(3)}</td>` +
+            `</tr>`;
+        }).join('\n');
+
+        laplaceContent.innerHTML = `<table style="width:100%;border-collapse:collapse">${headerHtml}<tbody>${bodyRows}</tbody></table>`;
+
+        // attach click handlers to header cells to toggle sort
+        const ths = laplaceContent.querySelectorAll('th[data-key]');
+        ths.forEach(th => {
+          th.addEventListener('click', () => {
+            const k = th.getAttribute('data-key');
+            if (laplaceSortKey === k) {
+              laplaceSortDir = (laplaceSortDir === 'asc') ? 'desc' : 'asc';
+            } else {
+              laplaceSortKey = k; laplaceSortDir = (k === 'abbr') ? 'asc' : 'desc';
+            }
+            renderLaplaceMeta();
+          });
+        });
+      } catch (e) { console.warn('[future] renderLaplaceMeta failed', e); }
+    }
+    if (laplaceToggle) {
+      laplaceToggle.addEventListener('click', () => {
+        if (!laplacePanel) return;
+        const showing = laplaceContent && laplaceContent.style.display !== 'none';
+        if (showing) {
+          laplaceContent.style.display = 'none'; laplaceToggle.textContent = 'Show';
+        } else {
+          laplaceContent.style.display = 'block'; laplaceToggle.textContent = 'Hide';
+          renderLaplaceMeta();
+        }
+      });
+    }
   });
 })();
