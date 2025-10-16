@@ -7,6 +7,7 @@ from .config import CSV_PATH, SENATE_CSV_PATH, OUT_DIR, PLOTS_DST, PLOTS_SRC, LA
 from .io_utils import ensure_dirs, write_text, read_csv
 from .pages import build_pages, make_data_page
 from .templates import FAVICON_SVG
+from .changelog import compile_changelog
 
 def build_site():
     ensure_dirs()
@@ -95,6 +96,12 @@ def build_site():
         make_data_page(rows)
     except Exception:
         pass
+    
+    # Build changelog page
+    try:
+        compile_changelog()
+    except Exception as e:
+        print(f"Warning: couldn't build changelog page: {e}")
 
     # Build methods page
     # try:
