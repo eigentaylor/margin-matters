@@ -79,6 +79,11 @@
     <div id="header-placeholder"></div>
 
     <div id="back-to-map-placeholder"></div>
+    <div id="evProjectionWarning" class="card"
+      style="background:#3a1a1a;border:1px solid #7a2a2a;color:#ffd6d6;display:none;margin-top:12px;padding:10px">
+      <strong>EV projection mismatch</strong>
+      <div id="evProjectionWarningText" style="margin-top:6px;color:#ffd6d6"></div>
+    </div>
     <div class="card">
       <div class="legend" style="margin-bottom:8px">Possible Election Map</div>
       <div id="map-wrap" class="center">
@@ -223,6 +228,19 @@
                 <option value="poly3">Poly (deg 3)</option>
               </select>
             </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="evProjectionSelect">EV projection</label>
+              <select id="evProjectionSelect" class="btn" style="min-width:200px">
+                <option value="baseline" selected>2024 Baseline</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span class="legend">Projection window</span>
+              <label class="legend" style="display:flex;align-items:center;gap:8px">
+                <input id="evProjectionFutureOnly" type="checkbox" />
+                Apply to 2032+
+              </label>
+            </div>
           </div>
           <div class="legend" style="font-size:0.85rem;color:var(--muted)">Choose endpoint model and slope calculation
             (used when generating futures).</div>
@@ -260,7 +278,19 @@
             dynamics, rather than the year to year fluctuations to say that Georgia is consistently trending left. Will
             Georgia be D+7.8 in 2048? I have no idea. But based on the data, that is "plausible" enough for this silly
             little model.<br /><br />
-            We do not bother to estimate future census data, so we just use the electoral votes from 2024.</div>
+      We do not bother to estimate future census data, so we just use the electoral votes from 2024.
+
+      <!-- 2030 Electoral Vote Projection Sources -->
+      <div style="margin-top:8px;font-size:0.95rem;color:var(--muted)">
+        <strong>2030 Electoral Vote Projection Sources</strong>
+        <p style="margin:6px 0 4px 0;color:var(--muted)">Sources used for projected reapportionment shifts:</p>
+        <ul style="margin:0 0 0 18px;color:var(--muted)">
+          <li>Brennan Center for Justice: <a href="https://www.brennancenter.org/our-work/analysis-opinion/how-congressional-maps-could-change-2030" target="_blank" rel="noopener noreferrer">How Congressional Maps Could Change in 2030</a> (accessed Oct 16, 2024).</li>
+          <li>The American Redistricting Project (ARP): <a href="https://thearp.org/blog/apportionment/2030-apportionment-forecast-2024/" target="_blank" rel="noopener noreferrer">2030 Apportionment Forecast – 2024</a> (accessed Oct 16, 2024).</li>
+          <li>Election Data Services via The Census Project: <a href="https://thecensusproject.org/2025/01/03/impact-of-latest-population-estimates-on-2030-reapportionment/" target="_blank" rel="noopener noreferrer">Impact of Latest Population Estimates on 2030 Reapportionment</a> (accessed Oct 16, 2024).</li>
+        </ul>
+      </div>
+          </div>
         </div>
       </div>
     </div>

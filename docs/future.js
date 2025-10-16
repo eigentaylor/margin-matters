@@ -6,6 +6,24 @@
 
   const PV_CAP = 0.5;
   const EPS = 1e-8;
+  const EV_PROJECTION_THRESHOLD_YEAR = 2032;
+  const EV_PROJECTION_BASE_KEY = 'baseline';
+  const EV_PROJECTION_LABEL_OVERRIDES = {
+    brennan: 'Brennan Center',
+    election_data_services: 'Election Data Services',
+    arp: 'American Redistricting Project'
+  };
+  const evProjectionState = {
+    maps: new Map(),
+    selectionKey: EV_PROJECTION_BASE_KEY,
+    futureOnly: false,
+    selectEl: null,
+    futureOnlyEl: null,
+    updatingControls: false,
+    pendingSelectionKey: null
+  };
+  let evProjectionRowsCache = null;
+  let evProjectionWarned = false;
 
   // Soft clip like Python softclip(x, L)
   function softclip(x, L) { return L * Math.tanh(x / L); }
@@ -18,6 +36,183 @@
     // Simple mulberry32 PRNG for reproducibility
     let t = (seed >>> 0) + 0x6D2B79F5;
     return function () { t |= 0; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  }
+  function titleizeProjectionKey(key) {
+    if (!key) return '';
+    return String(key).replace(/[_\s]+/g, ' ').replace(/\b\w/g, chr => chr.toUpperCase());
+  }
+  function evProjectionLabelForKey(key) {
+    if (!key) return '';
+    if (key === EV_PROJECTION_BASE_KEY) return '2024 Baseline';
+    const lower = String(key).toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(EV_PROJECTION_LABEL_OVERRIDES, lower)) {
+      return EV_PROJECTION_LABEL_OVERRIDES[lower];
+    }
+    return titleizeProjectionKey(lower);
+  }
+  function parseEvProjectionRows(rows) {
+    const out = new Map();
+    if (!Array.isArray(rows)) return out;
+    rows.forEach(row => {
+      if (!row) return;
+      const rawAbbr = row.abbr || row.ABBR || '';
+      const abbr = String(rawAbbr).trim().toUpperCase();
+      if (!abbr) return;
+      Object.keys(row).forEach(col => {
+        if (!col || col.toLowerCase() === 'abbr') return;
+        const raw = row[col];
+        if (raw === undefined || raw === null || raw === '') return;
+        const delta = +raw;
+        if (!Number.isFinite(delta)) return;
+        const key = String(col).trim().toLowerCase();
+        if (!out.has(key)) out.set(key, new Map());
+        out.get(key).set(abbr, delta);
+      });
+    });
+    return out;
+  }
+  async function loadEvProjectionRows() {
+    if (Array.isArray(evProjectionRowsCache)) return evProjectionRowsCache;
+    const candidates = [
+      '2030_electoral_vote_projections.csv',
+      '../election_data/2030_electoral_vote_projections.csv'
+    ];
+    for (let i = 0; i < candidates.length; i++) {
+      const path = candidates[i];
+      try {
+        const rows = await d3.csv(path);
+        if (rows && rows.length) {
+          console.log(`[future] Loaded EV projection data from ${path}`);
+          evProjectionRowsCache = rows;
+          return rows;
+        }
+      } catch (err) {
+        // try next path
+      }
+    }
+    if (!evProjectionWarned) {
+      console.warn('[future] EV projection CSV not found; using baseline 2024 EVs for all years.');
+      evProjectionWarned = true;
+    }
+    evProjectionRowsCache = [];
+    return evProjectionRowsCache;
+  }
+  function ensureEvProjectionSelectionValid() {
+    if (evProjectionState.selectionKey && evProjectionState.selectionKey !== EV_PROJECTION_BASE_KEY) {
+      if (!evProjectionState.maps.has(evProjectionState.selectionKey)) {
+        evProjectionState.selectionKey = EV_PROJECTION_BASE_KEY;
+      }
+    }
+  }
+  function refreshEvProjectionControls() {
+    const selectEl = evProjectionState.selectEl;
+    evProjectionState.updatingControls = true;
+    if (selectEl) {
+      const keys = Array.from(new Set([EV_PROJECTION_BASE_KEY, ...evProjectionState.maps.keys()]));
+      selectEl.innerHTML = '';
+      keys.forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = evProjectionLabelForKey(key);
+        selectEl.appendChild(opt);
+      });
+      ensureEvProjectionSelectionValid();
+      const target = keys.includes(evProjectionState.selectionKey) ? evProjectionState.selectionKey : EV_PROJECTION_BASE_KEY;
+      selectEl.value = target;
+      evProjectionState.selectionKey = target;
+    }
+    if (evProjectionState.futureOnlyEl) {
+      evProjectionState.futureOnlyEl.checked = !!evProjectionState.futureOnly;
+      evProjectionState.futureOnlyEl.disabled = (evProjectionState.selectionKey === EV_PROJECTION_BASE_KEY);
+    }
+    try { window._futureEvProjectionSelection = { key: evProjectionState.selectionKey, futureOnly: evProjectionState.futureOnly }; } catch (e) { }
+    evProjectionState.updatingControls = false;
+  }
+  function setupEvProjectionControls() {
+    const selectEl = document.getElementById('evProjectionSelect');
+    const futureOnlyEl = document.getElementById('evProjectionFutureOnly');
+    evProjectionState.selectEl = selectEl || null;
+    evProjectionState.futureOnlyEl = futureOnlyEl || null;
+    if (selectEl) {
+      selectEl.addEventListener('change', async () => {
+        if (evProjectionState.updatingControls) return;
+        const value = selectEl.value || EV_PROJECTION_BASE_KEY;
+        evProjectionState.selectionKey = value;
+        const isBaseline = (value === EV_PROJECTION_BASE_KEY);
+        if (evProjectionState.futureOnlyEl) {
+          evProjectionState.futureOnlyEl.disabled = isBaseline;
+          evProjectionState.futureOnlyEl.checked = !!evProjectionState.futureOnly;
+        }
+        updateUrl({
+          evProjection: isBaseline ? null : value,
+          evProjectionFutureOnly: isBaseline ? null : evProjectionState.futureOnly
+        });
+        try {
+          await regenerateWithCurrentSeed();
+          // refresh tester UI (map, labels, EV bar)
+          if (typeof window.updateAll === 'function') window.updateAll();
+          const curYear = (document.getElementById('yearSlider') && document.getElementById('yearSlider').value) ? parseInt(document.getElementById('yearSlider').value) : (window._curYear || 2024);
+          if (typeof window.updateStateLabels === 'function') window.updateStateLabels(curYear);
+        } catch (e) { console.warn('[future] failed to apply EV projection change', e); }
+      });
+    }
+    if (futureOnlyEl) {
+      futureOnlyEl.checked = !!evProjectionState.futureOnly;
+      futureOnlyEl.disabled = (evProjectionState.selectionKey === EV_PROJECTION_BASE_KEY);
+      futureOnlyEl.addEventListener('change', async () => {
+        if (evProjectionState.updatingControls) return;
+        evProjectionState.futureOnly = !!futureOnlyEl.checked;
+        updateUrl({
+          evProjection: (evProjectionState.selectionKey === EV_PROJECTION_BASE_KEY) ? null : evProjectionState.selectionKey,
+          evProjectionFutureOnly: (evProjectionState.selectionKey === EV_PROJECTION_BASE_KEY) ? null : evProjectionState.futureOnly
+        });
+        try {
+          await regenerateWithCurrentSeed();
+          if (typeof window.updateAll === 'function') window.updateAll();
+          const curYear = (document.getElementById('yearSlider') && document.getElementById('yearSlider').value) ? parseInt(document.getElementById('yearSlider').value) : (window._curYear || 2024);
+          if (typeof window.updateStateLabels === 'function') window.updateStateLabels(curYear);
+        } catch (e) { console.warn('[future] failed to apply EV projection future-only toggle', e); }
+      });
+    }
+    refreshEvProjectionControls();
+  }
+  function getSelectedEvProjectionMap() {
+    if (evProjectionState.selectionKey === EV_PROJECTION_BASE_KEY) return null;
+    return evProjectionState.maps.get(evProjectionState.selectionKey) || null;
+  }
+  function createEvLookup(evByUnit, projectionMap, opts) {
+    const base = new Map();
+    if (evByUnit && typeof evByUnit.forEach === 'function') {
+      evByUnit.forEach((value, key) => {
+        if (typeof key !== 'string') return;
+        const parts = key.split(':');
+        if (parts.length !== 2) return;
+        if (parts[0] === '2024') {
+          base.set(parts[1], +value || 0);
+        }
+      });
+    }
+    const futureOnly = !!(opts && opts.futureOnly);
+    return function getEvForYear(year, unit) {
+      if (!unit || unit === 'NATIONAL') return 0;
+      const baseVal = base.has(unit) ? base.get(unit) : 0;
+      const applyProjection = projectionMap && (!futureOnly || year >= EV_PROJECTION_THRESHOLD_YEAR);
+      if (!applyProjection) return baseVal;
+      const delta = projectionMap.get(unit) || 0;
+      const next = baseVal + delta;
+      return next >= 0 ? next : 0;
+    };
+  }
+  function updateEvProjectionStateFromRows(rows) {
+    const maps = parseEvProjectionRows(rows);
+    evProjectionState.maps = maps;
+    if (evProjectionState.pendingSelectionKey && maps.has(evProjectionState.pendingSelectionKey)) {
+      evProjectionState.selectionKey = evProjectionState.pendingSelectionKey;
+    }
+    evProjectionState.pendingSelectionKey = null;
+    ensureEvProjectionSelectionValid();
+    try { window._futureEvProjectionMaps = maps; } catch (e) { }
+    refreshEvProjectionControls();
   }
   function randn(rng) { // Box-Muller
     let u = 0, v = 0; while (u === 0) u = rng(); while (v === 0) v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
@@ -444,8 +639,13 @@
   }
 
   async function loadHistorical() {
-    const margins = await d3.csv('presidential_margins.csv');
-    const ec = await d3.csv('electoral_college.csv').catch(() => []);
+    const [marginsRaw, ecRaw, projectionRows] = await Promise.all([
+      d3.csv('presidential_margins.csv'),
+      d3.csv('electoral_college.csv').catch(() => []),
+      loadEvProjectionRows()
+    ]);
+    const margins = marginsRaw || [];
+    const ec = ecRaw || [];
     // Filter out national rows for hist generation
     const filtered = margins.filter(r => r.abbr && !(r.abbr === 'US' || r.abbr === 'USA' || r.abbr === 'National' || r.abbr === 'NATIONAL' || r.unit === 'NATIONAL'))
       .map(r => ({
@@ -461,7 +661,7 @@
     (ec || []).forEach(e => { const y = +e.year; const u = e.abbr; const ev = +e.electoral_votes; if (y && u) evByUnit.set(`${y}:${u}`, ev); });
     // fallback: take 2024 from margins if present
     (margins || []).forEach(r => { const y = +r.year; if (y !== 2024) return; const u = r.abbr; const ev = +r.electoral_votes; if (u && ev && !evByUnit.has(`2024:${u}`)) evByUnit.set(`2024:${u}`, ev); });
-    return { filtered, margins, evByUnit };
+    return { filtered, margins, evByUnit, evProjectionRows: projectionRows || [] };
   }
 
   function applyAtLarge(outMap, totals2024) {
@@ -493,7 +693,7 @@
     setAL('ME'); setAL('NE');
   }
 
-  function buildFutureDataset(histAll, paths, marginsAll, evMap) {
+  function buildFutureDataset(histAll, paths, marginsAll, evMap, evLookupFn) {
     // Create rows for each future year with fields expected by tester.js: {year, unit, rm, nm, ev, tp, dVotes, rVotes, tVotes, total}
     const byYear = new Map();
     const years = [2024, 2028, 2032, 2036, 2040, 2044, 2048];
@@ -565,7 +765,7 @@
         const rVotes = twoPartyTotal * rShare2;
         const topThirdVotes = isFutureYear ? 0 : Math.max(0, Math.min(totalVotes, topThirdShare * totalVotes));
         // EV: reuse 2024 mapping
-        const ev = evMap.get(`2024:${abbr}`) || 0;
+  const ev = evLookupFn ? evLookupFn(Y, abbr) : (evMap.get(`2024:${abbr}`) || 0);
         rows.push({
           year: Y,
           unit: abbr,
@@ -614,7 +814,8 @@
 
   async function generate(seed) {
     console.log('[future] generate() function called with seed:', seed);
-    const { filtered, margins, evByUnit } = await loadHistorical();
+  const { filtered, margins, evByUnit, evProjectionRows } = await loadHistorical();
+  updateEvProjectionStateFromRows(evProjectionRows);
     const rng = seedToRng(seed);
     console.log('[future] loadHistorical completed, filtered rows:', filtered.length);
     // Build slope options from URL (if any)
@@ -666,7 +867,10 @@
       }
     } catch (e) { console.warn('[future] failed to set laplace metadata', e); }
     // plug into tester.js global maps
-    const BY = buildFutureDataset(filtered, paths, margins, evByUnit);
+  const projectionMap = getSelectedEvProjectionMap();
+  console.log('[future] EV projection:', evProjectionState.selectionKey, 'futureOnly:', evProjectionState.futureOnly);
+  const evLookup = createEvLookup(evByUnit, projectionMap, { futureOnly: evProjectionState.futureOnly });
+  const BY = buildFutureDataset(filtered, paths, margins, evByUnit, evLookup);
     console.log('[future] buildFutureDataset completed');
     // Clear any previous future years then set
     const years = [2024, 2028, 2032, 2036, 2040, 2044, 2048];
@@ -681,10 +885,12 @@
     // If applyAtLarge produced ME-AL/NE-AL in paths, they will be included already by buildFutureDataset; however
     // when evMap originates from electoral_college.csv, make sure the window EV map includes these AL keys for 2024.
     ['ME-AL', 'NE-AL'].forEach(al => {
-      const ev = evByUnit.get(`2024:${al}`);
-      if (ev != null) {
-        // ensure mapping exists for every year
-        years.forEach(Y => { window._evByUnitMap && window._evByUnitMap.set(`${Y}:${al}`, ev); });
+      const baseEv = evLookup ? evLookup(2024, al) : evByUnit.get(`2024:${al}`);
+      if (baseEv != null) {
+        years.forEach(Y => {
+          const val = evLookup ? evLookup(Y, al) : baseEv;
+          window._evByUnitMap && window._evByUnitMap.set(`${Y}:${al}`, Number.isFinite(val) ? val : baseEv);
+        });
       }
     });
     // total EV per year
@@ -693,6 +899,34 @@
       const rows = BY.get(Y) || []; const tot = rows.reduce((s, r) => s + (+r.ev || 0), 0);
       window._totalEvByYear.set(Y, tot || 538);
     });
+
+    // EV projection validation: for years where projection applies, ensure total == 538
+    try {
+      const warnEl = document.getElementById('evProjectionWarning');
+      const warnTextEl = document.getElementById('evProjectionWarningText');
+      const projectionMap = getSelectedEvProjectionMap();
+      const futureOnly = !!evProjectionState.futureOnly;
+      const mismatches = [];
+      years.forEach(Y => {
+        // only check years where projection applies (if a projection selected)
+        if (!projectionMap) return;
+        if (futureOnly && Y < EV_PROJECTION_THRESHOLD_YEAR) return;
+        // compute total using evLookup (which respects projection rules)
+        const total = Array.from(BY.get(Y) || []).reduce((s, r) => s + (evLookup ? evLookup(Y, r.unit) : (+r.ev || 0)), 0);
+        if (Math.round(total) !== 538) mismatches.push({ year: Y, total: total });
+      });
+      if (mismatches.length) {
+        if (warnEl) warnEl.style.display = '';
+        if (warnTextEl) {
+          warnTextEl.innerHTML = `Selected EV projection <strong>${evProjectionState.selectionKey}</strong> produces unexpected totals for: ` +
+            mismatches.map(m => `${m.year} (total: ${Math.round(m.total)})`).join(', ') +
+            `. Expected 538 electoral votes. Please adjust the projection CSV or choose baseline.`;
+        }
+      } else {
+        if (warnEl) warnEl.style.display = 'none';
+        if (warnTextEl) warnTextEl.textContent = '';
+      }
+    } catch (e) { console.warn('[future] EV projection validation failed', e); }
 
     // Update laplace panel visibility if present
     try {
@@ -861,10 +1095,53 @@
 
   // UI wiring
   async function runWithSeed(seed) {
-    console.log('***RUNWITHSEED CALLED WITH SEED:', seed, '***');
-    await generate(seed);
+    let numericSeed = null;
+    if (Number.isFinite(seed)) {
+      numericSeed = Number(seed);
+    } else if (seed !== null && seed !== undefined && seed !== '') {
+      const parsed = parseInt(String(seed), 10);
+      if (!isNaN(parsed)) numericSeed = parsed;
+    }
+    const finalSeed = Number.isFinite(numericSeed) ? numericSeed : computeTodaySeed();
+    try { window._futureLastSeed = finalSeed; } catch (e) { }
+    console.log('***RUNWITHSEED CALLED WITH SEED:', finalSeed, '***');
+    await generate(finalSeed);
     console.log('***GENERATE COMPLETED***');
     // Don't call updateAll here - let the caller control when to update
+  }
+
+  function getCurrentSeedValue() {
+    const seedInput = document.getElementById('seedInput');
+    if (seedInput && seedInput.value !== undefined) {
+      const parsed = parseInt(String(seedInput.value), 10);
+      if (!isNaN(parsed)) return parsed;
+    }
+    if (typeof window !== 'undefined' && Number.isFinite(window._futureLastSeed)) {
+      return Number(window._futureLastSeed);
+    }
+    return null;
+  }
+
+  async function regenerateWithCurrentSeed() {
+    const current = getCurrentSeedValue();
+    const seed = Number.isFinite(current) ? current : computeTodaySeed();
+    try {
+      await runWithSeed(seed);
+    } catch (err) {
+      console.warn('[future] regenerateWithCurrentSeed failed', err);
+    }
+  }
+
+  function computeTodaySeed() {
+    try {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const da = String(d.getDate()).padStart(2, '0');
+      return parseInt(`${y}${m}${da}`, 10);
+    } catch (e) {
+      return 20250101;
+    }
   }
 
   function getUrlParams() {
@@ -890,6 +1167,13 @@
       } else {
         out.pvPreset = pvRaw;
       }
+    }
+    const evProj = p.get('evProjection');
+    if (evProj) out.evProjection = evProj.toLowerCase();
+    const evProjFutureOnly = p.get('evProjectionFutureOnly');
+    if (evProjFutureOnly != null) {
+      const str = evProjFutureOnly.toLowerCase();
+      out.evProjectionFutureOnly = (str === '1' || str === 'true');
     }
     // No flipped flag; numeric pvValue encodes sign when present
     return out;
@@ -933,6 +1217,22 @@
     if (params && Object.prototype.hasOwnProperty.call(params, 'refYear')) {
       if (params.refYear == null) url.searchParams.delete('refYear'); else url.searchParams.set('refYear', String(params.refYear));
     }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'evProjection')) {
+      const v = params.evProjection;
+      if (v === null || v === undefined || v === '') {
+        url.searchParams.delete('evProjection');
+      } else {
+        url.searchParams.set('evProjection', String(v));
+      }
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'evProjectionFutureOnly')) {
+      const flag = params.evProjectionFutureOnly;
+      if (flag === null || flag === undefined) {
+        url.searchParams.delete('evProjectionFutureOnly');
+      } else {
+        url.searchParams.set('evProjectionFutureOnly', flag ? '1' : '0');
+      }
+    }
     // No separate flipped flag; numeric pv overrides encode sign directly
     history.replaceState({}, '', url);
   }
@@ -952,7 +1252,13 @@
     const pvClear = document.getElementById('pvClear');
 
     const params = getUrlParams();
-    const todaySeed = (function () { try { const d = new Date(); const y = d.getFullYear(); const m = String(d.getMonth() + 1).padStart(2, '0'); const da = String(d.getDate()).padStart(2, '0'); return parseInt(`${y}${m}${da}`); } catch (e) { return 20250101; } })();
+    const todaySeed = computeTodaySeed();
+    if (params && params.evProjection) {
+      evProjectionState.pendingSelectionKey = params.evProjection;
+    }
+    if (params && Object.prototype.hasOwnProperty.call(params, 'evProjectionFutureOnly')) {
+      evProjectionState.futureOnly = !!params.evProjectionFutureOnly;
+    }
     const seed = (params.seed && !isNaN(params.seed)) ? params.seed : todaySeed;
     if (seedInput) seedInput.value = String(seed);
 
@@ -1057,8 +1363,8 @@
     (function wireModelControls() {
       const endpointSelect = document.getElementById('endpointSelect');
       const slopeSelect = document.getElementById('slopeMethod');
-  // initialize from URL params if present; default to laplace when no param provided
-  try { if (endpointSelect) endpointSelect.value = (params && params.endpoint) ? params.endpoint : 'laplace'; } catch (e) { }
+    // initialize from URL params if present; default to laplace when no param provided
+    try { if (endpointSelect) endpointSelect.value = (params && params.endpoint) ? params.endpoint : 'laplace'; } catch (e) { }
       try { if (slopeSelect && params && params.method) slopeSelect.value = params.method; } catch (e) { }
 
       async function onModelChange() {
@@ -1081,6 +1387,8 @@
       if (endpointSelect) endpointSelect.addEventListener('change', onModelChange);
       if (slopeSelect) slopeSelect.addEventListener('change', onModelChange);
     })();
+
+      setupEvProjectionControls();
 
     // apply URL year/pv BEFORE running seed generation
     if (params.year && yearSlider) {
