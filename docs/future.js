@@ -1568,6 +1568,11 @@
       if (typeof window.updateAll === 'function') window.updateAll();
     });
     if (pvFlip) pvFlip.addEventListener('click', () => {
+      if (typeof window._pvFlipInProgress !== 'undefined' && window._pvFlipInProgress) {
+        //try { console.log('pvFlip: ignored (already in progress)'); } catch (e) { }
+        return;
+      }
+      window._pvFlipInProgress = true;
       let cur = 0;
       try {
         const parsed = (pvText && typeof pvText.value === 'string') ? (typeof parsePvText === 'function' ? parsePvText(pvText.value) : null) : null;
@@ -1580,11 +1585,17 @@
           const idx = pvEl ? parseInt(pvEl.value) : 0; const stopVal = stops[idx] || 0;
           cur = stopVal;
         }
-      } catch (e) { /* ignore */ }
+      } catch (e) { console.warn(e); }
       const flipped = -cur;
-      // try { console.log('pvFlip clicked (future)', { pvTextRaw: (pvText && pvText.value) ? pvText.value : null, cur, flipped }); } catch (e) { }
+      try {
+        const pvTextRaw = (pvText && typeof pvText.value === 'string') ? pvText.value : null;
+        console.log('pvFlip clicked (future)', { pvTextRaw, cur, flipped });
+      } catch (e) { }
+      finally {
+        setTimeout(() => { try { window._pvFlipInProgress = false; } catch (e) { } }, 0);
+      }
       try { window._pvPresetName = null; } catch (e) { }
-      applyPvOverride(flipped);
+      try { applyPvOverride(flipped); } catch (e) { console.warn(e); }
       try {
         if (pvText) {
           if (Math.abs(flipped) < 1e-12) pvText.value = 'EVEN';
