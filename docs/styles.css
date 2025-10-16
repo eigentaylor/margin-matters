@@ -1877,3 +1877,32 @@ body.shift-vectors-page {
 .shift-vectors .labels .leader { pointer-events: none; }
 
 /* end shift-vectors specific styles */
+
+/* Histogram bar styles (used by docs/histograms.js) */
+.bar {
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 1px;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.bar-positive {
+  fill: #4169E1; /* blue */
+}
+.bar-negative {
+  fill: #B22222; /* red */
+}
+.bar-neutral {
+  fill: #888888; /* gray */
+}
+.bar:hover,
+.bar:focus {
+  opacity: 0.85;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+}
+
+/* Make sure the tooltip contents remain readable over dark background */
+.tooltip {
+  background: rgba(17,17,17,0.95);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
