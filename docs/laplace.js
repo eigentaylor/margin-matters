@@ -527,12 +527,14 @@ class LaplaceAnalyzer {
     const thead = `
       <thead>
         <tr>${cols.map(c => {
-      // Render rank column as non-sortable
-      if (c.key === '__rank') return `<th>${c.label}</th>`;
+      // Render rank column as non-sortable and sticky
+      if (c.key === '__rank') return `<th class="sticky rank">${c.label}</th>`;
       const active = c.key === sortKey;
       const arrow = active ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '';
       const attr = active ? ` data-sort="${sortDir}"` : '';
-      return `<th data-key="${c.key}" class="sortable"${attr}>${c.label}${arrow}</th>`;
+      // Make the unit/abbr header sticky as well
+      const extraClass = c.key === 'abbr' ? ' sticky abbr' : '';
+      return `<th data-key="${c.key}" class="sortable${extraClass}"${attr}>${c.label}${arrow}</th>`;
     }).join('')}</tr>
       </thead>
     `;
@@ -542,7 +544,7 @@ class LaplaceAnalyzer {
         .map((r, idx) => {
           const tds = cols.map(c => {
             // Rank column uses the current index + 1 (1-based)
-            if (c.key === '__rank') return `<td class="rank">${idx + 1}</td>`;
+            if (c.key === '__rank') return `<td class="sticky rank">${idx + 1}</td>`;
             const raw = r[c.key];
             let val;
             if (c.key === 'relative_margin_numeric') {
@@ -551,7 +553,11 @@ class LaplaceAnalyzer {
             } else {
               val = c.fmt ? c.fmt(raw) : raw ?? '';
             }
-            return `<td class="${c.key === 'relative_margin_numeric' ? 'muted nowrap' : ''}">${val ?? ''}</td>`;
+            // add sticky class to the unit column cells so they stick on horizontal scroll
+            const extraClass = c.key === 'abbr' ? ' sticky abbr' : '';
+            const baseClass = c.key === 'relative_margin_numeric' ? 'muted nowrap' : '';
+            const cls = `${baseClass}${extraClass ? ' ' + extraClass.trim() : ''}`.trim();
+            return `<td class="${cls}">${val ?? ''}</td>`;
           }).join('');
           return `<tr data-abbr="${r.abbr}">${tds}</tr>`;
         })
@@ -560,6 +566,39 @@ class LaplaceAnalyzer {
     `;
 
     els.tableContainer.innerHTML = `<table>${thead}${tbody}</table>`;
+    // After inserting table HTML, make the rank and abbr columns sticky with correct left offsets.
+    try {
+      const table = els.tableContainer.querySelector('table');
+      if (table) {
+        // Measure the rendered rank header cell to compute left offset for the abbr column
+        const rankTh = table.querySelector('th.rank');
+        const rankWidth = rankTh ? Math.ceil(rankTh.getBoundingClientRect().width) : 0;
+
+        // Determine a background color to avoid transparent overlap; fallback to white
+        const tableBg = window.getComputedStyle(table).backgroundColor || '#fff';
+
+        // Apply sticky styles to all sticky elements
+        Array.from(table.querySelectorAll('th.sticky, td.sticky')).forEach(el => {
+          el.style.position = 'sticky';
+          // header cells should sit above body cells
+          const isHeader = el.tagName === 'TH';
+          el.style.zIndex = isHeader ? '4' : '3';
+          // set background to table background to mask underlying content
+          el.style.background = tableBg;
+        });
+
+        // Set left offsets: rank at 0, abbr at rankWidth
+        Array.from(table.querySelectorAll('th.rank, td.rank')).forEach(el => {
+          el.style.left = '0px';
+        });
+        Array.from(table.querySelectorAll('th.abbr, td.abbr')).forEach(el => {
+          el.style.left = rankWidth + 'px';
+        });
+      }
+    } catch (e) {
+      // Non-fatal: if anything goes wrong with layout math, ignore and continue
+      console.warn('Sticky column setup failed', e);
+    }
     // Set up row click handlers: insert a details <tr> directly under the clicked row
     let openDetailsRow = null;
     Array.from(els.tableContainer.querySelectorAll('tbody tr')).forEach(tr => {
