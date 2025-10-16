@@ -463,9 +463,14 @@ def main():
                 out['top_third_party'] = 'None'
             out_rows.append(out)
         # calculate distances from median margin delta for the year
-        deltas = [safe_float(r['pres_margin_delta']) for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and r['abbr'] not in ['NATIONAL']]
-        if deltas:
-            deltas_sorted = sorted(deltas)
+        deltas_all = [safe_float(r['pres_margin_delta']) for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and r['abbr'] not in ['NATIONAL']]
+    # Exclude exact zeros from median calculations where possible (these often represent missing/placeholder values
+    # in historical data where no previous year exists or deltas are placeholders). If all values are zero,
+    # fall back to using zeros so a median is still computed.
+        deltas_nonzero = [d for d in deltas_all if d != 0.0]
+        use_deltas = deltas_nonzero if len(deltas_nonzero) > 0 else deltas_all
+        if use_deltas:
+            deltas_sorted = sorted(use_deltas)
             median = np.median(deltas_sorted)
             median_states = [r['abbr'] for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and safe_float(r['pres_margin_delta']) == median]
             if len(median_states) == 0:
