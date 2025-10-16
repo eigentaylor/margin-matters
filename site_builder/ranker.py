@@ -329,6 +329,11 @@ def make_page(payload: dict) -> str:
 
 
 def build_ranker_page(rows: List[Dict[str, Any]] | None = None):
+    """
+    DEPRECATED: ranker.html now loads data dynamically from presidential_margins.csv
+    using the dataLoader module. This function is kept for reference but should not
+    be used in the build pipeline. The ranker page is maintained directly in docs/ranker.html.
+    """
     if rows is None:
         rows = read_csv(CSV_PATH)
     rows = _coerce_metrics(rows)
