@@ -14,6 +14,7 @@
           <a class="btn" href="${prefix}/paths2028.html">2028 Paths</a>
           <a class="btn" href="${prefix}/ranker.html">Ranker</a>
           <a class="btn" href="${prefix}/trend-viewer.html">Trend Viewer</a>
+          <a class="btn" href="${prefix}/bellwether-explorer.html">Bellwether Explorer</a>
           <a class="btn" href="${prefix}/shift-vectors.html">Shift Vectors</a>
           <a class="btn" href="${prefix}/laplace.html">Laplace Rule</a>
           <a class="btn" href="${prefix}/future.html">"""Future"""</a>
