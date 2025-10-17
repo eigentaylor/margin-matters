@@ -48,6 +48,11 @@
 <li>Set the Election Data Service projection as the default value for the EV Projection, as well as defaulted to only applying for years after 2030.</li>
 <li>Added a light pull towards bellwether status for states. This is a minor adjustment to fix an issue where if too many bellwethers roll the same direction in Laplace mode, it can result in too few bellwethers.</li>
 </ul>
+<h2>Index and Future</h2>
+<ul>
+<li>Updated the election night simulator to roll random PV values at the time the simulation starts, rather than when it is prepared.</li>
+<li>This fixes it from having the same random PV values even if the user changes years.</li>
+</ul>
 <h2>TODO</h2>
 <ul>
 <li>Update documentation to describe the new EV-orthogonalized margin metric and its interpretation.</li>
