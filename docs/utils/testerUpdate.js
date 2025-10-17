@@ -62,11 +62,15 @@ export function createUpdateAll(deps) {
 
   function syncStopsForYear(year, refs, updateFn) {
     if (window._prevYear === year) return;
+    const extraPresets = (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [];
+    const injectNegativePresets = (typeof window !== 'undefined') ? !!window._injectNegativePresets : false;
     buildPvStops(year, {
       container: refs.pvStops,
       datalist: refs.pvStopsList,
       getNatMargin,
-      updateAll: updateFn
+      updateAll: updateFn,
+      extraPresets,
+      injectNegativePresets
     });
     const stopsNow = stopsByYear.get(year) || [0];
     const natNow = getNatMargin(year);
@@ -886,7 +890,9 @@ export function createUpdateAll(deps) {
       container: refs.pvStops,
       datalist: refs.pvStopsList,
       getNatMargin,
-      updateAll
+      updateAll,
+      extraPresets: (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [],
+      injectNegativePresets: (typeof window !== 'undefined') ? !!window._injectNegativePresets : false
     });
 
     updateFlipButtons();
