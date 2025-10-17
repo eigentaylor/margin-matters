@@ -112,7 +112,8 @@
 
         <div style="display:flex;align-items:center;gap:8px">
           <label for="yearSlider" style="flex:0 0 auto;min-width:48px">Year:</label>
-          <input id="yearSlider" type="range" min="2024" max="2048" step="4" value="2028" style="flex:1;min-width:120px;" />
+          <input id="yearSlider" type="range" min="2024" max="2048" step="4" value="2028"
+            style="flex:1;min-width:120px;" />
           <span id="yearVal" style="margin-left:8px;flex:0 0 auto">2028</span>
         </div>
         <div style="display:grid;gap:10px">
@@ -179,7 +180,7 @@
         </div>
         <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
 
-  <div class="card pv-tools" style="background:transparent;border-color:var(--border)">
+        <div class="card pv-tools" style="background:transparent;border-color:var(--border)">
           <div class="legend" style="margin-bottom:6px">PV tools</div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
             <div style="display:flex;flex-direction:column;gap:6px">
@@ -239,7 +240,7 @@
             <div style="display:flex;flex-direction:column;gap:6px">
               <span class="legend">Projection window</span>
               <label class="legend" style="display:flex;align-items:center;gap:8px">
-                <input id="evProjectionFutureOnly" type="checkbox" />
+                <input id="evProjectionFutureOnly" type="checkbox" checked/>
                 Apply to 2032+
               </label>
             </div>
@@ -334,7 +335,7 @@
   <!-- Flag future mode before loading tester.js to adjust stops/labels and default PV behavior -->
   <script>window._futureMode = true;</script>
   <!-- Centralized PV presets -->
-    <script src="./pv-presets.js"></script>
+  <script src="./pv-presets.js"></script>
   <!-- Reuse the same map logic and PV stops/EV bar from tester.js -->
   <script type="module" src="./tester.js"></script>
   <script type="module" src="./election-night.js"></script>

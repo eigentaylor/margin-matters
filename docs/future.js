@@ -15,12 +15,14 @@
   };
   const evProjectionState = {
     maps: new Map(),
-    selectionKey: EV_PROJECTION_BASE_KEY,
-    futureOnly: false,
+    // default to Election Data Services projection and apply only to 2032+
+    selectionKey: 'election_data_services',
+    futureOnly: true,
     selectEl: null,
     futureOnlyEl: null,
     updatingControls: false,
-    pendingSelectionKey: null
+    // Request activation when CSV rows are loaded if that key exists
+    pendingSelectionKey: 'election_data_services'
   };
   let evProjectionRowsCache = null;
   let evProjectionWarned = false;
@@ -31,6 +33,35 @@
   function wavg(values, weights) {
     let s = 0, w = 0; for (let i = 0; i < values.length; i++) { const vi = +values[i] || 0; const wi = +weights[i] || 0; s += vi * wi; w += wi; }
     return w ? s / w : 0;
+  }
+  // Pull states with relative margin near zero slightly closer to zero (bellwether pull).
+  // r: number (percentage points), opts: { alpha, sigma, minScale }
+  // r' = sign(r) * |r| * scale, where scale = max(1 - alpha*exp(-(abs(r)/sigma)^2), minScale)
+  // - alpha: max proportion to reduce at r=0 (0..1). e.g. 0.7
+  // - sigma: width (in percentage points) controlling decay of pull. e.g. 5.0
+  // - minScale: lower bound on scale to avoid collapsing magnitudes. e.g. 0.15
+  function pullTowardBellwether(r, opts) {
+    opts = opts || {};
+    const alpha = (typeof opts.alpha === 'number') ? opts.alpha : 0.7;
+    const sigma = (typeof opts.sigma === 'number') ? opts.sigma : 5.0;
+    const minScale = (typeof opts.minScale === 'number') ? opts.minScale : 0.15;
+    const x = Math.abs(+r || 0);
+    const w = alpha * Math.exp(- Math.pow(x / Math.max(1e-12, sigma), 2));
+    const scale = Math.max(1 - w, minScale);
+    return Math.sign(r) * x * scale;
+  }
+
+  // Apply pullTowardBellwether to an array and optionally rescale to preserve the mean.
+  // arr: Array<number>, opts passed to pullTowardBellwether, preserveMean: boolean
+  function pullAndPreserveMean(arr, opts, preserveMean) {
+    if (!Array.isArray(arr)) return arr;
+    const out = arr.map(v => pullTowardBellwether(v, opts));
+    if (!preserveMean) return out;
+    const origMean = mean(arr);
+    const newMean = mean(out);
+    if (Math.abs(newMean) < 1e-12) return out; // nothing sensible to rescale
+    const factor = origMean / newMean;
+    return out.map(v => v * factor);
   }
   function seedToRng(seed) {
     // Simple mulberry32 PRNG for reproducibility
