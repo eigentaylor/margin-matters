@@ -317,7 +317,12 @@ def main():
                 # top_third_party will be filled in below after parsing third_party_results
                 'top_third_party': '',
                 'top_third_party_share': r.get('top_third_party_share', 0.0),
-                
+                # ev-orthogonalized margin fields (filled later once per-year EV mean is known)
+                'ev_orthogonalized_margin': None,
+                'ev_orthogonalized_margin_delta': None,
+                'ev_orthogonalized_margin_str': '0',
+                'ev_orthogonalized_margin_delta_str': '0',
+
                 'pres_margin': f"{pres:.12f}",
                 'pres_margin_delta': f"{pres_delta:.12f}" if pres_delta is not None else '0',
                 # Default pres margin string is D+/R+ based on pres value. It may be overridden
@@ -463,10 +468,44 @@ def main():
                 out['top_third_party'] = 'None'
             out_rows.append(out)
         # calculate distances from median margin delta for the year
+        # First compute EV-weighted mean pres margin for the year (exclude NATIONAL)
+        ev_rows = [r for r in out_rows if r['year'] == year and r['abbr'] not in ['NATIONAL']]
+        total_ev = sum([safe_int(r.get('electoral_votes', 0)) for r in ev_rows])
+        if total_ev > 0:
+            weighted_sum = sum([safe_float(r.get('pres_margin', 0.0)) * safe_int(r.get('electoral_votes', 0)) for r in ev_rows])
+            ev_weighted_mean = weighted_sum / total_ev
+        else:
+            ev_weighted_mean = 0.0
+
+        # assign ev-orthogonalized margin and compute delta relative to previous year's orthogonalized value if present
+        for r in ev_rows:
+            try:
+                pres_val = safe_float(r.get('pres_margin', 0.0))
+                ev_orth = pres_val - ev_weighted_mean
+                r['ev_orthogonalized_margin'] = ev_orth
+                r['ev_orthogonalized_margin_str'] = utils.lean_str(ev_orth)
+                r['ev_weighted_mean'] = ev_weighted_mean
+                # find previous year's orthogonalized value in out_rows (previous years are earlier in out_rows)
+                prev_vals = [x for x in out_rows if x['abbr'] == r['abbr'] and x['year'] < year and x.get('ev_orthogonalized_margin') is not None]
+                if prev_vals:
+                    prev_ev_orth = prev_vals[-1]['ev_orthogonalized_margin']
+                    ev_orth_delta = ev_orth - prev_ev_orth
+                    r['ev_orthogonalized_margin_delta'] = ev_orth_delta
+                    r['ev_orthogonalized_margin_delta_str'] = utils.lean_str(ev_orth_delta)
+                else:
+                    r['ev_orthogonalized_margin_delta'] = 0.0
+                    r['ev_orthogonalized_margin_delta_str'] = utils.lean_str(0.0)
+            except Exception:
+                r['ev_orthogonalized_margin'] = None
+                r['ev_orthogonalized_margin_delta'] = None
+                r['ev_orthogonalized_margin_str'] = '0'
+                r['ev_orthogonalized_margin_delta_str'] = '0'
+
+        # Then continue with median calculations
         deltas_all = [safe_float(r['pres_margin_delta']) for r in out_rows if r['year'] == year and r['pres_margin_delta'] is not None and r['abbr'] not in ['NATIONAL']]
-    # Exclude exact zeros from median calculations where possible (these often represent missing/placeholder values
-    # in historical data where no previous year exists or deltas are placeholders). If all values are zero,
-    # fall back to using zeros so a median is still computed.
+        # Exclude exact zeros from median calculations where possible (these often represent missing/placeholder values
+        # in historical data where no previous year exists or deltas are placeholders). If all values are zero,
+        # fall back to using zeros so a median is still computed.
         deltas_nonzero = [d for d in deltas_all if d != 0.0]
         use_deltas = deltas_nonzero if len(deltas_nonzero) > 0 else deltas_all
         if use_deltas:
@@ -504,7 +543,9 @@ def main():
         'national_margin', 'national_margin_delta',
         'median_margin_delta',
         'relative_margin', 'relative_margin_delta',
-        'third_party_share', 'third_party_national_share', 'third_party_relative_share',
+        'third_party_share', 'third_party_national_share', 
+        # EV-orthogonalized margins
+        'ev_orthogonalized_margin', 'ev_orthogonalized_margin_delta', 'third_party_relative_share',
         'two_party_margin', 'two_party_margin_delta',
         'two_party_national_margin', 'two_party_national_margin_delta',
         'two_party_relative_margin', 'two_party_relative_margin_delta',
@@ -512,7 +553,7 @@ def main():
         'pres_margin_str', 'pres_margin_delta_str',
         'median_delta_dist', 'median_delta_dist_str',
         'national_margin_str', 'national_margin_delta_str',
-        'relative_margin_str', 'relative_margin_delta_str',
+        'relative_margin_str', 'relative_margin_delta_str','ev_orthogonalized_margin_str', 'ev_orthogonalized_margin_delta_str',
         'top_third_party_share_str',
         'third_party_share_str', 'third_party_national_share_str', 'third_party_relative_share_str',
         'two_party_margin_str', 'two_party_margin_delta_str',

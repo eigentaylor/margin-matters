@@ -40,11 +40,16 @@
               id="deltaOp">&gt;</span> <span id="deltaThreshVal" class="muted">0</span>)</label>
           <input id="deltaThresh" type="range" min="-0.01" max="0.01" step="0.0005" value="0" />
         </div>
-        <div class="field">
-          <label for="medianMode">Median delta comparison mode</label>
-          <input id="medianMode" type="checkbox" checked title="When enabled, use the per-unit median delta distance instead of an absolute delta threshold" />
-          <div id="medianModeHelp" class="muted" style="font-size:0.9rem;">When enabled, the delta threshold slider is hidden and success is determined by comparing a unit's delta to that year's median delta distance (field: median_delta_dist).</div>
-        </div>
+        <!-- Mode selector: choose how success is determined -->
+          <div class="field">
+            <label for="modeSelect">Mode</label>
+            <select id="modeSelect">
+              <option value="relative">Relative delta</option>
+              <option value="ev" selected>EV orthogonalized delta</option>
+              <option value="median">Median delta distance</option>
+            </select>
+            <div id="modeHelp" class="muted" style="font-size:0.9rem;">Choose how success is determined: relative Δ vs a threshold, sign of EV-orthogonalized margin delta (falls back to pres margin when zero), or comparison to that year's median delta distance.</div>
+          </div>
         <div class="field">
           <label for="windowSizes">Window sizes (comma-separated)</label>
           <input id="windowSizes" type="text" value="3,4,5,6" />

@@ -172,13 +172,12 @@ def compile_changelog():
         
     # If today's entry is missing, create a placeholder
     if not todays_found:
-        today_date = datetime.now()
-        entries.append({
-            "date": today_date,
-            "date_str": get_today_date_str(),
-            "content": '',
-            "file": None
-        })
+        print(f'No changelog entry found for today ({get_today_date_str()}), adding placeholder file.')
+        placeholder_file = changelog_dir / f"{get_today_date_str()}.md"
+        # create blank placeholder file
+        placeholder_file.write_text("", encoding="utf-8")
+    else:
+        print(f'Changelog entry found for today ({get_today_date_str()}).')
     
     # Sort entries by date (newest first)
     entries.sort(key=lambda x: x["date"], reverse=True)

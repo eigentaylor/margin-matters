@@ -139,6 +139,8 @@
         "median_delta_dist",
         "third_party_share",
         "third_party_relative_share",
+        "ev_orthogonalized_margin",
+        "ev_orthogonalized_margin_delta",
       ];
 
       // Load CSV data
@@ -230,6 +232,9 @@
           if (relative && delta) return 'two_party_relative_margin_delta';
           if (relative) return 'two_party_relative_margin'; if (delta) return 'two_party_margin_delta'; return 'two_party_margin';
         }
+        if (base === 'ev_orthogonalized') {
+          return delta ? 'ev_orthogonalized_margin_delta' : 'ev_orthogonalized_margin';
+        }
         if (relative && delta) return 'relative_margin_delta'; if (relative) return 'relative_margin'; if (delta) return 'pres_margin_delta'; return 'pres_margin';
       }
 
@@ -248,17 +253,18 @@
       function metricDisplayName() {
         if (base === 'median_delta_dist') return 'Median delta distance';
         if (base === 'third_party_share') return 'Third-party share' + (relative ? ' (relative)' : '');
+        if (base === 'ev_orthogonalized') { let s = 'EV-orthogonalized margin'; if (delta) s += ' (delta)'; return s; }
         let s = twoParty ? 'Two-party margin' : 'State margin'; if (delta) s += ' (delta)'; if (relative) s += ' (relative)'; return s;
       }
 
       function renderControls() {
         if (!data || !data.years || !data.years.length) return;
         $('#year-val').textContent = selectedYear; const slider = $('#year'); slider.min = yearMin; slider.max = yearMax; slider.step = 4; slider.value = selectedYear;
-        $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option><option value="median_delta_dist">Median delta distance</option>'; $('#metric').value = base;
+        $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option><option value="median_delta_dist">Median delta distance</option><option value="ev_orthogonalized">EV-orthogonalized margin</option>'; $('#metric').value = base;
         $('#two').checked = twoParty; $('#rel').checked = relative; $('#delt').checked = delta; $('#abs').checked = useAbs; $('#reverse').checked = reverse;
         const twoEl = $('#two'); if (twoEl && twoEl.parentElement) { const hideTwo = base !== 'margin'; twoEl.parentElement.style.display = hideTwo ? 'none' : ''; if (hideTwo) { twoEl.checked = false; twoParty = false; } }
-        const relEl = $('#rel'); if (relEl && relEl.parentElement) { const hideRel = base === 'median_delta_dist'; relEl.parentElement.style.display = hideRel ? 'none' : ''; if (hideRel) { relEl.checked = false; relative = false; } }
-        const deltEl = $('#delt'); if (deltEl && deltEl.parentElement) { const hideDelta = base !== 'margin'; const disableDelta = hideDelta || (selectedYear === yearMin); deltEl.parentElement.style.display = hideDelta ? 'none' : ''; deltEl.disabled = disableDelta; if (disableDelta) { deltEl.checked = false; delta = false; } }
+        const relEl = $('#rel'); if (relEl && relEl.parentElement) { const hideRel = base === 'median_delta_dist' || base === 'ev_orthogonalized'; relEl.parentElement.style.display = hideRel ? 'none' : ''; if (hideRel) { relEl.checked = false; relative = false; } }
+        const deltEl = $('#delt'); if (deltEl && deltEl.parentElement) { const hideDelta = (base !== 'margin' && base !== 'ev_orthogonalized'); const disableDelta = hideDelta || (selectedYear === yearMin); deltEl.parentElement.style.display = hideDelta ? 'none' : ''; deltEl.disabled = disableDelta; if (hideDelta) { deltEl.checked = false; delta = false; } }
         const nameEl = $('#metric-name'); if (nameEl) nameEl.textContent = metricDisplayName();
       }
 
@@ -292,6 +298,13 @@
             const rawKey = twoParty ? 'two_party_margin_delta' : 'pres_margin_delta';
             const raw = rec[rawKey];
             if (raw != null && !isNaN(raw)) label += ' (Raw: ' + niceStr(abbr, rawKey, rec) + ')';
+          } else if (base === 'ev_orthogonalized') {
+            // EV-orthogonalized: support both delta and raw display. When delta is selected,
+            // show Δ <delta> and append the raw orthogonalized value in parentheses like other margins.
+            rawKey = delta ? 'pres_margin_delta' : 'pres_margin'
+            const evOrthoKey = delta ? 'ev_orthogonalized_margin_delta' : 'ev_orthogonalized_margin';
+            if (delta) { if (rec[evOrthoKey] != null && !isNaN(rec[evOrthoKey])) label = 'Δ ' + niceStr(abbr, evOrthoKey, rec); if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw Δ: ' + niceStr(abbr, rawKey, rec) + ')'; }
+              else { if (rec[evOrthoKey] != null && !isNaN(rec[evOrthoKey])) label = niceStr(abbr, evOrthoKey, rec); if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw: ' + niceStr(abbr, rawKey, rec) + ')'; }
           } else { label = niceStr(abbr, metricKey, rec); }
           rows.push({ abbr, val, rec, label, sortKey: key });
         });

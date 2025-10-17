@@ -105,6 +105,55 @@ class LaplaceAnalyzer {
   }
 
   /**
+   * Determine whether a single entry counts as a success under EV-orthogonalized sign rules.
+   * - If ev > 0: counts as 'left' success
+   * - If ev < 0: counts as 'right' success
+   * - If ev === 0: use raw pres margin delta (pres) sign to decide
+   */
+  static evEntrySuccess(ev, pres, direction = 'left') {
+    if (!Number.isFinite(ev)) return false;
+    if (ev > 0) return direction === 'left';
+    if (ev < 0) return direction === 'right';
+    // ev === 0: fallback to pres
+    if (!Number.isFinite(pres)) return false;
+    return direction === 'left' ? pres > 0 : pres < 0;
+  }
+
+  /**
+   * Calculate Laplace probability using sign of EV-orthogonalized margin deltas.
+   * Signature mirrors laplaceProbMedianDist for backward compatibility: (evVals, presDists, N, direction)
+   */
+  laplaceProbSign(evVals, N, direction = 'left') {
+    // Handle legacy calling forms similar to laplaceProbMedianDist
+    if (!Array.isArray(evVals) || N <= 0) return null;
+    let presDists = null;
+    let useN = N;
+    let dir = direction;
+    if (arguments.length === 3) {
+      // called as (evVals, N, direction)
+      useN = arguments[1];
+      dir = arguments[2] || 'left';
+    } else if (arguments.length >= 4) {
+      presDists = arguments[1];
+      useN = arguments[2];
+      dir = arguments[3] || 'left';
+    }
+
+    const len = evVals.length;
+    const start = Math.max(0, len - useN);
+    const considered = [];
+    for (let i = start; i < len; i++) {
+      const v = evVals[i];
+      if (!Number.isFinite(v)) continue;
+      const p = Array.isArray(presDists) ? presDists[i] : NaN;
+      considered.push({ v, p });
+    }
+    if (!considered.length) return null;
+    const k = considered.filter(item => LaplaceAnalyzer.evEntrySuccess(item.v, item.p, dir)).length;
+    return (k + 1) / (considered.length + 2);
+  }
+
+  /**
    * Calculate weights for different window sizes
    * @param {Array<number>} windowSizes - Array of N values
    * @param {number} lambda - Decay parameter
@@ -144,13 +193,22 @@ class LaplaceAnalyzer {
       lambda = 0.25,
       weightType = 'linear',
       trendDir = 'left',
-      medianMode = true
+      mode = 'ev'
     } = options;
+  // normalize mode value to avoid issues with whitespace/case
+  const modeStr = typeof mode === 'string' ? mode.trim().toLowerCase() : String(mode);
+  if (typeof console !== 'undefined' && console.debug) console.debug('Laplace.analyze: modeStr=', modeStr);
     // Determine delta threshold default:
     // - If the caller supplied options.deltaThresh, use it.
     // - Otherwise, if medianMode is OFF, default to 0 per requested behavior.
     // - If medianMode is ON (or unspecified), keep the historical default of -0.005.
     let deltaThresh;
+    // Ensure the delta slider visibility matches the current mode (in case change event didn't fire)
+    try {
+      const container = els.deltaThresh && els.deltaThresh.parentNode;
+      if (container) container.style.display = mode === 'relative' ? '' : 'none';
+    } catch (e) { }
+    // Debug: log selected mode for troubleshooting
     if (Object.prototype.hasOwnProperty.call(options, 'deltaThresh')) {
       deltaThresh = options.deltaThresh;
     } else {
@@ -158,6 +216,7 @@ class LaplaceAnalyzer {
     }
 
     // Filter data to valid years and exclude national aggregates
+    if (typeof console !== 'undefined' && console.debug) console.debug('Laplace.analyze: mode=', mode, 'windowSizes=', windowSizes);
     const filtered = this.data.filter(row => {
       const year = parseInt(row.year);
       const abbr = row.abbr?.toUpperCase();
@@ -192,13 +251,15 @@ class LaplaceAnalyzer {
         pres_margin_delta: row.pres_margin_delta != null ? parseFloat(row.pres_margin_delta) : NaN,
         pres_margin_delta_str: row.pres_margin_delta_str != null ? String(row.pres_margin_delta_str) : '',
         median_delta_dist: row.median_delta_dist != null ? row.median_delta_dist : '',
-        median_delta_dist_str: row.median_delta_dist_str != null ? String(row.median_delta_dist_str) : ''
+        median_delta_dist_str: row.median_delta_dist_str != null ? String(row.median_delta_dist_str) : '',
+        // EV-orthogonalized margin delta (signed). Use field name as provided in CSV.
+        ev_orthogonalized_margin_delta: row.ev_orthogonalized_margin_delta != null ? parseFloat(row.ev_orthogonalized_margin_delta) : NaN,
+        ev_orthogonalized_margin_delta_str: row.ev_orthogonalized_margin_delta_str != null ? String(row.ev_orthogonalized_margin_delta_str) : ''
       });
     });
 
-    // Sort chronologically
-    Object.values(byUnit).forEach(rows => rows.sort((a, b) => a.year - b.year));
-
+  // Sort chronologically
+  Object.values(byUnit).forEach(rows => rows.sort((a, b) => a.year - b.year));
     // Calculate weights
     const Ws = this.calculateWeights(windowSizes, lambda, weightType);
 
@@ -212,18 +273,25 @@ class LaplaceAnalyzer {
         const raw = r.median_delta_dist;
         return Number.isFinite(Number(raw)) ? Number(raw) : NaN;
       });
+      // EV orthogonalized values (aligned with rows)
+      const ev_all = rows.map(r => Number.isFinite(parseFloat(r.ev_orthogonalized_margin_delta)) ? parseFloat(r.ev_orthogonalized_margin_delta) : NaN);
       // Keep years aligned with string deltas and also include pres_margin_delta strings
       const deltas_str_all = rows.map(r => ({
         year: r.year,
         val: r.delta_str ?? (Number.isFinite(r.delta) ? r.delta.toFixed(4) : '—'),
         pres_val: r.pres_margin_delta_str ?? (Number.isFinite(r.pres_margin_delta) ? r.pres_margin_delta.toFixed(4) : '')
       }));
-      const probsByN = {};
+  // use normalized mode from above (modeStr)
+  const probsByN = {};
       windowSizes.forEach(N => {
-        if (medianMode) {
+        if (modeStr === 'median') {
           // For median mode we need median delta distances and raw pres margin deltas (aligned arrays)
           probsByN[`N${N}`] = this.laplaceProbMedianDist(medians_all, rows.map(r => Number.isFinite(parseFloat(r.pres_margin_delta)) ? parseFloat(r.pres_margin_delta) : NaN), N, trendDir);
+        } else if (modeStr === 'ev') {
+          // EV-orthogonalized sign-based mode: count sign of ev_orthogonalized_margin_delta
+          probsByN[`N${N}`] = this.laplaceProbSign(ev_all, rows.map(r => Number.isFinite(parseFloat(r.pres_margin_delta)) ? parseFloat(r.pres_margin_delta) : NaN), N, trendDir);
         } else {
+          // relative delta mode
           probsByN[`N${N}`] = this.laplaceProb(deltas, N, deltaThresh, trendDir);
         }
       });
@@ -248,12 +316,14 @@ class LaplaceAnalyzer {
         ...probsByN,
         deltas,
         medians_all,
+        ev_all,
         deltas_str: deltas_str_all,
         // expose pres delta values/strings so details can display raw pres margins
         pres_margin_deltas: rows.map(r => Number.isFinite(parseFloat(r.pres_margin_delta)) ? parseFloat(r.pres_margin_delta) : NaN),
         pres_margin_delta_str: rows.map(r => r.pres_margin_delta_str ?? ''),
         // include median strings (if available) aligned with rows
         median_delta_dist_str: rows.map(r => r.median_delta_dist_str ?? ''),
+        ev_orthogonalized_margin_delta_str: rows.map(r => r.ev_orthogonalized_margin_delta_str ?? ''),
       });
     });
 
@@ -261,6 +331,7 @@ class LaplaceAnalyzer {
     results.sort((a, b) => {
       if (a.p_weighted === null) return 1;
       if (b.p_weighted === null) return -1;
+      if (a.p_weighted === b.p_weighted) return a.abbr.localeCompare(b.abbr);
       return b.p_weighted - a.p_weighted;
     });
 
@@ -310,7 +381,7 @@ class LaplaceAnalyzer {
     absThreshVal: document.getElementById('absThreshVal'),
     deltaThresh: document.getElementById('deltaThresh'),
     deltaThreshVal: document.getElementById('deltaThreshVal'),
-    medianMode: document.getElementById('medianMode'),
+    modeSelect: document.getElementById('modeSelect'),
     windowSizes: document.getElementById('windowSizes'),
     lambda: document.getElementById('lambda'),
     lambdaVal: document.getElementById('lambdaVal'),
@@ -374,18 +445,17 @@ class LaplaceAnalyzer {
       update();
     }
 
-    // medianMode: hide delta threshold UI when enabled
-    if (els.medianMode) {
+    // modeSelect: hide delta threshold UI when mode !== 'relative'
+    if (els.modeSelect) {
       const hideShow = () => {
-        const medianOn = !!els.medianMode.checked;
+        const mode = els.modeSelect.value || 'relative';
         const container = els.deltaThresh && els.deltaThresh.parentNode;
-        if (container) container.style.display = medianOn ? 'none' : '';
+        if (container) container.style.display = mode === 'relative' ? '' : 'none';
       };
-      els.medianMode.addEventListener('change', () => {
+      els.modeSelect.addEventListener('change', () => {
         hideShow();
         runAnalysis();
       });
-      // initialize
       try { hideShow(); } catch (e) { }
     }
   }
@@ -637,8 +707,8 @@ class LaplaceAnalyzer {
         const recentEntries = deltas_str.slice(startIndex).reverse();
         const recentNum = deltas.slice(-maxN).reverse();
 
-        const medianModeOn = els.medianMode && els.medianMode.checked;
-        const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
+  const mode = els.modeSelect && els.modeSelect.value ? els.modeSelect.value : 'relative';
+  const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
 
         // Prepare aligned median arrays for the recent window (chronological order -> we reverse for display)
         const medians_all = row.medians_all ?? [];
@@ -646,11 +716,17 @@ class LaplaceAnalyzer {
         const medians_recent = medians_all.slice(-maxN).reverse();
         const medianStrs_recent = medianStrs_all.slice(-maxN).reverse();
 
-  // prepare pres_recent aligned with medians for fallback when median === 0
-  const pres_all = row.pres_margin_deltas ?? [];
-  const pres_recent = pres_all.slice(-maxN).reverse();
+        // prepare pres_recent aligned with medians for fallback when median === 0
+        const pres_all = row.pres_margin_deltas ?? [];
+        const pres_recent = pres_all.slice(-maxN).reverse();
 
-  const formatted = recentEntries.map((entry, i) => {
+        // EV orthogonalized arrays aligned with rows
+        const ev_all = row.ev_all ?? [];
+        const evStrs_all = row.ev_orthogonalized_margin_delta_str ?? [];
+        const ev_recent = ev_all.slice(-maxN).reverse();
+        const evStrs_recent = evStrs_all.slice(-maxN).reverse();
+
+        const formatted = recentEntries.map((entry, i) => {
           // entry: { year, val, pres_val } where val is the relative delta string and pres_val is pres_margin_delta_str
           const year = entry.year;
           const presDeltaStr = entry.pres_val || entry.val || ''; // prefer raw pres margin delta string
@@ -659,7 +735,7 @@ class LaplaceAnalyzer {
           let metricLabel = '';
           let metricValue = '';
 
-          if (medianModeOn) {
+          if (mode === 'median') {
             const medianNum = Number.isFinite(medians_recent[i]) ? medians_recent[i] : NaN;
             const presNum = Number.isFinite(pres_recent[i]) ? pres_recent[i] : NaN;
             if (Number.isFinite(medianNum)) {
@@ -667,6 +743,14 @@ class LaplaceAnalyzer {
             }
             metricLabel = 'median_dist';
             metricValue = medianStrs_recent[i] || '';
+          } else if (mode === 'ev') {
+            const evNum = Number.isFinite(ev_recent[i]) ? ev_recent[i] : NaN;
+            const presNum = Number.isFinite(pres_recent[i]) ? pres_recent[i] : NaN;
+            if (Number.isFinite(evNum)) {
+              success = LaplaceAnalyzer.evEntrySuccess(evNum, presNum, trendDir);
+            }
+            metricLabel = 'ev_orth';
+            metricValue = evStrs_recent[i] || (Number.isFinite(evNum) ? evNum.toFixed(4) : '');
           } else {
             const deltaThresh = parseFloat(els.deltaThresh.value);
             if (Number.isFinite(num)) {
@@ -689,7 +773,7 @@ class LaplaceAnalyzer {
         td.className = 'state-details';
         td.innerHTML = `
           <div><strong>${abbr}</strong></div>
-          <div class="muted">${medianModeOn ? 'Delta distance from median delta (most recent)' : 'Relative deltas (most recent ' + recentEntries.length + ')'}:</div>
+          <div class="muted">${mode === 'median' ? 'Delta distance from median delta (most recent)' : (mode === 'ev' ? 'EV-orthogonalized deltas (most recent)' : 'Relative deltas (most recent ' + recentEntries.length + ')')}:</div>
           <div style="margin-top:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">
             ${recentEntries.length ? formatted.join('<br/> ') : '—'}
           </div>
@@ -765,7 +849,7 @@ class LaplaceAnalyzer {
     const trendDir = els.trendDir && els.trendDir.value ? els.trendDir.value : 'left';
     lastWindows = windowSizes.length ? windowSizes : [3, 4, 5, 6];
 
-    const medianModeOn = !!(els.medianMode && els.medianMode.checked);
+    const mode = els.modeSelect && els.modeSelect.value ? els.modeSelect.value : 'relative';
     const t0 = performance.now();
     const results = analyzer.analyze({
       endYear,
@@ -775,7 +859,7 @@ class LaplaceAnalyzer {
       lambda: Number.isFinite(lambda) ? lambda : 0.25,
       weightType,
       trendDir,
-      medianMode: medianModeOn
+      mode
     });
     const dt = performance.now() - t0;
 
@@ -792,7 +876,8 @@ class LaplaceAnalyzer {
       deltaDisplay = Number.isFinite(deltaThresh) ? deltaThresh.toFixed(4) : String(deltaThresh);
     }
 
-    setStatus(`Analyzed ${results.length} units in ${dt.toFixed(1)} ms • endYear=${endYear} • abs≤${absDisplay} • ${medianModeOn ? 'median-mode' : `Δ${operator}${deltaDisplay}`} • windows=[${lastWindows.join(', ')}] • ${weightType}, λ=${lambda}`);
+    const modeLabel = mode === 'median' ? 'median-mode' : (mode === 'ev' ? 'ev-orthogonalized' : `Δ${operator}${deltaDisplay}`);
+    setStatus(`Analyzed ${results.length} units in ${dt.toFixed(1)} ms • endYear=${endYear} • abs≤${absDisplay} • ${modeLabel} • windows=[${lastWindows.join(', ')}] • ${weightType}, λ=${lambda}`);
   }
 
   function downloadCSV() {

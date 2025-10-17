@@ -21,6 +21,40 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 17, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Data</h2>
+<ul>
+<li>Added EV-orthogonalized presidential margins to the presidential margins dataset.</li>
+<li>These margins represent each state's margin after removing the national EV-weighted average margin for that year.</li>
+<li>This gives a slightly different perspective, similar to the relative margin but weighted by EVs instead of turnout.</li>
+<li>Both the raw EV-orthogonalized margin and its delta from the previous election are included.</li>
+<li>Updated the build script to compute and include these new margins.</li>
+</ul>
+<h2>Ranker</h2>
+<ul>
+<li>Added support for EV-orthogonalized margins as a metric in the Ranker tool.</li>
+<li>Users can now select EV-orthogonalized margin or its delta when ranking states.</li>
+<li>The display format matches other margin metrics, showing both delta and raw values appropriately.</li>
+</ul>
+<h2>Laplace</h2>
+<ul>
+<li>Added EV-orthogonalized margin as an available metric in the Laplace tool for analysis, similar to the median delta mode.</li>
+<li>Set this as the default mode for determining success in the Laplace tool.</li>
+</ul>
+<h2>TODO</h2>
+<ul>
+<li>Update documentation to describe the new EV-orthogonalized margin metric and its interpretation.</li>
+<li>Add this data to the state pages and other relevant visualizations in the app.</li>
+<li>Use this metric for prediction and analysis in the future page.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         October 16, 2025
                     </div>
                     <div class='changelog-content'>
@@ -66,7 +100,7 @@
 </ul>
 <h2>Laplace</h2>
 <ul>
-<li>Updated the default delta threshold to 0 for the Laplace analyzer.</li>
+<li>Updated the default delta threshold to 0 for the Laplace analyzer outside of median mode.</li>
 </ul>
                     </div>
                 </div>
@@ -78,41 +112,34 @@
                     </div>
                     <div class='changelog-content'>
                         <h2>Added automated changelog system</h2>
-<br/>
 <ul>
 <li>Created changelog infrastructure for tracking daily updates</li>
 <li>Implemented automatic compilation of changelog entries during site build</li>
 <li>Added changelog page to site navigation</li>
 </ul>
 <h2>Improved build pipeline</h2>
-<br/>
 <ul>
 <li>Integrated changelog generation</li>
 <li>Added automatic cleanup of empty changelog files</li>
 </ul>
 <h2>Updated ranker page to not be stupid</h2>
-<br/>
 <ul>
 <li>Fixed terrible code to make it responsive to updates in the presidential data</li>
 </ul>
 <h2>Laplace page:</h2>
-<br/>
 <ul>
 <li>Made the unit column sticky on mobile so you can see which unit the row is for as you scroll horizontally</li>
 </ul>
 <h2>Attributions:</h2>
-<br/>
 <ul>
 <li>Added citation for senate level data from the wonderful MIT Election Data and Science Lab</li>
 </ul>
 <h2>Future:</h2>
-<br/>
 <ul>
 <li>Added a Laplace method to generate future endpoints (set as default)</li>
 <li>This uses a Bayesian approach similar to the Laplace page to give a more probabilistic estimate of future margins (allowing for uncertainty). Ex. CA trended blue significantly until 2020, but has started to trend red. But the line of best fit still has a firmly positive slope. Thus, the old method would almost certainly predict a continued blue trend, unless you used a different slope method. Whereas the Laplace method gives about a 50:50 chance of CA trending either direction, by weighting by recency and giving some uncertainty.</li>
 </ul>
 <h2>Coming soon:</h2>
-<br/>
 <ul>
 <li>A histogram page which allows users to visualize various aspects of presidential data</li>
 </ul>
