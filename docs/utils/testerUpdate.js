@@ -94,7 +94,15 @@ export function createUpdateAll(deps) {
       const eff = stopToEff.get(stopVal);
       if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
         const list = stopToUnits.get(stopVal) || [];
-        list.forEach(u => { if (u && u !== 'NATIONAL' && u !== 'NAT') matches.push(String(u).slice(0, 5)); });
+          list.forEach(u => {
+            if (!u || u === 'NATIONAL' || u === 'NAT') return;
+            const s = String(u);
+            if (s.startsWith('PRESET:')) {
+              matches.push(s.replace(/^PRESET:/, ''));
+            } else {
+              matches.push(s.slice(0, 5));
+            }
+          });
       }
     }
     const showNat = ((!(window._futureMode && year > 2024)) && override == null && Math.abs(stopVal - nat) <= STOP_EPS);

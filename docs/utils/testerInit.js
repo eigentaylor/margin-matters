@@ -135,7 +135,17 @@ export function createTesterInitializer(deps) {
     yearSlider.value = String(y);
     if (yearVal) yearVal.textContent = y;
 
-    buildPvStops(y);
+    // Ensure presets (including negative mirrors) are injected before we
+    // compute slider bounds. Pages can expose window._pvExtraPresets and
+    // window._injectNegativePresets; respect those here.
+    const extraPresets = (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [];
+    const injectNegativePresets = (typeof window !== 'undefined') ? !!window._injectNegativePresets : false;
+    // Populate stopsByYear and render the container now so subsequent logic
+    // that reads stopsByYear sees the full list (including negatives).
+    try {
+      buildPvStops(y, { container: pvStops, datalist: pvStopsList, getNatMargin, updateAll, extraPresets, injectNegativePresets });
+    } catch (e) { console.warn(e); }
+
     const stops = stopsByYear.get(y) || [0];
     pvSlider.min = 0;
     pvSlider.max = Math.max(0, stops.length - 1);
@@ -188,12 +198,7 @@ export function createTesterInitializer(deps) {
     const showNatInit = ((!(window._futureMode && y > 2024)) && Math.abs(curStop - nat) < STOP_EPS);
     if (pvVal) pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
 
-    buildPvStops(y, {
-      container: pvStops,
-      datalist: pvStopsList,
-      getNatMargin,
-      updateAll
-    });
+    // buildPvStops was already invoked above to populate stops and render the UI
     updateFlipMetricOptionsForYear();
 
     const btnClassic = document.getElementById('flipClassic');

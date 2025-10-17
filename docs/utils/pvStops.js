@@ -8,7 +8,7 @@ const stopToEff = new Map();
 const stopToUnits = new Map();
 const stopsByYear = new Map();
 
-export function buildPvStops(year, { container, datalist, getNatMargin, updateAll } = {}) {
+export function buildPvStops(year, { container, datalist, getNatMargin, updateAll, extraPresets = [], injectNegativePresets = false } = {}) {
   const cap = PV_CAP;
   stopToEff.clear();
   stopToUnits.clear();
@@ -30,19 +30,18 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
     }
   } catch (e) { console.warn(e); }
 
-  const stopsSet = new Set([0]);
+  const baseStopsSet = new Set([0]);
   stopToEff.set(0, 0 + EPS);
   if (!(isFutureMode && year > 2024) && isFinite(nat) && Math.abs(nat) <= cap) {
-    stopsSet.add(nat);
+    baseStopsSet.add(nat);
     stopToEff.set(nat, nat);
   }
 
   if (byYearStops && effByYearStops && byYearStops.size > 0) {
-    const keys = Array.from(byYearStops.keys());
-    for (const k of keys) {
+    for (const k of byYearStops.keys()) {
       const v = parseFloat(k);
       if (!isFinite(v) || Math.abs(v) > cap) continue;
-      stopsSet.add(v);
+      baseStopsSet.add(v);
       const eff = effByYearStops.has(k) ? effByYearStops.get(k) : (v + EPS);
       stopToEff.set(v, eff);
       const unitsMap = byYearStops.get(k);
@@ -54,61 +53,94 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
     }
   }
 
-  const stops = Array.from(stopsSet).sort((a, b) => a - b);
+  const keyFor = (val) => Number(val).toFixed(9);
+  const baseStops = Array.from(baseStopsSet).sort((a, b) => a - b);
+  const baseKeys = new Set(baseStops.map(keyFor));
+  const sliderStopsSet = new Set(baseStops);
+  const presetKeys = new Set();
   const presetStops = [];
+
+  const registerPreset = (val, name) => {
+    const key = keyFor(val);
+    if (!isFinite(val) || Math.abs(val) > cap) return false;
+    if (baseKeys.has(key) || presetKeys.has(key)) return false;
+    sliderStopsSet.add(val);
+    const displayName = name || String(val);
+    const pvUnits = stopToUnits.get(val) || [];
+    pvUnits.push(`PRESET:${displayName}`);
+    stopToUnits.set(val, pvUnits);
+    if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
+    presetStops.push({ val, name: displayName });
+    presetKeys.add(key);
+    return true;
+  };
+
   try {
     const presetEl = doc && doc.getElementById && doc.getElementById('pvPreset');
     if (presetEl && presetEl.options && presetEl.options.length) {
-      const existing = stops.slice();
-      const almostEqual = (a, b, eps = 1e-9) => Math.abs(a - b) <= eps;
       for (const opt of Array.from(presetEl.options)) {
         try {
-          const val = parseFloat(opt.value);
-          if (isFinite(val)) {
-            if (!opt.value || String(opt.value).trim() === '') continue;
-            let found = false;
-            for (const s of existing) { if (almostEqual(s, val)) { found = true; break; } }
-            for (const s of presetStops) { if (almostEqual(s.val, val)) { found = true; break; } }
-            if (!found && Math.abs(val) <= cap) {
-              const name = (opt.text || opt.label || '').split(':')[0].trim();
-              presetStops.push({ val, name });
-              const pvUnits = stopToUnits.get(val) || [];
-              pvUnits.push(`PRESET:${name || String(val)}`);
-              stopToUnits.set(val, pvUnits);
-              if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
-            }
-          }
-        } catch (e) { console.warn(e); }
+          const raw = (opt.value != null) ? String(opt.value).trim() : '';
+          if (!raw) continue;
+          const val = parseFloat(raw);
+          if (!isFinite(val)) continue;
+          const name = (opt.text || opt.label || '').split(':')[0].trim();
+          const optYear = (opt.dataset && opt.dataset.year) ? Number(opt.dataset.year) : null;
+          const yearMatch = (optYear != null && isFinite(optYear) && optYear === year);
+          if (!yearMatch) registerPreset(val, name);
+          if (injectNegativePresets) registerPreset(-val, name ? `-${name}` : String(-val));
+        } catch (err) { console.warn(err); }
       }
     }
-  } catch (e) { console.warn(e); }
 
-  const allStops = stops.slice();
-  try {
-    const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s) || []).length }));
-    // console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
-  } catch (e) { console.warn(e); }
+    if (Array.isArray(extraPresets) && extraPresets.length) {
+      for (const p of extraPresets) {
+        try {
+          if (!p) continue;
+          const val = Number(p.val);
+          if (!isFinite(val) || Math.abs(val) > cap) continue;
+          const name = (p.name || '').toString();
+          const presetYear = (p.year != null && isFinite(Number(p.year))) ? Number(p.year) : null;
+          if (presetYear !== year) registerPreset(val, name);
+          if (injectNegativePresets) registerPreset(-val, name ? `-${name}` : String(-val));
+        } catch (err) { console.warn(err); }
+      }
+    }
+  } catch (err) { console.warn(err); }
 
-  for (let i = 0; i < allStops.length; i++) {
-    const s = allStops[i];
+  const sliderStops = Array.from(sliderStopsSet).sort((a, b) => a - b);
+  for (let i = 0; i < sliderStops.length; i++) {
+    const s = sliderStops[i];
     if (!stopToEff.has(s)) stopToEff.set(s, s + EPS);
   }
 
-  stopsByYear.set(year, allStops);
+  const sliderIndexByKey = new Map();
+  sliderStops.forEach((val, idx) => { sliderIndexByKey.set(keyFor(val), idx); });
+
+  stopsByYear.set(year, sliderStops);
   if (datalist) {
-    datalist.innerHTML = allStops.map(v => `<option value="${(v * 100).toFixed(1)}"></option>`).join('');
+    datalist.innerHTML = sliderStops.map(v => `<option value="${(v * 100).toFixed(1)}"></option>`).join('');
     const sliderEl = doc && doc.getElementById ? doc.getElementById('pvSlider') : null;
     if (sliderEl) sliderEl.setAttribute('list', 'pvStopsList');
   }
 
   if (container) {
     const natForRender = (isFutureMode && year > 2024) ? 0 : nat;
-    const mainHtml = stops.map((v, i) => {
+    // Only render base stops in the visible list; presets stay slider-only.
+    const mainHtml = baseStops.map((v) => {
+      const sliderIdx = sliderIndexByKey.get(keyFor(v));
       const isEven = Math.abs(v) < 1e-12;
       const isNat = ((!(isFutureMode && year > 2024)) && Math.abs(v - natForRender) < 1e-12);
       const unitsRaw = (stopToUnits.get(v) || []).filter(u => u !== 'NATIONAL' && u !== 'NAT');
-      for (let j = 0; j < unitsRaw.length; j++) { if (unitsRaw[j] && unitsRaw[j].startsWith('PRESET:')) unitsRaw[j] = unitsRaw[j].replace(/^PRESET:/, ''); }
-      const units = (isEven || isNat) ? '' : unitsRaw.slice(0, 3).map(u => u.slice(0, 5)).join(',');
+      // Replace PRESET: prefix and preserve full preset names; for non-preset
+      // units keep the short (5-char) abbreviation to avoid overflowing the bar.
+      for (let j = 0; j < unitsRaw.length; j++) {
+        if (!unitsRaw[j]) continue;
+        if (unitsRaw[j].startsWith('PRESET:')) {
+          unitsRaw[j] = unitsRaw[j].replace(/^PRESET:/, '');
+        }
+      }
+      const units = (isEven || isNat) ? '' : unitsRaw.slice(0, 3).map(u => (u && u && u.indexOf('-') === -1 && u.length > 5 && !u.startsWith('PRESET:')) ? u.slice(0, 5) : u).join(',');
       const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
       const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
       let bgColor = '#0d0d0dff';
@@ -185,21 +217,26 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           //console.debug('[stops][debug] final bgColor is default', { year, stop: v, key: Number(v).toFixed(STOP_KEY_PREC), unitsRaw, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
         } catch (e) { console.warn('[stops][debug] error preparing final default color debug', e); }
       }
-      const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
-      const smallColor = isYellowish ? '#000' : 'var(--muted)';
-      return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`;
+  const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
+  const smallColor = isYellowish ? '#000' : 'var(--muted)';
+  const idxAttr = (sliderIdx != null && Number.isFinite(sliderIdx)) ? String(sliderIdx) : '';
+  const displayLabel = label.replace('<small', `<small style="color:${smallColor}"`);
+  return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${idxAttr}">${displayLabel}</span>`;
     }).join('');
 
     const presetHtml = presetStops.map((ps, pi) => {
-        const v = ps.val;
-        const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
-        const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
-        const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
-        const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
-        const name = ps.name || '';
-        const text = name ? `${name} ${label}` : label;
-        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name}">${text}</span>`;
-      }).join('');
+      const v = ps.val;
+      const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
+      const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
+      const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
+      const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
+      // Preserve leading '-' in the name so negative presets render as "(-Gore)"
+      const name = ps.name || '';
+      const text = name ? `${label} (${name})` : label;
+      // For data-name, keep the original provided name if meaningful, otherwise blank
+      const dataName = name || '';
+      return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${dataName}">${text}</span>`;
+    }).join('');
 
     container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
     container.querySelectorAll('span.btn').forEach((el) => {
@@ -216,15 +253,18 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
             } catch (e) { console.warn(e); }
           }
         } else {
-          const i = Number(el.getAttribute('data-idx'));
+          const idxAttr = el.getAttribute('data-idx');
           const slider = doc && doc.getElementById ? doc.getElementById('pvSlider') : null;
           try { window._pvOverride = null; } catch (e) { console.warn(e); }
-          if (slider) {
-            slider.value = String(i);
-            try {
-              if (typeof updateAll === 'function') updateAll();
-              else if (typeof window.updateAll === 'function') window.updateAll();
-            } catch (e) { console.warn(e); }
+          if (slider && idxAttr != null && idxAttr !== '') {
+            const i = Number(idxAttr);
+            if (!Number.isNaN(i)) {
+              slider.value = String(i);
+              try {
+                if (typeof updateAll === 'function') updateAll();
+                else if (typeof window.updateAll === 'function') window.updateAll();
+              } catch (e) { console.warn(e); }
+            }
           }
         }
       });
