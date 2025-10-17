@@ -238,6 +238,7 @@ def compile_changelog():
     <script src="header.js"></script>
     <script src="footer.js"></script>
     <script src="back-to-map.js"></script>
+    <script src="last-updated.js"></script>
 </body>
 
 </html>
