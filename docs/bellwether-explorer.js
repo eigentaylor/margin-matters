@@ -1,5 +1,19 @@
 // Bellwether & Close States Explorer
 // This module provides interactive visualizations for exploring bellwether and close states
+//
+// Features:
+// - View bellwether states (states with relative margin close to national margin)
+// - View close states (states with small raw presidential margins)
+// - Adjustable thresholds via sliders with smooth animations
+// - Three visualization modes:
+//   1. Bar Graph: Shows count of bellwether/close states over all election years
+//   2. Histogram: Shows distribution of margins for selected year with hover tooltips
+//   3. Table: Sortable table with detailed state information
+// - For bellwether states in specific years (not 2024), shows:
+//   - Whether the state is still a bellwether in 2024
+//   - The change in relative margin from selected year to 2024
+// - For close states, shows the vote difference
+// - All visualizations animate smoothly when settings change
 
 'use strict';
 
@@ -69,6 +83,14 @@ function filterData() {
   
   let filtered = data;
   
+  // Filter out NATIONAL aggregate rows and congressional districts (keep -AL at-large)
+  filtered = filtered.filter(row => {
+    if (row.abbr === 'NATIONAL') return false;
+    // Keep states and at-large districts (ME-AL, NE-AL), but not individual CDs
+    if (row.abbr.includes('-') && !row.abbr.endsWith('-AL')) return false;
+    return true;
+  });
+  
   // Filter by year if not "all"
   if (year !== 'all') {
     filtered = filtered.filter(row => row.year === year);
@@ -96,7 +118,14 @@ function getCountsByYear() {
   const years = [...new Set(data.map(row => row.year))].sort();
   
   const counts = years.map(year => {
-    const yearData = data.filter(row => row.year === year);
+    let yearData = data.filter(row => row.year === year);
+    // Filter out NATIONAL and congressional districts
+    yearData = yearData.filter(row => {
+      if (row.abbr === 'NATIONAL') return false;
+      if (row.abbr.includes('-') && !row.abbr.endsWith('-AL')) return false;
+      return true;
+    });
+    
     let count;
     
     if (category === 'bellwether') {
