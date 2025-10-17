@@ -140,13 +140,22 @@ class LaplaceAnalyzer {
     const {
       endYear = 2024,
       absThresh = 1.0,
-      deltaThresh = -0.005,
       windowSizes = [3, 4, 5, 6, 7],
       lambda = 0.25,
       weightType = 'linear',
       trendDir = 'left',
       medianMode = true
     } = options;
+    // Determine delta threshold default:
+    // - If the caller supplied options.deltaThresh, use it.
+    // - Otherwise, if medianMode is OFF, default to 0 per requested behavior.
+    // - If medianMode is ON (or unspecified), keep the historical default of -0.005.
+    let deltaThresh;
+    if (Object.prototype.hasOwnProperty.call(options, 'deltaThresh')) {
+      deltaThresh = options.deltaThresh;
+    } else {
+      deltaThresh = 0;
+    }
 
     // Filter data to valid years and exclude national aggregates
     const filtered = this.data.filter(row => {
