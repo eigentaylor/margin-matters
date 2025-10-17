@@ -381,9 +381,13 @@
     const hist = dfAll.filter(r => r.year >= 2000 && r.year <= 2024);
 
     // 1) per-state 2024 base + votes
-    const base2024 = dfAll
+    // Collect all 2024 rows, but exclude ME-AL and NE-AL from Laplace sampling because
+    // they are at-large aggregates and should be derived from their districts instead
+    // of being rolled independently.
+    const base2024_all = dfAll
       .filter(r => r.year === 2024)
       .map(r => ({ abbr: r.abbr, rel2024: +r.relative_margin || 0, total_votes: +r.total_votes || 0 }));
+    const base2024 = base2024_all.filter(b => !(b.abbr === 'ME-AL' || b.abbr === 'NE-AL'));
 
     // 2) per-state historical step sigma (already have a helper, reuse it if present; else inline)
     const sigMap = (typeof stateSigma === 'function')
@@ -428,17 +432,17 @@
       return Z / Math.sqrt(V / 4);
     }
 
-  // knobs
-  const c_scale = (opts && opts.c_scale) || 1.15; // magnitude multiplier (diffusive intuition)
-  const gamma = (opts && opts.gamma) || 0.30;     // shared-shock mix
-  const sigmaG = (opts && opts.sigmaG) || 0.06;   // scale of national shock (t4)
+    // knobs
+    const c_scale = (opts && opts.c_scale) || 1.15; // magnitude multiplier (diffusive intuition)
+    const gamma = (opts && opts.gamma) || 0.30;     // shared-shock mix
+    const sigmaG = (opts && opts.sigmaG) || 0.06;   // scale of national shock (t4)
 
-  // Laplace window-weighting options (defaults mirror laplace.js suggestion)
-  const windowSizes = (opts && opts.windowSizes) || [3, 4, 5, 6];
-  const lambda = (opts && Number.isFinite(opts.lambda)) ? opts.lambda : 0.25;
-  const weightType = (opts && opts.weightType) ? opts.weightType : 'linear';
-  const minN = Math.min(...windowSizes);
-  const weightForN = n => (weightType === 'exponential') ? Math.exp(-lambda * (n - minN)) : (1 / (1 + lambda * (n - minN)));
+    // Laplace window-weighting options (defaults mirror laplace.js suggestion)
+    const windowSizes = (opts && opts.windowSizes) || [3, 4, 5, 6];
+    const lambda = (opts && Number.isFinite(opts.lambda)) ? opts.lambda : 0.25;
+    const weightType = (opts && opts.weightType) ? opts.weightType : 'linear';
+    const minN = Math.min(...windowSizes);
+    const weightForN = n => (weightType === 'exponential') ? Math.exp(-lambda * (n - minN)) : (1 / (1 + lambda * (n - minN)));
 
     // 5) sample raw deltas per state and record metadata for debugging/inspection
     const deltas = [];
@@ -461,11 +465,11 @@
           probsByN[`N${N}`] = null; weightsByN[`N${N}`] = null;
         }
       }
-  // compute full-history counts (U/D) for fallback and diagnostics
-  const fullArr = perMargins.get(a) || [];
-  let U = 0, D = 0; for (let i = 1; i < fullArr.length; i++) { const dd = fullArr[i] - fullArr[i - 1]; if (dd > 0) U++; else if (dd < 0) D++; }
+      // compute full-history counts (U/D) for fallback and diagnostics
+      const fullArr = perMargins.get(a) || [];
+      let U = 0, D = 0; for (let i = 1; i < fullArr.length; i++) { const dd = fullArr[i] - fullArr[i - 1]; if (dd > 0) U++; else if (dd < 0) D++; }
 
-  // If no windows had sufficient data, fall back to full-history rule-of-succession
+      // If no windows had sufficient data, fall back to full-history rule-of-succession
       let pLeftWeighted = null;
       if (den > 0) pLeftWeighted = num / den; else {
         // use full history sign counts as fallback
@@ -491,8 +495,8 @@
       const G = rand_t_df4() * sigmaG;
       const combined = (1 - gamma) * delta + gamma * l1 * G;
 
-  // store metadata per-state for later inspection
-  deltas.push({ abbr: a, raw_delta: combined, pLeft: pLeftWeighted, pLeftByN: probsByN, pLeftWeights: weightsByN, signDraw: S, M, s_i, sigma_i, l1, G, counts: { U, D } });
+      // store metadata per-state for later inspection
+      deltas.push({ abbr: a, raw_delta: combined, pLeft: pLeftWeighted, pLeftByN: probsByN, pLeftWeights: weightsByN, signDraw: S, M, s_i, sigma_i, l1, G, counts: { U, D } });
     }
 
     // 6) recentre by 2024 votes
@@ -508,7 +512,7 @@
     for (const base of base2024) {
       const d = deltas.find(x => x.abbr === base.abbr) || { raw_delta: 0, centered: 0, pLeft: 0, counts: { U: 0, D: 0 }, signDraw: 0, M: 0, s_i: 0, sigma_i: 0, l1: 0, G: 0 };
       const shift = softclip(d.centered, soft_delta_L);
-        out.push({
+      out.push({
         abbr: base.abbr,
         rel_2024: base.rel2024,
         rel_2048_target: base.rel2024 + shift,
@@ -586,7 +590,7 @@
 
   function simulatePaths(dfAll, rng, opts) {
     const { soft_delta_L = 0.33, soft_value_L = 0.95, years_ahead = 24, shrink = 0.8, n_steps = 240, beta = 0.8, alpha = 0.45, kappa = 0.25, global_scale = 1.05, k_factors = 3, slopeOptions = null,
-  endpointMethod = 'laplace',     // NEW: 'slope' | 'laplace' (default to laplace)
+      endpointMethod = 'laplace',     // NEW: 'slope' | 'laplace' (default to laplace)
       laplaceOptions = {}           // optional knobs for Model A if endpointMethod='laplace'
     } = (opts || {});
     const hist = dfAll.filter(r => r.year >= 2000 && r.year <= 2024);
@@ -624,7 +628,7 @@
       const straight = t_grid.slice(1).map(u => y0 + total * u);
       const path = straight.map((v, i) => v + B[i]);
       const rec = { abbr: a, rel_2024: y0, rel_2048_target: yT };
-  if (rowLapMeta) rec.laplace_meta = rowLapMeta;
+      if (rowLapMeta) rec.laplace_meta = rowLapMeta;
       function nearestIdx(u) {
         let bestI = 1, bestD = 1e9; for (let i = 0; i < t_grid.length; i++) { const d = Math.abs(t_grid[i] - u); if (d < bestD) { bestD = d; bestI = i; } }
         return Math.max(1, Math.min(bestI, n_steps)) - 1; // index for path[]
@@ -765,7 +769,7 @@
         const rVotes = twoPartyTotal * rShare2;
         const topThirdVotes = isFutureYear ? 0 : Math.max(0, Math.min(totalVotes, topThirdShare * totalVotes));
         // EV: reuse 2024 mapping
-  const ev = evLookupFn ? evLookupFn(Y, abbr) : (evMap.get(`2024:${abbr}`) || 0);
+        const ev = evLookupFn ? evLookupFn(Y, abbr) : (evMap.get(`2024:${abbr}`) || 0);
         rows.push({
           year: Y,
           unit: abbr,
@@ -814,8 +818,8 @@
 
   async function generate(seed) {
     console.log('[future] generate() function called with seed:', seed);
-  const { filtered, margins, evByUnit, evProjectionRows } = await loadHistorical();
-  updateEvProjectionStateFromRows(evProjectionRows);
+    const { filtered, margins, evByUnit, evProjectionRows } = await loadHistorical();
+    updateEvProjectionStateFromRows(evProjectionRows);
     const rng = seedToRng(seed);
     console.log('[future] loadHistorical completed, filtered rows:', filtered.length);
     // Build slope options from URL (if any)
@@ -867,10 +871,10 @@
       }
     } catch (e) { console.warn('[future] failed to set laplace metadata', e); }
     // plug into tester.js global maps
-  const projectionMap = getSelectedEvProjectionMap();
-  console.log('[future] EV projection:', evProjectionState.selectionKey, 'futureOnly:', evProjectionState.futureOnly);
-  const evLookup = createEvLookup(evByUnit, projectionMap, { futureOnly: evProjectionState.futureOnly });
-  const BY = buildFutureDataset(filtered, paths, margins, evByUnit, evLookup);
+    const projectionMap = getSelectedEvProjectionMap();
+    console.log('[future] EV projection:', evProjectionState.selectionKey, 'futureOnly:', evProjectionState.futureOnly);
+    const evLookup = createEvLookup(evByUnit, projectionMap, { futureOnly: evProjectionState.futureOnly });
+    const BY = buildFutureDataset(filtered, paths, margins, evByUnit, evLookup);
     console.log('[future] buildFutureDataset completed');
     // Clear any previous future years then set
     const years = [2024, 2028, 2032, 2036, 2040, 2044, 2048];
@@ -1363,8 +1367,8 @@
     (function wireModelControls() {
       const endpointSelect = document.getElementById('endpointSelect');
       const slopeSelect = document.getElementById('slopeMethod');
-    // initialize from URL params if present; default to laplace when no param provided
-    try { if (endpointSelect) endpointSelect.value = (params && params.endpoint) ? params.endpoint : 'laplace'; } catch (e) { }
+      // initialize from URL params if present; default to laplace when no param provided
+      try { if (endpointSelect) endpointSelect.value = (params && params.endpoint) ? params.endpoint : 'laplace'; } catch (e) { }
       try { if (slopeSelect && params && params.method) slopeSelect.value = params.method; } catch (e) { }
 
       async function onModelChange() {
@@ -1388,7 +1392,7 @@
       if (slopeSelect) slopeSelect.addEventListener('change', onModelChange);
     })();
 
-      setupEvProjectionControls();
+    setupEvProjectionControls();
 
     // apply URL year/pv BEFORE running seed generation
     if (params.year && yearSlider) {
@@ -1693,10 +1697,10 @@
           return `<tr>` +
             `<td style="padding:6px;border-top:1px solid #222">${abbr}</td>` +
             `<td style="padding:6px;border-top:1px solid #222;text-align:right">${pWeightedVal.toFixed(3)}</td>` +
-            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN3!=null? pN3.toFixed(3): '—')}</td>` +
-            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN4!=null? pN4.toFixed(3): '—')}</td>` +
-            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN5!=null? pN5.toFixed(3): '—')}</td>` +
-            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN6!=null? pN6.toFixed(3): '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN3 != null ? pN3.toFixed(3) : '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN4 != null ? pN4.toFixed(3) : '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN5 != null ? pN5.toFixed(3) : '—')}</td>` +
+            `<td style="padding:6px;border-top:1px solid #222;text-align:right">${(pN6 != null ? pN6.toFixed(3) : '—')}</td>` +
             `<td style="padding:6px;border-top:1px solid #222;text-align:right">${signVal}</td>` +
             `<td style="padding:6px;border-top:1px solid #222;text-align:right">${raw.toFixed(3)}</td>` +
             `<td style="padding:6px;border-top:1px solid #222;text-align:right">${centered.toFixed(3)}</td>` +
