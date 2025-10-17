@@ -224,6 +224,9 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${idxAttr}">${displayLabel}</span>`;
     }).join('');
 
+    // Sort preset stops by numeric value so preset chips render in deterministic order
+    presetStops.sort((a, b) => a.val - b.val);
+
     const presetHtml = presetStops.map((ps, pi) => {
       const v = ps.val;
       const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
