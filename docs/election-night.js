@@ -153,6 +153,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     pvRandomCache: null,
     pvRandomCacheMode: null,
     pvRandomSeed: null,
+    pvRandomCacheYear: null,
     lastDisplayUpdate: 0 // Track last time display was updated for throttling
   };
 
@@ -263,7 +264,12 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       elements.toggle.addEventListener('click', () => {
         //console.log('ELECTION NIGHT TOGGLE CLICK');
         if (!state.prepared) {
-          prepareSimulation();
+          // Start should roll random PV now (at click time). Clear any cached random PV so
+          // resolvePvValue will draw fresh values based on the current time/seed.
+          state.pvRandomCache = null;
+          state.pvRandomCacheMode = null;
+          state.pvRandomCacheYear = null;
+          state.pvRandomSeed = null;
           startSimulation();
         } else if (state.running) {
           pauseSimulation();
@@ -294,6 +300,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         state.pvMode = elements.pvMode.value || 'current';
         state.pvRandomCache = null;
         state.pvRandomCacheMode = null;
+        state.pvRandomCacheYear = null;
         state.pvRandomSeed = null;
         if (!state.prepared) return;
         const resume = state.running;
@@ -528,6 +535,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const savedCache = state.pvRandomCache;
       const savedCacheMode = state.pvRandomCacheMode;
       const savedSeed = state.pvRandomSeed;
+      const savedCacheYear = state.pvRandomCacheYear;
       const savedConfidence = state.confidenceThreshold;
       const savedSpeed = state.speedMultiplier;
       const savedPvOverride = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
@@ -535,6 +543,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       state.pvMode = savedMode;
       state.pvRandomCache = savedCache;
       state.pvRandomCacheMode = savedCacheMode;
+      state.pvRandomCacheYear = savedCacheYear;
       state.pvRandomSeed = savedSeed;
       state.confidenceThreshold = savedConfidence;
       state.speedMultiplier = savedSpeed;
@@ -558,9 +567,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.running = false;
     state.prepared = false;
     state.stateData = [];
-  state.snapshot = new Map();
-  window._electionNightSnapshot = null;
-  try { window._evSummaryOverride = null; } catch (e) { /* ignore */ }
+    state.snapshot = new Map();
+    window._electionNightSnapshot = null;
+    try { window._evSummaryOverride = null; } catch (e) { /* ignore */ }
     window._electionNightActive = false;
     state.currentTime = 0;
     state.lastTimestamp = null;
@@ -634,7 +643,17 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   }
 
   function startSimulation() {
-    if (!state.prepared || state.running) return;
+    if (state.running) return;
+    // If not prepared, prepare now so PV random draw happens at start time.
+    if (!state.prepared) {
+      // clear cached PV random values so resolvePvValue will roll for the current start
+      state.pvRandomCache = null;
+      state.pvRandomCacheMode = null;
+      state.pvRandomCacheYear = null;
+      state.pvRandomSeed = null;
+      prepareSimulation();
+      if (!state.prepared) return;
+    }
     state.running = true;
     state.lastTimestamp = null;
     state.lastDisplayUpdate = state.currentTime; // Initialize to current time
@@ -1238,8 +1257,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
       applyColor(st, displayColor, metrics);
 
-  const evAllocation = isCalled ? (st.evCalledAllocations || null) : null;
-  if (evAllocation) {
+      const evAllocation = isCalled ? (st.evCalledAllocations || null) : null;
+      if (evAllocation) {
         dEV += evAllocation.D || 0;
         rEV += evAllocation.R || 0;
         oEV += evAllocation.O || 0;
@@ -2248,18 +2267,19 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (mode === 'current') {
       state.pvRandomCache = null;
       state.pvRandomCacheMode = null;
+      state.pvRandomCacheYear = null;
       state.pvRandomSeed = null;
       return current;
     }
 
-    if (state.pvRandomCache != null && state.pvRandomCacheMode === mode) {
+    const year = getSelectedYear() || 0;
+    if (state.pvRandomCache != null && state.pvRandomCacheMode === mode && state.pvRandomCacheYear === year) {
       window._pvOverride = state.pvRandomCache;
       return state.pvRandomCache;
     }
 
     if (state.pvRandomSeed == null) {
       const baseSeed = Date.now() >>> 0;
-      const year = getSelectedYear() || 0;
       state.pvRandomSeed = hashCode(`${year}:${mode}:${baseSeed}`);
     }
     const rng = mulberry32(state.pvRandomSeed >>> 0);
@@ -2274,6 +2294,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
     state.pvRandomCache = sample;
     state.pvRandomCacheMode = mode;
+    state.pvRandomCacheYear = year;
     window._pvOverride = sample;
     return sample;
   }
