@@ -180,7 +180,11 @@ function updateVisualization() {
     document.getElementById('tableContainer').style.display = 'block';
     renderTable();
   }
-  
+  // If the user selected the detailed table, the detailPanel is redundant — hide it
+  const detailPanel = document.getElementById('detailPanel');
+  if (detailPanel) {
+    detailPanel.style.display = displayType === 'table' ? 'none' : detailPanel.style.display;
+  }
   updateTitle();
 }
 
