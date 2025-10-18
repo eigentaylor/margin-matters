@@ -90,6 +90,9 @@
 
       <!-- Histogram Container -->
       <div id="histogramContainer" style="display:none">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+          <button id="histogramSummaryBtn" class="btn">Summary</button>
+        </div>
         <svg id="histogram" width="100%" height="400"></svg>
       </div>
 
@@ -111,6 +114,21 @@
       </div>
       <div id="errorMsg" class="legend" style="text-align:center;padding:40px;display:none;color:#ff6b6b">
         Error loading data. Please try again.
+      </div>
+      <!-- Detail panel for clicked bars/bins/rows -->
+      <div id="detailPanel" style="display:none;margin-top:12px;border:1px solid var(--border);padding:12px;border-radius:8px;background:var(--card)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div id="detailTitle" style="font-weight:600"></div>
+          <button id="detailClose" class="btn">Close</button>
+        </div>
+        <div class="table-wrap">
+          <table id="detailTable" class="flip-table">
+            <thead>
+              <tr><th>State</th><th>Year</th><th>Pres. Margin</th><th>Rel. Margin</th></tr>
+            </thead>
+            <tbody id="detailBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 

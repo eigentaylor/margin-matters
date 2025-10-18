@@ -30,16 +30,19 @@
 		},
 		{
 			"label": "Build site with new PV totals",
-			"type": "shell",
-			"command": "python",
+			"type": "process",
+			"command": "${command:python.interpreterPath}",
 			"args": [
-				"e:\\coding projects\\margin-matters\\build_site.py"
+				"${workspaceFolder}/build_site.py"
 			],
 			"isBackground": false,
 			"problemMatcher": [
 				"$python"
 			],
-			"group": "build"
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
 		}
 	]
 }

@@ -89,8 +89,6 @@ function filterData() {
   // Filter out NATIONAL aggregate rows and congressional districts (keep -AL at-large)
   filtered = filtered.filter(row => {
     if (row.abbr === 'NATIONAL') return false;
-    // Keep states and at-large districts (ME-AL, NE-AL), but not individual CDs
-    if (row.abbr.includes('-') && !row.abbr.endsWith('-AL')) return false;
     return true;
   });
   
@@ -122,12 +120,8 @@ function getCountsByYear() {
   
   const counts = years.map(year => {
     let yearData = data.filter(row => row.year === year);
-    // Filter out NATIONAL and congressional districts
-    yearData = yearData.filter(row => {
-      if (row.abbr === 'NATIONAL') return false;
-      if (row.abbr.includes('-') && !row.abbr.endsWith('-AL')) return false;
-      return true;
-    });
+    // Filter out NATIONAL rows only (include districts)
+    yearData = yearData.filter(row => row.abbr !== 'NATIONAL');
     
     let count;
     
@@ -285,7 +279,7 @@ function renderBarChart() {
 
       // Tooltip: show year and list of matching states + pres_margin_str
       const year = d.year;
-      const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL' && !(r.abbr.includes('-') && !r.abbr.endsWith('-AL')));
+  const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL');
       let matches = [];
       if (state.category === 'bellwether') {
         matches = rowsForYear.filter(r => {
@@ -309,6 +303,25 @@ function renderBarChart() {
     .on('mouseout', function() {
       d3.select(this).style('opacity', 0.8);
       tooltip.style('opacity', 0);
+    })
+    // click opens detail panel for that year
+    .on('click', function(event, d) {
+      const year = d.year;
+  const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL');
+      // For the selected category, filter
+      let matches = [];
+      if (state.category === 'bellwether') {
+        matches = rowsForYear.filter(r => {
+          const rel = parseFloat(r.relative_margin);
+          return !isNaN(rel) && Math.abs(rel) < state.bellwetherThreshold;
+        });
+      } else {
+        matches = rowsForYear.filter(r => {
+          const m = parseFloat(r.pres_margin);
+          return !isNaN(m) && Math.abs(m) < state.closeThreshold;
+        });
+      }
+      showDetailPanel(`${state.category === 'bellwether' ? 'Bellwether' : 'Close'} states — ${year}`, matches);
     })
     .transition()
     .duration(800)
@@ -469,10 +482,112 @@ function renderHistogram() {
       d3.select(this).style('opacity', 0.7);
       tooltip.style('opacity', 0);
     })
+    .on('click', function(event, d) {
+      // find states in this bin, then open detail panel
+      const statesInBin = filtered.filter(row => {
+        const val = parseFloat(row[marginKey]);
+        return val >= d.x0 && val < d.x1;
+      });
+      showDetailPanel(`${state.category === 'bellwether' ? 'Bellwether' : 'Close'} states — ${state.year === 'all' ? 'All Years' : state.year}`, statesInBin);
+    })
     .transition()
     .duration(800)
     .attr('y', d => y(d.length))
     .attr('height', d => height - y(d.length));
+}
+
+// Show detail panel with a list of rows (each row should include abbr, year, pres_margin, relative_margin)
+function showDetailPanel(title, rows) {
+  const panel = document.getElementById('detailPanel');
+  const titleEl = document.getElementById('detailTitle');
+  const body = document.getElementById('detailBody');
+  const closeBtn = document.getElementById('detailClose');
+
+  titleEl.textContent = title;
+  // prepare header with sortable columns
+  body.innerHTML = '';
+  const thead = document.querySelector('#detailTable thead');
+  if (thead) {
+    // build header row with clickable ths
+    thead.innerHTML = '';
+    const headerRow = document.createElement('tr');
+    const headers = [
+      { key: 'abbr', label: 'State' },
+      { key: 'year', label: 'Year' },
+      { key: 'pres_margin', label: 'Pres. Margin' },
+      { key: 'relative_margin', label: 'Rel. Margin' }
+    ];
+
+    // sort state for panel
+    let sortKey = null;
+    let sortDir = 'asc';
+
+    function renderBody() {
+      body.innerHTML = '';
+      if (!rows || rows.length === 0) {
+        body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted)">No matching rows</td></tr>';
+        return;
+      }
+
+      // make a copy and sort it
+      const sorted = [...rows].sort((a, b) => {
+        if (!sortKey) return 0;
+        let aVal = a[sortKey];
+        let bVal = b[sortKey];
+        // numeric keys
+        if (sortKey === 'pres_margin' || sortKey === 'relative_margin' || sortKey === 'year') {
+          aVal = parseFloat(aVal);
+          bVal = parseFloat(bVal);
+          if (isNaN(aVal)) aVal = 0;
+          if (isNaN(bVal)) bVal = 0;
+        } else {
+          // string compare
+          aVal = (aVal || '').toString();
+          bVal = (bVal || '').toString();
+        }
+        if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      sorted.forEach(r => {
+        const tr = document.createElement('tr');
+        const tdState = document.createElement('td'); tdState.textContent = r.abbr || '';
+        const tdYear = document.createElement('td'); tdYear.textContent = r.year || '';
+        const tdPres = document.createElement('td'); tdPres.textContent = r.pres_margin_str || (r.pres_margin !== undefined ? formatMargin(parseFloat(r.pres_margin)) : '');
+        const tdRel = document.createElement('td'); tdRel.textContent = r.relative_margin_str || (r.relative_margin !== undefined ? formatMargin(parseFloat(r.relative_margin)) : '');
+        tr.appendChild(tdState); tr.appendChild(tdYear); tr.appendChild(tdPres); tr.appendChild(tdRel);
+        body.appendChild(tr);
+      });
+    }
+
+    headers.forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h.label;
+      th.style.cursor = 'pointer';
+      th.dataset.key = h.key;
+      th.addEventListener('click', () => {
+        if (sortKey === h.key) {
+          sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortKey = h.key;
+          sortDir = 'asc';
+        }
+        // update header arrows
+        Array.from(thead.querySelectorAll('th')).forEach(t => { t.textContent = headers.find(hh => hh.key === t.dataset.key).label; });
+        th.textContent = h.label + (sortDir === 'asc' ? ' ▲' : ' ▼');
+        renderBody();
+      });
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+
+    // initial render
+    renderBody();
+  }
+
+  panel.style.display = 'block';
+  closeBtn.onclick = () => { panel.style.display = 'none'; };
 }
 
 // Render table with sorting
@@ -618,6 +733,12 @@ function renderTable() {
       tr.style.transition = 'opacity 0.3s';
       tr.style.opacity = '1';
     }, index * 20);
+    
+    // Click row to open detail panel for that single row
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('click', () => {
+      showDetailPanel(`${row.abbr} — ${row.year}`, [row]);
+    });
   });
 }
 
@@ -746,6 +867,16 @@ async function init() {
       state.displayType = e.target.value;
       updateVisualization();
     });
+
+    // Histogram summary button
+    const histBtn = document.getElementById('histogramSummaryBtn');
+    if (histBtn) {
+      histBtn.addEventListener('click', () => {
+        // Use filterData to get rows used by histogram for current settings
+        const rows = filterData();
+        showDetailPanel(`${state.category === 'bellwether' ? 'Bellwether' : 'Close'} — ${state.year === 'all' ? 'All Years' : state.year} (Histogram Summary)`, rows);
+      });
+    }
     
     // Initial render
     document.getElementById('loadingMsg').style.display = 'none';
