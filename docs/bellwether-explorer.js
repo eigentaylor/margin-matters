@@ -634,8 +634,12 @@ function renderTable() {
       sortable: true 
     });
     
-    if (year !== 'all' && year !== '2024') {
+    // Show 2024 status for any specific year (including 2024) but only show
+    // margin change and 2024 relative margin when the selected year is NOT 2024.
+    if (year !== 'all') {
       headers.push({ key: 'is_2024_bellwether', label: '2024 Status', sortable: true });
+    }
+    if (year !== 'all' && year !== '2024') {
       headers.push({ key: 'margin_change', label: `${year} → 2024`, sortable: true });
       headers.push({ key: 'relative_margin_2024', label: '2024 Rel. Margin', sortable: true });
     }
@@ -670,19 +674,23 @@ function renderTable() {
   const tableData = filtered.map(row => {
     const result = { ...row };
     
-    if (category === 'bellwether' && year !== 'all' && year !== '2024') {
-      // Check if state is bellwether in 2024
+    if (category === 'bellwether' && year !== 'all') {
+      // Check if state is bellwether in 2024 for any specific selected year (including 2024)
       const state2024 = state.data.find(r => r.abbr === row.abbr && r.year === '2024');
       if (state2024) {
         const rel2024 = parseFloat(state2024.relative_margin);
         result.is_2024_bellwether = !isNaN(rel2024) && Math.abs(rel2024) < state.bellwetherThreshold;
         result.relative_margin_2024 = rel2024;
-        
-        const relCurrent = parseFloat(row.relative_margin);
-        if (!isNaN(relCurrent) && !isNaN(rel2024)) {
-          result.margin_change = rel2024 - relCurrent;
+
+        // Only compute margin_change when comparing a prior year to 2024
+        if (year !== '2024') {
+          const relCurrent = parseFloat(row.relative_margin);
+          if (!isNaN(relCurrent) && !isNaN(rel2024)) {
+            result.margin_change = rel2024 - relCurrent;
+          }
         }
-        // compute the most recent year this unit was a bellwether across all data (look to the future / most recent)
+
+        // compute the most recent year this unit was a bellwether across all data
         const candidates = state.data
           .filter(r => r.abbr === row.abbr)
           .map(r => ({ year: parseInt(r.year, 10), rec: r }))
