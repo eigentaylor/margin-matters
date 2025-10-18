@@ -788,6 +788,86 @@ function getLeanStr(delta) {
   return delta > 0 ? '(D)' : '(R)';
 }
 
+// Update the browser URL query string to reflect current state (year, category, display)
+function updateUrl() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (state.year) params.set('year', state.year);
+    else params.delete('year');
+    if (state.category) params.set('category', state.category);
+    else params.delete('category');
+    if (state.displayType) params.set('display', state.displayType);
+    else params.delete('display');
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    history.replaceState(null, '', newUrl);
+  } catch (e) {
+    // ignore (e.g., non-browser env)
+    console.warn('Could not update URL params:', e);
+  }
+}
+
+// Read URL params and apply them to state and UI controls. Called during init.
+function applyUrlParamsToState() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const y = params.get('year');
+    const c = params.get('category');
+    const d = params.get('display');
+
+    // apply category
+    if (c && (c === 'bellwether' || c === 'close')) {
+      state.category = c;
+      const sel = document.getElementById('categorySelect');
+      if (sel) sel.value = c;
+      // toggle controls visibility
+      if (c === 'bellwether') {
+        document.getElementById('bellwetherControls').style.display = 'block';
+        document.getElementById('closeControls').style.display = 'none';
+      } else {
+        document.getElementById('bellwetherControls').style.display = 'none';
+        document.getElementById('closeControls').style.display = 'block';
+      }
+    }
+
+    // apply display
+    if (d && (d === 'bar' || d === 'histogram' || d === 'table')) {
+      state.displayType = d;
+      const disp = document.getElementById('displayType');
+      if (disp) disp.value = d;
+    }
+
+    // apply year (accept 'all' or a numeric year present in slider range)
+    if (y) {
+      const yearSlider = document.getElementById('yearSlider');
+      const allChk = document.getElementById('allYearsCheckbox');
+      const yearVal = document.getElementById('yearVal');
+      if (y === 'all') {
+        state.year = 'all';
+        if (allChk) { allChk.checked = true; }
+        if (yearVal) yearVal.textContent = 'All';
+      } else if (!isNaN(parseInt(y, 10)) && yearSlider) {
+        const min = parseInt(yearSlider.min, 10);
+        const max = parseInt(yearSlider.max, 10);
+        const yi = parseInt(y, 10);
+        if (yi >= min && yi <= max) {
+          state.year = String(yi);
+          yearSlider.value = yi;
+          if (allChk) { allChk.checked = false; }
+          if (yearVal) yearVal.textContent = state.year;
+        }
+      }
+
+    }
+
+    // finally render with applied params
+    state.sortColumn = null;
+    updateVisualization();
+  } catch (e) {
+    console.warn('Could not apply URL params:', e);
+  }
+}
+
 // Sort table data
 function sortTableData(data) {
   const { sortColumn, sortDirection } = state;
@@ -860,6 +940,7 @@ async function init() {
         allChk.checked = false;
         state.sortColumn = null;
         updateVisualization();
+        updateUrl();
       });
 
       allChk.addEventListener('change', (e) => {
@@ -872,6 +953,7 @@ async function init() {
         }
         state.sortColumn = null;
         updateVisualization();
+        updateUrl();
       });
     }
     
@@ -889,6 +971,7 @@ async function init() {
       
       state.sortColumn = null;
       updateVisualization();
+      updateUrl();
     });
     
     document.getElementById('bellwetherThreshold').addEventListener('input', (e) => {
@@ -906,7 +989,11 @@ async function init() {
     document.getElementById('displayType').addEventListener('change', (e) => {
       state.displayType = e.target.value;
       updateVisualization();
+      updateUrl();
     });
+
+    // Apply URL params (if present) to initial state and controls
+    applyUrlParamsToState();
 
     // Histogram summary button
     const histBtn = document.getElementById('histogramSummaryBtn');
