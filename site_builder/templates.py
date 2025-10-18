@@ -11,6 +11,7 @@ PAGE_HTML = r"""<!doctype html>
 </head>
 <body>
 <script src="../maintenance-check.js"></script>
+<script src="./last-updated.js"></script>
 <div class="container" data-available-datasets="%AVAILABLE_DATASETS%">
   <div id="header-placeholder" data-is-inner="true"></div>
   <div class="legend" style="margin-top:12px">%LEGEND%</div>
@@ -681,7 +682,6 @@ PAGE_HTML = r"""<!doctype html>
 <script src="../header.js"></script>
 <script src="../back-to-map.js"></script>
 <script src="../footer.js"></script>
-<script src="../last-updated.js"></script>
 <script src="../other-pages.js"></script>
 </body>
 </html>
