@@ -29,6 +29,9 @@ const state = {
   sortDirection: 'asc'
 };
 
+// list of available years (populated on init)
+state.years = [];
+
 // Load and parse CSV data
 async function loadData() {
   try {
@@ -168,6 +171,10 @@ function updateVisualization() {
   document.getElementById('tableContainer').style.display = 'none';
   document.getElementById('loadingMsg').style.display = 'none';
   
+  // Hide year control when viewing bar chart (bar shows counts across years)
+  const yc = document.getElementById('yearControl');
+  if (yc) yc.style.display = displayType === 'bar' ? 'none' : 'flex';
+  
   // Show appropriate container
   if (displayType === 'bar') {
     document.getElementById('barChartContainer').style.display = 'block';
@@ -215,6 +222,19 @@ function renderBarChart() {
   
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // remove any old bar tooltips and create a single tooltip for the bar chart
+  d3.selectAll('.bar-tooltip').remove();
+  const tooltip = d3.select('body').append('div')
+    .attr('class', 'tooltip bar-tooltip')
+    .style('position', 'absolute')
+    .style('background', 'var(--card)')
+    .style('border', '1px solid var(--border)')
+    .style('border-radius', '8px')
+    .style('padding', '8px')
+    .style('pointer-events', 'none')
+    .style('opacity', 0)
+    .style('z-index', 1000);
   
   // Create scales
   const x = d3.scaleBand()
@@ -260,11 +280,35 @@ function renderBarChart() {
     .attr('height', 0)
     .attr('fill', state.category === 'bellwether' ? '#66b3ff' : '#ff6b6b')
     .style('opacity', 0.8)
-    .on('mouseover', function() {
+    .on('mouseover', function(event, d) {
       d3.select(this).style('opacity', 1);
+
+      // Tooltip: show year and list of matching states + pres_margin_str
+      const year = d.year;
+      const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL' && !(r.abbr.includes('-') && !r.abbr.endsWith('-AL')));
+      let matches = [];
+      if (state.category === 'bellwether') {
+        matches = rowsForYear.filter(r => {
+          const rel = parseFloat(r.relative_margin);
+          return !isNaN(rel) && Math.abs(rel) < state.bellwetherThreshold;
+        }).map(r => ({ abbr: r.abbr, margin: r.relative_margin_str || (r.relative_margin !== undefined ? formatMargin(parseFloat(r.relative_margin)) : '') }));
+      } else {
+        matches = rowsForYear.filter(r => {
+          const m = parseFloat(r.pres_margin);
+          return !isNaN(m) && Math.abs(m) < state.closeThreshold;
+        }).map(r => ({ abbr: r.abbr, margin: r.pres_margin_str || (r.pres_margin !== undefined ? formatMargin(parseFloat(r.pres_margin)) : '') }));
+      }
+
+      const listHtml = matches.length === 0 ? '<div style="color:var(--muted)">No matching states</div>' : matches.slice(0,30).map(m => `${m.abbr}: ${m.margin}`).join('<br>');
+
+      tooltip.style('opacity', 1)
+        .html(`<strong>${year}</strong><br>Count: ${d.count}<br>${listHtml}${matches.length > 30 ? '<br>...' : ''}`)
+        .style('left', (event.pageX + 10) + 'px')
+        .style('top', (event.pageY - 10) + 'px');
     })
     .on('mouseout', function() {
       d3.select(this).style('opacity', 0.8);
+      tooltip.style('opacity', 0);
     })
     .transition()
     .duration(800)
@@ -634,22 +678,41 @@ async function init() {
     // Load data
     state.data = await loadData();
     
-    // Populate year dropdown
-    const years = [...new Set(state.data.map(row => row.year))].sort().reverse();
-    const yearSelect = document.getElementById('yearSelect');
-    years.forEach(year => {
-      const option = document.createElement('option');
-      option.value = year;
-      option.textContent = year;
-      yearSelect.appendChild(option);
-    });
-    
-    // Set up event listeners
-    document.getElementById('yearSelect').addEventListener('change', (e) => {
-      state.year = e.target.value;
-      state.sortColumn = null;
-      updateVisualization();
-    });
+    // Populate year slider and All Years checkbox
+    const years = [...new Set(state.data.map(row => row.year))].map(y => parseInt(y, 10)).filter(Boolean).sort((a,b) => a - b);
+    state.years = years.map(String);
+    const yearSlider = document.getElementById('yearSlider');
+    const yearVal = document.getElementById('yearVal');
+    const allChk = document.getElementById('allYearsCheckbox');
+
+    if (years.length > 0 && yearSlider) {
+      yearSlider.min = years[0];
+      yearSlider.max = years[years.length - 1];
+      yearSlider.step = 4;
+      yearSlider.value = years[years.length - 1];
+      state.year = String(yearSlider.value);
+      yearVal.textContent = state.year;
+
+      yearSlider.addEventListener('input', (e) => {
+        state.year = String(e.target.value);
+        yearVal.textContent = state.year;
+        allChk.checked = false;
+        state.sortColumn = null;
+        updateVisualization();
+      });
+
+      allChk.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          state.year = 'all';
+          yearVal.textContent = 'All';
+        } else {
+          state.year = String(yearSlider.value);
+          yearVal.textContent = state.year;
+        }
+        state.sortColumn = null;
+        updateVisualization();
+      });
+    }
     
     document.getElementById('categorySelect').addEventListener('change', (e) => {
       state.category = e.target.value;

@@ -13,19 +13,6 @@
 			"group": "build"
 		},
 		{
-			"label": "Build site with new PV totals",
-			"type": "shell",
-			"command": "python",
-			"args": [
-				"e:\\coding projects\\margin-matters\\build_site.py"
-			],
-			"isBackground": false,
-			"problemMatcher": [
-				"$python"
-			],
-			"group": "build"
-		},
-		{
 			"label": "Lint docs JS",
 			"type": "shell",
 			"command": "npx",
@@ -49,6 +36,9 @@
 				"e:\\coding projects\\margin-matters\\build_site.py"
 			],
 			"isBackground": false,
+			"problemMatcher": [
+				"$python"
+			],
 			"group": "build"
 		}
 	]

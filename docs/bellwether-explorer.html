@@ -27,12 +27,12 @@
     <div class="card" style="margin-top:12px">
       <div class="legend" style="margin-bottom:12px">Settings</div>
       
-      <!-- Year Selection -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <label for="yearSelect" style="min-width:120px">Year:</label>
-        <select id="yearSelect" class="btn" style="flex:1;max-width:200px">
-          <option value="all">All Years</option>
-        </select>
+      <!-- Year Selection (slider) -->
+      <div id="yearControl" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <label for="yearSlider" style="min-width:120px">Year:</label>
+        <input id="yearSlider" type="range" min="1864" max="2024" step="4" value="2024" style="flex:1;max-width:300px" />
+        <span id="yearVal" style="min-width:80px;text-align:right">2024</span>
+        <label style="margin-left:8px;display:flex;align-items:center;gap:6px"><input id="allYearsCheckbox" type="checkbox" /> All Years</label>
       </div>
 
       <!-- Category Selection -->
