@@ -39,7 +39,7 @@ async function loadData() {
     const text = await response.text();
     const lines = text.trim().split('\n');
     const headers = lines[0].split(',');
-    
+
     const data = [];
     for (let i = 1; i < lines.length; i++) {
       const values = parseCSVLine(lines[i]);
@@ -51,7 +51,7 @@ async function loadData() {
         data.push(row);
       }
     }
-    
+
     return data;
   } catch (error) {
     console.error('Error loading data:', error);
@@ -64,7 +64,7 @@ function parseCSVLine(line) {
   const result = [];
   let current = '';
   let inQuotes = false;
-  
+
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
     if (char === '"') {
@@ -83,20 +83,20 @@ function parseCSVLine(line) {
 // Filter data based on current state
 function filterData() {
   const { data, year, category, bellwetherThreshold, closeThreshold } = state;
-  
+
   let filtered = data;
-  
+
   // Filter out NATIONAL aggregate rows and congressional districts (keep -AL at-large)
   filtered = filtered.filter(row => {
     if (row.abbr === 'NATIONAL') return false;
     return true;
   });
-  
+
   // Filter by year if not "all"
   if (year !== 'all') {
     filtered = filtered.filter(row => row.year === year);
   }
-  
+
   // Filter by category
   if (category === 'bellwether') {
     filtered = filtered.filter(row => {
@@ -109,7 +109,7 @@ function filterData() {
       return !isNaN(presMargin) && Math.abs(presMargin) < closeThreshold;
     });
   }
-  
+
   return filtered;
 }
 
@@ -117,14 +117,14 @@ function filterData() {
 function getCountsByYear() {
   const { data, category, bellwetherThreshold, closeThreshold } = state;
   const years = [...new Set(data.map(row => row.year))].sort();
-  
+
   const counts = years.map(year => {
     let yearData = data.filter(row => row.year === year);
     // Filter out NATIONAL rows only (include districts)
     yearData = yearData.filter(row => row.abbr !== 'NATIONAL');
-    
+
     let count;
-    
+
     if (category === 'bellwether') {
       count = yearData.filter(row => {
         const relMargin = parseFloat(row.relative_margin);
@@ -136,10 +136,10 @@ function getCountsByYear() {
         return !isNaN(presMargin) && Math.abs(presMargin) < closeThreshold;
       }).length;
     }
-    
+
     return { year, count };
   });
-  
+
   return counts;
 }
 
@@ -158,17 +158,17 @@ function formatVotes(value) {
 // Update visualization based on display type
 function updateVisualization() {
   const { displayType } = state;
-  
+
   // Hide all containers
   document.getElementById('barChartContainer').style.display = 'none';
   document.getElementById('histogramContainer').style.display = 'none';
   document.getElementById('tableContainer').style.display = 'none';
   document.getElementById('loadingMsg').style.display = 'none';
-  
+
   // Hide year control when viewing bar chart (bar shows counts across years)
   const yc = document.getElementById('yearControl');
   if (yc) yc.style.display = displayType === 'bar' ? 'none' : 'flex';
-  
+
   // Show appropriate container
   if (displayType === 'bar') {
     document.getElementById('barChartContainer').style.display = 'block';
@@ -205,7 +205,7 @@ function updateTitle() {
   const { year, category, displayType } = state;
   const categoryLabel = category === 'bellwether' ? 'Bellwether States' : 'Close States';
   const yearLabel = year === 'all' ? 'All Years' : year;
-  
+
   let title = '';
   if (displayType === 'bar') {
     title = `${categoryLabel}: Count by Year`;
@@ -214,22 +214,22 @@ function updateTitle() {
   } else {
     title = `${categoryLabel}: Detailed List (${yearLabel})`;
   }
-  
+
   document.getElementById('vizTitle').textContent = title;
 }
 
 // Render bar chart showing count over years
 function renderBarChart() {
   const counts = getCountsByYear();
-  
+
   const margin = { top: 20, right: 30, bottom: 60, left: 50 };
   const svg = d3.select('#barChart');
   const containerWidth = svg.node().parentNode.clientWidth;
   const width = containerWidth - margin.left - margin.right;
   const height = 400 - margin.top - margin.bottom;
-  
+
   svg.selectAll('*').remove();
-  
+
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -245,18 +245,18 @@ function renderBarChart() {
     .style('pointer-events', 'none')
     .style('opacity', 0)
     .style('z-index', 1000);
-  
+
   // Create scales
   const x = d3.scaleBand()
     .domain(counts.map(d => d.year))
     .range([0, width])
     .padding(0.2);
-  
+
   const y = d3.scaleLinear()
     .domain([0, d3.max(counts, d => d.count)])
     .nice()
     .range([height, 0]);
-  
+
   // Add axes
   g.append('g')
     .attr('class', 'axis')
@@ -268,17 +268,17 @@ function renderBarChart() {
     .attr('transform', 'rotate(-45)')
     .style('text-anchor', 'end')
     .style('fill', 'var(--fg)');
-  
+
   g.append('g')
     .attr('class', 'axis')
     .call(d3.axisLeft(y))
     .selectAll('text')
     .style('fill', 'var(--fg)');
-  
+
   // Style axis lines
   g.selectAll('.axis path, .axis line')
     .style('stroke', 'var(--border)');
-  
+
   // Add bars with animation
   g.selectAll('.bar')
     .data(counts)
@@ -290,12 +290,12 @@ function renderBarChart() {
     .attr('height', 0)
     .attr('fill', state.category === 'bellwether' ? '#66b3ff' : '#ff6b6b')
     .style('opacity', 0.8)
-    .on('mouseover', function(event, d) {
+    .on('mouseover', function (event, d) {
       d3.select(this).style('opacity', 1);
 
       // Tooltip: show year and list of matching states + pres_margin_str
       const year = d.year;
-  const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL');
+      const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL');
       let matches = [];
       if (state.category === 'bellwether') {
         matches = rowsForYear.filter(r => {
@@ -309,21 +309,21 @@ function renderBarChart() {
         }).map(r => ({ abbr: r.abbr, margin: r.pres_margin_str || (r.pres_margin !== undefined ? formatMargin(parseFloat(r.pres_margin)) : '') }));
       }
 
-      const listHtml = matches.length === 0 ? '<div style="color:var(--muted)">No matching states</div>' : matches.slice(0,30).map(m => `${m.abbr}: ${m.margin}`).join('<br>');
+      const listHtml = matches.length === 0 ? '<div style="color:var(--muted)">No matching states</div>' : matches.slice(0, 30).map(m => `${m.abbr}: ${m.margin}`).join('<br>');
 
       tooltip.style('opacity', 1)
         .html(`<strong>${year}</strong><br>Count: ${d.count}<br>${listHtml}${matches.length > 30 ? '<br>...' : ''}`)
         .style('left', (event.pageX + 10) + 'px')
         .style('top', (event.pageY - 10) + 'px');
     })
-    .on('mouseout', function() {
+    .on('mouseout', function () {
       d3.select(this).style('opacity', 0.8);
       tooltip.style('opacity', 0);
     })
     // click opens detail panel for that year
-    .on('click', function(event, d) {
+    .on('click', function (event, d) {
       const year = d.year;
-  const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL');
+      const rowsForYear = state.data.filter(r => r.year === year && r.abbr !== 'NATIONAL');
       // For the selected category, filter
       let matches = [];
       if (state.category === 'bellwether') {
@@ -343,7 +343,7 @@ function renderBarChart() {
     .duration(800)
     .attr('y', d => y(d.count))
     .attr('height', d => height - y(d.count));
-  
+
   // Add count labels
   g.selectAll('.label')
     .data(counts)
@@ -366,24 +366,24 @@ function renderBarChart() {
 function renderHistogram() {
   const filtered = filterData();
   const { category, year } = state;
-  
+
   const margin = { top: 20, right: 30, bottom: 60, left: 50 };
   const svg = d3.select('#histogram');
   const containerWidth = svg.node().parentNode.clientWidth;
   const width = containerWidth - margin.left - margin.right;
   const height = 400 - margin.top - margin.bottom;
-  
+
   svg.selectAll('*').remove();
-  
+
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
-  
+
   // Get margin values based on category
   const marginKey = category === 'bellwether' ? 'relative_margin' : 'pres_margin';
   const values = filtered
     .map(row => parseFloat(row[marginKey]))
     .filter(v => !isNaN(v));
-  
+
   if (values.length === 0) {
     g.append('text')
       .attr('x', width / 2)
@@ -393,24 +393,24 @@ function renderHistogram() {
       .text('No data for selected criteria');
     return;
   }
-  
+
   // Create bins
   const threshold = category === 'bellwether' ? state.bellwetherThreshold : state.closeThreshold;
   const histogram = d3.bin()
     .domain([-threshold, threshold])
     .thresholds(20);
   const bins = histogram(values);
-  
+
   // Create scales
   const x = d3.scaleLinear()
     .domain([-threshold, threshold])
     .range([0, width]);
-  
+
   const y = d3.scaleLinear()
     .domain([0, d3.max(bins, d => d.length)])
     .nice()
     .range([height, 0]);
-  
+
   // Add axes
   const xAxis = g.append('g')
     .attr('class', 'axis')
@@ -421,17 +421,17 @@ function renderHistogram() {
     }))
     .selectAll('text')
     .style('fill', 'var(--fg)');
-  
+
   g.append('g')
     .attr('class', 'axis')
     .call(d3.axisLeft(y))
     .selectAll('text')
     .style('fill', 'var(--fg)');
-  
+
   // Style axis lines
   g.selectAll('.axis path, .axis line')
     .style('stroke', 'var(--border)');
-  
+
   // Add center line
   g.append('line')
     .attr('x1', x(0))
@@ -441,7 +441,7 @@ function renderHistogram() {
     .style('stroke', 'var(--accent)')
     .style('stroke-width', 2)
     .style('stroke-dasharray', '5,5');
-  
+
   // Create tooltip
   const tooltip = d3.select('body').append('div')
     .attr('class', 'tooltip')
@@ -453,7 +453,7 @@ function renderHistogram() {
     .style('pointer-events', 'none')
     .style('opacity', 0)
     .style('z-index', 1000);
-  
+
   // Add bars with animation
   g.selectAll('.bar')
     .data(bins)
@@ -468,37 +468,37 @@ function renderHistogram() {
       return d.x0 >= 0 ? '#4169E1' : '#B22222';
     })
     .style('opacity', 0.7)
-    .on('mouseover', function(event, d) {
+    .on('mouseover', function (event, d) {
       d3.select(this).style('opacity', 1);
-      
+
       // Get states in this bin
       const statesInBin = filtered.filter(row => {
         const val = parseFloat(row[marginKey]);
         return val >= d.x0 && val < d.x1;
       });
-      
+
       const tooltipText = statesInBin
         .slice(0, 10)
         .map(row => {
           const val = parseFloat(row[marginKey]);
-          const marginStr = category === 'bellwether' 
-            ? row.relative_margin_str 
+          const marginStr = category === 'bellwether'
+            ? row.relative_margin_str
             : row.pres_margin_str;
           return `${row.abbr}: ${marginStr}`;
         })
         .join('<br>');
-      
+
       tooltip
         .style('opacity', 1)
         .html(`Count: ${d.length}<br>${tooltipText}${statesInBin.length > 10 ? '<br>...' : ''}`)
         .style('left', (event.pageX + 10) + 'px')
         .style('top', (event.pageY - 10) + 'px');
     })
-    .on('mouseout', function() {
+    .on('mouseout', function () {
       d3.select(this).style('opacity', 0.7);
       tooltip.style('opacity', 0);
     })
-    .on('click', function(event, d) {
+    .on('click', function (event, d) {
       // find states in this bin, then open detail panel
       const statesInBin = filtered.filter(row => {
         const val = parseFloat(row[marginKey]);
@@ -610,50 +610,54 @@ function showDetailPanel(title, rows) {
 function renderTable() {
   const filtered = filterData();
   const { category, year } = state;
-  
+
   const tableHeader = document.getElementById('tableHeader');
   const tableBody = document.getElementById('tableBody');
-  
+
   // Clear existing content
   tableHeader.innerHTML = '';
   tableBody.innerHTML = '';
-  
+
   if (filtered.length === 0) {
     tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--muted)">No data for selected criteria</td></tr>';
     return;
   }
-  
+
   // Create headers based on category and year
   const headers = [];
-  headers.push({ key: 'abbr', label: 'State', sortable: true });
-  
+  headers.push({ key: 'abbr', label: 'Unit', sortable: true });
+
   if (category === 'bellwether') {
-    headers.push({ 
-      key: 'relative_margin', 
-      label: year === 'all' ? 'Rel. Margin' : `${year} Rel. Margin`, 
-      sortable: true 
+    headers.push({
+      key: 'relative_margin',
+      label: year === 'all' ? 'Margin' : `${year} Margin`,
+      sortable: true
     });
-    
+    // Add Streak column for detailed table view (bellwether only)
+    if (state.displayType === 'table') {
+      headers.push({ key: 'streak', label: 'Streak', sortable: true });
+    }
+
     // Show 2024 status for any specific year (including 2024) but only show
     // margin change and 2024 relative margin when the selected year is NOT 2024.
     if (year !== 'all') {
       headers.push({ key: 'is_2024_bellwether', label: '2024 Status', sortable: true });
     }
     if (year !== 'all' && year !== '2024') {
-      headers.push({ key: 'margin_change', label: `${year} → 2024`, sortable: true });
-      headers.push({ key: 'relative_margin_2024', label: '2024 Rel. Margin', sortable: true });
+      //headers.push({ key: 'margin_change', label: `${year} → 2024`, sortable: true });
+      headers.push({ key: 'relative_margin_2024', label: '2024 Margin', sortable: true });
     }
   } else {
-    headers.push({ 
-      key: 'pres_margin', 
-      label: year === 'all' ? 'Margin' : `${year} Margin`, 
-      sortable: true 
+    headers.push({
+      key: 'pres_margin',
+      label: year === 'all' ? 'Margin' : `${year} Margin`,
+      sortable: true
     });
     headers.push({ key: 'vote_difference', label: 'Vote Difference', sortable: true });
   }
-  
-  headers.push({ key: 'electoral_votes', label: 'EV', sortable: true });
-  
+
+  //headers.push({ key: 'electoral_votes', label: 'EV', sortable: true });
+
   // Create header row
   headers.forEach(header => {
     const th = document.createElement('th');
@@ -662,18 +666,18 @@ function renderTable() {
       th.classList.add('sortable');
       th.style.cursor = 'pointer';
       th.addEventListener('click', () => sortTable(header.key));
-      
+
       if (state.sortColumn === header.key) {
         th.innerHTML += state.sortDirection === 'asc' ? ' ▲' : ' ▼';
       }
     }
     tableHeader.appendChild(th);
   });
-  
+
   // Prepare data with computed fields
   const tableData = filtered.map(row => {
     const result = { ...row };
-    
+
     if (category === 'bellwether' && year !== 'all') {
       // Check if state is bellwether in 2024 for any specific selected year (including 2024)
       const state2024 = state.data.find(r => r.abbr === row.abbr && r.year === '2024');
@@ -681,6 +685,12 @@ function renderTable() {
         const rel2024 = parseFloat(state2024.relative_margin);
         result.is_2024_bellwether = !isNaN(rel2024) && Math.abs(rel2024) < state.bellwetherThreshold;
         result.relative_margin_2024 = rel2024;
+
+        // Ensure formatted strings are present
+        result.pres_margin_str = row.pres_margin_str || (row.pres_margin !== undefined ? formatMargin(parseFloat(row.pres_margin)) : '');
+        result.relative_margin_str = row.relative_margin_str || (row.relative_margin !== undefined ? formatMargin(parseFloat(row.relative_margin)) : '');
+        result.pres_margin_2024_str = state2024.pres_margin_str || (state2024.pres_margin !== undefined ? formatMargin(parseFloat(state2024.pres_margin)) : '');
+        result.relative_margin_2024_str = state2024.relative_margin_str || (state2024.relative_margin !== undefined ? formatMargin(parseFloat(state2024.relative_margin)) : '');
 
         // Only compute margin_change when comparing a prior year to 2024
         if (year !== '2024') {
@@ -705,35 +715,99 @@ function renderTable() {
         }
       }
     }
-    
+
     if (category === 'close') {
       const dVotes = parseFloat(row.D_votes) || 0;
       const rVotes = parseFloat(row.R_votes) || 0;
       result.vote_difference = Math.abs(dVotes - rVotes);
     }
-    
+
+    // Compute streaks for bellwether units (across all years) and pick the
+    // streak that includes this row's year if possible; otherwise pick the
+    // most recent streak. Also record the end year of the previous streak.
+    if (category === 'bellwether') {
+      const thisYear = parseInt(row.year, 10);
+      // collect all bellwether years for this unit
+      const bellYears = state.data
+        .filter(r => r.abbr === row.abbr)
+        .filter(r => {
+          const rel = parseFloat(r.relative_margin);
+          return !isNaN(rel) && Math.abs(rel) < state.bellwetherThreshold;
+        })
+        .map(r => parseInt(r.year, 10))
+        .filter(y => !isNaN(y))
+        .sort((a, b) => a - b);
+
+      if (bellYears.length > 0) {
+        // group into streaks (consecutive 4-year steps)
+        const streaks = [];
+        let s = bellYears[0];
+        let e = bellYears[0];
+        for (let i = 1; i < bellYears.length; i++) {
+          if (bellYears[i] === e + 4) {
+            e = bellYears[i];
+          } else {
+            streaks.push({ start: s, end: e, length: Math.floor((e - s) / 4) + 1 });
+            s = bellYears[i];
+            e = bellYears[i];
+          }
+        }
+        streaks.push({ start: s, end: e, length: Math.floor((e - s) / 4) + 1 });
+
+        // find streak that includes thisYear
+        let currentIdx = -1;
+        if (!isNaN(thisYear)) {
+          currentIdx = streaks.findIndex(st => thisYear >= st.start && thisYear <= st.end);
+        }
+        // if not found, choose the most recent streak (last in array)
+        if (currentIdx === -1) currentIdx = streaks.length - 1;
+
+        if (currentIdx >= 0 && streaks[currentIdx]) {
+          const cur = streaks[currentIdx];
+          result.streak = cur.length;
+          result.streak_range = `${cur.start}–${cur.end}`;
+          if (currentIdx - 1 >= 0) {
+            const prev = streaks[currentIdx - 1];
+            result.prev_streak_range = `${prev.start}–${prev.end}`;
+          }
+        }
+        // also store the most recent (latest) streak for display in 2024 status
+        const latest = streaks[streaks.length - 1];
+        if (latest) {
+          result.latest_streak_length = latest.length;
+          result.latest_streak_range = `${latest.start}–${latest.end}`;
+        }
+      }
+    }
+
     return result;
   });
-  
+
   // Sort data
   const sortedData = sortTableData(tableData);
-  
+
   // Create table rows with animation
   sortedData.forEach((row, index) => {
     const tr = document.createElement('tr');
     tr.style.opacity = '0';
-    
+
     headers.forEach(header => {
       const td = document.createElement('td');
-      
-      switch(header.key) {
+
+      switch (header.key) {
         case 'abbr':
-          td.textContent = row.abbr;
+          td.textContent = row.abbr + (' (' + (row.electoral_votes || '0') + ' EV' + (row.electoral_votes > 1 ? 's' : '') + ')');
           break;
         case 'relative_margin':
-          td.textContent = row.relative_margin_str || '';
+          // Show both raw pres margin and relative margin
+          if (row.pres_margin_str || row.relative_margin_str) {
+            td.innerHTML = `${row.pres_margin_str ? 'Raw: ' + row.pres_margin_str : ''}` + (row.pres_margin_str && row.relative_margin_str ? '<br>' : '') + `${row.relative_margin_str ? 'Relative: ' + row.relative_margin_str : ''}`;
+          } else {
+            td.textContent = '';
+          }
           break;
         case 'pres_margin':
+          // Keep pres_margin cell if ever used separately
           td.textContent = row.pres_margin_str || '';
           break;
         case 'electoral_votes':
@@ -742,8 +816,13 @@ function renderTable() {
         case 'is_2024_bellwether':
           td.textContent = row.is_2024_bellwether ? '✓' : '✗';
           td.style.color = row.is_2024_bellwether ? '#4ade80' : '#f87171';
-          if (!row.is_2024_bellwether && row.last_bellwether_year) {
-            td.innerHTML += `<br><span style="font-size:0.85rem;color:var(--muted)">Last: ${row.last_bellwether_year}</span>`;
+          // if (!row.is_2024_bellwether && row.last_bellwether_year) {
+          //   td.innerHTML += `<br><span style="font-size:0.85rem;color:var(--muted)">Last: ${row.last_bellwether_year}</span>`;
+          // }
+          // show latest streak (most recent) beneath the status if available
+          if (row.latest_streak_range) {
+            const to_2024_streak_length = row.latest_streak_length || '';
+            td.innerHTML += `<br><span style="font-size:0.85rem;color:var(--muted)">Latest streak: ${row.latest_streak_range} (${to_2024_streak_length})</span>`;
           }
           break;
         case 'margin_change':
@@ -752,8 +831,21 @@ function renderTable() {
           }
           break;
         case 'relative_margin_2024':
-          if (row.relative_margin_2024 !== undefined) {
-            td.textContent = formatMargin(row.relative_margin_2024);
+          // Show both raw (if available) and relative margin for 2024 when present
+          if (row.relative_margin_2024_str || row.relative_margin_2024 !== undefined) {
+            const raw = row.pres_margin_2024_str ? 'Raw: ' + row.pres_margin_2024_str : (row.pres_margin_2024 !== undefined ? 'Raw: ' + formatMargin(row.pres_margin_2024) : '');
+            const rel = row.relative_margin_2024_str ? 'Relative: ' + row.relative_margin_2024_str : (row.relative_margin_2024 !== undefined ? 'Relative: ' + formatMargin(row.relative_margin_2024) : '');
+            const delta = row.margin_change;
+            td.innerHTML = `${raw}${raw && rel ? '<br>' : ''}${rel}<br>Δ ${delta !== undefined ? formatMargin(delta) + ' ' + getLeanStr(delta) : ''}`;
+          }
+          break;
+        case 'streak':
+          if (row.streak !== undefined) {
+            const range = row.streak_range ? row.streak_range : '';
+            td.innerHTML = `${row.streak}${range ? ' (' + range + ')' : ''}`;
+            if (row.prev_streak_range) {
+              td.innerHTML += `<br><span style="font-size:0.85rem;color:var(--muted)">Previous streak: ${row.prev_streak_range}</span>`;
+            }
           }
           break;
         case 'vote_difference':
@@ -762,18 +854,17 @@ function renderTable() {
           }
           break;
       }
-      
+
       tr.appendChild(td);
     });
-    
     tableBody.appendChild(tr);
-    
+
     // Animate row appearance
     setTimeout(() => {
       tr.style.transition = 'opacity 0.3s';
       tr.style.opacity = '1';
     }, index * 20);
-    
+
     // Click row to open detail panel for that single row
     tr.style.cursor = 'pointer';
     tr.addEventListener('click', () => {
@@ -871,32 +962,32 @@ function applyUrlParamsToState() {
 // Sort table data
 function sortTableData(data) {
   const { sortColumn, sortDirection } = state;
-  
+
   if (!sortColumn) return data;
-  
+
   return [...data].sort((a, b) => {
     let aVal = a[sortColumn];
     let bVal = b[sortColumn];
-    
+
     // Handle numeric values
     if (sortColumn.includes('margin') || sortColumn === 'electoral_votes' || sortColumn === 'vote_difference') {
       aVal = parseFloat(aVal);
       bVal = parseFloat(bVal);
-      
+
       if (isNaN(aVal)) aVal = 0;
       if (isNaN(bVal)) bVal = 0;
     }
-    
+
     // Handle boolean values
     if (sortColumn === 'is_2024_bellwether') {
       aVal = aVal ? 1 : 0;
       bVal = bVal ? 1 : 0;
     }
-    
+
     let comparison = 0;
     if (aVal < bVal) comparison = -1;
     if (aVal > bVal) comparison = 1;
-    
+
     return sortDirection === 'asc' ? comparison : -comparison;
   });
 }
@@ -909,7 +1000,7 @@ function sortTable(column) {
     state.sortColumn = column;
     state.sortDirection = 'asc';
   }
-  
+
   renderTable();
 }
 
@@ -918,9 +1009,9 @@ async function init() {
   try {
     // Load data
     state.data = await loadData();
-    
+
     // Populate year slider and All Years checkbox
-    const years = [...new Set(state.data.map(row => row.year))].map(y => parseInt(y, 10)).filter(Boolean).sort((a,b) => a - b);
+    const years = [...new Set(state.data.map(row => row.year))].map(y => parseInt(y, 10)).filter(Boolean).sort((a, b) => a - b);
     state.years = years.map(String);
     const yearSlider = document.getElementById('yearSlider');
     const yearVal = document.getElementById('yearVal');
@@ -956,10 +1047,10 @@ async function init() {
         updateUrl();
       });
     }
-    
+
     document.getElementById('categorySelect').addEventListener('change', (e) => {
       state.category = e.target.value;
-      
+
       // Show/hide appropriate controls
       if (state.category === 'bellwether') {
         document.getElementById('bellwetherControls').style.display = 'block';
@@ -968,24 +1059,24 @@ async function init() {
         document.getElementById('bellwetherControls').style.display = 'none';
         document.getElementById('closeControls').style.display = 'block';
       }
-      
+
       state.sortColumn = null;
       updateVisualization();
       updateUrl();
     });
-    
+
     document.getElementById('bellwetherThreshold').addEventListener('input', (e) => {
       state.bellwetherThreshold = parseFloat(e.target.value);
       document.getElementById('bellwetherThresholdVal').textContent = e.target.value;
       updateVisualization();
     });
-    
+
     document.getElementById('closeThreshold').addEventListener('input', (e) => {
       state.closeThreshold = parseFloat(e.target.value);
       document.getElementById('closeThresholdVal').textContent = e.target.value;
       updateVisualization();
     });
-    
+
     document.getElementById('displayType').addEventListener('change', (e) => {
       state.displayType = e.target.value;
       updateVisualization();
@@ -1004,11 +1095,11 @@ async function init() {
         showDetailPanel(`${state.category === 'bellwether' ? 'Bellwether' : 'Close'} — ${state.year === 'all' ? 'All Years' : state.year} (Histogram Summary)`, rows);
       });
     }
-    
+
     // Initial render
     document.getElementById('loadingMsg').style.display = 'none';
     updateVisualization();
-    
+
   } catch (error) {
     console.error('Initialization error:', error);
     document.getElementById('loadingMsg').style.display = 'none';
