@@ -207,12 +207,16 @@ function updateTitle() {
   const yearLabel = year === 'all' ? 'All Years' : year;
 
   let title = '';
+  const thresholdLabel = category === 'bellwether'
+    ? `${(state.bellwetherThreshold * 100).toFixed(1)}% threshold`
+    : `${(state.closeThreshold * 100).toFixed(1)}% threshold`;
+
   if (displayType === 'bar') {
-    title = `${categoryLabel}: Count by Year`;
+    title = `${categoryLabel}: Count by Year — ${thresholdLabel}`;
   } else if (displayType === 'histogram') {
-    title = `${categoryLabel}: Margin Distribution (${yearLabel})`;
+    title = `${categoryLabel}: Margin Distribution (${yearLabel}) — ${thresholdLabel}`;
   } else {
-    title = `${categoryLabel}: Detailed List (${yearLabel})`;
+    title = `${categoryLabel}: Detailed List (${yearLabel}) — ${thresholdLabel}`;
   }
 
   document.getElementById('vizTitle').textContent = title;
@@ -1030,6 +1034,11 @@ async function init() {
       if (bellDisplay) {
         bellDisplay.textContent = (state.bellwetherThreshold * 100).toFixed(1) + '%';
       }
+      // initialize close threshold display as percent
+      const closeDisplay = document.getElementById('closeThresholdVal');
+      if (closeDisplay) {
+        closeDisplay.textContent = (state.closeThreshold * 100).toFixed(1) + '%';
+      }
 
       yearSlider.addEventListener('input', (e) => {
         state.year = String(e.target.value);
@@ -1081,7 +1090,9 @@ async function init() {
 
     document.getElementById('closeThreshold').addEventListener('input', (e) => {
       state.closeThreshold = parseFloat(e.target.value);
-      document.getElementById('closeThresholdVal').textContent = e.target.value;
+      // display as percent (e.g., 0.01 -> 1.0%)
+      const pct = (state.closeThreshold * 100).toFixed(1) + '%';
+      document.getElementById('closeThresholdVal').textContent = pct;
       updateVisualization();
     });
 
