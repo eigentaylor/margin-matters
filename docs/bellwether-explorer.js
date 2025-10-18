@@ -185,6 +185,18 @@ function updateVisualization() {
   if (detailPanel) {
     detailPanel.style.display = displayType === 'table' ? 'none' : detailPanel.style.display;
   }
+  // Hide/disable the All Years checkbox (and its label text) when in table view
+  const allChk = document.getElementById('allYearsCheckbox');
+  if (allChk) {
+    const parentLabel = allChk.closest('label') || allChk.parentElement;
+    if (displayType === 'table') {
+      if (parentLabel) parentLabel.style.display = 'none';
+      allChk.disabled = true;
+    } else {
+      if (parentLabel) parentLabel.style.display = '';
+      allChk.disabled = false;
+    }
+  }
   updateTitle();
 }
 
@@ -670,6 +682,19 @@ function renderTable() {
         if (!isNaN(relCurrent) && !isNaN(rel2024)) {
           result.margin_change = rel2024 - relCurrent;
         }
+        // compute the most recent year this unit was a bellwether across all data (look to the future / most recent)
+        const candidates = state.data
+          .filter(r => r.abbr === row.abbr)
+          .map(r => ({ year: parseInt(r.year, 10), rec: r }))
+          .filter(x => !isNaN(x.year))
+          .filter(x => {
+            const rel = parseFloat(x.rec.relative_margin);
+            return !isNaN(rel) && Math.abs(rel) < state.bellwetherThreshold;
+          });
+        if (candidates.length > 0) {
+          const maxYear = Math.max(...candidates.map(c => c.year));
+          result.last_bellwether_year = String(maxYear);
+        }
       }
     }
     
@@ -709,6 +734,9 @@ function renderTable() {
         case 'is_2024_bellwether':
           td.textContent = row.is_2024_bellwether ? '✓' : '✗';
           td.style.color = row.is_2024_bellwether ? '#4ade80' : '#f87171';
+          if (!row.is_2024_bellwether && row.last_bellwether_year) {
+            td.innerHTML += `<br><span style="font-size:0.85rem;color:var(--muted)">Last: ${row.last_bellwether_year}</span>`;
+          }
           break;
         case 'margin_change':
           if (row.margin_change !== undefined) {
