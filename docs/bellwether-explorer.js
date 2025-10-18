@@ -1025,6 +1025,12 @@ async function init() {
       state.year = String(yearSlider.value);
       yearVal.textContent = state.year;
 
+      // initialize bellwether threshold display as percent
+      const bellDisplay = document.getElementById('bellwetherThresholdVal');
+      if (bellDisplay) {
+        bellDisplay.textContent = (state.bellwetherThreshold * 100).toFixed(1) + '%';
+      }
+
       yearSlider.addEventListener('input', (e) => {
         state.year = String(e.target.value);
         yearVal.textContent = state.year;
@@ -1067,7 +1073,9 @@ async function init() {
 
     document.getElementById('bellwetherThreshold').addEventListener('input', (e) => {
       state.bellwetherThreshold = parseFloat(e.target.value);
-      document.getElementById('bellwetherThresholdVal').textContent = e.target.value;
+      // display as percentage (e.g., 0.05 -> 5.0%)
+      const pct = (state.bellwetherThreshold * 100).toFixed(1) + '%';
+      document.getElementById('bellwetherThresholdVal').textContent = pct;
       updateVisualization();
     });
 
