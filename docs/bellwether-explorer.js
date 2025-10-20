@@ -31,6 +31,7 @@ const state = {
   streakThreshold: 3,
   maxAllowedMisses: 1,
   onlyCurrentStreak: false,
+  reverseOutcome: false,
   outcomeSortColumn: 'longest',
   outcomeSortDirection: 'desc'
 };
@@ -1045,10 +1046,13 @@ function computeOutcomeRows() {
     if (targetSign === null) return;
 
     const success = unitSign === targetSign;
+    // If reverseOutcome is enabled, treat 'success' as a mismatch (failure) so
+    // we compute streaks of failures instead of correct outcomes.
+    const effectiveSuccess = state.reverseOutcome ? !success : success;
     const list = unitEntries.get(row.abbr) || [];
     list.push({
       year,
-      success,
+      success: effectiveSuccess,
       electoralVotes: parseInt(row.electoral_votes, 10)
     });
     unitEntries.set(row.abbr, list);
@@ -1181,7 +1185,9 @@ function buildOutcomeSequences(entries, maxAllowedMisses) {
       startYear: entries[i].year,
       endYear,
       length,
-      missYears: misses.slice()
+      missYears: misses.slice(),
+      // totalElections counts only the elections for which we have data
+      totalElections: entries.filter(e => e.year >= entries[i].year && e.year <= endYear).length
     });
   }
 
@@ -1202,7 +1208,7 @@ function formatOutcomeStreak(streak, includeActiveNote) {
   const range = streak.startYear === streak.endYear
     ? `${streak.startYear}`
     : `${streak.startYear}-${streak.endYear}`;
-  const total = Math.floor((streak.endYear - streak.startYear) / 4) + 1;
+  const total = streak.totalElections || (Math.floor((streak.endYear - streak.startYear) / 4) + 1);
   const lengthLabel = total === 1 ? `${streak.length}/${total} election` : `${streak.length}/${total} elections`;
   const activeLabel = includeActiveNote && streak.endYear === state.latestYear ? ' | Active' : '';
   const missLabel = streak.missYears && streak.missYears.length > 0
@@ -1216,7 +1222,7 @@ function formatOutcomeStreak(streak, includeActiveNote) {
 function formatOutcomeStreakParts(streak, includeActiveNote) {
   if (!streak) return [];
   const range = streak.startYear === streak.endYear ? `${streak.startYear}` : `${streak.startYear}-${streak.endYear}`;
-  const total = Math.floor((streak.endYear - streak.startYear) / 4) + 1;
+  const total = streak.totalElections || (Math.floor((streak.endYear - streak.startYear) / 4) + 1);
   const lengthLabel = total === 1 ? `${streak.length}/${total} election` : `${streak.length}/${total} elections`;
   const parts = [range, lengthLabel];
   if (streak.missYears && streak.missYears.length > 0) {
@@ -1265,8 +1271,8 @@ function renderStatusIntoCell(row, td) {
       ? `${row.current.startYear}`
       : `${row.current.startYear}-${row.current.endYear}`;
     parts.push(range);
-    const totalCur = Math.floor((row.current.endYear - row.current.startYear) / 4) + 1;
-    const lengthLabel = totalCur === 1 ? `${row.current.length}/${totalCur} election` : `${row.current.length}/${totalCur} elections`;
+  const totalCur = row.current.totalElections || (Math.floor((row.current.endYear - row.current.startYear) / 4) + 1);
+  const lengthLabel = totalCur === 1 ? `${row.current.length}/${totalCur} election` : `${row.current.length}/${totalCur} elections`;
     parts.push(lengthLabel);
     if (row.current.missYears && row.current.missYears.length > 0) {
       parts.push(`Missed ${row.current.missYears.join(', ')}`);
@@ -1290,8 +1296,8 @@ function renderStatusIntoCell(row, td) {
     parts.push('Inactive');
     parts.push(`End of last streak ${row.mostRecent.endYear}`);
     if (row.mostRecent.length) {
-      const totalRecent = Math.floor((row.mostRecent.endYear - row.mostRecent.startYear) / 4) + 1;
-      parts.push(`${row.mostRecent.length}/${totalRecent} ${row.mostRecent.length === 1 ? 'election' : 'elections'} (${row.mostRecent.startYear}-${row.mostRecent.endYear})`);
+  const totalRecent = row.mostRecent.totalElections || (Math.floor((row.mostRecent.endYear - row.mostRecent.startYear) / 4) + 1);
+  parts.push(`${row.mostRecent.length}/${totalRecent} ${row.mostRecent.length === 1 ? 'election' : 'elections'} (${row.mostRecent.startYear}-${row.mostRecent.endYear})`);
     }
 
     parts.forEach((p, idx) => {
@@ -1404,6 +1410,9 @@ function refreshOutcomeControls() {
 
   const onlyCurrent = document.getElementById('onlyCurrentStreak');
   if (onlyCurrent) onlyCurrent.checked = state.onlyCurrentStreak;
+
+  const revEl = document.getElementById('reverseStreaks');
+  if (revEl) revEl.checked = !!state.reverseOutcome;
 }
 
 // Get lean direction string
@@ -1427,12 +1436,14 @@ function updateUrl() {
       params.set('outcome', state.outcomeType);
       params.set('streak', String(state.streakThreshold));
       params.set('maxMisses', String(state.maxAllowedMisses || 0));
+      if (state.reverseOutcome) params.set('reverse', '1');
       if (state.onlyCurrentStreak) params.set('active', '1');
       else params.delete('active');
     } else {
       params.delete('outcome');
       params.delete('streak');
       params.delete('maxMisses');
+      params.delete('reverse');
       params.delete('active');
     }
 
@@ -1480,6 +1491,9 @@ function applyUrlParamsToState() {
     if (!isNaN(maxMissParam)) {
       state.maxAllowedMisses = Math.max(0, Math.min(2, maxMissParam));
     }
+
+    const revParam = params.get('reverse');
+    state.reverseOutcome = revParam === '1';
 
     const activeParam = params.get('active');
     state.onlyCurrentStreak = activeParam === '1';
@@ -1703,6 +1717,16 @@ async function init() {
         if (state.displayType === 'outcome') {
           renderOutcomeTable();
         }
+        updateUrl();
+      });
+    }
+
+    const revChk = document.getElementById('reverseStreaks');
+    if (revChk) {
+      revChk.addEventListener('change', (e) => {
+        state.reverseOutcome = !!e.target.checked;
+        refreshOutcomeControls();
+        if (state.displayType === 'outcome') renderOutcomeTable();
         updateUrl();
       });
     }
