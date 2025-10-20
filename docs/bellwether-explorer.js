@@ -1288,7 +1288,7 @@ function renderStatusIntoCell(row, td) {
   if (row.mostRecent) {
     const parts = [];
     parts.push('Inactive');
-    parts.push(`Last correct ${row.mostRecent.endYear}`);
+    parts.push(`End of last streak ${row.mostRecent.endYear}`);
     if (row.mostRecent.length) {
       const totalRecent = Math.floor((row.mostRecent.endYear - row.mostRecent.startYear) / 4) + 1;
       parts.push(`${row.mostRecent.length}/${totalRecent} ${row.mostRecent.length === 1 ? 'election' : 'elections'} (${row.mostRecent.startYear}-${row.mostRecent.endYear})`);
