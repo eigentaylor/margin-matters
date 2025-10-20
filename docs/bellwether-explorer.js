@@ -26,11 +26,21 @@ const state = {
   closeThreshold: 0.01,
   displayType: 'bar',
   sortColumn: null,
-  sortDirection: 'asc'
+  sortDirection: 'asc',
+  outcomeType: 'ec',
+  streakThreshold: 3,
+  maxAllowedMisses: 1,
+  onlyCurrentStreak: false,
+  outcomeSortColumn: 'longest',
+  outcomeSortDirection: 'desc'
 };
 
 // list of available years (populated on init)
 state.years = [];
+state.nationalByYear = new Map();
+state.latestYear = null;
+
+const EC_MISMATCH_YEARS = new Set([1876, 1888, 2000, 2016]);
 
 // Load and parse CSV data
 async function loadData() {
@@ -155,6 +165,12 @@ function formatVotes(value) {
   return Math.abs(value).toLocaleString();
 }
 
+function marginSign(value) {
+  if (isNaN(value)) return null;
+  if (Math.abs(value) < 1e-9) return 0;
+  return value > 0 ? 1 : -1;
+}
+
 // Update visualization based on display type
 function updateVisualization() {
   const { displayType } = state;
@@ -163,11 +179,15 @@ function updateVisualization() {
   document.getElementById('barChartContainer').style.display = 'none';
   document.getElementById('histogramContainer').style.display = 'none';
   document.getElementById('tableContainer').style.display = 'none';
+  const outcomeContainer = document.getElementById('outcomeTableContainer');
+  if (outcomeContainer) outcomeContainer.style.display = 'none';
   document.getElementById('loadingMsg').style.display = 'none';
 
   // Hide year control when viewing bar chart (bar shows counts across years)
   const yc = document.getElementById('yearControl');
-  if (yc) yc.style.display = displayType === 'bar' ? 'none' : 'flex';
+  if (yc) yc.style.display = (displayType === 'bar' || displayType === 'outcome') ? 'none' : 'flex';
+
+  toggleControlsForDisplay();
 
   // Show appropriate container
   if (displayType === 'bar') {
@@ -176,6 +196,13 @@ function updateVisualization() {
   } else if (displayType === 'histogram') {
     document.getElementById('histogramContainer').style.display = 'block';
     renderHistogram();
+  } else if (displayType === 'table') {
+    document.getElementById('tableContainer').style.display = 'block';
+    renderTable();
+  } else if (displayType === 'outcome') {
+    refreshOutcomeControls();
+    if (outcomeContainer) outcomeContainer.style.display = 'block';
+    renderOutcomeTable();
   } else {
     document.getElementById('tableContainer').style.display = 'block';
     renderTable();
@@ -183,13 +210,13 @@ function updateVisualization() {
   // If the user selected the detailed table, the detailPanel is redundant — hide it
   const detailPanel = document.getElementById('detailPanel');
   if (detailPanel) {
-    detailPanel.style.display = displayType === 'table' ? 'none' : detailPanel.style.display;
+    detailPanel.style.display = (displayType === 'table' || displayType === 'outcome') ? 'none' : detailPanel.style.display;
   }
   // Hide/disable the All Years checkbox (and its label text) when in table view
   const allChk = document.getElementById('allYearsCheckbox');
   if (allChk) {
     const parentLabel = allChk.closest('label') || allChk.parentElement;
-    if (displayType === 'table') {
+    if (displayType === 'table' || displayType === 'outcome') {
       if (parentLabel) parentLabel.style.display = 'none';
       allChk.disabled = true;
     } else {
@@ -198,6 +225,32 @@ function updateVisualization() {
     }
   }
   updateTitle();
+}
+
+function toggleControlsForDisplay() {
+  const isOutcome = state.displayType === 'outcome';
+  const catRow = document.getElementById('categoryRow');
+  if (catRow) catRow.style.display = isOutcome ? 'none' : 'flex';
+
+  const outcomeControls = document.getElementById('outcomeControls');
+  if (outcomeControls) outcomeControls.style.display = isOutcome ? 'block' : 'none';
+
+  const bellControls = document.getElementById('bellwetherControls');
+  const closeControls = document.getElementById('closeControls');
+
+  if (isOutcome) {
+    if (bellControls) bellControls.style.display = 'none';
+    if (closeControls) closeControls.style.display = 'none';
+    return;
+  }
+
+  if (state.category === 'bellwether') {
+    if (bellControls) bellControls.style.display = 'block';
+    if (closeControls) closeControls.style.display = 'none';
+  } else {
+    if (bellControls) bellControls.style.display = 'none';
+    if (closeControls) closeControls.style.display = 'block';
+  }
 }
 
 // Update title based on current settings
@@ -215,6 +268,14 @@ function updateTitle() {
     title = `${categoryLabel}: Count by Year — ${thresholdLabel}`;
   } else if (displayType === 'histogram') {
     title = `${categoryLabel}: Margin Distribution (${yearLabel}) — ${thresholdLabel}`;
+  } else if (displayType === 'table') {
+    title = `${categoryLabel}: Detailed List (${yearLabel}) — ${thresholdLabel}`;
+  } else if (displayType === 'outcome') {
+    const outcomeLabel = state.outcomeType === 'pv' ? 'Popular Vote' : 'Electoral College';
+    const streakLabel = state.streakThreshold === 1
+      ? '1 election minimum'
+      : `${state.streakThreshold} election minimum`;
+    title = `Outcome Streaks (${outcomeLabel}) — ${streakLabel}`;
   } else {
     title = `${categoryLabel}: Detailed List (${yearLabel}) — ${thresholdLabel}`;
   }
@@ -877,6 +938,474 @@ function renderTable() {
   });
 }
 
+function renderOutcomeTable() {
+  const headerEl = document.getElementById('outcomeTableHeader');
+  const bodyEl = document.getElementById('outcomeTableBody');
+  if (!headerEl || !bodyEl) return;
+
+  headerEl.innerHTML = '';
+  bodyEl.innerHTML = '';
+
+  const rows = computeOutcomeRows();
+
+  if (rows.length === 0) {
+    bodyEl.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--muted)">No outcome streaks meet the current filters</td></tr>';
+    return;
+  }
+
+  const columns = [
+    { key: 'unit', label: 'Unit', sortable: true },
+    { key: 'longest', label: 'Longest Streak', sortable: true },
+    { key: 'recent', label: 'Most Recent Streak', sortable: true },
+    { key: 'status', label: 'Status', sortable: true }
+  ];
+
+  columns.forEach(col => {
+    const th = document.createElement('th');
+    th.textContent = col.label;
+    if (col.sortable) {
+      th.classList.add('sortable');
+      th.style.cursor = 'pointer';
+      if (state.outcomeSortColumn === col.key) {
+        th.innerHTML = `${col.label} ${state.outcomeSortDirection === 'asc' ? '▲' : '▼'}`;
+      }
+      th.addEventListener('click', () => {
+        if (state.outcomeSortColumn === col.key) {
+          state.outcomeSortDirection = state.outcomeSortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+          state.outcomeSortColumn = col.key;
+          state.outcomeSortDirection = col.key === 'unit' ? 'asc' : 'desc';
+        }
+        renderOutcomeTable();
+      });
+    }
+    headerEl.appendChild(th);
+  });
+
+  const sortedRows = sortOutcomeRows(rows);
+
+  sortedRows.forEach((row, idx) => {
+    const tr = document.createElement('tr');
+    tr.style.opacity = '0';
+
+    columns.forEach(col => {
+      const td = document.createElement('td');
+      switch (col.key) {
+        case 'unit': {
+          const ev = row.meta && row.meta.electoralVotes ? ` (${row.meta.electoralVotes} EV)` : '';
+          td.textContent = row.abbr + ev;
+          break;
+        }
+        case 'longest':
+          renderStreakIntoCell(row.longest, td, false);
+          break;
+        case 'recent':
+          renderStreakIntoCell(row.mostRecent, td, true);
+          break;
+        case 'status':
+          renderStatusIntoCell(row, td);
+          break;
+        default:
+          td.textContent = '';
+      }
+      tr.appendChild(td);
+    });
+
+    bodyEl.appendChild(tr);
+
+    setTimeout(() => {
+      tr.style.transition = 'opacity 0.3s';
+      tr.style.opacity = '1';
+    }, idx * 20);
+  });
+}
+
+function computeOutcomeRows() {
+  const rows = [];
+  if (!state.nationalByYear || state.nationalByYear.size === 0) return rows;
+
+  const unitEntries = new Map();
+  const unitMeta = new Map();
+
+  state.data.forEach(row => {
+    if (row.abbr === 'NATIONAL') return;
+    const year = parseInt(row.year, 10);
+    if (isNaN(year)) return;
+    const nat = state.nationalByYear.get(year);
+    if (!nat) return;
+    const presMargin = parseFloat(row.pres_margin);
+    if (isNaN(presMargin)) return;
+    const unitSign = marginSign(presMargin);
+    if (unitSign === null) return;
+
+    let targetSign = nat.sign;
+    if (state.outcomeType === 'ec' && EC_MISMATCH_YEARS.has(year)) {
+      targetSign = targetSign === null ? null : -targetSign;
+    }
+    if (targetSign === null) return;
+
+    const success = unitSign === targetSign;
+    const list = unitEntries.get(row.abbr) || [];
+    list.push({
+      year,
+      success,
+      electoralVotes: parseInt(row.electoral_votes, 10)
+    });
+    unitEntries.set(row.abbr, list);
+
+    const meta = unitMeta.get(row.abbr) || { electoralVotes: null };
+    const ev = parseInt(row.electoral_votes, 10);
+    if (!isNaN(ev)) {
+      if (meta.electoralVotes === null || year === state.latestYear) {
+        meta.electoralVotes = ev;
+      }
+    }
+    unitMeta.set(row.abbr, meta);
+  });
+
+  unitEntries.forEach((entries, abbr) => {
+  entries.sort((a, b) => a.year - b.year);
+  const sequences = buildOutcomeSequences(entries, state.maxAllowedMisses || 0);
+    const qualifying = sequences.filter(seq => seq.length >= state.streakThreshold);
+    if (qualifying.length === 0) return;
+
+    const longest = qualifying.reduce((best, seq) => {
+      if (!best) return seq;
+      if (seq.length > best.length) return seq;
+      if (seq.length === best.length && seq.endYear > best.endYear) return seq;
+      return best;
+    }, null);
+
+    const mostRecent = qualifying.reduce((best, seq) => {
+      if (!best) return seq;
+      if (seq.endYear > best.endYear) return seq;
+      if (seq.endYear === best.endYear && seq.length > best.length) return seq;
+      return best;
+    }, null);
+
+    const currentCandidates = qualifying.filter(seq => seq.endYear === state.latestYear);
+    let current = null;
+    if (currentCandidates.length > 0) {
+      current = currentCandidates.reduce((best, seq) => {
+        if (!best) return seq;
+        if (seq.length > best.length) return seq;
+        if (seq.length === best.length && seq.startYear > best.startYear) return seq;
+        return best;
+      }, null);
+    }
+
+    const onCurrent = Boolean(current);
+    if (state.onlyCurrentStreak && !onCurrent) return;
+
+    rows.push({
+      abbr,
+      meta: unitMeta.get(abbr) || {},
+      longest,
+      mostRecent,
+      current,
+      onCurrent
+    });
+  });
+
+  return rows;
+}
+
+function buildOutcomeSequences(entries, maxAllowedMisses) {
+  const sequences = [];
+
+  // maxAllowedMisses: 0,1,2
+  const maxMiss = Math.max(0, Math.min(2, parseInt(maxAllowedMisses, 10) || 0));
+
+  for (let i = 0; i < entries.length; i++) {
+    if (!entries[i].success) continue;
+
+    let lastYear = entries[i].year;
+    let length = 1;
+    let misses = [];
+    let endYear = entries[i].year;
+    let missCount = 0;
+    let j = i + 1;
+
+    while (j < entries.length) {
+      const next = entries[j];
+      const gap = next.year - lastYear;
+      if (gap !== 4) break;
+
+      if (next.success) {
+        length += 1;
+        lastYear = next.year;
+        endYear = next.year;
+        j += 1;
+        continue;
+      }
+
+      // next is a miss; attempt to bridge up to maxMiss misses in a row
+      if (missCount >= maxMiss) break;
+
+      // try to see if we can bridge with k misses where k <= maxMiss - missCount
+      let bridged = false;
+      for (let k = 1; k <= (maxMiss - missCount); k++) {
+        // ensure we have at least k missed entries followed by a success at the correct steps
+        if (j + k >= entries.length) break;
+        const after = entries[j + k];
+        // after must be success and consecutive 4-year steps across the block
+        let ok = after.success;
+        // check the spacing between successive years in the block
+        let prevYear = lastYear;
+        for (let m = 0; m <= k; m++) {
+          const idx = j + m;
+          if (idx >= entries.length) { ok = false; break; }
+          const yr = entries[idx].year;
+          if (yr - prevYear !== 4) { ok = false; break; }
+          prevYear = yr;
+        }
+        if (!ok) continue;
+
+        // we can bridge these k misses
+        for (let m = 0; m < k; m++) {
+          misses.push(entries[j + m].year);
+        }
+        missCount += k;
+        length += 1; // bridged sequence gains one for the after.success year
+        lastYear = after.year;
+        endYear = after.year;
+        j = j + k + 1;
+        bridged = true;
+        break;
+      }
+
+      if (!bridged) break;
+    }
+
+    sequences.push({
+      startYear: entries[i].year,
+      endYear,
+      length,
+      missYears: misses.slice()
+    });
+  }
+
+  // dedupe: prefer longer sequences when duplicates arise
+  const dedup = new Map();
+  sequences.forEach(seq => {
+    const key = `${seq.startYear}-${seq.endYear}-${seq.missYears.join('|')}`;
+    if (!dedup.has(key) || dedup.get(key).length < seq.length) {
+      dedup.set(key, seq);
+    }
+  });
+
+  return [...dedup.values()];
+}
+
+function formatOutcomeStreak(streak, includeActiveNote) {
+  if (!streak) return '—';
+  const range = streak.startYear === streak.endYear
+    ? `${streak.startYear}`
+    : `${streak.startYear}-${streak.endYear}`;
+  const total = Math.floor((streak.endYear - streak.startYear) / 4) + 1;
+  const lengthLabel = total === 1 ? `${streak.length}/${total} election` : `${streak.length}/${total} elections`;
+  const activeLabel = includeActiveNote && streak.endYear === state.latestYear ? ' | Active' : '';
+  const missLabel = streak.missYears && streak.missYears.length > 0
+    ? ` | Missed ${streak.missYears.join(', ')}`
+    : '';
+  // keep legacy string form (with <br>) for backwards compatibility
+  return `${range} | ${lengthLabel}${missLabel}${activeLabel}`;
+}
+
+// Return array of parts to render on separate lines: [range, length, missed?, active?]
+function formatOutcomeStreakParts(streak, includeActiveNote) {
+  if (!streak) return [];
+  const range = streak.startYear === streak.endYear ? `${streak.startYear}` : `${streak.startYear}-${streak.endYear}`;
+  const total = Math.floor((streak.endYear - streak.startYear) / 4) + 1;
+  const lengthLabel = total === 1 ? `${streak.length}/${total} election` : `${streak.length}/${total} elections`;
+  const parts = [range, lengthLabel];
+  if (streak.missYears && streak.missYears.length > 0) {
+    parts.push(`Missed ${streak.missYears.join(', ')}`);
+  }
+  if (includeActiveNote && streak.endYear === state.latestYear) {
+    parts.push('Active');
+  }
+  return parts;
+}
+
+function renderStreakIntoCell(streak, td, includeActiveNote) {
+  td.innerHTML = '';
+  const parts = formatOutcomeStreakParts(streak, includeActiveNote);
+  if (!parts || parts.length === 0) {
+    td.textContent = '—';
+    return;
+  }
+
+  parts.forEach((p, idx) => {
+    const d = document.createElement('div');
+    // first line (range) a bit bolder
+    if (idx === 0) d.style.fontWeight = '600';
+    // missed-years and active get muted/smaller style
+    if (p.startsWith('Missed')) {
+      d.style.color = 'var(--muted)';
+      d.style.fontSize = '0.9rem';
+    }
+    if (p === 'Active') {
+      d.style.color = 'var(--accent)';
+      d.style.fontSize = '0.9rem';
+    }
+    d.textContent = p;
+    td.appendChild(d);
+  });
+}
+
+// Render the status column using multiple lines similar to streak cells.
+function renderStatusIntoCell(row, td) {
+  td.innerHTML = '';
+
+  // Active/current streak
+  if (row.onCurrent && row.current) {
+    const parts = [];
+    const range = row.current.startYear === row.current.endYear
+      ? `${row.current.startYear}`
+      : `${row.current.startYear}-${row.current.endYear}`;
+    parts.push(range);
+    const totalCur = Math.floor((row.current.endYear - row.current.startYear) / 4) + 1;
+    const lengthLabel = totalCur === 1 ? `${row.current.length}/${totalCur} election` : `${row.current.length}/${totalCur} elections`;
+    parts.push(lengthLabel);
+    if (row.current.missYears && row.current.missYears.length > 0) {
+      parts.push(`Missed ${row.current.missYears.join(', ')}`);
+    }
+    parts.push('Active');
+
+    parts.forEach((p, idx) => {
+      const d = document.createElement('div');
+      if (idx === 0) d.style.fontWeight = '600';
+      if (p.startsWith('Missed')) { d.style.color = 'var(--muted)'; d.style.fontSize = '0.9rem'; }
+      if (p === 'Active') { d.style.color = 'var(--accent)'; d.style.fontSize = '0.9rem'; d.style.fontWeight = '600';}
+      d.textContent = p;
+      td.appendChild(d);
+    });
+    return;
+  }
+
+  // Inactive but with a most recent qualifying streak
+  if (row.mostRecent) {
+    const parts = [];
+    parts.push('Inactive');
+    parts.push(`Last correct ${row.mostRecent.endYear}`);
+    if (row.mostRecent.length) {
+      const totalRecent = Math.floor((row.mostRecent.endYear - row.mostRecent.startYear) / 4) + 1;
+      parts.push(`${row.mostRecent.length}/${totalRecent} ${row.mostRecent.length === 1 ? 'election' : 'elections'} (${row.mostRecent.startYear}-${row.mostRecent.endYear})`);
+    }
+
+    parts.forEach((p, idx) => {
+      const d = document.createElement('div');
+      if (idx === 0) d.style.fontWeight = '600';
+      if (idx === 1) d.style.fontSize = '0.9rem';
+      d.textContent = p;
+      td.appendChild(d);
+    });
+    return;
+  }
+
+  // Generic inactive fallback
+  td.textContent = 'Inactive';
+}
+
+function formatOutcomeStatus(row) {
+  if (row.onCurrent && row.current) {
+    const range = row.current.startYear === row.current.endYear
+      ? `${row.current.startYear}`
+      : `${row.current.startYear}-${row.current.endYear}`;
+    const lengthLabel = row.current.length === 1 ? '1 election' : `${row.current.length} elections`;
+    const missLabel = row.current.missYears && row.current.missYears.length > 0
+      ? ` (Missed ${row.current.missYears.join(', ')})`
+      : '';
+    return `Active | ${range} | ${lengthLabel}${missLabel}`;
+  }
+
+  const lastYear = row.mostRecent ? row.mostRecent.endYear : null;
+  if (lastYear) {
+    return `Inactive | last correct ${lastYear}`;
+  }
+  return 'Inactive';
+}
+
+function sortOutcomeRows(rows) {
+  const { outcomeSortColumn, outcomeSortDirection } = state;
+  const dir = outcomeSortDirection === 'asc' ? 1 : -1;
+
+  const compare = (a, b) => {
+    switch (outcomeSortColumn) {
+      case 'unit': {
+        const cmp = a.abbr.localeCompare(b.abbr);
+        return cmp * dir;
+      }
+      case 'longest': {
+        // Primary: numeric streak length, Secondary: most recent end year, Tertiary: abbr
+        const aLen = a.longest ? a.longest.length : 0;
+        const bLen = b.longest ? b.longest.length : 0;
+        if (aLen !== bLen) return (aLen - bLen) * dir;
+        const aYear = a.longest ? a.longest.endYear : 0;
+        const bYear = b.longest ? b.longest.endYear : 0;
+        if (aYear !== bYear) return (aYear - bYear) * dir;
+        return a.abbr.localeCompare(b.abbr) * dir;
+      }
+      case 'recent': {
+        // Primary: numeric length of the most recent qualifying streak
+        // Secondary: end year (more recent later), tertiary: abbr
+        const aLen = a.mostRecent ? a.mostRecent.length : 0;
+        const bLen = b.mostRecent ? b.mostRecent.length : 0;
+        if (aLen !== bLen) return (aLen - bLen) * dir;
+        const aYear = a.mostRecent ? a.mostRecent.endYear : 0;
+        const bYear = b.mostRecent ? b.mostRecent.endYear : 0;
+        if (aYear !== bYear) return (aYear - bYear) * dir;
+        return a.abbr.localeCompare(b.abbr) * dir;
+      }
+      case 'status': {
+        const aStatus = rowStatusValue(a);
+        const bStatus = rowStatusValue(b);
+        if (aStatus !== bStatus) return (aStatus - bStatus) * dir;
+        const aLen = a.current ? a.current.length : 0;
+        const bLen = b.current ? b.current.length : 0;
+        if (aLen !== bLen) return (aLen - bLen) * dir;
+        const aYear = a.current ? a.current.startYear : 0;
+        const bYear = b.current ? b.current.startYear : 0;
+        if (aYear !== bYear) return (aYear - bYear) * dir;
+        return a.abbr.localeCompare(b.abbr) * dir;
+      }
+      default:
+        return a.abbr.localeCompare(b.abbr) * dir;
+    }
+  };
+
+  rows.sort(compare);
+  return rows;
+}
+
+function rowStatusValue(row) {
+  if (row.onCurrent) return 2;
+  if (row.mostRecent) return 1;
+  return 0;
+}
+
+function formatStreakThreshold(value) {
+  return value === 1 ? '1 election' : `${value} elections`;
+}
+
+function refreshOutcomeControls() {
+  const outcomeTypeEl = document.getElementById('outcomeType');
+  if (outcomeTypeEl) outcomeTypeEl.value = state.outcomeType;
+
+  const streakSlider = document.getElementById('streakThreshold');
+  if (streakSlider) streakSlider.value = state.streakThreshold;
+
+  const streakLabel = document.getElementById('streakThresholdVal');
+  if (streakLabel) streakLabel.textContent = formatStreakThreshold(state.streakThreshold);
+
+  const maxMissEl = document.getElementById('maxAllowedMisses');
+  if (maxMissEl) maxMissEl.value = String(state.maxAllowedMisses || 0);
+
+  const onlyCurrent = document.getElementById('onlyCurrentStreak');
+  if (onlyCurrent) onlyCurrent.checked = state.onlyCurrentStreak;
+}
+
 // Get lean direction string
 function getLeanStr(delta) {
   if (Math.abs(delta) < 0.001) return '';
@@ -893,6 +1422,19 @@ function updateUrl() {
     else params.delete('category');
     if (state.displayType) params.set('display', state.displayType);
     else params.delete('display');
+
+    if (state.displayType === 'outcome') {
+      params.set('outcome', state.outcomeType);
+      params.set('streak', String(state.streakThreshold));
+      params.set('maxMisses', String(state.maxAllowedMisses || 0));
+      if (state.onlyCurrentStreak) params.set('active', '1');
+      else params.delete('active');
+    } else {
+      params.delete('outcome');
+      params.delete('streak');
+      params.delete('maxMisses');
+      params.delete('active');
+    }
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     history.replaceState(null, '', newUrl);
@@ -915,22 +1457,32 @@ function applyUrlParamsToState() {
       state.category = c;
       const sel = document.getElementById('categorySelect');
       if (sel) sel.value = c;
-      // toggle controls visibility
-      if (c === 'bellwether') {
-        document.getElementById('bellwetherControls').style.display = 'block';
-        document.getElementById('closeControls').style.display = 'none';
-      } else {
-        document.getElementById('bellwetherControls').style.display = 'none';
-        document.getElementById('closeControls').style.display = 'block';
-      }
     }
 
     // apply display
-    if (d && (d === 'bar' || d === 'histogram' || d === 'table')) {
+    if (d && (d === 'bar' || d === 'histogram' || d === 'table' || d === 'outcome')) {
       state.displayType = d;
       const disp = document.getElementById('displayType');
       if (disp) disp.value = d;
     }
+
+    const outcomeParam = params.get('outcome');
+    if (outcomeParam && (outcomeParam === 'pv' || outcomeParam === 'ec')) {
+      state.outcomeType = outcomeParam;
+    }
+
+    const streakParam = parseInt(params.get('streak'), 10);
+    if (!isNaN(streakParam)) {
+      state.streakThreshold = Math.min(5, Math.max(1, streakParam));
+    }
+
+    const maxMissParam = parseInt(params.get('maxMisses'), 10);
+    if (!isNaN(maxMissParam)) {
+      state.maxAllowedMisses = Math.max(0, Math.min(2, maxMissParam));
+    }
+
+    const activeParam = params.get('active');
+    state.onlyCurrentStreak = activeParam === '1';
 
     // apply year (accept 'all' or a numeric year present in slider range)
     if (y) {
@@ -954,6 +1506,8 @@ function applyUrlParamsToState() {
       }
 
     }
+
+    refreshOutcomeControls();
 
     // finally render with applied params
     state.sortColumn = null;
@@ -1014,9 +1568,24 @@ async function init() {
     // Load data
     state.data = await loadData();
 
+    state.nationalByYear.clear();
+    state.data.forEach(row => {
+      if (row.abbr !== 'NATIONAL') return;
+      const yearNum = parseInt(row.year, 10);
+      const marginVal = parseFloat(row.pres_margin);
+      if (isNaN(yearNum) || isNaN(marginVal)) return;
+      state.nationalByYear.set(yearNum, {
+        presMargin: marginVal,
+        sign: marginSign(marginVal)
+      });
+    });
+
     // Populate year slider and All Years checkbox
     const years = [...new Set(state.data.map(row => row.year))].map(y => parseInt(y, 10)).filter(Boolean).sort((a, b) => a - b);
     state.years = years.map(String);
+    if (years.length > 0) {
+      state.latestYear = years[years.length - 1];
+    }
     const yearSlider = document.getElementById('yearSlider');
     const yearVal = document.getElementById('yearVal');
     const allChk = document.getElementById('allYearsCheckbox');
@@ -1063,22 +1632,16 @@ async function init() {
       });
     }
 
-    document.getElementById('categorySelect').addEventListener('change', (e) => {
-      state.category = e.target.value;
-
-      // Show/hide appropriate controls
-      if (state.category === 'bellwether') {
-        document.getElementById('bellwetherControls').style.display = 'block';
-        document.getElementById('closeControls').style.display = 'none';
-      } else {
-        document.getElementById('bellwetherControls').style.display = 'none';
-        document.getElementById('closeControls').style.display = 'block';
-      }
-
-      state.sortColumn = null;
-      updateVisualization();
-      updateUrl();
-    });
+    const categorySelect = document.getElementById('categorySelect');
+    if (categorySelect) {
+      categorySelect.addEventListener('change', (e) => {
+        state.category = e.target.value;
+        state.sortColumn = null;
+        toggleControlsForDisplay();
+        updateVisualization();
+        updateUrl();
+      });
+    }
 
     document.getElementById('bellwetherThreshold').addEventListener('input', (e) => {
       state.bellwetherThreshold = parseFloat(e.target.value);
@@ -1101,6 +1664,62 @@ async function init() {
       updateVisualization();
       updateUrl();
     });
+
+    const outcomeTypeEl = document.getElementById('outcomeType');
+    if (outcomeTypeEl) {
+      outcomeTypeEl.addEventListener('change', (e) => {
+        state.outcomeType = e.target.value;
+        refreshOutcomeControls();
+        if (state.displayType === 'outcome') {
+          renderOutcomeTable();
+          updateTitle();
+        }
+        updateUrl();
+      });
+    }
+
+    const streakSlider = document.getElementById('streakThreshold');
+    if (streakSlider) {
+      streakSlider.addEventListener('input', (e) => {
+        const nextValue = parseInt(e.target.value, 10);
+        if (!isNaN(nextValue)) {
+          state.streakThreshold = Math.min(5, Math.max(1, nextValue));
+          refreshOutcomeControls();
+          if (state.displayType === 'outcome') {
+            renderOutcomeTable();
+            updateTitle();
+          }
+          updateUrl();
+        }
+      });
+    }
+
+    const maxMissEl = document.getElementById('maxAllowedMisses');
+    if (maxMissEl) {
+      maxMissEl.addEventListener('change', (e) => {
+        const v = parseInt(e.target.value, 10);
+        state.maxAllowedMisses = isNaN(v) ? 0 : Math.max(0, Math.min(2, v));
+        refreshOutcomeControls();
+        if (state.displayType === 'outcome') {
+          renderOutcomeTable();
+        }
+        updateUrl();
+      });
+    }
+
+    const onlyCurrent = document.getElementById('onlyCurrentStreak');
+    if (onlyCurrent) {
+      onlyCurrent.addEventListener('change', (e) => {
+        state.onlyCurrentStreak = e.target.checked;
+        refreshOutcomeControls();
+        if (state.displayType === 'outcome') {
+          renderOutcomeTable();
+        }
+        updateUrl();
+      });
+    }
+
+    refreshOutcomeControls();
 
     // Apply URL params (if present) to initial state and controls
     applyUrlParamsToState();
