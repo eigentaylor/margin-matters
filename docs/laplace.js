@@ -846,7 +846,8 @@ class LaplaceAnalyzer {
         const tipColumns = [
           { key: 'abbr', label: 'State', type: 'string' },
           { key: 'share', label: 'Share', type: 'percent' },
-          { key: 'avgPv', label: 'Avg tipping PV', type: 'number' }
+          { key: 'avgPv', label: 'Avg tipping PV', type: 'number' },
+          { key: 'std', label: 'Std dev', type: 'percent' }
         ];
         const tipSort = summary.tipSort || (summary.tipSort = { key: 'share', dir: 'desc' });
         const sorter = (a, b, key, dir) => {
@@ -871,6 +872,7 @@ class LaplaceAnalyzer {
               <td data-key="abbr">${item.abbr}</td>
               <td data-key="share">${formatPercent(item.share)}</td>
               <td data-key="avgPv">${formatLean(item.avgPv)}</td>
+              <td data-key="std">${Number.isFinite(item.std) ? (item.std * 100).toFixed(2) + '%' : '—'}</td>
             </tr>`)
           .join('');
         const headerHtml = tipColumns
@@ -1341,10 +1343,11 @@ class LaplaceAnalyzer {
         .map(([abbr, stat]) => ({
           abbr,
           share: tippingCount ? stat.count / tippingCount : 0,
-          avgPv: stat.count ? stat.pvSum / stat.count : null
+          avgPv: stat.count ? stat.pvSum / stat.count : null,
+          std: statesByAbbr && statesByAbbr.has(abbr) ? statesByAbbr.get(abbr).std : null
         }))
         .sort((a, b) => b.share - a.share)
-        .slice(0, 10);
+        .slice(0, 12);
 
       const tipDetails = {};
       tippingDetails.forEach((list, abbr) => {
