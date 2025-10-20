@@ -5,7 +5,7 @@
     { value: '', label: 'Select preset…' },
     { value: 0.005, label: 'Gore: D+0.5', year: 2000 },
     { value: 0.021, label: 'Clinton: D+2.1', year: 2016 },
-    { value: -0.016, label: 'Trump: R+1.6', year: 2024 },
+    { value: -0.015, label: 'Trump: R+1.5', year: 2024 },
     { value: 0.045, label: 'Biden: D+4.5', year: 2020 },
     { value: 0.075, label: 'Obama: D+7.5', year: 2008 },
     { value: 0.085, label: 'William Clinton: D+8.5', year: 1996 },
