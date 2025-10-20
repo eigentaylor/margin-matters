@@ -401,6 +401,15 @@ class LaplaceAnalyzer {
     mcBellwethers: document.getElementById('mcBellwethers')
   };
 
+  // default the mode selector to 'relative' (Relative delta mode)
+  if (els.modeSelect) {
+    try {
+      els.modeSelect.value = 'relative';
+    } catch (e) {
+      // ignore if the element/value is not available in this environment
+    }
+  }
+
   /** @type {LaplaceAnalyzer|null} */
   let analyzer = null;
   /** cached last results for download */
