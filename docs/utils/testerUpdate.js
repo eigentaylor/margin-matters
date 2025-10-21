@@ -47,6 +47,8 @@ export function createUpdateAll(deps) {
       evFillO: document.getElementById('evFillO'),
       evFillR: document.getElementById('evFillR'),
       evText: document.getElementById('evText'),
+      pvResetActual: document.getElementById('pvResetActual'),
+      pvTippingBtn: document.getElementById('pvTipping'),
       flipEC: document.getElementById('flipEC'),
       closeStates: document.getElementById('closeStates'),
       pvDem: document.getElementById('pvDem'),
@@ -128,6 +130,8 @@ export function createUpdateAll(deps) {
     } catch (e) { console.warn(e); }
     pvVal.textContent = out;
   }
+
+  const tippingInfoByYear = new Map();
 
   function computeMapState(year, pvState) {
     const { pv, nat, stopVal } = pvState;
@@ -308,6 +312,57 @@ export function createUpdateAll(deps) {
     adjustAtLargeFromDistricts(year, abbrColors, unitColors, pvState.pv);
 
     return { arr, abbrColors, unitColors, unitParties, dEV, rEV, oEV };
+  }
+
+  // Identify the PV stop where the Democratic EV tally first clears a majority.
+  function computeTippingInfo(year, natMargin) {
+    const stops = stopsByYear.get(year) || [];
+    if (!stops.length) return null;
+    const totalEv = (typeof window !== 'undefined' && window._totalEvByYear && typeof window._totalEvByYear.get === 'function')
+      ? window._totalEvByYear.get(year) || 538
+      : 538;
+    const majorityCutoff = (totalEv / 2) + EPS;
+    const prevYear = (typeof window !== 'undefined') ? window._curYear : null;
+    const prevPv = (typeof window !== 'undefined') ? window._curPv : null;
+    try {
+      for (let i = 0; i < stops.length; i++) {
+        const stopVal = stops[i];
+        const effPv = stopToEff.has(stopVal) ? stopToEff.get(stopVal) : stopVal;
+        try {
+          if (typeof window !== 'undefined') {
+            window._curYear = year;
+            window._curPv = effPv;
+          }
+          const mapState = computeMapState(year, { pv: effPv, nat: natMargin, stopVal });
+          const dEv = mapState && isFinite(mapState.dEV) ? mapState.dEV : 0;
+          if (dEv >= majorityCutoff) {
+            const dEvDisplay = Number.isFinite(dEv) ? (Math.abs(dEv - Math.round(dEv)) < 1e-6 ? String(Math.round(dEv)) : dEv.toFixed(1)) : '0';
+            const units = (stopToUnits.get(stopVal) || [])
+              .filter(Boolean)
+              .filter(u => !/^PRESET:/.test(u) && u !== 'NATIONAL' && u !== 'NAT');
+            const titleParts = [`Tipping point ${leanStr(effPv)}`, `D ${dEvDisplay} of ${totalEv} EV`];
+            if (units.length) titleParts.push(`Trigger: ${units.join(', ')}`);
+            return {
+              index: i,
+              stop: stopVal,
+              pv: effPv,
+              dEV: dEv,
+              majority: majorityCutoff,
+              units,
+              title: titleParts.join(' | ')
+            };
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+      return null;
+    } finally {
+      if (typeof window !== 'undefined') {
+        window._curYear = prevYear;
+        window._curPv = prevPv;
+      }
+    }
   }
 
   function adjustAtLargeFromDistricts(year, abbrColors, unitColors, pv) {
@@ -886,14 +941,52 @@ export function createUpdateAll(deps) {
 
     updatePvLabel(refs, pvState);
 
+    const tippingInfo = computeTippingInfo(year, pvState.nat);
+    if (typeof window !== 'undefined') {
+      window._curYear = year;
+      window._curPv = pvState.pv;
+    }
+    if (tippingInfo) {
+      tippingInfoByYear.set(year, tippingInfo);
+    } else {
+      tippingInfoByYear.delete(year);
+    }
+    if (typeof window !== 'undefined') {
+      window._pvTippingByYear = tippingInfoByYear;
+    }
+
+    const tippingTitle = tippingInfo ? tippingInfo.title : '';
+    const tippingIndex = tippingInfo ? tippingInfo.index : null;
+    if (refs.pvTippingBtn) {
+      refs.pvTippingBtn.disabled = !tippingInfo;
+      if (tippingInfo) {
+        refs.pvTippingBtn.dataset.year = String(year);
+        refs.pvTippingBtn.dataset.idx = String(tippingInfo.index);
+  const unitHint = (tippingInfo.units && tippingInfo.units.length) ? ` - ${tippingInfo.units.join(', ')}` : '';
+        refs.pvTippingBtn.title = `Set PV to tipping point ${leanStr(tippingInfo.pv)}${unitHint}`;
+      } else {
+        delete refs.pvTippingBtn.dataset.year;
+        delete refs.pvTippingBtn.dataset.idx;
+        refs.pvTippingBtn.title = 'Tipping point unavailable';
+      }
+    }
+
     buildPvStops(year, {
       container: refs.pvStops,
       datalist: refs.pvStopsList,
       getNatMargin,
       updateAll,
       extraPresets: (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [],
-      injectNegativePresets: (typeof window !== 'undefined') ? !!window._injectNegativePresets : false
+      injectNegativePresets: (typeof window !== 'undefined') ? !!window._injectNegativePresets : false,
+      tippingIndex,
+      tippingTitle
     });
+
+    if (refs.pvResetActual) {
+      const showActual = !!(window._futureMode && year === 2024);
+      refs.pvResetActual.style.display = showActual ? '' : 'none';
+      refs.pvResetActual.disabled = !showActual;
+    }
 
     updateFlipButtons();
 

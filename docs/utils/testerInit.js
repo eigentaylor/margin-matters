@@ -64,6 +64,8 @@ export function createTesterInitializer(deps) {
     const pvStops = document.getElementById('pvStops');
     const pvStopsList = document.getElementById('pvStopsList');
     const pvResetBtn = document.getElementById('pvReset');
+  const pvResetActualBtn = document.getElementById('pvResetActual');
+  const pvTippingBtn = document.getElementById('pvTipping');
     if (!yearSlider || !pvSlider) return;
 
     const resolveDefaultPv = (year) => {
@@ -224,12 +226,22 @@ export function createTesterInitializer(deps) {
     if (pvResetBtn) {
       pvResetBtn.addEventListener('click', () => {
         const year = parseInt(yearSlider.value, 10);
-  const { stops: curStops, idx } = resolveDefaultPv(year);
+        const info = resolveDefaultPv(year);
+        const stopsNow = info.stops;
+        let idx = info.idx;
+        if (window._futureMode) {
+          const evenIdx = stopsNow.findIndex(v => Math.abs(v) <= STOP_EPS);
+          if (evenIdx >= 0) idx = evenIdx;
+        }
         pvSlider.min = 0;
-        pvSlider.max = Math.max(0, curStops.length - 1);
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
         pvSlider.step = 1;
         pvSlider.value = String(idx);
         try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
         if (!window._applyingFlip) {
           try { clearFlips(); } catch (err) { console.warn(err); }
         }
@@ -237,6 +249,60 @@ export function createTesterInitializer(deps) {
         try {
           const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
           updateUrl(year, idx, flipMode);
+        } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvResetActualBtn) {
+      pvResetActualBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const info = resolveDefaultPv(year);
+        const natIdx = info.stops.findIndex(v => Math.abs(v - info.nat) <= STOP_EPS);
+        const idx = natIdx >= 0 ? natIdx : info.idx;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, info.stops.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(idx);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
+        updateAll();
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(year, idx, flipMode);
+        } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvTippingBtn) {
+      pvTippingBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const tippingMap = (typeof window !== 'undefined' && window._pvTippingByYear instanceof Map) ? window._pvTippingByYear : null;
+        const info = tippingMap ? tippingMap.get(year) : null;
+        if (!info || info.index == null) return;
+        const stopsNow = stopsByYear.get(year) || [];
+        if (!stopsNow.length || info.index < 0 || info.index >= stopsNow.length) return;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(info.index);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
+        updateAll();
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(year, info.index, flipMode);
         } catch (err) { console.warn(err); }
       });
     }

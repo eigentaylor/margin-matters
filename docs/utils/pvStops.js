@@ -8,7 +8,7 @@ const stopToEff = new Map();
 const stopToUnits = new Map();
 const stopsByYear = new Map();
 
-export function buildPvStops(year, { container, datalist, getNatMargin, updateAll, extraPresets = [], injectNegativePresets = false } = {}) {
+export function buildPvStops(year, { container, datalist, getNatMargin, updateAll, extraPresets = [], injectNegativePresets = false, tippingIndex = null, tippingTitle = '' } = {}) {
   const cap = PV_CAP;
   stopToEff.clear();
   stopToUnits.clear();
@@ -19,6 +19,8 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   const isFutureMode = !!(hasWindow && window._futureMode);
   const natMarginFn = (typeof getNatMargin === 'function') ? getNatMargin : (() => 0);
   const nat = (isFutureMode && year > 2024) ? 0 : natMarginFn(year);
+  const tipIdx = (typeof tippingIndex === 'number' && tippingIndex >= 0) ? Math.floor(tippingIndex) : null;
+  const tipTitle = tippingTitle ? String(tippingTitle) : '';
 
   const byYearStops = (hasWindow && window._stopColorsByYear && window._stopColorsByYear.get(year)) || null;
   const effByYearStops = (hasWindow && window._stopEffByYear && window._stopEffByYear.get(year)) || null;
@@ -217,11 +219,18 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           //console.debug('[stops][debug] final bgColor is default', { year, stop: v, key: Number(v).toFixed(STOP_KEY_PREC), unitsRaw, stopToUnits: (stopToUnits.get(v) || []), stopToEff: stopToEff.get(v) });
         } catch (e) { console.warn('[stops][debug] error preparing final default color debug', e); }
       }
-  const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
-  const smallColor = isYellowish ? '#000' : 'var(--muted)';
-  const idxAttr = (sliderIdx != null && Number.isFinite(sliderIdx)) ? String(sliderIdx) : '';
-  const displayLabel = label.replace('<small', `<small style="color:${smallColor}"`);
-  return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${idxAttr}">${displayLabel}</span>`;
+      const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
+      const smallColor = isYellowish ? '#000' : 'var(--muted)';
+      const idxAttr = (sliderIdx != null && Number.isFinite(sliderIdx)) ? String(sliderIdx) : '';
+      const displayLabel = label.replace('<small', `<small style="color:${smallColor}"`);
+      const isTipping = (tipIdx !== null && sliderIdx === tipIdx);
+      const tipBadge = isTipping ? '<span class="tip-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#f2c94c">TIP</span>' : '';
+      let btnStyle = `padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}`;
+      if (isTipping) btnStyle += ';box-shadow:0 0 0 2px #f2c94c inset';
+      const titleText = isTipping ? (tipTitle || 'Tipping point stop') : '';
+      const titleAttr = titleText ? ` title="${titleText.replace(/"/g, '&quot;')}"` : '';
+      const ariaAttr = isTipping ? ' aria-label="Tipping point stop"' : '';
+      return `<span class="btn" style="${btnStyle}" data-idx="${idxAttr}"${ariaAttr}${titleAttr}>${tipBadge}${displayLabel}</span>`;
     }).join('');
 
     // Sort preset stops by numeric value so preset chips render in deterministic order
