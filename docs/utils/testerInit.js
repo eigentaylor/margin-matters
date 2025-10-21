@@ -64,8 +64,9 @@ export function createTesterInitializer(deps) {
     const pvStops = document.getElementById('pvStops');
     const pvStopsList = document.getElementById('pvStopsList');
     const pvResetBtn = document.getElementById('pvReset');
-  const pvResetActualBtn = document.getElementById('pvResetActual');
-  const pvTippingBtn = document.getElementById('pvTipping');
+    const pvResetEvenBtn = document.getElementById('pvResetEven');
+    const pvResetActualBtn = document.getElementById('pvResetActual');
+    const pvTippingBtn = document.getElementById('pvTipping');
     if (!yearSlider || !pvSlider) return;
 
     const resolveDefaultPv = (year) => {
@@ -250,6 +251,26 @@ export function createTesterInitializer(deps) {
           const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
           updateUrl(year, idx, flipMode);
         } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvResetEvenBtn) {
+      pvResetEvenBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const info = resolveDefaultPv(year);
+        const stopsNow = info.stops || [];
+        // find the even (0) stop index
+        let evenIdx = stopsNow.findIndex(v => Math.abs(v) <= STOP_EPS);
+        if (evenIdx < 0) evenIdx = 0;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(evenIdx);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try { const pvPresetEl = document.getElementById('pvPreset'); if (pvPresetEl) pvPresetEl.value = ''; } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) { try { clearFlips(); } catch (err) { console.warn(err); } }
+        updateAll();
+        try { const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(year, evenIdx, flipMode); } catch (err) { console.warn(err); }
       });
     }
 
