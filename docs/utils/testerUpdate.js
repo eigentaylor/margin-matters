@@ -365,10 +365,7 @@ export function createUpdateAll(deps) {
       const dir = (winnerAtEven === 'D') ? -1 : 1;
 
       // iterate stops away from even until winner flips
-      let i = evenIdx;
-      while (true) {
-        i += dir;
-        if (i < 0 || i >= stops.length) break;
+      for (let i = evenIdx + dir; i >= 0 && i < stops.length; i += dir) {
         const stopVal = stops[i];
         const effPv = stopToEff.has(stopVal) ? stopToEff.get(stopVal) : stopVal;
         try {
