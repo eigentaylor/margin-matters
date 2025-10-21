@@ -314,7 +314,12 @@ export function createUpdateAll(deps) {
     return { arr, abbrColors, unitColors, unitParties, dEV, rEV, oEV };
   }
 
-  // Identify the PV stop where the Democratic EV tally first clears a majority.
+  // Identify the PV stop where the election flips relative to EVEN.
+  // Algorithm:
+  // - compute EV outcome at the EVEN stop
+  // - determine the winner at EVEN (D or R)
+  // - move in the opposite direction from that winner through all stops
+  //   until the result flips; return the stop where the flip occurs.
   function computeTippingInfo(year, natMargin) {
     const stops = stopsByYear.get(year) || [];
     if (!stops.length) return null;
@@ -324,18 +329,58 @@ export function createUpdateAll(deps) {
     const majorityCutoff = (totalEv / 2) + EPS;
     const prevYear = (typeof window !== 'undefined') ? window._curYear : null;
     const prevPv = (typeof window !== 'undefined') ? window._curPv : null;
+
+    // find EVEN stop index (exact or nearest)
+    let evenIdx = stops.findIndex(v => Math.abs(v) <= STOP_EPS);
+    if (evenIdx < 0) {
+      // pick nearest to zero
+      let best = 0; let bestAbs = Math.abs(stops[0] || 0);
+      for (let i = 1; i < stops.length; i++) {
+        const a = Math.abs(stops[i]);
+        if (a < bestAbs) { bestAbs = a; best = i; }
+      }
+      evenIdx = best;
+    }
+
     try {
-      for (let i = 0; i < stops.length; i++) {
+      if (typeof window !== 'undefined') {
+        window._curYear = year;
+      }
+
+      const evenStopVal = stops[evenIdx];
+      const evenEff = stopToEff.has(evenStopVal) ? stopToEff.get(evenStopVal) : evenStopVal;
+      if (typeof window !== 'undefined') window._curPv = evenEff;
+      const evenMap = computeMapState(year, { pv: evenEff, nat: natMargin, stopVal: evenStopVal });
+      const dEvEven = evenMap && isFinite(evenMap.dEV) ? evenMap.dEV : 0;
+      const rEvEven = evenMap && isFinite(evenMap.rEV) ? evenMap.rEV : 0;
+
+      // determine winner at EVEN
+      const EPS_WIN = 1e-6;
+      let winnerAtEven = 'R';
+      if (dEvEven > rEvEven + EPS_WIN) winnerAtEven = 'D';
+      else if (rEvEven > dEvEven + EPS_WIN) winnerAtEven = 'R';
+      else winnerAtEven = (dEvEven >= rEvEven ? 'D' : 'R');
+
+      // search direction: if D wins at even, move towards R (decreasing index), else move towards D (increasing index)
+      const dir = (winnerAtEven === 'D') ? -1 : 1;
+
+      // iterate stops away from even until winner flips
+      let i = evenIdx;
+      while (true) {
+        i += dir;
+        if (i < 0 || i >= stops.length) break;
         const stopVal = stops[i];
         const effPv = stopToEff.has(stopVal) ? stopToEff.get(stopVal) : stopVal;
         try {
-          if (typeof window !== 'undefined') {
-            window._curYear = year;
-            window._curPv = effPv;
-          }
+          if (typeof window !== 'undefined') window._curPv = effPv;
           const mapState = computeMapState(year, { pv: effPv, nat: natMargin, stopVal });
           const dEv = mapState && isFinite(mapState.dEV) ? mapState.dEV : 0;
-          if (dEv >= majorityCutoff) {
+          const rEv = mapState && isFinite(mapState.rEV) ? mapState.rEV : 0;
+          let winner = 'R';
+          if (dEv > rEv + EPS_WIN) winner = 'D';
+          else if (rEv > dEv + EPS_WIN) winner = 'R';
+          else winner = (dEv >= rEv ? 'D' : 'R');
+          if (winner !== winnerAtEven) {
             const dEvDisplay = Number.isFinite(dEv) ? (Math.abs(dEv - Math.round(dEv)) < 1e-6 ? String(Math.round(dEv)) : dEv.toFixed(1)) : '0';
             const units = (stopToUnits.get(stopVal) || [])
               .filter(Boolean)
