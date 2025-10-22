@@ -233,8 +233,8 @@ Interactive Histograms for Presidential Margins Data
       const initFieldCfg = fieldConfigs[currentConfig.field];
       if (initFieldCfg && initFieldCfg.timeSeriesOnly) {
         // force state/time-series mode and limit states to NATIONAL
-  el.viewMode.value = 'timeseries';
-  currentConfig.viewMode = 'timeseries';
+        el.viewMode.value = 'timeseries';
+        currentConfig.viewMode = 'timeseries';
         populateStateSelect(['NATIONAL'], true);
       } else if (initFieldCfg && initFieldCfg.disallowNational) {
         // For relative fields that disallow NATIONAL, populate excluding NATIONAL
@@ -312,8 +312,8 @@ Interactive Histograms for Presidential Margins Data
     const fieldCfg = fieldConfigs[currentConfig.field];
     if (requestedMode === 'year' && fieldCfg && fieldCfg.timeSeriesOnly) {
       // revert selector to state/time-series mode
-  el.viewMode.value = 'timeseries';
-  currentConfig.viewMode = 'timeseries';
+      el.viewMode.value = 'timeseries';
+      currentConfig.viewMode = 'timeseries';
       // inform user subtly
       el.infoBox.textContent = `${fieldCfg.label} is only available as a time series (NATIONAL).`;
       return;
@@ -363,8 +363,8 @@ Interactive Histograms for Presidential Margins Data
 
     // If the field is time-series-only, force state view and restrict states to NATIONAL
     if (fieldCfg && fieldCfg.timeSeriesOnly) {
-  el.viewMode.value = 'timeseries';
-  currentConfig.viewMode = 'timeseries';
+      el.viewMode.value = 'timeseries';
+      currentConfig.viewMode = 'timeseries';
       populateStateSelect(['NATIONAL'], true);
     } else if (fieldCfg && fieldCfg.disallowNational) {
       // For relative fields that disallow NATIONAL, ensure state selector excludes NATIONAL
@@ -386,8 +386,8 @@ Interactive Histograms for Presidential Margins Data
 
     // If user attempted to switch to year while field requires time series, prevent it
     if (currentConfig.viewMode === 'year' && fieldCfg && fieldCfg.timeSeriesOnly) {
-  el.viewMode.value = 'timeseries';
-  currentConfig.viewMode = 'timeseries';
+      el.viewMode.value = 'timeseries';
+      currentConfig.viewMode = 'timeseries';
     }
 
     updateChart();
@@ -661,7 +661,7 @@ Interactive Histograms for Presidential Margins Data
     bars.merge(barsEnter)
       .on('mouseenter', function (event, d) {
         d3.select(this).style('opacity', 0.7);
-        showTooltip(event, d, fieldConfig);
+        showTooltip(event, d, fieldConfig, median);
       })
       .on('mousemove', function (event) {
         updateTooltipPosition(event);
@@ -796,7 +796,7 @@ Interactive Histograms for Presidential Margins Data
     bars.merge(barsEnter)
       .on('mouseenter', function (event, d) {
         d3.select(this).style('opacity', 0.7);
-        showTooltipTimeSeries(event, d, fieldConfig);
+        showTooltipTimeSeries(event, d, fieldConfig, median);
       })
       .on('mousemove', function (event) {
         updateTooltipPosition(event);
@@ -926,8 +926,9 @@ Interactive Histograms for Presidential Margins Data
     el.chartLegend.innerHTML = legendHtml;
   }
 
-  function showTooltip(event, bin, fieldConfig) {
+  function showTooltip(event, bin, fieldConfig, median) {
     const states = bin.states || [];
+    const eps = 1e-9;
 
     let tooltipHtml = `
       <div style="font-weight: 600; margin-bottom: 4px;">
@@ -941,7 +942,16 @@ Interactive Histograms for Presidential Margins Data
       tooltipHtml += '<div style="font-weight: 600; margin-bottom: 4px;">States/Units:</div>';
 
       states.forEach(s => {
-        tooltipHtml += `<div style="margin-left: 8px;">${s.state}: ${s.strValue}</div>`;
+        const isMedian = (median != null && Math.abs(s.value - median) <= eps);
+        tooltipHtml += `<div style="margin-left: 8px; display:flex; align-items:center; gap:8px;">`;
+        if (isMedian) {
+          tooltipHtml += `<span style="color: ${colors.average}; font-weight:700;">★</span>`;
+        } else {
+          tooltipHtml += `<span style="width:14px; display:inline-block;"></span>`;
+        }
+        tooltipHtml += `<span>${s.state}: ${s.strValue}</span>`;
+        if (isMedian) tooltipHtml += `<span style="margin-left:6px; color:${colors.average}; font-size:0.85rem;">median</span>`;
+        tooltipHtml += `</div>`;
       });
 
       tooltipHtml += '</div>';
@@ -952,8 +962,9 @@ Interactive Histograms for Presidential Margins Data
     updateTooltipPosition(event);
   }
 
-  function showTooltipTimeSeries(event, bin, fieldConfig) {
+  function showTooltipTimeSeries(event, bin, fieldConfig, median) {
     const years = bin.years || [];
+    const eps = 1e-9;
 
     let tooltipHtml = `
       <div style="font-weight: 600; margin-bottom: 4px;">
@@ -967,7 +978,16 @@ Interactive Histograms for Presidential Margins Data
       tooltipHtml += '<div style="font-weight: 600; margin-bottom: 4px;">Years:</div>';
 
       years.forEach(y => {
-        tooltipHtml += `<div style="margin-left: 8px;">${y.year}: ${y.strValue}</div>`;
+        const isMedian = (median != null && Math.abs(y.value - median) <= eps);
+        tooltipHtml += `<div style="margin-left: 8px; display:flex; align-items:center; gap:8px;">`;
+        if (isMedian) {
+          tooltipHtml += `<span style="color: ${colors.average}; font-weight:700;">★</span>`;
+        } else {
+          tooltipHtml += `<span style="width:14px; display:inline-block;"></span>`;
+        }
+        tooltipHtml += `<span>${y.year}: ${y.strValue}</span>`;
+        if (isMedian) tooltipHtml += `<span style="margin-left:6px; color:${colors.average}; font-size:0.85rem;">median</span>`;
+        tooltipHtml += `</div>`;
       });
 
       tooltipHtml += '</div>';
