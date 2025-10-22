@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Histograms • Margin Matters</title>
+  <link rel="icon" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="maintenance-check.js"></script>
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --fg: #f5f5f5;
+      --muted: #a5a5a5;
+      --accent: #66b3ff;
+      --card: #141414;
+      --border: #2a2a2a;
+      --blue: #4169E1;
+      --red: #B22222;
+      --green: #10b981;
+      --yellow: #f59e0b;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Helvetica, Arial;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 700px) {
+      .controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1050px) {
+      .controls {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .controls .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .controls label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .controls select,
+    .controls input {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.95rem;
+    }
+
+    .controls select:focus,
+    .controls input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .button:hover {
+      background: #2a2a2a;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .button.primary:hover {
+      background: #5aa3e6;
+    }
+
+    #chart {
+      width: 100%;
+      height: 600px;
+      position: relative;
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: #111;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      max-width: 300px;
+    }
+
+    .tooltip-hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .legend {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 16px;
+      margin-bottom: 4px;
+    }
+
+    .legend-line {
+      width: 20px;
+      height: 2px;
+      display: inline-block;
+    }
+
+    .info-box {
+      background: #1b1b1b;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .share-url {
+      background: #1b1b1b;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      word-break: break-all;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .share-url input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      outline: none;
+    }
+
+    .axis-label {
+      font-size: 0.9rem;
+      fill: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+
+    <div class="header">
+      <h1>Interactive Histograms</h1>
+      <div class="legend">Explore distribution of presidential election metrics. This is a new page which will have a
+        lot of bugs! Please report any issues you encounter.</div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <div class="field">
+          <label for="viewMode">View Mode</label>
+          <select id="viewMode">
+            <option value="year">Single Year Distribution</option>
+            <option value="timeseries">Time Series for State/Field</option>
+          </select>
+        </div>
+
+        <div class="field" id="yearField">
+          <label for="yearSelect">Year</label>
+          <select id="yearSelect"></select>
+        </div>
+
+        <div class="field" id="stateField" style="display: none;">
+          <label for="stateSelect">State/Unit</label>
+          <select id="stateSelect"></select>
+        </div>
+
+        <div class="field">
+          <label for="fieldSelect">Field</label>
+          <select id="fieldSelect"></select>
+        </div>
+      </div>
+
+      <div class="info-box" id="infoBox">
+        Select a year and field to view the distribution across states.
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="chart"></div>
+      <div class="legend" id="chartLegend"></div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <button class="button primary" id="shareBtn">Copy Share URL</button>
+        <span id="shareStatus" style="color: var(--green); display: none;">✓ Copied to clipboard!</span>
+      </div>
+      <div class="share-url" id="shareUrl">
+        <input type="text" id="shareInput" readonly />
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+  </div>
+
+  <div id="tooltip" class="tooltip tooltip-hidden"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="./header.js"></script>
+  <script src="./footer.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./last-updated.js"></script>
+  <script src="./histograms.js"></script>
+</body>
+
+</html>
