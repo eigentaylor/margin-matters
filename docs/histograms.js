@@ -195,6 +195,7 @@ Interactive Histograms for Presidential Margins Data
         currentConfig.buckets = v;
         sliderVal.textContent = v;
         updateChart();
+        updateUrl();
       });
 
       sliderWrap.appendChild(sliderLabel);
@@ -250,17 +251,26 @@ Interactive Histograms for Presidential Margins Data
       const sliderElem = document.getElementById('bucketSlider');
       const sliderValElem = document.getElementById('bucketSliderVal');
       if (sliderElem) {
-        let defaultCount = getDefaultBucketCount((currentConfig.viewMode === 'year') ?
-          allData.filter(d => d.year === currentConfig.year).length :
-          allData.filter(d => d.abbr === currentConfig.state).length);
-        currentConfig.buckets = defaultCount;
-        sliderElem.value = defaultCount;
-        if (sliderValElem) sliderValElem.textContent = defaultCount;
+        if (currentConfig.buckets) {
+          sliderElem.value = currentConfig.buckets;
+          if (sliderValElem) sliderValElem.textContent = currentConfig.buckets;
+        } else {
+          let defaultCount = getDefaultBucketCount((currentConfig.viewMode === 'year') ?
+            allData.filter(d => d.year === currentConfig.year).length :
+            allData.filter(d => d.abbr === currentConfig.state).length);
+          currentConfig.buckets = defaultCount;
+          sliderElem.value = defaultCount;
+          if (sliderValElem) sliderValElem.textContent = defaultCount;
+          // reflect initial bucket count in URL
+          updateUrl();
+        }
       }
 
       // Initialize chart
-      initChart();
-      updateChart();
+  // Update URL to reflect initial state (may include buckets parsed from URL)
+  updateUrl();
+  initChart();
+  updateChart();
 
     } catch (error) {
       console.error('Error loading data:', error);
@@ -412,6 +422,10 @@ Interactive Histograms for Presidential Margins Data
       currentConfig.field = params.get('field');
       el.fieldSelect.value = currentConfig.field;
     }
+    if (params.has('buckets')) {
+      const b = parseInt(params.get('buckets'));
+      if (!isNaN(b) && b > 0) currentConfig.buckets = b;
+    }
   }
 
   function updateUrl() {
@@ -424,6 +438,7 @@ Interactive Histograms for Presidential Margins Data
       params.set('state', currentConfig.state);
     }
     params.set('field', currentConfig.field);
+  if (currentConfig.buckets) params.set('buckets', currentConfig.buckets);
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
@@ -538,6 +553,12 @@ Interactive Histograms for Presidential Margins Data
 
     const fieldConfig = fieldConfigs[currentConfig.field];
     if (!fieldConfig) return;
+
+    // If this field disallows NATIONAL, ensure the state select doesn't contain it
+    if (fieldConfig.disallowNational) {
+      const opts = Array.from(el.stateSelect.options).map(o => o.value).filter(v => v !== 'NATIONAL');
+      populateStateSelect(opts, false);
+    }
 
     if (currentConfig.viewMode === 'year') {
       updateYearHistogram(fieldConfig);
