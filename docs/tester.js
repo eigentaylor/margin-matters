@@ -476,6 +476,7 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
           color_name,
           IS_TIE_STOP: (r.IS_TIE_STOP !== undefined) ? r.IS_TIE_STOP : (r.is_tie_stop !== undefined ? r.is_tie_stop : null),
           IS_TIPPING_POINT: (r.IS_TIPPING_POINT !== undefined) ? r.IS_TIPPING_POINT : (r.is_tipping_point !== undefined ? r.is_tipping_point : null),
+          IS_FIRST_TIE_STOP: (r.IS_FIRST_TIE_STOP !== undefined) ? r.IS_FIRST_TIE_STOP : (r.is_first_tie_stop !== undefined ? r.is_first_tie_stop : null),
           ELECTORAL_VOTE_TOTALS: (r.ELECTORAL_VOTE_TOTALS !== undefined) ? r.ELECTORAL_VOTE_TOTALS : (r.electoral_vote_totals !== undefined ? r.electoral_vote_totals : '')
         });
         // Record effective once per stop key

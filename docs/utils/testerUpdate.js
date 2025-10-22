@@ -48,7 +48,8 @@ export function createUpdateAll(deps) {
       evFillR: document.getElementById('evFillR'),
       evText: document.getElementById('evText'),
       pvResetActual: document.getElementById('pvResetActual'),
-      pvTippingBtn: document.getElementById('pvTipping'),
+  pvTippingBtn: document.getElementById('pvTipping'),
+  pvTie: document.getElementById('pvTie'),
       flipEC: document.getElementById('flipEC'),
       closeStates: document.getElementById('closeStates'),
       pvDem: document.getElementById('pvDem'),
@@ -1162,13 +1163,83 @@ export function createUpdateAll(deps) {
       if (tippingInfo) {
         refs.pvTippingBtn.dataset.year = String(year);
         refs.pvTippingBtn.dataset.idx = String(tippingInfo.index);
-  const unitHint = (tippingInfo.units && tippingInfo.units.length) ? ` - ${tippingInfo.units.join(', ')}` : '';
+        const unitHint = (tippingInfo.units && tippingInfo.units.length) ? ` - ${tippingInfo.units.join(', ')}` : '';
         refs.pvTippingBtn.title = `Set PV to tipping point ${leanStr(tippingInfo.pv)}${unitHint}`;
       } else {
         delete refs.pvTippingBtn.dataset.year;
         delete refs.pvTippingBtn.dataset.idx;
         refs.pvTippingBtn.title = 'Tipping point unavailable';
       }
+    }
+
+    // pvTie: Set to first tie stop (IS_FIRST_TIE_STOP). If tippingInfo came from synthetic meta
+    // it may already prefer tipping stops; but we still expose a separate button which uses CSV flags
+    // when available.
+    if (refs.pvTie) {
+      // default: hidden
+      try { refs.pvTie.style.display = 'none'; } catch (e) { /* ignore */ }
+      try { refs.pvTie.disabled = true; } catch (e) { /* ignore */ }
+      // If tippingInfo was built from CSV flags, it may indicate a tie stop via the title or source.
+      // We prefer to show the tie button when there is a distinct first-tie stop recorded in window._stopColorsByYear
+      try {
+        const futureMetaMap = (typeof window !== 'undefined' && window._futureStopMeta && typeof window._futureStopMeta.get === 'function') ? window._futureStopMeta : null;
+        let tieIndex = null;
+        if (futureMetaMap && futureMetaMap.has(year)) {
+          const meta = futureMetaMap.get(year);
+          // meta may expose tieStops set; pick closest to nat
+          if (meta && meta.tieStops && typeof meta.tieStops.forEach === 'function') {
+            let best = null; let bestAbs = Infinity;
+            meta.tieStops.forEach(val => {
+              if (!Number.isFinite(val)) return;
+              const diff = Math.abs(val - (pvState ? pvState.nat : 0));
+              if (diff < bestAbs) { bestAbs = diff; best = val; }
+            });
+            if (best != null) {
+              const stopsArr = stopsByYear.get(year) || [];
+              const idx = stopsArr.findIndex(s => Math.abs(s - best) <= STOP_EPS);
+              if (idx >= 0) tieIndex = idx;
+            }
+          }
+        }
+        // Fallback: check raw stop color CSV mapping (window._stopColorsByYear)
+        if (tieIndex == null && typeof window !== 'undefined' && window._stopColorsByYear && typeof window._stopColorsByYear.get === 'function') {
+          const byYearStops = window._stopColorsByYear.get(year);
+          if (byYearStops && typeof byYearStops.keys === 'function') {
+            const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+            for (const key of byYearStops.keys()) {
+              try {
+                const table = byYearStops.get(key);
+                if (!table || typeof table.forEach !== 'function') continue;
+                let foundFirst = false;
+                table.forEach((info) => {
+                  if (!info) return;
+                  try {
+                    if (!foundFirst && parseBool(info.IS_FIRST_TIE_STOP)) {
+                      const chosen = parseFloat(key);
+                      const stopsArr = stopsByYear.get(year) || [];
+                      const idx = stopsArr.findIndex(s => Math.abs(s - chosen) <= STOP_EPS);
+                      if (idx >= 0) {
+                        tieIndex = idx;
+                        foundFirst = true;
+                      }
+                    }
+                  } catch (e) { /* ignore */ }
+                });
+                if (tieIndex != null) break;
+              } catch (e) { /* ignore individual key errors */ }
+            }
+          }
+        }
+        if (tieIndex != null && Number.isFinite(tieIndex)) {
+          try {
+            refs.pvTie.style.display = '';
+            refs.pvTie.disabled = false;
+            refs.pvTie.dataset.year = String(year);
+            refs.pvTie.dataset.idx = String(tieIndex);
+            refs.pvTie.title = 'Set PV to first EC tie stop';
+          } catch (e) { /* ignore */ }
+        }
+      } catch (e) { console.warn(e); }
     }
 
     buildPvStops(year, {

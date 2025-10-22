@@ -357,9 +357,10 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 ss = stops_list[ii]
                 d_ev, r_ev, _ = stop_ev_totals.get(ss, (0, 0, 0))
                 # check for tie or flip
-                if abs(d_ev - r_ev) <= EPS_EV:
-                    print(f"Debug: {year} tie stop at index {ii} is {stops_list[ii]}")
-                    tie_index = ii
+                if d_ev < EVs_to_win and r_ev < EVs_to_win:
+                    if tie_index is None and 0 <= ii < len(stops_list):
+                        print(f"Debug: {year} tie stop at index {ii} is {stops_list[ii]}")
+                        tie_index = ii
                 runner_up_ev = r_ev if runner_up == 'R' else d_ev
                 winner_ev = d_ev if winner_actual == 'D' else r_ev
                 if winner_ev > EVs_to_win:
@@ -377,8 +378,9 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
         # Build flag maps for quick lookup
         tie_stops = set()
         tipping_stops = set()
-        no_majority_stops = set()
+        #no_majority_stops = set()
         evs_by_stop = defaultdict(lambda: defaultdict(lambda: (0, 0, 0)))
+        first_tie_stop = None
         for s, (d_ev, r_ev, o_ev) in stop_ev_totals.items():
             evs_by_stop[year][abbr] = (d_ev, r_ev, o_ev)
             # if abs(d_ev - r_ev) <= EPS_EV:
@@ -387,8 +389,8 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             #     tie_stops.add(s)
             if d_ev < EVs_to_win and r_ev < EVs_to_win:
                 #no_majority_stops.add(s)
-                if year == 1960:
-                    pass
+                if tie_index is not None and 0 <= tie_index < len(stops_list):
+                    first_tie_stop = stops_list[tie_index]
                 tie_stops.add(s)
         if tipping_index is not None and 0 <= tipping_index < len(stops_list):
             tipping_stops.add(stops_list[tipping_index])
@@ -401,6 +403,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             sval = float(row.get('stop') or 0.0)
             row['IS_TIE_STOP'] = 'true' if any(abs(sval - ts) <= 10**(-STOP_KEY_PREC) for ts in tie_stops) else 'false'
             row['IS_TIPPING_POINT'] = 'true' if any(abs(sval - ts) <= 10**(-STOP_KEY_PREC) for ts in tipping_stops) else 'false'
+            row['IS_FIRST_TIE_STOP'] = 'true' if (first_tie_stop and abs(sval - first_tie_stop) <= 10**(-STOP_KEY_PREC)) else 'false'
             #row['ELECTORAL_VOTE_TOTALS'] = str(evs_by_stop[year].get(row.get('unit')))
             # row['IS_NO_MAJORITY_STOP'] = 'true' if any(abs(sval - ts) <= 10**(-STOP_KEY_PREC) for ts in no_majority_stops) else 'false'
 
@@ -424,7 +427,7 @@ def main():
     os.makedirs(docs_dir, exist_ok=True)
     outfile = os.path.join(docs_dir, 'stop_colors.csv')
     with open(outfile, 'w', newline='', encoding='utf-8') as f:
-        fieldnames = ['year', 'stop', 'stop_key', 'effective_pv', 'unit', 'winner', 'result_color_name', 'color_css', 'IS_TIE_STOP', 'IS_TIPPING_POINT', 'ELECTORAL_VOTE_TOTALS']#, 'IS_NO_MAJORITY_STOP']
+        fieldnames = ['year', 'stop', 'stop_key', 'effective_pv', 'unit', 'winner', 'result_color_name', 'color_css', 'IS_TIE_STOP', 'IS_TIPPING_POINT', 'IS_FIRST_TIE_STOP']#, 'IS_NO_MAJORITY_STOP']
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         for r in out_rows:

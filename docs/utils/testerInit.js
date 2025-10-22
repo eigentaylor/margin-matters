@@ -67,6 +67,7 @@ export function createTesterInitializer(deps) {
     const pvResetEvenBtn = document.getElementById('pvResetEven');
     const pvResetActualBtn = document.getElementById('pvResetActual');
     const pvTippingBtn = document.getElementById('pvTipping');
+  const pvTieBtn = document.getElementById('pvTie');
     if (!yearSlider || !pvSlider) return;
 
     const resolveDefaultPv = (year) => {
@@ -324,6 +325,35 @@ export function createTesterInitializer(deps) {
         try {
           const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
           updateUrl(year, info.index, flipMode);
+        } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvTieBtn) {
+      pvTieBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const tippingMap = (typeof window !== 'undefined' && window._pvTippingByYear instanceof Map) ? window._pvTippingByYear : null;
+        // We looked up the tie index during updateAll and stored it on the button dataset
+        const infoIdx = pvTieBtn && pvTieBtn.dataset && pvTieBtn.dataset.idx ? parseInt(pvTieBtn.dataset.idx, 10) : null;
+        if (infoIdx == null || !Number.isFinite(infoIdx)) return;
+        const stopsNow = stopsByYear.get(year) || [];
+        if (!stopsNow.length || infoIdx < 0 || infoIdx >= stopsNow.length) return;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(infoIdx);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
+        updateAll();
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(year, infoIdx, flipMode);
         } catch (err) { console.warn(err); }
       });
     }
