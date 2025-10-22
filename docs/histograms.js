@@ -78,7 +78,7 @@ Interactive Histograms for Presidential Margins Data
     'R_votes': { label: 'Republican Votes', hasZero: false, hasNational: false, format: formatNumber },
     'total_votes': { label: 'Total Votes', hasZero: false, hasNational: false, format: formatNumber },
     'third_party_votes': { label: 'Third Party Votes', hasZero: false, hasNational: false, format: formatNumber },
-    'electoral_votes': { label: 'Electoral Votes', hasZero: false, hasNational: false, format: formatNumber }
+    'electoral_votes': { label: 'Electoral Votes', hasZero: false, hasNational: false, format: formatNumber, disallowNational: true }
   };
 
   // Colors
@@ -266,11 +266,22 @@ Interactive Histograms for Presidential Margins Data
         }
       }
 
+      // Ensure fields that disallow NATIONAL don't accidentally leave NATIONAL in the selector
+      const activeFieldCfg = fieldConfigs[currentConfig.field];
+      if (activeFieldCfg && activeFieldCfg.disallowNational) {
+        const nonNational = allStates.filter(s => s !== 'NATIONAL');
+        populateStateSelect(nonNational, false);
+        if (currentConfig.state === 'NATIONAL' || !nonNational.includes(currentConfig.state)) {
+          currentConfig.state = nonNational.length > 0 ? nonNational[0] : 'NATIONAL';
+          el.stateSelect.value = currentConfig.state;
+        }
+      }
+
       // Initialize chart
-  // Update URL to reflect initial state (may include buckets parsed from URL)
-  updateUrl();
-  initChart();
-  updateChart();
+      // Update URL to reflect initial state (may include buckets parsed from URL)
+      updateUrl();
+      initChart();
+      updateChart();
 
     } catch (error) {
       console.error('Error loading data:', error);
@@ -283,7 +294,13 @@ Interactive Histograms for Presidential Margins Data
     // Clear existing options
     el.stateSelect.innerHTML = '';
 
-    const list = onlyNational ? ['NATIONAL'] : states;
+    // Respect field-level disallowNational flag unless caller explicitly requests onlyNational
+    const fieldCfg = fieldConfigs[currentConfig.field];
+    let list = onlyNational ? ['NATIONAL'] : states.slice();
+
+    if (!onlyNational && fieldCfg && fieldCfg.disallowNational) {
+      list = list.filter(s => s !== 'NATIONAL');
+    }
 
     list.forEach(state => {
       const option = document.createElement('option');
@@ -300,14 +317,14 @@ Interactive Histograms for Presidential Margins Data
     } else {
       // enable selector and set to currentConfig.state if present
       el.stateSelect.disabled = false;
-      if (currentConfig.state && states.includes(currentConfig.state)) {
+      // If the current state was NATIONAL but the list no longer contains it, pick a safe default
+      if (currentConfig.state && list.includes(currentConfig.state)) {
         el.stateSelect.value = currentConfig.state;
       } else {
-        // default
-        // prefer first available state that's not NATIONAL if NATIONAL exists and isn't ideal
-        if (states.length > 0) {
-          currentConfig.state = states[0];
+        if (list.length > 0) {
+          currentConfig.state = list[0];
         } else {
+          // no available states (edge case) - fall back to NATIONAL
           currentConfig.state = 'NATIONAL';
         }
         el.stateSelect.value = currentConfig.state;
@@ -438,7 +455,7 @@ Interactive Histograms for Presidential Margins Data
       params.set('state', currentConfig.state);
     }
     params.set('field', currentConfig.field);
-  if (currentConfig.buckets) params.set('buckets', currentConfig.buckets);
+    if (currentConfig.buckets) params.set('buckets', currentConfig.buckets);
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
@@ -569,7 +586,12 @@ Interactive Histograms for Presidential Margins Data
 
   function updateYearHistogram(fieldConfig) {
     // Filter data for selected year
-    const yearData = allData.filter(d => d.year === currentConfig.year);
+    let yearData = allData.filter(d => d.year === currentConfig.year);
+
+    // If the field disallows NATIONAL, remove any NATIONAL row from the calculation
+    if (fieldConfig && fieldConfig.disallowNational) {
+      yearData = yearData.filter(d => d.abbr !== 'NATIONAL');
+    }
 
     // Extract values
     const values = yearData
@@ -948,8 +970,11 @@ Interactive Histograms for Presidential Margins Data
   }
 
   function showTooltip(event, bin, fieldConfig, median) {
-    const states = bin.states || [];
+    let states = (bin.states || []).slice();
     const eps = 1e-9;
+
+    // Sort states by numeric value ascending
+    states.sort((a, b) => a.value - b.value);
 
     let tooltipHtml = `
       <div style="font-weight: 600; margin-bottom: 4px;">
@@ -962,16 +987,38 @@ Interactive Histograms for Presidential Margins Data
       tooltipHtml += '<div style="border-top: 1px solid #2a2a2a; padding-top: 6px; margin-top: 6px;">';
       tooltipHtml += '<div style="font-weight: 600; margin-bottom: 4px;">States/Units:</div>';
 
+      // If no single unit equals the median, insert a synthetic median row so it's clear where it lies
+      let hasExactMedian = false;
+      if (median != null) {
+        for (const s of states) {
+          if (Math.abs(s.value - median) <= eps) { hasExactMedian = true; break; }
+        }
+      }
+
+      if (median != null && !hasExactMedian) {
+        // Only show the synthetic median if it lies within this bin's numeric range
+        if (median >= bin.x0 - eps && median <= bin.x1 + eps) {
+          const medianEntry = { value: median, state: null, strValue: fieldConfig.format(median), __isMedian: true };
+          let insertIdx = states.findIndex(s => s.value > median);
+          if (insertIdx === -1) insertIdx = states.length;
+          states.splice(insertIdx, 0, medianEntry);
+        }
+      }
+
       states.forEach(s => {
-        const isMedian = (median != null && Math.abs(s.value - median) <= eps);
+        const isMedian = s.__isMedian || (median != null && Math.abs(s.value - median) <= eps);
         tooltipHtml += `<div style="margin-left: 8px; display:flex; align-items:center; gap:8px;">`;
         if (isMedian) {
           tooltipHtml += `<span style="color: ${colors.average}; font-weight:700;">★</span>`;
         } else {
           tooltipHtml += `<span style="width:14px; display:inline-block;"></span>`;
         }
-        tooltipHtml += `<span>${s.state}: ${s.strValue}</span>`;
-        if (isMedian) tooltipHtml += `<span style="margin-left:6px; color:${colors.average}; font-size:0.85rem;">median</span>`;
+        if (s.__isMedian) {
+          tooltipHtml += `<span>median: ${s.strValue}</span>`;
+        } else {
+          tooltipHtml += `<span>${s.state}: ${s.strValue}</span>`;
+        }
+        if (isMedian && !s.__isMedian) tooltipHtml += `<span style="margin-left:6px; color:${colors.average}; font-size:0.85rem;">median</span>`;
         tooltipHtml += `</div>`;
       });
 
@@ -984,8 +1031,11 @@ Interactive Histograms for Presidential Margins Data
   }
 
   function showTooltipTimeSeries(event, bin, fieldConfig, median) {
-    const years = bin.years || [];
+    let years = (bin.years || []).slice();
     const eps = 1e-9;
+
+    // Sort years by numeric value ascending
+    years.sort((a, b) => a.value - b.value);
 
     let tooltipHtml = `
       <div style="font-weight: 600; margin-bottom: 4px;">
@@ -998,16 +1048,38 @@ Interactive Histograms for Presidential Margins Data
       tooltipHtml += '<div style="border-top: 1px solid #2a2a2a; padding-top: 6px; margin-top: 6px;">';
       tooltipHtml += '<div style="font-weight: 600; margin-bottom: 4px;">Years:</div>';
 
+      // If no single data point equals the median, insert a synthetic median row so the tooltip shows where it lies
+      let hasExactMedian = false;
+      if (median != null) {
+        for (const y of years) {
+          if (Math.abs(y.value - median) <= eps) { hasExactMedian = true; break; }
+        }
+      }
+
+      if (median != null && !hasExactMedian) {
+        // Only show the synthetic median if it lies within this bin's numeric range
+        if (median >= bin.x0 - eps && median <= bin.x1 + eps) {
+          const medianEntry = { value: median, year: null, strValue: fieldConfig.format(median), __isMedian: true };
+          let insertIdx = years.findIndex(y => y.value > median);
+          if (insertIdx === -1) insertIdx = years.length;
+          years.splice(insertIdx, 0, medianEntry);
+        }
+      }
+
       years.forEach(y => {
-        const isMedian = (median != null && Math.abs(y.value - median) <= eps);
+        const isMedian = y.__isMedian || (median != null && Math.abs(y.value - median) <= eps);
         tooltipHtml += `<div style="margin-left: 8px; display:flex; align-items:center; gap:8px;">`;
         if (isMedian) {
           tooltipHtml += `<span style="color: ${colors.average}; font-weight:700;">★</span>`;
         } else {
           tooltipHtml += `<span style="width:14px; display:inline-block;"></span>`;
         }
-        tooltipHtml += `<span>${y.year}: ${y.strValue}</span>`;
-        if (isMedian) tooltipHtml += `<span style="margin-left:6px; color:${colors.average}; font-size:0.85rem;">median</span>`;
+        if (y.__isMedian) {
+          tooltipHtml += `<span>median: ${y.strValue}</span>`;
+        } else {
+          tooltipHtml += `<span>${y.year}: ${y.strValue}</span>`;
+        }
+        if (isMedian && !y.__isMedian) tooltipHtml += `<span style="margin-left:6px; color:${colors.average}; font-size:0.85rem;">median</span>`;
         tooltipHtml += `</div>`;
       });
 
