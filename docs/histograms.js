@@ -49,7 +49,7 @@ Interactive Histograms for Presidential Margins Data
     'national_margin_delta': { label: 'National Margin Delta', hasZero: true, hasNational: false, format: formatPercent, timeSeriesOnly: true, nationalOnly: true },
     'relative_margin': { label: 'Relative Margin', hasZero: true, hasNational: false, format: formatPercent, disallowNational: true },
     'relative_margin_delta': { label: 'Relative Margin Delta', hasZero: true, hasNational: false, format: formatPercent, disallowNational: true },
-    'median_margin_delta': { label: 'Median Margin Delta', hasZero: true, hasNational: false, format: formatPercent, timeSeriesOnly: true, nationalOnly: true },
+    'median_margin_delta': { label: 'Median Margin Delta by Year', hasZero: true, hasNational: false, format: formatPercent, timeSeriesOnly: true, nationalOnly: true },
     'median_delta_dist': { label: 'Median Delta Distance', hasZero: true, hasNational: false, format: formatNumber },
 
     // Two-party fields
@@ -63,10 +63,10 @@ Interactive Histograms for Presidential Margins Data
     // Share fields
     'D_share': { label: 'Democratic Vote Share', hasZero: false, hasNational: false, format: formatPercent },
     'R_share': { label: 'Republican Vote Share', hasZero: false, hasNational: false, format: formatPercent },
-    'third_party_share': { label: 'Third Party Share', hasZero: false, hasNational: false, format: formatPercent },
-    'third_party_national_share': { label: 'Third Party National Share', hasZero: false, hasNational: false, format: formatPercent },
-    'third_party_relative_share': { label: 'Third Party Relative Share', hasZero: false, hasNational: false, format: formatPercent, disallowNational: true },
-    'top_third_party_share': { label: 'Top Third Party Share', hasZero: false, hasNational: false, format: formatPercent },
+    'third_party_share': { label: 'Third Party Share', hasZero: false, hasNational: false, format: formatRawPercent },
+    'third_party_national_share': { label: 'Third Party National Share', hasZero: false, hasNational: false, format: formatRawPercent },
+    'third_party_relative_share': { label: 'Third Party Relative Share', hasZero: false, hasNational: false, format: formatRawPercent, disallowNational: true },
+    'top_third_party_share': { label: 'Top Third Party Share', hasZero: false, hasNational: false, format: formatRawPercent },
 
     // Delta fields
     'D_delta': { label: 'Democratic Vote Delta', hasZero: true, hasNational: false, format: formatNumber },
@@ -106,6 +106,14 @@ Interactive Histograms for Presidential Margins Data
     return 'EVEN';
   }
 
+  // Raw percent formatter for fields that represent a single-party share
+  // (should display just the percent value, not D+/R+ style)
+  function formatRawPercent(value) {
+    if (value == null || isNaN(value)) return 'N/A';
+    const pct = (value * 100).toFixed(1);
+    return `${pct}%`;
+  }
+
   function formatNumber(value) {
     if (value == null || isNaN(value)) return 'N/A';
     if (Math.abs(value) >= 1000000) {
@@ -135,13 +143,28 @@ Interactive Histograms for Presidential Margins Data
       allStates = [...new Set(allData.map(d => d.abbr))].sort();
       populateStateSelect(allStates);
 
-      // Populate field dropdown
+      // Populate field dropdown with groups: Single Year Fields first, then Multiyear Fields
+      // Create optgroups
+      const singleGroup = document.createElement('optgroup');
+      singleGroup.label = 'Single Year Fields';
+      const multiGroup = document.createElement('optgroup');
+      multiGroup.label = 'Multiyear Fields';
+
+      // Sort entries for stable order: keep object order but ensure single-year first
       Object.entries(fieldConfigs).forEach(([field, config]) => {
         const option = document.createElement('option');
         option.value = field;
         option.textContent = config.label;
-        el.fieldSelect.appendChild(option);
+        if (config && config.timeSeriesOnly) {
+          multiGroup.appendChild(option);
+        } else {
+          singleGroup.appendChild(option);
+        }
       });
+
+      // Append groups to select, single-year group first
+      el.fieldSelect.appendChild(singleGroup);
+      el.fieldSelect.appendChild(multiGroup);
 
       // Create bucket slider control (buckets)
       const sliderWrap = document.createElement('div');
