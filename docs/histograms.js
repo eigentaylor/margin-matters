@@ -233,8 +233,8 @@ Interactive Histograms for Presidential Margins Data
       const initFieldCfg = fieldConfigs[currentConfig.field];
       if (initFieldCfg && initFieldCfg.timeSeriesOnly) {
         // force state/time-series mode and limit states to NATIONAL
-        el.viewMode.value = 'state';
-        currentConfig.viewMode = 'state';
+  el.viewMode.value = 'timeseries';
+  currentConfig.viewMode = 'timeseries';
         populateStateSelect(['NATIONAL'], true);
       } else if (initFieldCfg && initFieldCfg.disallowNational) {
         // For relative fields that disallow NATIONAL, populate excluding NATIONAL
@@ -312,8 +312,8 @@ Interactive Histograms for Presidential Margins Data
     const fieldCfg = fieldConfigs[currentConfig.field];
     if (requestedMode === 'year' && fieldCfg && fieldCfg.timeSeriesOnly) {
       // revert selector to state/time-series mode
-      el.viewMode.value = 'state';
-      currentConfig.viewMode = 'state';
+  el.viewMode.value = 'timeseries';
+  currentConfig.viewMode = 'timeseries';
       // inform user subtly
       el.infoBox.textContent = `${fieldCfg.label} is only available as a time series (NATIONAL).`;
       return;
@@ -363,8 +363,8 @@ Interactive Histograms for Presidential Margins Data
 
     // If the field is time-series-only, force state view and restrict states to NATIONAL
     if (fieldCfg && fieldCfg.timeSeriesOnly) {
-      el.viewMode.value = 'state';
-      currentConfig.viewMode = 'state';
+  el.viewMode.value = 'timeseries';
+  currentConfig.viewMode = 'timeseries';
       populateStateSelect(['NATIONAL'], true);
     } else if (fieldCfg && fieldCfg.disallowNational) {
       // For relative fields that disallow NATIONAL, ensure state selector excludes NATIONAL
@@ -386,8 +386,8 @@ Interactive Histograms for Presidential Margins Data
 
     // If user attempted to switch to year while field requires time series, prevent it
     if (currentConfig.viewMode === 'year' && fieldCfg && fieldCfg.timeSeriesOnly) {
-      el.viewMode.value = 'state';
-      currentConfig.viewMode = 'state';
+  el.viewMode.value = 'timeseries';
+  currentConfig.viewMode = 'timeseries';
     }
 
     updateChart();
