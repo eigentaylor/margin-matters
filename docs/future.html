@@ -8,6 +8,7 @@
   <link rel="icon" href="./favicon.svg" />
   <link rel="stylesheet" href="./styles.css" />
   <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
   <style>
     :root {
       --bg: #0b0b0b;
@@ -79,6 +80,11 @@
     <div id="header-placeholder"></div>
 
     <div id="back-to-map-placeholder"></div>
+    <div id="evProjectionWarning" class="card"
+      style="background:#3a1a1a;border:1px solid #7a2a2a;color:#ffd6d6;display:none;margin-top:12px;padding:10px">
+      <strong>EV projection mismatch</strong>
+      <div id="evProjectionWarningText" style="margin-top:6px;color:#ffd6d6"></div>
+    </div>
     <div class="card">
       <div class="legend" style="margin-bottom:8px">Possible Election Map</div>
       <div id="map-wrap" class="center">
@@ -105,22 +111,29 @@
         </div>
 
 
-        <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <label for="yearSlider" class="legend">Year</label>
-            <div style="display:flex;align-items:center;gap:8px;min-width:320px">
-              <input id="yearSlider" type="range" min="2024" max="2048" step="4" value="2028"
-                style="flex:1;min-width:160px;" />
-              <span id="yearVal">2028</span>
-            </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <label for="yearSlider" style="flex:0 0 auto;min-width:48px">Year:</label>
+          <input id="yearSlider" type="range" min="2024" max="2048" step="4" value="2028"
+            style="flex:1;min-width:120px;" />
+          <span id="yearVal" style="margin-left:8px;flex:0 0 auto">2028</span>
+        </div>
+        <div style="display:grid;gap:10px">
+          <div style="display:flex;gap:10px;align-items:center">
+            <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
+            <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
+            <span id="pvVal">EVEN</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:320px">
-            <label for="pvSlider" class="legend">PV (Nat. Margin)</label>
-            <div style="display:flex;gap:10px;align-items:center">
-              <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
-              <span id="pvVal">EVEN</span>
-            </div>
-            <datalist id="pvStopsList"></datalist>
+          <datalist id="pvStopsList"></datalist>
+          <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:8px">
+            <button id="pvReset" class="btn" type="button">Reset to EVEN</button>
+            <button id="pvResetActual" class="btn" type="button" style="display:none">Reset to Actual</button>
+            <button id="pvTipping" class="btn" type="button" disabled>Set to Tipping Point</button>
+          </div>
+          <div id="pvTotals" class="pv-totals" style="display: none;">
+            <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span></div>
+            <div class="pv-badge pv-o"><span class="label">Other</span><span id="pvOth" class="num">0</span></div>
+            <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
+            <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
           </div>
         </div>
         <div class="legend" style="text-align:left">Enter a seed to generate a "plausible" path of relative state
@@ -172,7 +185,7 @@
         </div>
         <div id="pvStops" class="legend" style="font-size:0.95rem"></div>
 
-        <div class="card" style="background:transparent;border-color:var(--border)">
+        <div class="card pv-tools" style="background:transparent;border-color:var(--border)">
           <div class="legend" style="margin-bottom:6px">PV tools</div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
             <div style="display:flex;flex-direction:column;gap:6px">
@@ -189,6 +202,56 @@
               <button id="pvClear" class="btn">Clear</button>
             </div>
           </div>
+        </div>
+
+        <!-- Laplace sampling details (populated when endpoint method = laplace) -->
+        <div class="card" id="laplacePanel" style="background:transparent;border-color:var(--border);display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="legend" style="margin-bottom:6px">Laplace endpoint sampling details</div>
+            <button id="laplaceToggle" class="btn">Show</button>
+          </div>
+          <div id="laplaceContent"
+            style="margin-top:8px;display:none;max-height:320px;overflow:auto;font-size:0.9rem;color:var(--muted)">
+          </div>
+        </div>
+
+        <!-- Model options: endpoint and slope method selectors used by future.js -->
+        <div class="card" style="background:transparent;border-color:var(--border)">
+          <div class="legend" style="margin-bottom:6px">Model options</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="endpointSelect">Endpoint method</label>
+              <select id="endpointSelect" class="btn" style="min-width:160px">
+                <option value="slope">Slope (trend)</option>
+                <option value="laplace" selected>Laplace (sign + tail)</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="slopeMethod">Slope method</label>
+              <select id="slopeMethod" class="btn" style="min-width:160px">
+                <option value="ols" selected>OLS</option>
+                <option value="wls">WLS</option>
+                <option value="loess">LOESS</option>
+                <option value="poly2">Poly (deg 2)</option>
+                <option value="poly3">Poly (deg 3)</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label class="legend" for="evProjectionSelect">EV projection</label>
+              <select id="evProjectionSelect" class="btn" style="min-width:200px">
+                <option value="baseline" selected>2024 Baseline</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span class="legend">Projection window</span>
+              <label class="legend" style="display:flex;align-items:center;gap:8px">
+                <input id="evProjectionFutureOnly" type="checkbox" checked/>
+                Apply to 2032+
+              </label>
+            </div>
+          </div>
+          <div class="legend" style="font-size:0.85rem;color:var(--muted)">Choose endpoint model and slope calculation
+            (used when generating futures).</div>
         </div>
 
         <div id="closeStates" class="legend"></div>
@@ -223,7 +286,27 @@
             dynamics, rather than the year to year fluctuations to say that Georgia is consistently trending left. Will
             Georgia be D+7.8 in 2048? I have no idea. But based on the data, that is "plausible" enough for this silly
             little model.<br /><br />
-            We do not bother to estimate future census data, so we just use the electoral votes from 2024.</div>
+            Future census projections from the following:
+
+            <!-- 2030 Electoral Vote Projection Sources -->
+            <div style="margin-top:8px;font-size:0.95rem;color:var(--muted)">
+              <strong>2030 Electoral Vote Projection Sources</strong>
+              <p style="margin:6px 0 4px 0;color:var(--muted)">Sources used for projected reapportionment shifts:</p>
+              <ul style="margin:0 0 0 18px;color:var(--muted)">
+                <li>Brennan Center for Justice: <a
+                    href="https://www.brennancenter.org/our-work/analysis-opinion/how-congressional-maps-could-change-2030"
+                    target="_blank" rel="noopener noreferrer">How Congressional Maps Could Change in 2030</a> (accessed
+                  Oct 16, 2024).</li>
+                <li>The American Redistricting Project (ARP): <a
+                    href="https://thearp.org/blog/apportionment/2030-apportionment-forecast-2024/" target="_blank"
+                    rel="noopener noreferrer">2030 Apportionment Forecast – 2024</a> (accessed Oct 16, 2024).</li>
+                <li>Election Data Services via The Census Project: <a
+                    href="https://thecensusproject.org/2025/01/03/impact-of-latest-population-estimates-on-2030-reapportionment/"
+                    target="_blank" rel="noopener noreferrer">Impact of Latest Population Estimates on 2030
+                    Reapportionment</a> (accessed Oct 16, 2024).</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -247,7 +330,6 @@
   <script src="./header.js"></script>
   <script src="./back-to-map.js"></script>
   <script src="./footer.js"></script>
-  <script src="./last-updated.js"></script>
   </div>
 
   <div class="tooltip" id="tooltip"></div>
@@ -256,6 +338,7 @@
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   <!-- Flag future mode before loading tester.js to adjust stops/labels and default PV behavior -->
   <script>window._futureMode = true;</script>
+  <!-- <script>window._futureDebug = true;</script> -->
   <!-- Centralized PV presets -->
   <script src="./pv-presets.js"></script>
   <!-- Reuse the same map logic and PV stops/EV bar from tester.js -->
@@ -263,8 +346,7 @@
   <script type="module" src="./election-night.js"></script>
   <!-- Page driver that generates future margins and plugs into tester.js state -->
   <script src="./future.js"></script>
-  <!-- Centralized PV presets -->
-  <script src="./pv-presets.js"></script>
+
 
   <div id="enLogPanel" aria-live="polite" aria-label="Election night call log">
     <div class="en-log-header">Call log</div>

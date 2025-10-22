@@ -86,6 +86,9 @@ def simple_markdown_to_html(text):
     
     return '\n'.join(html_lines)
 
+def get_today_date_str():
+    """Get today's date as a string in YYYY-MM-DD format."""
+    return datetime.now().strftime("%Y-%m-%d")
 
 def process_inline_formatting(text):
     """Process inline markdown formatting like bold, italic, links."""
@@ -124,6 +127,8 @@ def compile_changelog():
     entries = []
     files_to_delete = []
     
+    todays_found = False
+    
     # Collect all valid changelog entries
     for entry_file in sorted(changelog_dir.iterdir()):
         if not entry_file.is_file():
@@ -133,6 +138,8 @@ def compile_changelog():
         if not match:
             continue
         
+        todays_found = (match.group(1) == get_today_date_str())
+
         date_str = match.group(1)
         content = entry_file.read_text(encoding="utf-8").strip()
         
@@ -162,6 +169,15 @@ def compile_changelog():
             print(f"Deleted empty changelog file: {empty_file.name}")
         except Exception as e:
             print(f"Warning: Could not delete {empty_file.name}: {e}")
+        
+    # If today's entry is missing, create a placeholder
+    if not todays_found:
+        print(f'No changelog entry found for today ({get_today_date_str()}), adding placeholder file.')
+        placeholder_file = changelog_dir / f"{get_today_date_str()}.md"
+        # create blank placeholder file
+        placeholder_file.write_text("", encoding="utf-8")
+    else:
+        print(f'Changelog entry found for today ({get_today_date_str()}).')
     
     # Sort entries by date (newest first)
     entries.sort(key=lambda x: x["date"], reverse=True)
@@ -204,6 +220,7 @@ def compile_changelog():
     <link rel='stylesheet' href='styles.css' />
     <link rel="icon" href="favicon.svg" />
     <script src="maintenance-check.js"></script>
+    <script src="./last-updated.js"></script>
 </head>
 
 <body>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bellwether & Close States Explorer • Margin Matters</title>
+  <link rel="icon" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+
+    <div class="card" style="margin-top:12px">
+      <h2 style="margin-top:0">Bellwether & Close States Explorer</h2>
+      <p class="legend">
+        Explore how bellwether states (close to the national margin) and close states (small raw margins)
+        have changed across election years from 1864 to 2024. Page is in beta; bug reports and feedback welcome!
+      </p>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="card" style="margin-top:12px">
+      <div class="legend" style="margin-bottom:12px">Settings</div>
+
+      <!-- Year Selection (slider) -->
+      <div id="yearControl" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <label for="yearSlider" style="min-width:120px">Year:</label>
+        <input id="yearSlider" type="range" min="1864" max="2024" step="4" value="2024"
+          style="flex:1;max-width:300px" />
+        <span id="yearVal" style="min-width:80px;text-align:right">2024</span>
+        <label style="margin-left:8px;display:flex;align-items:center;gap:6px"><input id="allYearsCheckbox"
+            type="checkbox" /> All Years</label>
+      </div>
+
+      <!-- Category Selection -->
+      <div id="categoryRow" style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <label for="categorySelect" style="min-width:120px">Category:</label>
+        <select id="categorySelect" class="btn" style="flex:1;max-width:200px">
+          <option value="bellwether">Bellwether States</option>
+          <option value="close">Close States</option>
+        </select>
+      </div>
+
+      <!-- Bellwether Threshold Slider -->
+      <div id="bellwetherControls" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <label for="bellwetherThreshold" style="min-width:120px">Bellwether Threshold:</label>
+          <input id="bellwetherThreshold" type="range" min="0.01" max="0.10" step="0.005" value="0.05" style="flex:1" />
+          <span id="bellwetherThresholdVal" style="min-width:60px">5.0%</span>
+        </div>
+        <div class="legend" style="font-size:0.85rem;color:var(--muted)">
+          Maximum absolute relative margin distance from national margin
+        </div>
+      </div>
+
+      <!-- Close States Threshold Slider -->
+      <div id="closeControls" style="margin-bottom:12px;display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <label for="closeThreshold" style="min-width:120px">Close Threshold:</label>
+          <input id="closeThreshold" type="range" min="0.001" max="0.05" step="0.001" value="0.01" style="flex:1" />
+          <span id="closeThresholdVal" style="min-width:60px">1.0%</span>
+        </div>
+        <div class="legend" style="font-size:0.85rem;color:var(--muted)">
+          Maximum absolute presidential margin (raw state margin)
+        </div>
+      </div>
+
+      <!-- Display Type Selection -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <label for="displayType" style="min-width:120px">Display:</label>
+        <select id="displayType" class="btn" style="flex:1;max-width:300px">
+          <option value="bar">Bar Graph (Count Over Years)</option>
+          <option value="histogram">Histogram (Margin Distribution)</option>
+          <option value="table">Table (Detailed List)</option>
+          <option value="outcome">Outcome Table (Streaks)</option>
+        </select>
+      </div>
+
+      <div id="outcomeControls" style="margin-bottom:12px;display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <label for="outcomeType" style="min-width:120px">Outcome:</label>
+          <select id="outcomeType" class="btn" style="flex:1;max-width:220px">
+            <option value="pv">Popular Vote</option>
+            <option value="ec">Electoral College</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <label for="streakThreshold" style="min-width:120px">Streak Length:</label>
+          <input id="streakThreshold" type="range" min="1" max="5" step="1" value="3" style="flex:1" />
+          <span id="streakThresholdVal" style="min-width:120px">3 elections</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <label for="maxAllowedMisses" style="min-width:120px">Allowed misses:</label>
+            <select id="maxAllowedMisses" class="btn" style="max-width:140px">
+              <option value="0">No misses</option>
+              <option value="1" selected>1 miss</option>
+              <option value="2">2 misses</option>
+            </select>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px"><input id="onlyCurrentStreak" type="checkbox" /> Only show active 2024 streaks</label>
+          <label style="display:flex;align-items:center;gap:8px"><input id="reverseStreaks" type="checkbox" /> Show reverse bellwethers (streaks of failures)</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visualization Area -->
+    <div class="card" style="margin-top:12px">
+      <div id="vizTitle" class="legend" style="margin-bottom:12px;font-size:1.1rem"></div>
+
+      <!-- Bar Chart Container -->
+      <div id="barChartContainer" style="display:none">
+        <svg id="barChart" width="100%" height="400"></svg>
+      </div>
+
+      <!-- Histogram Container -->
+      <div id="histogramContainer" style="display:none">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+          <button id="histogramSummaryBtn" class="btn">Summary</button>
+        </div>
+        <svg id="histogram" width="100%" height="400"></svg>
+      </div>
+
+      <!-- Table Container -->
+      <div id="tableContainer" style="display:none">
+        <div class="table-wrap">
+          <table id="dataTable" class="flip-table">
+            <thead>
+              <tr id="tableHeader"></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Outcome Table Container -->
+      <div id="outcomeTableContainer" style="display:none">
+        <div class="table-wrap">
+          <table id="outcomeTable" class="flip-table">
+            <thead>
+              <tr id="outcomeTableHeader"></tr>
+            </thead>
+            <tbody id="outcomeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Loading/Error Messages -->
+      <div id="loadingMsg" class="legend" style="text-align:center;padding:40px">
+        Loading data...
+      </div>
+      <div id="errorMsg" class="legend" style="text-align:center;padding:40px;display:none;color:#ff6b6b">
+        Error loading data. Please try again.
+      </div>
+      <!-- Detail panel for clicked bars/bins/rows -->
+      <div id="detailPanel"
+        style="display:none;margin-top:12px;border:1px solid var(--border);padding:12px;border-radius:8px;background:var(--card)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div id="detailTitle" style="font-weight:600"></div>
+          <button id="detailClose" class="btn">Close</button>
+        </div>
+        <div class="table-wrap">
+          <table id="detailTable" class="flip-table">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>Year</th>
+                <th>Pres. Margin</th>
+                <th>Rel. Margin</th>
+              </tr>
+            </thead>
+            <tbody id="detailBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="./header.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./footer.js"></script>
+  <script type="module" src="./bellwether-explorer.js"></script>
+</body>
+
+</html>

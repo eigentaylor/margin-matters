@@ -63,7 +63,21 @@ export function createTesterInitializer(deps) {
     const pvVal = document.getElementById('pvVal');
     const pvStops = document.getElementById('pvStops');
     const pvStopsList = document.getElementById('pvStopsList');
+    const pvResetBtn = document.getElementById('pvReset');
+    const pvResetEvenBtn = document.getElementById('pvResetEven');
+    const pvResetActualBtn = document.getElementById('pvResetActual');
+    const pvTippingBtn = document.getElementById('pvTipping');
     if (!yearSlider || !pvSlider) return;
+
+    const resolveDefaultPv = (year) => {
+      const stops = stopsByYear.get(year) || [0];
+      const nat = getNatMargin(year);
+      const hasActual = !(window._futureMode && year > 2024);
+      let idx = hasActual ? stops.findIndex(v => Math.abs(v - nat) <= STOP_EPS) : -1;
+      if (idx < 0) idx = stops.findIndex(v => Math.abs(v) <= STOP_EPS);
+      if (idx < 0) idx = 0;
+      return { stops, nat, idx };
+    };
 
     window.addEventListener('mapReady', () => updateAll());
     yearSlider.addEventListener('input', () => {
@@ -135,15 +149,24 @@ export function createTesterInitializer(deps) {
     yearSlider.value = String(y);
     if (yearVal) yearVal.textContent = y;
 
-    buildPvStops(y);
-    const stops = stopsByYear.get(y) || [0];
-    pvSlider.min = 0;
-    pvSlider.max = Math.max(0, stops.length - 1);
-    pvSlider.step = 1;
-    const nat = getNatMargin(y);
-    let defaultIdx = stops.findIndex(v => Math.abs(v - nat) <= STOP_EPS);
-    if (defaultIdx < 0) defaultIdx = stops.findIndex(v => Math.abs(v) <= STOP_EPS);
-    if (defaultIdx < 0) defaultIdx = 0;
+    // Ensure presets (including negative mirrors) are injected before we
+    // compute slider bounds. Pages can expose window._pvExtraPresets and
+    // window._injectNegativePresets; respect those here.
+    const extraPresets = (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [];
+    const injectNegativePresets = (typeof window !== 'undefined') ? !!window._injectNegativePresets : false;
+    // Populate stopsByYear and render the container now so subsequent logic
+    // that reads stopsByYear sees the full list (including negatives).
+    try {
+      buildPvStops(y, { container: pvStops, datalist: pvStopsList, getNatMargin, updateAll, extraPresets, injectNegativePresets });
+    } catch (e) { console.warn(e); }
+
+  const defaultInfo = resolveDefaultPv(y);
+  const stops = defaultInfo.stops;
+  const nat = defaultInfo.nat;
+  let defaultIdx = defaultInfo.idx;
+  pvSlider.min = 0;
+  pvSlider.max = Math.max(0, stops.length - 1);
+  pvSlider.step = 1;
 
     if (urlParams.pv !== null && Number.isInteger(urlParams.pv) && urlParams.pv >= 0 && urlParams.pv < stops.length) {
       defaultIdx = Math.floor(urlParams.pv);
@@ -188,12 +211,7 @@ export function createTesterInitializer(deps) {
     const showNatInit = ((!(window._futureMode && y > 2024)) && Math.abs(curStop - nat) < STOP_EPS);
     if (pvVal) pvVal.textContent = (showNatInit ? 'Actual ' : '') + leanStr(curEff);
 
-    buildPvStops(y, {
-      container: pvStops,
-      datalist: pvStopsList,
-      getNatMargin,
-      updateAll
-    });
+    // buildPvStops was already invoked above to populate stops and render the UI
     updateFlipMetricOptionsForYear();
 
     const btnClassic = document.getElementById('flipClassic');
@@ -205,6 +223,110 @@ export function createTesterInitializer(deps) {
     if (btnTie) btnTie.addEventListener('click', () => applyFlip('tie'));
     if (btnReset) btnReset.addEventListener('click', () => { clearFlips(); updateAll(); });
     updateFlipButtons();
+
+    if (pvResetBtn) {
+      pvResetBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const info = resolveDefaultPv(year);
+        const stopsNow = info.stops;
+        let idx = info.idx;
+        if (window._futureMode) {
+          const evenIdx = stopsNow.findIndex(v => Math.abs(v) <= STOP_EPS);
+          if (evenIdx >= 0) idx = evenIdx;
+        }
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(idx);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
+        updateAll();
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(year, idx, flipMode);
+        } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvResetEvenBtn) {
+      pvResetEvenBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const info = resolveDefaultPv(year);
+        const stopsNow = info.stops || [];
+        // find the even (0) stop index
+        let evenIdx = stopsNow.findIndex(v => Math.abs(v) <= STOP_EPS);
+        if (evenIdx < 0) evenIdx = 0;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(evenIdx);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try { const pvPresetEl = document.getElementById('pvPreset'); if (pvPresetEl) pvPresetEl.value = ''; } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) { try { clearFlips(); } catch (err) { console.warn(err); } }
+        updateAll();
+        try { const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null; updateUrl(year, evenIdx, flipMode); } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvResetActualBtn) {
+      pvResetActualBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const info = resolveDefaultPv(year);
+        const natIdx = info.stops.findIndex(v => Math.abs(v - info.nat) <= STOP_EPS);
+        const idx = natIdx >= 0 ? natIdx : info.idx;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, info.stops.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(idx);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
+        updateAll();
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(year, idx, flipMode);
+        } catch (err) { console.warn(err); }
+      });
+    }
+
+    if (pvTippingBtn) {
+      pvTippingBtn.addEventListener('click', () => {
+        const year = parseInt(yearSlider.value, 10);
+        const tippingMap = (typeof window !== 'undefined' && window._pvTippingByYear instanceof Map) ? window._pvTippingByYear : null;
+        const info = tippingMap ? tippingMap.get(year) : null;
+        if (!info || info.index == null) return;
+        const stopsNow = stopsByYear.get(year) || [];
+        if (!stopsNow.length || info.index < 0 || info.index >= stopsNow.length) return;
+        pvSlider.min = 0;
+        pvSlider.max = Math.max(0, stopsNow.length - 1);
+        pvSlider.step = 1;
+        pvSlider.value = String(info.index);
+        try { window._pvOverride = null; window._pvPresetName = null; } catch (err) { console.warn(err); }
+        try {
+          const pvPresetEl = document.getElementById('pvPreset');
+          if (pvPresetEl) pvPresetEl.value = '';
+        } catch (err) { console.warn(err); }
+        if (!window._applyingFlip) {
+          try { clearFlips(); } catch (err) { console.warn(err); }
+        }
+        updateAll();
+        try {
+          const flipMode = (window._activeFlip && window._activeFlip.mode) ? window._activeFlip.mode : null;
+          updateUrl(year, info.index, flipMode);
+        } catch (err) { console.warn(err); }
+      });
+    }
 
     const propEvToggle = document.getElementById('propEvToggle');
     const propEvFooter = document.getElementById('propEvFooter');

@@ -8,7 +8,7 @@ const stopToEff = new Map();
 const stopToUnits = new Map();
 const stopsByYear = new Map();
 
-export function buildPvStops(year, { container, datalist, getNatMargin, updateAll } = {}) {
+export function buildPvStops(year, { container, datalist, getNatMargin, updateAll, extraPresets = [], injectNegativePresets = false, tippingIndex = null, tippingTitle = '' } = {}) {
   const cap = PV_CAP;
   stopToEff.clear();
   stopToUnits.clear();
@@ -19,30 +19,38 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   const isFutureMode = !!(hasWindow && window._futureMode);
   const natMarginFn = (typeof getNatMargin === 'function') ? getNatMargin : (() => 0);
   const nat = (isFutureMode && year > 2024) ? 0 : natMarginFn(year);
+  const tipIdx = (typeof tippingIndex === 'number' && tippingIndex >= 0) ? Math.floor(tippingIndex) : null;
+  const tipTitle = tippingTitle ? String(tippingTitle) : '';
 
   const byYearStops = (hasWindow && window._stopColorsByYear && window._stopColorsByYear.get(year)) || null;
   const effByYearStops = (hasWindow && window._stopEffByYear && window._stopEffByYear.get(year)) || null;
+  const futureMeta = (hasWindow && window._futureStopMeta && window._futureStopMeta.get(year)) || null;
 
   try {
     if (byYearStops) {
       const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
-      // console.log('[stops] raw stop keys (sample)', sampleKeys);
+      try {
+        const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
+        const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+        //if (debugEnabled) console.debug(`[pvStops] ${dataSource} stop keys sample for ${year}:`, sampleKeys);
+        if (debugEnabled) console.debug(`[pvStops] ${dataSource} byYearStops size for ${year}:`, byYearStops.size, 'effByYearStops present:', !!effByYearStops);
+        if (debugEnabled && isFutureMode && futureMeta) console.debug(`[pvStops] FUTURE meta for ${year}:`, { threshold: futureMeta.threshold, totalEv: futureMeta.totalEv, tippingStopsCount: futureMeta.tippingStops ? futureMeta.tippingStops.size : 0, tieStopsCount: futureMeta.tieStops ? futureMeta.tieStops.size : 0 });
+      } catch (e) { /* ignore */ }
     }
   } catch (e) { console.warn(e); }
 
-  const stopsSet = new Set([0]);
+  const baseStopsSet = new Set([0]);
   stopToEff.set(0, 0 + EPS);
   if (!(isFutureMode && year > 2024) && isFinite(nat) && Math.abs(nat) <= cap) {
-    stopsSet.add(nat);
+    baseStopsSet.add(nat);
     stopToEff.set(nat, nat);
   }
 
   if (byYearStops && effByYearStops && byYearStops.size > 0) {
-    const keys = Array.from(byYearStops.keys());
-    for (const k of keys) {
+    for (const k of byYearStops.keys()) {
       const v = parseFloat(k);
       if (!isFinite(v) || Math.abs(v) > cap) continue;
-      stopsSet.add(v);
+      baseStopsSet.add(v);
       const eff = effByYearStops.has(k) ? effByYearStops.get(k) : (v + EPS);
       stopToEff.set(v, eff);
       const unitsMap = byYearStops.get(k);
@@ -54,66 +62,100 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
     }
   }
 
-  const stops = Array.from(stopsSet).sort((a, b) => a - b);
+  const keyFor = (val) => Number(val).toFixed(9);
+  const baseStops = Array.from(baseStopsSet).sort((a, b) => a - b);
+  const baseKeys = new Set(baseStops.map(keyFor));
+  const sliderStopsSet = new Set(baseStops);
+  const presetKeys = new Set();
   const presetStops = [];
+
+  const registerPreset = (val, name) => {
+    const key = keyFor(val);
+    if (!isFinite(val) || Math.abs(val) > cap) return false;
+    if (baseKeys.has(key) || presetKeys.has(key)) return false;
+    sliderStopsSet.add(val);
+    const displayName = name || String(val);
+    const pvUnits = stopToUnits.get(val) || [];
+    pvUnits.push(`PRESET:${displayName}`);
+    stopToUnits.set(val, pvUnits);
+    if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
+    presetStops.push({ val, name: displayName });
+    presetKeys.add(key);
+    return true;
+  };
+
   try {
     const presetEl = doc && doc.getElementById && doc.getElementById('pvPreset');
     if (presetEl && presetEl.options && presetEl.options.length) {
-      const existing = stops.slice();
-      const almostEqual = (a, b, eps = 1e-9) => Math.abs(a - b) <= eps;
       for (const opt of Array.from(presetEl.options)) {
         try {
-          const val = parseFloat(opt.value);
-          if (isFinite(val)) {
-            if (!opt.value || String(opt.value).trim() === '') continue;
-            let found = false;
-            for (const s of existing) { if (almostEqual(s, val)) { found = true; break; } }
-            for (const s of presetStops) { if (almostEqual(s.val, val)) { found = true; break; } }
-            if (!found && Math.abs(val) <= cap) {
-              const name = (opt.text || opt.label || '').split(':')[0].trim();
-              presetStops.push({ val, name });
-              const pvUnits = stopToUnits.get(val) || [];
-              pvUnits.push(`PRESET:${name || String(val)}`);
-              stopToUnits.set(val, pvUnits);
-              if (!stopToEff.has(val)) stopToEff.set(val, val + EPS);
-            }
-          }
-        } catch (e) { console.warn(e); }
+          const raw = (opt.value != null) ? String(opt.value).trim() : '';
+          if (!raw) continue;
+          const val = parseFloat(raw);
+          if (!isFinite(val)) continue;
+          const name = (opt.text || opt.label || '').split(':')[0].trim();
+          const optYear = (opt.dataset && opt.dataset.year) ? Number(opt.dataset.year) : null;
+          const yearMatch = (optYear != null && isFinite(optYear) && optYear === year);
+          if (!yearMatch) registerPreset(val, name);
+          if (injectNegativePresets) registerPreset(-val, name ? `-${name}` : String(-val));
+        } catch (err) { console.warn(err); }
       }
     }
-  } catch (e) { console.warn(e); }
 
-  const allStops = stops.slice();
-  try {
-    const effPreview = allStops.slice(0, 25).map(s => ({ s, eff: stopToEff.get(s), units: (stopToUnits.get(s) || []).length }));
-    // console.log('[stops] finalized stops', { year, count: allStops.length, preview: effPreview });
-  } catch (e) { console.warn(e); }
+    if (Array.isArray(extraPresets) && extraPresets.length) {
+      for (const p of extraPresets) {
+        try {
+          if (!p) continue;
+          const val = Number(p.val);
+          if (!isFinite(val) || Math.abs(val) > cap) continue;
+          const name = (p.name || '').toString();
+          const presetYear = (p.year != null && isFinite(Number(p.year))) ? Number(p.year) : null;
+          if (presetYear !== year) registerPreset(val, name);
+          if (injectNegativePresets) registerPreset(-val, name ? `-${name}` : String(-val));
+        } catch (err) { console.warn(err); }
+      }
+    }
+  } catch (err) { console.warn(err); }
 
-  for (let i = 0; i < allStops.length; i++) {
-    const s = allStops[i];
+  const sliderStops = Array.from(sliderStopsSet).sort((a, b) => a - b);
+  for (let i = 0; i < sliderStops.length; i++) {
+    const s = sliderStops[i];
     if (!stopToEff.has(s)) stopToEff.set(s, s + EPS);
   }
 
-  stopsByYear.set(year, allStops);
+  const sliderIndexByKey = new Map();
+  sliderStops.forEach((val, idx) => { sliderIndexByKey.set(keyFor(val), idx); });
+
+  stopsByYear.set(year, sliderStops);
   if (datalist) {
-    datalist.innerHTML = allStops.map(v => `<option value="${(v * 100).toFixed(1)}"></option>`).join('');
+    datalist.innerHTML = sliderStops.map(v => `<option value="${(v * 100).toFixed(1)}"></option>`).join('');
     const sliderEl = doc && doc.getElementById ? doc.getElementById('pvSlider') : null;
     if (sliderEl) sliderEl.setAttribute('list', 'pvStopsList');
   }
 
   if (container) {
     const natForRender = (isFutureMode && year > 2024) ? 0 : nat;
-    const mainHtml = stops.map((v, i) => {
+    // Only render base stops in the visible list; presets stay slider-only.
+    const mainHtml = baseStops.map((v) => {
+      const sliderIdx = sliderIndexByKey.get(keyFor(v));
       const isEven = Math.abs(v) < 1e-12;
       const isNat = ((!(isFutureMode && year > 2024)) && Math.abs(v - natForRender) < 1e-12);
       const unitsRaw = (stopToUnits.get(v) || []).filter(u => u !== 'NATIONAL' && u !== 'NAT');
-      for (let j = 0; j < unitsRaw.length; j++) { if (unitsRaw[j] && unitsRaw[j].startsWith('PRESET:')) unitsRaw[j] = unitsRaw[j].replace(/^PRESET:/, ''); }
-      const units = (isEven || isNat) ? '' : unitsRaw.slice(0, 3).map(u => u.slice(0, 5)).join(',');
+      // Replace PRESET: prefix and preserve full preset names; for non-preset
+      // units keep the short (5-char) abbreviation to avoid overflowing the bar.
+      for (let j = 0; j < unitsRaw.length; j++) {
+        if (!unitsRaw[j]) continue;
+        if (unitsRaw[j].startsWith('PRESET:')) {
+          unitsRaw[j] = unitsRaw[j].replace(/^PRESET:/, '');
+        }
+      }
+      const units = (isEven || isNat) ? '' : unitsRaw.slice(0, 3).map(u => (u && u && u.indexOf('-') === -1 && u.length > 5 && !u.startsWith('PRESET:')) ? u.slice(0, 5) : u).join(',');
       const base = isEven ? 'EVEN' : (isNat ? (leanStr(v) + ' Actual') : leanStr(v));
       const label = units ? `${base} <small style="margin-left:6px;color:var(--muted)">${units}</small>` : base;
       let bgColor = '#0d0d0dff';
       const CANON = { BLUE: '#1e4bd1', RED: '#b22222', YELLOW: '#C9A400' };
       // helper to find the closest CSV key when numeric rounding differs
+      // Use STOP_KEY_PREC precision and a tighter tolerance matching future.js's STOP_KEY_PREC
       const findKeyForValue = (map, val) => {
         if (!map || typeof map.keys !== 'function') return null;
         let best = null; let bestDiff = Infinity;
@@ -123,13 +165,16 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           const diff = Math.abs(num - val);
           if (diff < bestDiff) { bestDiff = diff; best = k; }
         }
-        // allow small tolerance for matching (covers small nudge/effective pv differences)
-        const TOL = 0.00025; // 0.025% absolute margin
+        // Tighter tolerance: match only if within one unit of STOP_KEY_PREC
+        const PREC = (typeof STOP_KEY_PREC === 'number') ? STOP_KEY_PREC : 6;
+        const TOL = Math.pow(10, -PREC) * 1.5; // e.g., 1.5 * 10^-6
         return (bestDiff <= TOL) ? best : null;
       };
+      // prepare CSV lookup variable (may be assigned below)
+      let byStopCsv = null;
       if (!isEven) {
         const key = Number(v).toFixed(STOP_KEY_PREC);
-        let byStopCsv = byYearStops && byYearStops.get(key);
+        byStopCsv = byYearStops && byYearStops.get(key);
         // if exact key lookup failed, try fuzzy-match on numeric keys
         if (!byStopCsv && byYearStops) {
           const alt = findKeyForValue(byYearStops, v);
@@ -145,7 +190,9 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           try {
             let hasT = false, hasD = false, hasR = false;
             let firstCss = null;
-            byStopCsv.forEach((info) => {
+            let csvEntries = 0;
+            byStopCsv.forEach((info, unit) => {
+              csvEntries++;
               if (!firstCss && info && info.color_css) firstCss = info.color_css;
               if (info && info.winner) {
                 const w = String(info.winner).toUpperCase();
@@ -153,7 +200,16 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
                 else if (w === 'D') hasD = true;
                 else if (w === 'R') hasR = true;
               }
+              // targeted debug: if this is 2020 and unit is WI or PA, log full row for inspection
+              try {
+                if (Number(year) === 2020 && unit && (String(unit).toUpperCase() === 'WI' || String(unit).toUpperCase() === 'PA')) {
+                  const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
+                  const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+                  if (debugEnabled) console.debug(`[pvStops][2020-row][${dataSource}] stop ${v} key ${key} unit ${unit}`, info);
+                }
+              } catch (e) { /* ignore */ }
             });
+            //try { console.debug(`[pvStops] CSV entries for year ${year} stop ${v} key ${key}:`, csvEntries, 'hasT', hasT, 'hasD', hasD, 'hasR', hasR); } catch (e) { /* ignore */ }
             if (hasT) bgColor = CANON.YELLOW;
             else if (hasD) bgColor = CANON.BLUE;
             else if (hasR) bgColor = CANON.RED;
@@ -187,19 +243,81 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       }
       const textColor = (bgColor === '#FFFFFF' || isYellowish) ? '#000' : '#fff';
       const smallColor = isYellowish ? '#000' : 'var(--muted)';
-      return `<span class="btn" style="padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}" data-idx="${i}">${label.replace('<small', `<small style=\"color:${smallColor}\"`)}</span>`;
+      const idxAttr = (sliderIdx != null && Number.isFinite(sliderIdx)) ? String(sliderIdx) : '';
+      const displayLabel = label.replace('<small', `<small style="color:${smallColor}"`);
+      // Prefer CSV/future flags when present. For future years prefer window._futureStopMeta to
+      // determine the canonical tipping/tie stops and their EV totals. This avoids mismatches
+      // from per-unit rows and ensures the displayed chip matches the annotated synthetic stop.
+      let isTipCsv = false;
+      let isTieCsv = false;
+      try {
+        const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+        // If we have a future meta entry for this year, consult it first
+        if (futureMeta && futureMeta.tippingStops && futureMeta.totalsByValue) {
+          // check whether this numeric stop value is listed as tipping/tie
+          const keyStr = Number(v).toFixed(STOP_KEY_PREC);
+          const isTipByMeta = Array.from(futureMeta.tippingStops || []).some(val => Number(val) === Number(v));
+          const isTieByMeta = Array.from(futureMeta.tieStops || []).some(val => Number(val) === Number(v));
+          if (isTipByMeta || isTieByMeta) {
+            isTipCsv = !!isTipByMeta; isTieCsv = !!isTieByMeta;
+            const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+            if (debugEnabled) console.debug(`[pvStops] FUTURE meta flags for year ${year} stop ${v} key ${keyStr} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
+          }
+        }
+        // If no meta or meta didn't include this stop, fall back to per-stop CSV-like flags
+        if ((!isTipCsv && !isTieCsv) && byStopCsv && typeof byStopCsv.forEach === 'function') {
+          byStopCsv.forEach((info) => {
+            if (!info) return;
+            try {
+              if (parseBool(info.IS_TIPPING_POINT)) isTipCsv = true;
+              if (parseBool(info.IS_TIE_STOP)) isTieCsv = true;
+            } catch (e) { console.warn(e); }
+          });
+          if (isTipCsv || isTieCsv) {
+            const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
+            const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+            if (debugEnabled) console.debug(`[pvStops] ${dataSource} flags for year ${year} stop ${v} key ${Number(v).toFixed(STOP_KEY_PREC)} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
+          }
+        }
+        // targeted 2020 check: print slider index and tip index context
+        try {
+          if (Number(year) === 2020) {
+            const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+            if (debugEnabled) console.debug(`[pvStops][2020-check] sliderIdx=${sliderIdx}, tipIdx=${tipIdx}, stopToEff=${stopToEff.get(v)}`);
+          }
+        } catch (e) { /* ignore */ }
+      } catch (e) { console.warn(e); }
+
+      // If flags exist (from CSV or FUTURE meta), use them; otherwise fall back to tipIdx matching
+      const isTipping = isTipCsv || (isTipCsv === false && isTieCsv === false && tipIdx !== null && sliderIdx === tipIdx);
+      const tipBadge = isTipping ? '<span class="tip-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#f2c94c">TIP</span>' : '';
+      const isTie = (!isTipping && isTieCsv);
+      const tieBadge = isTie ? '<span class="tie-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#9aa3b2">TIE</span>' : '';
+      let btnStyle = `padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}`;
+      if (isTipping) btnStyle += ';box-shadow:0 0 0 2px #f2c94c inset';
+      if (isTie) btnStyle += ';box-shadow:0 0 0 2px #9aa3b2 inset';
+      const titleText = isTipping ? (tipTitle || 'Tipping point stop') : (isTie ? 'Electoral College tie at this stop' : '');
+      const titleAttr = titleText ? ` title="${titleText.replace(/"/g, '&quot;')}"` : '';
+      const ariaAttr = isTipping ? ' aria-label="Tipping point stop"' : (isTie ? ' aria-label="Electoral College tie at this stop"' : '');
+      return `<span class="btn" style="${btnStyle}" data-idx="${idxAttr}"${ariaAttr}${titleAttr}>${tipBadge}${tieBadge}${displayLabel}</span>`;
     }).join('');
 
+    // Sort preset stops by numeric value so preset chips render in deterministic order
+    presetStops.sort((a, b) => a.val - b.val);
+
     const presetHtml = presetStops.map((ps, pi) => {
-        const v = ps.val;
-        const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
-        const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
-        const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
-        const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
-        const name = ps.name || '';
-        const text = name ? `${name} ${label}` : label;
-        return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${name}">${text}</span>`;
-      }).join('');
+      const v = ps.val;
+      const sign = (v > 0) ? 'D' : (v < 0 ? 'R' : 'EVEN');
+      const label = (sign === 'EVEN') ? 'EVEN' : ((v > 0 ? 'D+' : 'R+') + (Math.abs(v) * 100).toFixed(1));
+      const bg = (v > 0) ? '#4169E1' : (v < 0 ? '#B22222' : '#888888');
+      const txt = (bg === '#FFFFFF') ? '#000' : '#fff';
+      // Preserve leading '-' in the name so negative presets render as "(-Gore)"
+      const name = ps.name || '';
+      const text = name ? `${label} (${name})` : label;
+      // For data-name, keep the original provided name if meaningful, otherwise blank
+      const dataName = name || '';
+      return `<span class="btn preset-chip" style="padding:4px 6px;margin:2px;background-color:${bg};color:${txt}" data-pv="${v}" data-name="${dataName}">${text}</span>`;
+    }).join('');
 
     container.innerHTML = 'Stops: ' + mainHtml + '<div style="margin-top:6px">Presets: ' + (presetHtml || '<span class="muted">None</span>') + '</div>';
     container.querySelectorAll('span.btn').forEach((el) => {
@@ -216,15 +334,18 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
             } catch (e) { console.warn(e); }
           }
         } else {
-          const i = Number(el.getAttribute('data-idx'));
+          const idxAttr = el.getAttribute('data-idx');
           const slider = doc && doc.getElementById ? doc.getElementById('pvSlider') : null;
           try { window._pvOverride = null; } catch (e) { console.warn(e); }
-          if (slider) {
-            slider.value = String(i);
-            try {
-              if (typeof updateAll === 'function') updateAll();
-              else if (typeof window.updateAll === 'function') window.updateAll();
-            } catch (e) { console.warn(e); }
+          if (slider && idxAttr != null && idxAttr !== '') {
+            const i = Number(idxAttr);
+            if (!Number.isNaN(i)) {
+              slider.value = String(i);
+              try {
+                if (typeof updateAll === 'function') updateAll();
+                else if (typeof window.updateAll === 'function') window.updateAll();
+              } catch (e) { console.warn(e); }
+            }
           }
         }
       });

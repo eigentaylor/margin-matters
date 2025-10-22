@@ -4,3 +4,4 @@
 docs/possibilities.bayes.js
 /node_modules
 /.venv
+/test-bellwether-logic.js

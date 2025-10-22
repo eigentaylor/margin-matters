@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="./last-updated.js"></script>
   <meta name="description"
     content="Interactive Laplace Rule of Succession analysis over varying windows and thresholds for presidential margins." />
 </head>
@@ -37,13 +38,20 @@
         </div>
         <div class="field">
           <label for="deltaThresh" style="display: block;">Delta threshold (success if Δ relative margin <span
-              id="deltaOp">&gt;</span> <span id="deltaThreshVal" class="muted">-0.005</span>)</label>
-          <input id="deltaThresh" type="range" min="-0.01" max="0.01" step="0.0005" value="-0.005" />
+              id="deltaOp">&gt;</span> <span id="deltaThreshVal" class="muted">0</span>)</label>
+          <input id="deltaThresh" type="range" min="-0.01" max="0.01" step="0.0005" value="0" />
         </div>
+        <!-- Mode selector: choose how success is determined -->
         <div class="field">
-          <label for="medianMode">Median delta comparison mode</label>
-          <input id="medianMode" type="checkbox" checked title="When enabled, use the per-unit median delta distance instead of an absolute delta threshold" />
-          <div id="medianModeHelp" class="muted" style="font-size:0.9rem;">When enabled, the delta threshold slider is hidden and success is determined by comparing a unit's delta to that year's median delta distance (field: median_delta_dist).</div>
+          <label for="modeSelect">Mode</label>
+          <select id="modeSelect">
+            <option value="relative">Relative delta</option>
+            <option value="ev" selected>EV orthogonalized delta</option>
+            <option value="median">Median delta distance</option>
+          </select>
+          <div id="modeHelp" class="muted" style="font-size:0.9rem;">Choose how success is determined: relative Δ vs a
+            threshold, sign of EV-orthogonalized margin delta (falls back to pres margin when zero), or comparison to
+            that year's median delta distance.</div>
         </div>
         <div class="field">
           <label for="windowSizes">Window sizes (comma-separated)</label>
@@ -91,6 +99,17 @@
         last N elections for a unit.
         <br />• Weighted probability averages across the selected windows using the chosen weight scheme.
       </p>
+      <div class="field">
+        <label for="simCount">Monte Carlo simulations <span id="simCountVal" class="muted">2,000</span></label>
+        <input id="simCount" type="range" min="200" max="20000" step="200" value="2000" />
+      </div>
+      <div id="mcContainer" class="card mc-results" style="display:none;">
+        <h2>Monte Carlo Outlook</h2>
+        <div id="mcSummary" class="summary muted"></div>
+        <div id="mcTipping" class="table-wrap" style="margin-top:10px;"></div>
+        <div id="mcBellwethers" class="table-wrap" style="margin-top:10px;"></div>
+      </div>
+
     </div>
 
     <div id="footer-placeholder"></div>
@@ -114,7 +133,6 @@
     }
   </script>
   <script src="laplace.js" defer></script>
-  <script src="./last-updated.js"></script>
 </body>
 
 </html>

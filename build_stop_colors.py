@@ -4,8 +4,6 @@ from collections import defaultdict
 import traceback
 from typing import Dict, List, Tuple
 
-import numpy as np
-
 import params
 
 
@@ -43,6 +41,8 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
 
     out: List[Dict] = []
     for year, lst in by_year.items():
+        if year == 2020:
+            pass
         # Extract nat margin
         nat = None
         for r in lst:
@@ -230,7 +230,177 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                 print(f"Debug: {year} stop {s} missing eff, adding small nudge")
                 stop_to_eff[s] = s + EPS
 
+        # --- Compute EV totals at each stop so we can mark tie/tipping stops ---
+        # Build sorted list of stops for deterministic behavior
+        stops_list = sorted(stops_set)
+
+        # compute total EV available for the year (sum of ev for non-NATIONAL rows)
+        total_ev = 0
+        for rr in lst:
+            abbr_rr = rr.get('abbr')
+            if not abbr_rr or abbr_rr in ('NATIONAL', 'NAT'):
+                continue
+            ev_val = int(parse_float(rr.get('electoral_votes') or rr.get('EV') or 0))
+            total_ev += ev_val
+        if total_ev <= 0:
+            total_ev = 538
+
+        # helper to compute winner at pv for a given row (reuse earlier logic)
+        def winner_for_row_at_pv(rrow, pv_margin):
+            two_party_votes = parse_float(rrow.get('total_votes')) - parse_float(rrow.get('third_party_votes'))
+            if two_party_votes <= 0:
+                # fallback to margin-based
+                # compute base margin and use sign
+                d_votes_base = parse_float(rrow.get('D_votes'))
+                r_votes_base = parse_float(rrow.get('R_votes'))
+                if d_votes_base >= r_votes_base:
+                    return 'D'
+                return 'R'
+            d_votes_base = parse_float(rrow.get('D_votes'))
+            r_votes_base = parse_float(rrow.get('R_votes'))
+            o_votes_base = parse_float(rrow.get('T_votes'))
+            nat_local = parse_float(rrow.get('national_margin'))
+            base_d_share = d_votes_base / two_party_votes
+            base_margin = 2 * base_d_share - 1
+            pv_shift = pv_margin - nat_local
+            target_margin = base_margin + pv_shift
+            target_d_share = (target_margin + 1) / 2
+            d = two_party_votes * target_d_share
+            r = two_party_votes * (1 - target_d_share)
+            o = o_votes_base
+            if d > r and d > o:
+                return 'D'
+            elif r > d and r > o:
+                return 'R'
+            elif o > d and o > r:
+                return 'T'
+            else:
+                # Tie: use side of pv relative to national
+                return 'D' if (pv_margin - nat_local) >= 0 else 'R'
+
+        # compute EV tallies at each stop
+        stop_ev_totals = {}
+        for s in stops_list:
+            eff = stop_to_eff.get(s, s)
+            d_ev = 0
+            r_ev = 0
+            o_ev = 0
+            for rr in lst:
+                abbr_rr = rr.get('abbr')
+                if not abbr_rr or abbr_rr in ('NATIONAL', 'NAT'):
+                    continue
+                ev_val = int(parse_float(rr.get('electoral_votes') or rr.get('EV') or 0))
+                w = winner_for_row_at_pv(rr, eff)
+                if w == 'D':
+                    d_ev += ev_val
+                elif w == 'R':
+                    r_ev += ev_val
+                else:
+                    o_ev += ev_val
+            stop_ev_totals[s] = (d_ev, r_ev, o_ev)
+
+        # decide tipping point and tie stops using Actual-start algorithm
+        # find actual index (stop nearest to national margin 'nat')
+        actual_idx = None
+        for ii, s in enumerate(stops_list):
+            if abs(s - nat) <= EPS:
+                actual_idx = ii
+                break
+        if actual_idx is None:
+            # nearest to national margin
+            best = 0
+            best_abs = abs(stops_list[0] - nat)
+            for ii in range(1, len(stops_list)):
+                a = abs(stops_list[ii] - nat)
+                if a < best_abs:
+                    best_abs = a
+                    best = ii
+            actual_idx = best
+
+        EPS_EV = 0.5
+        tipping_index = None
+        tie_index = None
+        EVs_to_win = total_ev // 2 + 1
+        # compute actual outcome
+        s_actual = stops_list[actual_idx]
+        d_actual, r_actual, _ = stop_ev_totals.get(s_actual, (0, 0, 0))
+        if abs(d_actual - r_actual) <= EPS_EV:
+            # actual is tie: search symmetrically outward for first tie or flip
+            maxdist = max(actual_idx, len(stops_list) - 1 - actual_idx)
+            for dist in range(1, maxdist + 1):
+                cand_idxs = []
+                left = actual_idx - dist
+                right = actual_idx + dist
+                if left >= 0: cand_idxs.append(left)
+                if right < len(stops_list): cand_idxs.append(right)
+                found = False
+                for ci in cand_idxs:
+                    ss = stops_list[ci]
+                    d_ev, r_ev, _ = stop_ev_totals.get(ss, (0, 0, 0))
+                    if abs(d_ev - r_ev) <= EPS_EV or (d_ev > r_ev + EPS_EV) or (r_ev > d_ev + EPS_EV):
+                        tipping_index = ci
+                        found = True
+                        break
+                if found:
+                    break
+        else:
+            # actual has a winner; search against that winner until flip
+            winner_actual = 'D' if d_actual > r_actual else 'R'
+            runner_up = 'R' if winner_actual == 'D' else 'D'
+            dir = -1 if winner_actual == 'D' else 1
+            ii = actual_idx + dir
+            while 0 <= ii < len(stops_list):
+                ss = stops_list[ii]
+                d_ev, r_ev, _ = stop_ev_totals.get(ss, (0, 0, 0))
+                # check for tie or flip
+                if abs(d_ev - r_ev) <= EPS_EV:
+                    print(f"Debug: {year} tie stop at index {ii} is {stops_list[ii]}")
+                    tie_index = ii
+                runner_up_ev = r_ev if runner_up == 'R' else d_ev
+                winner_ev = d_ev if winner_actual == 'D' else r_ev
+                if winner_ev > EVs_to_win:
+                    cur_winner = winner_actual
+                elif runner_up_ev > EVs_to_win:
+                    cur_winner = runner_up
+                else:
+                    cur_winner = None
+                cur_winner = runner_up if runner_up_ev > EVs_to_win else winner_actual
+                if cur_winner == runner_up:
+                    tipping_index = ii
+                    break
+                ii += dir
+
+        # Build flag maps for quick lookup
+        tie_stops = set()
+        tipping_stops = set()
+        no_majority_stops = set()
+        evs_by_stop = defaultdict(lambda: defaultdict(lambda: (0, 0, 0)))
+        for s, (d_ev, r_ev, o_ev) in stop_ev_totals.items():
+            evs_by_stop[year][abbr] = (d_ev, r_ev, o_ev)
+            # if abs(d_ev - r_ev) <= EPS_EV:
+            #     if tie_index is not None and 0 <= tie_index < len(stops_list):
+            #         print(f"Debug: {year} tie stop at index {tie_index} is {stops_list[tie_index]}")
+            #     tie_stops.add(s)
+            if d_ev < EVs_to_win and r_ev < EVs_to_win:
+                #no_majority_stops.add(s)
+                tie_stops.add(s)
+        if tipping_index is not None and 0 <= tipping_index < len(stops_list):
+            tipping_stops.add(stops_list[tipping_index])
+
+        # annotate previously appended rows for this year
+        for row in out:
+            if int(row.get('year') or 0) != year:
+                continue
+            # stop stored in row['stop'] as high-precision string
+            sval = float(row.get('stop') or 0.0)
+            row['IS_TIE_STOP'] = 'true' if any(abs(sval - ts) <= 10**(-STOP_KEY_PREC) for ts in tie_stops) else 'false'
+            row['IS_TIPPING_POINT'] = 'true' if any(abs(sval - ts) <= 10**(-STOP_KEY_PREC) for ts in tipping_stops) else 'false'
+            #row['ELECTORAL_VOTE_TOTALS'] = str(evs_by_stop[year].get(row.get('unit')))
+            # row['IS_NO_MAJORITY_STOP'] = 'true' if any(abs(sval - ts) <= 10**(-STOP_KEY_PREC) for ts in no_majority_stops) else 'false'
+
     # No additional winner pass needed; rows appended inline above
+    # sort by year, stop
+    out.sort(key=lambda r: (int(r.get('year') or 0), float(r.get('stop') or 0.0)))
     return out
 
 
@@ -248,7 +418,8 @@ def main():
     os.makedirs(docs_dir, exist_ok=True)
     outfile = os.path.join(docs_dir, 'stop_colors.csv')
     with open(outfile, 'w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=['year', 'stop', 'stop_key', 'effective_pv', 'unit', 'winner', 'result_color_name', 'color_css'])
+        fieldnames = ['year', 'stop', 'stop_key', 'effective_pv', 'unit', 'winner', 'result_color_name', 'color_css', 'IS_TIE_STOP', 'IS_TIPPING_POINT', 'ELECTORAL_VOTE_TOTALS']#, 'IS_NO_MAJORITY_STOP']
+        w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         for r in out_rows:
             w.writerow(r)

@@ -47,6 +47,8 @@ export function createUpdateAll(deps) {
       evFillO: document.getElementById('evFillO'),
       evFillR: document.getElementById('evFillR'),
       evText: document.getElementById('evText'),
+      pvResetActual: document.getElementById('pvResetActual'),
+      pvTippingBtn: document.getElementById('pvTipping'),
       flipEC: document.getElementById('flipEC'),
       closeStates: document.getElementById('closeStates'),
       pvDem: document.getElementById('pvDem'),
@@ -62,11 +64,15 @@ export function createUpdateAll(deps) {
 
   function syncStopsForYear(year, refs, updateFn) {
     if (window._prevYear === year) return;
+    const extraPresets = (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [];
+    const injectNegativePresets = (typeof window !== 'undefined') ? !!window._injectNegativePresets : false;
     buildPvStops(year, {
       container: refs.pvStops,
       datalist: refs.pvStopsList,
       getNatMargin,
-      updateAll: updateFn
+      updateAll: updateFn,
+      extraPresets,
+      injectNegativePresets
     });
     const stopsNow = stopsByYear.get(year) || [0];
     const natNow = getNatMargin(year);
@@ -94,7 +100,15 @@ export function createUpdateAll(deps) {
       const eff = stopToEff.get(stopVal);
       if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
         const list = stopToUnits.get(stopVal) || [];
-        list.forEach(u => { if (u && u !== 'NATIONAL' && u !== 'NAT') matches.push(String(u).slice(0, 5)); });
+          list.forEach(u => {
+            if (!u || u === 'NATIONAL' || u === 'NAT') return;
+            const s = String(u);
+            if (s.startsWith('PRESET:')) {
+              matches.push(s.replace(/^PRESET:/, ''));
+            } else {
+              matches.push(s.slice(0, 5));
+            }
+          });
       }
     }
     const showNat = ((!(window._futureMode && year > 2024)) && override == null && Math.abs(stopVal - nat) <= STOP_EPS);
@@ -116,6 +130,8 @@ export function createUpdateAll(deps) {
     } catch (e) { console.warn(e); }
     pvVal.textContent = out;
   }
+
+  const tippingInfoByYear = new Map();
 
   function computeMapState(year, pvState) {
     const { pv, nat, stopVal } = pvState;
@@ -296,6 +312,257 @@ export function createUpdateAll(deps) {
     adjustAtLargeFromDistricts(year, abbrColors, unitColors, pvState.pv);
 
     return { arr, abbrColors, unitColors, unitParties, dEV, rEV, oEV };
+  }
+
+  // Identify the PV stop where the election flips relative to EVEN.
+  // Algorithm:
+  // - compute EV outcome at the EVEN stop
+  // - determine the winner at EVEN (D or R)
+  // - move in the opposite direction from that winner through all stops
+  //   until the result flips; return the stop where the flip occurs.
+  function computeTippingInfo(year, natMargin) {
+    const stops = stopsByYear.get(year) || [];
+    if (!stops.length) return null;
+    const totalEv = (typeof window !== 'undefined' && window._totalEvByYear && typeof window._totalEvByYear.get === 'function')
+      ? window._totalEvByYear.get(year) || 538
+      : 538;
+    const majorityCutoff = (totalEv / 2) + EPS;
+    const prevYear = (typeof window !== 'undefined') ? window._curYear : null;
+    const prevPv = (typeof window !== 'undefined') ? window._curPv : null;
+    // CSV-only mode: read stop_colors flags for IS_TIPPING_POINT / IS_TIE_STOP and
+    // select the first matching stop (prefer IS_TIPPING_POINT over IS_TIE_STOP).
+    try {
+      const futureMetaMap = (typeof window !== 'undefined' && window._futureStopMeta && typeof window._futureStopMeta.get === 'function') ? window._futureStopMeta : null;
+      if (futureMetaMap && futureMetaMap.has(year)) {
+        const meta = futureMetaMap.get(year);
+        const stopsArr = stopsByYear.get(year) || [];
+        if (!Array.isArray(stopsArr) || !stopsArr.length) return null;
+        const chooseFromSet = (set) => {
+          if (!set || typeof set.forEach !== 'function' || set.size === 0) return null;
+          let bestVal = null;
+          let bestAbs = Infinity;
+          set.forEach(val => {
+            if (!Number.isFinite(val)) return;
+            const diff = Math.abs(val - natMargin);
+            if (diff < bestAbs) {
+              bestAbs = diff;
+              bestVal = val;
+            }
+          });
+          return bestVal;
+        };
+        const setHasValue = (set, val, tol) => {
+          if (!set || typeof set.forEach !== 'function') return false;
+          const threshold = Math.max(tol || STOP_EPS, 0.0005);
+          let match = false;
+          set.forEach(entry => {
+            if (match) return;
+            if (!Number.isFinite(entry)) return;
+            if (Math.abs(entry - val) <= threshold) match = true;
+          });
+          return match;
+        };
+        let candidateStop = chooseFromSet(meta.tippingStops);
+        if (candidateStop == null) candidateStop = chooseFromSet(meta.tieStops);
+        if (candidateStop == null || !Number.isFinite(candidateStop)) return null;
+        let idx = stopsArr.findIndex(s => Math.abs(s - candidateStop) <= STOP_EPS);
+        if (idx < 0) idx = stopsArr.findIndex(s => Math.abs(s - candidateStop) <= 0.0005);
+        if (idx < 0) {
+          let bestIdx = -1;
+          let bestDiff = Infinity;
+          for (let i = 0; i < stopsArr.length; i++) {
+            const diff = Math.abs(stopsArr[i] - candidateStop);
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              bestIdx = i;
+            }
+          }
+          idx = bestIdx;
+        }
+        if (idx < 0) return null;
+        const stopVal = stopsArr[idx];
+        const lookupTotals = (val) => {
+          if (!meta || !meta.totalsByValue || typeof meta.totalsByValue.forEach !== 'function') return null;
+          if (typeof meta.totalsByValue.get === 'function' && meta.totalsByValue.has(val)) {
+            return meta.totalsByValue.get(val);
+          }
+          let best = null;
+          let bestDiff = Infinity;
+          meta.totalsByValue.forEach((entry, key) => {
+            if (!Number.isFinite(key)) return;
+            const diff = Math.abs(key - val);
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              best = entry;
+            }
+          });
+          return best;
+        };
+        const totalsEntry = lookupTotals(stopVal) || lookupTotals(candidateStop);
+        const effPv = totalsEntry && Number.isFinite(totalsEntry.eff) ? totalsEntry.eff : (stopToEff.get(stopVal) || stopVal);
+        try { if (typeof window !== 'undefined') { window._curYear = year; window._curPv = effPv; } } catch (e) { }
+        const dEv = totalsEntry && Number.isFinite(totalsEntry.d) ? totalsEntry.d : 0;
+        const effectiveTotalEv = meta && Number.isFinite(meta.totalEv) ? meta.totalEv : totalEv;
+        const effectiveMajority = meta && Number.isFinite(meta.majority) ? meta.majority : ((effectiveTotalEv / 2) + EPS);
+        // units listed for this stop (may include PRESET:, NATIONAL etc.)
+        const rawUnits = (stopToUnits.get(stopVal) || []).filter(Boolean).filter(u => !/^PRESET:/.test(u) && u !== 'NATIONAL' && u !== 'NAT');
+
+        // Validate pivot units by simulating the map state at effPv and checking which unit(s)
+        // are actually pivotal: removing that unit's EV assigned to D should drop D below majority.
+        const pivotUnits = [];
+        try {
+          const sim = computeMapState(year, { pv: effPv, nat: natMargin, stopVal });
+          const simDEv = sim && Number.isFinite(sim.dEV) ? sim.dEV : dEv;
+          // For each unit candidate, check its EV and whether it is currently assigned to D
+          for (const u of rawUnits) {
+            try {
+              // find EV for unit
+              let uEv = null;
+              try {
+                if (typeof evByUnit !== 'undefined' && evByUnit && typeof evByUnit.get === 'function') {
+                  const v = evByUnit.get(`${year}:${u}`);
+                  if (Number.isFinite(v)) uEv = v;
+                }
+              } catch (ee) { /* ignore */ }
+              // fallback: look up from byYear rows
+              if (uEv == null) {
+                const rows = byYear.get(year) || [];
+                const row = rows.find(r => r && r.unit === u);
+                if (row && Number.isFinite(+row.ev)) uEv = +row.ev;
+              }
+              if (!Number.isFinite(uEv)) continue;
+              const unitParty = (sim && sim.unitParties && sim.unitParties.get(u)) || null;
+              // Only consider units currently giving EVs to D
+              if (!unitParty || unitParty !== 'Blue') continue;
+              const dWithout = simDEv - uEv;
+              if (dWithout < effectiveMajority) {
+                pivotUnits.push(u);
+                // prefer single pivot; break if we found one
+                break;
+              }
+            } catch (ee) { /* ignore per-unit errors */ }
+          }
+        } catch (ee) { /* ignore simulation errors */ }
+
+        const chosenUnits = (pivotUnits.length ? pivotUnits : rawUnits);
+        const dEvDisplay = Number.isFinite(dEv) ? (Math.abs(dEv - Math.round(dEv)) < 1e-6 ? String(Math.round(dEv)) : dEv.toFixed(1)) : '0';
+        const isTippingStop = setHasValue(meta && meta.tippingStops, stopVal, STOP_EPS);
+        const titleParts = [(isTippingStop ? `Tipping point ${leanStr(effPv)}` : `EC tie ${leanStr(effPv)}`), `D ${dEvDisplay} of ${effectiveTotalEv} EV`];
+
+        // Verification logging: ensure chosen unit(s) are actual pivots. For each candidate unit,
+        // compute its EV and verify that D_without_unit < majority <= D_with_unit.
+        try {
+          const verifyRows = [];
+          // compute base D ev from totalsEntry (meta) or simulation fallback
+          const baseDEv = Number.isFinite(dEv) ? dEv : (sim && Number.isFinite(sim.dEV) ? sim.dEV : 0);
+          for (const u of (chosenUnits.length ? chosenUnits : rawUnits)) {
+            let uEv = null;
+            try {
+              // Prefer the runtime EV map created by future.js (window._evByUnitMap) when present,
+              // otherwise fall back to the injected evByUnit dependency.
+              if (typeof window !== 'undefined' && window._evByUnitMap && typeof window._evByUnitMap.get === 'function') {
+                const v = window._evByUnitMap.get(`${year}:${u}`) || window._evByUnitMap.get(`2024:${u}`);
+                if (Number.isFinite(v)) uEv = v;
+              }
+              if (uEv == null && typeof evByUnit !== 'undefined' && evByUnit && typeof evByUnit.get === 'function') {
+                const v = evByUnit.get(`${year}:${u}`);
+                if (Number.isFinite(v)) uEv = v;
+              }
+            } catch (e) { /* ignore */ }
+            if (uEv == null) {
+              const rows = byYear.get(year) || [];
+              const row = rows.find(r => r && r.unit === u);
+              if (row && Number.isFinite(+row.ev)) uEv = +row.ev;
+            }
+            const dWithout = (Number.isFinite(baseDEv) && Number.isFinite(uEv)) ? (baseDEv - uEv) : NaN;
+            const flips = Number.isFinite(dWithout) && Number.isFinite(effectiveMajority) ? (dWithout < effectiveMajority && baseDEv >= effectiveMajority) : false;
+            verifyRows.push({ unit: u, unitEV: uEv, dWith: baseDEv, dWithout, majority: effectiveMajority, flips });
+          }
+          // Log verification details
+          const debugEnabled = (typeof window !== 'undefined' && window._tippingDebug);
+          if (debugEnabled) {
+            try { console.debug('[TIPPING-VERIFY] synthetic meta check', { year, stopVal, effPv, totalsEntryD: dEv, effectiveTotalEv, effectiveMajority, verifyRows, pivotUnits }); } catch (e) { /* ignore */ }
+          }
+          // Filter chosenUnits to those that actually flip the majority (if any)
+          const actualPivots = verifyRows.filter(r => r.flips).map(r => r.unit);
+          if (actualPivots.length) {
+            chosenUnits.splice(0, chosenUnits.length, ...actualPivots);
+          }
+          // If none of the chosen units actually flip the majority, warn to aid debugging
+          if (!verifyRows.some(r => r.flips)) {
+            if (debugEnabled) {
+              try { console.warn('[TIPPING-VERIFY] No pivot unit actually flips the majority for this stop — meta may be inconsistent', { year, stopVal, effPv, totalsEntryD: dEv, effectiveTotalEv, effectiveMajority, verifyRows }); } catch (e) { /* ignore */ }
+            }
+          }
+        } catch (e) { /* ignore verification errors */ }
+
+        if (chosenUnits.length) titleParts.push(`Trigger: ${chosenUnits.join(', ')}`);
+        const res = { index: idx, stop: stopVal, pv: effPv, dEV: dEv, majority: effectiveMajority, units: chosenUnits, title: titleParts.join(' | ') };
+        const debugEnabled2 = (typeof window !== 'undefined' && window._tippingDebug);
+        if (debugEnabled2) {
+          try { console.debug('TIPPING: selected from synthetic future meta', { year, idx: res.index, pv: res.pv, title: res.title, pivotUnits }); } catch (e) { }
+        }
+        return res;
+      }
+      if (typeof window === 'undefined' || !window._stopColorsByYear || typeof window._stopColorsByYear.get !== 'function') return null;
+      const byYearStops = window._stopColorsByYear.get(year);
+      if (!byYearStops || typeof byYearStops.keys !== 'function') return null;
+      const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+      let tippingStopVal = null;
+      let tieStopVal = null;
+      for (const key of byYearStops.keys()) {
+        try {
+          const table = byYearStops.get(key);
+          if (!table || typeof table.forEach !== 'function') continue;
+          table.forEach((info) => {
+            if (!info) return;
+            try {
+              if (!tippingStopVal && parseBool(info.IS_TIPPING_POINT)) {
+                tippingStopVal = parseFloat(key);
+              }
+              if (!tieStopVal && parseBool(info.IS_TIE_STOP)) {
+                tieStopVal = parseFloat(key);
+              }
+            } catch (e) { /* ignore */ }
+          });
+          if (tippingStopVal) break;
+        } catch (e) { /* ignore individual key errors */ }
+      }
+      const chosenStop = (tippingStopVal != null) ? tippingStopVal : (tieStopVal != null ? tieStopVal : null);
+      if (chosenStop == null || !isFinite(chosenStop)) return null;
+      // map numeric stop to slider index
+      let idx = stops.findIndex(s => Math.abs(s - chosenStop) <= STOP_EPS);
+      if (idx < 0) idx = stops.findIndex(s => Math.abs(s - chosenStop) <= 0.0005);
+      if (idx < 0) {
+        const debugEnabled = (typeof window !== 'undefined' && window._tippingDebug);
+        if (debugEnabled) {
+          try { console.debug('TIPPING: CSV indicated stop not found in slider stops', { year, chosenStop }); } catch (e) { }
+        }
+        return null;
+      }
+      const stopVal = stops[idx];
+      const effPv = stopToEff.has(stopVal) ? stopToEff.get(stopVal) : stopVal;
+      try { if (typeof window !== 'undefined') { window._curYear = year; window._curPv = effPv; } } catch (e) { }
+      const mapState = computeMapState(year, { pv: effPv, nat: natMargin, stopVal });
+      const dEv = mapState && isFinite(mapState.dEV) ? mapState.dEV : 0;
+      const dEvDisplay = Number.isFinite(dEv) ? (Math.abs(dEv - Math.round(dEv)) < 1e-6 ? String(Math.round(dEv)) : dEv.toFixed(1)) : '0';
+      const units = (stopToUnits.get(stopVal) || []).filter(Boolean).filter(u => !/^PRESET:/.test(u) && u !== 'NATIONAL' && u !== 'NAT');
+      const titleParts = [(tippingStopVal != null) ? `Tipping point ${leanStr(effPv)}` : `EC tie ${leanStr(effPv)}`, `D ${dEvDisplay} of ${totalEv} EV`];
+      if (units.length) titleParts.push(`Trigger: ${units.join(', ')}`);
+      const res = { index: idx, stop: stopVal, pv: effPv, dEV: dEv, majority: majorityCutoff, units, title: titleParts.join(' | ') };
+      const debugEnabled = (typeof window !== 'undefined' && window._tippingDebug);
+      if (debugEnabled) {
+        try { console.log('TIPPING: selected from CSV flags', { year, idx: res.index, pv: res.pv, title: res.title }); } catch (e) { }
+      }
+      return res;
+    } catch (e) {
+      console.warn(e);
+      return null;
+    } finally {
+      if (typeof window !== 'undefined') {
+        try { window._curYear = prevYear; window._curPv = prevPv; } catch (e) { }
+      }
+    }
   }
 
   function adjustAtLargeFromDistricts(year, abbrColors, unitColors, pv) {
@@ -874,12 +1141,52 @@ export function createUpdateAll(deps) {
 
     updatePvLabel(refs, pvState);
 
+    const tippingInfo = computeTippingInfo(year, pvState.nat);
+    if (typeof window !== 'undefined') {
+      window._curYear = year;
+      window._curPv = pvState.pv;
+    }
+    if (tippingInfo) {
+      tippingInfoByYear.set(year, tippingInfo);
+    } else {
+      tippingInfoByYear.delete(year);
+    }
+    if (typeof window !== 'undefined') {
+      window._pvTippingByYear = tippingInfoByYear;
+    }
+
+    const tippingTitle = tippingInfo ? tippingInfo.title : '';
+    const tippingIndex = tippingInfo ? tippingInfo.index : null;
+    if (refs.pvTippingBtn) {
+      refs.pvTippingBtn.disabled = !tippingInfo;
+      if (tippingInfo) {
+        refs.pvTippingBtn.dataset.year = String(year);
+        refs.pvTippingBtn.dataset.idx = String(tippingInfo.index);
+  const unitHint = (tippingInfo.units && tippingInfo.units.length) ? ` - ${tippingInfo.units.join(', ')}` : '';
+        refs.pvTippingBtn.title = `Set PV to tipping point ${leanStr(tippingInfo.pv)}${unitHint}`;
+      } else {
+        delete refs.pvTippingBtn.dataset.year;
+        delete refs.pvTippingBtn.dataset.idx;
+        refs.pvTippingBtn.title = 'Tipping point unavailable';
+      }
+    }
+
     buildPvStops(year, {
       container: refs.pvStops,
       datalist: refs.pvStopsList,
       getNatMargin,
-      updateAll
+      updateAll,
+      extraPresets: (typeof window !== 'undefined' && Array.isArray(window._pvExtraPresets)) ? window._pvExtraPresets : [],
+      injectNegativePresets: (typeof window !== 'undefined') ? !!window._injectNegativePresets : false,
+      tippingIndex,
+      tippingTitle
     });
+
+    if (refs.pvResetActual) {
+      const showActual = !!(window._futureMode && year === 2024);
+      refs.pvResetActual.style.display = showActual ? '' : 'none';
+      refs.pvResetActual.disabled = !showActual;
+    }
 
     updateFlipButtons();
 

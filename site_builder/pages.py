@@ -496,6 +496,7 @@ def make_data_page(rows: List[Dict]):
             <title>Presidential margins CSV</title>
             <link rel='stylesheet' href='styles.css'/>
             <link rel="icon" href="favicon.svg" />
+            <script src="./last-updated.js"></script>
         </head>
     <body>
       <div class='container'>
@@ -512,7 +513,6 @@ def make_data_page(rows: List[Dict]):
         <script src="./header.js"></script>
         <script src="./back-to-map.js"></script>
         <script src="./footer.js"></script>
-        <script src="./last-updated.js"></script>
     </body>
     </html>"""
     write_text(OUT_DIR / "presidential_margins.html", html)

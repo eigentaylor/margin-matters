@@ -468,7 +468,16 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
         const byStop = window._stopColorsByYear.get(y);
         const effByStop = window._stopEffByYear.get(y);
         if (!byStop.has(key)) byStop.set(key, new Map());
-        byStop.get(key).set(unit, { winner, color_css, color_name });
+        // Preserve CSV metadata including tipping/tie flags so client code can
+        // rely on precomputed annotations.
+        byStop.get(key).set(unit, {
+          winner,
+          color_css,
+          color_name,
+          IS_TIE_STOP: (r.IS_TIE_STOP !== undefined) ? r.IS_TIE_STOP : (r.is_tie_stop !== undefined ? r.is_tie_stop : null),
+          IS_TIPPING_POINT: (r.IS_TIPPING_POINT !== undefined) ? r.IS_TIPPING_POINT : (r.is_tipping_point !== undefined ? r.is_tipping_point : null),
+          ELECTORAL_VOTE_TOTALS: (r.ELECTORAL_VOTE_TOTALS !== undefined) ? r.ELECTORAL_VOTE_TOTALS : (r.electoral_vote_totals !== undefined ? r.electoral_vote_totals : '')
+        });
         // Record effective once per stop key
         if (!effByStop.has(key) && eff != null && isFinite(eff)) effByStop.set(key, eff);
       });

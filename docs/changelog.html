@@ -8,6 +8,7 @@
     <link rel='stylesheet' href='styles.css' />
     <link rel="icon" href="favicon.svg" />
     <script src="maintenance-check.js"></script>
+    <script src="./last-updated.js"></script>
 </head>
 
 <body>
@@ -21,7 +22,208 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
-                        October 15, 2024
+                        October 21, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Index and Future</h2>
+<ul>
+<li>Added more buttons under the PV slider</li>
+<li>Changed the "Reset PV" button to "Reset to Actual" in index.html</li>
+<li>Changed the "Reset PV" button to "Reset to EVEN" in future.html</li>
+<li>Added one new button: "Set to Tipping Point" which sets the PV to the stop which tips the election.</li>
+<li>Added a visual indicator on the tipping point stop in the index and future pages</li>
+<li>Added visual indicators on stops which would result in no electoral college winner (tie) in the index and future pages</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 20, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Laplace</h2>
+<ul>
+<li>Set the default mode selector to "Relative delta mode" on page load.</li>
+<li>Added a maximum of 12 states shown in the tipping points table (instead of 10).</li>
+<li>Added a std dev column to the tipping points table.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 19, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Bellwethers</h2>
+<ul>
+<li>Added a new display mode: "Outcome Table (Streaks)".</li>
+<li>Rather than looking at states/units which are barometric bellwethers (states close to the national popular vote), this table shows states/units that have had long streaks of voting for the winning presidential candidate.</li>
+<li>Users can set a streak threshold (default 5 elections) and choose to allow up to one or two misses in the streak.</li>
+<li>The table lists states/units that meet the criteria, showing their longest qualifying streaks, as well as the most recent streak.</li>
+<li>Allow users to view popular vote winner streaks or electoral vote winner streaks.</li>
+<li>Added a reverse streaks option to show states that have consistently voted against the winning candidate.</li>
+</ul>
+<h2>Laplace</h2>
+<ul>
+<li>Added a little naive Monte Carlo simulation tool to estimate probabilities based on Laplace smoothing.</li>
+<li>Users can set the number of simulations to run.</li>
+<li>The results table shows the likelihood of each state to be a tipping point based on a simplified Normal model using Laplace probabilities.</li>
+<li>Clicking on these states brings up a detailed view with more information: showing the differences between a scenario's map at the tipping point and the 2024 map, as well as a basic ranking of states by their relative margin in the scenario.</li>
+<li>Also included is a table showing the percent of simulations a state was a bellwether within 5 percentage points of the national popular vote and the percentage of simulations it was more democratic than the national popular vote.</li>
+<li>There are still some bugs and rough edges to work out, but it's a start.</li>
+</ul>
+<h2>General</h2>
+<ul>
+<li>Updated the PV Presets dropdown to correct the 2024 Trump margin preset from R+1.6 to R+1.5.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 18, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Bellwether & Close States Explorer</h2>
+<ul>
+<li>Added URL parameters for pre-selecting categories, display, and year in the Bellwether & Close States Explorer tool. Users can now share specific views by including parameters in the URL.</li>
+<li>example: <code>?year=2004&category=bellwether&display=histogram</code></li>
+<li>Showed more detailed margin information (both Raw and Relative margins)</li>
+<li>Made the detailed table more compact by combining certain columns and adding additional context such as electoral votes next to state abbreviations.</li>
+<li>Added streak information to the detailed table view, showing</li>
+<li>how many consecutive elections a state has been a bellwether</li>
+<li>the range of years and length for that streak</li>
+<li>the last streak the state had before its current status</li>
+<li>Displayed the thresholds as a percentage (e.g., "5.0%") instead of a decimal (e.g., "0.05") for better user clarity.</li>
+<li>Updated visualization titles to include the selected threshold values for better context.</li>
+</ul>
+<h2>Paths 2028</h2>
+<ul>
+<li>Fixed the page being... broken lol</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 17, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Data</h2>
+<ul>
+<li>Added EV-orthogonalized presidential margins to the presidential margins dataset.</li>
+<li>These margins represent each state's margin after removing the national EV-weighted average margin for that year.</li>
+<li>This gives a slightly different perspective, similar to the relative margin but weighted by EVs instead of turnout.</li>
+<li>Both the raw EV-orthogonalized margin and its delta from the previous election are included.</li>
+<li>Updated the build script to compute and include these new margins.</li>
+</ul>
+<h2>Ranker</h2>
+<ul>
+<li>Added support for EV-orthogonalized margins as a metric in the Ranker tool.</li>
+<li>Users can now select EV-orthogonalized margin or its delta when ranking states.</li>
+<li>The display format matches other margin metrics, showing both delta and raw values appropriately.</li>
+</ul>
+<h2>Laplace</h2>
+<ul>
+<li>Added EV-orthogonalized margin as an available metric in the Laplace tool for analysis, similar to the median delta mode.</li>
+<li>Set this as the default mode for determining success in the Laplace tool.</li>
+</ul>
+<h2>Future</h2>
+<ul>
+<li>Set the Election Data Service projection as the default value for the EV Projection, as well as defaulted to only applying for years after 2030.</li>
+<li>Added a light pull towards bellwether status for states. This is a minor adjustment to fix an issue where if too many bellwethers roll the same direction in Laplace mode, it can result in too few bellwethers.</li>
+</ul>
+<h2>Index and Future</h2>
+<ul>
+<li>Updated the election night simulator to roll random PV values at the time the simulation starts, rather than when it is prepared.</li>
+<li>This fixes it from having the same random PV values even if the user changes years.</li>
+</ul>
+<h2>Bellwether Explorer</h2>
+<ul>
+<li>Launched the new Bellwether Explorer page, allowing users to explore bellwether and close states over time with interactive visualizations.</li>
+<li>Added navigation link to the Bellwether Explorer in the site header.</li>
+<li>Implemented adjustable sliders for bellwether and close state thresholds, with real-time updates to visualizations.</li>
+<li>Developed three display modes: Bar Graph, Histogram, and Table, each with smooth animations and interactivity.</li>
+<li>Clicking bars in the histogram now opens a detailed panel listing the states represented by that bar, enhancing data exploration.</li>
+<li>Histograms have a summary button to view all states included in the histogram for the current settings.</li>
+<li>Added year selection controls, allowing users to choose a specific year or view all years.</li>
+<li>Shows when a state was last a bellwether prior to 2024 in the table view for added context.</li>
+</ul>
+<h2>General</h2>
+<ul>
+<li>Moved the last-updated.js script in all pages to hopefully load more consistently by being earlier in the document.</li>
+</ul>
+<h2>TODO</h2>
+<ul>
+<li>Update documentation to describe the new EV-orthogonalized margin metric and its interpretation.</li>
+<li>Add this data to the state pages and other relevant visualizations in the app.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 16, 2025
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Future</h2>
+<ul>
+<li>Added option to use census reapportionment projections.</li>
+<li>Uses projections from The ARP, the Brennan Center, and the Census Project.</li>
+<li>The user can choose to have this apply universally or only in years after 2030.</li>
+<li>Of course, these are just projections, and the actual reapportionment may differ. I cannot see into the future!</li>
+</ul>
+<p><!-- 2030 Electoral Vote Projection Sources --></p>
+<ul>
+<li><p>Sources: <em>Projected 2030 congressional reapportionment shifts from the Brennan Center, the American Redistricting Project, and Election Data Services.</em></p></li>
+</ul>
+<p><ul></p>
+<p><li></p>
+<p>Brennan Center for Justice.</p>
+<p><a href="https://www.brennancenter.org/our-work/analysis-opinion/how-congressional-maps-could-change-2030" target="_blank" rel="noopener noreferrer"></p>
+<p><em>How Congressional Maps Could Change in 2030</em></a>.</p>
+<p></li></p>
+<p><li></p>
+<p>The American Redistricting Project (ARP).</p>
+<p><a href="https://thearp.org/blog/apportionment/2030-apportionment-forecast-2024/" target="_blank" rel="noopener noreferrer"></p>
+<p><em>2030 Apportionment Forecast – 2024</em></a>.</p>
+<p></li></p>
+<p><li></p>
+<p>Election Data Services, via The Census Project.</p>
+<p><a href="https://thecensusproject.org/2025/01/03/impact-of-latest-population-estimates-on-2030-reapportionment/" target="_blank" rel="noopener noreferrer"></p>
+<p><em>Impact of Latest Population Estimates on 2030 Reapportionment</em></a>.</p>
+<p></li></p>
+<p></ul></p>
+<ul>
+<li>Added these citations to the "Future" page.</li>
+<li>Fixed a bug where the flip PV button was not working in the "Future" page.</li>
+<li>Updated the style of the sliders and buttons on the "Future" page to match the rest of the app.</li>
+</ul>
+<h2>Index and Future pages</h2>
+<ul>
+<li>Added the preset stops to the stops list for the PV slider, so users can select them directly through the slider UI.</li>
+<li>Negative presets were added as well. So you can see a "Gore" level Republican margin as well!</li>
+<li>Added a reset PV button to reset the PV stops to the default for the selected year (either the actual margin or EVEN for future years).</li>
+<li>Sorted the presets by order of value since now there are both positive and negative presets and that's a lot more buttons to show.</li>
+</ul>
+<h2>Laplace</h2>
+<ul>
+<li>Updated the default delta threshold to 0 for the Laplace analyzer outside of median mode.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        October 15, 2025
                     </div>
                     <div class='changelog-content'>
                         <h2>Added automated changelog system</h2>
@@ -46,6 +248,11 @@
 <h2>Attributions:</h2>
 <ul>
 <li>Added citation for senate level data from the wonderful MIT Election Data and Science Lab</li>
+</ul>
+<h2>Future:</h2>
+<ul>
+<li>Added a Laplace method to generate future endpoints (set as default)</li>
+<li>This uses a Bayesian approach similar to the Laplace page to give a more probabilistic estimate of future margins (allowing for uncertainty). Ex. CA trended blue significantly until 2020, but has started to trend red. But the line of best fit still has a firmly positive slope. Thus, the old method would almost certainly predict a continued blue trend, unless you used a different slope method. Whereas the Laplace method gives about a 50:50 chance of CA trending either direction, by weighting by recency and giving some uncertainty.</li>
 </ul>
 <h2>Coming soon:</h2>
 <ul>

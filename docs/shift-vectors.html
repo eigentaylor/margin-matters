@@ -8,6 +8,7 @@
     <link rel="icon" href="./favicon.svg" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="maintenance-check.js"></script>
+    <script src="./last-updated.js"></script>
 </head>
 
 <body class="shift-vectors-page shift-vectors">
@@ -145,7 +146,8 @@
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
                 <div>
                     <strong>Data</strong>
-                    <div class="legend-note" style="margin-top:6px">Expand to see the raw vote-delta table for the selected year. Tap column headers to sort.</div>
+                    <div class="legend-note" style="margin-top:6px">Expand to see the raw vote-delta table for the
+                        selected year. Tap column headers to sort.</div>
                 </div>
                 <div>
                     <button id="dataToggle" class="btn" aria-expanded="false">Show table</button>
@@ -155,7 +157,8 @@
             <div id="dataPanel" hidden style="margin-top:12px">
                 <div id="dataSummary" class="chart-note">Loading…</div>
                 <div class="table-wrap" style="margin-top:8px">
-                    <table id="shiftDataTable" class="shift-data-table ev-breakdown-table" aria-describedby="dataSummary">
+                    <table id="shiftDataTable" class="shift-data-table ev-breakdown-table"
+                        aria-describedby="dataSummary">
                         <thead>
                             <tr>
                                 <th data-key="label" scope="col" class="sortable">Unit</th>
@@ -186,7 +189,6 @@
     <script src="./header.js"></script>
     <script src="./back-to-map.js"></script>
     <script src="./footer.js"></script>
-    <script src="./last-updated.js"></script>
 </body>
 
 </html>
