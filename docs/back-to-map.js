@@ -55,7 +55,7 @@
       if (attempts >= maxAttempts) {
         clearInterval(poll);
         // Try fallback fetches from a small set of likely prefixes.
-        const prefixes = ['docs/', './', '../', '/margin-matters/docs/', '/margin-matters/'];
+        const prefixes = ['./', '../', '/margin-matters/docs/', '/margin-matters/'];
         (async function tryFallbacks() {
           for (let i = 0; i < prefixes.length; i++) {
             const prefix = prefixes[i];

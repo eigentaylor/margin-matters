@@ -24,13 +24,16 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
 
   const byYearStops = (hasWindow && window._stopColorsByYear && window._stopColorsByYear.get(year)) || null;
   const effByYearStops = (hasWindow && window._stopEffByYear && window._stopEffByYear.get(year)) || null;
+  const futureMeta = (hasWindow && window._futureStopMeta && window._futureStopMeta.get(year)) || null;
 
   try {
     if (byYearStops) {
       const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
       try {
-        console.debug(`[pvStops] CSV stop keys sample for ${year}:`, sampleKeys);
-        console.debug(`[pvStops] CSV byYearStops size for ${year}:`, byYearStops.size, 'effByYearStops present:', !!effByYearStops);
+        const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
+        //console.debug(`[pvStops] ${dataSource} stop keys sample for ${year}:`, sampleKeys);
+        console.debug(`[pvStops] ${dataSource} byYearStops size for ${year}:`, byYearStops.size, 'effByYearStops present:', !!effByYearStops);
+        if (isFutureMode && futureMeta) console.debug(`[pvStops] FUTURE meta for ${year}:`, { threshold: futureMeta.threshold, totalEv: futureMeta.totalEv, tippingStopsCount: futureMeta.tippingStops ? futureMeta.tippingStops.size : 0, tieStopsCount: futureMeta.tieStops ? futureMeta.tieStops.size : 0 });
       } catch (e) { /* ignore */ }
     }
   } catch (e) { console.warn(e); }
@@ -151,6 +154,7 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       let bgColor = '#0d0d0dff';
       const CANON = { BLUE: '#1e4bd1', RED: '#b22222', YELLOW: '#C9A400' };
       // helper to find the closest CSV key when numeric rounding differs
+      // Use STOP_KEY_PREC precision and a tighter tolerance matching future.js's STOP_KEY_PREC
       const findKeyForValue = (map, val) => {
         if (!map || typeof map.keys !== 'function') return null;
         let best = null; let bestDiff = Infinity;
@@ -160,8 +164,9 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           const diff = Math.abs(num - val);
           if (diff < bestDiff) { bestDiff = diff; best = k; }
         }
-        // allow small tolerance for matching (covers small nudge/effective pv differences)
-        const TOL = 0.00025; // 0.025% absolute margin
+        // Tighter tolerance: match only if within one unit of STOP_KEY_PREC
+        const PREC = (typeof STOP_KEY_PREC === 'number') ? STOP_KEY_PREC : 6;
+        const TOL = Math.pow(10, -PREC) * 1.5; // e.g., 1.5 * 10^-6
         return (bestDiff <= TOL) ? best : null;
       };
       // prepare CSV lookup variable (may be assigned below)
@@ -197,7 +202,8 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
               // targeted debug: if this is 2020 and unit is WI or PA, log full row for inspection
               try {
                 if (Number(year) === 2020 && unit && (String(unit).toUpperCase() === 'WI' || String(unit).toUpperCase() === 'PA')) {
-                  console.debug(`[pvStops][2020-row] stop ${v} key ${key} unit ${unit}`, info);
+                  const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
+                  console.debug(`[pvStops][2020-row][${dataSource}] stop ${v} key ${key} unit ${unit}`, info);
                 }
               } catch (e) { /* ignore */ }
             });
@@ -237,12 +243,26 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       const smallColor = isYellowish ? '#000' : 'var(--muted)';
       const idxAttr = (sliderIdx != null && Number.isFinite(sliderIdx)) ? String(sliderIdx) : '';
       const displayLabel = label.replace('<small', `<small style="color:${smallColor}"`);
-      // Prefer CSV flags (IS_TIPPING_POINT / IS_TIE_STOP) when present.
+      // Prefer CSV/future flags when present. For future years prefer window._futureStopMeta to
+      // determine the canonical tipping/tie stops and their EV totals. This avoids mismatches
+      // from per-unit rows and ensures the displayed chip matches the annotated synthetic stop.
       let isTipCsv = false;
       let isTieCsv = false;
       try {
-        if (byStopCsv && typeof byStopCsv.forEach === 'function') {
-          const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+        const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+        // If we have a future meta entry for this year, consult it first
+        if (futureMeta && futureMeta.tippingStops && futureMeta.totalsByValue) {
+          // check whether this numeric stop value is listed as tipping/tie
+          const keyStr = Number(v).toFixed(STOP_KEY_PREC);
+          const isTipByMeta = Array.from(futureMeta.tippingStops || []).some(val => Number(val) === Number(v));
+          const isTieByMeta = Array.from(futureMeta.tieStops || []).some(val => Number(val) === Number(v));
+          if (isTipByMeta || isTieByMeta) {
+            isTipCsv = !!isTipByMeta; isTieCsv = !!isTieByMeta;
+            console.debug(`[pvStops] FUTURE meta flags for year ${year} stop ${v} key ${keyStr} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
+          }
+        }
+        // If no meta or meta didn't include this stop, fall back to per-stop CSV-like flags
+        if ((!isTipCsv && !isTieCsv) && byStopCsv && typeof byStopCsv.forEach === 'function') {
           byStopCsv.forEach((info) => {
             if (!info) return;
             try {
@@ -251,25 +271,26 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
             } catch (e) { console.warn(e); }
           });
           if (isTipCsv || isTieCsv) {
-            try { console.debug(`[pvStops] CSV flags for year ${year} stop ${v} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`); } catch (e) { console.log(e); }
+            const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
+            console.debug(`[pvStops] ${dataSource} flags for year ${year} stop ${v} key ${Number(v).toFixed(STOP_KEY_PREC)} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
           }
-          // targeted 2020 check: print slider index and tip index context
-          try {
-            if (Number(year) === 2020) {
-              console.debug(`[pvStops][2020-check] sliderIdx=${sliderIdx}, tipIdx=${tipIdx}, stopToEff=${stopToEff.get(v)}`);
-            }
-          } catch (e) { /* ignore */ }
         }
+        // targeted 2020 check: print slider index and tip index context
+        try {
+          if (Number(year) === 2020) {
+            console.debug(`[pvStops][2020-check] sliderIdx=${sliderIdx}, tipIdx=${tipIdx}, stopToEff=${stopToEff.get(v)}`);
+          }
+        } catch (e) { /* ignore */ }
       } catch (e) { console.warn(e); }
 
-      // If CSV flags exist, use them; otherwise fall back to tipIdx matching
-      const isTipping = isTipCsv;// || (isTipCsv === false && isTieCsv === false && tipIdx !== null && sliderIdx === tipIdx);
+      // If flags exist (from CSV or FUTURE meta), use them; otherwise fall back to tipIdx matching
+      const isTipping = isTipCsv || (isTipCsv === false && isTieCsv === false && tipIdx !== null && sliderIdx === tipIdx);
       const tipBadge = isTipping ? '<span class="tip-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#f2c94c">TIP</span>' : '';
       const isTie = (!isTipping && isTieCsv);
       const tieBadge = isTie ? '<span class="tie-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#9aa3b2">TIE</span>' : '';
       let btnStyle = `padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}`;
-  if (isTipping) btnStyle += ';box-shadow:0 0 0 2px #f2c94c inset';
-  if (isTie) btnStyle += ';box-shadow:0 0 0 2px #9aa3b2 inset';
+      if (isTipping) btnStyle += ';box-shadow:0 0 0 2px #f2c94c inset';
+      if (isTie) btnStyle += ';box-shadow:0 0 0 2px #9aa3b2 inset';
       const titleText = isTipping ? (tipTitle || 'Tipping point stop') : (isTie ? 'Electoral College tie at this stop' : '');
       const titleAttr = titleText ? ` title="${titleText.replace(/"/g, '&quot;')}"` : '';
       const ariaAttr = isTipping ? ' aria-label="Tipping point stop"' : (isTie ? ' aria-label="Electoral College tie at this stop"' : '');

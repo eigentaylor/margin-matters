@@ -1035,11 +1035,13 @@
       const STOP_KEY_PREC = 6;
       if (!window._stopColorsByYear) window._stopColorsByYear = new Map();
       if (!window._stopEffByYear) window._stopEffByYear = new Map();
+      if (!window._futureStopMeta) window._futureStopMeta = new Map();
       // IMPORTANT: when regenerating (e.g. slope method change), wipe prior future-year
       // synthetic stops so we don't accumulate an ever-growing list of stale stops.
       years.filter(y => y > 2024).forEach(year => {
         if (window._stopColorsByYear.has(year)) window._stopColorsByYear.delete(year);
         if (window._stopEffByYear.has(year)) window._stopEffByYear.delete(year);
+        if (window._futureStopMeta.has(year)) window._futureStopMeta.delete(year);
       });
 
       // console.log('[future] Starting synthetic stop generation for future years');
@@ -1062,6 +1064,227 @@
       function sign(x) { return x > 0 ? 1 : (x < 0 ? -1 : 0); }
       // Basic color chooser (aligned roughly with tester.js palette extremes)
       function colorForWinner(w) { return (w === 'D') ? '#4169E1' : (w === 'R' ? '#B22222' : '#C9A400'); }
+      const toStopKey = (val) => Number(val).toFixed(STOP_KEY_PREC);
+      function computeEvTotals(rows, pvShift) {
+        let d = 0; let r = 0; let o = 0;
+        const details = [];
+        rows.forEach(row => {
+          if (!row || row.unit === 'NATIONAL') return;
+          const ev = Number(row.ev);
+          if (!Number.isFinite(ev) || ev <= 0) return;
+          const margin = Number(row.rm) || 0;
+          const adj = margin + pvShift;
+          const dir = sign(pvShift); // if pvShift>0, adj==0 favors D; if pvShift<0, adj==0 favors R
+          let bucket = '?';
+          if (adj === 0) { 
+            if (dir > 0) { d += ev; bucket = 'D'; }
+            else if (dir < 0) { r += ev; bucket = 'R'; }
+            else { console.warn('[computeEvTotals] encountered tie margin with zero pvShift and no direction:', { unit: row.unit, ev, margin, pvShift, adj }); o += ev; bucket = 'TIE'; }
+          }
+          else if (adj > 0) { d += ev; bucket = 'D'; }
+          else if (adj < 0) { r += ev; bucket = 'R'; }
+          else { console.warn('[computeEvTotals] encountered tie margin after adjustment:', { unit: row.unit, ev, margin, pvShift, adj }); o += ev; bucket = 'TIE'; }
+          if (typeof window !== 'undefined' && window._futureDebug && window._futureDebugVerbose) {
+            details.push({ unit: row.unit, ev, rm: margin, adj, bucket });
+          }
+        });
+        if (typeof window !== 'undefined' && window._futureDebug && window._futureDebugVerbose && details.length > 0) {
+          console.debug(`[computeEvTotals] pvShift=${pvShift.toFixed(6)} → D=${d} R=${r} O=${o} total=${d+r+o}`, details);
+        }
+        return { d, r, o };
+      }
+      function annotateFutureYearStops(year) {
+        const byStop = window._stopColorsByYear.get(year);
+        if (!byStop || byStop.size === 0) return;
+        const effMap = window._stopEffByYear.get(year) || new Map();
+        const rows = BY.get(year) || [];
+        const natMargin = 0;
+        const stopsSet = new Set([0, natMargin]);
+        byStop.forEach((_, key) => {
+          const val = parseFloat(key);
+          if (Number.isFinite(val)) stopsSet.add(val);
+        });
+        const stopsList = Array.from(stopsSet).sort((a, b) => a - b);
+        const totalsByKey = new Map();
+        const totalsByValue = new Map();
+        const totalEv = rows.reduce((sum, row) => {
+          if (!row || row.unit === 'NATIONAL') return sum;
+          const ev = Number(row.ev);
+          return Number.isFinite(ev) ? sum + ev : sum;
+        }, 0);
+        const EVsToWin = Math.floor(totalEv / 2) + 1;
+        const stopData = stopsList.map(stopVal => {
+          const key = toStopKey(stopVal);
+          const effPv = (Math.abs(stopVal - natMargin) <= EPS) ? stopVal : (effMap.get(key) ?? stopVal);
+          const totals = computeEvTotals(rows, effPv);
+          const totalCheck = totals.d + totals.r + totals.o;
+          if (typeof window !== 'undefined' && window._futureDebug && Math.abs(totalCheck - totalEv) > 0.1) {
+            console.warn(`[future][annotate] EV total mismatch at stop ${stopVal.toFixed(6)}: computed D=${totals.d} R=${totals.r} O=${totals.o} total=${totalCheck} expected=${totalEv} missing=${totalEv - totalCheck}`);
+          }
+          totalsByKey.set(key, { stop: stopVal, eff: effPv, d: totals.d, r: totals.r, o: totals.o });
+          totalsByValue.set(stopVal, { stop: stopVal, eff: effPv, d: totals.d, r: totals.r, o: totals.o });
+          // Do not mark 'tie' simply because neither side reaches the majority threshold.
+          // Ties should be exact EV ties (d == r). We'll detect those during the directional
+          // search below and set tieIndex/tieStops only when abs(d - r) <= EPS_EV.
+          return { stopVal, key, eff: effPv, totals };
+        });
+        if (!stopData.length) return;
+        let actualIdx = stopData.findIndex(entry => Math.abs(entry.stopVal - natMargin) <= EPS);
+        if (actualIdx < 0) {
+          let bestIdx = 0;
+          let bestDiff = Math.abs(stopData[0].stopVal - natMargin);
+          for (let i = 1; i < stopData.length; i++) {
+            const diff = Math.abs(stopData[i].stopVal - natMargin);
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              bestIdx = i;
+            }
+          }
+          actualIdx = bestIdx;
+        }
+        // Find tipping point: the stop where the runner-up crosses from <270 to ≥270.
+        // Find tie stops: any stop where D or R has exactly 269 EV (269-269 tie).
+        let tippingIndex = null;
+        const tieIndices = [];
+        const dActual = stopData[actualIdx].totals.d;
+        const rActual = stopData[actualIdx].totals.r;
+        
+        // Scan all stops to find ties (D or R exactly 269)
+        for (let i = 0; i < stopData.length; i++) {
+          const d_ev = stopData[i].totals.d;
+          const r_ev = stopData[i].totals.r;
+          if (d_ev === 269 || r_ev === 269) {
+            tieIndices.push(i);
+          }
+        }
+
+        // Find tipping point: look for the transition where runner-up crosses 270 threshold
+        // Determine winner and runner-up at EVEN
+        const winnerActual = (dActual > rActual) ? 'D' : (rActual > dActual ? 'R' : null);
+        if (winnerActual) {
+          const runnerUp = (winnerActual === 'D') ? 'R' : 'D';
+          const dir = (winnerActual === 'D') ? -1 : 1; // move opposite winner (toward runner-up's favor)
+          
+          if (typeof window !== 'undefined' && window._futureDebug) {
+            console.debug(`[future][annotate][scan] year ${year} EVEN at actualIdx ${actualIdx} dActual=${dActual} rActual=${rActual} winner=${winnerActual} runnerUp=${runnerUp} dir=${dir} EVsToWin=${EVsToWin}`);
+          }
+          
+          // Search from EVEN in the direction that favors the runner-up
+          let prevRunnerEV = null;
+          for (let step = 0; step < stopData.length; step++) {
+            const ii = actualIdx + (dir * step);
+            if (ii < 0 || ii >= stopData.length) break;
+            
+            const d_ev = stopData[ii].totals.d;
+            const r_ev = stopData[ii].totals.r;
+            const runnerEV = (runnerUp === 'R') ? r_ev : d_ev;
+            const winnerEV = (winnerActual === 'D') ? d_ev : r_ev;
+            
+            if (typeof window !== 'undefined' && window._futureDebug) {
+              console.debug(`[future][annotate][scan] step ${step} ii=${ii} stopVal=${stopData[ii].stopVal.toFixed(6)} D=${d_ev} R=${r_ev} runnerEV=${runnerEV} prevRunnerEV=${prevRunnerEV}`);
+            }
+            
+            // Check if runner-up just crossed the threshold (from <270 to ≥270)
+            if (prevRunnerEV != null && prevRunnerEV < EVsToWin && runnerEV >= EVsToWin) {
+              tippingIndex = ii;
+              if (typeof window !== 'undefined' && window._futureDebug) {
+                console.debug(`[future][annotate][scan] ✓ FOUND TIPPING at ii=${ii} stopVal=${stopData[ii].stopVal.toFixed(6)} runnerEV crossed from ${prevRunnerEV} to ${runnerEV}`);
+              }
+              break;
+            }
+            prevRunnerEV = runnerEV;
+          }
+        }
+
+        const tippingStopKeys = new Set();
+        const tippingStopValues = new Set();
+        if (tippingIndex != null && tippingIndex >= 0 && tippingIndex < stopData.length) {
+          const cand = stopData[tippingIndex];
+          tippingStopKeys.add(cand.key);
+          tippingStopValues.add(cand.stopVal);
+        }
+
+        const tieStopKeys = new Set();
+        const tieStopValues = new Set();
+        for (const idx of tieIndices) {
+          if (idx >= 0 && idx < stopData.length) {
+            const t = stopData[idx];
+            tieStopKeys.add(t.key);
+            tieStopValues.add(t.stopVal);
+          }
+        }
+
+        // Verify tipping stop: ensure at least one unit at that stop is actually pivotal
+        // (removing its EV would drop the winner below the threshold).
+        if (tippingIndex != null && tippingIndex >= 0 && tippingIndex < stopData.length) {
+          try {
+            const tipStop = stopData[tippingIndex];
+            const tipTotals = tipStop.totals;
+            const tipEffPv = tipStop.eff;
+            // Get winner and runner-up at the tipping stop
+            const winnerAtTip = (tipTotals.d > tipTotals.r) ? 'D' : (tipTotals.r > tipTotals.d ? 'R' : null);
+            if (winnerAtTip) {
+              const winnerEV = (winnerAtTip === 'D') ? tipTotals.d : tipTotals.r;
+              // For each unit that gave EVs to the winner at this stop, check if removing it drops below threshold
+              const pivotUnits = [];
+              rows.forEach(row => {
+                if (!row || row.unit === 'NATIONAL') return;
+                const unitEV = Number(row.ev);
+                if (!Number.isFinite(unitEV) || unitEV <= 0) return;
+                const margin = Number(row.rm) || 0;
+                const adj = margin + tipEffPv;
+                const unitWinner = (adj > EPS) ? 'D' : (adj < -EPS ? 'R' : null);
+                if (unitWinner === winnerAtTip) {
+                  const winnerWithout = winnerEV - unitEV;
+                  if (winnerWithout < EVsToWin) {
+                    pivotUnits.push(row.unit);
+                  }
+                }
+              });
+              // If no units are actually pivotal, log a warning
+              if (pivotUnits.length === 0 && typeof window !== 'undefined' && window._futureDebug) {
+                console.warn('[future][annotate] No pivot units found for tipping stop', { year, tippingIndex, tipStop: tipStop.stopVal, tipTotals, EVsToWin, winnerAtTip, winnerEV });
+              } else if (typeof window !== 'undefined' && window._futureDebug) {
+                console.debug('[future][annotate] Pivot units verified for tipping stop', { year, tippingIndex, tipStop: tipStop.stopVal, pivotUnits });
+              }
+            }
+          } catch (e) { console.warn('[future][annotate] tipping verification error', e); }
+        }
+
+        // Optional debug: print context for this year when enabled
+        try {
+          if (typeof window !== 'undefined' && window._futureDebug) {
+            const sampleAround = (i, radius = 3) => stopData.slice(Math.max(0, i - radius), Math.min(stopData.length, i + radius + 1)).map((s, idx) => ({ idx: Math.max(0, i - radius) + idx, stop: s.stopVal, totals: s.totals }));
+            console.debug('[future][annotate] year', year, 'actualIdx', actualIdx, 'tippingIndex', tippingIndex, 'tieIndices', tieIndices, 'totalEv', totalEv, 'EVsToWin', EVsToWin, 'nearby', sampleAround(tippingIndex || actualIdx));
+          }
+        } catch (e) { /* ignore debug errors */ }
+        byStop.forEach((unitsMap, key) => {
+          const totals = totalsByKey.get(key);
+          const isTip = tippingStopKeys.has(key);
+          const isTie = tieStopKeys.has(key);
+          unitsMap.forEach(info => {
+            if (!info) return;
+            info.IS_TIPPING_POINT = isTip ? 'true' : 'false';
+            info.IS_TIE_STOP = isTie ? 'true' : 'false';
+            if (totals) {
+              info.ELECTORAL_VOTE_TOTALS = JSON.stringify({ D: totals.d, R: totals.r, O: totals.o });
+            } else {
+              delete info.ELECTORAL_VOTE_TOTALS;
+            }
+          });
+        });
+        const metaEntry = {
+          natMargin,
+          totalEv,
+          majority: (totalEv / 2) + EPS,
+          threshold: EVsToWin,
+          tippingStops: tippingStopValues,
+          tieStops: tieStopValues,
+          totalsByValue,
+          stopsList: stopData.map(d => d.stopVal)
+        };
+        window._futureStopMeta.set(year, metaEntry);
+      }
       // For each future year > 2024, create a stop at -rm per unit (flip point) and any third-party window boundaries
       years.filter(y => y > 2024).forEach(year => {
         // console.log('[future] Processing year', year);
@@ -1110,6 +1333,13 @@
         //console.log('[future] Year', year, 'generated', stopCount, 'stops');
         const finalStopCount = window._stopColorsByYear.get(year) ? window._stopColorsByYear.get(year).size : 0;
         //console.log('[future] Year', year, 'final stop count in map:', finalStopCount);
+      });
+      years.filter(y => y > 2024).forEach(year => {
+        try {
+          annotateFutureYearStops(year);
+        } catch (err) {
+          console.warn('[future] failed to annotate synthetic stops', year, err);
+        }
       });
       //console.log('[future] synthetic stops generated for future years');
 
@@ -1654,7 +1884,7 @@
     const laplacePanel = document.getElementById('laplacePanel');
     const laplaceToggle = document.getElementById('laplaceToggle');
     const laplaceContent = document.getElementById('laplaceContent');
-    console.log('[future] laplacePanel:', laplacePanel, 'laplaceToggle:', laplaceToggle, 'laplaceContent:', laplaceContent);
+    //console.log('[future] laplacePanel:', laplacePanel, 'laplaceToggle:', laplaceToggle, 'laplaceContent:', laplaceContent);
     // Sort state for laplace table (preserved between renders)
     let laplaceSortKey = 'pWeighted';
     let laplaceSortDir = 'desc'; // 'asc' | 'desc'
