@@ -291,6 +291,10 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     continue
                 ev_val = int(parse_float(rr.get('electoral_votes') or rr.get('EV') or 0))
                 w = winner_for_row_at_pv(rr, eff)
+                if abbr_rr == 'AL' and year == 1960:
+                    d_ev += 5 # special case: AL 1960 had 5 pledged EVs for Kennedy
+                    o_ev += 6 # special case: AL 1960 had 6 unpledged EVs for Byrd
+                    continue
                 if w == 'D':
                     d_ev += ev_val
                 elif w == 'R':
@@ -383,6 +387,8 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             #     tie_stops.add(s)
             if d_ev < EVs_to_win and r_ev < EVs_to_win:
                 #no_majority_stops.add(s)
+                if year == 1960:
+                    pass
                 tie_stops.add(s)
         if tipping_index is not None and 0 <= tipping_index < len(stops_list):
             tipping_stops.add(stops_list[tipping_index])
