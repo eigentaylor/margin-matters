@@ -364,7 +364,7 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     cur_winner = runner_up
                 else:
                     cur_winner = None
-                cur_winner = runner_up if runner_up_ev > EVs_to_win else winner_actual
+                cur_winner = runner_up if runner_up_ev >= EVs_to_win else winner_actual
                 if cur_winner == runner_up:
                     tipping_index = ii
                     break
