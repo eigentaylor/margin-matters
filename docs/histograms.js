@@ -434,13 +434,61 @@ Interactive Histograms for Presidential Margins Data
   }
 
   function copyShareUrl() {
-    el.shareInput.select();
-    document.execCommand('copy');
+    // Ensure the share input has the current URL
+    try {
+      el.shareInput.value = window.location.href;
+    } catch (e) {
+      // ignore
+    }
 
-    el.shareStatus.style.display = 'inline';
-    setTimeout(() => {
+    const urlToCopy = el.shareInput && el.shareInput.value ? el.shareInput.value : window.location.href;
+
+    // Use modern clipboard API when available
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(urlToCopy).then(() => {
+        console.log('Share URL copied to clipboard:', urlToCopy);
+        el.shareStatus.style.display = 'inline';
+        setTimeout(() => { el.shareStatus.style.display = 'none'; }, 2000);
+      }).catch((err) => {
+        console.warn('navigator.clipboard.writeText failed, falling back to execCommand copy', err);
+        // fallback
+        fallbackCopy(urlToCopy);
+      });
+    } else {
+      fallbackCopy(urlToCopy);
+    }
+  }
+
+  function fallbackCopy(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) {
+        console.log('Share URL copied to clipboard using fallback:', text);
+        el.shareStatus.style.display = 'inline';
+        setTimeout(() => { el.shareStatus.style.display = 'none'; }, 2000);
+      } else {
+        console.warn('Fallback copy (execCommand) failed; showing input for manual copy');
+        // show the input so the user can copy manually
+        el.shareUrl.style.display = 'flex';
+        el.shareInput.focus();
+        el.shareInput.select();
+        el.shareStatus.style.display = 'none';
+      }
+    } catch (e) {
+      console.error('Copy to clipboard failed completely:', e);
+      // give up — show input for manual copy
+      el.shareUrl.style.display = 'flex';
+      el.shareInput.focus();
+      el.shareInput.select();
       el.shareStatus.style.display = 'none';
-    }, 2000);
+    }
   }
 
   function initChart() {
