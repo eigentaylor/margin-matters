@@ -28,7 +28,10 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   try {
     if (byYearStops) {
       const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
-      // console.log('[stops] raw stop keys (sample)', sampleKeys);
+      try {
+        console.debug(`[pvStops] CSV stop keys sample for ${year}:`, sampleKeys);
+        console.debug(`[pvStops] CSV byYearStops size for ${year}:`, byYearStops.size, 'effByYearStops present:', !!effByYearStops);
+      } catch (e) { /* ignore */ }
     }
   } catch (e) { console.warn(e); }
 
@@ -161,9 +164,11 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
         const TOL = 0.00025; // 0.025% absolute margin
         return (bestDiff <= TOL) ? best : null;
       };
+      // prepare CSV lookup variable (may be assigned below)
+      let byStopCsv = null;
       if (!isEven) {
         const key = Number(v).toFixed(STOP_KEY_PREC);
-        let byStopCsv = byYearStops && byYearStops.get(key);
+        byStopCsv = byYearStops && byYearStops.get(key);
         // if exact key lookup failed, try fuzzy-match on numeric keys
         if (!byStopCsv && byYearStops) {
           const alt = findKeyForValue(byYearStops, v);
@@ -179,7 +184,9 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           try {
             let hasT = false, hasD = false, hasR = false;
             let firstCss = null;
-            byStopCsv.forEach((info) => {
+            let csvEntries = 0;
+            byStopCsv.forEach((info, unit) => {
+              csvEntries++;
               if (!firstCss && info && info.color_css) firstCss = info.color_css;
               if (info && info.winner) {
                 const w = String(info.winner).toUpperCase();
@@ -187,7 +194,14 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
                 else if (w === 'D') hasD = true;
                 else if (w === 'R') hasR = true;
               }
+              // targeted debug: if this is 2020 and unit is WI or PA, log full row for inspection
+              try {
+                if (Number(year) === 2020 && unit && (String(unit).toUpperCase() === 'WI' || String(unit).toUpperCase() === 'PA')) {
+                  console.debug(`[pvStops][2020-row] stop ${v} key ${key} unit ${unit}`, info);
+                }
+              } catch (e) { /* ignore */ }
             });
+            //try { console.debug(`[pvStops] CSV entries for year ${year} stop ${v} key ${key}:`, csvEntries, 'hasT', hasT, 'hasD', hasD, 'hasR', hasR); } catch (e) { /* ignore */ }
             if (hasT) bgColor = CANON.YELLOW;
             else if (hasD) bgColor = CANON.BLUE;
             else if (hasR) bgColor = CANON.RED;
@@ -223,14 +237,43 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       const smallColor = isYellowish ? '#000' : 'var(--muted)';
       const idxAttr = (sliderIdx != null && Number.isFinite(sliderIdx)) ? String(sliderIdx) : '';
       const displayLabel = label.replace('<small', `<small style="color:${smallColor}"`);
-      const isTipping = (tipIdx !== null && sliderIdx === tipIdx);
+      // Prefer CSV flags (IS_TIPPING_POINT / IS_TIE_STOP) when present.
+      let isTipCsv = false;
+      let isTieCsv = false;
+      try {
+        if (byStopCsv && typeof byStopCsv.forEach === 'function') {
+          const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+          byStopCsv.forEach((info) => {
+            if (!info) return;
+            try {
+              if (parseBool(info.IS_TIPPING_POINT)) isTipCsv = true;
+              if (parseBool(info.IS_TIE_STOP)) isTieCsv = true;
+            } catch (e) { console.warn(e); }
+          });
+          if (isTipCsv || isTieCsv) {
+            try { console.debug(`[pvStops] CSV flags for year ${year} stop ${v} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`); } catch (e) { console.log(e); }
+          }
+          // targeted 2020 check: print slider index and tip index context
+          try {
+            if (Number(year) === 2020) {
+              console.debug(`[pvStops][2020-check] sliderIdx=${sliderIdx}, tipIdx=${tipIdx}, stopToEff=${stopToEff.get(v)}`);
+            }
+          } catch (e) { /* ignore */ }
+        }
+      } catch (e) { console.warn(e); }
+
+      // If CSV flags exist, use them; otherwise fall back to tipIdx matching
+      const isTipping = isTipCsv;// || (isTipCsv === false && isTieCsv === false && tipIdx !== null && sliderIdx === tipIdx);
       const tipBadge = isTipping ? '<span class="tip-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#f2c94c">TIP</span>' : '';
+      const isTie = (!isTipping && isTieCsv);
+      const tieBadge = isTie ? '<span class="tie-badge" style="margin-right:4px;font-size:0.75em;font-weight:700;color:#9aa3b2">TIE</span>' : '';
       let btnStyle = `padding:4px 6px;margin:2px;background-color:${bgColor};color:${textColor}`;
-      if (isTipping) btnStyle += ';box-shadow:0 0 0 2px #f2c94c inset';
-      const titleText = isTipping ? (tipTitle || 'Tipping point stop') : '';
+  if (isTipping) btnStyle += ';box-shadow:0 0 0 2px #f2c94c inset';
+  if (isTie) btnStyle += ';box-shadow:0 0 0 2px #9aa3b2 inset';
+      const titleText = isTipping ? (tipTitle || 'Tipping point stop') : (isTie ? 'Electoral College tie at this stop' : '');
       const titleAttr = titleText ? ` title="${titleText.replace(/"/g, '&quot;')}"` : '';
-      const ariaAttr = isTipping ? ' aria-label="Tipping point stop"' : '';
-      return `<span class="btn" style="${btnStyle}" data-idx="${idxAttr}"${ariaAttr}${titleAttr}>${tipBadge}${displayLabel}</span>`;
+      const ariaAttr = isTipping ? ' aria-label="Tipping point stop"' : (isTie ? ' aria-label="Electoral College tie at this stop"' : '');
+      return `<span class="btn" style="${btnStyle}" data-idx="${idxAttr}"${ariaAttr}${titleAttr}>${tipBadge}${tieBadge}${displayLabel}</span>`;
     }).join('');
 
     // Sort preset stops by numeric value so preset chips render in deterministic order

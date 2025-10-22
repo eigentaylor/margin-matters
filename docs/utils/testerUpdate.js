@@ -329,80 +329,60 @@ export function createUpdateAll(deps) {
     const majorityCutoff = (totalEv / 2) + EPS;
     const prevYear = (typeof window !== 'undefined') ? window._curYear : null;
     const prevPv = (typeof window !== 'undefined') ? window._curPv : null;
-
-    // find EVEN stop index (exact or nearest)
-    let evenIdx = stops.findIndex(v => Math.abs(v) <= STOP_EPS);
-    if (evenIdx < 0) {
-      // pick nearest to zero
-      let best = 0; let bestAbs = Math.abs(stops[0] || 0);
-      for (let i = 1; i < stops.length; i++) {
-        const a = Math.abs(stops[i]);
-        if (a < bestAbs) { bestAbs = a; best = i; }
-      }
-      evenIdx = best;
-    }
-
+    // CSV-only mode: read stop_colors flags for IS_TIPPING_POINT / IS_TIE_STOP and
+    // select the first matching stop (prefer IS_TIPPING_POINT over IS_TIE_STOP).
     try {
-      if (typeof window !== 'undefined') {
-        window._curYear = year;
-      }
-
-      const evenStopVal = stops[evenIdx];
-      const evenEff = stopToEff.has(evenStopVal) ? stopToEff.get(evenStopVal) : evenStopVal;
-      if (typeof window !== 'undefined') window._curPv = evenEff;
-      const evenMap = computeMapState(year, { pv: evenEff, nat: natMargin, stopVal: evenStopVal });
-      const dEvEven = evenMap && isFinite(evenMap.dEV) ? evenMap.dEV : 0;
-      const rEvEven = evenMap && isFinite(evenMap.rEV) ? evenMap.rEV : 0;
-
-      // determine winner at EVEN
-      const EPS_WIN = 1e-6;
-      let winnerAtEven = 'R';
-      if (dEvEven > rEvEven + EPS_WIN) winnerAtEven = 'D';
-      else if (rEvEven > dEvEven + EPS_WIN) winnerAtEven = 'R';
-      else winnerAtEven = (dEvEven >= rEvEven ? 'D' : 'R');
-
-      // search direction: if D wins at even, move towards R (decreasing index), else move towards D (increasing index)
-      const dir = (winnerAtEven === 'D') ? -1 : 1;
-
-      // iterate stops away from even until winner flips
-      for (let i = evenIdx + dir; i >= 0 && i < stops.length; i += dir) {
-        const stopVal = stops[i];
-        const effPv = stopToEff.has(stopVal) ? stopToEff.get(stopVal) : stopVal;
+      if (typeof window === 'undefined' || !window._stopColorsByYear || typeof window._stopColorsByYear.get !== 'function') return null;
+      const byYearStops = window._stopColorsByYear.get(year);
+      if (!byYearStops || typeof byYearStops.keys !== 'function') return null;
+      const parseBool = (v) => (v === true || v === '1' || v === 1 || String(v).toLowerCase() === 'true');
+      let tippingStopVal = null;
+      let tieStopVal = null;
+      for (const key of byYearStops.keys()) {
         try {
-          if (typeof window !== 'undefined') window._curPv = effPv;
-          const mapState = computeMapState(year, { pv: effPv, nat: natMargin, stopVal });
-          const dEv = mapState && isFinite(mapState.dEV) ? mapState.dEV : 0;
-          const rEv = mapState && isFinite(mapState.rEV) ? mapState.rEV : 0;
-          let winner = 'R';
-          if (dEv > rEv + EPS_WIN) winner = 'D';
-          else if (rEv > dEv + EPS_WIN) winner = 'R';
-          else winner = (dEv >= rEv ? 'D' : 'R');
-          if (winner !== winnerAtEven) {
-            const dEvDisplay = Number.isFinite(dEv) ? (Math.abs(dEv - Math.round(dEv)) < 1e-6 ? String(Math.round(dEv)) : dEv.toFixed(1)) : '0';
-            const units = (stopToUnits.get(stopVal) || [])
-              .filter(Boolean)
-              .filter(u => !/^PRESET:/.test(u) && u !== 'NATIONAL' && u !== 'NAT');
-            const titleParts = [`Tipping point ${leanStr(effPv)}`, `D ${dEvDisplay} of ${totalEv} EV`];
-            if (units.length) titleParts.push(`Trigger: ${units.join(', ')}`);
-            return {
-              index: i,
-              stop: stopVal,
-              pv: effPv,
-              dEV: dEv,
-              majority: majorityCutoff,
-              units,
-              title: titleParts.join(' | ')
-            };
-          }
-        } catch (err) {
-          console.warn(err);
-        }
+          const table = byYearStops.get(key);
+          if (!table || typeof table.forEach !== 'function') continue;
+          table.forEach((info) => {
+            if (!info) return;
+            try {
+              if (!tippingStopVal && parseBool(info.IS_TIPPING_POINT)) {
+                tippingStopVal = parseFloat(key);
+              }
+              if (!tieStopVal && parseBool(info.IS_TIE_STOP)) {
+                tieStopVal = parseFloat(key);
+              }
+            } catch (e) { /* ignore */ }
+          });
+          if (tippingStopVal) break;
+        } catch (e) { /* ignore individual key errors */ }
       }
+      const chosenStop = (tippingStopVal != null) ? tippingStopVal : (tieStopVal != null ? tieStopVal : null);
+      if (chosenStop == null || !isFinite(chosenStop)) return null;
+      // map numeric stop to slider index
+      let idx = stops.findIndex(s => Math.abs(s - chosenStop) <= STOP_EPS);
+      if (idx < 0) idx = stops.findIndex(s => Math.abs(s - chosenStop) <= 0.0005);
+      if (idx < 0) {
+        try { console.debug('TIPPING: CSV indicated stop not found in slider stops', { year, chosenStop }); } catch (e) { }
+        return null;
+      }
+      const stopVal = stops[idx];
+      const effPv = stopToEff.has(stopVal) ? stopToEff.get(stopVal) : stopVal;
+      try { if (typeof window !== 'undefined') { window._curYear = year; window._curPv = effPv; } } catch (e) { }
+      const mapState = computeMapState(year, { pv: effPv, nat: natMargin, stopVal });
+      const dEv = mapState && isFinite(mapState.dEV) ? mapState.dEV : 0;
+      const dEvDisplay = Number.isFinite(dEv) ? (Math.abs(dEv - Math.round(dEv)) < 1e-6 ? String(Math.round(dEv)) : dEv.toFixed(1)) : '0';
+      const units = (stopToUnits.get(stopVal) || []).filter(Boolean).filter(u => !/^PRESET:/.test(u) && u !== 'NATIONAL' && u !== 'NAT');
+      const titleParts = [(tippingStopVal != null) ? `Tipping point ${leanStr(effPv)}` : `EC tie ${leanStr(effPv)}`, `D ${dEvDisplay} of ${totalEv} EV`];
+      if (units.length) titleParts.push(`Trigger: ${units.join(', ')}`);
+      const res = { index: idx, stop: stopVal, pv: effPv, dEV: dEv, majority: majorityCutoff, units, title: titleParts.join(' | ') };
+      try { console.log('TIPPING: selected from CSV flags', { year, idx: res.index, pv: res.pv, title: res.title }); } catch (e) { }
+      return res;
+    } catch (e) {
+      console.warn(e);
       return null;
     } finally {
       if (typeof window !== 'undefined') {
-        window._curYear = prevYear;
-        window._curPv = prevPv;
+        try { window._curYear = prevYear; window._curPv = prevPv; } catch (e) { }
       }
     }
   }
