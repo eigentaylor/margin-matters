@@ -479,7 +479,10 @@ export function createUpdateAll(deps) {
             verifyRows.push({ unit: u, unitEV: uEv, dWith: baseDEv, dWithout, majority: effectiveMajority, flips });
           }
           // Log verification details
-          try { console.debug('[TIPPING-VERIFY] synthetic meta check', { year, stopVal, effPv, totalsEntryD: dEv, effectiveTotalEv, effectiveMajority, verifyRows, pivotUnits }); } catch (e) { /* ignore */ }
+          const debugEnabled = (typeof window !== 'undefined' && window._tippingDebug);
+          if (debugEnabled) {
+            try { console.debug('[TIPPING-VERIFY] synthetic meta check', { year, stopVal, effPv, totalsEntryD: dEv, effectiveTotalEv, effectiveMajority, verifyRows, pivotUnits }); } catch (e) { /* ignore */ }
+          }
           // Filter chosenUnits to those that actually flip the majority (if any)
           const actualPivots = verifyRows.filter(r => r.flips).map(r => r.unit);
           if (actualPivots.length) {
@@ -487,13 +490,18 @@ export function createUpdateAll(deps) {
           }
           // If none of the chosen units actually flip the majority, warn to aid debugging
           if (!verifyRows.some(r => r.flips)) {
-            try { console.warn('[TIPPING-VERIFY] No pivot unit actually flips the majority for this stop — meta may be inconsistent', { year, stopVal, effPv, totalsEntryD: dEv, effectiveTotalEv, effectiveMajority, verifyRows }); } catch (e) { /* ignore */ }
+            if (debugEnabled) {
+              try { console.warn('[TIPPING-VERIFY] No pivot unit actually flips the majority for this stop — meta may be inconsistent', { year, stopVal, effPv, totalsEntryD: dEv, effectiveTotalEv, effectiveMajority, verifyRows }); } catch (e) { /* ignore */ }
+            }
           }
         } catch (e) { /* ignore verification errors */ }
 
         if (chosenUnits.length) titleParts.push(`Trigger: ${chosenUnits.join(', ')}`);
         const res = { index: idx, stop: stopVal, pv: effPv, dEV: dEv, majority: effectiveMajority, units: chosenUnits, title: titleParts.join(' | ') };
-        try { console.debug('TIPPING: selected from synthetic future meta', { year, idx: res.index, pv: res.pv, title: res.title, pivotUnits }); } catch (e) { }
+        const debugEnabled2 = (typeof window !== 'undefined' && window._tippingDebug);
+        if (debugEnabled2) {
+          try { console.debug('TIPPING: selected from synthetic future meta', { year, idx: res.index, pv: res.pv, title: res.title, pivotUnits }); } catch (e) { }
+        }
         return res;
       }
       if (typeof window === 'undefined' || !window._stopColorsByYear || typeof window._stopColorsByYear.get !== 'function') return null;
@@ -526,7 +534,10 @@ export function createUpdateAll(deps) {
       let idx = stops.findIndex(s => Math.abs(s - chosenStop) <= STOP_EPS);
       if (idx < 0) idx = stops.findIndex(s => Math.abs(s - chosenStop) <= 0.0005);
       if (idx < 0) {
-        try { console.debug('TIPPING: CSV indicated stop not found in slider stops', { year, chosenStop }); } catch (e) { }
+        const debugEnabled = (typeof window !== 'undefined' && window._tippingDebug);
+        if (debugEnabled) {
+          try { console.debug('TIPPING: CSV indicated stop not found in slider stops', { year, chosenStop }); } catch (e) { }
+        }
         return null;
       }
       const stopVal = stops[idx];
@@ -539,7 +550,10 @@ export function createUpdateAll(deps) {
       const titleParts = [(tippingStopVal != null) ? `Tipping point ${leanStr(effPv)}` : `EC tie ${leanStr(effPv)}`, `D ${dEvDisplay} of ${totalEv} EV`];
       if (units.length) titleParts.push(`Trigger: ${units.join(', ')}`);
       const res = { index: idx, stop: stopVal, pv: effPv, dEV: dEv, majority: majorityCutoff, units, title: titleParts.join(' | ') };
-      try { console.log('TIPPING: selected from CSV flags', { year, idx: res.index, pv: res.pv, title: res.title }); } catch (e) { }
+      const debugEnabled = (typeof window !== 'undefined' && window._tippingDebug);
+      if (debugEnabled) {
+        try { console.log('TIPPING: selected from CSV flags', { year, idx: res.index, pv: res.pv, title: res.title }); } catch (e) { }
+      }
       return res;
     } catch (e) {
       console.warn(e);

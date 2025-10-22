@@ -31,9 +31,10 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
       const sampleKeys = Array.from(byYearStops.keys()).slice(0, 12);
       try {
         const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
-        //console.debug(`[pvStops] ${dataSource} stop keys sample for ${year}:`, sampleKeys);
-        console.debug(`[pvStops] ${dataSource} byYearStops size for ${year}:`, byYearStops.size, 'effByYearStops present:', !!effByYearStops);
-        if (isFutureMode && futureMeta) console.debug(`[pvStops] FUTURE meta for ${year}:`, { threshold: futureMeta.threshold, totalEv: futureMeta.totalEv, tippingStopsCount: futureMeta.tippingStops ? futureMeta.tippingStops.size : 0, tieStopsCount: futureMeta.tieStops ? futureMeta.tieStops.size : 0 });
+        const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+        //if (debugEnabled) console.debug(`[pvStops] ${dataSource} stop keys sample for ${year}:`, sampleKeys);
+        if (debugEnabled) console.debug(`[pvStops] ${dataSource} byYearStops size for ${year}:`, byYearStops.size, 'effByYearStops present:', !!effByYearStops);
+        if (debugEnabled && isFutureMode && futureMeta) console.debug(`[pvStops] FUTURE meta for ${year}:`, { threshold: futureMeta.threshold, totalEv: futureMeta.totalEv, tippingStopsCount: futureMeta.tippingStops ? futureMeta.tippingStops.size : 0, tieStopsCount: futureMeta.tieStops ? futureMeta.tieStops.size : 0 });
       } catch (e) { /* ignore */ }
     }
   } catch (e) { console.warn(e); }
@@ -203,7 +204,8 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
               try {
                 if (Number(year) === 2020 && unit && (String(unit).toUpperCase() === 'WI' || String(unit).toUpperCase() === 'PA')) {
                   const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
-                  console.debug(`[pvStops][2020-row][${dataSource}] stop ${v} key ${key} unit ${unit}`, info);
+                  const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+                  if (debugEnabled) console.debug(`[pvStops][2020-row][${dataSource}] stop ${v} key ${key} unit ${unit}`, info);
                 }
               } catch (e) { /* ignore */ }
             });
@@ -258,7 +260,8 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           const isTieByMeta = Array.from(futureMeta.tieStops || []).some(val => Number(val) === Number(v));
           if (isTipByMeta || isTieByMeta) {
             isTipCsv = !!isTipByMeta; isTieCsv = !!isTieByMeta;
-            console.debug(`[pvStops] FUTURE meta flags for year ${year} stop ${v} key ${keyStr} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
+            const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+            if (debugEnabled) console.debug(`[pvStops] FUTURE meta flags for year ${year} stop ${v} key ${keyStr} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
           }
         }
         // If no meta or meta didn't include this stop, fall back to per-stop CSV-like flags
@@ -272,13 +275,15 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
           });
           if (isTipCsv || isTieCsv) {
             const dataSource = (isFutureMode && year > 2024) ? 'SYNTHETIC' : 'CSV';
-            console.debug(`[pvStops] ${dataSource} flags for year ${year} stop ${v} key ${Number(v).toFixed(STOP_KEY_PREC)} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
+            const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+            if (debugEnabled) console.debug(`[pvStops] ${dataSource} flags for year ${year} stop ${v} key ${Number(v).toFixed(STOP_KEY_PREC)} IS_TIPPING_POINT=${isTipCsv}, IS_TIE_STOP=${isTieCsv}`);
           }
         }
         // targeted 2020 check: print slider index and tip index context
         try {
           if (Number(year) === 2020) {
-            console.debug(`[pvStops][2020-check] sliderIdx=${sliderIdx}, tipIdx=${tipIdx}, stopToEff=${stopToEff.get(v)}`);
+            const debugEnabled = (typeof window !== 'undefined' && window._pvStopsDebug);
+            if (debugEnabled) console.debug(`[pvStops][2020-check] sliderIdx=${sliderIdx}, tipIdx=${tipIdx}, stopToEff=${stopToEff.get(v)}`);
           }
         } catch (e) { /* ignore */ }
       } catch (e) { console.warn(e); }
