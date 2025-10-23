@@ -484,7 +484,7 @@ def main():
                 ev_orth = pres_val - ev_weighted_mean
                 r['ev_orthogonalized_margin'] = ev_orth
                 r['ev_orthogonalized_margin_str'] = utils.lean_str(ev_orth)
-                r['ev_weighted_mean'] = ev_weighted_mean
+                #r['ev_weighted_mean'] = ev_weighted_mean
                 # find previous year's orthogonalized value in out_rows (previous years are earlier in out_rows)
                 prev_vals = [x for x in out_rows if x['abbr'] == r['abbr'] and x['year'] < year and x.get('ev_orthogonalized_margin') is not None]
                 if prev_vals:
@@ -541,6 +541,7 @@ def main():
         'D_delta', 'R_delta', 'total_delta',
         'pres_margin', 'pres_margin_delta',
         'national_margin', 'national_margin_delta',
+        #'ev_weighted_mean',
         'median_margin_delta',
         'relative_margin', 'relative_margin_delta',
         'third_party_share', 'third_party_national_share', 

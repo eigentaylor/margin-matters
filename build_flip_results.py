@@ -22,6 +22,8 @@ import math
 import os
 from collections import defaultdict
 
+import numpy as np
+
 DOCS_CSV = os.path.join('presidential_margins.csv')
 OUT_SUMMARY = os.path.join('docs', 'flip_results.csv')
 OUT_DETAILS = os.path.join('docs', 'flip_details.csv')
