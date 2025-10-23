@@ -21,6 +21,10 @@ import csv
 import math
 import os
 from collections import defaultdict
+from itertools import product
+from typing import Any, Callable
+
+import numpy as np
 
 DOCS_CSV = os.path.join('presidential_margins.csv')
 OUT_SUMMARY = os.path.join('docs', 'flip_results.csv')
@@ -73,6 +77,148 @@ def group_by_year(rows):
         by[r['year']].append(r)
     return dict(by)
 
+
+COMPOUND_STATES = {'ME', 'NE'}
+
+
+def votes_needed(winner_votes: int, challenger_votes: int) -> int:
+    margin = max(0, int(winner_votes) - int(challenger_votes))
+    if margin <= 0:
+        return 0
+    return margin // 2 + 1
+
+
+def margin_cost(votes: int, total_votes: int) -> int:
+    total = max(1, int(total_votes))
+    return int(round(100000 * (int(votes) / total)))
+
+
+def prepare_compound_state(state_rows, runner_party, winner_party) -> dict[str, Any] | None:
+    if not state_rows:
+        return None
+    state = state_rows[0]['abbr'].split('-')[0]
+    info = {
+        'state': state,
+        'districts': [],
+        'al': None
+    }
+    for row in state_rows:
+        parties = {
+            'D': row['D_votes'],
+            'R': row['R_votes'],
+            'T': row['T_votes'],
+        }
+        winner = row['party_win']
+        winner_votes = parties.get(winner, 0)
+        runner_votes = parties.get(runner_party, 0)
+        others = [parties[p] for p in parties if p != winner]
+        best_other_votes = max(others) if others else 0
+        entry = {
+            'abbr': row['abbr'],
+            'state': state,
+            'ev': int(row['electoral_votes'] or 0),
+            'total_votes': int(row['total_votes'] or 0),
+            'winner_party': winner,
+            'votes_to_runner': votes_needed(winner_votes, runner_votes) if runner_party else 0,
+            'votes_to_best_other': votes_needed(winner_votes, best_other_votes),
+            'party_votes': parties
+        }
+        if row['abbr'].endswith('-AL'):
+            info['al'] = entry
+        else:
+            info['districts'].append(entry)
+    return info
+
+
+def make_detail(unit, votes_needed_value, target_party):
+    return {
+        'abbr': unit['abbr'],
+        'ev': unit['ev'],
+        'votes_needed': int(votes_needed_value),
+        'total_votes': unit['total_votes'],
+        'from_party': unit['winner_party'],
+        'target_party': target_party
+    }
+
+
+def dedupe_options(options):
+    best = {}
+    for opt in options:
+        key = (opt['ev'], tuple(sorted(u['abbr'] for u in opt['units'])))
+        if key not in best or opt['cost'] < best[key]['cost']:
+            best[key] = opt
+    return list(best.values())
+
+
+def generate_compound_options(
+    state_info: dict[str, Any] | None,
+    votes_field: str,
+    target_party: str,
+    metric: str,
+    eligible_unit: Callable[[dict[str, Any]], bool] | None = None,
+) -> list[dict[str, Any]]:
+    default = [{'ev': 0, 'cost': 0, 'votes': 0, 'units': []}]
+    if not state_info:
+        return default
+
+    districts = []
+    for d in state_info['districts']:
+        if d.get(votes_field, 0) <= 0:
+            continue
+        if eligible_unit and not eligible_unit(d):
+            continue
+        districts.append(d)
+
+    al_info = state_info.get('al')
+    if al_info and (al_info.get(votes_field, 0) <= 0 or (eligible_unit and not eligible_unit(al_info))):
+        al_info = None
+    options = [{'ev': 0, 'cost': 0, 'votes': 0, 'units': []}]
+
+    def calc_cost_value(votes, total):
+        if metric == 'margin':
+            return margin_cost(votes, total)
+        return int(votes)
+
+    # District-only combinations
+    n = len(districts)
+    for mask in range(1, 1 << n):
+        selected = [districts[i] for i in range(n) if mask & (1 << i)]
+        base_votes = sum(unit[votes_field] for unit in selected)
+        if base_votes <= 0:
+            continue
+        base_cost = sum(calc_cost_value(unit[votes_field], unit['total_votes']) for unit in selected)
+        details = [make_detail(unit, unit[votes_field], target_party) for unit in selected]
+        options.append({
+            'ev': sum(unit['ev'] for unit in selected),
+            'cost': base_cost,
+            'votes': base_votes,
+            'units': details
+        })
+
+    # Combinations that include the at-large unit
+    if al_info and al_info.get(votes_field, 0) > 0:
+        for mask in range(1 << n):
+            selected = [districts[i] for i in range(n) if mask & (1 << i)]
+            base_votes = sum(unit[votes_field] for unit in selected)
+            base_cost = sum(calc_cost_value(unit[votes_field], unit['total_votes']) for unit in selected)
+            base_ev = sum(unit['ev'] for unit in selected)
+            base_details = [make_detail(unit, unit[votes_field], target_party) for unit in selected]
+
+            extra = max(0, al_info[votes_field] - base_votes)
+            total_votes = base_votes + extra
+            if total_votes <= 0:
+                continue
+
+            details = base_details + [make_detail(al_info, extra, target_party)]
+            cost = base_cost + calc_cost_value(extra, al_info['total_votes'])
+            options.append({
+                'ev': base_ev + al_info['ev'],
+                'cost': cost,
+                'votes': total_votes,
+                'units': details
+            })
+
+    return dedupe_options(options)
 
 def compute_knapsack(units, target_ev, cost_func=None):
     """
@@ -205,165 +351,205 @@ def compute_knapsack_exact(units, target_ev, cost_func=None):
 
 
 def analyze_year(rows_for_year, metric: str = 'votes'):
-    # Determine aggregate party EVs using winner labels per unit
     ev_by_party = defaultdict(int)
     total_ev = 0
     year = rows_for_year[0]['year'] if rows_for_year else 0
-    
-    for r in rows_for_year:
-        # compute base EV from the data, but allow overrides for historical anomalies
-        ev = int(r['electoral_votes'] or 0)
 
-        # Special-case: Colorado in 1876 had no popular-vote returns here; treat it as
-        # having 3 electoral votes and awarded to the Republican (Hayes). Exclude it
-        # from flip consideration later by not adding it to the generic ev_by_party loop.
-        if year == 1876 and r['abbr'] == 'CO':
+    for row in rows_for_year:
+        ev = int(row['electoral_votes'] or 0)
+        if year == 1876 and row['abbr'] == 'CO':
             ev = 3
             total_ev += ev
             ev_by_party['R'] += ev
-            # skip the normal processing for this row
             continue
 
         total_ev += ev
 
-        # Special case for Alabama 1960: if AL won by D or T, allocate 5 D + 6 O instead of 11 to winner
-        if year == 1960 and r['abbr'] == 'AL' and r['party_win'] in ('D', 'T'):
+        if year == 1960 and row['abbr'] == 'AL' and row['party_win'] in ('D', 'T'):
             ev_by_party['D'] += 5
-            ev_by_party['T'] += 6  # Use 'T' for Others/third-party
-        elif year == 1948 and r['abbr'] == 'AL' and r['party_win'] in ('D', 'T'):
-            ev_by_party['T'] += 11  # All 11 to Dixiecrats (Strom Thurmond)
+            ev_by_party['T'] += 6
+        elif year == 1948 and row['abbr'] == 'AL' and row['party_win'] in ('D', 'T'):
+            ev_by_party['T'] += 11
         else:
-            ev_by_party[r['party_win']] += ev
-    
-    need = total_ev // 2 + 1
+            ev_by_party[row['party_win']] += ev
 
-    # Determine top two parties by EVs (treat non-D/R as 'T')
+    need = total_ev // 2 + 1
     winner_party = max(ev_by_party.items(), key=lambda kv: kv[1])[0]
     winner_ev = ev_by_party[winner_party]
-    # pick runner-up as the better of the other two party sums
     others = {p: v for p, v in ev_by_party.items() if p != winner_party}
     if others:
-        runner_party = max(others.items(), key=lambda kv: kv[1])[0]
-        runner_ev = others[runner_party]
+        runner_party, runner_ev = max(others.items(), key=lambda kv: kv[1])
     else:
         runner_party, runner_ev = ('D' if winner_party != 'D' else 'R'), 0
 
-    # Build candidate flipping set: units not currently won by runner_party
-    units = []
-    for r in rows_for_year:
-        # Do not consider Colorado 1876 as a flippable unit; its EVs were assigned to R above.
-        if year == 1876 and r['abbr'] == 'CO':
+    compound_rows = defaultdict(list)
+    unit_entries = []
+
+    def skip_unit(row):
+        if year == 1876 and row['abbr'] == 'CO':
+            return True
+        if year == 1868 and row['abbr'] == 'FL':
+            return True
+        if year == 1864 and row['abbr'] == 'LA':
+            return True
+        if year == 1960 and row['abbr'] == 'AL':
+            return True
+        return False
+
+    for row in rows_for_year:
+        if skip_unit(row):
             continue
-        if year == 1868 and r['abbr'] == 'FL':
-            # Florida 1868 had no popular vote returns here; treat it as having 3 electoral votes
-            # and awarded to the Republican (Grant). Exclude it from flip consideration later.
-            continue
-        if year == 1864 and r['abbr'] == 'LA':
-            # Louisiana 1864 had no popular vote returns here; treat it as having 7 electoral votes
-            # and awarded to the Republican (Lincoln). Exclude it from flip consideration later.
-            continue
-        if year == 1960 and r['abbr'] == 'AL':
-            # Alabama 1960 is split 5 D + 6 O if won by D or T, so cannot be flipped as a unit
+        state_code = row['abbr'].split('-')[0]
+        if state_code in COMPOUND_STATES:
+            compound_rows[state_code].append(row)
             continue
 
-        if r['party_win'] == runner_party:
-            continue
-        ev = int(r['electoral_votes'] or 0)
+        ev = int(row['electoral_votes'] or 0)
         if ev <= 0:
             continue
+
         party_votes = {
-            'D': r['D_votes'],
-            'R': r['R_votes'],
-            'T': r['T_votes'],
+            'D': row['D_votes'],
+            'R': row['R_votes'],
+            'T': row['T_votes'],
         }
-        winner_votes = r['winner_votes']
+        winner_votes = party_votes.get(row['party_win'], 0)
         runner_votes = party_votes.get(runner_party, 0)
-        margin_to_runner = winner_votes - runner_votes
-        votes_to_runner = max(0, margin_to_runner // 2 + 1)
+        votes_to_runner = 0 if row['party_win'] == runner_party else votes_needed(winner_votes, runner_votes)
+        other_votes = [party_votes[p] for p in party_votes if p != row['party_win']]
+        best_other_votes = max(other_votes) if other_votes else 0
+        votes_to_best_other = votes_needed(winner_votes, best_other_votes)
 
-        other_parties = [p for p in party_votes if p != r['party_win']]
-        best_other_votes = max(party_votes[p] for p in other_parties) if other_parties else 0
-        margin_to_best_other = winner_votes - best_other_votes
-        votes_to_best_other = max(0, margin_to_best_other // 2 + 1)
-
-        units.append({
-            'year': r['year'],
-            'abbr': r['abbr'],
+        unit_entries.append({
+            'year': row['year'],
+            'abbr': row['abbr'],
             'ev': ev,
-            'total_votes': int(r['total_votes'] or 0),
-            'from_party': r['party_win'],
+            'total_votes': int(row['total_votes'] or 0),
+            'from_party': row['party_win'],
             'votes_to_runner': votes_to_runner,
             'votes_to_best_other': votes_to_best_other,
         })
 
-    # Define cost function by metric
-    # votes: raw votes_to_flip
-    # margin: minimize total thousandths of percent (0.001%) of state votes moved across chosen units
-    if metric == 'margin':
-        def cost_func(u):
-            tv = max(1, int(u['total_votes'] or 0))
-            # thousandths of a percent units: round(1000 * pct) == round(100000 * fraction)
-            return int(round(100000 * (int(u['votes_needed']) / tv)))
-    else:
-        def cost_func(u):
-            return int(u['votes_needed'])
-
-    # Mode classic: make runner reach need
-    target_ev_classic = max(0, need - runner_ev)
-    units_classic = [
+    runner_units = [
         {
-            'year': u['year'],
-            'abbr': u['abbr'],
-            'ev': u['ev'],
-            'total_votes': u['total_votes'],
-            'from_party': u['from_party'],
-            'votes_needed': max(0, int(u['votes_to_runner'])),
+            'year': entry['year'],
+            'abbr': entry['abbr'],
+            'ev': entry['ev'],
+            'total_votes': entry['total_votes'],
+            'from_party': entry['from_party'],
+            'votes_needed': entry['votes_to_runner'],
             'target_party': runner_party,
         }
-        for u in units
+        for entry in unit_entries
+        if entry['votes_to_runner'] > 0 and entry['ev'] > 0
     ]
-    chosen_c, cost_c, ev_c = compute_knapsack(units_classic, target_ev_classic, cost_func)
 
-    # Mode no_majority: reduce winner below need by flipping from the winner regardless of runner gains
-    # Equivalent to flipping at least winner_ev - (need - 1) EV away from winner
-    target_away = max(0, winner_ev - (need - 1))
-    # restrict to units currently held by winner_party (those flips reduce winner's EV)
-    units_from_winner = [
+    winner_units = [
         {
-            'year': u['year'],
-            'abbr': u['abbr'],
-            'ev': u['ev'],
-            'total_votes': u['total_votes'],
-            'from_party': u['from_party'],
-            'votes_needed': max(0, int(u['votes_to_best_other'])),
+            'year': entry['year'],
+            'abbr': entry['abbr'],
+            'ev': entry['ev'],
+            'total_votes': entry['total_votes'],
+            'from_party': entry['from_party'],
+            'votes_needed': entry['votes_to_best_other'],
             'target_party': 'any',
         }
-        for u in units
-        if u['from_party'] == winner_party
+        for entry in unit_entries
+        if entry['from_party'] == winner_party and entry['votes_to_best_other'] > 0 and entry['ev'] > 0
     ]
-    chosen_n, cost_n, ev_n = compute_knapsack(units_from_winner, target_away, cost_func)
 
-    # Mode tie: look for an exact set of EVs to give runner exactly total_ev/2 (tie).
-    # Only possible if total_ev is even and target_ev_tie > 0.
-    tie_result = ([], math.inf, 0)
+    if metric == 'margin':
+        def cost_func(unit):
+            return margin_cost(unit['votes_needed'], unit['total_votes'])
+    else:
+        def cost_func(unit):
+            return int(unit['votes_needed'])
+
+    target_ev_classic = max(0, need - runner_ev)
+    target_away = max(0, winner_ev - (need - 1))
+    target_ev_tie = None
     if total_ev % 2 == 0:
         target_ev_tie = total_ev // 2 - runner_ev
-        if target_ev_tie > 0:
-            # units available to flip to runner are those not currently won by runner
-            units_for_tie = [
-                {
-                    'year': u['year'],
-                    'abbr': u['abbr'],
-                    'ev': u['ev'],
-                    'total_votes': u['total_votes'],
-                    'from_party': u['from_party'],
-                    'votes_needed': max(0, int(u['votes_to_runner'])),
-                    'target_party': runner_party,
-                }
-                for u in units
-            ]
-            tie_result = compute_knapsack_exact(units_for_tie, target_ev_tie, cost_func)
-    chosen_t, cost_t, ev_t = tie_result
+
+    compound_info = {
+        state: prepare_compound_state(compound_rows.get(state, []), runner_party, winner_party)
+        for state in COMPOUND_STATES
+    }
+
+    runner_opts_me = generate_compound_options(compound_info.get('ME'), 'votes_to_runner', runner_party, metric)
+    runner_opts_ne = generate_compound_options(compound_info.get('NE'), 'votes_to_runner', runner_party, metric)
+    eligible_winner = lambda unit: unit['winner_party'] == winner_party
+    no_majority_opts_me = generate_compound_options(compound_info.get('ME'), 'votes_to_best_other', 'any', metric, eligible_unit=eligible_winner)
+    no_majority_opts_ne = generate_compound_options(compound_info.get('NE'), 'votes_to_best_other', 'any', metric, eligible_unit=eligible_winner)
+
+    def merge_options(option_tuple):
+        total_cost = 0
+        total_ev = 0
+        units = []
+        for opt in option_tuple:
+            total_cost += opt['cost']
+            total_ev += opt['ev']
+            units.extend(dict(u) for u in opt['units'])
+        return total_cost, total_ev, units
+
+    classic_best = {'cost': math.inf, 'ev': 0, 'units': []}
+    for opt_me, opt_ne in product(runner_opts_me, runner_opts_ne):
+        combo_cost, combo_ev, combo_units = merge_options((opt_me, opt_ne))
+        remaining = max(0, target_ev_classic - combo_ev)
+        chosen_rest, rest_cost, rest_ev = compute_knapsack(runner_units, remaining, cost_func)
+        if not math.isfinite(rest_cost):
+            continue
+        total_ev_combo = combo_ev + rest_ev
+        if total_ev_combo < target_ev_classic:
+            continue
+        total_cost_combo = combo_cost + rest_cost
+        total_units = combo_units + [dict(u) for u in chosen_rest]
+        if total_cost_combo < classic_best['cost']:
+            classic_best = {'cost': total_cost_combo, 'ev': total_ev_combo, 'units': total_units}
+
+    no_majority_best = {'cost': math.inf, 'ev': 0, 'units': []}
+    for opt_me, opt_ne in product(no_majority_opts_me, no_majority_opts_ne):
+        combo_cost, combo_ev, combo_units = merge_options((opt_me, opt_ne))
+        remaining = max(0, target_away - combo_ev)
+        chosen_rest, rest_cost, rest_ev = compute_knapsack(winner_units, remaining, cost_func)
+        if not math.isfinite(rest_cost):
+            continue
+        total_ev_combo = combo_ev + rest_ev
+        if total_ev_combo < target_away:
+            continue
+        total_cost_combo = combo_cost + rest_cost
+        total_units = combo_units + [dict(u) for u in chosen_rest]
+        if total_cost_combo < no_majority_best['cost']:
+            no_majority_best = {'cost': total_cost_combo, 'ev': total_ev_combo, 'units': total_units}
+
+    if target_ev_tie is None or target_ev_tie <= 0:
+        tie_best = {'cost': 0, 'ev': 0, 'units': []}
+    else:
+        tie_best = {'cost': math.inf, 'ev': 0, 'units': []}
+        for opt_me, opt_ne in product(runner_opts_me, runner_opts_ne):
+            combo_cost, combo_ev, combo_units = merge_options((opt_me, opt_ne))
+            if combo_ev > target_ev_tie:
+                continue
+            remaining = target_ev_tie - combo_ev
+            chosen_rest, rest_cost, rest_ev = compute_knapsack_exact(runner_units, remaining, cost_func)
+            if not math.isfinite(rest_cost):
+                continue
+            total_ev_combo = combo_ev + rest_ev
+            if total_ev_combo != target_ev_tie:
+                continue
+            total_cost_combo = combo_cost + rest_cost
+            total_units = combo_units + [dict(u) for u in chosen_rest]
+            if total_cost_combo < tie_best['cost']:
+                tie_best = {'cost': total_cost_combo, 'ev': total_ev_combo, 'units': total_units}
+
+    def finalize(result):
+        if not math.isfinite(result['cost']):
+            return {'cost': -1, 'ev': 0, 'units': []}
+        return {
+            'cost': int(result['cost']),
+            'ev': result['ev'],
+            'units': [dict(u) for u in result['units']]
+        }
 
     return {
         'winner_party': winner_party,
@@ -371,9 +557,9 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         'runner_party': runner_party,
         'runner_ev': runner_ev,
         'need': need,
-        'classic': {'cost': int(cost_c if math.isfinite(cost_c) else -1), 'ev': ev_c, 'units': chosen_c},
-        'no_majority': {'cost': int(cost_n if math.isfinite(cost_n) else -1), 'ev': ev_n, 'units': chosen_n},
-        'tie': {'cost': int(cost_t if math.isfinite(cost_t) else -1), 'ev': ev_t, 'units': chosen_t},
+        'classic': finalize(classic_best),
+        'no_majority': finalize(no_majority_best),
+        'tie': finalize(tie_best),
         'total_ev': total_ev,
         'metric': metric,
     }
