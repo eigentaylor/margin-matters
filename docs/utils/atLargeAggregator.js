@@ -17,6 +17,27 @@ const CONFIG = {
   }
 };
 
+function getGlobalScope() {
+  if (typeof globalThis === 'object' && globalThis) return globalThis;
+  if (typeof window === 'object' && window) return window;
+  if (typeof global === 'object' && global) return global;
+  return {};
+}
+
+function aggregationEnabled(options = {}) {
+  if (options && Object.prototype.hasOwnProperty.call(options, '__aggregateAtLarge')) {
+    return !!options.__aggregateAtLarge;
+  }
+  const scope = getGlobalScope();
+  if (Object.prototype.hasOwnProperty.call(scope, '_aggregateAtLarge')) {
+    return !!scope._aggregateAtLarge;
+  }
+  if (Object.prototype.hasOwnProperty.call(scope, '_futureMode')) {
+    return !!scope._futureMode;
+  }
+  return false;
+}
+
 function normalizeUnit(unitOrState) {
   if (!unitOrState) return { state: null, atLarge: null, config: null, kind: null };
   const str = String(unitOrState);
@@ -129,6 +150,7 @@ function applyVotesToFlip(dVotes, rVotes, votesToFlip) {
 }
 
 export function shouldAggregateAtLarge(year, unitOrState) {
+  if (!aggregationEnabled()) return false;
   const { config, kind } = normalizeUnit(unitOrState);
   if (!config) return false;
   if (!(kind === 'state' || kind === 'atLarge')) return false;
@@ -136,6 +158,7 @@ export function shouldAggregateAtLarge(year, unitOrState) {
 }
 
 export function getAtLargeAdjustedTotals(year, unitOrState, options = {}) {
+  if (!aggregationEnabled(options)) return null;
   const { pv, useActiveFlip = true, rowsOverride = null, natMarginOverride = null } = options;
   const { state, atLarge, config, kind } = normalizeUnit(unitOrState);
   if (!config || !(kind === 'state' || kind === 'atLarge') || Number(year) < config.threshold) return null;
@@ -445,6 +468,7 @@ function applyAtLargeBaseRow(year, config, rows, natMargin) {
 }
 
 export function prepareAtLargeData(options = {}) {
+  if (!aggregationEnabled(options)) return;
   const {
     byYear = (typeof window !== 'undefined' ? window._byYearMap : null),
     stopColorsByYear = (typeof window !== 'undefined' ? window._stopColorsByYear : null),
