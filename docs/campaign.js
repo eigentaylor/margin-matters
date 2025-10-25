@@ -32,8 +32,12 @@ class CampaignGame {
   setupUI() {
     // Setup modal
     const startBtn = document.getElementById('start-game');
+    const loadBtn = document.getElementById('load-game');
     const setupModal = document.getElementById('setup-modal');
     const gameContainer = document.getElementById('game-container');
+    
+    // Check for saved game
+    this.checkForSavedGame();
     
     // Difficulty selection
     const difficultyOptions = document.querySelectorAll('.difficulty-option');
@@ -66,9 +70,29 @@ class CampaignGame {
       gameContainer.classList.remove('hidden');
     });
     
+    // Load game button
+    loadBtn.addEventListener('click', () => {
+      this.loadGame();
+      setupModal.classList.add('hidden');
+      gameContainer.classList.remove('hidden');
+    });
+    
     // End phase button
     document.getElementById('end-phase-btn').addEventListener('click', () => {
       this.endPhase();
+    });
+    
+    // Save game button
+    document.getElementById('save-game-btn').addEventListener('click', () => {
+      this.saveGame();
+    });
+    
+    // New game button
+    document.getElementById('new-game-btn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to start a new game? Current progress will be lost.')) {
+        gameContainer.classList.add('hidden');
+        setupModal.classList.remove('hidden');
+      }
     });
   }
   
@@ -99,6 +123,9 @@ class CampaignGame {
     
     // Update UI
     this.updateUI();
+    
+    // Auto-save
+    this.saveGame();
   }
   
   endPhase() {
@@ -125,6 +152,9 @@ class CampaignGame {
     
     // Get final polls (which approximate the true result)
     const finalPolls = this.pollingSystem.generatePolls();
+    
+    // Clear saved game since it's complete
+    localStorage.removeItem('campaign-save');
     
     // Show final results
     this.showFinalResults(finalPolls);
@@ -245,6 +275,9 @@ class CampaignGame {
     
     // Update UI
     this.updateUI();
+    
+    // Auto-save after decision
+    this.saveGame();
   }
   
   updateEventLog() {
@@ -284,6 +317,89 @@ class CampaignGame {
         <div class="pundit-quote">"${analyses.sliver.quote}"</div>
       </div>
     `;
+  }
+  
+  // Check if there's a saved game
+  checkForSavedGame() {
+    const savedGame = localStorage.getItem('campaign-save');
+    const loadBtn = document.getElementById('load-game');
+    
+    if (savedGame) {
+      loadBtn.style.display = 'block';
+      
+      // Show save info
+      try {
+        const data = JSON.parse(savedGame);
+        loadBtn.textContent = `Load Saved Game (Phase ${data.currentPhase}/10)`;
+      } catch (e) {
+        console.error('Error parsing saved game:', e);
+        loadBtn.style.display = 'none';
+      }
+    }
+  }
+  
+  // Save game to localStorage
+  saveGame() {
+    if (!this.gameState) {
+      alert('No game to save!');
+      return;
+    }
+    
+    try {
+      const saveData = this.gameState.toJSON();
+      localStorage.setItem('campaign-save', JSON.stringify(saveData));
+      
+      // Show success message
+      const btn = document.getElementById('save-game-btn');
+      const originalText = btn.textContent;
+      btn.textContent = '✓ Saved!';
+      btn.style.background = 'var(--success)';
+      
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 2000);
+      
+      console.log('Game saved successfully');
+    } catch (e) {
+      console.error('Error saving game:', e);
+      alert('Failed to save game. Please try again.');
+    }
+  }
+  
+  // Load game from localStorage
+  loadGame() {
+    const savedGame = localStorage.getItem('campaign-save');
+    
+    if (!savedGame) {
+      alert('No saved game found!');
+      return;
+    }
+    
+    try {
+      const data = JSON.parse(savedGame);
+      
+      // Restore game state
+      this.gameState = GameState.fromJSON(data);
+      this.gameState.initializeStateDeltas(this.dataLoader.getStateList());
+      
+      // Reinitialize systems with restored state
+      this.eventSystem = new EventSystem(this.gameState, this.dataLoader);
+      this.decisionSystem = new DecisionSystem(this.gameState, this.dataLoader);
+      this.pollingSystem = new PollingSystem(this.gameState, this.dataLoader);
+      this.punditSystem = new PunditSystem(this.gameState, this.dataLoader, this.pollingSystem);
+      
+      // Regenerate polls for current phase
+      this.pollingSystem.generatePolls();
+      
+      // Update UI
+      this.updateUI();
+      
+      console.log('Game loaded successfully');
+    } catch (e) {
+      console.error('Error loading game:', e);
+      alert('Failed to load saved game. The save file may be corrupted.');
+    }
   }
 }
 
