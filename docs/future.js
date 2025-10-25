@@ -734,6 +734,20 @@
     const years = [2024, 2028, 2032, 2036, 2040, 2044, 2048];
     const totals2024 = new Map();
     marginsAll.forEach(r => { if (+r.year === 2024) totals2024.set(r.abbr, +r.total_votes || 0); });
+    
+    // Build turnout probability vector from 2024 (proportion of total national votes in each unit)
+    const turnout2024 = new Map();
+    let national2024Total = 0;
+    totals2024.forEach((votes, abbr) => {
+      // Skip district-level units for national total (only count at-large)
+      if (!(abbr.includes('-') && !abbr.endsWith('-AL'))) {
+        national2024Total += votes;
+      }
+    });
+    totals2024.forEach((votes, abbr) => {
+      turnout2024.set(abbr, votes / Math.max(1, national2024Total));
+    });
+    
     // compute at-large from districts if needed
     applyAtLarge(paths, totals2024);
     const baseRows2024 = new Map();
@@ -766,38 +780,52 @@
       return wavg(v, w) || 0;
     }
     const nat2024 = natMargin2024();
+    
+    // Calculate turnout growth factors for future years
+    // Modest growth: ~1.5% per 4-year cycle (approximately 0.37% per year)
+    const turnoutGrowthPerCycle = 0.015;
+    const getTurnoutFactor = (year) => {
+      if (year === 2024) return 1.0;
+      const cycles = (year - 2024) / 4;
+      return Math.pow(1 + turnoutGrowthPerCycle, cycles);
+    };
+    
     years.forEach(Y => {
       const nationalMargin = (Y === 2024) ? nat2024 : 0.0;
       const rows = [];
       let natD = 0, natR = 0, natT = 0, natTotal = 0, natTopThirdVotes = 0;
+      
+      // Calculate total turnout for this year (with growth factor)
+      const turnoutFactor = getTurnoutFactor(Y);
+      const isFutureYear = (Y > 2024);
+      
       // make per-unit rows
       paths.forEach((rec, abbr) => {
         if (!rec || !abbr) return;
         const rel = (Y === 2024) ? rec.rel_2024 : rec[Y];
         const rm = isFinite(rel) ? rel : 0;
         const base = getBaseRow(abbr);
-        const totalVotes = base ? (+base.total_votes || (+base.D_votes || 0) + (+base.R_votes || 0) + (+base.third_party_votes || 0)) : (totals2024.get(abbr) || 0);
+        
+        // Calculate turnout for this unit, applying growth factor for future years
+        const baseTurnout = base ? (+base.total_votes || (+base.D_votes || 0) + (+base.R_votes || 0) + (+base.third_party_votes || 0)) : (totals2024.get(abbr) || 0);
+        const totalVotes = isFutureYear ? Math.round(baseTurnout * turnoutFactor) : baseTurnout;
+        
         // For simulated future years we do NOT model third-party votes; allocate only between D and R.
-        const isFutureYear = (Y > 2024);
         const thirdShare = isFutureYear ? 0 : clampShare(base ? base.third_party_share : 0);
         const topThirdShare = isFutureYear ? 0 : clampShare(base ? base.top_third_party_share : thirdShare);
         const tVotes = isFutureYear ? 0 : Math.max(0, totalVotes * thirdShare);
         const twoPartyTotal = Math.max(0, totalVotes - tVotes);
-        let dShare2 = 0.5 + (rm + nationalMargin) / 2;
-        if (!isFinite(dShare2)) dShare2 = 0.5;
-        dShare2 = Math.max(0, Math.min(1, dShare2));
-        let rShare2 = 1 - dShare2;
-        if (!isFinite(rShare2)) rShare2 = 0.5;
-        rShare2 = Math.max(0, Math.min(1, rShare2));
-        const denom = dShare2 + rShare2;
-        if (denom > 0) {
-          dShare2 /= denom;
-          rShare2 /= denom;
-        } else {
-          dShare2 = rShare2 = 0.5;
-        }
-        const dVotes = twoPartyTotal * dShare2;
-        const rVotes = twoPartyTotal * rShare2;
+        
+        // Calculate D and R votes using the formula: D = T(1+r)/2, R = T(1-r)/2
+        // where r is the raw margin (relative_margin + national_margin)
+        // This ensures (D-R)/(D+R) = r
+        const rawMargin = rm + nationalMargin;
+        let dVotes = twoPartyTotal * (1 + rawMargin) / 2;
+        let rVotes = twoPartyTotal * (1 - rawMargin) / 2;
+        
+        // Ensure non-negative votes
+        dVotes = Math.max(0, dVotes);
+        rVotes = Math.max(0, rVotes);
         const topThirdVotes = isFutureYear ? 0 : Math.max(0, Math.min(totalVotes, topThirdShare * totalVotes));
         // EV: reuse 2024 mapping
         const ev = evLookupFn ? evLookupFn(Y, abbr) : (evMap.get(`2024:${abbr}`) || 0);
