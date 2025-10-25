@@ -251,26 +251,42 @@ def compute_post_flip_state(rows_for_year, flipped_units, year):
         # Determine EV allocation after flips
         ev = int(r['electoral_votes'] or 0)
         
-        # Handle historical special cases first
+        # Handle historical special cases that have no popular vote or special allocation
         if year == 1876 and abbr == 'CO':
+            # Colorado 1876: 3 EVs to R, no popular vote
             ev_after['R'] += 3
             continue
         if year == 1868 and abbr == 'FL':
+            # Florida 1868: 3 EVs to R, no popular vote
+            ev_after['R'] += 3
             continue
         if year == 1864 and abbr == 'LA':
+            # Louisiana 1864: 7 EVs to R, no popular vote  
+            ev_after['R'] += 7
             continue
         if year == 1960 and abbr == 'AL':
+            # Alabama 1960: split EVs 5D + 6T if won by D or T
             if abbr in flipped_map:
                 # Would need special handling but we exclude AL 1960 from flipping
                 pass
-            elif r['party_win'] in ('D', 'T'):
+            if r['party_win'] in ('D', 'T'):
                 ev_after['D'] += 5
                 ev_after['T'] += 6
             else:
                 ev_after[r['party_win']] += ev
             continue
-        if year == 1948 and abbr == 'AL' and r['party_win'] in ('D', 'T'):
-            ev_after['T'] += 11
+        if year == 1948 and abbr == 'AL':
+            # Alabama 1948: all 11 to T if won by D or T (Dixiecrats)
+            if abbr in flipped_map:
+                target_party = flipped_map[abbr]['target_party']
+                if target_party in ('D', 'T'):
+                    ev_after['T'] += 11
+                else:
+                    ev_after[target_party] += ev
+            elif r['party_win'] in ('D', 'T'):
+                ev_after['T'] += 11
+            else:
+                ev_after[r['party_win']] += ev
             continue
         
         # Check if this unit was flipped
