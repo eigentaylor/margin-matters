@@ -80,7 +80,7 @@ export class PunditSystem {
     const confidence = Math.abs(noisyScore - 6.5) > 3 ? 'High' : 'Medium';
     
     const quotes = [
-      `The beets have spoken. ${noisyScore} out of 13 keys favor ${noisyScore >= 7 ? 'your candidate' : 'the opposition'}.`,
+      `The beets have spoken. ${noisyScore} out of 13 beets favor ${noisyScore >= 7 ? 'your candidate' : 'the opposition'}.`,
       `Historical patterns suggest ${prediction.toLowerCase()}.`,
       `The fundamentals point to ${noisyScore >= 7 ? 'your victory' : 'an uphill battle'}.`,
       `My model has correctly predicted ${Math.floor(85 + this.gameState.rng() * 10)}% of elections using these structural factors.`
@@ -95,7 +95,7 @@ export class PunditSystem {
       score: `${noisyScore}/13 Keys`,
       quote: quote,
       details: [
-        'Uses 13 structural "keys" to predict winner',
+        'Uses 13 structural "beets" to predict the popular vote winner',
         'Focuses on fundamentals over polls',
         'Historical track record varies'
       ]
