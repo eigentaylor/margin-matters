@@ -28,7 +28,8 @@ def test_output_format():
     
     required_detail_fields = [
         'year', 'metric', 'mode', 'abbr', 'ev',
-        'from_party', 'to_party', 'votes_to_flip', 'pct_of_state_votes'
+        'from_party', 'to_party', 'votes_to_flip', 'pct_of_state_votes',
+        'post_flip_winner', 'post_flip_margin'
     ]
     missing = [f for f in required_detail_fields if f not in fieldnames]
     
@@ -61,30 +62,33 @@ def test_output_format():
 
 
 def test_2000_ne_al_fix():
-    """Verify that NE-AL is not chosen for margin metric in 2000 tie scenario."""
+    """Verify that NE-AL is not directly flipped for margin metric in 2000 tie scenario."""
     print("Testing 2000 NE-AL fix...")
     
     with open('docs/flip_details.csv', newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         ne_rows_2000_margin_tie = [
             r for r in reader 
-            if r['year'] == '2000' and r['metric'] == 'margin' and r['mode'] == 'tie'
+            if r['year'] == '2000' and r['metric'] == 'margin' and r['mode'] == 'tie' and r['abbr'].startswith('NE-')
         ]
     
-    # Should NOT contain NE-AL
-    ne_al_found = any(r['abbr'] == 'NE-AL' for r in ne_rows_2000_margin_tie)
-    if ne_al_found:
-        print("  ❌ FAIL: NE-AL found in 2000 margin tie results")
-        return False
-    
-    # Should contain NE districts instead
-    districts = [r for r in ne_rows_2000_margin_tie if r['abbr'].startswith('NE-')]
+    # Should contain NE districts
+    districts = [r for r in ne_rows_2000_margin_tie if r['abbr'] in ['NE-01', 'NE-02', 'NE-03']]
     if not districts:
         print("  ❌ FAIL: No NE districts found in 2000 margin tie results")
         return False
     
-    print(f"  ✓ NE-AL not in results")
-    print(f"  ✓ Found {len(districts)} NE districts: {[r['abbr'] for r in districts]}")
+    # Should have NE-AL but with 0 votes_to_flip (not directly flipped)
+    ne_al = [r for r in ne_rows_2000_margin_tie if r['abbr'] == 'NE-AL']
+    if ne_al:
+        if ne_al[0]['votes_to_flip'] == '0':
+            print(f"  ✓ NE-AL present but not directly flipped (0 votes)")
+            print(f"  ✓ NE-AL shows aggregated result: {ne_al[0]['post_flip_winner']}+{ne_al[0]['post_flip_margin']}")
+        else:
+            print(f"  ❌ FAIL: NE-AL should not be directly flipped, but has {ne_al[0]['votes_to_flip']} votes")
+            return False
+    
+    print(f"  ✓ Found {len(districts)} NE districts that were flipped: {[r['abbr'] for r in districts if int(r['votes_to_flip']) > 0]}")
     
     # Check from_party and to_party are populated
     for r in districts:
@@ -198,6 +202,47 @@ def test_ev_sum_consistency():
     return True
 
 
+def test_2000_ne_post_flip_margins():
+    """Verify 2000 NE district flips properly aggregate to -AL."""
+    print("Testing 2000 NE post-flip margins and aggregation...")
+    
+    with open('docs/flip_details.csv', newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        ne_rows = [r for r in reader if r['year'] == '2000' and r['metric'] == 'margin' and r['mode'] == 'tie' and r['abbr'].startswith('NE')]
+    
+    # Check that we have all NE units including -AL
+    abbrs = {r['abbr'] for r in ne_rows}
+    expected_abbrs = {'NE-01', 'NE-02', 'NE-AL'}
+    
+    if abbrs != expected_abbrs:
+        print(f"  ❌ FAIL: Expected {expected_abbrs}, got {abbrs}")
+        return False
+    
+    # Check NE-01
+    ne01 = next(r for r in ne_rows if r['abbr'] == 'NE-01')
+    if ne01['post_flip_winner'] != 'D' or ne01['post_flip_margin'] != '2':
+        print(f"  ❌ FAIL: NE-01 expected D+2, got {ne01['post_flip_winner']}+{ne01['post_flip_margin']}")
+        return False
+    print(f"  ✓ NE-01: {ne01['from_party']} → {ne01['to_party']}, post-flip: {ne01['post_flip_winner']}+{ne01['post_flip_margin']}")
+    
+    # Check NE-02
+    ne02 = next(r for r in ne_rows if r['abbr'] == 'NE-02')
+    if ne02['post_flip_winner'] != 'D' or ne02['post_flip_margin'] != '2':
+        print(f"  ❌ FAIL: NE-02 expected D+2, got {ne02['post_flip_winner']}+{ne02['post_flip_margin']}")
+        return False
+    print(f"  ✓ NE-02: {ne02['from_party']} → {ne02['to_party']}, post-flip: {ne02['post_flip_winner']}+{ne02['post_flip_margin']}")
+    
+    # Check NE-AL - should show aggregated margin after district flips
+    ne_al = next(r for r in ne_rows if r['abbr'] == 'NE-AL')
+    if ne_al['post_flip_winner'] != 'R' or ne_al['post_flip_margin'] != '103952':
+        print(f"  ❌ FAIL: NE-AL expected R+103952, got {ne_al['post_flip_winner']}+{ne_al['post_flip_margin']}")
+        return False
+    print(f"  ✓ NE-AL: aggregated from districts, post-flip: {ne_al['post_flip_winner']}+{ne_al['post_flip_margin']}")
+    
+    print("  ✅ PASS: 2000 NE post-flip margins and aggregation correct\n")
+    return True
+
+
 def main():
     """Run all tests."""
     print("=" * 60)
@@ -210,6 +255,7 @@ def main():
     results.append(test_third_party_flipping())
     results.append(test_post_flip_ev())
     results.append(test_ev_sum_consistency())
+    results.append(test_2000_ne_post_flip_margins())
     
     print("=" * 60)
     if all(results):

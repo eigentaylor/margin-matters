@@ -228,7 +228,7 @@ def compute_post_flip_state(rows_for_year, flipped_units, year):
         year: Election year
         
     Returns:
-        Dict with post-flip statistics including popular votes and EV breakdown
+        Dict with post-flip statistics including popular votes, EV breakdown, and per-unit margins
     """
     # Create a mapping of abbr to flipped unit
     flipped_map = {u['abbr']: u for u in flipped_units}
@@ -237,13 +237,74 @@ def compute_post_flip_state(rows_for_year, flipped_units, year):
     popular_votes_after = {'D': 0, 'R': 0, 'T': 0}
     ev_after = {'D': 0, 'R': 0, 'T': 0}
     
-    # States that had districts flipped (for tracking at-large implications)
-    states_with_flipped_districts = set()
+    # Track per-unit post-flip vote totals and winner
+    unit_votes_after = {}  # abbr -> {'D': votes, 'R': votes, 'T': votes, 'winner': party, 'margin': int}
+    
+    # First pass: compute post-flip votes for each district
+    district_votes_by_state = defaultdict(lambda: {'D': 0, 'R': 0, 'T': 0})
     
     for r in rows_for_year:
         abbr = r['abbr']
         
-        # Add popular votes (unchanged)
+        # Skip -AL units in first pass (we'll compute them from districts)
+        if abbr.endswith('-AL'):
+            continue
+        
+        # Initialize vote counts
+        d_votes_after = r['D_votes']
+        r_votes_after = r['R_votes']
+        t_votes_after = r['T_votes']
+        
+        # Apply flip if this unit was flipped
+        if abbr in flipped_map:
+            flip = flipped_map[abbr]
+            votes_to_flip = flip['votes_needed']
+            from_party = flip['from_party']
+            to_party = flip['target_party']
+            
+            # Move votes from from_party to to_party
+            if from_party == 'D':
+                d_votes_after -= votes_to_flip
+            elif from_party == 'R':
+                r_votes_after -= votes_to_flip
+            elif from_party == 'T':
+                t_votes_after -= votes_to_flip
+            
+            if to_party == 'D':
+                d_votes_after += votes_to_flip
+            elif to_party == 'R':
+                r_votes_after += votes_to_flip
+            elif to_party == 'T':
+                t_votes_after += votes_to_flip
+        
+        # Determine winner after flip
+        party_votes_after = {'D': d_votes_after, 'R': r_votes_after, 'T': t_votes_after}
+        winner_after = max(party_votes_after.items(), key=lambda x: x[1])[0]
+        winner_votes_after = party_votes_after[winner_after]
+        runner_up_votes_after = max(v for p, v in party_votes_after.items() if p != winner_after)
+        margin_after = winner_votes_after - runner_up_votes_after
+        
+        unit_votes_after[abbr] = {
+            'D': d_votes_after,
+            'R': r_votes_after,
+            'T': t_votes_after,
+            'winner': winner_after,
+            'margin': margin_after,
+        }
+        
+        # If this is a district, accumulate for state -AL
+        if is_district(abbr):
+            state = get_state_from_district(abbr)
+            if state:
+                district_votes_by_state[state]['D'] += d_votes_after
+                district_votes_by_state[state]['R'] += r_votes_after
+                district_votes_by_state[state]['T'] += t_votes_after
+    
+    # Second pass: compute -AL units from district aggregates and handle other units
+    for r in rows_for_year:
+        abbr = r['abbr']
+        
+        # Add to overall popular vote totals (unchanged original votes)
         popular_votes_after['D'] += r['D_votes']
         popular_votes_after['R'] += r['R_votes']
         popular_votes_after['T'] += r['T_votes']
@@ -253,21 +314,16 @@ def compute_post_flip_state(rows_for_year, flipped_units, year):
         
         # Handle historical special cases that have no popular vote or special allocation
         if year == 1876 and abbr == 'CO':
-            # Colorado 1876: 3 EVs to R, no popular vote
             ev_after['R'] += 3
             continue
         if year == 1868 and abbr == 'FL':
-            # Florida 1868: 3 EVs to R, no popular vote
             ev_after['R'] += 3
             continue
         if year == 1864 and abbr == 'LA':
-            # Louisiana 1864: 7 EVs to R, no popular vote  
             ev_after['R'] += 7
             continue
         if year == 1960 and abbr == 'AL':
-            # Alabama 1960: split EVs 5D + 6T if won by D or T
             if abbr in flipped_map:
-                # Would need special handling but we exclude AL 1960 from flipping
                 pass
             if r['party_win'] in ('D', 'T'):
                 ev_after['D'] += 5
@@ -276,7 +332,6 @@ def compute_post_flip_state(rows_for_year, flipped_units, year):
                 ev_after[r['party_win']] += ev
             continue
         if year == 1948 and abbr == 'AL':
-            # Alabama 1948: all 11 to T if won by D or T (Dixiecrats)
             if abbr in flipped_map:
                 target_party = flipped_map[abbr]['target_party']
                 if target_party in ('D', 'T'):
@@ -289,24 +344,47 @@ def compute_post_flip_state(rows_for_year, flipped_units, year):
                 ev_after[r['party_win']] += ev
             continue
         
-        # Check if this unit was flipped
-        if abbr in flipped_map:
-            target_party = flipped_map[abbr]['target_party']
-            ev_after[target_party] += ev
-            
-            # Track if this is a district flip
-            if is_district(abbr):
-                state = get_state_from_district(abbr)
-                if state:
-                    states_with_flipped_districts.add(state)
+        # Handle -AL units
+        if abbr.endswith('-AL'):
+            state = abbr.split('-')[0]
+            if state in district_votes_by_state:
+                # Use aggregated district votes
+                d_votes_after = district_votes_by_state[state]['D']
+                r_votes_after = district_votes_by_state[state]['R']
+                t_votes_after = district_votes_by_state[state]['T']
+                
+                party_votes_after = {'D': d_votes_after, 'R': r_votes_after, 'T': t_votes_after}
+                winner_after = max(party_votes_after.items(), key=lambda x: x[1])[0]
+                winner_votes_after = party_votes_after[winner_after]
+                runner_up_votes_after = max(v for p, v in party_votes_after.items() if p != winner_after)
+                margin_after = winner_votes_after - runner_up_votes_after
+                
+                unit_votes_after[abbr] = {
+                    'D': d_votes_after,
+                    'R': r_votes_after,
+                    'T': t_votes_after,
+                    'winner': winner_after,
+                    'margin': margin_after,
+                }
+                
+                ev_after[winner_after] += ev
+            else:
+                # No districts for this state, use original winner
+                if abbr in unit_votes_after:
+                    ev_after[unit_votes_after[abbr]['winner']] += ev
+                else:
+                    ev_after[r['party_win']] += ev
         else:
-            # No flip, use original winner
-            ev_after[r['party_win']] += ev
+            # Non -AL unit, use computed or original
+            if abbr in unit_votes_after:
+                ev_after[unit_votes_after[abbr]['winner']] += ev
+            else:
+                ev_after[r['party_win']] += ev
     
     return {
         'popular_votes_after': popular_votes_after,
         'ev_after': ev_after,
-        'states_with_flipped_districts': list(states_with_flipped_districts),
+        'unit_votes_after': unit_votes_after,
     }
 
 
@@ -595,7 +673,19 @@ def main():
 
             # per-unit details for each mode (include tie)
             for mode in ('classic', 'no_majority', 'tie'):
+                post = res[mode].get('post_flip')
+                unit_votes_after = post.get('unit_votes_after', {}) if post else {}
+                
                 for u in res[mode]['units']:
+                    abbr = u['abbr']
+                    
+                    # Get post-flip margin if available
+                    post_flip_winner = ''
+                    post_flip_margin = ''
+                    if abbr in unit_votes_after:
+                        post_flip_winner = unit_votes_after[abbr]['winner']
+                        post_flip_margin = unit_votes_after[abbr]['margin']
+                    
                     detail_rows.append({
                         'year': year,
                         'metric': metric,
@@ -606,7 +696,40 @@ def main():
                         'to_party': u.get('target_party', ''),
                         'votes_to_flip': u['votes_needed'],
                         'pct_of_state_votes': round(100.0 * (u['votes_needed'] / u['total_votes']) if u['total_votes'] else 0.0, 3),
+                        'post_flip_winner': post_flip_winner,
+                        'post_flip_margin': post_flip_margin,
                     })
+                
+                # Also add rows for affected -AL units
+                if unit_votes_after:
+                    # Find states that had districts flipped
+                    flipped_districts = [u['abbr'] for u in res[mode]['units'] if is_district(u['abbr'])]
+                    affected_states = set()
+                    for dist in flipped_districts:
+                        state = get_state_from_district(dist)
+                        if state:
+                            affected_states.add(state)
+                    
+                    # Add -AL rows for affected states
+                    for r in year_rows:
+                        abbr = r['abbr']
+                        if abbr.endswith('-AL'):
+                            state = abbr.split('-')[0]
+                            if state in affected_states and abbr in unit_votes_after:
+                                ev = int(r['electoral_votes'] or 0)
+                                detail_rows.append({
+                                    'year': year,
+                                    'metric': metric,
+                                    'mode': mode,
+                                    'abbr': abbr,
+                                    'ev': ev,
+                                    'from_party': r['party_win'],
+                                    'to_party': unit_votes_after[abbr]['winner'],
+                                    'votes_to_flip': 0,  # Not directly flipped
+                                    'pct_of_state_votes': 0.0,
+                                    'post_flip_winner': unit_votes_after[abbr]['winner'],
+                                    'post_flip_margin': unit_votes_after[abbr]['margin'],
+                                })
 
     # write CSVs
     os.makedirs('docs', exist_ok=True)
@@ -625,7 +748,7 @@ def main():
         w.writerows(summary_rows)
 
     with open(OUT_DETAILS, 'w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=['year','metric','mode','abbr','ev','from_party','to_party','votes_to_flip','pct_of_state_votes'])
+        w = csv.DictWriter(f, fieldnames=['year','metric','mode','abbr','ev','from_party','to_party','votes_to_flip','pct_of_state_votes','post_flip_winner','post_flip_margin'])
         w.writeheader()
         w.writerows(detail_rows)
 
