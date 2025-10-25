@@ -8,6 +8,7 @@
   const EPS = 1e-8;
   const EV_PROJECTION_THRESHOLD_YEAR = 2032;
   const EV_PROJECTION_BASE_KEY = 'baseline';
+  const TURNOUT_GROWTH_PER_CYCLE = 0.015; // 1.5% growth per 4-year election cycle
   const EV_PROJECTION_LABEL_OVERRIDES = {
     brennan: 'Brennan Center',
     election_data_services: 'Election Data Services',
@@ -735,18 +736,9 @@
     const totals2024 = new Map();
     marginsAll.forEach(r => { if (+r.year === 2024) totals2024.set(r.abbr, +r.total_votes || 0); });
     
-    // Build turnout probability vector from 2024 (proportion of total national votes in each unit)
-    const turnout2024 = new Map();
-    let national2024Total = 0;
-    totals2024.forEach((votes, abbr) => {
-      // Skip district-level units for national total (only count at-large)
-      if (!(abbr.includes('-') && !abbr.endsWith('-AL'))) {
-        national2024Total += votes;
-      }
-    });
-    totals2024.forEach((votes, abbr) => {
-      turnout2024.set(abbr, votes / Math.max(1, national2024Total));
-    });
+    // Note: turnout2024 Map is prepared for potential future use in more sophisticated
+    // turnout modeling (e.g., state-specific growth rates based on historical trends).
+    // Currently, turnout growth is uniform across all states via TURNOUT_GROWTH_PER_CYCLE.
     
     // compute at-large from districts if needed
     applyAtLarge(paths, totals2024);
@@ -782,12 +774,10 @@
     const nat2024 = natMargin2024();
     
     // Calculate turnout growth factors for future years
-    // Modest growth: ~1.5% per 4-year cycle (approximately 0.37% per year)
-    const turnoutGrowthPerCycle = 0.015;
     const getTurnoutFactor = (year) => {
       if (year === 2024) return 1.0;
       const cycles = (year - 2024) / 4;
-      return Math.pow(1 + turnoutGrowthPerCycle, cycles);
+      return Math.pow(1 + TURNOUT_GROWTH_PER_CYCLE, cycles);
     };
     
     years.forEach(Y => {
