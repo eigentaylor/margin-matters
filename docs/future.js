@@ -5,7 +5,7 @@
   // It plugs into tester.js by writing to the same globals (byYear, evByUnit, etc.).
 
   const PV_CAP = 0.5;
-  const EPS = 1e-5;
+  const EPS = 1e-6;
   const EV_PROJECTION_THRESHOLD_YEAR = 2032;
   const EV_PROJECTION_BASE_KEY = 'baseline';
   const TURNOUT_GROWTH_PER_CYCLE = 0.015; // 1.5% growth per 4-year election cycle
@@ -1093,7 +1093,14 @@
       });
 
       const natTwo = natD + natR;
-      const natNm = natTwo > 0 ? (natD - natR) / natTwo : targetNatMargin;
+      // Compute national margin from aggregated integer votes. For future years
+      // we want the national margin to equal the targetNatMargin (usually 0)
+      // to avoid small rounding/drift introducing a bias in PV calculations.
+      let natNm = natTwo > 0 ? (natD - natR) / natTwo : targetNatMargin;
+      if (isFutureYear) {
+        // Force exact target for synthetic years to keep PV orthogonal to turnout
+        natNm = targetNatMargin;
+      }
       const natThirdShare = natTotalAcc > 0 ? natT / natTotalAcc : 0;
       const natTopThirdShare = natTotalAcc > 0 ? natTopThirdVotes / natTotalAcc : 0;
 
@@ -1101,6 +1108,13 @@
         if (row.unit !== 'NATIONAL') row.nm = natNm;
       });
 
+      // For synthetic years we may want the NATIONAL row's vote totals to reflect
+      // the target national margin (natNm) rather than the integer-aggregated
+      // per-state assignments which can introduce small rounding bias. Compute
+      // desired two-party totals from natNm and natTotalAcc and use those here.
+      const natTwoTotal = Math.max(0, natTotalAcc - natT);
+      const natDDesired = Math.round(natTwoTotal * (1 + natNm) / 2);
+      const natRDesired = Math.max(0, natTwoTotal - natDDesired);
       rows.unshift({
         year: Y,
         unit: 'NATIONAL',
@@ -1109,8 +1123,8 @@
         ev: 0,
         tp: natTopThirdShare,
         thirdShare: natThirdShare,
-        dVotes: natD,
-        rVotes: natR,
+        dVotes: natDDesired,
+        rVotes: natRDesired,
         tVotes: natT,
         total: natTotalAcc,
         topThirdVotes: natTopThirdVotes,

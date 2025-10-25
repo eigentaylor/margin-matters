@@ -20,6 +20,13 @@ export function clampMargin(value) {
 
 export function computePvAdjustedBreakdown(row, pvShift = 0, natActualMargin = 0) {
   const pv = isFinite(pvShift) ? (pvShift - natActualMargin) : 0;
+  // Debug trace: optional global flag to inspect PV arithmetic at runtime
+  try {
+    if (typeof window !== 'undefined' && window._pvTrace) {
+      const unit = row && (row.unit || row.Unit || row.abbr) ? (row.unit || row.Unit || row.abbr) : '(unknown)';
+      console.debug('[PV-TRACE] unit=', unit, 'pvShift=', pvShift, 'natActualMargin=', natActualMargin, 'pv(relative)=', pv);
+    }
+  } catch (e) { /* non-fatal debug error */ }
   const totalVotes = totalVotesFromRow(row);
 
   let dVotesBase = Math.max(0, Number(row && row.dVotes) || 0);

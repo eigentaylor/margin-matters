@@ -96,6 +96,14 @@ export function createUpdateAll(deps) {
     const override = (typeof window._pvOverride === 'number' && isFinite(window._pvOverride)) ? window._pvOverride : null;
     const pv = (override != null) ? override : (stopToEff.get(stopVal) || (stopVal + EPS * (stopVal === 0 ? 1 : Math.sign(stopVal - nat))));
 
+    // Optional trace for debugging PV resolution: enable by setting window._pvTrace = true in the browser console
+    try {
+      if (typeof window !== 'undefined' && window._pvTrace) {
+        const eff = stopToEff.get(stopVal);
+        console.debug('[PV-TRACE] year=', year, 'stopIndex=', pvIndex, 'stopVal=', stopVal, 'stopToEff=', eff, 'resolved pv=', pv, 'override=', override, 'nat=', nat);
+      }
+    } catch (e) { /* ignore debug errors */ }
+
     const matches = [];
     if (override == null) {
       const eff = stopToEff.get(stopVal);
