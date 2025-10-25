@@ -5,9 +5,14 @@
   // It plugs into tester.js by writing to the same globals (byYear, evByUnit, etc.).
 
   const PV_CAP = 0.5;
-  const EPS = 1e-8;
+  const EPS = 1e-5;
   const EV_PROJECTION_THRESHOLD_YEAR = 2032;
   const EV_PROJECTION_BASE_KEY = 'baseline';
+  const TURNOUT_GROWTH_PER_CYCLE = 0.015; // 1.5% growth per 4-year election cycle
+  const TURNOUT_GROWTH_VOL_PER_CYCLE = 0.02; // Std dev for per-cycle turnout shocks
+  const TURNOUT_MIN_GROWTH_FACTOR = 0.90; // Prevent extreme one-cycle declines
+  const TURNOUT_SHARE_NOISE = 0.05; // Log-normal noise for turnout share drift
+  const TURNOUT_MIN_SHARE = 1e-6;
   const EV_PROJECTION_LABEL_OVERRIDES = {
     brennan: 'Brennan Center',
     election_data_services: 'Election Data Services',
@@ -728,22 +733,33 @@
     setAL('ME'); setAL('NE');
   }
 
-  function buildFutureDataset(histAll, paths, marginsAll, evMap, evLookupFn) {
+  function buildFutureDataset(histAll, paths, marginsAll, evMap, evLookupFn, rng) {
     // Create rows for each future year with fields expected by tester.js: {year, unit, rm, nm, ev, tp, dVotes, rVotes, tVotes, total}
-    const byYear = new Map();
     const years = [2024, 2028, 2032, 2036, 2040, 2044, 2048];
+    const byYear = new Map();
+
+    const rngFn = (typeof rng === 'function') ? rng : Math.random;
+
     const totals2024 = new Map();
-    marginsAll.forEach(r => { if (+r.year === 2024) totals2024.set(r.abbr, +r.total_votes || 0); });
-    // compute at-large from districts if needed
+    marginsAll.forEach(r => {
+      if (+r.year === 2024 && r.abbr) {
+        const totalVotes = +r.total_votes || (+r.total || 0);
+        if (isFinite(totalVotes) && totalVotes > 0) totals2024.set(r.abbr, totalVotes);
+      }
+    });
+
     applyAtLarge(paths, totals2024);
+
     const baseRows2024 = new Map();
     marginsAll.forEach(r => { if (+r.year === 2024 && r.abbr) baseRows2024.set(r.abbr, r); });
+
     function clampShare(value) {
       const v = Number(value);
       if (!isFinite(v) || v <= 0) return 0;
       if (v >= 1) return 1;
       return v;
     }
+
     function getBaseRow(abbr) {
       if (!abbr) return null;
       if (baseRows2024.has(abbr)) return baseRows2024.get(abbr);
@@ -753,59 +769,308 @@
       }
       return null;
     }
-    // national margin for 2024 baseline
+
+    function totalFromBase(abbr) {
+      const row = getBaseRow(abbr);
+      if (row) {
+        const explicit = +row.total_votes || +row.total;
+        if (isFinite(explicit) && explicit > 0) return explicit;
+        const d = +row.D_votes || +row.dVotes || 0;
+        const r = +row.R_votes || +row.rVotes || 0;
+        const t = +row.third_party_votes || +row.tVotes || 0;
+        const sum = d + r + t;
+        if (sum > 0) return sum;
+      }
+      if (totals2024.has(abbr)) return totals2024.get(abbr);
+      return 0;
+    }
+
     function natMargin2024() {
-      // Prefer explicit NATIONAL row if present
       const natRow = marginsAll.find(r => +r.year === 2024 && (r.abbr === 'NATIONAL' || r.unit === 'NATIONAL' || r.abbr === 'US' || r.abbr === 'USA' || r.abbr === 'National'));
       if (natRow && isFinite(+natRow.national_margin)) return +natRow.national_margin;
-      // Fallback: compute from two-party votes if available; else weighted avg of per-row national_margin
       const rows = marginsAll.filter(r => +r.year === 2024 && r.abbr && r.abbr !== 'NATIONAL');
-      let d = 0, r = 0; rows.forEach(x => { d += (+x.D_votes || 0); r += (+x.R_votes || 0); });
+      let d = 0, r = 0;
+      rows.forEach(x => { d += (+x.D_votes || 0); r += (+x.R_votes || 0); });
       if ((d + r) > 0) { return (d - r) / (d + r); }
-      const w = rows.map(r => +r.total_votes || 0); const v = rows.map(r => +r.national_margin || 0);
+      const w = rows.map(r => +r.total_votes || 0);
+      const v = rows.map(r => +r.national_margin || 0);
       return wavg(v, w) || 0;
     }
+
     const nat2024 = natMargin2024();
+
+    const aggregatorUnits = [];
+    const aggregatorIndex = new Map();
+    const aggregatorBaseTotals = [];
+    paths.forEach((rec, abbr) => {
+      if (!rec || !abbr || abbr === 'NATIONAL') return;
+      if (abbr.includes('-') && !abbr.endsWith('-AL')) return;
+      const baseTotal = totalFromBase(abbr);
+      const safeTotal = isFinite(baseTotal) && baseTotal > 0 ? baseTotal : 1;
+      aggregatorIndex.set(abbr, aggregatorUnits.length);
+      aggregatorUnits.push(abbr);
+      aggregatorBaseTotals.push(safeTotal);
+    });
+
+    if (!aggregatorUnits.length) return byYear;
+
+    const baseNationalTotal = aggregatorBaseTotals.reduce((s, v) => s + v, 0);
+
+    const aggregatorSharesByYear = new Map();
+    const aggregatorTotalsByYear = new Map();
+    const baseShareMap = new Map();
+    aggregatorUnits.forEach((unit, idx) => baseShareMap.set(unit, aggregatorBaseTotals[idx] / baseNationalTotal));
+    aggregatorSharesByYear.set(2024, baseShareMap);
+    aggregatorTotalsByYear.set(2024, Math.round(baseNationalTotal));
+
+    const districtRatiosByState = new Map();
+    const districtToStateKey = new Map();
+    paths.forEach((rec, abbr) => {
+      if (!rec || !abbr) return;
+      if (!(abbr.includes('-') && !abbr.endsWith('-AL'))) return;
+      const state = abbr.split('-')[0];
+      const stateKey = aggregatorIndex.has(`${state}-AL`) ? `${state}-AL` : state;
+      districtToStateKey.set(abbr, stateKey);
+      if (!districtRatiosByState.has(stateKey)) districtRatiosByState.set(stateKey, []);
+      const baseTotal = totalFromBase(abbr);
+      districtRatiosByState.get(stateKey).push({ unit: abbr, total: baseTotal });
+    });
+
+    districtRatiosByState.forEach((entries, stateKey) => {
+      const denom = entries.reduce((s, e) => s + (isFinite(e.total) && e.total > 0 ? e.total : 0), 0);
+      const fallback = entries.length ? 1 / entries.length : 0;
+      const normalized = entries.map(e => {
+        const ratio = denom > 0 && isFinite(e.total) && e.total > 0 ? (e.total / denom) : fallback;
+        return { unit: e.unit, ratio };
+      });
+      districtRatiosByState.set(stateKey, normalized);
+    });
+
+    function normalizeShares(arr) {
+      const sum = arr.reduce((s, v) => s + v, 0);
+      if (!(sum > 0)) {
+        const equal = arr.length ? 1 / arr.length : 0;
+        return arr.map(() => equal);
+      }
+      return arr.map(v => v / sum);
+    }
+
+    function allocateFromShares(shares, total) {
+      const n = shares.length;
+      if (!n || total <= 0) return { totals: Array.from({ length: n }, () => 0), floats: Array.from({ length: n }, () => 0) };
+      const normalized = normalizeShares(shares);
+      const floats = normalized.map(s => s * total);
+      const floors = floats.map(x => Math.floor(x));
+      let assigned = floors.reduce((a, b) => a + b, 0);
+      let remainder = total - assigned;
+      const order = floats.map((value, idx) => ({ idx, frac: value - floors[idx] }))
+        .sort((a, b) => b.frac - a.frac);
+      let i = 0;
+      while (remainder > 0 && i < order.length) {
+        floors[order[i].idx] += 1;
+        remainder -= 1;
+        i += 1;
+      }
+      return { totals: floors, floats };
+    }
+
+    function enforceOrthogonality(shares, relMargins) {
+      const n = shares.length;
+      if (!n) return shares;
+      const rm = relMargins.map(v => Number.isFinite(v) ? v : 0);
+      const meanRm = rm.reduce((s, v) => s + v, 0) / n;
+      const rmZero = rm.map(v => v - meanRm);
+      let denom = 0;
+      for (let i = 0; i < n; i++) denom += rm[i] * rmZero[i];
+      if (Math.abs(denom) < 1e-12) return normalizeShares(shares);
+      let current = shares.slice();
+      for (let iter = 0; iter < 6; iter++) {
+        const dot = current.reduce((s, v, idx) => s + v * rm[idx], 0);
+        if (Math.abs(dot) < 1e-10) break;
+        let lambda = -dot / denom;
+        let lower = -Infinity;
+        let upper = Infinity;
+        for (let i = 0; i < n; i++) {
+          const rz = rmZero[i];
+          if (Math.abs(rz) < 1e-12) continue;
+          const bound = -current[i] / rz;
+          if (rz > 0) lower = Math.max(lower, bound);
+          else upper = Math.min(upper, bound);
+        }
+        if (lower > upper) break;
+        if (lambda < lower) lambda = lower;
+        if (lambda > upper) lambda = upper;
+        current = current.map((v, i) => v + lambda * rmZero[i]);
+        const minVal = Math.min(...current);
+        if (minVal < 0) {
+          current = current.map(v => Math.max(v, 0));
+          current = normalizeShares(current);
+        }
+      }
+      return normalizeShares(current);
+    }
+
+    const futureYears = years.slice(1);
+    let prevSharesArray = aggregatorUnits.map(unit => baseShareMap.get(unit));
+    let prevTotal = Math.round(baseNationalTotal);
+
+    futureYears.forEach(year => {
+      const relMargins = aggregatorUnits.map(unit => {
+        const rec = paths.get(unit);
+        if (!rec) return 0;
+        const value = rec[year];
+        if (Number.isFinite(value)) return value;
+        if (year === 2024 && Number.isFinite(rec.rel_2024)) return rec.rel_2024;
+        return 0;
+      });
+      const noisyShares = prevSharesArray.map(share => {
+        const noise = Math.exp(randn(rngFn) * TURNOUT_SHARE_NOISE);
+        return Math.max(TURNOUT_MIN_SHARE, share * noise);
+      });
+      let candidateShares = normalizeShares(noisyShares);
+      candidateShares = enforceOrthogonality(candidateShares, relMargins);
+      const floorApplied = candidateShares.map(v => Math.max(TURNOUT_MIN_SHARE, v));
+      candidateShares = normalizeShares(floorApplied);
+
+  const growthNoise = randn(rngFn) * TURNOUT_GROWTH_VOL_PER_CYCLE;
+      const cycleFactor = Math.max(TURNOUT_MIN_GROWTH_FACTOR, 1 + TURNOUT_GROWTH_PER_CYCLE + growthNoise);
+      const targetTotal = Math.max(1, Math.round(prevTotal * cycleFactor));
+
+      const shareMap = new Map();
+      aggregatorUnits.forEach((unit, idx) => shareMap.set(unit, candidateShares[idx]));
+      aggregatorSharesByYear.set(year, shareMap);
+      aggregatorTotalsByYear.set(year, targetTotal);
+
+      prevSharesArray = candidateShares;
+      prevTotal = targetTotal;
+    });
+
     years.forEach(Y => {
-      const nationalMargin = (Y === 2024) ? nat2024 : 0.0;
+      const isFutureYear = Y > 2024;
+      const shareMap = aggregatorSharesByYear.get(Y) || aggregatorSharesByYear.get(2024);
+      const nationalTotal = aggregatorTotalsByYear.get(Y) || aggregatorTotalsByYear.get(2024) || Math.round(baseNationalTotal);
+      const shareArray = aggregatorUnits.map(unit => shareMap.get(unit) ?? (1 / aggregatorUnits.length));
+      const { totals: aggregatorTotals } = allocateFromShares(shareArray, nationalTotal);
+      const aggregatorTotalsMap = new Map();
+      aggregatorUnits.forEach((unit, idx) => aggregatorTotalsMap.set(unit, aggregatorTotals[idx]));
+
+      const districtTotalsMap = new Map();
+      districtRatiosByState.forEach((entries, stateKey) => {
+        const stateTotal = aggregatorTotalsMap.get(stateKey) || 0;
+        if (!entries.length) return;
+        if (stateTotal <= 0) {
+          entries.forEach(e => districtTotalsMap.set(e.unit, 0));
+          return;
+        }
+        const ratios = entries.map(e => e.ratio);
+        const { totals: alloc } = allocateFromShares(ratios, stateTotal);
+        entries.forEach((entry, idx) => districtTotalsMap.set(entry.unit, alloc[idx]));
+      });
+
       const rows = [];
-      let natD = 0, natR = 0, natT = 0, natTotal = 0, natTopThirdVotes = 0;
-      // make per-unit rows
+      let natD = 0, natR = 0, natT = 0, natTotalAcc = 0, natTopThirdVotes = 0;
+      const targetNatMargin = isFutureYear ? 0 : nat2024;
+
       paths.forEach((rec, abbr) => {
         if (!rec || !abbr) return;
-        const rel = (Y === 2024) ? rec.rel_2024 : rec[Y];
-        const rm = isFinite(rel) ? rel : 0;
+        const rmVal = (Y === 2024) ? rec.rel_2024 : rec[Y];
+        const rm = Number.isFinite(rmVal) ? rmVal : 0;
         const base = getBaseRow(abbr);
-        const totalVotes = base ? (+base.total_votes || (+base.D_votes || 0) + (+base.R_votes || 0) + (+base.third_party_votes || 0)) : (totals2024.get(abbr) || 0);
-        // For simulated future years we do NOT model third-party votes; allocate only between D and R.
-        const isFutureYear = (Y > 2024);
-        const thirdShare = isFutureYear ? 0 : clampShare(base ? base.third_party_share : 0);
-        const topThirdShare = isFutureYear ? 0 : clampShare(base ? base.top_third_party_share : thirdShare);
-        const tVotes = isFutureYear ? 0 : Math.max(0, totalVotes * thirdShare);
-        const twoPartyTotal = Math.max(0, totalVotes - tVotes);
-        let dShare2 = 0.5 + (rm + nationalMargin) / 2;
-        if (!isFinite(dShare2)) dShare2 = 0.5;
-        dShare2 = Math.max(0, Math.min(1, dShare2));
-        let rShare2 = 1 - dShare2;
-        if (!isFinite(rShare2)) rShare2 = 0.5;
-        rShare2 = Math.max(0, Math.min(1, rShare2));
-        const denom = dShare2 + rShare2;
-        if (denom > 0) {
-          dShare2 /= denom;
-          rShare2 /= denom;
-        } else {
-          dShare2 = rShare2 = 0.5;
-        }
-        const dVotes = twoPartyTotal * dShare2;
-        const rVotes = twoPartyTotal * rShare2;
-        const topThirdVotes = isFutureYear ? 0 : Math.max(0, Math.min(totalVotes, topThirdShare * totalVotes));
-        // EV: reuse 2024 mapping
         const ev = evLookupFn ? evLookupFn(Y, abbr) : (evMap.get(`2024:${abbr}`) || 0);
-        rows.push({
+        const includeInNat = !(abbr.includes('-') && !abbr.endsWith('-AL'));
+
+        if (Y === 2024 && base) {
+          const thirdShare = clampShare(base.third_party_share || base.thirdShare);
+          const topThirdShare = clampShare(base.top_third_party_share || base.tp);
+          const dVotes = Math.max(0, +base.D_votes || +base.dVotes || 0);
+          const rVotes = Math.max(0, +base.R_votes || +base.rVotes || 0);
+          const tVotes = Math.max(0, +base.third_party_votes || +base.tVotes || 0);
+          const totalVotes = Math.max(0, +base.total_votes || +base.total || (dVotes + rVotes + tVotes));
+          const topThirdVotes = Math.max(0, +base.T_votes || +base.topThirdVotes || 0);
+          const baseNatMargin = Number.isFinite(+base.national_margin) ? +base.national_margin : targetNatMargin;
+          const dCandidate = base.D_candidate || base.dCandidate || '';
+          const rCandidate = base.R_candidate || base.rCandidate || '';
+          const thirdPartyResults = base.thirdPartyResults || base.third_party_results || {};
+          const row = {
+            year: Y,
+            unit: abbr,
+            rm,
+            nm: baseNatMargin,
+            ev,
+            tp: topThirdShare,
+            thirdShare,
+            dVotes,
+            rVotes,
+            tVotes,
+            total: totalVotes,
+            topThirdVotes,
+            dCandidate,
+            rCandidate,
+            thirdPartyResults
+          };
+          rows.push(row);
+          if (includeInNat) {
+            natD += dVotes;
+            natR += rVotes;
+            natT += tVotes;
+            natTotalAcc += totalVotes;
+            natTopThirdVotes += topThirdVotes;
+          }
+          return;
+        }
+
+        let totalVotes = 0;
+        if (aggregatorTotalsMap.has(abbr)) {
+          totalVotes = aggregatorTotalsMap.get(abbr);
+        } else if (districtTotalsMap.has(abbr)) {
+          totalVotes = districtTotalsMap.get(abbr);
+        } else {
+          const fallback = totalFromBase(abbr);
+          const scale = nationalTotal / Math.max(1, baseNationalTotal);
+          totalVotes = Math.round(fallback * scale);
+        }
+        totalVotes = Math.max(0, totalVotes);
+
+        const thirdShare = 0;
+        const topThirdShare = 0;
+        const tVotes = 0;
+        const twoPartyTotal = Math.max(0, totalVotes - tVotes);
+        const rawMargin = Math.max(-0.999, Math.min(0.999, rm + targetNatMargin));
+        const dFloat = twoPartyTotal * (1 + rawMargin) / 2;
+        const rFloat = twoPartyTotal - dFloat;
+        let dVotes = Math.floor(dFloat);
+        let rVotes = Math.floor(rFloat);
+        let assigned = dVotes + rVotes;
+        let remainder = Math.round(twoPartyTotal - assigned);
+        const fractions = [
+          { party: 'D', frac: dFloat - dVotes },
+          { party: 'R', frac: rFloat - rVotes }
+        ].sort((a, b) => b.frac - a.frac);
+        let idx = 0;
+        while (remainder > 0 && idx < fractions.length) {
+          if (fractions[idx].party === 'D') dVotes += 1;
+          else rVotes += 1;
+          remainder -= 1;
+          idx += 1;
+        }
+        if (remainder < 0) {
+          fractions.sort((a, b) => a.frac - b.frac);
+          idx = 0;
+          while (remainder < 0 && idx < fractions.length) {
+            if (fractions[idx].party === 'D' && dVotes > 0) dVotes -= 1;
+            else if (fractions[idx].party === 'R' && rVotes > 0) rVotes -= 1;
+            remainder += 1;
+            idx += 1;
+          }
+        }
+        dVotes = Math.max(0, dVotes);
+        rVotes = Math.max(0, rVotes);
+
+        const row = {
           year: Y,
           unit: abbr,
           rm,
-          nm: nationalMargin,
+          nm: targetNatMargin,
           ev,
           tp: topThirdShare,
           thirdShare,
@@ -813,21 +1078,29 @@
           rVotes,
           tVotes,
           total: totalVotes,
-          topThirdVotes
-        });
-        const includeInNat = !(abbr.includes('-') && !abbr.endsWith('-AL'));
+          topThirdVotes: 0,
+          dCandidate: 'D',
+          rCandidate: 'R',
+          thirdPartyResults: {}
+        };
+        rows.push(row);
         if (includeInNat) {
           natD += dVotes;
           natR += rVotes;
           natT += tVotes;
-          natTotal += totalVotes;
-          natTopThirdVotes += topThirdVotes;
+          natTotalAcc += totalVotes;
         }
       });
+
       const natTwo = natD + natR;
-      const natNm = (Y === 2024) ? nat2024 : (natTwo > 0 ? (natD - natR) / natTwo : 0);
-      const natThirdShare = natTotal > 0 ? natT / natTotal : 0;
-      const natTopThirdShare = natTotal > 0 ? natTopThirdVotes / natTotal : 0;
+      const natNm = natTwo > 0 ? (natD - natR) / natTwo : targetNatMargin;
+      const natThirdShare = natTotalAcc > 0 ? natT / natTotalAcc : 0;
+      const natTopThirdShare = natTotalAcc > 0 ? natTopThirdVotes / natTotalAcc : 0;
+
+      rows.forEach(row => {
+        if (row.unit !== 'NATIONAL') row.nm = natNm;
+      });
+
       rows.unshift({
         year: Y,
         unit: 'NATIONAL',
@@ -839,11 +1112,16 @@
         dVotes: natD,
         rVotes: natR,
         tVotes: natT,
-        total: natTotal,
-        topThirdVotes: natTopThirdVotes
+        total: natTotalAcc,
+        topThirdVotes: natTopThirdVotes,
+        dCandidate: 'D',
+        rCandidate: 'R',
+        thirdPartyResults: {}
       });
+
       byYear.set(Y, rows);
     });
+
     return byYear;
   }
 
@@ -905,7 +1183,7 @@
     const projectionMap = getSelectedEvProjectionMap();
     console.log('[future] EV projection:', evProjectionState.selectionKey, 'futureOnly:', evProjectionState.futureOnly);
     const evLookup = createEvLookup(evByUnit, projectionMap, { futureOnly: evProjectionState.futureOnly });
-    const BY = buildFutureDataset(filtered, paths, margins, evByUnit, evLookup);
+  const BY = buildFutureDataset(filtered, paths, margins, evByUnit, evLookup, rng);
     console.log('[future] buildFutureDataset completed');
     // Clear any previous future years then set
     const years = [2024, 2028, 2032, 2036, 2040, 2044, 2048];
@@ -1301,7 +1579,10 @@
           // Always add naive flip stop s = -rm
           const s = -rm;
           if (isFinite(s)) {
-            const eff = s + (sign(s - nat) === 0 ? EPS : sign(s - nat) * EPS);
+            // Nudge effective PV by the sign of the stop so positive stops
+            // push slightly toward the Democratic side and negative stops
+            // toward the Republican side. Use Math.sign(s) * EPS.
+            const eff = s + Math.sign(s) * EPS;
             // After applying eff, margin becomes ~ sign(s)*EPS so winner is sign(s)
             const postWinner = (sign(s) > 0) ? 'D' : (sign(s) < 0 ? 'R' : 'D');
             recordStop(year, s, eff, r.unit, postWinner, colorForWinner(postWinner));
@@ -1318,13 +1599,15 @@
             const nD = nat + 2 * (T_share - D_share);
             const nR = nat + 2 * (R_share - T_share);
             if (isFinite(nD)) {
-              const effD = nD + (sign(nD - nat) === 0 ? EPS : sign(nD - nat) * EPS);
+              // Nudge window boundary by sign as above
+              const effD = nD + Math.sign(nD) * EPS;
               // Winner inside window treated as T (other)
               recordStop(year, nD, effD, r.unit, 'T', colorForWinner('T'));
               stopCount++;
             }
             if (isFinite(nR)) {
-              const effR = nR + (sign(nR - nat) === 0 ? EPS : sign(nR - nat) * EPS);
+              // Nudge window boundary by sign as above
+              const effR = nR + Math.sign(nR) * EPS;
               recordStop(year, nR, effR, r.unit, 'T', colorForWinner('T'));
               stopCount++;
             }
