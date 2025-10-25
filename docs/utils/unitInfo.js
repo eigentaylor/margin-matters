@@ -218,8 +218,10 @@ export function calculateUnitWinnerTakeAllEVs(unit, opts) {
 export function calculateUnitVoteTallies(unit) {
     try {
         // Defer to the getUnitFinalVoteTotals and election-night snapshot when present
-        const isIndexPage = window.location && (window.location.pathname && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/'));
-        if (!isIndexPage) return null;
+        const pathname = window.location && window.location.pathname;
+        const isIndexPage = !!(pathname && (pathname.endsWith('index.html') || pathname === '/'));
+        const isFutureMode = !!(typeof window !== 'undefined' && window._futureMode);
+        if (!isIndexPage && !isFutureMode) return null;
 
         let year = (typeof window._curYear === 'number' && isFinite(window._curYear)) ? window._curYear : null;
         if (!isFinite(year)) {
@@ -227,7 +229,8 @@ export function calculateUnitVoteTallies(unit) {
             year = yearEl ? parseInt(yearEl.value, 10) : null;
         }
         const pv = window._curPv || 0;
-        if (!year || year > 2024) return null;
+        if (!year) return null;
+        if (year > 2024 && !isFutureMode) return null;
 
         const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
 
@@ -263,56 +266,55 @@ export function calculateUnitVoteTallies(unit) {
         }
 
         const totals = getUnitFinalVoteTotals(unit, { year, pv });
-        if (!totals) { console.log('calculateUnitVoteTallies: no totals found for', unit); return null; }
+        if (!totals) return null;
 
-        // If PV is set to the national actual margin (the 'Actual' PV setting),
-        // prefer raw CSV vote counts from the parsed rows rather than the
-        // PV-adjusted breakdown. This ensures close states show the exact
-        // tallies from `presidential_margins.csv` when the PV slider is set to
-        // Actual.
-        try {
-            const natMargin = (typeof window._getNatMargin === 'function') ? window._getNatMargin(year) : ((typeof window.getNatMargin === 'function') ? window.getNatMargin(year) : 0);
-            const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
-            if (isFinite(natMargin) && isFinite(pv) && rows && rows.length && Math.abs(pv - natMargin) < 1e-9) {
-                if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: PV equals natMargin, using raw CSV counts for', unit, { pv, natMargin });
-                const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-                const row = rows.find(x => x && x.unit === keyUnit);
-                if (row) {
-                    // If this unit is flipped in the active scenario, prefer the
-                    // flipped/adjusted totals from getUnitFinalVoteTotals so the
-                    // tooltip reflects the scenario. Otherwise, return raw CSV counts.
-                    let useAdjustedForFlip = false;
-                    try {
-                        const keyU = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-                        const flipped = (typeof isUnitFlipped === 'function') ? isUnitFlipped(year, keyU) : (typeof window.isUnitFlipped === 'function' ? window.isUnitFlipped(year, keyU) : false);
-                        useAdjustedForFlip = !!flipped;
-                    } catch (e) { useAdjustedForFlip = false; }
-
-                    if (useAdjustedForFlip) {
+        if (year <= 2024) {
+            // If PV is set to the national actual margin (the 'Actual' PV setting),
+            // prefer raw CSV vote counts from the parsed rows rather than the
+            // PV-adjusted breakdown. This ensures close states show the exact
+            // tallies from `presidential_margins.csv` when the PV slider is set to
+            // Actual.
+            try {
+                const natMargin = (typeof window._getNatMargin === 'function') ? window._getNatMargin(year) : ((typeof window.getNatMargin === 'function') ? window.getNatMargin(year) : 0);
+                const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+                if (isFinite(natMargin) && isFinite(pv) && rows && rows.length && Math.abs(pv - natMargin) < 1e-9) {
+                    if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: PV equals natMargin, using raw CSV counts for', unit, { pv, natMargin });
+                    const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+                    const row = rows.find(x => x && x.unit === keyUnit);
+                    if (row) {
+                        // If this unit is flipped in the active scenario, prefer the
+                        // flipped/adjusted totals from getUnitFinalVoteTotals so the
+                        // tooltip reflects the scenario. Otherwise, return raw CSV counts.
+                        let useAdjustedForFlip = false;
                         try {
-                            const totals = getUnitFinalVoteTotals(unit, { year, pv });
-                            if (totals) {
-                                const dAdj = Math.round(Math.max(0, totals.dVotes || 0));
-                                const rAdj = Math.round(Math.max(0, totals.rVotes || 0));
-                                const oAdj = Math.round(Math.max(0, totals.topThirdVotes || 0));
-                                if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: returning ADJUSTED counts for flipped unit', unit, { D: dAdj, R: rAdj, O: oAdj });
-                                return { D: dAdj, R: rAdj, O: oAdj, total: dAdj + rAdj + oAdj };
-                            }
-                        } catch (e) { /* fallthrough to raw */ }
-                    }
+                            const keyU = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+                            const flipped = (typeof isUnitFlipped === 'function') ? isUnitFlipped(year, keyU) : (typeof window.isUnitFlipped === 'function' ? window.isUnitFlipped(year, keyU) : false);
+                            useAdjustedForFlip = !!flipped;
+                        } catch (e) { useAdjustedForFlip = false; }
 
-                    const dRaw = Math.round(Math.max(0, +row.dVotes || 0));
-                    const rRaw = Math.round(Math.max(0, +row.rVotes || 0));
-                    const oRaw = Math.round(Math.max(0, (+row.topThirdVotes || +row.tVotes || 0)));
-                    if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: returning RAW CSV counts for', unit, { D: dRaw, R: rRaw, O: oRaw });
-                    return { D: dRaw, R: rRaw, O: oRaw, total: dRaw + rRaw + oRaw };
+                        if (useAdjustedForFlip) {
+                            try {
+                                const totalsAdj = getUnitFinalVoteTotals(unit, { year, pv });
+                                if (totalsAdj) {
+                                    const dAdj = Math.round(Math.max(0, totalsAdj.dVotes || 0));
+                                    const rAdj = Math.round(Math.max(0, totalsAdj.rVotes || 0));
+                                    const oAdj = Math.round(Math.max(0, totalsAdj.topThirdVotes || 0));
+                                    if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: returning ADJUSTED counts for flipped unit', unit, { D: dAdj, R: rAdj, O: oAdj });
+                                    return { D: dAdj, R: rAdj, O: oAdj, total: dAdj + rAdj + oAdj };
+                                }
+                            } catch (e) { /* fallthrough to raw */ }
+                        }
+
+                        const dRaw = Math.round(Math.max(0, +row.dVotes || 0));
+                        const rRaw = Math.round(Math.max(0, +row.rVotes || 0));
+                        const oRaw = Math.round(Math.max(0, (+row.topThirdVotes || +row.tVotes || 0)));
+                        if (window.DEBUG_TOOLTIP) console.log('calculateUnitVoteTallies: returning RAW CSV counts for', unit, { D: dRaw, R: rRaw, O: oRaw });
+                        return { D: dRaw, R: rRaw, O: oRaw, total: dRaw + rRaw + oRaw };
+                    }
+                    else if (window.DEBUG_TOOLTIP) { console.log('calculateUnitVoteTallies: no matching row found for', unit); }
                 }
-                else { console.log('calculateUnitVoteTallies: no matching row found for', unit); }
-            }
-            // else {
-            //     console.log('calculateUnitVoteTallies: PV not equal to natMargin, using adjusted totals for', unit, { pv, natMargin }, 'diff: (pv - natMargin) =', (pv - natMargin));
-            // }
-        } catch (e) { console.warn(e); }
+            } catch (e) { console.warn(e); }
+        }
 
         const dRounded = Math.round(Math.max(0, totals.dVotes || 0));
         const rRounded = Math.round(Math.max(0, totals.rVotes || 0));
