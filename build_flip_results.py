@@ -206,6 +206,18 @@ def compute_knapsack_exact(units, target_ev, cost_func=None):
     return chosen, dp[n][target_ev], target_ev
 
 
+def is_district(abbr):
+    """Check if a unit is a congressional district (ME-01, NE-02, etc.)"""
+    return '-' in abbr and abbr.split('-')[1] not in ['AL']
+
+
+def get_state_from_district(abbr):
+    """Get the state abbreviation from a district (ME-01 -> ME)"""
+    if is_district(abbr):
+        return abbr.split('-')[0]
+    return None
+
+
 def analyze_year(rows_for_year, metric: str = 'votes'):
     # Determine aggregate party EVs using winner labels per unit
     ev_by_party = defaultdict(int)
@@ -252,6 +264,14 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
 
     # Build candidate flipping set: units not currently won by runner_party
     units = []
+    # Track which states have districts for handling -AL independence issue
+    states_with_districts = set()
+    for r in rows_for_year:
+        if is_district(r['abbr']):
+            state = get_state_from_district(r['abbr'])
+            if state:
+                states_with_districts.add(state)
+    
     for r in rows_for_year:
         # Do not consider Colorado 1876 as a flippable unit; its EVs were assigned to R above.
         if year == 1876 and r['abbr'] == 'CO':
@@ -267,6 +287,16 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         if year == 1960 and r['abbr'] == 'AL':
             # Alabama 1960 is split 5 D + 6 O if won by D or T, so cannot be flipped as a unit
             continue
+        
+        # For margin metric, exclude -AL units when there are districts for that state
+        # because -AL is not independent from the districts
+        abbr = r['abbr']
+        is_al = abbr.endswith('-AL')
+        if metric == 'margin' and is_al:
+            state = abbr.split('-')[0]
+            if state in states_with_districts:
+                # Skip this -AL unit for margin metric as it's not independent
+                continue
 
         if r['party_win'] == runner_party:
             continue
@@ -283,10 +313,22 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         margin_to_runner = winner_votes - runner_votes
         votes_to_runner = max(0, margin_to_runner // 2 + 1)
 
-        other_parties = [p for p in party_votes if p != r['party_win']]
-        best_other_votes = max(party_votes[p] for p in other_parties) if other_parties else 0
-        margin_to_best_other = winner_votes - best_other_votes
-        votes_to_best_other = max(0, margin_to_best_other // 2 + 1)
+        # For each potential target party, compute votes needed to flip to that party
+        votes_to_party = {}
+        best_other_party = None
+        best_other_votes_count = 0
+        for target_party in ['D', 'R', 'T']:
+            if target_party == r['party_win']:
+                continue
+            target_votes = party_votes.get(target_party, 0)
+            margin = winner_votes - target_votes
+            votes_needed = max(0, margin // 2 + 1)
+            votes_to_party[target_party] = votes_needed
+            if target_votes > best_other_votes_count:
+                best_other_votes_count = target_votes
+                best_other_party = target_party
+        
+        votes_to_best_other = votes_to_party.get(best_other_party, 0) if best_other_party else 0
 
         units.append({
             'year': r['year'],
@@ -296,6 +338,9 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
             'from_party': r['party_win'],
             'votes_to_runner': votes_to_runner,
             'votes_to_best_other': votes_to_best_other,
+            'best_other_party': best_other_party,
+            'votes_to_party': votes_to_party,
+            'party_votes': party_votes,
         })
 
     # Define cost function by metric
@@ -321,6 +366,7 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
             'from_party': u['from_party'],
             'votes_needed': max(0, int(u['votes_to_runner'])),
             'target_party': runner_party,
+            'party_votes': u['party_votes'],
         }
         for u in units
     ]
@@ -329,20 +375,23 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
     # Mode no_majority: reduce winner below need by flipping from the winner regardless of runner gains
     # Equivalent to flipping at least winner_ev - (need - 1) EV away from winner
     target_away = max(0, winner_ev - (need - 1))
-    # restrict to units currently held by winner_party (those flips reduce winner's EV)
-    units_from_winner = [
-        {
-            'year': u['year'],
-            'abbr': u['abbr'],
-            'ev': u['ev'],
-            'total_votes': u['total_votes'],
-            'from_party': u['from_party'],
-            'votes_needed': max(0, int(u['votes_to_best_other'])),
-            'target_party': 'any',
-        }
-        for u in units
-        if u['from_party'] == winner_party
-    ]
+    # We can flip units currently held by winner_party to any other party,
+    # OR flip units held by other parties to third parties if that's more efficient
+    # Build units for all states that could reduce winner's EV (directly or indirectly)
+    units_from_winner = []
+    for u in units:
+        # If winner_party holds this unit, we can flip it to best_other
+        if u['from_party'] == winner_party:
+            units_from_winner.append({
+                'year': u['year'],
+                'abbr': u['abbr'],
+                'ev': u['ev'],
+                'total_votes': u['total_votes'],
+                'from_party': u['from_party'],
+                'votes_needed': max(0, int(u['votes_to_best_other'])),
+                'target_party': u.get('best_other_party', 'any'),
+                'party_votes': u['party_votes'],
+            })
     chosen_n, cost_n, ev_n = compute_knapsack(units_from_winner, target_away, cost_func)
 
     # Mode tie: look for an exact set of EVs to give runner exactly total_ev/2 (tie).
@@ -361,6 +410,7 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
                     'from_party': u['from_party'],
                     'votes_needed': max(0, int(u['votes_to_runner'])),
                     'target_party': runner_party,
+                    'party_votes': u['party_votes'],
                 }
                 for u in units
             ]
@@ -425,6 +475,8 @@ def main():
                         'mode': mode,
                         'abbr': u['abbr'],
                         'ev': u['ev'],
+                        'from_party': u.get('from_party', ''),
+                        'to_party': u.get('target_party', ''),
                         'votes_to_flip': u['votes_needed'],
                         'pct_of_state_votes': round(100.0 * (u['votes_needed'] / u['total_votes']) if u['total_votes'] else 0.0, 3),
                     })
@@ -442,7 +494,7 @@ def main():
         w.writerows(summary_rows)
 
     with open(OUT_DETAILS, 'w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=['year','metric','mode','abbr','ev','votes_to_flip','pct_of_state_votes'])
+        w = csv.DictWriter(f, fieldnames=['year','metric','mode','abbr','ev','from_party','to_party','votes_to_flip','pct_of_state_votes'])
         w.writeheader()
         w.writerows(detail_rows)
 
