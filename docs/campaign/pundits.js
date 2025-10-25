@@ -92,7 +92,7 @@ export class PunditSystem {
       name: 'Prof. Aleck Lickman',
       prediction: prediction,
       confidence: confidence,
-      score: `${noisyScore}/13 Keys`,
+      score: `${noisyScore}/13 Beets`,
       quote: quote,
       details: [
         'Uses 13 structural "beets" to predict the popular vote winner',
