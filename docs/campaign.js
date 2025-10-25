@@ -187,7 +187,7 @@ class CampaignGame {
     
     // Update candidate display
     document.getElementById('candidate-display').textContent = 
-      `${this.gameState.playerCandidate} (${this.gameState.playerParty}) vs ${this.gameState.opponentCandidate}`;
+      `${this.gameState.playerCandidate} (${this.gameState.playerParty}) vs ${this.gameState.opponentCandidate} (${this.gameState.playerParty === 'D' ? 'R' : 'D'})`;
     
     // Update decisions panel
     this.updateDecisionsPanel();
