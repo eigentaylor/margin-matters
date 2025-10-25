@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2028 Campaign • Margin Matters</title>
+  <link rel="icon" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --fg: #f5f5f5;
+      --muted: #a5a5a5;
+      --accent: #66b3ff;
+      --card: #141414;
+      --border: #2a2a2a;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Helvetica, Arial;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .game-stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 1024px) {
+      .game-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .map-container {
+      min-height: 400px;
+      position: relative;
+    }
+
+    .decisions-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .decision-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--fg);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .decision-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: #1a1a1a;
+    }
+
+    .decision-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .decision-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .decision-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .event-log {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 12px;
+      background: #0a0a0a;
+      border-radius: 8px;
+    }
+
+    .event-item {
+      padding: 8px;
+      margin-bottom: 8px;
+      border-left: 3px solid var(--accent);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 4px;
+    }
+
+    .event-phase {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .pundit-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pundit-box {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .pundit-name {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .pundit-quote {
+      font-style: italic;
+      color: var(--fg);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #1a1a1a;
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: #5099ee;
+    }
+
+    #setup-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #0a0a0a;
+      color: var(--fg);
+      font-size: 1rem;
+    }
+
+    .difficulty-option {
+      padding: 12px;
+      margin-bottom: 8px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .difficulty-option:hover {
+      border-color: var(--accent);
+    }
+
+    .difficulty-option.selected {
+      border-color: var(--accent);
+      background: rgba(102, 179, 255, 0.1);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header-placeholder"></div>
+
+  <div class="container">
+    <div id="setup-modal">
+      <div class="modal-content">
+        <h2>2028 Campaign Setup</h2>
+        <p style="color: var(--muted); margin-bottom: 24px;">
+          Take control of a presidential campaign and guide your candidate to victory. Make strategic decisions, manage resources, and respond to events as you compete for the White House.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Your Party</label>
+          <select id="player-party" class="form-select">
+            <option value="D">Democratic Party</option>
+            <option value="R">Republican Party</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Candidate Name</label>
+          <input type="text" id="player-candidate" class="form-input" placeholder="Enter candidate name" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Opponent Candidate Name</label>
+          <input type="text" id="opponent-candidate" class="form-input" placeholder="Enter opponent name" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Difficulty</label>
+          <div id="difficulty-options">
+            <div class="difficulty-option" data-difficulty="very-easy">
+              <div style="font-weight: 600;">Very Easy</div>
+              <div style="font-size: 0.9rem; color: var(--muted);">
+                Strong national advantage. States highly responsive to good decisions. Large PV wins possible.
+              </div>
+            </div>
+            <div class="difficulty-option selected" data-difficulty="normal">
+              <div style="font-weight: 600;">Normal</div>
+              <div style="font-size: 0.9rem; color: var(--muted);">
+                Balanced race. States moderately responsive. Victory requires good strategy.
+              </div>
+            </div>
+            <div class="difficulty-option" data-difficulty="hard">
+              <div style="font-weight: 600;">Hard</div>
+              <div style="font-size: 0.9rem; color: var(--muted);">
+                Slight disadvantage. States less elastic. Bad decisions more costly.
+              </div>
+            </div>
+            <div class="difficulty-option" data-difficulty="very-hard">
+              <div style="font-weight: 600;">Very Hard</div>
+              <div style="font-size: 0.9rem; color: var(--muted);">
+                Strong headwinds. Limited state movement. Every decision critical.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="start-game" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem;">
+          Start Campaign
+        </button>
+      </div>
+    </div>
+
+    <div id="game-container" class="hidden">
+      <div class="card game-header">
+        <div>
+          <h1 style="margin: 0 0 8px 0;">2028 Campaign</h1>
+          <div id="candidate-display" style="color: var(--muted);"></div>
+        </div>
+        <div class="game-stats">
+          <div class="stat-item">
+            <span class="stat-label">Phase</span>
+            <span class="stat-value" id="phase-display">1 / 10</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Resources</span>
+            <span class="stat-value" id="resources-display">100</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Decisions Left</span>
+            <span class="stat-value" id="decisions-left">3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-grid">
+        <div>
+          <div class="card">
+            <h3 style="margin-top: 0;">Electoral Map</h3>
+            <div id="map-container" class="map-container">
+              <div style="text-align: center; padding: 40px; color: var(--muted);">
+                Map will be displayed here
+              </div>
+            </div>
+            <div id="map-legend" style="margin-top: 16px; display: flex; justify-content: center; gap: 16px; font-size: 0.9rem;">
+              <span><span style="color: #ef4444;">●</span> Safe R</span>
+              <span><span style="color: #fca5a5;">●</span> Lean R</span>
+              <span><span style="color: #d1d5db;">●</span> Toss-up</span>
+              <span><span style="color: #93c5fd;">●</span> Lean D</span>
+              <span><span style="color: #3b82f6;">●</span> Safe D</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top: 0;">Pundit Analysis</h3>
+            <div class="pundit-panel" id="pundit-panel"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <h3 style="margin-top: 0;">Make Your Move</h3>
+            <div class="decisions-panel" id="decisions-panel"></div>
+            <button id="end-phase-btn" class="btn btn-primary" style="width: 100%; margin-top: 12px;" disabled>
+              End Phase
+            </button>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top: 0;">Campaign Log</h3>
+            <div class="event-log" id="event-log"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./header.js"></script>
+  <script src="./footer.js"></script>
+  <script type="module" src="./campaign.js"></script>
+</body>
+
+</html>
