@@ -137,10 +137,14 @@ def test_post_flip_ev():
         for row in reader:
             if row['year'] == '2000' and row['metric'] == 'margin':
                 # Verify it's a 269-269 tie
-                if row['tie_ev_d_after'] == '269' and row['tie_ev_r_after'] == '269':
-                    print(f"  ✓ 2000 margin tie: D=269, R=269 (correct)")
+                tie_d = row['tie_ev_d_after']
+                tie_r = row['tie_ev_r_after']
+                tie_t = row['tie_ev_t_after']
+                
+                if tie_d == '269' and tie_r == '269' and tie_t == '0':
+                    print(f"  ✓ 2000 margin tie: D=269, R=269, T=0 (correct)")
                 else:
-                    print(f"  ❌ FAIL: Expected 269-269, got {row['tie_ev_d_after']}-{row['tie_ev_r_after']}")
+                    print(f"  ❌ FAIL: Expected D=269, R=269, T=0, got D={tie_d}, R={tie_r}, T={tie_t}")
                     return False
                 break
     
@@ -166,10 +170,22 @@ def test_ev_sum_consistency():
                 r = row.get(f'{mode}_ev_r_after', '')
                 t = row.get(f'{mode}_ev_t_after', '')
                 
-                if d and r and t:
-                    ev_sum = int(d) + int(r) + int(t)
-                    if ev_sum != total_ev:
-                        issues.append(f"{year} {metric} {mode}: sum={ev_sum}, expected={total_ev}")
+                # Skip if any values are missing or empty
+                if not d or not r or not t:
+                    continue
+                
+                # Validate numeric values before conversion
+                try:
+                    d_val = int(d)
+                    r_val = int(r)
+                    t_val = int(t)
+                except ValueError:
+                    issues.append(f"{year} {metric} {mode}: non-numeric values D={d}, R={r}, T={t}")
+                    continue
+                
+                ev_sum = d_val + r_val + t_val
+                if ev_sum != total_ev:
+                    issues.append(f"{year} {metric} {mode}: sum={ev_sum}, expected={total_ev}")
     
     if issues:
         print(f"  ❌ FAIL: Found {len(issues)} inconsistencies:")
