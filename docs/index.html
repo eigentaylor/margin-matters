@@ -61,6 +61,12 @@
             <span id="specialNotes" style="flex:1;text-align:right;font-style:italic;font-size:0.85em"></span>
           </div>
           <div>
+            <div id="pvTotals" class="pv-totals">
+              <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span></div>
+              <div class="pv-badge pv-o"><span class="label">Other</span><span id="pvOth" class="num">0</span></div>
+              <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
+              <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
+            </div>
             <div style="display:flex;gap:10px;align-items:center">
               <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
               <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
@@ -73,12 +79,6 @@
               <button id="pvTie" class="btn" type="button" style="display:none" disabled>Set to Tie</button>
               <button id="pvTipping" class="btn" type="button" disabled>Set to Tipping Point</button>
             </div>
-          </div>
-          <div id="pvTotals" class="pv-totals">
-            <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span></div>
-            <div class="pv-badge pv-o"><span class="label">Other</span><span id="pvOth" class="num">0</span></div>
-            <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
-            <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
           </div>
           <div id="electionNightCard" class="card"
             style="background:transparent;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px">
