@@ -13,7 +13,10 @@
     { value: -0.154, label: 'Eisenhower: R+15.4', year: 1956 },
     { value: -0.182, label: 'Reagan: R+18.2', year: 1984 },
     { value: 0.226, label: 'Johnson: D+22.6', year: 1964 },
-    { value: -0.231, label: 'Nixon: R+23.1', year: 1972 }
+    { value: -0.231, label: 'Nixon: R+23.1', year: 1972 },
+    { value: 0.243, label: 'FDR: D+24.3', year: 1936 },
+    { value: -0.262, label: 'Harding: R+26.2', year: 1920 },
+    
   ];
 
   // Expose presets for other scripts
