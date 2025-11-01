@@ -177,6 +177,64 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
     window.refreshActiveMapTip = refreshActiveMapTip;
   } catch (e) { console.warn(e); }
 
+  // Centralize state hover handlers so they can be (re)attached after DOM updates
+  function attachStateHoverHandlers() {
+    try {
+      const idToAbbr = ID_TO_ABBR;
+      d3.selectAll('path.state')
+        .on('mouseover', function (evt, d) {
+          const sel = d3.select(this);
+          const cur = sel.attr('fill') || '#2f2f2f';
+          sel.attr('data-orig-fill', cur);
+          try {
+            const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
+            // Use a neutral highlight color to avoid party-color confusion
+            let highlight = '#A0A0A0';
+            sel.attr('fill', highlight);
+          } catch (e) { sel.attr('fill', '#A0A0A0'); }
+          try {
+            // Determine state abbreviation robustly: prefer bound datum, fall back to element id (e.g., 'state-TX')
+            let abbr = null;
+            try {
+              if (d && d.id != null) abbr = idToAbbr[String(d.id).padStart(2, '0')];
+            } catch (e) { /* ignore */ }
+            if (!abbr) {
+              try {
+                const elId = (this && this.id) ? this.id : (this && this.getAttribute ? this.getAttribute('id') : null);
+                if (elId && elId.startsWith && elId.startsWith('state-')) abbr = elId.slice('state-'.length);
+                else if (elId && elId.length === 2) abbr = elId.toUpperCase();
+              } catch (e) { /* ignore */ }
+            }
+            if (abbr) {
+              try {
+                const curYear = (window._curYear != null) ? window._curYear : (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : null);
+                const tipInfoOpts = {};
+                if (abbr === 'CO' && curYear === 1876) {
+                  tipInfoOpts.staticText = 'CO · 3 EV - R';
+                } else if (abbr === 'FL' && curYear === 1868) {
+                  tipInfoOpts.staticText = 'FL · 3 EV - R';
+                } else if (abbr === 'LA' && curYear === 1864) {
+                  tipInfoOpts.staticText = 'LA · 7 EV - R';
+                } else {
+                  tipInfoOpts.label = abbr;
+                }
+                const tipInfo = createUnitTipInfo(abbr, tipInfoOpts);
+                if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
+              } catch (e) { /* ignore tooltip errors */ }
+            }
+          } catch (e) { console.warn(e); }
+        })
+        .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { console.warn(e); } })
+        .on('mouseout', function () {
+          const sel = d3.select(this);
+          const orig = sel.attr('data-orig-fill') || '#2f2f2f';
+          sel.attr('fill', orig);
+          sel.attr('data-orig-fill', null);
+          try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { console.warn(e); }
+        });
+    } catch (e) { console.warn(e); }
+  }
+
   try {
     window.addEventListener('mapReady', function () {
       try {
@@ -191,59 +249,8 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
         //   updateStateLabels(y);
       } catch (e) { console.warn(e); }
       try {
-        // Rebind hover to use centralized tooltip logic
-        const idToAbbr = ID_TO_ABBR;
-        d3.selectAll('path.state')
-          .on('mouseover', function (evt, d) {
-            const sel = d3.select(this);
-            const cur = sel.attr('fill') || '#2f2f2f';
-            sel.attr('data-orig-fill', cur);
-            try {
-              const isYellow = (cur.toLowerCase && cur.toLowerCase() === '#ffd700');
-              // Use a neutral highlight color to avoid party-color confusion
-              let highlight = '#A0A0A0';
-              sel.attr('fill', highlight);
-            } catch (e) { sel.attr('fill', '#A0A0A0'); }
-            try {
-              // Determine state abbreviation robustly: prefer bound datum, fall back to element id (e.g., 'state-TX')
-              let abbr = null;
-              try {
-                if (d && d.id != null) abbr = idToAbbr[String(d.id).padStart(2, '0')];
-              } catch (e) { /* ignore */ }
-              if (!abbr) {
-                try {
-                  const elId = (this && this.id) ? this.id : (this && this.getAttribute ? this.getAttribute('id') : null);
-                  if (elId && elId.startsWith && elId.startsWith('state-')) abbr = elId.slice('state-'.length);
-                  else if (elId && elId.length === 2) abbr = elId.toUpperCase();
-                } catch (e) { /* ignore */ }
-              }
-              if (abbr) {
-                try {
-                  const curYear = (window._curYear != null) ? window._curYear : (document.getElementById('yearSlider') ? +document.getElementById('yearSlider').value : null);
-                  const tipInfoOpts = {};
-                  if (abbr === 'CO' && curYear === 1876) {
-                    tipInfoOpts.staticText = 'CO · 3 EV - R';
-                  } else if (abbr === 'FL' && curYear === 1868) {
-                    tipInfoOpts.staticText = 'FL · 3 EV - R';
-                  } else if (abbr === 'LA' && curYear === 1864) {
-                    tipInfoOpts.staticText = 'LA · 7 EV - R';
-                  } else {
-                    tipInfoOpts.label = abbr;
-                  }
-                  const tipInfo = createUnitTipInfo(abbr, tipInfoOpts);
-                  if (typeof window.showMapTip === 'function') window.showMapTip(evt, tipInfo.getText(), tipInfo);
-                } catch (e) { /* ignore tooltip errors */ }
-              }
-            } catch (e) { console.warn(e); }
-          })
-          .on('mousemove', function (evt) { try { if (typeof window.moveMapTip === 'function') window.moveMapTip(evt); } catch (e) { console.warn(e); } })
-          .on('mouseout', function () {
-            const sel = d3.select(this);
-            const orig = sel.attr('data-orig-fill') || '#2f2f2f';
-            sel.attr('fill', orig);
-            sel.attr('data-orig-fill', null);
-            try { if (typeof window.hideMapTip === 'function') window.hideMapTip(); } catch (e) { console.warn(e); }
-          });
+        // Attach centralized state hover handlers (defined above)
+        try { attachStateHoverHandlers(); } catch (e) { console.warn(e); }
       } catch (e) { console.warn(e); }
     });
   } catch (e) { console.warn(e); }
@@ -654,6 +661,8 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
         try { d3.select('svg#map').select('g').select('.state-boundaries').raise(); } catch (e) { console.warn(e); }
         // apply initial colors now that district paths exist
         try { updateAll(); } catch (e) { console.warn(e); }
+        // Rebind state hover handlers after districts/state DOM changes so tooltips attach reliably
+        try { attachStateHoverHandlers(); } catch (e) { console.warn(e); }
       } catch (e) {
         console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
       }
