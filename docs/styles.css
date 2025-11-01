@@ -500,6 +500,7 @@ hr {
     border-top: none;
     border-radius: 0 0 12px 12px;
     flex-direction: column;
+    flex-wrap: nowrap;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease, padding 0.3s ease;
@@ -519,6 +520,7 @@ hr {
     width: 100%;
     text-align: left;
     justify-content: flex-start;
+    flex-shrink: 0;
   }
 
   .card.site-header {
