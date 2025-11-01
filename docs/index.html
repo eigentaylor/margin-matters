@@ -74,16 +74,21 @@
               <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span></div>
               <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
             </div>
-            <div style="display:flex;gap:10px;align-items:center">
-              <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
-              <div class="nav-btn-group">
-                <button id="prevStop" class="nav-btn" title="Previous PV stop">◀</button>
+            <div style="display:grid;gap:10px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;width:100%">
+                <span id="pvSliderLabel">PV (Nat. Margin):</span>
               </div>
-              <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
-              <div class="nav-btn-group">
-                <button id="nextStop" class="nav-btn" title="Next PV stop">▶</button>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="nav-btn-group">
+                  <button id="prevStop" class="nav-btn" title="Previous PV stop">◀</button>
+                </div>
+                <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList"
+                  style="flex:1" />
+                <div class="nav-btn-group">
+                  <button id="nextStop" class="nav-btn" title="Next PV stop">▶</button>
+                </div>
+                <span id="pvVal">EVEN</span>
               </div>
-              <span id="pvVal">EVEN</span>
             </div>
             <datalist id="pvStopsList"></datalist>
             <div id="quickButtons" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:8px">
