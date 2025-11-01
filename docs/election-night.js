@@ -1922,10 +1922,42 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     const pvRep = document.getElementById('pvRep');
     const pvOth = document.getElementById('pvOth');
     const pvTot = document.getElementById('pvTot');
+    const pvMargin = document.getElementById('pvMargin');
+    const pvDemPct = document.getElementById('pvDemPct');
+    const pvRepPct = document.getElementById('pvRepPct');
+    const pvOthPct = document.getElementById('pvOthPct');
     if (pvDem) pvDem.textContent = fmt(dVotes);
     if (pvRep) pvRep.textContent = fmt(rVotes);
     if (pvOth) pvOth.textContent = fmt(oVotes);
     if (pvTot) pvTot.textContent = fmt(counted);
+
+    // Add percentages
+    if (counted > 0) {
+      const dPct = (dVotes / counted * 100).toFixed(1);
+      const rPct = (rVotes / counted * 100).toFixed(1);
+      const oPct = (oVotes / counted * 100).toFixed(1);
+      if (pvDemPct) pvDemPct.textContent = `(${dPct}%)`;
+      if (pvRepPct) pvRepPct.textContent = `(${rPct}%)`;
+      if (pvOthPct) pvOthPct.textContent = `(${oPct}%)`;
+    } else {
+      if (pvDemPct) pvDemPct.textContent = '';
+      if (pvRepPct) pvRepPct.textContent = '';
+      if (pvOthPct) pvOthPct.textContent = '';
+    }
+
+    // Add margin
+    if (pvMargin) {
+      const margin = dVotes - rVotes;
+      if (Math.abs(margin) < 0.5) {
+        pvMargin.textContent = 'EVEN';
+      } else if (margin > 0) {
+        const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
+        pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+      } else {
+        const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
+        pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+      }
+    }
 
     const margin = counted > 0 ? ((dVotes - rVotes) / counted) : null;
     const marginStr = margin == null ? '—' : formatLean(margin);

@@ -48,14 +48,18 @@ export function createUpdateAll(deps) {
       evFillR: document.getElementById('evFillR'),
       evText: document.getElementById('evText'),
       pvResetActual: document.getElementById('pvResetActual'),
-  pvTippingBtn: document.getElementById('pvTipping'),
-  pvTie: document.getElementById('pvTie'),
+      pvTippingBtn: document.getElementById('pvTipping'),
+      pvTie: document.getElementById('pvTie'),
       flipEC: document.getElementById('flipEC'),
       closeStates: document.getElementById('closeStates'),
       pvDem: document.getElementById('pvDem'),
       pvRep: document.getElementById('pvRep'),
       pvOth: document.getElementById('pvOth'),
       pvTot: document.getElementById('pvTot'),
+      pvMargin: document.getElementById('pvMargin'),
+      pvDemPct: document.getElementById('pvDemPct'),
+      pvRepPct: document.getElementById('pvRepPct'),
+      pvOthPct: document.getElementById('pvOthPct'),
       relBaseline: document.getElementById('relBaseline'),
       relDeltas: document.getElementById('relDeltas'),
       relDeltasList: document.getElementById('relDeltasList'),
@@ -109,15 +113,15 @@ export function createUpdateAll(deps) {
       const eff = stopToEff.get(stopVal);
       if (eff != null && isFinite(eff) && Math.abs(pv - eff) <= STOP_EPS) {
         const list = stopToUnits.get(stopVal) || [];
-          list.forEach(u => {
-            if (!u || u === 'NATIONAL' || u === 'NAT') return;
-            const s = String(u);
-            if (s.startsWith('PRESET:')) {
-              matches.push(s.replace(/^PRESET:/, ''));
-            } else {
-              matches.push(s.slice(0, 5));
-            }
-          });
+        list.forEach(u => {
+          if (!u || u === 'NATIONAL' || u === 'NAT') return;
+          const s = String(u);
+          if (s.startsWith('PRESET:')) {
+            matches.push(s.replace(/^PRESET:/, ''));
+          } else {
+            matches.push(s.slice(0, 5));
+          }
+        });
       }
     }
     const showNat = ((!(window._futureMode && year > 2024)) && override == null && Math.abs(stopVal - nat) <= STOP_EPS);
@@ -989,10 +993,41 @@ export function createUpdateAll(deps) {
           const natRow = rows.find(rr => rr.unit === 'NATIONAL' || rr.unit === 'NAT');
           if (natRow) {
             const fmt = (x) => isFinite(x) ? Math.round(x).toLocaleString('en-US') : '0';
-            if (refs.pvDem) refs.pvDem.textContent = fmt(+natRow.dVotes || 0);
-            if (refs.pvRep) refs.pvRep.textContent = fmt(+natRow.rVotes || 0);
-            if (refs.pvOth) refs.pvOth.textContent = fmt(+natRow.tVotes || 0);
-            if (refs.pvTot) refs.pvTot.textContent = fmt(+natRow.total || 0);
+            const dVotes = +natRow.dVotes || 0;
+            const rVotes = +natRow.rVotes || 0;
+            const tVotes = +natRow.tVotes || 0;
+            const totalVotes = +natRow.total || 0;
+            if (refs.pvDem) refs.pvDem.textContent = fmt(dVotes);
+            if (refs.pvRep) refs.pvRep.textContent = fmt(rVotes);
+            if (refs.pvOth) refs.pvOth.textContent = fmt(tVotes);
+            if (refs.pvTot) refs.pvTot.textContent = fmt(totalVotes);
+            // Add percentages
+            if (totalVotes > 0) {
+              const dPct = (dVotes / totalVotes * 100).toFixed(1);
+              const rPct = (rVotes / totalVotes * 100).toFixed(1);
+              const tPct = (tVotes / totalVotes * 100).toFixed(1);
+              if (refs.pvDemPct) refs.pvDemPct.textContent = `(${dPct}%)`;
+              if (refs.pvRepPct) refs.pvRepPct.textContent = `(${rPct}%)`;
+              if (refs.pvOthPct) refs.pvOthPct.textContent = `(${tPct}%)`;
+            } else {
+              if (refs.pvDemPct) refs.pvDemPct.textContent = '';
+              if (refs.pvRepPct) refs.pvRepPct.textContent = '';
+              if (refs.pvOthPct) refs.pvOthPct.textContent = '';
+            }
+            // Add margin
+            if (refs.pvMargin) {
+              const margin = dVotes - rVotes;
+              if (Math.abs(margin) < 0.5) {
+                refs.pvMargin.textContent = 'EVEN';
+              } else if (margin > 0) {
+                const pctDiff = totalVotes > 0 ? Math.abs((dVotes / totalVotes - rVotes / totalVotes) * 100).toFixed(1) : '0.0';
+                refs.pvMargin.textContent = 'D+' + fmt(Math.abs(margin));
+                refs.pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+              } else {
+                const pctDiff = totalVotes > 0 ? Math.abs((dVotes / totalVotes - rVotes / totalVotes) * 100).toFixed(1) : '0.0';
+                refs.pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+              }
+            }
             return;
           }
         }
@@ -1023,6 +1058,32 @@ export function createUpdateAll(deps) {
       if (refs.pvRep) refs.pvRep.textContent = fmt(rSum);
       if (refs.pvOth) refs.pvOth.textContent = fmt(tSum);
       if (refs.pvTot) refs.pvTot.textContent = fmt(totSum);
+      // Add percentages
+      if (totSum > 0) {
+        const dPct = (dSum / totSum * 100).toFixed(1);
+        const rPct = (rSum / totSum * 100).toFixed(1);
+        const tPct = (tSum / totSum * 100).toFixed(1);
+        if (refs.pvDemPct) refs.pvDemPct.textContent = `(${dPct}%)`;
+        if (refs.pvRepPct) refs.pvRepPct.textContent = `(${rPct}%)`;
+        if (refs.pvOthPct) refs.pvOthPct.textContent = `(${tPct}%)`;
+      } else {
+        if (refs.pvDemPct) refs.pvDemPct.textContent = '';
+        if (refs.pvRepPct) refs.pvRepPct.textContent = '';
+        if (refs.pvOthPct) refs.pvOthPct.textContent = '';
+      }
+      // Add margin
+      if (refs.pvMargin) {
+        const margin = dSum - rSum;
+        if (Math.abs(margin) < 0.5) {
+          refs.pvMargin.textContent = 'EVEN';
+        } else if (margin > 0) {
+          const pctDiff = totSum > 0 ? Math.abs((dSum / totSum - rSum / totSum) * 100).toFixed(1) : '0.0';
+          refs.pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        } else {
+          const pctDiff = totSum > 0 ? Math.abs((dSum / totSum - rSum / totSum) * 100).toFixed(1) : '0.0';
+          refs.pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        }
+      }
     } catch (e) { /* non-fatal */ }
   }
 
