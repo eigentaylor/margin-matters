@@ -44,7 +44,9 @@ body {
   padding: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial
+  font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 a {
@@ -59,7 +61,10 @@ a:hover {
 .container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 16px
+  padding: 16px;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header {
@@ -79,7 +84,10 @@ a:hover {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 16px
+  padding: 16px;
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .grid {
@@ -508,8 +516,11 @@ hr {
   }
 
   .site-header .small-links.expanded {
-    max-height: 500px;
+    max-height: calc(100vh - 80px);
     padding: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .site-header .small-links .btn {
@@ -549,7 +560,8 @@ hr {
   align-items: stretch;
   justify-content: center;
   margin-top: 10px;
-  flex-wrap: wrap
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .pv-badge {
@@ -762,6 +774,138 @@ hr {
 
   .slider-control-row .slider-wrapper {
     min-width: 150px;
+  }
+
+  /* Fix PV totals overflow on mobile */
+  .pv-totals {
+    gap: 6px;
+  }
+
+  .pv-badge {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 140px;
+    padding: 6px 8px;
+  }
+
+  .pv-badge .num {
+    min-width: 7ch;
+    font-size: 0.9rem;
+  }
+
+  /* Fix special notes overflow */
+  #candidateInfo {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  #candidateNames,
+  #specialNotes {
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  /* Fix PV slider row to prevent overflow */
+  #pvSlider {
+    min-width: 100px !important;
+    flex: 1 1 auto !important;
+  }
+
+  #pvVal {
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
+
+  /* Fix quick buttons to wrap properly */
+  #quickButtons {
+    justify-content: center;
+  }
+
+  #quickButtons .btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 120px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Ensure flip controls wrap properly */
+  .flip-controls {
+    gap: 6px;
+  }
+
+  .flip-controls .btn {
+    flex: 1 1 calc(50% - 3px);
+    min-width: 110px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Fix slider wrappers to prevent overflow */
+  .slider-wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .slider-wrapper input[type="range"] {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  /* Fix PV tools card overflow */
+  .pv-tools {
+    overflow-x: hidden;
+  }
+
+  .pv-tools > div {
+    flex-wrap: wrap;
+  }
+
+  .pv-tools input[type="text"],
+  .pv-tools select {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Ensure all flex containers within cards respect viewport width */
+  .card > div {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Fix any remaining overflow issues */
+  * {
+    max-width: 100%;
+  }
+
+  input[type="range"] {
+    max-width: 100%;
+  }
+}
+
+/* Additional mobile fixes for very small screens */
+@media (max-width: 480px) {
+  .pv-badge {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .pv-badge .num {
+    min-width: 6ch;
+  }
+
+  #quickButtons .btn,
+  .flip-controls .btn {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .slider-control-row label {
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
+  .slider-control-row .slider-wrapper {
+    flex: 1 1 100%;
+    width: 100%;
   }
 }
 
