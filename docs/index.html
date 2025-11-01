@@ -48,11 +48,18 @@
       </div>
       <hr style="margin:12px 0" />
       <div id="tester" class="center" style="margin-top:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <label for="yearSlider" style="flex:0 0 auto;min-width:48px">Year:</label>
-          <input id="yearSlider" type="range" min="1864" max="2024" step="4" value="2024"
-            style="flex:1;min-width:120px;" />
-          <span id="yearVal" style="margin-left:8px;flex:0 0 auto">2024</span>
+        <div class="slider-control-row">
+          <label for="yearSlider">Year:</label>
+          <div class="slider-wrapper">
+            <div class="nav-btn-group">
+              <button id="prevYear" class="nav-btn" title="Previous election year">◀</button>
+            </div>
+            <input id="yearSlider" type="range" min="1864" max="2024" step="4" value="2024" />
+            <span id="yearVal" class="slider-value">2024</span>
+            <div class="nav-btn-group">
+              <button id="nextYear" class="nav-btn" title="Next election year">▶</button>
+            </div>
+          </div>
         </div>
         <div style="display:grid;gap:10px">
           <div id="candidateInfo"
@@ -69,7 +76,13 @@
             </div>
             <div style="display:flex;gap:10px;align-items:center">
               <label for="pvSlider" style="min-width:150px">PV (Nat. Margin):</label>
+              <div class="nav-btn-group">
+                <button id="prevStop" class="nav-btn" title="Previous PV stop">◀</button>
+              </div>
               <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" list="pvStopsList" style="flex:1" />
+              <div class="nav-btn-group">
+                <button id="nextStop" class="nav-btn" title="Next PV stop">▶</button>
+              </div>
               <span id="pvVal">EVEN</span>
             </div>
             <datalist id="pvStopsList"></datalist>
@@ -220,6 +233,127 @@
     <script src="./pv-presets.js"></script>
     <script type="module" src="tester.js"></script>
     <script type="module" src="election-night.js"></script>
+    <script>
+      // Navigation button handlers
+      (function () {
+        document.addEventListener('DOMContentLoaded', () => {
+          const yearSlider = document.getElementById('yearSlider');
+          const pvSlider = document.getElementById('pvSlider');
+          const prevYear = document.getElementById('prevYear');
+          const nextYear = document.getElementById('nextYear');
+          const prevStop = document.getElementById('prevStop');
+          const nextStop = document.getElementById('nextStop');
+
+          function updateYearButtons() {
+            if (!yearSlider || !prevYear || !nextYear) return;
+            const val = parseInt(yearSlider.value);
+            const min = parseInt(yearSlider.min);
+            const max = parseInt(yearSlider.max);
+            //console.log({ val, min, max, yearSliderValue: yearSlider.value });
+            prevYear.disabled = (val <= min);
+            nextYear.disabled = (val >= max);
+            //console.log({ prevYear: prevYear.disabled, nextYear: nextYear.disabled, val, max, comparison: val >= max });
+          }
+
+          function updateStopButtons() {
+            if (!pvSlider || !prevStop || !nextStop) return;
+            const val = parseInt(pvSlider.value);
+            const min = parseInt(pvSlider.min);
+            const max = parseInt(pvSlider.max);
+            prevStop.disabled = (val <= min);
+            nextStop.disabled = (val >= max);
+          }
+
+          function changeYear(delta) {
+            if (!yearSlider) return;
+            const step = parseInt(yearSlider.step) || 4;
+            const newVal = parseInt(yearSlider.value) + (delta * step);
+            const min = parseInt(yearSlider.min);
+            const max = parseInt(yearSlider.max);
+            if (newVal >= min && newVal <= max) {
+              yearSlider.value = newVal;
+              yearSlider.dispatchEvent(new Event('input', { bubbles: true }));
+              updateYearButtons();
+            }
+          }
+
+          function changeStop(delta) {
+            if (!pvSlider) return;
+            const newVal = parseInt(pvSlider.value) + delta;
+            const min = parseInt(pvSlider.min);
+            const max = parseInt(pvSlider.max);
+            if (newVal >= min && newVal <= max) {
+              pvSlider.value = newVal;
+              pvSlider.dispatchEvent(new Event('input', { bubbles: true }));
+              updateStopButtons();
+            }
+          }
+
+          if (prevYear) {
+            prevYear.addEventListener('click', () => changeYear(-1));
+          }
+
+          if (nextYear) {
+            nextYear.addEventListener('click', () => changeYear(1));
+          }
+
+          if (prevStop) {
+            prevStop.addEventListener('click', () => changeStop(-1));
+          }
+
+          if (nextStop) {
+            nextStop.addEventListener('click', () => changeStop(1));
+          }
+
+          // Keyboard shortcuts: Ctrl+Left/Right for year, Shift+Left/Right for stops
+          document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'ArrowLeft') {
+              e.preventDefault();
+              changeYear(-1);
+            } else if (e.ctrlKey && e.key === 'ArrowRight') {
+              e.preventDefault();
+              changeYear(1);
+            } else if (e.shiftKey && e.key === 'ArrowLeft') {
+              e.preventDefault();
+              changeStop(-1);
+            } else if (e.shiftKey && e.key === 'ArrowRight') {
+              e.preventDefault();
+              changeStop(1);
+            }
+          });
+
+          // Update button states on slider changes
+          if (yearSlider) {
+            yearSlider.addEventListener('input', updateYearButtons);
+            // Don't call updateYearButtons() here - wait for URL params to load
+          }
+
+          if (pvSlider) {
+            pvSlider.addEventListener('input', updateStopButtons);
+            // Don't call updateStopButtons() here - wait for URL params to load
+          }
+
+          // Update button states after tester.js loads URL params and initializes
+          window.addEventListener('mapReady', () => {
+            // Defer slightly to ensure tester.js init completes
+            setTimeout(() => {
+              updateYearButtons();
+              updateStopButtons();
+            }, 50);
+          });
+
+          // Also update when sliders change (after user interaction or programmatic updates)
+          if (yearSlider) {
+            const observer = new MutationObserver(updateYearButtons);
+            observer.observe(yearSlider, { attributes: true, attributeFilter: ['value'] });
+          }
+          if (pvSlider) {
+            const observer = new MutationObserver(updateStopButtons);
+            observer.observe(pvSlider, { attributes: true, attributeFilter: ['value'] });
+          }
+        });
+      })();
+    </script>
     <script>
       // Lightweight PV tools wiring (reuses tester.js globals where possible)
       (function () {
