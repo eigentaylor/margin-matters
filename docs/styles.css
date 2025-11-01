@@ -592,17 +592,17 @@ hr {
     min-width: 0;
     flex: 1 1 calc(50% - 5px);
   }
-  
+
   .pv-badge .label {
     font-size: 0.8rem;
     letter-spacing: 0.4px;
   }
-  
+
   .pv-badge .num {
     min-width: 6ch;
     font-size: 0.95rem;
   }
-  
+
   .pv-totals {
     gap: 6px;
   }
@@ -793,12 +793,12 @@ hr {
     min-width: 0;
     flex: 1 1 100%;
   }
-  
+
   .slider-control-row label {
     min-width: auto;
     flex: 0 0 auto;
   }
-  
+
   #pvVal {
     min-width: 100px;
     font-size: 0.9rem;
@@ -2496,23 +2496,24 @@ body.shift-vectors-page {
 
 /* Mobile-specific fixes for overflow issues on index.html and future.html */
 @media (max-width: 640px) {
+
   /* Prevent body and container from overflowing */
   body {
     overflow-x: hidden;
   }
-  
+
   .container {
     max-width: 100%;
     overflow-x: hidden;
   }
-  
+
   /* candidateInfo and specialNotes: ensure proper wrapping */
   #candidateInfo {
     flex-direction: column !important;
     gap: 8px !important;
     align-items: flex-start !important;
   }
-  
+
   #candidateNames,
   #specialNotes {
     flex: 1 1 100% !important;
@@ -2521,7 +2522,7 @@ body.shift-vectors-page {
     overflow-wrap: break-word;
     max-width: 100%;
   }
-  
+
   /* Quick buttons: ensure they wrap properly */
   #quickButtons {
     display: flex !important;
@@ -2529,7 +2530,7 @@ body.shift-vectors-page {
     gap: 6px !important;
     width: 100%;
   }
-  
+
   #quickButtons .btn {
     flex: 1 1 calc(50% - 3px);
     min-width: 0;
@@ -2537,25 +2538,25 @@ body.shift-vectors-page {
     font-size: 0.9rem;
     white-space: nowrap;
   }
-  
+
   /* PV slider container: prevent overflow */
   #pvSlider {
     max-width: 100%;
     min-width: 0;
   }
-  
+
   /* Flip controls: ensure proper wrapping */
   .flip-controls {
     gap: 6px !important;
   }
-  
+
   .flip-controls .btn {
     flex: 1 1 calc(50% - 3px);
     min-width: 0;
     padding: 8px 10px;
     font-size: 0.9rem;
   }
-  
+
   /* PV tools: ensure inputs don't overflow */
   .pv-tools input[type="text"],
   .pv-tools select {
@@ -2563,29 +2564,29 @@ body.shift-vectors-page {
     width: 100%;
     box-sizing: border-box;
   }
-  
-  .pv-tools > div {
+
+  .pv-tools>div {
     flex-direction: column !important;
     gap: 8px !important;
   }
-  
-  .pv-tools > div > div {
+
+  .pv-tools>div>div {
     width: 100%;
   }
-  
+
   /* Card padding: reduce on very small screens */
   .card {
     padding: 12px;
   }
-  
+
   /* Ensure all flex containers respect viewport width */
   * {
     max-width: 100%;
   }
-  
+
   /* Allow specific elements to exceed but contain content */
-  #tester > div,
-  #tester > div > div {
+  #tester>div,
+  #tester>div>div {
     max-width: 100%;
     overflow-x: hidden;
   }
