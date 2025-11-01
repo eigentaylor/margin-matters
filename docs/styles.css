@@ -15,10 +15,24 @@
   --region-purple: #8b5cf6;
 }
 
-.shift-vectors .legend-block { display: block; }
-.shift-vectors .legend-section { margin-bottom: 6px; }
-.shift-vectors .badges.small .badge { font-size: 0.86em; padding: 6px 8px; }
-.shift-vectors .legend-note { font-size: 0.9em; color: rgba(255,255,255,0.72); margin-top:6px; }
+.shift-vectors .legend-block {
+  display: block;
+}
+
+.shift-vectors .legend-section {
+  margin-bottom: 6px;
+}
+
+.shift-vectors .badges.small .badge {
+  font-size: 0.86em;
+  padding: 6px 8px;
+}
+
+.shift-vectors .legend-note {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 6px;
+}
 
 * {
   box-sizing: border-box
@@ -184,8 +198,10 @@ img.plot {
   max-height: none;
   overflow: visible;
 }
+
 /* Mobile: avoid tables expanding the page horizontally. Make table scroll inside the card. */
 @media (max-width: 640px) {
+
   /* Ensure the outer container can scroll horizontally without breaking the viewport */
   .pv-tools .table-wrap {
     overflow-x: auto;
@@ -194,7 +210,8 @@ img.plot {
 
   /* Make the table layout more compact on small screens */
   .pv-tools .table-wrap table {
-    min-width: 600px; /* allow internal scrolling while keeping readable columns */
+    min-width: 600px;
+    /* allow internal scrolling while keeping readable columns */
     font-size: 14px;
   }
 
@@ -202,7 +219,10 @@ img.plot {
   .pv-tools .controls .field {
     padding: 6px 0;
   }
-  .pv-tools .controls label { font-size: 0.92rem; }
+
+  .pv-tools .controls label {
+    font-size: 0.92rem;
+  }
 
   /* Make table cells wrap where sensible and keep nowrap cells from forcing width */
   .pv-tools .table-wrap table td,
@@ -212,7 +232,10 @@ img.plot {
   }
 
   /* Allow the rank and abbr columns to stay visible but keep them compact */
-  .pv-tools .table-wrap table td.rank { width: 36px; text-align: center; }
+  .pv-tools .table-wrap table td.rank {
+    width: 36px;
+    text-align: center;
+  }
 
   /* Actions row: wrap buttons to avoid overflow */
   .pv-tools .actions {
@@ -223,7 +246,10 @@ img.plot {
   }
 
   /* Ensure status text can break to next line */
-  .pv-tools .actions .summary { flex: 1 1 100%; min-width: 0; }
+  .pv-tools .actions .summary {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
 }
 
 table {
@@ -725,18 +751,116 @@ hr {
     padding: 2px 6px;
     font-size: 0.8rem;
   }
-  
+
   .nav-btn-group {
     gap: 2px;
   }
-  
+
   .slider-control-row {
     gap: 6px;
   }
-  
+
   .slider-control-row .slider-wrapper {
     min-width: 150px;
   }
+}
+
+/* Styling for year and PV sliders on index.html and future.html
+   Use visuals consistent with the `.slider-thumb` element used on
+   dual-range controls so the native thumbs match the custom thumbs. */
+#yearSlider,
+#pvSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+#yearSlider::-webkit-slider-thumb,
+#pvSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  margin-top: -6px;
+  /* helps vertically center over track */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  z-index: 3;
+  cursor: grab;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+#yearSlider::-webkit-slider-thumb:hover,
+#pvSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+#yearSlider::-webkit-slider-thumb:active,
+#pvSlider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+#yearSlider::-moz-range-thumb,
+#pvSlider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #444;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+#yearSlider::-moz-range-thumb:hover,
+#pvSlider::-moz-range-thumb:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+#yearSlider::-moz-range-thumb:active,
+#pvSlider::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+#yearSlider:focus::-webkit-slider-thumb,
+#pvSlider:focus::-webkit-slider-thumb {
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 6px rgba(102, 179, 255, 0.2);
+}
+
+#yearSlider:focus::-moz-range-thumb,
+#pvSlider:focus::-moz-range-thumb {
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 0 6px rgba(102, 179, 255, 0.2);
+}
+
+#yearSlider:focus,
+#pvSlider:focus {
+  outline: none;
+}
+
+/* Improve slider track appearance */
+#yearSlider::-webkit-slider-runnable-track,
+#pvSlider::-webkit-slider-runnable-track {
+  height: 8px;
+  background: linear-gradient(90deg, rgba(102, 179, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+#yearSlider::-moz-range-track,
+#pvSlider::-moz-range-track {
+  height: 8px;
+  background: linear-gradient(90deg, rgba(102, 179, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border-radius: 6px;
+  border: 1px solid var(--border);
 }
 
 /* Map layout: full-width map, any overlays drawn inside SVG */
@@ -1009,7 +1133,7 @@ body.has-prop-ev-toggle {
 
 .pv-tools input[type="range"]::-webkit-slider-runnable-track {
   height: 10px;
-  background: linear-gradient(90deg, rgba(102,179,255,0.12), rgba(255,255,255,0.04));
+  background: linear-gradient(90deg, rgba(102, 179, 255, 0.12), rgba(255, 255, 255, 0.04));
   border-radius: 8px;
   border: 1px solid var(--border);
 }
@@ -1021,13 +1145,14 @@ body.has-prop-ev-toggle {
   border-radius: 50%;
   background: #fff;
   border: 2px solid #444;
-  margin-top: -4px; /* center thumb over track */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  margin-top: -4px;
+  /* center thumb over track */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .pv-tools input[type="range"]::-moz-range-track {
   height: 10px;
-  background: linear-gradient(90deg, rgba(102,179,255,0.12), rgba(255,255,255,0.04));
+  background: linear-gradient(90deg, rgba(102, 179, 255, 0.12), rgba(255, 255, 255, 0.04));
   border-radius: 8px;
   border: 1px solid var(--border);
 }
@@ -1038,7 +1163,7 @@ body.has-prop-ev-toggle {
   border-radius: 50%;
   background: #fff;
   border: 2px solid #444;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .pv-tools input[type="range"]:focus {
@@ -1046,7 +1171,7 @@ body.has-prop-ev-toggle {
 }
 
 .pv-tools input[type="range"]:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 8px rgba(102,179,255,0.08);
+  box-shadow: 0 0 0 8px rgba(102, 179, 255, 0.08);
 }
 
 .pv-tools .muted {
@@ -1084,7 +1209,8 @@ body.has-prop-ev-toggle {
   background: #0f0f0f;
   border: 1px solid var(--border);
   border-radius: 6px;
-  pointer-events: none; /* important: track should not catch clicks */
+  pointer-events: none;
+  /* important: track should not catch clicks */
 }
 
 .dual-range-slider .slider-range {
@@ -1096,7 +1222,8 @@ body.has-prop-ev-toggle {
   border-radius: 6px;
   left: 0;
   width: 0;
-  pointer-events: none; /* important: decorative only */
+  pointer-events: none;
+  /* important: decorative only */
   z-index: 1;
 }
 
@@ -1111,28 +1238,47 @@ body.has-prop-ev-toggle {
 }
 
 /* Put max on top by default so right-side clicks hit the max thumb */
-.slider-input--min { z-index: 2; }
-.slider-input--max { z-index: 3; }
+.slider-input--min {
+  z-index: 2;
+}
+
+.slider-input--max {
+  z-index: 3;
+}
 
 .dual-range-slider .slider-input::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px; height: 14px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #fff;
   border: 2px solid #222;
 }
 
 .dual-range-slider .slider-input::-moz-range-thumb {
-  width: 14px; height: 14px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #fff;
   border: 2px solid #222;
 }
 
 /* Hide native thumbs but keep inputs for value/storage; we'll use custom thumbs */
-.dual-range-slider .slider-input::-webkit-slider-thumb { opacity: 0; width: 0; height: 0; }
-.dual-range-slider .slider-input::-moz-range-thumb { opacity: 0; width: 0; height: 0; }
-.dual-range-slider .slider-input { pointer-events: none; }
+.dual-range-slider .slider-input::-webkit-slider-thumb {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.dual-range-slider .slider-input::-moz-range-thumb {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.dual-range-slider .slider-input {
+  pointer-events: none;
+}
 
 /* Custom thumb visuals */
 .slider-thumb {
@@ -1144,13 +1290,22 @@ body.has-prop-ev-toggle {
   border-radius: 50%;
   background: #fff;
   border: 2px solid #444;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   z-index: 10;
   cursor: grab;
 }
-.slider-thumb:active { cursor: grabbing; }
-.slider-thumb.thumb-start { background: linear-gradient(180deg,#fff,#e6f7ff); }
-.slider-thumb.thumb-end { background: linear-gradient(180deg,#fff,#ffe6f0); }
+
+.slider-thumb:active {
+  cursor: grabbing;
+}
+
+.slider-thumb.thumb-start {
+  background: linear-gradient(180deg, #fff, #e6f7ff);
+}
+
+.slider-thumb.thumb-end {
+  background: linear-gradient(180deg, #fff, #ffe6f0);
+}
 
 /* While a slider thumb is being dragged we add a body class (`slider-dragging`).
    Force a grabbing cursor for the whole document during that interaction to
@@ -1829,68 +1984,308 @@ body.shift-vectors-page {
   margin-bottom: 12px;
 }
 
-.shift-vectors .legend { color: var(--muted); }
-.shift-vectors .page-title { display:flex; flex-direction:column; gap:6px }
-.shift-vectors .page-title h1 { font-size:1.65rem; margin:0 }
-.shift-vectors .controls { display:grid; gap:16px }
-@media (min-width:720px) { .shift-vectors .controls { grid-template-columns: repeat(2, minmax(0,1fr)); align-items:end } }
-@media (min-width:1024px) { .shift-vectors .controls { grid-template-columns: repeat(3, minmax(0,1fr)) } }
+.shift-vectors .legend {
+  color: var(--muted);
+}
+
+.shift-vectors .page-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+.shift-vectors .page-title h1 {
+  font-size: 1.65rem;
+  margin: 0
+}
+
+.shift-vectors .controls {
+  display: grid;
+  gap: 16px
+}
+
+@media (min-width:720px) {
+  .shift-vectors .controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end
+  }
+}
+
+@media (min-width:1024px) {
+  .shift-vectors .controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+  }
+}
 
 /* Mobile-first: stack chart above controls and table for small screens */
 @media (max-width: 720px) {
-  .shift-vectors .chart-card { order: 0; }
-  .shift-vectors .controls { order: 1; }
-  .shift-vectors .data-panel { order: 2; }
-  .shift-vectors .card { padding: 12px }
+  .shift-vectors .chart-card {
+    order: 0;
+  }
+
+  .shift-vectors .controls {
+    order: 1;
+  }
+
+  .shift-vectors .data-panel {
+    order: 2;
+  }
+
+  .shift-vectors .card {
+    padding: 12px
+  }
+
   /* larger touch targets */
-  .shift-vectors .toggle-row label, .shift-vectors .badge, .shift-vectors .btn { padding: 10px 12px }
-  .shift-vectors .chart-card { min-height: 360px }
+  .shift-vectors .toggle-row label,
+  .shift-vectors .badge,
+  .shift-vectors .btn {
+    padding: 10px 12px
+  }
+
+  .shift-vectors .chart-card {
+    min-height: 360px
+  }
 }
 
 /* Data panel styles */
-.shift-vectors .data-panel .btn { min-width: 120px }
-.shift-vectors #dataPanel { transition: max-height 0.28s ease, opacity 0.2s ease }
-.shift-vectors .shift-data-table th, .shift-vectors .shift-data-table td { font-size: 0.92rem; padding: 8px 10px }
-.shift-vectors .shift-data-table thead th.sortable { cursor: pointer }
-.shift-vectors .shift-data-table thead th.sorted-asc::after, .shift-vectors .shift-data-table thead th.sorted-desc::after { margin-left: 6px; opacity: 0.85 }
+.shift-vectors .data-panel .btn {
+  min-width: 120px
+}
+
+.shift-vectors #dataPanel {
+  transition: max-height 0.28s ease, opacity 0.2s ease
+}
+
+.shift-vectors .shift-data-table th,
+.shift-vectors .shift-data-table td {
+  font-size: 0.92rem;
+  padding: 8px 10px
+}
+
+.shift-vectors .shift-data-table thead th.sortable {
+  cursor: pointer
+}
+
+.shift-vectors .shift-data-table thead th.sorted-asc::after,
+.shift-vectors .shift-data-table thead th.sorted-desc::after {
+  margin-left: 6px;
+  opacity: 0.85
+}
 
 /* Make table rows easier to tap on mobile */
-.shift-vectors .shift-data-table tbody tr { touch-action: manipulation }
-.shift-vectors .shift-data-table tbody tr td { padding: 12px 10px }
+.shift-vectors .shift-data-table tbody tr {
+  touch-action: manipulation
+}
+
+.shift-vectors .shift-data-table tbody tr td {
+  padding: 12px 10px
+}
 
 /* small screens: let table take full width and allow scrolling horizontally */
 @media (max-width: 520px) {
-  .shift-vectors .table-wrap { overflow-x: auto }
-  .shift-vectors .shift-data-table th, .shift-vectors .shift-data-table td { white-space: nowrap }
+  .shift-vectors .table-wrap {
+    overflow-x: auto
+  }
+
+  .shift-vectors .shift-data-table th,
+  .shift-vectors .shift-data-table td {
+    white-space: nowrap
+  }
 }
-.shift-vectors .field { display:flex; flex-direction:column; gap:8px }
-.shift-vectors .field label { font-size:0.9rem; color:var(--muted) }
-.shift-vectors .slider-row { display:flex; align-items:center; gap:12px }
-.shift-vectors .toggle-row { display:flex; gap:16px; flex-wrap:wrap; align-items:center }
-.shift-vectors .toggle-row label { display:inline-flex; gap:8px; align-items:center; font-size:0.92rem; color:var(--muted); cursor:pointer }
-.shift-vectors .metrics { display:flex; gap:18px; flex-wrap:wrap; font-size:0.9rem; color:var(--muted) }
-.shift-vectors .chart-card { position:relative; overflow:hidden }
-.shift-vectors #vectorChart { width:100%; height:100%; min-height:420px; display:block }
-.shift-vectors .empty-state { display:none; text-align:center; font-size:1rem; padding:24px 0; color:var(--muted) }
-.shift-vectors .tooltip { position:fixed; pointer-events:none; background:rgba(17,17,17,0.95); border:1px solid var(--border); padding:8px 10px; border-radius:8px; color:var(--fg); font-size:0.92rem; line-height:1.4; opacity:0; transform:translateY(-6px); transition:opacity 0.1s ease, transform 0.1s ease; box-shadow:0 8px 16px rgba(0,0,0,0.45); z-index:20; max-width:42ch; max-width:420px; white-space:normal; word-wrap:break-word; overflow-wrap:break-word; }
-.shift-vectors .tooltip.visible { opacity:1; transform:translateY(0) }
-.shift-vectors .tooltip-note { margin-top:6px; font-size:0.82rem; color:var(--muted) }
-.shift-vectors .tooltip .arrow { font-weight:700; margin-right:6px }
-.shift-vectors .tooltip .pct { color: rgba(255,255,255,0.78); font-weight:600 }
-.shift-vectors .chart-note { margin-top:10px; font-size:0.9rem; color:var(--muted) }
-.shift-vectors .loading { font-size:0.95rem; color:var(--muted) }
-.shift-vectors .axis text { fill:var(--muted); font-size:0.75rem }
-.shift-vectors .axis path, .shift-vectors .axis line { stroke:var(--plot-grid) }
-.shift-vectors .axis-label { fill:var(--muted); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em }
-.shift-vectors .zero-line { stroke:var(--plot-zero); stroke-width:1.4; stroke-dasharray:4 4 }
-.shift-vectors .unit-circle { fill:var(--plot-circle); stroke:var(--plot-circle-stroke); stroke-width:1.2 }
-.shift-vectors .point { stroke:rgba(11,11,11,0.85); stroke-width:1; cursor:pointer }
-.shift-vectors .point:hover, .shift-vectors .point.active { stroke-width:2; stroke:#fff }
-.shift-vectors .badge { display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:999px; padding:4px 10px }
-.shift-vectors .badge .swatch { width:10px; height:10px; border-radius:3px }
-.shift-vectors .badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; color:var(--muted) }
-.shift-vectors .status-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; font-size:0.9rem; color:var(--muted) }
-.shift-vectors input[type="range"] { accent-color: var(--accent) }
+
+.shift-vectors .field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px
+}
+
+.shift-vectors .field label {
+  font-size: 0.9rem;
+  color: var(--muted)
+}
+
+.shift-vectors .slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px
+}
+
+.shift-vectors .toggle-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center
+}
+
+.shift-vectors .toggle-row label {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.92rem;
+  color: var(--muted);
+  cursor: pointer
+}
+
+.shift-vectors .metrics {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: var(--muted)
+}
+
+.shift-vectors .chart-card {
+  position: relative;
+  overflow: hidden
+}
+
+.shift-vectors #vectorChart {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  display: block
+}
+
+.shift-vectors .empty-state {
+  display: none;
+  text-align: center;
+  font-size: 1rem;
+  padding: 24px 0;
+  color: var(--muted)
+}
+
+.shift-vectors .tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(17, 17, 17, 0.95);
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--fg);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.45);
+  z-index: 20;
+  max-width: 42ch;
+  max-width: 420px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.shift-vectors .tooltip.visible {
+  opacity: 1;
+  transform: translateY(0)
+}
+
+.shift-vectors .tooltip-note {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--muted)
+}
+
+.shift-vectors .tooltip .arrow {
+  font-weight: 700;
+  margin-right: 6px
+}
+
+.shift-vectors .tooltip .pct {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600
+}
+
+.shift-vectors .chart-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--muted)
+}
+
+.shift-vectors .loading {
+  font-size: 0.95rem;
+  color: var(--muted)
+}
+
+.shift-vectors .axis text {
+  fill: var(--muted);
+  font-size: 0.75rem
+}
+
+.shift-vectors .axis path,
+.shift-vectors .axis line {
+  stroke: var(--plot-grid)
+}
+
+.shift-vectors .axis-label {
+  fill: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em
+}
+
+.shift-vectors .zero-line {
+  stroke: var(--plot-zero);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 4
+}
+
+.shift-vectors .unit-circle {
+  fill: var(--plot-circle);
+  stroke: var(--plot-circle-stroke);
+  stroke-width: 1.2
+}
+
+.shift-vectors .point {
+  stroke: rgba(11, 11, 11, 0.85);
+  stroke-width: 1;
+  cursor: pointer
+}
+
+.shift-vectors .point:hover,
+.shift-vectors .point.active {
+  stroke-width: 2;
+  stroke: #fff
+}
+
+.shift-vectors .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px
+}
+
+.shift-vectors .badge .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px
+}
+
+.shift-vectors .badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--muted)
+}
+
+.shift-vectors .status-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--muted)
+}
+
+.shift-vectors input[type="range"] {
+  accent-color: var(--accent)
+}
 
 /* Make the Year slider span the full width of the controls area and expand */
 .shift-vectors .controls .field:first-child {
@@ -1900,11 +2295,13 @@ body.shift-vectors-page {
   align-items: center;
   gap: 12px;
 }
+
 .shift-vectors .controls .field:first-child .slider-row {
   flex: 1 1 0;
   min-width: 0;
   display: flex;
 }
+
 .shift-vectors #yearSlider {
   width: 100%;
   flex: 1 1 0;
@@ -1912,24 +2309,41 @@ body.shift-vectors-page {
 }
 
 /* stronger explicit rules for the year-field wrapper to avoid selector timing issues */
-.shift-vectors .year-field { grid-column: 1 / -1; display:flex; align-items:center; gap:12px }
-.shift-vectors .year-field .slider-row { flex:1 1 0; min-width:0; display:flex; align-items:center }
-.shift-vectors .year-field .badge { margin-left: 12px }
+.shift-vectors .year-field {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px
+}
+
+.shift-vectors .year-field .slider-row {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center
+}
+
+.shift-vectors .year-field .badge {
+  margin-left: 12px
+}
 
 /* Make the year slider visually larger: taller track and larger thumb */
 .shift-vectors #yearSlider {
   -webkit-appearance: none;
   appearance: none;
-  height: 28px; /* overall control height */
-  background: transparent; /* track drawn via pseudo-elements */
+  height: 28px;
+  /* overall control height */
+  background: transparent;
+  /* track drawn via pseudo-elements */
 }
 
 .shift-vectors #yearSlider::-webkit-slider-runnable-track {
   height: 10px;
-  background: linear-gradient(90deg, rgba(102,179,255,0.2), rgba(255,255,255,0.06));
+  background: linear-gradient(90deg, rgba(102, 179, 255, 0.2), rgba(255, 255, 255, 0.06));
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .shift-vectors #yearSlider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 20px;
@@ -1937,72 +2351,105 @@ body.shift-vectors-page {
   border-radius: 50%;
   background: #fff;
   border: 2px solid #444;
-  margin-top: -5px; /* center thumb over track */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  margin-top: -5px;
+  /* center thumb over track */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .shift-vectors #yearSlider::-moz-range-track {
   height: 10px;
-  background: linear-gradient(90deg, rgba(102,179,255,0.2), rgba(255,255,255,0.06));
+  background: linear-gradient(90deg, rgba(102, 179, 255, 0.2), rgba(255, 255, 255, 0.06));
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .shift-vectors #yearSlider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background: #fff;
   border: 2px solid #444;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Focus styles for accessibility */
 .shift-vectors #yearSlider:focus {
   outline: none;
 }
+
 .shift-vectors #yearSlider:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 6px rgba(102,179,255,0.12);
+  box-shadow: 0 0 0 6px rgba(102, 179, 255, 0.12);
 }
 
 /* small label styling for the SVG label groups */
-.shift-vectors .labels .lbl { font-size:11px; fill:#fff; pointer-events:none }
-.shift-vectors .labels .box { fill: rgba(0,0,0,0.6); stroke: rgba(255,255,255,0.06); rx:6; ry:6 }
-.shift-vectors .labels .leader { stroke: rgba(255,255,255,0.6); stroke-width:1; opacity:0.85 }
+.shift-vectors .labels .lbl {
+  font-size: 11px;
+  fill: #fff;
+  pointer-events: none
+}
+
+.shift-vectors .labels .box {
+  fill: rgba(0, 0, 0, 0.6);
+  stroke: rgba(255, 255, 255, 0.06);
+  rx: 6;
+  ry: 6
+}
+
+.shift-vectors .labels .leader {
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 1;
+  opacity: 0.85
+}
 
 /* allow label group to receive pointer events so hover handlers can trigger tooltips;
    keep individual decorative children non-interactive so they don't block other elements */
-.shift-vectors .labels .label { pointer-events: auto; }
-.shift-vectors .labels .box { pointer-events: auto; }
+.shift-vectors .labels .label {
+  pointer-events: auto;
+}
+
+.shift-vectors .labels .box {
+  pointer-events: auto;
+}
+
 .shift-vectors .labels .lbl,
-.shift-vectors .labels .leader { pointer-events: none; }
+.shift-vectors .labels .leader {
+  pointer-events: none;
+}
 
 /* end shift-vectors specific styles */
 
 /* Histogram bar styles (used by docs/histograms.js) */
 .bar {
-  stroke: rgba(255,255,255,0.06);
+  stroke: rgba(255, 255, 255, 0.06);
   stroke-width: 1px;
   transition: opacity 0.12s ease, transform 0.12s ease;
 }
+
 .bar-positive {
-  fill: #4169E1; /* blue */
+  fill: #4169E1;
+  /* blue */
 }
+
 .bar-negative {
-  fill: #B22222; /* red */
+  fill: #B22222;
+  /* red */
 }
+
 .bar-neutral {
-  fill: #888888; /* gray */
+  fill: #888888;
+  /* gray */
 }
+
 .bar:hover,
 .bar:focus {
   opacity: 0.85;
   transform: translateY(-2px);
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
 }
 
 /* Make sure the tooltip contents remain readable over dark background */
 .tooltip {
-  background: rgba(17,17,17,0.95);
+  background: rgba(17, 17, 17, 0.95);
   color: var(--fg);
   border: 1px solid var(--border);
 }
