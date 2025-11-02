@@ -597,6 +597,9 @@ hr {
     gap: 6px;
     min-width: 0;
     flex: 1 1 calc(50% - 5px);
+    /* Stack label/number/delta vertically on small screens so values don't overlap */
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .pv-badge .label {
@@ -605,8 +608,18 @@ hr {
   }
 
   .pv-badge .num {
-    min-width: 6ch;
+    /* allow numeric value to shrink and align left when stacked */
+    min-width: 0;
     font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .pv-badge .delta {
+    /* allow percent/delta to wrap and sit on its own line under the number */
+    white-space: normal;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 0.85rem;
   }
 
   .pv-totals {
