@@ -281,7 +281,15 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         winner_votes = r['winner_votes']
         runner_votes = party_votes.get(runner_party, 0)
         margin_to_runner = winner_votes - runner_votes
+        # Base votes needed to overtake the current winner in this unit
         votes_to_runner = max(0, margin_to_runner // 2 + 1)
+        # Quick-fix: ensure the runner will exceed any other party (including third-party)
+        # after the transfer. Compute the highest competing party votes (any party
+        # other than the runner) and require runner final votes > that value.
+        highest_T_competitor = party_votes.get('T', 0) if runner_party != 'T' else 0
+        # if the highest competitor is D or R, the votes needed to runner already covers it
+        need_to_pass_competitor = max(0, highest_T_competitor - runner_votes + 1)
+        votes_to_runner = max(votes_to_runner, need_to_pass_competitor)
 
         other_parties = [p for p in party_votes if p != r['party_win']]
         best_other_votes = max(party_votes[p] for p in other_parties) if other_parties else 0
@@ -310,7 +318,8 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         def cost_func(u):
             return int(u['votes_needed'])
 
-    # Mode classic: make runner reach need
+    # Mode classic: make runner reach the electoral-vote majority (need).
+    # Ensure the runner's EVs after flips will be >= need (the majority threshold).
     target_ev_classic = max(0, need - runner_ev)
     units_classic = [
         {
@@ -325,6 +334,10 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         for u in units
     ]
     chosen_c, cost_c, ev_c = compute_knapsack(units_classic, target_ev_classic, cost_func)
+    # Defensive check: if the knapsack returned a solution that doesn't actually
+    # bring the runner to the majority threshold, treat it as infeasible.
+    if ev_c and (runner_ev + ev_c) < need:
+        chosen_c, cost_c, ev_c = [], math.inf, 0
 
     # Mode no_majority: reduce winner below need by flipping from the winner regardless of runner gains
     # Equivalent to flipping at least winner_ev - (need - 1) EV away from winner
@@ -344,6 +357,10 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         if u['from_party'] == winner_party
     ]
     chosen_n, cost_n, ev_n = compute_knapsack(units_from_winner, target_away, cost_func)
+    # Defensive check: ensure the chosen flips actually reduce the winner below the majority
+    # (i.e., winner_ev - ev_n <= need - 1). If not, mark infeasible.
+    if ev_n and (winner_ev - ev_n) > (need - 1):
+        chosen_n, cost_n, ev_n = [], math.inf, 0
 
     # Mode tie: look for an exact set of EVs to give runner exactly total_ev/2 (tie).
     # Only possible if total_ev is even and target_ev_tie > 0.
@@ -365,6 +382,9 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
                 for u in units
             ]
             tie_result = compute_knapsack_exact(units_for_tie, target_ev_tie, cost_func)
+            # Defensive check: ensure the exact-knapsack produced the expected tie EVs.
+            if tie_result[2] != 0 and tie_result[2] != target_ev_tie:
+                tie_result = ([], math.inf, 0)
     chosen_t, cost_t, ev_t = tie_result
 
     return {
