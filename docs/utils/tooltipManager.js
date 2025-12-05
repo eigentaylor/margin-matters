@@ -340,7 +340,12 @@ export function formatUnitTooltip(unit, opts) {
             }
 
             // Only add vote row if we have votes to display
-            if (voteParts.length) rows.push(voteParts.join(' | '));
+            if (voteParts.length) {
+                // On mobile, display each candidate on a separate line to avoid cutoff
+                const isMobile = (typeof window !== 'undefined' && window.innerWidth < 600);
+                const separator = isMobile ? '\n' : ' | ';
+                rows.push(voteParts.join(separator));
+            }
             // Add vote margin between top and runner-up
             const votes = [
                 { party: 'D', count: voteTallies.D },
