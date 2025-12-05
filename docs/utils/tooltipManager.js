@@ -292,6 +292,13 @@ export function formatUnitTooltip(unit, opts) {
             // Find the party with the highest vote tally
             const maxVotes = Math.max(voteTallies.D, voteTallies.R, voteTallies.O);
 
+            // Calculate total votes for percentage display
+            const totalVotes = (voteTallies.D || 0) + (voteTallies.R || 0) + (voteTallies.O || 0);
+            const pctFormatter = (x) => {
+                if (!isFinite(x) || totalVotes <= 0) return '0.0%';
+                return ((x / totalVotes) * 100).toFixed(1) + '%';
+            };
+
             // Candidate name lookup (use the resolver to prefer snapshot/info values)
             const displayNames = true; // show candidate last names when available
             const candidateNames = displayNames ? resolveCandidateNames(info, unit) : { D: 'D', R: 'R', O: 'O' };
@@ -324,19 +331,19 @@ export function formatUnitTooltip(unit, opts) {
                 }
             }
 
-            // Only display parties with votes, add star to the highest
+            // Only display parties with votes, add star to the highest, include percentage
             if (voteTallies.D > 0) {
                 const dLabel = candidateNames && candidateNames.D ? candidateNames.D : 'D';
-                voteParts.push(`${voteTallies.D === maxVotes ? dLabel + '*' : dLabel}: ${formatter(voteTallies.D)}`);
+                voteParts.push(`${voteTallies.D === maxVotes ? dLabel + '*' : dLabel}: ${formatter(voteTallies.D)} (${pctFormatter(voteTallies.D)})`);
             }
             if (voteTallies.R > 0) {
                 const rLabel = candidateNames && candidateNames.R ? candidateNames.R : 'R';
-                voteParts.push(`${voteTallies.R === maxVotes ? rLabel + '*' : rLabel}: ${formatter(voteTallies.R)}`);
+                voteParts.push(`${voteTallies.R === maxVotes ? rLabel + '*' : rLabel}: ${formatter(voteTallies.R)} (${pctFormatter(voteTallies.R)})`);
             }
             // Only display top third party if it has votes (not all third parties)
             if (voteTallies.O > 0) {
                 const oLabel = candidateNames && candidateNames.O ? candidateNames.O : 'O';
-                voteParts.push(`${voteTallies.O === maxVotes ? oLabel + '*' : oLabel}: ${formatter(voteTallies.O)}`);
+                voteParts.push(`${voteTallies.O === maxVotes ? oLabel + '*' : oLabel}: ${formatter(voteTallies.O)} (${pctFormatter(voteTallies.O)})`);
             }
 
             // Only add vote row if we have votes to display
@@ -345,6 +352,10 @@ export function formatUnitTooltip(unit, opts) {
                 const isMobile = (typeof window !== 'undefined' && window.innerWidth < 600);
                 const separator = isMobile ? '\n' : ' | ';
                 rows.push(voteParts.join(separator));
+                // Add total votes line
+                if (totalVotes > 0) {
+                    rows.push(`Total: ${formatter(totalVotes)} votes`);
+                }
             }
             // Add vote margin between top and runner-up
             const votes = [
