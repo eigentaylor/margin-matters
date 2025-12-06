@@ -62,8 +62,89 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
         stop_to_units: Dict[float, List[str]] = defaultdict(list)
         stop_to_eff: Dict[float, float] = {}
 
+        # Compute the effective_pv for EVEN stop that produces a national margin of exactly 0
+        # (i.e., D total votes = R total votes nationally)
+        # This uses the SAME formula as testerUpdate.js updateNationalTotals():
+        #   rmAdj = relative_margin + eff_pv
+        #   twoD = 0.5 + rmAdj / 2
+        #   dShare = (1 - third_party_share) * twoD
+        #   rShare = (1 - third_party_share) * (1 - twoD)
+        #   dVotes = total * dShare, rVotes = total * rShare
+        def compute_national_raw_margin_at_eff(eff_pv: float) -> Tuple[float, float, float]:
+            """
+            Given an effective PV value, compute the national raw vote margin.
+            Returns (d_total, r_total, diff) where diff = d_total - r_total
+            """
+            nat_d = 0.0
+            nat_r = 0.0
+            for r in lst:
+                abbr = r.get('abbr')
+                if not abbr or abbr in ('NATIONAL', 'NAT'):
+                    continue
+                # Skip district rows (ME-01, ME-02, NE-01, NE-02, NE-03) to avoid double-counting.
+                # Use only the at-large rows (ME-AL, NE-AL) which contain the state totals.
+                if '-' in abbr and not abbr.endswith('-AL'):
+                    continue
+                total_votes = parse_float(r.get('total_votes'))
+                if total_votes <= 0:
+                    continue
+                
+                # Match JS: tp = third_party_share (clamped 0-1)
+                third_party_share = parse_float(r.get('third_party_share'))
+                tp = max(0.0, min(1.0, third_party_share))
+                
+                # Match JS: rm = relative_margin
+                rm = parse_float(r.get('relative_margin'))
+                
+                # Match JS formula exactly
+                rmAdj = rm + eff_pv
+                twoD = 0.5 + rmAdj / 2.0
+                twoD = max(0.0, min(1.0, twoD))
+                
+                dShare = (1.0 - tp) * twoD
+                rShare = (1.0 - tp) * (1.0 - twoD)
+                
+                d_adj = total_votes * dShare
+                r_adj = total_votes * rShare
+                
+                nat_d += d_adj
+                nat_r += r_adj
+            
+            diff = nat_d - nat_r
+            return (nat_d, nat_r, diff)
+
+        # Use binary search to find the effective_pv that produces diff = 0 (D votes = R votes)
+        def find_even_eff() -> float:
+            # Start with eff = 0 as initial guess
+            lo, hi = -0.5, 0.5  # search bounds
+            # First check what diff we get at eff = 0
+            _, _, diff_at_zero = compute_national_raw_margin_at_eff(0.0)
+            # If already very close to 0, just use 0
+            if abs(diff_at_zero) < 1.0:  # less than 1 vote difference
+                return 0.0
+            # Binary search for the eff that produces diff = 0
+            for _ in range(100):  # max iterations
+                mid = (lo + hi) / 2
+                _, _, diff_at_mid = compute_national_raw_margin_at_eff(mid)
+                if abs(diff_at_mid) < 1.0:  # less than 1 vote difference
+                    return mid
+                # If diff is positive (D ahead), we need to shift more toward R (lower eff)
+                # If diff is negative (R ahead), we need to shift more toward D (higher eff)
+                if diff_at_mid > 0:
+                    hi = mid
+                else:
+                    lo = mid
+            return (lo + hi) / 2
+
+        even_eff = find_even_eff()
+        # Verify the result
+        d_at_even, r_at_even, diff_at_even = compute_national_raw_margin_at_eff(even_eff)
+        raw_diff = abs(diff_at_even)
+        if raw_diff > 1000:  # More than 1000 votes difference is concerning
+            print(f"Warning: {year} EVEN stop has raw vote margin of {raw_diff:.0f} votes (eff={even_eff:.12f})")
+        
         # EVEN and Actual effs
-        stop_to_eff[0.0] = 0.0
+        stop_to_eff[0.0] = even_eff
         stop_to_eff[nat] = nat
 
         # helper to classify and append an output row for a single unit/stop
@@ -229,6 +310,19 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
             if s not in stop_to_eff:
                 print(f"Debug: {year} stop {s} missing eff, adding small nudge")
                 stop_to_eff[s] = s + EPS
+
+        # Add a special row for the EVEN stop (stop=0) with the computed effective_pv
+        # This allows the JavaScript to read the correct effective_pv instead of using a hardcoded value
+        out.append({
+            'year': year,
+            'stop': '0.000000000000',
+            'stop_key': '0.000000',
+            'effective_pv': f"{even_eff:.12f}",
+            'unit': 'EVEN',  # Special marker unit
+            'winner': '',
+            'result_color_name': '',
+            'color_css': '',
+        })
 
         # --- Compute EV totals at each stop so we can mark tie/tipping stops ---
         # Build sorted list of stops for deterministic behavior

@@ -132,9 +132,11 @@ export function createUpdateAll(deps) {
   function updatePvLabel(refs, pvState) {
     const { pvVal } = refs;
     if (!pvVal) return;
-    const { pv, matches, showNat } = pvState;
-    const matchLabel = (Math.abs(pvState.stopVal) < STOP_EPS) ? '' : (matches.length ? ' (' + (matches.slice(0, 6).join(',') + (matches.length > 6 ? '…' : '')) + ')' : '');
-    const base = (showNat ? 'Actual ' : '') + leanStr(pv) + matchLabel;
+    const { pv, matches, showNat, stopVal } = pvState;
+    const matchLabel = (Math.abs(stopVal) < STOP_EPS) ? '' : (matches.length ? ' (' + (matches.slice(0, 6).join(',') + (matches.length > 6 ? '…' : '')) + ')' : '');
+    // Special case: when stopVal is 0 (EVEN stop), always display "EVEN" regardless of the small effective adjustment
+    const pvDisplay = (Math.abs(stopVal) < STOP_EPS) ? 'EVEN' : leanStr(pv);
+    const base = (showNat ? 'Actual ' : '') + pvDisplay + matchLabel;
     let out = base;
     try {
       if (typeof window._pvOverride === 'number' && isFinite(window._pvOverride) && window._pvPresetName) {

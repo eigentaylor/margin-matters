@@ -40,7 +40,22 @@ export function buildPvStops(year, { container, datalist, getNatMargin, updateAl
   } catch (e) { console.warn(e); }
 
   const baseStopsSet = new Set([0]);
-  stopToEff.set(0, 0 + EPS);
+  // For the EVEN stop (0), use the effective_pv from CSV if available (precomputed to produce 0 raw vote margin),
+  // otherwise fall back to 0 + EPS
+  // Note: CSV parsers may convert "0.000000" to a float (0) so String(0) could be "0", "0.0", etc.
+  // We check multiple possible key formats for robustness.
+  let evenEffFromCsv = null;
+  if (effByYearStops) {
+    // Try various possible key formats
+    for (const tryKey of ['0.000000', '0', '0.0', '0.00']) {
+      if (effByYearStops.has(tryKey)) {
+        evenEffFromCsv = effByYearStops.get(tryKey);
+        break;
+      }
+    }
+  }
+  const evenEffValue = (evenEffFromCsv != null && isFinite(evenEffFromCsv)) ? evenEffFromCsv : (0 + EPS);
+  stopToEff.set(0, evenEffValue);
   if (!(isFutureMode && year > 2024) && isFinite(nat) && Math.abs(nat) <= cap) {
     baseStopsSet.add(nat);
     stopToEff.set(nat, nat);
