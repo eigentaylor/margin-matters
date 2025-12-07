@@ -47,6 +47,7 @@ export function createUpdateAll(deps) {
       evFillO: document.getElementById('evFillO'),
       evFillR: document.getElementById('evFillR'),
       evText: document.getElementById('evText'),
+      evNeededToWin: document.getElementById('evNeededToWin'),
       pvResetActual: document.getElementById('pvResetActual'),
       pvTippingBtn: document.getElementById('pvTipping'),
       pvTie: document.getElementById('pvTie'),
@@ -868,6 +869,12 @@ export function createUpdateAll(deps) {
       try { refs.evText.style.display = 'none'; refs.evText.setAttribute && refs.evText.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
     }
     if (refs.flipEC) refs.flipEC.textContent = summary;
+    
+    // Update EVs needed to win display
+    if (refs.evNeededToWin) {
+      const evsNeeded = Math.floor(totalEV / 2) + 1;
+      refs.evNeededToWin.textContent = `EVs needed to win: ${evsNeeded}`;
+    }
   }
 
   function updateCloseStatesPanel(refs, year, pv) {
