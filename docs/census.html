@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Census Reapportionment • Margin Matters</title>
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="maintenance-check.js"></script>
+    <script src="./last-updated.js"></script>
+    <meta name="description"
+        content="Explore how electoral votes have shifted across states after each decennial census from 1870 to 2020." />
+    <style>
+        /* Census page specific styles */
+        .census-page {
+            --gain-color: #22c55e;
+            --loss-color: #ef4444;
+            --same-color: #6b7280;
+            --new-color: #8b5cf6;
+        }
+
+        .census-controls {
+            display: grid;
+            gap: 16px;
+        }
+
+        @media (min-width: 720px) {
+            .census-controls {
+                grid-template-columns: 1fr 1fr;
+                align-items: end;
+            }
+        }
+
+        .census-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .census-stat {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        .census-stat .label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .census-stat .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .census-stat.gained .value {
+            color: var(--gain-color);
+        }
+
+        .census-stat.lost .value {
+            color: var(--loss-color);
+        }
+
+        .census-stat.same .value {
+            color: var(--same-color);
+        }
+
+        .census-stat.new .value {
+            color: var(--new-color);
+        }
+
+        .census-stat.total .value {
+            color: #fff;
+        }
+
+        .change-lists {
+            display: grid;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (min-width: 900px) {
+            .change-lists {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .change-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .change-section h3 {
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .change-section.gained h3 {
+            color: var(--gain-color);
+        }
+
+        .change-section.lost h3 {
+            color: var(--loss-color);
+        }
+
+        .change-section.new h3 {
+            color: var(--new-color);
+        }
+
+        .change-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .change-item:last-child {
+            border-bottom: none;
+        }
+
+        .change-item .state-name {
+            font-weight: 500;
+        }
+
+        .change-item .change-value {
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .change-item .change-value.gain {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--gain-color);
+        }
+
+        .change-item .change-value.loss {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--loss-color);
+        }
+
+        .change-item .change-value.new {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--new-color);
+        }
+
+        /* Timeline visualization */
+        .timeline-container {
+            overflow-x: auto;
+            margin: 16px 0;
+            padding-bottom: 8px;
+        }
+
+        .timeline {
+            display: flex;
+            gap: 4px;
+            min-width: fit-content;
+        }
+
+        .timeline-year {
+            flex: 0 0 auto;
+            width: 80px;
+            text-align: center;
+            padding: 8px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .timeline-year:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .timeline-year.active {
+            background: rgba(65, 105, 225, 0.3);
+            border: 1px solid rgba(65, 105, 225, 0.6);
+        }
+
+        .timeline-year .year-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .timeline-year .year-total {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* State grid for visual overview */
+        .state-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 6px;
+            margin: 16px 0;
+        }
+
+        .state-cell {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .state-cell:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .state-cell .abbr {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .state-cell .ev {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .state-cell .delta {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .state-cell.gained {
+            border: 1px solid var(--gain-color);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .state-cell.gained .delta {
+            color: var(--gain-color);
+        }
+
+        .state-cell.lost {
+            border: 1px solid var(--loss-color);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .state-cell.lost .delta {
+            color: var(--loss-color);
+        }
+
+        .state-cell.new-state {
+            border: 1px solid var(--new-color);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .state-cell.new-state .delta {
+            color: var(--new-color);
+        }
+
+        .state-cell.no-change {
+            opacity: 0.6;
+        }
+
+        /* History table */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-table th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .history-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .ev-change-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ev-change-indicator .arrow {
+            font-size: 0.8rem;
+        }
+
+        .ev-change-indicator .arrow.up {
+            color: var(--gain-color);
+        }
+
+        .ev-change-indicator .arrow.down {
+            color: var(--loss-color);
+        }
+
+        /* Tab navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .tab-nav .btn {
+            opacity: 0.7;
+        }
+
+        .tab-nav .btn.active {
+            opacity: 1;
+            background: rgba(65, 105, 225, 0.3);
+            border-color: rgba(65, 105, 225, 0.6);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Loading state */
+        .loading-text {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+        }
+
+        /* Total EV history chart placeholder */
+        .total-ev-chart {
+            height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+
+<body class="census-page pv-tools">
+    <div class="container">
+        <div id="header-placeholder"></div>
+        <div id="back-to-map-placeholder"></div>
+
+        <div class="card page-title">
+            <h1>Census Reapportionment</h1>
+            <div class="legend">Explore how electoral votes have shifted across states after each decennial census.
+                See which states gained or lost representation, new states admitted, and how the total electoral
+                vote count has changed from 1870 to 2020.</div>
+        </div>
+
+        <div class="card">
+            <div class="tab-nav">
+                <button class="btn active" data-tab="overview">Overview</button>
+                <button class="btn" data-tab="timeline">Timeline</button>
+                <button class="btn" data-tab="history">Full History</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-panel active">
+                <div class="census-controls">
+                    <div class="field">
+                        <label for="censusYearSlider">Census Year</label>
+                        <div class="slider-row">
+                            <input id="censusYearSlider" type="range" min="1870" max="2020" step="10" value="2020" />
+                            <span id="censusYearVal" class="badge">2020</span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Applies to Elections</label>
+                        <span id="electionYears" class="muted">Loading...</span>
+                    </div>
+                </div>
+
+                <div id="censusSummary" class="census-summary">
+                    <div class="census-stat gained">
+                        <div class="label">States Gained EVs</div>
+                        <div class="value" id="statesGained">-</div>
+                    </div>
+                    <div class="census-stat lost">
+                        <div class="label">States Lost EVs</div>
+                        <div class="value" id="statesLost">-</div>
+                    </div>
+                    <div class="census-stat same">
+                        <div class="label">No Change</div>
+                        <div class="value" id="statesSame">-</div>
+                    </div>
+                    <div class="census-stat new">
+                        <div class="label">New States</div>
+                        <div class="value" id="statesNew">-</div>
+                    </div>
+                    <div class="census-stat total">
+                        <div class="label">Total EVs</div>
+                        <div class="value" id="totalEVs">-</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 24px;">State Changes</h3>
+                <div id="stateGrid" class="state-grid">
+                    <div class="loading-text">Loading electoral vote data...</div>
+                </div>
+
+                <div id="changeLists" class="change-lists">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Timeline Tab -->
+            <div id="tab-timeline" class="tab-panel">
+                <h3>Census Timeline (1870–2020)</h3>
+                <p class="legend">Click any census year to view details. The timeline shows how the total number of
+                    electoral votes evolved over time.</p>
+
+                <div class="timeline-container">
+                    <div id="censusTimeline" class="timeline">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div id="timelineChart" class="card" style="margin-top: 16px;">
+                    <h4>Total Electoral Votes Over Time</h4>
+                    <svg id="evHistoryChart" width="100%" height="250" viewBox="0 0 800 250"
+                        preserveAspectRatio="xMidYMid meet"></svg>
+                </div>
+
+                <div id="biggestChanges" class="card" style="margin-top: 16px;">
+                    <h4>Biggest Changes by Census</h4>
+                    <div id="biggestChangesList" class="table-wrap">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="tab-history" class="tab-panel">
+                <h3>Complete Reapportionment History</h3>
+                <p class="legend">A comprehensive table showing electoral vote counts for all states across every census
+                    reapportionment.</p>
+
+                <div class="field" style="margin-bottom: 16px;">
+                    <label for="stateFilter">Filter by State</label>
+                    <select id="stateFilter">
+                        <option value="">All States</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <div id="historyTableWrap" class="table-wrap">
+                    <table id="historyTable" class="history-table ev-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <!-- Census year columns added by JS -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>About Census Reapportionment</h3>
+            <div class="legend">
+                <p>Every 10 years, following the decennial census, the 435 seats in the U.S. House of Representatives
+                    are reapportioned among the states based on population changes. Since a state's electoral vote count
+                    equals its number of House seats plus its two senators, reapportionment directly affects
+                    presidential elections.</p>
+                <p style="margin-top: 12px;">Key historical notes:</p>
+                <ul style="margin-top: 8px; padding-left: 20px; color: var(--muted);">
+                    <li>The total number of electoral votes has changed as new states were admitted and DC gained
+                        voting rights (1961)</li>
+                    <li>The House was capped at 435 members in 1929, making reapportionment a zero-sum game</li>
+                    <li>Population shifts from the Rust Belt to the Sun Belt have been the dominant trend since the
+                        1970s</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="./census.js"></script>
+    <script src="./header.js"></script>
+    <script src="./back-to-map.js"></script>
+    <script src="./footer.js"></script>
+</body>
+
+</html>
