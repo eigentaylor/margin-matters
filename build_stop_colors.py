@@ -487,7 +487,27 @@ def build_stop_rows(rows: List[Dict]) -> List[Dict]:
                     first_tie_stop = stops_list[tie_index]
                 tie_stops.add(s)
         if tipping_index is not None and 0 <= tipping_index < len(stops_list):
-            tipping_stops.add(stops_list[tipping_index])
+            tipping_stop_val = stops_list[tipping_index]
+            # Skip EVEN stop (stop=0.0) - find nearest actual state stop instead
+            if abs(tipping_stop_val) < EPS:
+                # EVEN stop detected as tipping point - find nearest non-EVEN stop
+                # Search in direction away from actual result
+                if tipping_index > 0:
+                    tipping_stop_val = stops_list[tipping_index - 1]
+                elif tipping_index < len(stops_list) - 1:
+                    tipping_stop_val = stops_list[tipping_index + 1]
+            tipping_stops.add(tipping_stop_val)
+        
+        # Also ensure first_tie_stop is not EVEN
+        if first_tie_stop is not None and abs(first_tie_stop) < EPS:
+            # Find nearest non-EVEN tie stop
+            if tie_index is not None:
+                if tie_index > 0 and abs(stops_list[tie_index - 1]) >= EPS:
+                    first_tie_stop = stops_list[tie_index - 1]
+                elif tie_index < len(stops_list) - 1 and abs(stops_list[tie_index + 1]) >= EPS:
+                    first_tie_stop = stops_list[tie_index + 1]
+                else:
+                    first_tie_stop = None  # No valid non-EVEN tie stop found
 
         # annotate previously appended rows for this year
         for row in out:
