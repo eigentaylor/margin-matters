@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tipping Point Analysis · Margin Matters</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="favicon.svg" />
+    <script src="maintenance-check.js"></script>
+    <script src="./last-updated.js"></script>
+    <style>
+        :root {
+            --bg: #0b0b0b;
+            --fg: #f5f5f5;
+            --muted: #a5a5a5;
+            --accent: #66b3ff;
+            --card: #141414;
+            --border: #2a2a2a;
+            --dem-color: #1e4bd1;
+            --rep-color: #b22222;
+        }
+
+        #tipping-point-chart {
+            width: 100%;
+            height: 600px;
+            margin-top: 16px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .btn-toggle {
+            background: var(--card);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-toggle:hover {
+            background: var(--border);
+        }
+
+        .btn-toggle.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .legend-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .info-text {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+        <div id="back-to-map-placeholder"></div>
+        <div class="legend" style="margin-top:12px">Tipping Point Analysis</div>
+
+        <div class="card">
+            <h1 style="margin-top:0">Electoral College Tipping Point</h1>
+            <p class="legend">
+                The tipping point is the state that gives the winning candidate their 270th electoral vote. 
+                It represents the decisive margin that determines the electoral college outcome.
+            </p>
+
+            <div class="controls">
+                <div class="control-group">
+                    <button id="btn-show-pv" class="btn-toggle">Show Popular Vote</button>
+                </div>
+                <div class="control-group">
+                    <button id="btn-abs-value" class="btn-toggle">Absolute Value</button>
+                </div>
+                <div class="control-group">
+                    <button id="btn-show-diff" class="btn-toggle">Show Difference (PV - TP)</button>
+                </div>
+            </div>
+
+            <canvas id="tipping-point-chart"></canvas>
+
+            <div class="legend-box">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--dem-color);"></div>
+                    <span>Democrats advantaged (can lose PV but win EC)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--rep-color);"></div>
+                    <span>Republicans advantaged (can lose PV but win EC)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #888; height: 2px;"></div>
+                    <span>Tipping Point</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #66b3ff; opacity: 0.5; height: 2px;"></div>
+                    <span>Popular Vote (when shown)</span>
+                </div>
+            </div>
+
+            <div class="info-text">
+                <strong>Understanding the chart:</strong><br>
+                • When the tipping point is positive (above 0), Republicans are advantaged - they can win the Electoral College while losing the popular vote<br>
+                • When the tipping point is negative (below 0), Democrats are advantaged - they can win the Electoral College while losing the popular vote<br>
+                • The colored area between the tipping point line and zero shows which party has the structural advantage<br>
+                • The difference view shows how much the popular vote differs from the tipping point margin
+            </div>
+        </div>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <script src="./header.js"></script>
+    <script src="./back-to-map.js"></script>
+    <script src="./footer.js"></script>
+    <script src="./tipping-point.js"></script>
+</body>
+
+</html>

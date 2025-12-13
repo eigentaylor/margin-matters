@@ -17,6 +17,7 @@
           <a class="btn" href="${prefix}/bellwether-explorer.html">Bellwethers</a>
           <a class="btn" href="${prefix}/histograms.html">Histograms</a>
           <a class="btn" href="${prefix}/shift-vectors.html">Shift Vectors</a>
+          <a class="btn" href="${prefix}/tipping-point.html">Tipping Points</a>
           <a class="btn" href="${prefix}/laplace.html">Laplace Rule</a>
           <a class="btn" href="${prefix}/future.html">"""Future"""</a>
           <a class="btn" href="${prefix}/methods.html">Methods</a>
