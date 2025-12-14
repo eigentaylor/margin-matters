@@ -19,6 +19,7 @@
           <a class="btn" href="${prefix}/shift-vectors.html">Shift Vectors</a>
           <a class="btn" href="${prefix}/census.html">Census</a>
           <a class="btn" href="${prefix}/laplace.html">Laplace Rule</a>
+          <a class="btn" href="${prefix}/keys.html">13 Keys</a>
           <a class="btn" href="${prefix}/future.html">"""Future"""</a>
           <a class="btn" href="${prefix}/methods.html">Methods</a>
           <a class="btn" href="${prefix}/changelog.html">Changelog</a>

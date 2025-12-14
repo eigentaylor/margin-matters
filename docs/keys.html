@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>13 Keys Analysis • Margin Matters</title>
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="maintenance-check.js"></script>
+    <script src="./last-updated.js"></script>
+    <style>
+        :root {
+            --bg: #0b0b0b;
+            --fg: #f5f5f5;
+            --muted: #a5a5a5;
+            --accent: #66b3ff;
+            --card: #141414;
+            --border: #2a2a2a;
+            --blue: #4169E1;
+            --red: #B22222;
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --purple: #a855f7;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Helvetica, Arial;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            text-align: center;
+        }
+
+        .page-title h1 {
+            margin: 0 0 8px 0;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .controls .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .controls label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .controls select,
+        .controls input {
+            background: var(--bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.95rem;
+        }
+
+        /* Keys table styling */
+        .keys-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .keys-table th,
+        .keys-table td {
+            padding: 8px 6px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .keys-table th {
+            background: #1a1a1a;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .keys-table th.sortable {
+            cursor: pointer;
+        }
+
+        .keys-table th.sortable:hover {
+            background: #252525;
+        }
+
+        .keys-table th.sorted-asc::after {
+            content: ' ▲';
+            font-size: 0.75em;
+        }
+
+        .keys-table th.sorted-desc::after {
+            content: ' ▼';
+            font-size: 0.75em;
+        }
+
+        .keys-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .keys-table .key-true {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6ee7b7;
+        }
+
+        .keys-table .key-false {
+            background: rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+        }
+
+        .keys-table .prediction-correct {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .keys-table .prediction-incorrect {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .keys-table td:first-child {
+            font-weight: 600;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-card .note {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* Correlation matrix */
+        .correlation-table {
+            font-size: 0.75rem;
+        }
+
+        .correlation-table th,
+        .correlation-table td {
+            padding: 4px;
+            min-width: 40px;
+        }
+
+        .correlation-table th {
+            font-size: 0.7rem;
+        }
+
+        .corr-cell {
+            transition: opacity 0.2s;
+        }
+
+        /* Chart containers */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            min-height: 400px;
+        }
+
+        .chart-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Tabs for charts */
+        .chart-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .chart-tab {
+            padding: 8px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--fg);
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .chart-tab:hover {
+            background: #252525;
+        }
+
+        .chart-tab.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+
+        .chart-panel {
+            display: none;
+        }
+
+        .chart-panel.active {
+            display: block;
+        }
+
+        /* Controversy section */
+        .controversy-section {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .controversy-section h3 {
+            color: #fca5a5;
+            margin-top: 0;
+        }
+
+        .controversy-section ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .controversy-section li {
+            margin-bottom: 8px;
+        }
+
+        /* Tooltip */
+        #tooltip {
+            position: fixed;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            z-index: 1000;
+            max-width: 300px;
+            display: none;
+        }
+
+        /* Legend */
+        .chart-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        .chart-legend .item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chart-legend .swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .keys-table {
+                font-size: 0.75rem;
+            }
+
+            .keys-table th,
+            .keys-table td {
+                padding: 4px 3px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header-placeholder"></div>
+        <div id="back-to-map-placeholder"></div>
+
+        <div class="card page-title">
+            <h1>13 Keys to the White House</h1>
+            <div class="legend">
+                Explore Allan Lichtman's "13 Keys to the White House" prediction system and its relationship to actual
+                election
+                outcomes.
+                The keys are a set of (arguably subjective) true/false statements about the incumbent party; 6 or more
+                false keys (supposedly)
+                predict a
+                challenger victory.
+            </div>
+        </div>
+
+        <!-- Statistics Summary -->
+        <div class="card">
+            <div class="legend" style="margin-bottom:12px"><strong>Summary Statistics</strong></div>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="label">Correlation (r)</div>
+                    <div class="value" id="correlationValue">—</div>
+                    <div class="note">False Keys vs Incumbent NPV</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">R² (Coefficient of Determination)</div>
+                    <div class="value" id="r2Value">—</div>
+                    <div class="note">Variance explained by false keys</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">PV Prediction Accuracy</div>
+                    <div class="value" id="pvAccuracy">—</div>
+                    <div class="note">Using 6-key threshold</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">EC Prediction Accuracy</div>
+                    <div class="value" id="ecAccuracy">—</div>
+                    <div class="note">Using 6-key threshold</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Election Results Table -->
+        <div class="card">
+            <div class="legend" style="margin-bottom:12px"><strong>Election Results & Key Counts</strong></div>
+            <div class="table-wrap" style="max-height:500px;overflow-y:auto;">
+                <table class="keys-table" id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-col="year">Year</th>
+                            <th class="sortable" data-col="incumbent_party">Inc. Party</th>
+                            <th class="sortable" data-col="incumbent_nominee">Incumbent Nominee</th>
+                            <th class="sortable" data-col="challenger_nominee">Challenger Nominee</th>
+                            <th class="sortable" data-col="false_keys"># False Keys</th>
+                            <th class="sortable" data-col="npv_incumbent_relative_pct">NPV (Inc. Relative)</th>
+                            <th class="sortable" data-col="pv_winner">PV Winner</th>
+                            <th class="sortable" data-col="ec_winner">EC Winner</th>
+                            <th>Keys Prediction</th>
+                            <th>PV Correct?</th>
+                            <th>EC Correct?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Keys Detail Table -->
+        <div class="card">
+            <div class="legend" style="margin-bottom:12px"><strong>Individual Keys by Election</strong></div>
+            <div class="controls">
+                <div class="field">
+                    <label for="yearFilter">Filter by Year:</label>
+                    <select id="yearFilter">
+                        <option value="all">All Years</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-wrap" style="max-height:600px;overflow-y:auto;">
+                <table class="keys-table" id="keysTable">
+                    <thead>
+                        <tr id="keysTableHeader"></tr>
+                    </thead>
+                    <tbody id="keysTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Key Correlations -->
+        <div class="card">
+            <div class="legend" style="margin-bottom:12px"><strong>Key-to-Key Correlations</strong></div>
+            <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">
+                Correlation matrix showing how often each pair of keys are true/false together. Higher values (green)
+                indicate
+                keys that tend to move together.
+            </p>
+            <div class="table-wrap" style="overflow-x:auto;">
+                <table class="keys-table correlation-table" id="correlationTable">
+                    <thead id="correlationTableHeader"></thead>
+                    <tbody id="correlationTableBody"></tbody>
+                </table>
+            </div>
+            <div id="topCorrelations" style="margin-top:16px;"></div>
+        </div>
+
+        <!-- Interactive Charts -->
+        <div class="card">
+            <div class="legend" style="margin-bottom:12px"><strong>Interactive Visualizations</strong></div>
+            <div class="chart-tabs">
+                <button class="chart-tab active" data-panel="scatter">Scatter Plot</button>
+                <button class="chart-tab" data-panel="residuals">Residuals</button>
+                <button class="chart-tab" data-panel="boxplot">Box Plot</button>
+                <button class="chart-tab" data-panel="histogram">Histogram</button>
+            </div>
+
+            <!-- Scatter Plot -->
+            <div class="chart-panel active" id="scatterPanel">
+                <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px;">
+                    Scatter plot of incumbent-relative NPV vs. false key count. Includes line of best fit, 6-key
+                    threshold, and
+                    standard deviation bands.
+                </p>
+                <div class="chart-container" id="scatterChart"></div>
+                <div class="chart-legend">
+                    <div class="item"><span class="swatch" style="background:var(--accent)"></span> Data Points</div>
+                    <div class="item"><span class="swatch" style="background:var(--yellow)"></span> Line of Best Fit
+                    </div>
+                    <div class="item"><span class="swatch" style="background:rgba(255,255,255,0.3)"></span> ±1σ Band
+                    </div>
+                    <div class="item"><span class="swatch" style="background:rgba(255,255,255,0.15)"></span> ±2σ Band
+                    </div>
+                    <div class="item"><span class="swatch" style="background:var(--red)"></span> 6-Key Threshold</div>
+                </div>
+            </div>
+
+            <!-- Residuals Plot -->
+            <div class="chart-panel" id="residualsPanel">
+                <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px;">
+                    Residual errors from the line of best fit. Positive values mean the incumbent outperformed the
+                    model's
+                    prediction.
+                </p>
+                <div class="chart-container" id="residualsChart"></div>
+            </div>
+
+            <!-- Box Plot -->
+            <div class="chart-panel" id="boxplotPanel">
+                <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px;">
+                    Distribution of incumbent-relative NPV for each false key count. Shows median, quartiles, and
+                    outliers.
+                </p>
+                <div class="chart-container" id="boxplotChart"></div>
+            </div>
+
+            <!-- Histogram -->
+            <div class="chart-panel" id="histogramPanel">
+                <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px;">
+                    Distribution of incumbent-relative NPV for elections with a specific number of false keys.
+                </p>
+                <div class="controls" style="margin-bottom:12px;">
+                    <div class="field">
+                        <label for="histogramKeyCount">False Key Count:</label>
+                        <select id="histogramKeyCount">
+                            <option value="all">All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container" id="histogramChart"></div>
+            </div>
+        </div>
+
+        <!-- Controversy Section -->
+        <div class="controversy-section">
+            <h3>⚠️ Controversy & Criticisms</h3>
+            <p>
+                This section summarizes common criticisms so readers can interpret the data appropriately.
+            </p>
+            <p>
+                Allan Lichtman's "13 Keys to the White House" system has faced significant criticism and accusations of
+                overfitting and pseudoscience. While Lichtman claims a near-perfect prediction record, critics raise
+                several
+                concerns. <a
+                    href="https://thepostrider.com/allan-lichtman-is-famous-for-correctly-predicting-the-2016-election-the-problem-he-didnt/"
+                    target="_blank">This</a> is an excellent article on this topic by The Post Rider.
+            </p>
+
+            <p>
+                I have also written my own analysis <a href="https://eigentaylor.github.io/blog/lichtman/"
+                    target="_blank">here</a>.
+            </p>
+            <p>Key criticisms include:</p>
+            <ul>
+                <li>
+                    <strong>Popular Vote vs. Electoral College:</strong> The keys have always predicted the popular vote
+                    winner, rather than the electoral college. You can see that in the above analysis that shows the
+                    keys retrospectively predicted Samuel J. Tilden in 1876 and Grover Cleveland in 1888, both of whom
+                    won the popular
+                    vote but lost the electoral college. Indeed, in 2000 Lichtman predicted Al Gore who won the popular
+                    vote but lost the electoral college to George W. Bush. Even in October 2016, Lichtman published an
+                    article predicting Donald Trump but also stating the keys predict only the popular vote. After Trump
+                    won the electoral college, and lost the popular vote, Lichtman claimed the keys had been changed
+                    since 2000 to predict the electoral college winner, contradicting his earlier statements. If anyone
+                    tells you the keys predict the electoral college, even if that is Allan Lichtman himself, they are
+                    <strong>rewriting history</strong>, contradicting what Allan Lichtman has said previously, and even
+                    what is printed
+                    in the 2024 edition of his book, "Predicting the Next President". See <a
+                        href="https://thepostrider.com/allan-lichtman-is-famous-for-correctly-predicting-the-2016-election-the-problem-he-didnt/"
+                        target="_blank">this</a> article for more details.
+                </li>
+                <li>
+                    <strong>2016 Controversy:</strong> Lichtman predicted Trump would win in 2016, but Hillary Clinton
+                    won the
+                    popular
+                    vote by 2.1%. Based on writings as late as October 2016, Lichtman stated the keys predicted only the
+                    popular vote winner. Given that context, this means the keys, as called by Lichtman, were wrong in
+                    2016.
+                </li>
+                <li>
+                    <strong>Overfitting the data:</strong> Critics argue the keys were developed by retroactively
+                    fitting too closely to the historical election outcomes, rather than being based on robust
+                    predictive factors. That is, they look great on past data but may not generalize well to future
+                    elections. Critics point to 2016 and 2024 as examples where the system failed to predict the outcome
+                    correctly, based on its stated criteria of predicting the popular vote winner.
+                </li>
+                <li>
+                    <strong>Unweighted Keys:</strong> All keys are treated equally, but acknowledged as having varying
+                    weight in different elections. Therefore, a simple 6-key threshold as a deterministic rule for the
+                    incumbent party losing the popular vote is mathematically incoherent.
+                    That would require each key to have equal predictive power in order for such a threshold to work
+                    deterministically.
+                </li>
+                <li>
+                    <strong>Subjective Key Assignments:</strong> Many keys require subjective judgment (e.g., "incumbent
+                    charisma,"
+                    "scandal," "social unrest"). Lichtman often assigns these values <em>after</em> an election's
+                    outcome is
+                    known,
+                    and he has been accused of changing key assignments retroactively to preserve his record. See <a
+                        href="https://fivethirtyeight.com/features/despite-keys-obama-is-no-lock/"
+                        target="_blank">this</a>
+                    article by Nate Silver for more details.
+                </li>
+                <li>
+                    <strong>Small Sample Size:</strong> With only ~40 elections since 1860, statistical validation is
+                    limited. The model as defined failed in 2016 and 2024, when it failed to predict the popular vote
+                    winner.
+                </li>
+                <li>
+                    <strong>Lack of Quantitative Thresholds:</strong> Unlike statistical models with defined probability
+                    outputs,
+                    the keys provide binary predictions with no uncertainty estimates, making them difficult to evaluate
+                    rigorously.
+                </li>
+            </ul>
+            <p style="margin-bottom:0;">
+                <em>This analysis presents the keys alongside actual election data so you can evaluate the system's
+                    predictive
+                    power for yourself.</em>
+            </p>
+        </div>
+
+        <div id="footer-placeholder"></div>
+    </div>
+
+    <div id="tooltip"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./header.js"></script>
+    <script src="./back-to-map.js"></script>
+    <script src="./footer.js"></script>
+    <script src="./keys.js"></script>
+</body>
+
+</html>
