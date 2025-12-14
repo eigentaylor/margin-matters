@@ -466,6 +466,16 @@
                     Scatter plot of incumbent-relative NPV (absolute values) vs. false key count. Includes line of best fit, 6-key
                     threshold, and standard deviation bands.
                 </p>
+                <div class="controls" style="margin-bottom:12px;">
+                    <div class="field">
+                        <label for="scatterYearRange">Year Range:</label>
+                        <select id="scatterYearRange">
+                            <option value="all">All Years (1864-2024)</option>
+                            <option value="pre1984">Pre-1984 (Retrospective)</option>
+                            <option value="1984plus">1984-2024 (Lichtman Predictions)</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="chart-container" id="scatterChart"></div>
                 <div class="chart-legend">
                     <div class="item"><span class="swatch" style="background:var(--accent)"></span> Data Points</div>

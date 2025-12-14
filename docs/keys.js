@@ -60,6 +60,7 @@
     pvAccuracy: document.getElementById('pvAccuracy'),
     ecAccuracy: document.getElementById('ecAccuracy'),
     histogramKeyCount: document.getElementById('histogramKeyCount'),
+    scatterYearRange: document.getElementById('scatterYearRange'),
     tooltip: document.getElementById('tooltip')
   };
 
@@ -481,9 +482,25 @@
   /**
    * Create scatter plot
    */
-  function createScatterPlot(regressionData, slope, intercept, r) {
+  function createScatterPlot(regressionData, slope, intercept, r, yearRange = 'all') {
     const container = document.getElementById('scatterChart');
     container.innerHTML = '';
+
+    // Filter data by year range
+    let filteredData = regressionData;
+    if (yearRange === 'pre1984') {
+      filteredData = regressionData.filter(d => d.year < 1984);
+    } else if (yearRange === '1984plus') {
+      filteredData = regressionData.filter(d => d.year >= 1984);
+    }
+
+    // Recalculate regression on filtered data
+    if (filteredData.length > 0) {
+      const filtered = linearRegression(filteredData);
+      slope = filtered.slope;
+      intercept = filtered.intercept;
+      r = filtered.r;
+    }
 
     const svg = d3.select(container)
       .append('svg')
@@ -504,8 +521,8 @@
       .domain([yExtent[0] - yPadding, yExtent[1] + yPadding])
       .range([innerHeight, 0]);
 
-    // Standard deviation bands
-    const std = calculateResidualStd(regressionData, slope, intercept);
+    // Standard deviation bands (use filtered data)
+    const std = calculateResidualStd(filteredData, slope, intercept);
 
     // 2σ band
     g.append('path')
@@ -588,9 +605,9 @@
       .attr('stroke', colors.yellow)
       .attr('stroke-width', 2);
 
-    // Data points
+    // Data points (use filtered data)
     g.selectAll('circle')
-      .data(regressionData)
+      .data(filteredData)
       .join('circle')
       .attr('cx', d => xScale(d.x))
       .attr('cy', d => yScale(d.y))
@@ -617,9 +634,9 @@
       })
       .on('mouseout', hideTooltip);
 
-    // Add labels for each point
+    // Add labels for each point (use filtered data)
     g.selectAll('text.label')
-      .data(regressionData)
+      .data(filteredData)
       .join('text')
       .attr('class', 'label')
       .attr('x', d => xScale(d.x) + 8)
@@ -1421,6 +1438,11 @@
     // Histogram key count filter
     elements.histogramKeyCount.addEventListener('change', (e) => {
       createHistogram(regressionData, e.target.value);
+    });
+
+    // Scatter plot year range filter
+    elements.scatterYearRange.addEventListener('change', (e) => {
+      createScatterPlot(regressionData, slope, intercept, r, e.target.value);
     });
   }
 
