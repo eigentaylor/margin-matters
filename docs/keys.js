@@ -447,6 +447,38 @@
   }
 
   /**
+   * Render table showing years where PV and EC diverged
+   */
+  function renderDivergentTable() {
+    const divergentYears = [1876, 1888, 2000, 2016];
+    const rows = [];
+    divergentYears.forEach(year => {
+      const row = uniqueElections.find(r => r.year === year);
+      if (!row) return;
+
+      const keysPredictsIncumbent = row.false_keys < 6;
+      const keysPredictionParty = keysPredictsIncumbent ? row.incumbent_party : row.challenger_party;
+      const pvWinner = row.pv_winner || '—';
+      const ecWinner = row.ec_winner || '—';
+      const predictedPV = (keysPredictionParty === pvWinner);
+
+      rows.push({ year, pvWinner, ecWinner, keysPredictionParty, predictedPV });
+    });
+
+    const body = document.getElementById('divergentTableBody');
+    if (!body) return;
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.year}</td>
+        <td style="color:${r.pvWinner === 'D' ? colors.dem : colors.rep}">${r.pvWinner}</td>
+        <td style="color:${r.ecWinner === 'D' ? colors.dem : colors.rep}">${r.ecWinner}</td>
+        <td style="color:${r.keysPredictionParty === 'D' ? colors.dem : colors.rep}">${r.keysPredictionParty}</td>
+        <td class="${r.predictedPV ? 'prediction-correct' : 'prediction-incorrect'}">${r.predictedPV ? 'Yes' : 'No'}</td>
+      </tr>
+    `).join('');
+  }
+
+  /**
    * Create scatter plot
    */
   function createScatterPlot(regressionData, slope, intercept, r) {
@@ -1085,6 +1117,7 @@
       renderResultsTable();
       renderKeysTable();
       renderCorrelationMatrix();
+      renderDivergentTable();
 
       // Create charts
       createScatterPlot(regressionData, slope, intercept, r);
