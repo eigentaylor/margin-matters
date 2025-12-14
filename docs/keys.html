@@ -457,14 +457,14 @@
                 <button class="chart-tab" data-panel="residuals">Residuals</button>
                 <button class="chart-tab" data-panel="boxplot">Box Plot</button>
                 <button class="chart-tab" data-panel="histogram">Histogram</button>
+                <button class="chart-tab" data-panel="delta">Delta Analysis</button>
             </div>
 
             <!-- Scatter Plot -->
             <div class="chart-panel active" id="scatterPanel">
                 <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px;">
-                    Scatter plot of incumbent-relative NPV vs. false key count. Includes line of best fit, 6-key
-                    threshold, and
-                    standard deviation bands.
+                    Scatter plot of incumbent-relative NPV (absolute values) vs. false key count. Includes line of best fit, 6-key
+                    threshold, and standard deviation bands.
                 </p>
                 <div class="chart-container" id="scatterChart"></div>
                 <div class="chart-legend">
@@ -512,6 +512,22 @@
                     </div>
                 </div>
                 <div class="chart-container" id="histogramChart"></div>
+            </div>
+
+            <!-- Delta Analysis -->
+            <div class="chart-panel" id="deltaPanel">
+                <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px;">
+                    Correlation between false key count and year-over-year change in incumbent party NPV.
+                    Shows whether more false keys predict larger swings against the incumbent party.
+                </p>
+                <div class="chart-container" id="deltaChart"></div>
+                <div class="chart-legend">
+                    <div class="item"><span class="swatch" style="background:var(--accent)"></span> Data Points</div>
+                    <div class="item"><span class="swatch" style="background:var(--yellow)"></span> Line of Best Fit</div>
+                    <div class="item"><span class="swatch" style="background:rgba(255,255,255,0.3)"></span> ±1σ Band</div>
+                    <div class="item"><span class="swatch" style="background:rgba(255,255,255,0.15)"></span> ±2σ Band</div>
+                    <div class="item"><span class="swatch" style="background:var(--red)"></span> 6-Key Threshold</div>
+                </div>
             </div>
         </div>
 

@@ -673,7 +673,15 @@
       .attr('text-anchor', 'end')
       .attr('fill', colors.yellow)
       .attr('font-size', '12px')
-      .text(`r = ${r.toFixed(3)}`);
+      ;
+    const r2 = (typeof r === 'number') ? (r * r) : NaN;
+    svg.append('text')
+      .attr('x', chartWidth - chartMargin.right - 10)
+      .attr('y', chartMargin.top + 38)
+      .attr('text-anchor', 'end')
+      .attr('fill', colors.yellow)
+      .attr('font-size', '12px')
+      .text(`r = ${r.toFixed(3)} | r² = ${isFinite(r2) ? r2.toFixed(3) : '—'}`);
   }
 
   /**
@@ -1065,6 +1073,230 @@
   }
 
   /**
+   * Create delta scatter plot (false keys vs. year-over-year NPV change)
+   */
+  function createDeltaScatterPlot(regressionData) {
+    console.log('createDeltaScatterPlot: entering');
+    console.log('createDeltaScatterPlot: uniqueElections count=', uniqueElections && uniqueElections.length);
+    const container = document.getElementById('deltaChart');
+    container.innerHTML = '';
+
+    // Prepare delta data (filter out elections without delta values or non-numeric entries)
+    const deltaData = uniqueElections
+      .filter(d => {
+        const rawDelta = d.npv_incumbent_relative_delta;
+        const rawKeys = d.false_keys;
+        if (rawDelta === null || rawDelta === undefined) return false;
+        if (rawDelta === '') return false; // exclude empty baseline rows like 1864
+        if (rawKeys === null || rawKeys === undefined || rawKeys === '') return false;
+        const y = +rawDelta;
+        const x = +rawKeys;
+        return Number.isFinite(y) && Number.isFinite(x);
+      })
+      .map(d => ({
+        x: +d.false_keys,
+        y: +d.npv_incumbent_relative_delta,
+        year: d.year
+      }));
+
+    console.log('createDeltaScatterPlot: deltaData length=', deltaData.length, 'sample=', deltaData.slice(0,3));
+    if (deltaData.length === 0) {
+      console.warn('createDeltaScatterPlot: no delta data available');
+      container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No delta data available</p>';
+      return;
+    }
+
+    // Calculate regression for delta data
+    const { slope, intercept, r, r2 } = linearRegression(deltaData);
+
+    const svg = d3.select(container)
+      .append('svg')
+      .attr('viewBox', `0 0 ${chartWidth} ${chartHeight}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${chartMargin.left},${chartMargin.top})`);
+
+    // Scales
+    const xScale = d3.scaleLinear()
+      .domain([0, 10])
+      .range([0, innerWidth]);
+
+    const yExtent = d3.extent(deltaData, d => d.y);
+    const yPadding = Math.max(0.05, (yExtent[1] - yExtent[0]) * 0.15);
+    const yScale = d3.scaleLinear()
+      .domain([yExtent[0] - yPadding, yExtent[1] + yPadding])
+      .range([innerHeight, 0]);
+
+    // Standard deviation of residuals for delta regression
+    const std = calculateResidualStd(deltaData, slope, intercept);
+
+    // 2σ band (draw first so it's behind other elements)
+    g.append('path')
+      .datum([[0, 2], [10, 2]])
+      .attr('fill', 'rgba(255,255,255,0.06)')
+      .attr('d', d3.area()
+        .x(d => xScale(d[0]))
+        .y0(d => yScale(slope * d[0] + intercept - 2 * std))
+        .y1(d => yScale(slope * d[0] + intercept + 2 * std))
+        .curve(d3.curveLinear)([[0, 0], [10, 0]])
+      );
+
+    // 1σ band
+    g.append('path')
+      .datum([[0, 1], [10, 1]])
+      .attr('fill', 'rgba(255,255,255,0.10)')
+      .attr('d', d3.area()
+        .x(d => xScale(d[0]))
+        .y0(d => yScale(slope * d[0] + intercept - std))
+        .y1(d => yScale(slope * d[0] + intercept + std))
+        .curve(d3.curveLinear)([[0, 0], [10, 0]])
+      );
+
+    // Grid lines
+    g.append('g')
+      .attr('class', 'grid')
+      .selectAll('line')
+      .data(xScale.ticks(10))
+      .join('line')
+      .attr('x1', d => xScale(d))
+      .attr('x2', d => xScale(d))
+      .attr('y1', 0)
+      .attr('y2', innerHeight)
+      .attr('stroke', 'rgba(255,255,255,0.1)');
+
+    g.append('g')
+      .attr('class', 'grid')
+      .selectAll('line')
+      .data(yScale.ticks(8))
+      .join('line')
+      .attr('x1', 0)
+      .attr('x2', innerWidth)
+      .attr('y1', d => yScale(d))
+      .attr('y2', d => yScale(d))
+      .attr('stroke', 'rgba(255,255,255,0.1)');
+
+    // Zero line (no change from previous election)
+    g.append('line')
+      .attr('x1', 0)
+      .attr('x2', innerWidth)
+      .attr('y1', yScale(0))
+      .attr('y2', yScale(0))
+      .attr('stroke', 'rgba(255,255,255,0.4)')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '4,4');
+
+    // 6-key threshold
+    g.append('line')
+      .attr('x1', xScale(5.5))
+      .attr('x2', xScale(5.5))
+      .attr('y1', 0)
+      .attr('y2', innerHeight)
+      .attr('stroke', colors.red)
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '6,4');
+
+    g.append('text')
+      .attr('x', xScale(5.5) + 8)
+      .attr('y', 20)
+      .attr('fill', colors.red)
+      .attr('font-size', '12px')
+      .text('6-key threshold');
+
+    // Line of best fit
+    g.append('line')
+      .attr('x1', xScale(0))
+      .attr('y1', yScale(intercept))
+      .attr('x2', xScale(10))
+      .attr('y2', yScale(slope * 10 + intercept))
+      .attr('stroke', colors.yellow)
+      .attr('stroke-width', 2);
+
+    // Data points
+    g.selectAll('circle')
+      .data(deltaData)
+      .join('circle')
+      .attr('cx', d => xScale(d.x))
+      .attr('cy', d => yScale(d.y))
+      .attr('r', 6)
+      .attr('fill', colors.accent)
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 1)
+      .attr('cursor', 'pointer')
+      .on('mouseover', (event, d) => {
+        const direction = d.y > 0 ? 'Improved' : d.y < 0 ? 'Declined' : 'No change';
+        const color = d.y > 0 ? colors.green : d.y < 0 ? colors.red : colors.muted;
+        showTooltip(event, `
+          <strong>${d.year}</strong><br>
+          False Keys: ${d.x}<br>
+          Delta: <span style="color:${color}">${formatNPV(d.y)}</span><br>
+          <em style="color:${color}">${direction} vs. previous election</em>
+        `);
+      })
+      .on('mouseout', hideTooltip);
+
+    // Add labels for each point
+    g.selectAll('text.label')
+      .data(deltaData)
+      .join('text')
+      .attr('class', 'label')
+      .attr('x', d => xScale(d.x) + 8)
+      .attr('y', d => yScale(d.y) + 4)
+      .attr('fill', colors.muted)
+      .attr('font-size', '10px')
+      .text(d => d.year);
+
+    // Axes
+    g.append('g')
+      .attr('transform', `translate(0,${innerHeight})`)
+      .call(d3.axisBottom(xScale).ticks(10))
+      .selectAll('text')
+      .attr('fill', colors.muted);
+
+    g.append('g')
+      .call(d3.axisLeft(yScale).tickFormat(d => (d * 100).toFixed(0) + '%'))
+      .selectAll('text')
+      .attr('fill', colors.muted);
+
+    // Axis labels
+    svg.append('text')
+      .attr('x', chartWidth / 2)
+      .attr('y', chartHeight - 10)
+      .attr('text-anchor', 'middle')
+      .attr('fill', colors.muted)
+      .attr('font-size', '14px')
+      .text('Number of False Keys');
+
+    svg.append('text')
+      .attr('x', -chartHeight / 2)
+      .attr('y', 20)
+      .attr('text-anchor', 'middle')
+      .attr('fill', colors.muted)
+      .attr('font-size', '14px')
+      .attr('transform', 'rotate(-90)')
+      .text('Change in Incumbent Party NPV from Previous Election');
+
+    // Equation and R value (styled like main scatter plot)
+    svg.append('text')
+      .attr('x', chartWidth - chartMargin.right - 10)
+      .attr('y', chartMargin.top + 20)
+      .attr('text-anchor', 'end')
+      .attr('fill', colors.yellow)
+      .attr('font-size', '12px')
+      .text(`y = ${slope.toFixed(4)}x + ${intercept.toFixed(4)}`);
+
+    svg.append('text')
+      .attr('x', chartWidth - chartMargin.right - 10)
+      .attr('y', chartMargin.top + 38)
+      .attr('text-anchor', 'end')
+      .attr('fill', colors.yellow)
+      .attr('font-size', '12px')
+      .text(`r = ${r.toFixed(3)} | r² = ${r2.toFixed(3)}`);
+
+    console.log('createDeltaScatterPlot: regression r=', r, 'r2=', r2, 'slope=', slope, 'intercept=', intercept);
+  }
+
+  /**
    * Show tooltip
    */
   function showTooltip(event, html) {
@@ -1166,11 +1398,23 @@
     // Chart tabs
     document.querySelectorAll('.chart-tab').forEach(tab => {
       tab.addEventListener('click', () => {
+        const panel = tab.dataset.panel;
+        console.log('Chart tab clicked:', panel);
         document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.chart-panel').forEach(p => p.classList.remove('active'));
 
         tab.classList.add('active');
-        document.getElementById(tab.dataset.panel + 'Panel').classList.add('active');
+        document.getElementById(panel + 'Panel').classList.add('active');
+
+        // If switching to delta panel, recreate the delta chart (ensure it's rendered)
+        if (panel === 'delta') {
+          try {
+            createDeltaScatterPlot(regressionData);
+            console.log('Delta chart recreated on tab click');
+          } catch (err) {
+            console.error('Error creating delta chart on tab click:', err);
+          }
+        }
       });
     });
 
