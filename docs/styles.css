@@ -2623,3 +2623,11 @@ body.shift-vectors-page {
     overflow-x: hidden;
   }
 }
+
+/* Hide diagnostics/debug panels when present on pages */
+#diagnostics, .diagnostics, #diagPanel, .diag-panel, #enLogPanel {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
