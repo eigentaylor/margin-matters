@@ -2625,7 +2625,10 @@ body.shift-vectors-page {
 }
 
 /* Hide diagnostics/debug panels when present on pages */
-#diagnostics, .diagnostics, #diagPanel, .diag-panel, #enLogPanel {
+#diagnostics,
+.diagnostics,
+#diagPanel,
+.diag-panel {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
