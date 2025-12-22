@@ -372,17 +372,6 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     // Mark election-night active immediately so any code paths that call
     // updateAll() during preparation will not overwrite the live EV bar.
     try { window._electionNightActive = true; } catch (e) { /* ignore */ }
-    try {
-      const totalPool = state.totalEvPool || 538;
-      window._evSummaryOverride = {
-        dEV: 0,
-        rEV: 0,
-        oEV: 0,
-        uEV: totalPool,
-        totalEV: totalPool,
-        updatedAt: Date.now()
-      };
-    } catch (e) { /* ignore */ }
 
     try { prepareAtLargeData(); } catch (e) { /* non-fatal */ }
 
@@ -395,8 +384,6 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.targetPvLabel = formatLean(pvValue);
     state.confidenceThreshold = getConfidenceSliderValue();
     updateConfidenceLabel(state.confidenceThreshold);
-
-    if (typeof window.updateAll === 'function') window.updateAll();
 
     state.prevUnitColors = window._lastUnitColors ? new Map(window._lastUnitColors) : null;
     state.prevAbbrColors = window._lastAbbrColors
@@ -444,6 +431,22 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
 
     state.totalEvPool = determineEvPool(year, data);
+
+    // Now that we have the correct totalEvPool, set up the EV summary override
+    // This ensures updateAll() uses the right "EVs needed to win" value
+    try {
+      window._evSummaryOverride = {
+        dEV: 0,
+        rEV: 0,
+        oEV: 0,
+        uEV: state.totalEvPool,
+        totalEV: state.totalEvPool,
+        updatedAt: Date.now()
+      };
+    } catch (e) { /* ignore */ }
+
+    // Call updateAll after setting the override with the correct totalEvPool
+    if (typeof window.updateAll === 'function') window.updateAll();
 
     state.totalEligibleVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.totalVotes : 0), 0);
 
