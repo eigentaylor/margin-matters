@@ -606,6 +606,19 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
 
     try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
+    
+    // Remove phantom EV fill elements and clean up right-anchor on evFillR
+    try {
+      ['evFillPhantomD', 'evFillPhantomR', 'evFillPhantomO'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.parentElement) el.parentElement.removeChild(el);
+      });
+      const rEl = document.getElementById('evFillR');
+      if (rEl && rEl.dataset && rEl.dataset.anchor) {
+        delete rEl.dataset.anchor;
+      }
+    } catch (e) { /* ignore */ }
+    
     if (typeof window.hideMapTip === 'function') {
       try { window.hideMapTip(); } catch (e) { }
     }
@@ -1211,6 +1224,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (elements.timeLabel) elements.timeLabel.textContent = `${formatTimeLabel(timeMinutes)} ET`;
 
     let dEV = 0, rEV = 0, oEV = 0;
+    // Track uncalled state leanings for phantom EV display
+    let phantomDEV = 0, phantomREV = 0, phantomOEV = 0;
     let dCounted = 0, rCounted = 0, oCounted = 0, countedVotes = 0;
 
     state.snapshot.clear();
@@ -1265,6 +1280,16 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         dEV += evAllocation.D || 0;
         rEV += evAllocation.R || 0;
         oEV += evAllocation.O || 0;
+      } else if (!isCalled && metrics.reporting > EPS && st.ev > 0) {
+        // Track phantom EVs for uncalled states based on current leader
+        const leader = metrics.leader;
+        if (leader === 'D') {
+          phantomDEV += st.ev;
+        } else if (leader === 'R') {
+          phantomREV += st.ev;
+        } else if (leader === 'O') {
+          phantomOEV += st.ev;
+        }
       }
 
       if (st.pvWeight) {
@@ -1354,11 +1379,14 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         oEV,
         uEV,
         totalEV: totalPool,
+        phantomDEV,
+        phantomREV,
+        phantomOEV,
         updatedAt: Date.now()
       };
     } catch (e) { /* ignore */ }
 
-    updateEvDisplay(dEV, rEV, oEV);
+    updateEvDisplay(dEV, rEV, oEV, phantomDEV, phantomREV, phantomOEV);
     updatePopularVoteDisplay(dCounted, rCounted, oCounted, countedVotes);
     updateProgressSlider(timeMinutes);
     updateCallLog(timeMinutes);
@@ -1724,30 +1752,85 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.boxesDirty = true;
   }
 
-  function updateEvDisplay(dEV, rEV, oEV) {
+  function updateEvDisplay(dEV, rEV, oEV, phantomDEV = 0, phantomREV = 0, phantomOEV = 0) {
     const totalPool = Math.max(1, state.totalEvPool || 538);
     const called = Math.max(0, dEV + rEV + oEV);
-    const uEV = Math.max(0, totalPool - called);
+    const phantomTotal = Math.max(0, phantomDEV + phantomREV + phantomOEV);
+    // Uncalled EVs exclude phantom EVs (states with reporting but not yet called)
+    const uEV = Math.max(0, totalPool - called - phantomTotal);
 
     const dPct = (dEV / totalPool) * 100;
+    const phantomDPct = (phantomDEV / totalPool) * 100;
     const uPct = (uEV / totalPool) * 100;
     const oPct = (oEV / totalPool) * 100;
+    const phantomOPct = (phantomOEV / totalPool) * 100;
     const rPct = (rEV / totalPool) * 100;
+    const phantomRPct = (phantomREV / totalPool) * 100;
 
     const dEl = document.getElementById('evFillD');
     const uEl = document.getElementById('evFillU');
     const oEl = document.getElementById('evFillO');
     const rEl = document.getElementById('evFillR');
     const txt = document.getElementById('evText');
+    const parentBar = dEl ? dEl.parentElement : null;
 
+    // Ensure the called R segment is right-anchored only when phantoms are present
+    // so the phantom R segment appears immediately to its left (uncalled -> phantom R -> called R).
+    // Remove the anchor when no phantoms exist to allow normal left-to-right layout.
+    try {
+      if (rEl && rEl.dataset) {
+        const hasPhantoms = (phantomDEV > EPS || phantomREV > EPS || phantomOEV > EPS);
+        if (hasPhantoms) {
+          rEl.dataset.anchor = 'right';
+        } else {
+          delete rEl.dataset.anchor;
+        }
+      }
+    } catch (e) { /* ignore */ }
+
+    // Create or get phantom elements
+    const getOrCreatePhantom = (id, baseColor, anchor) => {
+      let el = document.getElementById(id);
+      if (!el && parentBar) {
+        el = document.createElement('div');
+        el.id = id;
+        el.style.position = 'absolute';
+        el.style.top = '0';
+        el.style.bottom = '0';
+        el.style.background = baseColor;
+        el.style.opacity = '0.35';
+        el.style.pointerEvents = 'none';
+        if (anchor === 'right') {
+          el.dataset.anchor = 'right';
+        }
+        // Insert phantoms before evMid and evText for proper z-order
+        const evMid = document.getElementById('evMid');
+        if (evMid) {
+          parentBar.insertBefore(el, evMid);
+        } else {
+          parentBar.appendChild(el);
+        }
+      }
+      return el;
+    };
+
+    const phantomDEl = getOrCreatePhantom('evFillPhantomD', '#6a8fd9', 'left');
+    const phantomOEl = getOrCreatePhantom('evFillPhantomO', '#d9c760', 'left');
+    const phantomREl = getOrCreatePhantom('evFillPhantomR', '#d46a6a', 'right');
+
+    // Build ordered segment list: called D, phantom D, uncalled U, phantom O, called O, phantom R, called R
+    // Left side: D (called) -> phantomD -> U (part) -> phantomO -> O (called)
+    // Right side: R (called) -> phantomR
     const segments = [
-      { el: dEl, pct: dPct, value: dEV, code: 'D' },
-      { el: uEl, pct: uPct, value: uEV, code: 'U' },
-      { el: oEl, pct: oPct, value: oEV, code: 'O' },
-      { el: rEl, pct: rPct, value: rEV, code: 'R' }
+      { el: dEl, pct: dPct, value: dEV, code: 'D', side: 'left' },
+      { el: phantomDEl, pct: phantomDPct, value: phantomDEV, code: 'UD', side: 'left', isPhantom: true },
+      { el: uEl, pct: uPct, value: uEV, code: 'U', side: 'left' },
+      { el: phantomOEl, pct: phantomOPct, value: phantomOEV, code: 'UO', side: 'left', isPhantom: true },
+      { el: oEl, pct: oPct, value: oEV, code: 'O', side: 'left' },
+      { el: rEl, pct: rPct, value: rEV, code: 'R', side: 'right' },
+      { el: phantomREl, pct: phantomRPct, value: phantomREV, code: 'UR', side: 'right', isPhantom: true }
     ];
 
-    const parentBar = dEl ? dEl.parentElement : null;
     const showLabelPct = 3;
     const readableTextColor = colorStr => {
       try {
@@ -1819,6 +1902,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
     });
 
+    // Apply border radius to edge segments (skip phantom elements for radius)
+    const leftNonPhantom = leftActive.filter(el => !el.id.includes('Phantom'));
+    const rightNonPhantom = rightActive.filter(el => !el.id.includes('Phantom'));
+    
     if (leftActive.length) {
       const firstLeft = leftActive[0];
       firstLeft.style.borderTopLeftRadius = firstLeft.style.borderBottomLeftRadius = '9px';
@@ -1837,6 +1924,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
     }
 
+    // Add labels to all segments (including phantom segments with UD/UO/UR codes)
     segments.forEach(seg => {
       if (!seg.el) return;
       const value = Number.isFinite(seg.value) ? seg.value : 0;
@@ -1908,13 +1996,22 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     });
 
     if (txt) {
+      // Include phantom EVs in the display text for context
+      const totalUncalled = uEV + phantomDEV + phantomREV + phantomOEV;
       const parts = [`D ${dEV}`];
-      if (uEV > 0) parts.push(`U ${uEV}`);
-      if (oEV > 0) parts.push(`O ${oEV}`);
-      parts.push(`R ${rEV}`);
-      txt.textContent = (uEV > 0 || oEV > 0)
+      if (phantomDEV > 0) parts[0] += ` (+${phantomDEV})`;
+      if (totalUncalled > 0) parts.push(`U ${totalUncalled}`);
+      if (oEV > 0 || phantomOEV > 0) {
+        let oPart = `O ${oEV}`;
+        if (phantomOEV > 0) oPart += ` (+${phantomOEV})`;
+        parts.push(oPart);
+      }
+      let rPart = `R ${rEV}`;
+      if (phantomREV > 0) rPart += ` (+${phantomREV})`;
+      parts.push(rPart);
+      txt.textContent = (totalUncalled > 0 || oEV > 0 || phantomOEV > 0)
         ? parts.join(' | ')
-        : `${dEV} - ${rEV}`;
+        : `${dEV}${phantomDEV > 0 ? ` (+${phantomDEV})` : ''} - ${rEV}${phantomREV > 0 ? ` (+${phantomREV})` : ''}`;
     }
   }
 
