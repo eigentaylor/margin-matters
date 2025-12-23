@@ -384,11 +384,27 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
     return basePromise.catch(() => []);
   }
 
+  function isSenateMode() {
+    // Detect if we're on senate.html page
+    try {
+      if (typeof window !== 'undefined' && window.location) {
+        const pathname = window.location.pathname || '';
+        return pathname.includes('senate.html');
+      }
+    } catch (e) { }
+    return false;
+  }
+
   function loadTesterData() {
     const loader = getActiveDataLoader();
-    const marginsPromise = (loader && typeof loader.loadPresidentialMargins === 'function')
-      ? loader.loadPresidentialMargins()
-      : d3.csv('presidential_margins.csv');
+    const isSenatePage = isSenateMode();
+    
+    // Use senate_margins.csv for senate page, presidential_margins.csv otherwise
+    const marginsPromise = isSenatePage
+      ? d3.csv('senate_margins.csv')
+      : ((loader && typeof loader.loadPresidentialMargins === 'function')
+        ? loader.loadPresidentialMargins()
+        : d3.csv('presidential_margins.csv'));
 
     return Promise.all([
       marginsPromise,
@@ -400,6 +416,7 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
   }
 
   loadTesterData().then(([margins, ec, flipResults, flipDetails, stopColors]) => {
+  const isSenatePage = isSenateMode();
     (margins || []).forEach(r => {
       const year = +r.year;
       const unit = r.abbr;
@@ -440,7 +457,9 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
       const row = {
         year, unit, rm, nm, ev, tp: topThirdShare, thirdShare,
         dVotes, rVotes, tVotes, total: totalVotes, topThirdVotes,
-        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes, color
+        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes, color,
+        // Preserve winner party (useful for senate aggregation)
+        winner_party: (r.winner_party || r.winnerParty || r.winner || '')
       };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);
@@ -498,13 +517,53 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
       colorForMargin: marginToColor
     });
 
+    // If we're on the senate page, aggregate seat winners into per-state seat counts
+    // and expose a helper map for tooltips and EV-bar logic. We also populate
+    // `evByUnit` with the total number of senators for each state so existing UI
+    // that expects an EV lookup continues to work (the EV bar will be scaled
+    // to 100 elsewhere when `window._senateMode` is true).
+    try {
+      if (isSenatePage) {
+        const senateSeatsByYear = new Map();
+        for (const [y, rows] of byYear.entries()) {
+          const m = new Map();
+          (rows || []).forEach(rw => {
+            try {
+              const unitKey = String(rw.unit || '');
+              if (!unitKey || unitKey.toUpperCase() === 'NATIONAL') return;
+              const st = unitKey.slice(0, 2);
+              // Treat ME and NE as aggregated single units (ME, NE)
+              const abbr = (st === 'ME' || st === 'NE') ? st : st;
+              if (!abbr) return;
+              if (!m.has(abbr)) m.set(abbr, { D: 0, R: 0, I: 0, other: 0, total: 0 });
+              const bucket = m.get(abbr);
+              const party = String(rw.winner_party || '').trim();
+              if (/^D/i.test(party) || /Dem/i.test(party)) bucket.D++;
+              else if (/^R/i.test(party) || /Rep/i.test(party)) bucket.R++;
+              else if (/^I/i.test(party) || /^Ind/i.test(party)) bucket.I++;
+              else bucket.other++;
+              bucket.total++;
+            } catch (e) { /* ignore per-row errors */ }
+          });
+          // Populate evByUnit with total seats for compatibility
+          for (const [abbr, counts] of m.entries()) {
+            try { evByUnit.set(`${y}:${abbr}`, counts.total); } catch (e) { }
+          }
+          senateSeatsByYear.set(y, m);
+        }
+        window._senateSeatsByYear = senateSeatsByYear;
+      }
+    } catch (e) { console.warn('Error building senate seat aggregates', e); }
+
     // expose simple accessors
     window.getRowsForYear = function (y) { try { return byYear.get(y) || []; } catch (e) { return []; } };
     window.getEvFor = function (y, u) { try { return evByUnit.get(`${y}:${u}`); } catch (e) { return null; } };
 
     init();
     // attempt to load ME/NE district geometries for per-district coloring
-    fetch('me_ne_districts.geojson').then(r => r.json()).then(geo => {
+    // In senate mode we do NOT render ME/NE districts; treat them as single statewide units
+    if (!isSenatePage) {
+      fetch('me_ne_districts.geojson').then(r => r.json()).then(geo => {
       try {
         // Create clipPaths for ME and NE using the state paths already on the map
         const svgEl = d3.select('#map');
@@ -666,7 +725,11 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
       } catch (e) {
         console.warn(`Couldn't render ME/NE districts: ${e && e.message ? e.message : e}`);
       }
-    }).catch(() => {/* no district overlay available */ });
+      }).catch(() => {/* no district overlay available */ });
+    } else {
+      // ensure updateAll still runs to color the map appropriately
+      try { updateAll(); } catch (e) { /* ignore */ }
+    }
   });
 
   const updateAll = createUpdateAll({
@@ -729,6 +792,9 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
   window._getNatMargin = getNatMargin;
   window._STOP_EPS = STOP_EPS;
   window.updateUrl = updateUrl;
+  
+  // Expose senate mode flag for tooltips and EV bar
+  window._senateMode = isSenateMode();
 
   // Expose proportional EV allocation for use in modal
   window.allocateProportionalEVs = allocateProportionalEVs;

@@ -160,8 +160,12 @@ export function formatUnitTooltip(unit, opts) {
         // Build tooltip content with multiple rows. We'll assemble rows after computing vote tallies
         const rows = [];
 
-        // Second row: EV allocation (for proportional mode)
+        // Second row: EV allocation (for proportional mode) or Senator info (for senate mode)
+        const isSenateMode = !!(window._senateMode);
         const evAllocation = (function () {
+            // In senate mode, skip EV allocation and show senator info instead
+            if (isSenateMode) return null;
+            
             const electionNightActive = !!window._electionNightActive;
             const reportingVal = (info && info.reporting != null) ? Number(info.reporting) : null;
             const fullyCounted = (reportingVal != null && isFinite(reportingVal)) ? (reportingVal >= 0.999) : false;
@@ -178,7 +182,19 @@ export function formatUnitTooltip(unit, opts) {
             }
             return wta;
         })();
-        if (evAllocation) {
+        
+        // In senate mode, display senator information based on election results
+        if (isSenateMode && info) {
+            const senatorParts = [];
+            // Get winner party from the info object
+            const winnerParty = info.winner_party || info.winnerParty;
+            if (winnerParty) {
+                senatorParts.push(`${winnerParty}: 1`);
+            }
+            if (senatorParts.length) {
+                rows.push(senatorParts.join(' | '));
+            }
+        } else if (evAllocation) {
             const evParts = [];
             // Resolve candidate last names for labels (prefer snapshot/info, then derived helpers, then CSV map)
             function resolveCandidateNames(infoObj, unitKey) {
@@ -398,11 +414,42 @@ export function formatUnitTooltip(unit, opts) {
             return `${prefix}+99.9`;
         })();
 
-        // First row: Basic info (display name, EV, margin)
+        // First row: Basic info (display name, EV or senate seat counts, margin)
         // Keep showing the unit/display name first; marginStr will include candidate label when available
         const basicParts = [];
         if (display) basicParts.push(display);
-        if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
+        // If we're in senate mode, prefer to show senator counts (D/R/I) rather than EVs
+        const isSenate = !!(window._senateMode);
+        if (isSenate) {
+            try {
+                const year = window._curYear;
+                const seatsMap = (window._senateSeatsByYear && window._senateSeatsByYear.get) ? window._senateSeatsByYear.get(year) : null;
+                const unitKey = (unit && unit.length >= 2) ? unit.slice(0,2) : unit;
+                let counts = null;
+                if (seatsMap && unitKey && seatsMap.has(unitKey)) counts = seatsMap.get(unitKey);
+                // Fallback: if getAdjustedInfo provides a winner_party we can at least show single winner
+                if (!counts && info && info.winner_party) {
+                    const wp = String(info.winner_party || '').trim();
+                    counts = { D: 0, R: 0, I: 0, other: 0, total: 1 };
+                    if (/^D/i.test(wp) || /Dem/i.test(wp)) counts.D = 1;
+                    else if (/^R/i.test(wp) || /Rep/i.test(wp)) counts.R = 1;
+                    else if (/^I/i.test(wp) || /Ind/i.test(wp)) counts.I = 1;
+                    else counts.other = 1;
+                }
+                if (counts) {
+                    const parts = [];
+                    if (isFinite(counts.D) && counts.D > 0) parts.push(`D: ${counts.D}`);
+                    if (isFinite(counts.R) && counts.R > 0) parts.push(`R: ${counts.R}`);
+                    if (isFinite(counts.I) && counts.I > 0) parts.push(`I: ${counts.I}`);
+                    if (parts.length === 0 && isFinite(counts.total)) parts.push(`Total: ${counts.total}`);
+                    basicParts.push(parts.join(', '));
+                } else if (ev != null && ev !== '') {
+                    basicParts.push(`${ev} EV`);
+                }
+            } catch (e) { if (ev != null && ev !== '') basicParts.push(`${ev} EV`); }
+        } else {
+            if (ev != null && ev !== '') basicParts.push(`${ev} EV`);
+        }
         if (cappedMarginStr) basicParts.push(cappedMarginStr);
         if (basicParts.length) rows.unshift(basicParts.join(' · '));
 
@@ -772,7 +819,9 @@ export function getAdjustedInfo(unit) {
             candidates: (Object.keys(candMap).length ? candMap : undefined),
             dCandidate: r.dCandidate || null,
             rCandidate: r.rCandidate || null,
-            thirdPartyResults: r.thirdPartyResults || null
+            thirdPartyResults: r.thirdPartyResults || null,
+            // For senate mode, include winner party information
+            winner_party: r.winner_party || null
         };
     } catch (e) { return null; }
 }

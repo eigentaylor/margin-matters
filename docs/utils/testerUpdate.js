@@ -156,6 +156,9 @@ export function createUpdateAll(deps) {
     const unitColors = new Map();
     const unitParties = new Map();
     let dEV = 0; let rEV = 0; let oEV = 0;
+    
+    // In senate mode, count senators instead of EVs
+    const isSenateMode = !!(window._senateMode);
 
     const activeFlip = window._activeFlip && window._activeFlip.year === year ? window._activeFlip : null;
 
@@ -182,11 +185,13 @@ export function createUpdateAll(deps) {
       }
       let m = baseMargin;
 
-      let ev = evByUnit.get(`${year}:${unit}`);
-      if (ev == null || isNaN(ev)) {
+      // In senate mode, use 1 for senator count; otherwise use electoral votes
+      let ev = isSenateMode ? 1 : evByUnit.get(`${year}:${unit}`);
+      if (!isSenateMode && (ev == null || isNaN(ev))) {
         ev = (+r.ev);
         if (!isFinite(ev)) ev = 0;
       }
+      if (isSenateMode && !isFinite(ev)) ev = 1;
 
       const tallies = calculateUnitVoteTallies(unit);
       let voteLeader = null;
@@ -683,7 +688,7 @@ export function createUpdateAll(deps) {
 
     let totalEV = (hasOverride && Number.isFinite(+override.totalEV) && +override.totalEV > 0)
       ? +override.totalEV
-      : 538;
+      : (window._senateMode ? 100 : 538);  // In senate mode, total is 100 senators
     try {
       if (!hasOverride) {
         const t = window._totalEvByYear && window._totalEvByYear.get(year);
