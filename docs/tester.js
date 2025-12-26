@@ -437,10 +437,13 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
         // If parsing fails, leave as empty object
       }
 
+      // Parse elasticity (deltaMargin / deltaNPV)
+      const elasticity = +r.elasticity || 0;
+
       const row = {
         year, unit, rm, nm, ev, tp: topThirdShare, thirdShare,
         dVotes, rVotes, tVotes, total: totalVotes, topThirdVotes,
-        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes, color
+        dCandidate, rCandidate, thirdPartyResults, specialCaseNotes, color, elasticity
       };
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(row);

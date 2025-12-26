@@ -278,6 +278,13 @@ def main():
             two_party_pres_delta = two_party_margin - prev_two_party if prev_two_party is not None else None
             two_party_relative_delta = two_party_relative - prev_two_party_relative if prev_two_party_relative is not None else None
             two_party_national_delta = two_party_national - prev_two_party_national if prev_two_party_national is not None else None
+            
+            # Calculate elasticity: pres_margin_delta / national_margin_delta
+            # Return 0 if either value is None or national_margin_delta is 0
+            if pres_delta is not None and national_delta is not None and national_delta != 0:
+                elasticity = pres_delta / national_delta
+            else:
+                elasticity = 0.0
 
             # determine electoral votes from Electoral_College.csv (with ME/NE special-casing)
             electoral_votes = compute_electoral_votes(year, abbr) or r.get('electoral_votes', 0)
@@ -354,6 +361,9 @@ def main():
                 'two_party_relative_margin_str': utils.lean_str(two_party_relative) if two_party_relative is not None else '0.0',
                 'two_party_relative_margin_delta': two_party_relative_delta if two_party_relative_delta is not None else 0.0,
                 'two_party_relative_margin_delta_str': utils.lean_str(two_party_relative_delta) if two_party_relative_delta is not None else '0.0',
+                
+                'elasticity': elasticity,
+                'elasticity_str': f"{elasticity:.4f}" if elasticity != 0.0 else '0.0000',
                 
                 'top_third_party_share_str': utils.lean_str(r.get('top_third_party_share', 0.0), third_party=True),
                 
@@ -550,6 +560,7 @@ def main():
         'two_party_margin', 'two_party_margin_delta',
         'two_party_national_margin', 'two_party_national_margin_delta',
         'two_party_relative_margin', 'two_party_relative_margin_delta',
+        'elasticity',
         'color',
         'pres_margin_str', 'pres_margin_delta_str',
         'median_delta_dist', 'median_delta_dist_str',
@@ -560,6 +571,7 @@ def main():
         'two_party_margin_str', 'two_party_margin_delta_str',
         'two_party_national_margin_str', 'two_party_national_margin_delta_str',
         'two_party_relative_margin_str', 'two_party_relative_margin_delta_str',
+        'elasticity_str',
         'special_case_notes',
         'source_url',
     ]

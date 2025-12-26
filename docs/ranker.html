@@ -110,6 +110,9 @@
         </li>
         <li><strong>Relative</strong>: the state's margin minus the national margin.</li>
         <li><strong>Delta</strong>: change in the chosen metric since the previous election.</li>
+        <li><strong>Elasticity</strong>: measures how responsive a state is to national swings. Calculated as the
+          state's margin change divided by the national margin change (ΔMargin/ΔNPV). Values &gt;1 indicate more elastic
+          (larger swings), &lt;1 less elastic (smaller swings).</li>
       </ul>
     </div>
 
@@ -142,6 +145,7 @@
         "third_party_relative_share",
         "ev_orthogonalized_margin",
         "ev_orthogonalized_margin_delta",
+        "elasticity",
       ];
 
       // Load CSV data
@@ -178,6 +182,11 @@
         const entry = { abbr: abbrRaw };
         if (r.electoral_votes != null) {
           entry.electoral_votes = r.electoral_votes;
+        }
+
+        // Load national_margin_delta for elasticity coloring
+        if (r.national_margin_delta != null) {
+          entry.national_margin_delta = r.national_margin_delta;
         }
 
         for (const m of METRICS) {
@@ -229,6 +238,7 @@
       function buildMetricKey() {
         if (base === 'median_delta_dist') return 'median_delta_dist';
         if (base === 'third_party_share') return relative ? 'third_party_relative_share' : 'third_party_share';
+        if (base === 'elasticity') return 'elasticity';
         if (twoParty) {
           if (relative && delta) return 'two_party_relative_margin_delta';
           if (relative) return 'two_party_relative_margin'; if (delta) return 'two_party_margin_delta'; return 'two_party_margin';
@@ -248,6 +258,7 @@
           return sign === 'EVEN' ? 'EVEN' : (sign + '+' + pct);
         }
         if (String(m).includes('share')) return (v * 100).toFixed(2) + '%';
+        if (m === 'elasticity') return 'Elasticity ' + v.toFixed(4);
         return v.toFixed(4);
       }
 
@@ -255,17 +266,25 @@
         if (base === 'median_delta_dist') return 'Median delta distance';
         if (base === 'third_party_share') return 'Third-party share' + (relative ? ' (relative)' : '');
         if (base === 'ev_orthogonalized') { let s = 'EV-orthogonalized margin'; if (delta) s += ' (delta)'; return s; }
+        if (base === 'elasticity') return 'Elasticity (ΔMargin/ΔNPV)';
         let s = twoParty ? 'Two-party margin' : 'State margin'; if (delta) s += ' (delta)'; if (relative) s += ' (relative)'; return s;
       }
 
       function renderControls() {
         if (!data || !data.years || !data.years.length) return;
         $('#year-val').textContent = selectedYear; const slider = $('#year'); slider.min = yearMin; slider.max = yearMax; slider.step = 4; slider.value = selectedYear;
-        $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option><option value="median_delta_dist">Median delta distance</option><option value="ev_orthogonalized">EV-orthogonalized margin</option>'; $('#metric').value = base;
+        $('#metric').innerHTML = '<option value="margin">Margin</option><option value="third_party_share">Third-party share</option><option value="median_delta_dist">Median delta distance</option><option value="ev_orthogonalized">EV-orthogonalized margin</option><option value="elasticity">Elasticity</option>'; $('#metric').value = base;
         $('#two').checked = twoParty; $('#rel').checked = relative; $('#delt').checked = delta; $('#abs').checked = useAbs; $('#reverse').checked = reverse;
         const twoEl = $('#two'); if (twoEl && twoEl.parentElement) { const hideTwo = base !== 'margin'; twoEl.parentElement.style.display = hideTwo ? 'none' : ''; if (hideTwo) { twoEl.checked = false; twoParty = false; } }
         const relEl = $('#rel'); if (relEl && relEl.parentElement) { const hideRel = base === 'median_delta_dist' || base === 'ev_orthogonalized'; relEl.parentElement.style.display = hideRel ? 'none' : ''; if (hideRel) { relEl.checked = false; relative = false; } }
         const deltEl = $('#delt'); if (deltEl && deltEl.parentElement) { const hideDelta = (base !== 'margin' && base !== 'ev_orthogonalized'); const disableDelta = hideDelta || (selectedYear === yearMin); deltEl.parentElement.style.display = hideDelta ? 'none' : ''; deltEl.disabled = disableDelta; if (hideDelta) { deltEl.checked = false; delta = false; } }
+        // Hide all checkboxes for elasticity since it has no modifiers
+        if (base === 'elasticity') {
+          if ($('#two').parentElement) $('#two').parentElement.style.display = 'none';
+          if ($('#rel').parentElement) $('#rel').parentElement.style.display = 'none';
+          if ($('#delt').parentElement) $('#delt').parentElement.style.display = 'none';
+          twoParty = false; relative = false; delta = false;
+        }
         const nameEl = $('#metric-name'); if (nameEl) nameEl.textContent = metricDisplayName();
       }
 
@@ -305,7 +324,15 @@
             rawKey = delta ? 'pres_margin_delta' : 'pres_margin'
             const evOrthoKey = delta ? 'ev_orthogonalized_margin_delta' : 'ev_orthogonalized_margin';
             if (delta) { if (rec[evOrthoKey] != null && !isNaN(rec[evOrthoKey])) label = 'Δ ' + niceStr(abbr, evOrthoKey, rec); if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw Δ: ' + niceStr(abbr, rawKey, rec) + ')'; }
-              else { if (rec[evOrthoKey] != null && !isNaN(rec[evOrthoKey])) label = niceStr(abbr, evOrthoKey, rec); if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw: ' + niceStr(abbr, rawKey, rec) + ')'; }
+            else { if (rec[evOrthoKey] != null && !isNaN(rec[evOrthoKey])) label = niceStr(abbr, evOrthoKey, rec); if (rec[rawKey] != null && !isNaN(rec[rawKey])) label += ' (Raw: ' + niceStr(abbr, rawKey, rec) + ')'; }
+          } else if (base === 'elasticity') {
+            // Elasticity: show the value with pres_margin_delta and national_margin_delta for context
+            label = 'Elasticity (ΔMargin/ΔNPV): ' + niceStr(abbr, metricKey, rec);
+            const presKey = 'pres_margin_delta';
+            const natKey = 'national_margin_delta';
+            if (rec[presKey] != null && !isNaN(rec[presKey]) && rec[natKey] != null && !isNaN(rec[natKey])) {
+              label += '<br>(State Δ: ' + niceStr(abbr, presKey, rec) + ',<br>National Δ: ' + niceStr(abbr, natKey, rec) + ')';
+            }
           } else { label = niceStr(abbr, metricKey, rec); }
           rows.push({ abbr, val, rec, label, sortKey: key });
         });
@@ -315,14 +342,14 @@
         return rows;
       }
 
-      function rowColorClass(val) { const key = buildMetricKey(); if (!String(key).includes('margin') && key !== 'median_delta_dist') return 'bg-purple-600 border-purple-300'; if (val > 0) return 'bg-blue-600 border-blue-300'; if (val < 0) return 'bg-rose-600 border-rose-300'; return 'bg-slate-600 border-slate-300'; }
+      function rowColorClass(val, rec) { const key = buildMetricKey(); if (!String(key).includes('margin') && key !== 'median_delta_dist' && key !== 'elasticity') return 'bg-purple-600 border-purple-300'; if (key === 'elasticity') { const natDelta = rec && rec['national_margin_delta'] != null ? +rec['national_margin_delta'] : 0; const elasticity = val; if (natDelta < 0) { if (elasticity >= 1) return 'bg-rose-600 border-rose-300'; if (elasticity > 0) return 'bg-purple-600 border-purple-300'; return 'bg-blue-600 border-blue-300'; } else if (natDelta > 0) { if (elasticity >= 1) return 'bg-blue-600 border-blue-300'; if (elasticity > 0) return 'bg-purple-600 border-purple-300'; return 'bg-rose-600 border-rose-300'; } return 'bg-slate-600 border-slate-300'; } if (val > 0) return 'bg-blue-600 border-blue-300'; if (val < 0) return 'bg-rose-600 border-rose-300'; return 'bg-slate-600 border-slate-300'; }
 
       function renderList() {
         const rows = compute(); const list = $('#results'); if (!rows.length) { list.innerHTML = '<div class="text-sm text-slate-400">No data for this selection.</div>'; return; }
         list.innerHTML = rows.map((r, i) => (
           (function () {
             var abbr = r.abbr; var link = (abbr.indexOf('-') !== -1 ? ('unit/' + abbr + '.html') : ('state/' + abbr + '.html')); return (
-              `<div class="flex items-center justify-between rounded-lg shadow-lg border-2 text-white p-3 sm:p-4 m-1 sm:m-2 transform transition-all hover:scale-[1.02] ${rowColorClass(r.val)}" style="animation-delay:${i * 30}ms">` +
+              `<div class="flex items-center justify-between rounded-lg shadow-lg border-2 text-white p-3 sm:p-4 m-1 sm:m-2 transform transition-all hover:scale-[1.02] ${rowColorClass(r.val, r.rec)}" style="animation-delay:${i * 30}ms">` +
               `<div class="flex-shrink-0 text-center"><div class="text-sm sm:text-base lg:text-lg font-bold">#${r.rank}</div><div class="text-[10px] sm:text-xs opacity-90">EVs: ${r.rec.electoral_votes ?? '—'}</div></div>` +
               `<div class="flex-1 min-w-0 px-3 flex flex-col">` +
               `  <div class="text-sm sm:text-lg lg:text-xl font-semibold truncate"><a href="${link}" target="_blank" rel="noopener noreferrer" class="hover:underline text-current">${abbr}</a></div>` +

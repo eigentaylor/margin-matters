@@ -869,7 +869,7 @@ export function createUpdateAll(deps) {
       try { refs.evText.style.display = 'none'; refs.evText.setAttribute && refs.evText.setAttribute('aria-hidden', 'true'); } catch (e) { /* ignore */ }
     }
     if (refs.flipEC) refs.flipEC.textContent = summary;
-    
+
     // Update EVs needed to win display
     if (refs.evNeededToWin) {
       const evsNeeded = Math.floor(totalEV / 2) + 1;
@@ -1154,7 +1154,8 @@ export function createUpdateAll(deps) {
         if (year < 2024 && baselineYear === 2024) {
           delta = -delta;
         }
-        items.push({ unit: r.unit, delta, prevRel, curRel });
+        const elasticity = +r.elasticity || 0;
+        items.push({ unit: r.unit, delta, prevRel, curRel, elasticity });
       });
       items.sort((a, b) => a.delta - b.delta);
 
@@ -1176,10 +1177,12 @@ export function createUpdateAll(deps) {
         const small = smallColor(txt);
         const prevStr = (year < 2024 && baselineYear === 2024) ? fmtLean(it.curRel) : fmtLean(it.prevRel);
         const curStr = (year < 2024 && baselineYear === 2024) ? fmtLean(it.prevRel) : fmtLean(it.curRel);
+        const elastStr = isFinite(it.elasticity) && it.elasticity !== 0 ? it.elasticity.toFixed(3) : '—';
         return `<div class="btn" style="padding:6px 8px;background:${bg};color:${txt};display:flex;flex-direction:column;align-items:flex-start;min-width:110px">
             <div style="font-weight:600">${it.unit}</div>
             <div style="font-size:0.86rem;color:${small}">Δ ${fmtLean(it.delta)}</div>
             <div style="font-size:0.86rem;color:${small}">${prevStr} → ${curStr}</div>
+            <div style="font-size:0.78rem;color:${small}">Elast.: ${elastStr}</div>
           </div>`;
       }).join('');
       listEl.innerHTML = html || '<span class="legend">No data.</span>';
