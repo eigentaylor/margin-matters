@@ -1177,12 +1177,15 @@ export function createUpdateAll(deps) {
         const small = smallColor(txt);
         const prevStr = (year < 2024 && baselineYear === 2024) ? fmtLean(it.curRel) : fmtLean(it.prevRel);
         const curStr = (year < 2024 && baselineYear === 2024) ? fmtLean(it.prevRel) : fmtLean(it.curRel);
-        const elastStr = isFinite(it.elasticity) && it.elasticity !== 0 ? it.elasticity.toFixed(3) : '—';
+        // Hide elasticity for future years (only show for historical data)
+        const showElasticity = year <= 2024 && baselineYear <= 2024;
+        const elastStr = showElasticity && isFinite(it.elasticity) && it.elasticity !== 0 ? it.elasticity.toFixed(3) : '';
+        const elastLine = elastStr ? `<div style="font-size:0.78rem;color:${small}">Elast.: ${elastStr}</div>` : '';
         return `<div class="btn" style="padding:6px 8px;background:${bg};color:${txt};display:flex;flex-direction:column;align-items:flex-start;min-width:110px">
             <div style="font-weight:600">${it.unit}</div>
             <div style="font-size:0.86rem;color:${small}">Δ ${fmtLean(it.delta)}</div>
             <div style="font-size:0.86rem;color:${small}">${prevStr} → ${curStr}</div>
-            <div style="font-size:0.78rem;color:${small}">Elast.: ${elastStr}</div>
+            ${elastLine}
           </div>`;
       }).join('');
       listEl.innerHTML = html || '<span class="legend">No data.</span>';
