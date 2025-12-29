@@ -43,9 +43,11 @@ Interactive Explorer for margin-matters
   // - twoParty: two_party_margin | two_party_national_margin
   // - thirdParty: third_party_share | third_party_national_share
   // - thirdParty relative: third_party_relative_share
+  // - elasticity: elasticity (measures responsiveness to national swings)
   const METRIC = {
     MARGIN: 'margin',
-    THIRD: 'thirdParty'
+    THIRD: 'thirdParty',
+    ELASTICITY: 'elasticity'
   };
 
   // Colors consistent with existing images
@@ -108,8 +110,14 @@ Interactive Explorer for margin-matters
     const s = v > 0 ? '+' : ''; return s + (v * 100).toFixed(1) + '%';
   }
 
+  function elasticityFmt(v) {
+    if (v == null || isNaN(v) || v === 0) return '';
+    return v.toFixed(3);
+  }
+
   function fmtForCurrent(metric, rel, delta, twoP) {
     if (metric === METRIC.THIRD) return rel ? percentFmtSigned : percentFmt;
+    if (metric === METRIC.ELASTICITY) return elasticityFmt;
     // return a wrapper that calls leanFmt with rel context
     return v => leanFmt(v, rel, delta);
   }
@@ -118,13 +126,19 @@ Interactive Explorer for margin-matters
     const { metric, rel, delta, twoP } = meta;
     // Determine kind and column names
     const isThird = metric === METRIC.THIRD;
-    const kindDefault = (delta || rel) ? 'bar' : (isThird ? 'line' : 'line');
+    const isElasticity = metric === METRIC.ELASTICITY;
+    const kindDefault = (delta || rel) ? 'bar' : (isThird || isElasticity ? 'line' : 'line');
     const kind = (el.chart.value === 'auto') ? kindDefault : el.chart.value;
 
     // Columns (state and nat where applicable)
     let yCol = null, yNatCol = null, desc = '';
 
-    if (isThird) {
+    if (isElasticity) {
+      // Elasticity: measures how responsive a state is to national swings
+      yCol = 'elasticity';
+      yNatCol = null; // No national comparison for elasticity
+      desc = 'Elasticity: how responsive a state is to national swings (deltaMargin / deltaNPV).';
+    } else if (isThird) {
       if (delta) {
         // No explicit third-party deltas in CSV; approximate via year-over-year diff? For now, fall back to normal share
         yCol = rel ? 'third_party_relative_share' : 'third_party_share';

@@ -78,7 +78,10 @@ Interactive Histograms for Presidential Margins Data
     'R_votes': { label: 'Republican Votes', hasZero: false, hasNational: false, format: formatNumber },
     'total_votes': { label: 'Total Votes', hasZero: false, hasNational: false, format: formatNumber },
     'third_party_votes': { label: 'Third Party Votes', hasZero: false, hasNational: false, format: formatNumber },
-    'electoral_votes': { label: 'Electoral Votes', hasZero: false, hasNational: false, format: formatNumber, disallowNational: true }
+    'electoral_votes': { label: 'Electoral Votes', hasZero: false, hasNational: false, format: formatNumber, disallowNational: true },
+
+    // Elasticity (measures responsiveness to national swings)
+    'elasticity': { label: 'Elasticity', hasZero: false, hasNational: false, format: formatElasticity, disallowNational: true }
   };
 
   // Colors
@@ -123,6 +126,12 @@ Interactive Histograms for Presidential Margins Data
       return (value / 1000).toFixed(1) + 'K';
     }
     return value.toFixed(2);
+  }
+
+  // Elasticity formatter - shows how responsive a state is to national swings
+  function formatElasticity(value) {
+    if (value == null || isNaN(value) || value === 0) return 'N/A';
+    return value.toFixed(3);
   }
 
   // Initialize

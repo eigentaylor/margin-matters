@@ -54,8 +54,11 @@
     // when the user switches back to presidential
     let presYearCache = { start: null, end: null };
 
-    function fmt(v, rel, delta) {
+    function fmt(v, rel, delta, isElasticity) {
       if (v == null || isNaN(v)) return '';
+      if (isElasticity) {
+        return v.toFixed(2);
+      }
       const sign = v > 0 ? 'D' : v < 0 ? 'R' : '';
       const pct = Math.abs(v * 100).toFixed(1) + '%';
       if (sign) return `${sign}+${pct}`;
@@ -112,8 +115,14 @@
 
       // columns
       const isThird = metric === 'thirdParty';
+      const isElasticity = metric === 'elasticity';
       let yCol = null, yNatCol = null, desc = '', strCol = '';
-      if (isThird) {
+      if (isElasticity) {
+        yCol = 'elasticity';
+        yNatCol = null;
+        desc = 'Elasticity: how responsive this state is to national swings.';
+        strCol = 'elasticity_str';
+      } else if (isThird) {
         yCol = rel ? 'third_party_relative_share' : 'third_party_share';
         yNatCol = rel ? null : 'third_party_national_share';
         desc = rel ? 'State third-party share minus national.' : 'Third-party share.';
@@ -161,7 +170,7 @@
         return {
           year: +r.year,
           value: value,
-          str: r[strCol] || fmt(value, rel, delta),
+          str: r[strCol] || fmt(value, rel, delta, isElasticity),
           color: r.color || null,
           class: r.class || r['class'] || '',
           baseMargin: parseNum(r.pres_margin)
@@ -170,7 +179,7 @@
       const dataN = yNatCol ? natRows.map(r => ({
         year: +r.year,
         value: parseNum(r[yNatCol]),
-        str: fmt(parseNum(r[yNatCol]), rel, delta),
+        str: fmt(parseNum(r[yNatCol]), rel, delta, isElasticity),
         baseMargin: parseNum(r.pres_margin),
         color: winnerColor(parseNum(r.pres_margin), r.color)
       })).filter(d => d.value != null && d.year >= start && d.year <= end) : [];
@@ -264,7 +273,7 @@
         y.domain([yMin - pad, yMax + pad]).nice();
         x.domain(years);
         const xA_empty = d3.axisBottom(x).tickValues(years).tickFormat(d3.format('d'));
-        const yA_empty = d3.axisLeft(y).ticks(8).tickFormat(v => fmt(v, rel, delta));
+        const yA_empty = d3.axisLeft(y).ticks(8).tickFormat(v => fmt(v, rel, delta, isElasticity));
         xAxisG.attr('transform', `translate(0,${innerH})`).call(xA_empty);
         yAxisG.call(yA_empty);
         zeroG.selectAll('*').remove();
@@ -277,7 +286,7 @@
       y.domain([yMin - pad, yMax + pad]).nice();
 
       const xA = d3.axisBottom(x).tickValues(years).tickFormat(d3.format('d'));
-      const yA = d3.axisLeft(y).ticks(8).tickFormat(v => fmt(v, rel, delta));
+      const yA = d3.axisLeft(y).ticks(8).tickFormat(v => fmt(v, rel, delta, isElasticity));
       xAxisG.attr('transform', `translate(0,${innerH})`).call(xA);
       yAxisG.call(yA);
 
@@ -414,7 +423,7 @@
                 .attr('stroke-width', 2);
               tooltip
                 .style('opacity', 1)
-                .html(`<strong>${d.year} (National)</strong><br/>${fmt(d.value, rel, delta)}`);
+                .html(`<strong>${d.year} (National)</strong><br/>${fmt(d.value, rel, delta, isElasticity)}`);
             })
             .on('mousemove', function (event) {
               const [mx, my] = d3.pointer(event, rootEl);

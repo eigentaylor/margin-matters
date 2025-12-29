@@ -208,9 +208,13 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
         if str(st).upper() in ("NAT", "NATIONAL"):
             page = page.replace("%RELATIVE_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
             page = page.replace("%RELATIVE_DISABLED%", " disabled")
+            page = page.replace("%ELASTICITY_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
+            page = page.replace("%ELASTICITY_DISABLED%", " disabled")
         else:
             page = page.replace("%RELATIVE_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
             page = page.replace("%RELATIVE_DISABLED%", "")
+            page = page.replace("%ELASTICITY_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
+            page = page.replace("%ELASTICITY_DISABLED%", "")
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         # Include other-pages dropdown script on state pages
         other_js = "<script src='../other-pages.js'></script>" if True else ""
@@ -303,6 +307,8 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
         # Unit pages should have the relative control visible and enabled by default
         page = page.replace("%RELATIVE_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
         page = page.replace("%RELATIVE_DISABLED%", "")
+        page = page.replace("%ELASTICITY_LABEL_STYLE%", "display: flex; align-items: center; gap: 4px;")
+        page = page.replace("%ELASTICITY_DISABLED%", "")
         page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
         # Include other-pages dropdown script on unit pages
         other_js = "<script src='../other-pages.js'></script>" if True else ""
@@ -464,6 +470,9 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
     # National page: hide & disable relative margins control
     page = page.replace("%RELATIVE_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
     page = page.replace("%RELATIVE_DISABLED%", " disabled")
+    # National page: hide & disable elasticity control (elasticity is relative to national)
+    page = page.replace("%ELASTICITY_LABEL_STYLE%", "display: none; align-items: center; gap: 4px;")
+    page = page.replace("%ELASTICITY_DISABLED%", " disabled")
     page = page.replace("%LAST_UPDATED%", LAST_UPDATED)
     # Include other-pages on national page too
     other_js = "<script src='../other-pages.js'></script>"

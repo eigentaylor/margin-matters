@@ -36,6 +36,9 @@ PAGE_HTML = r"""<!doctype html>
           <label style="display: flex; align-items: center; gap: 4px;">
             <input type="checkbox" id="chart-thirdparty"> Third-party share
           </label>
+          <label style="%ELASTICITY_LABEL_STYLE%">
+            <input type="checkbox" id="chart-elasticity"%ELASTICITY_DISABLED%> Elasticity
+          </label>
         </div>
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="year-range-slider" style="font-size: 0.9rem;">Year Range: <span id="year-range-display">1864-2024</span></label>
@@ -225,11 +228,26 @@ PAGE_HTML = r"""<!doctype html>
     if (controlsInitialized) return;
     controlsInitialized = true;
 
-    const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty'];
+    const controls = ['chart-twoparty', 'chart-relative', 'chart-delta', 'chart-thirdparty', 'chart-elasticity'];
     controls.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
       el.addEventListener('change', () => {
+        if (id === 'chart-elasticity' && el.checked) {
+          // Elasticity is mutually exclusive with other options
+          const chartTwoParty = document.getElementById('chart-twoparty');
+          const chartRelative = document.getElementById('chart-relative');
+          const chartDelta = document.getElementById('chart-delta');
+          const chartThirdParty = document.getElementById('chart-thirdparty');
+          if (chartTwoParty) chartTwoParty.checked = false;
+          if (chartRelative) chartRelative.checked = false;
+          if (chartDelta) chartDelta.checked = false;
+          if (chartThirdParty) chartThirdParty.checked = false;
+        } else if (id !== 'chart-elasticity' && el.checked) {
+          // Uncheck elasticity when any other option is selected
+          const elasticityToggle = document.getElementById('chart-elasticity');
+          if (elasticityToggle) elasticityToggle.checked = false;
+        }
         if (id === 'chart-twoparty' && el.checked) {
           const footerTwoParty = document.getElementById('twoPartyToggle');
           const footerRelative = document.getElementById('relativeToggle');
@@ -368,35 +386,46 @@ PAGE_HTML = r"""<!doctype html>
     const chartRelativeEl = document.getElementById('chart-relative');
     const chartDeltaEl = document.getElementById('chart-delta');
     const chartThirdEl = document.getElementById('chart-thirdparty');
+    const chartElasticityEl = document.getElementById('chart-elasticity');
 
     const savedTwoParty = localStorage.getItem('chartTwoParty') === 'true';
     const savedRelative = localStorage.getItem('chartRelative') === 'true';
     const savedDelta = localStorage.getItem('chartDelta') === 'true';
     const savedThirdParty = localStorage.getItem('chartThirdParty') === 'true';
+    const savedElasticity = localStorage.getItem('chartElasticity') === 'true';
 
     const urlChartTwo = readUrlBool('chartTwo', null);
     const urlChartRel = readUrlBool('chartRelative', null);
     const urlChartDelta = readUrlBool('chartDelta', null);
     const urlChartThird = readUrlBool('chartThird', null);
+    const urlChartElasticity = readUrlBool('chartElasticity', null);
 
     let initialTwoParty = urlChartTwo !== null ? urlChartTwo : savedTwoParty;
     let initialRelative = urlChartRel !== null ? urlChartRel : savedRelative;
     let initialThird = urlChartThird !== null ? urlChartThird : savedThirdParty;
+    let initialElasticity = urlChartElasticity !== null ? urlChartElasticity : savedElasticity;
     const initialDelta = urlChartDelta !== null ? urlChartDelta : savedDelta;
 
     if (initialTwoParty) {
       initialThird = false;
+      initialElasticity = false;
       if (urlChartRel === null) initialRelative = false;
     }
     if (initialThird) {
       initialTwoParty = false;
+      initialElasticity = false;
       initialRelative = true;
+    }
+    if (initialElasticity) {
+      initialTwoParty = false;
+      initialThird = false;
     }
 
     if (chartTwoPartyEl) chartTwoPartyEl.checked = !!initialTwoParty;
     if (chartRelativeEl) chartRelativeEl.checked = !!initialRelative;
     if (chartDeltaEl) chartDeltaEl.checked = !!initialDelta;
     if (chartThirdEl) chartThirdEl.checked = !!initialThird;
+    if (chartElasticityEl) chartElasticityEl.checked = !!initialElasticity;
 
     // Disable / hide the "Relative margins" control on the national page because
     // relative margins make every unit effectively 0 for NATIONAL/NAT and are
@@ -596,6 +625,7 @@ PAGE_HTML = r"""<!doctype html>
     const rel = document.getElementById('chart-relative')?.checked || false;
   let delta = document.getElementById('chart-delta')?.checked || false;
     const thirdParty = document.getElementById('chart-thirdparty')?.checked || false;
+    const elasticity = document.getElementById('chart-elasticity')?.checked || false;
 
     let yearStartVal = parseInt(yearStartInput?.value ?? '', 10);
     let yearEndVal = parseInt(yearEndInput?.value ?? '', 10);
@@ -629,6 +659,7 @@ PAGE_HTML = r"""<!doctype html>
       localStorage.setItem('chartRelative', rel ? 'true' : 'false');
       localStorage.setItem('chartDelta', delta ? 'true' : 'false');
       localStorage.setItem('chartThirdParty', thirdParty ? 'true' : 'false');
+      localStorage.setItem('chartElasticity', elasticity ? 'true' : 'false');
       if (Number.isFinite(yearStartVal)) localStorage.setItem('chartYearStart', String(yearStartVal));
       if (Number.isFinite(yearEndVal)) localStorage.setItem('chartYearEnd', String(yearEndVal));
     } catch (err) {
@@ -653,7 +684,7 @@ PAGE_HTML = r"""<!doctype html>
   // Ensure deltas are disabled for senate dataset
   if (activeDataset === 'senate') delta = false;
 
-  const metric = thirdParty ? 'thirdParty' : 'margin';
+  const metric = elasticity ? 'elasticity' : (thirdParty ? 'thirdParty' : 'margin');
     chart.update({
       data: chartData,
       state: pageStateAbbr,
