@@ -98,11 +98,8 @@
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="display:flex;align-items:center;gap:8px">
             <label for="maxAllowedMisses" style="min-width:120px">Allowed misses:</label>
-            <select id="maxAllowedMisses" class="btn" style="max-width:140px">
-              <option value="0">No misses</option>
-              <option value="1" selected>1 miss</option>
-              <option value="2">2 misses</option>
-            </select>
+            <input id="maxAllowedMisses" type="range" min="0" max="5" step="1" value="1" style="flex:1" />
+            <span id="maxAllowedMissesVal" style="min-width:80px">1 miss</span>
           </div>
           <label style="display:flex;align-items:center;gap:8px"><input id="onlyCurrentStreak" type="checkbox" /> Only show active 2024 streaks</label>
           <label style="display:flex;align-items:center;gap:8px"><input id="reverseStreaks" type="checkbox" /> Show reverse bellwethers (streaks of failures)</label>

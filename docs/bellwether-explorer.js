@@ -1117,8 +1117,8 @@ function computeOutcomeRows() {
 function buildOutcomeSequences(entries, maxAllowedMisses) {
   const sequences = [];
 
-  // maxAllowedMisses: 0,1,2
-  const maxMiss = Math.max(0, Math.min(2, parseInt(maxAllowedMisses, 10) || 0));
+  // maxAllowedMisses: 0-5
+  const maxMiss = Math.max(0, Math.min(5, parseInt(maxAllowedMisses, 10) || 0));
 
   for (let i = 0; i < entries.length; i++) {
     if (!entries[i].success) continue;
@@ -1408,6 +1408,12 @@ function refreshOutcomeControls() {
   const maxMissEl = document.getElementById('maxAllowedMisses');
   if (maxMissEl) maxMissEl.value = String(state.maxAllowedMisses || 0);
 
+  const maxMissLabel = document.getElementById('maxAllowedMissesVal');
+  if (maxMissLabel) {
+    const val = parseInt(state.maxAllowedMisses, 10);
+    maxMissLabel.textContent = val === 0 ? 'No misses' : val === 1 ? '1 miss' : `${val} misses`;
+  }
+
   const onlyCurrent = document.getElementById('onlyCurrentStreak');
   if (onlyCurrent) onlyCurrent.checked = state.onlyCurrentStreak;
 
@@ -1489,7 +1495,7 @@ function applyUrlParamsToState() {
 
     const maxMissParam = parseInt(params.get('maxMisses'), 10);
     if (!isNaN(maxMissParam)) {
-      state.maxAllowedMisses = Math.max(0, Math.min(2, maxMissParam));
+      state.maxAllowedMisses = Math.max(0, Math.min(5, maxMissParam));
     }
 
     const revParam = params.get('reverse');
@@ -1710,9 +1716,9 @@ async function init() {
 
     const maxMissEl = document.getElementById('maxAllowedMisses');
     if (maxMissEl) {
-      maxMissEl.addEventListener('change', (e) => {
+      maxMissEl.addEventListener('input', (e) => {
         const v = parseInt(e.target.value, 10);
-        state.maxAllowedMisses = isNaN(v) ? 0 : Math.max(0, Math.min(2, v));
+        state.maxAllowedMisses = isNaN(v) ? 0 : Math.max(0, Math.min(5, v));
         refreshOutcomeControls();
         if (state.displayType === 'outcome') {
           renderOutcomeTable();
