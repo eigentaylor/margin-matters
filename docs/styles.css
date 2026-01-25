@@ -57,9 +57,18 @@ a:hover {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 16px
+  padding: 16px;
+  transition: margin 0.3s ease
+}
+
+/* Shift container left when election night panel is visible on medium screens */
+@media (min-width: 1200px) and (max-width: 1700px) {
+  .container.en-active {
+    margin-left: auto;
+    margin-right: calc(280px + 32px);
+  }
 }
 
 .header {

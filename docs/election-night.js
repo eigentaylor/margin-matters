@@ -446,6 +446,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     } catch (e) { /* ignore */ }
     // Show the call log panel when the election-night simulation is prepared
     try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) { }
+    // Shift container left on medium screens to avoid overlap
+    try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { }
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
@@ -647,7 +649,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
 
     try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
-    
+    // Remove en-active class to restore container centering
+    try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { }
+
     // Remove phantom EV fill elements and clean up right-anchor on evFillR
     try {
       ['evFillPhantomD', 'evFillPhantomR', 'evFillPhantomO'].forEach(id => {
@@ -659,7 +663,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         delete rEl.dataset.anchor;
       }
     } catch (e) { /* ignore */ }
-    
+
     if (typeof window.hideMapTip === 'function') {
       try { window.hideMapTip(); } catch (e) { }
     }
@@ -1953,7 +1957,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     // Apply border radius to edge segments (skip phantom elements for radius)
     const leftNonPhantom = leftActive.filter(el => !el.id.includes('Phantom'));
     const rightNonPhantom = rightActive.filter(el => !el.id.includes('Phantom'));
-    
+
     if (leftActive.length) {
       const firstLeft = leftActive[0];
       firstLeft.style.borderTopLeftRadius = firstLeft.style.borderBottomLeftRadius = '9px';
