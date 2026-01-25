@@ -144,6 +144,17 @@
               <input id="enConfidence" type="range" min="0" max="1" step="0.01" value="0.3" style="flex:1" />
               <span id="enConfidenceVal" class="legend" style="font-size:0.9rem">0.3</span>
             </div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <label for="enLogInterval" class="legend" style="font-size:0.9rem">Log interval</label>
+              <select id="enLogInterval" class="btn"
+                style="min-width:100px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+                <option value="5" selected>5 min</option>
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+              </select>
+              <button id="enDownloadTxt" class="btn" style="min-width:110px" disabled>Download TXT</button>
+              <button id="enDownloadCsv" class="btn" style="min-width:110px" disabled>Download CSV</button>
+            </div>
             <div class="legend" style="font-size:0.85rem;text-align:left;color:var(--muted)">Call log floats on the
               right so you can track updates while watching the map.</div>
           </div>

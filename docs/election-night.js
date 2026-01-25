@@ -154,7 +154,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     pvRandomCacheMode: null,
     pvRandomSeed: null,
     pvRandomCacheYear: null,
-    lastDisplayUpdate: 0 // Track last time display was updated for throttling
+    lastDisplayUpdate: 0, // Track last time display was updated for throttling
+    // Simulation log state
+    logEntries: [],
+    logInterval: 5, // minutes between log entries (min 5)
+    lastLogTime: -Infinity // last time a log entry was recorded
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -174,7 +178,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     logPanel: null,
     confidence: null,
     confidenceVal: null,
-    victory: null
+    victory: null,
+    logInterval: null,
+    downloadTxt: null,
+    downloadCsv: null
   };
 
   /**
@@ -358,6 +365,26 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       updateConfidenceLabel(state.confidenceThreshold);
     }
 
+    // Initialize log interval selector and download buttons
+    elements.logInterval = document.getElementById('enLogInterval');
+    elements.downloadTxt = document.getElementById('enDownloadTxt');
+    elements.downloadCsv = document.getElementById('enDownloadCsv');
+
+    if (elements.logInterval) {
+      elements.logInterval.addEventListener('change', () => {
+        const val = parseInt(elements.logInterval.value, 10);
+        if (isFinite(val) && val >= 5) state.logInterval = val;
+      });
+    }
+
+    if (elements.downloadTxt) {
+      elements.downloadTxt.addEventListener('click', () => downloadSimulationLog('txt'));
+    }
+
+    if (elements.downloadCsv) {
+      elements.downloadCsv.addEventListener('click', () => downloadSimulationLog('csv'));
+    }
+
     updateToggleLabel();
   }
 
@@ -396,6 +423,15 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       : new Map();
     state.boxesDirty = false;
     state.callRecords = [];
+    // Initialize log state for this simulation
+    state.logEntries = [];
+    state.lastLogTime = -Infinity;
+    // Read log interval from UI if available
+    if (elements.logInterval) {
+      const val = parseInt(elements.logInterval.value, 10);
+      if (isFinite(val) && val >= 5) state.logInterval = val;
+    }
+    updateDownloadButtons();
 
     state.year = year;
 
@@ -585,6 +621,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.abbrColorMap = null;
     state.boxesDirty = false;
     state.callRecords = [];
+    // Reset log state
+    state.logEntries = [];
+    state.lastLogTime = -Infinity;
+    updateDownloadButtons();
+
     state.confidenceThreshold = getConfidenceSliderValue();
     updateConfidenceLabel(state.confidenceThreshold);
 
@@ -1407,6 +1448,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (typeof window.refreshActiveMapTip === 'function') {
       try { window.refreshActiveMapTip(); } catch (e) { }
     }
+
+    // Record log entry at interval boundaries
+    maybeRecordLogEntry(timeMinutes, 'interval', null);
   }
 
   function computeMetrics(st, timeMinutes, phaseName) {
@@ -1693,6 +1737,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
+
+    // Record a log entry for this call event (bypasses interval check)
+    recordCallLogEntry(callTime, st.unitKey, calledLeader);
+
     try {
       const unit = st && st.unitKey ? st.unitKey : null;
       const abbr = unit && unit.length >= 2 ? unit.slice(0, 2) : null;
@@ -2707,6 +2755,311 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     return total > 0 ? total : 538;
   }
   // color helpers moved to ./utils/colorUtils.js
+
+  /**
+   * Collect a log entry capturing the current state of all units.
+   * @param {number} timeMinutes - Current simulation time in minutes
+   * @param {string|null} eventType - Optional event type ('call', 'interval', etc.)
+   * @param {object|null} eventData - Optional data about a specific event (e.g., which state was called)
+   * @returns {object} Log entry object
+   */
+  function collectLogEntry(timeMinutes, eventType = 'interval', eventData = null) {
+    const units = [];
+    let totalDEV = 0, totalREV = 0, totalOEV = 0;
+    let phantomDEV = 0, phantomREV = 0, phantomOEV = 0;
+    let totalDVotes = 0, totalRVotes = 0, totalOVotes = 0, totalCounted = 0;
+
+    state.stateData.forEach(st => {
+      const snap = state.snapshot.get(st.unitKey);
+      if (!snap) return;
+
+      const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
+      const evAlloc = isCalled ? (st.evCalledAllocations || st.evAllocations) : null;
+
+      if (evAlloc) {
+        totalDEV += evAlloc.D || 0;
+        totalREV += evAlloc.R || 0;
+        totalOEV += evAlloc.O || 0;
+      } else if (!isCalled && snap.reporting > EPS && st.ev > 0) {
+        if (snap.leader === 'D') phantomDEV += st.ev;
+        else if (snap.leader === 'R') phantomREV += st.ev;
+        else if (snap.leader === 'O') phantomOEV += st.ev;
+      }
+
+      if (st.pvWeight) {
+        totalDVotes += snap.dVotes || 0;
+        totalRVotes += snap.rVotes || 0;
+        totalOVotes += snap.oVotes || 0;
+        totalCounted += snap.countedVotes || 0;
+      }
+
+      units.push({
+        unit: st.unitKey,
+        abbr: st.abbr,
+        ev: st.ev,
+        reporting: snap.reporting,
+        reportingPct: (snap.reporting * 100).toFixed(2) + '%',
+        leader: snap.leader,
+        called: isCalled,
+        calledFor: isCalled ? (st.callLeader || snap.leader) : null,
+        margin: snap.margin,
+        marginStr: snap.marginStr,
+        confidence: snap.confidence,
+        dVotes: Math.round(snap.dVotes || 0),
+        rVotes: Math.round(snap.rVotes || 0),
+        oVotes: Math.round(snap.oVotes || 0),
+        countedVotes: Math.round(snap.countedVotes || 0),
+        remainingVotes: Math.round(snap.remainingVotes || 0),
+        evAllocD: evAlloc ? (evAlloc.D || 0) : 0,
+        evAllocR: evAlloc ? (evAlloc.R || 0) : 0,
+        evAllocO: evAlloc ? (evAlloc.O || 0) : 0
+      });
+    });
+
+    // Sort units alphabetically by unitKey for consistent ordering
+    units.sort((a, b) => a.unit.localeCompare(b.unit));
+
+    return {
+      time: timeMinutes,
+      timeLabel: formatTimeLabel(timeMinutes),
+      eventType,
+      eventData,
+      summary: {
+        calledDEV: totalDEV,
+        calledREV: totalREV,
+        calledOEV: totalOEV,
+        phantomDEV,
+        phantomREV,
+        phantomOEV,
+        totalDVotes: Math.round(totalDVotes),
+        totalRVotes: Math.round(totalRVotes),
+        totalOVotes: Math.round(totalOVotes),
+        totalCounted: Math.round(totalCounted),
+        pvMargin: totalCounted > 0 ? ((totalDVotes - totalRVotes) / totalCounted) : 0
+      },
+      units
+    };
+  }
+
+  /**
+   * Check if a log entry should be recorded at the current time.
+   * Records at interval boundaries and ensures we don't duplicate entries.
+   */
+  function shouldRecordLogEntry(timeMinutes) {
+    if (!state.prepared) return false;
+    if (state.logEntries.length === 0) return true; // Always record first entry
+    const interval = state.logInterval || 5;
+    // Record if we've crossed an interval boundary
+    return timeMinutes >= state.lastLogTime + interval - EPS;
+  }
+
+  /**
+   * Record a log entry if conditions are met.
+   * @param {number} timeMinutes - Current simulation time
+   * @param {string} eventType - 'interval' or 'call'
+   * @param {object|null} eventData - Optional event-specific data
+   */
+  function maybeRecordLogEntry(timeMinutes, eventType = 'interval', eventData = null) {
+    if (eventType === 'interval' && !shouldRecordLogEntry(timeMinutes)) return;
+    const entry = collectLogEntry(timeMinutes, eventType, eventData);
+    state.logEntries.push(entry);
+    state.lastLogTime = timeMinutes;
+    updateDownloadButtons();
+  }
+
+  /**
+   * Force record a call event log entry (bypasses interval check).
+   */
+  function recordCallLogEntry(timeMinutes, unitKey, leader) {
+    const entry = collectLogEntry(timeMinutes, 'call', { unitKey, leader });
+    state.logEntries.push(entry);
+    // Don't update lastLogTime so interval entries still work correctly
+    updateDownloadButtons();
+  }
+
+  /**
+   * Enable/disable download buttons based on whether we have log entries.
+   */
+  function updateDownloadButtons() {
+    const hasEntries = state.logEntries.length > 0;
+    if (elements.downloadTxt) elements.downloadTxt.disabled = !hasEntries;
+    if (elements.downloadCsv) elements.downloadCsv.disabled = !hasEntries;
+  }
+
+  /**
+   * Format log entries as a human-readable text file.
+   */
+  function formatLogAsTxt() {
+    const lines = [];
+    const year = state.year || getSelectedYear() || 'Unknown';
+    const pvLabel = state.targetPvLabel || 'Unknown';
+
+    lines.push('='.repeat(80));
+    lines.push('ELECTION NIGHT SIMULATION LOG');
+    lines.push('='.repeat(80));
+    lines.push(`Year: ${year}`);
+    lines.push(`Target PV: ${pvLabel}`);
+    lines.push(`Log Interval: ${state.logInterval} minutes`);
+    lines.push(`Confidence Threshold: ${state.confidenceThreshold}`);
+    lines.push(`Total Entries: ${state.logEntries.length}`);
+    lines.push(`Generated: ${new Date().toISOString()}`);
+    lines.push('='.repeat(80));
+    lines.push('');
+
+    state.logEntries.forEach((entry, idx) => {
+      const eventLabel = entry.eventType === 'call'
+        ? `[CALL: ${entry.eventData?.unitKey || '?'} for ${entry.eventData?.leader || '?'}]`
+        : '[INTERVAL]';
+
+      lines.push('-'.repeat(80));
+      lines.push(`${entry.timeLabel} ${eventLabel}`);
+      lines.push('-'.repeat(80));
+
+      const s = entry.summary;
+      lines.push(`EV Called:   D: ${s.calledDEV}  R: ${s.calledREV}  O: ${s.calledOEV}`);
+      lines.push(`EV Phantom:  D: ${s.phantomDEV}  R: ${s.phantomREV}  O: ${s.phantomOEV}`);
+      const pvPct = (Math.abs(s.pvMargin) * 100).toFixed(2);
+      const pvDir = s.pvMargin > 0 ? 'D' : (s.pvMargin < 0 ? 'R' : 'TIE');
+      lines.push(`Pop Vote:    D: ${s.totalDVotes.toLocaleString()}  R: ${s.totalRVotes.toLocaleString()}  O: ${s.totalOVotes.toLocaleString()}  (${pvDir}+${pvPct}%)`);
+      lines.push(`Total Counted: ${s.totalCounted.toLocaleString()}`);
+      lines.push('');
+
+      // Header for state table
+      const header = 'Unit       EV  Report%  Leader  Called  CalledFor  Margin       Conf   D Votes      R Votes      O Votes';
+      lines.push(header);
+      lines.push('-'.repeat(header.length));
+
+      entry.units.forEach(u => {
+        const unitStr = u.unit.padEnd(10);
+        const evStr = String(u.ev).padStart(3);
+        const reportStr = u.reportingPct.padStart(7);
+        const leaderStr = (u.leader || '-').padEnd(6);
+        const calledStr = (u.called ? 'Yes' : 'No').padEnd(6);
+        const calledForStr = (u.calledFor || '-').padEnd(9);
+        const marginStr = (u.marginStr || '-').padEnd(12);
+        const confStr = (u.confidence != null ? u.confidence.toFixed(2) : '-').padStart(5);
+        const dVotesStr = u.dVotes.toLocaleString().padStart(12);
+        const rVotesStr = u.rVotes.toLocaleString().padStart(12);
+        const oVotesStr = u.oVotes.toLocaleString().padStart(12);
+
+        lines.push(`${unitStr} ${evStr}  ${reportStr}  ${leaderStr}  ${calledStr}  ${calledForStr}  ${marginStr} ${confStr}  ${dVotesStr} ${rVotesStr} ${oVotesStr}`);
+      });
+
+      lines.push('');
+    });
+
+    lines.push('='.repeat(80));
+    lines.push('END OF LOG');
+    lines.push('='.repeat(80));
+
+    return lines.join('\n');
+  }
+
+  /**
+   * Format log entries as a CSV file.
+   */
+  function formatLogAsCsv() {
+    const rows = [];
+    const year = state.year || getSelectedYear() || 'Unknown';
+
+    // CSV header
+    rows.push([
+      'Time', 'TimeMinutes', 'EventType', 'EventUnit', 'EventLeader',
+      'SummaryCalledDEV', 'SummaryCalledREV', 'SummaryCalledOEV',
+      'SummaryPhantomDEV', 'SummaryPhantomREV', 'SummaryPhantomOEV',
+      'SummaryDVotes', 'SummaryRVotes', 'SummaryOVotes', 'SummaryTotalCounted', 'SummaryPVMargin',
+      'Unit', 'Abbr', 'EV', 'Reporting', 'Leader', 'Called', 'CalledFor',
+      'Margin', 'MarginStr', 'Confidence',
+      'DVotes', 'RVotes', 'OVotes', 'CountedVotes', 'RemainingVotes',
+      'EVAllocD', 'EVAllocR', 'EVAllocO'
+    ].join(','));
+
+    state.logEntries.forEach(entry => {
+      const s = entry.summary;
+      const eventUnit = entry.eventData?.unitKey || '';
+      const eventLeader = entry.eventData?.leader || '';
+
+      entry.units.forEach(u => {
+        const row = [
+          `"${entry.timeLabel}"`,
+          entry.time,
+          entry.eventType,
+          eventUnit,
+          eventLeader,
+          s.calledDEV, s.calledREV, s.calledOEV,
+          s.phantomDEV, s.phantomREV, s.phantomOEV,
+          s.totalDVotes, s.totalRVotes, s.totalOVotes, s.totalCounted, s.pvMargin.toFixed(6),
+          u.unit,
+          u.abbr,
+          u.ev,
+          u.reporting.toFixed(4),
+          u.leader || '',
+          u.called ? 1 : 0,
+          u.calledFor || '',
+          u.margin != null ? u.margin.toFixed(6) : '',
+          `"${u.marginStr || ''}"`,
+          u.confidence != null ? u.confidence.toFixed(4) : '',
+          u.dVotes,
+          u.rVotes,
+          u.oVotes,
+          u.countedVotes,
+          u.remainingVotes,
+          u.evAllocD,
+          u.evAllocR,
+          u.evAllocO
+        ];
+        rows.push(row.join(','));
+      });
+    });
+
+    return rows.join('\n');
+  }
+
+  /**
+   * Download the simulation log as a file.
+   * @param {'txt'|'csv'} format - File format
+   */
+  function downloadSimulationLog(format) {
+    if (!state.logEntries.length) {
+      console.warn('No log entries to download');
+      return false;
+    }
+
+    try {
+      const year = state.year || getSelectedYear() || 'unknown';
+      const timestamp = Date.now();
+      let content, mimeType, extension;
+
+      if (format === 'csv') {
+        content = formatLogAsCsv();
+        mimeType = 'text/csv';
+        extension = 'csv';
+      } else {
+        content = formatLogAsTxt();
+        mimeType = 'text/plain';
+        extension = 'txt';
+      }
+
+      const filename = `election-night-${year}-${timestamp}.${extension}`;
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        try {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (e) { }
+      }, 5000);
+      return true;
+    } catch (e) {
+      console.error('downloadSimulationLog failed', e);
+      return false;
+    }
+  }
 
 
   window.resetElectionNightSimulation = function (restorePv = true) {

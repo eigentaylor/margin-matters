@@ -1068,8 +1068,8 @@ function computeOutcomeRows() {
   });
 
   unitEntries.forEach((entries, abbr) => {
-  entries.sort((a, b) => a.year - b.year);
-  const sequences = buildOutcomeSequences(entries, state.maxAllowedMisses || 0);
+    entries.sort((a, b) => a.year - b.year);
+    const sequences = buildOutcomeSequences(entries, state.maxAllowedMisses || 0);
     const qualifying = sequences.filter(seq => seq.length >= state.streakThreshold);
     if (qualifying.length === 0) return;
 
@@ -1271,8 +1271,8 @@ function renderStatusIntoCell(row, td) {
       ? `${row.current.startYear}`
       : `${row.current.startYear}-${row.current.endYear}`;
     parts.push(range);
-  const totalCur = row.current.totalElections || (Math.floor((row.current.endYear - row.current.startYear) / 4) + 1);
-  const lengthLabel = totalCur === 1 ? `${row.current.length}/${totalCur} election` : `${row.current.length}/${totalCur} elections`;
+    const totalCur = row.current.totalElections || (Math.floor((row.current.endYear - row.current.startYear) / 4) + 1);
+    const lengthLabel = totalCur === 1 ? `${row.current.length}/${totalCur} election` : `${row.current.length}/${totalCur} elections`;
     parts.push(lengthLabel);
     if (row.current.missYears && row.current.missYears.length > 0) {
       parts.push(`Missed ${row.current.missYears.join(', ')}`);
@@ -1283,7 +1283,7 @@ function renderStatusIntoCell(row, td) {
       const d = document.createElement('div');
       if (idx === 0) d.style.fontWeight = '600';
       if (p.startsWith('Missed')) { d.style.color = 'var(--muted)'; d.style.fontSize = '0.9rem'; }
-      if (p === 'Active') { d.style.color = 'var(--accent)'; d.style.fontSize = '0.9rem'; d.style.fontWeight = '600';}
+      if (p === 'Active') { d.style.color = 'var(--accent)'; d.style.fontSize = '0.9rem'; d.style.fontWeight = '600'; }
       d.textContent = p;
       td.appendChild(d);
     });
@@ -1296,8 +1296,8 @@ function renderStatusIntoCell(row, td) {
     parts.push('Inactive');
     parts.push(`End of last streak ${row.mostRecent.endYear}`);
     if (row.mostRecent.length) {
-  const totalRecent = row.mostRecent.totalElections || (Math.floor((row.mostRecent.endYear - row.mostRecent.startYear) / 4) + 1);
-  parts.push(`${row.mostRecent.length}/${totalRecent} ${row.mostRecent.length === 1 ? 'election' : 'elections'} (${row.mostRecent.startYear}-${row.mostRecent.endYear})`);
+      const totalRecent = row.mostRecent.totalElections || (Math.floor((row.mostRecent.endYear - row.mostRecent.startYear) / 4) + 1);
+      parts.push(`${row.mostRecent.length}/${totalRecent} ${row.mostRecent.length === 1 ? 'election' : 'elections'} (${row.mostRecent.startYear}-${row.mostRecent.endYear})`);
     }
 
     parts.forEach((p, idx) => {
