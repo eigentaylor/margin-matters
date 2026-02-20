@@ -182,14 +182,21 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
             )
             senate_section_attr = ' data-empty="true"'
 
-        dataset_sections_html = (
-            '<div class="dataset-sections">\n'
-            '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
-            '  <div class="dataset-section" data-dataset="senate"{senate_attr}>\n{senate_tables}\n  </div>\n'
-            '</div>'
-        ).format(pres_tables=pres_tables_html, senate_tables=senate_tables_html, senate_attr=senate_section_attr)
-
-        available_datasets_value = "presidential,senate"
+        if params.INCLUDE_SENATE:
+            dataset_sections_html = (
+                '<div class="dataset-sections">\n'
+                '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+                '  <div class="dataset-section" data-dataset="senate"{senate_attr}>\n{senate_tables}\n  </div>\n'
+                '</div>'
+            ).format(pres_tables=pres_tables_html, senate_tables=senate_tables_html, senate_attr=senate_section_attr)
+            available_datasets_value = "presidential,senate"
+        else:
+            dataset_sections_html = (
+                '<div class="dataset-sections">\n'
+                '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+                '</div>'
+            ).format(pres_tables=pres_tables_html)
+            available_datasets_value = "presidential"
 
         legend_text = f"{params.ABBR_TO_STATE.get(st, st)} ({st}) — Statewide"
         page = (
@@ -446,14 +453,21 @@ def build_pages(rows: List[Dict], senate_rows: Optional[List[Dict]] = None):
         )
         senate_section_attr = ' data-empty="true"'
 
-    dataset_sections_html = (
-        '<div class="dataset-sections">\n'
-        '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
-        '  <div class="dataset-section" data-dataset="senate"{senate_attr}>\n{senate_tables}\n  </div>\n'
-        '</div>'
-    ).format(pres_tables=pres_tables_html, senate_tables=senate_tables_html, senate_attr=senate_section_attr)
-
-    available_datasets_value = "presidential,senate" if national_senate_rows else "presidential"
+    if params.INCLUDE_SENATE:
+        dataset_sections_html = (
+            '<div class="dataset-sections">\n'
+            '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+            '  <div class="dataset-section" data-dataset="senate"{senate_attr}>\n{senate_tables}\n  </div>\n'
+            '</div>'
+        ).format(pres_tables=pres_tables_html, senate_tables=senate_tables_html, senate_attr=senate_section_attr)
+        available_datasets_value = "presidential,senate" if national_senate_rows else "presidential"
+    else:
+        dataset_sections_html = (
+            '<div class="dataset-sections">\n'
+            '  <div class="dataset-section is-active" data-dataset="presidential">\n{pres_tables}\n  </div>\n'
+            '</div>'
+        ).format(pres_tables=pres_tables_html)
+        available_datasets_value = "presidential"
 
     page = (
         PAGE_HTML

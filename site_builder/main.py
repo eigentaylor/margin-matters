@@ -3,6 +3,7 @@ import shutil
 import re
 from pathlib import Path
 
+import params
 from .config import CSV_PATH, SENATE_CSV_PATH, OUT_DIR, PLOTS_DST, PLOTS_SRC, LAST_UPDATED
 from .io_utils import ensure_dirs, write_text, read_csv
 from .pages import build_pages, make_data_page
@@ -25,9 +26,12 @@ def build_site():
                 shutil.copy2(item, PLOTS_DST / item.name)
 
     rows = read_csv(CSV_PATH)
-    try:
-        senate_rows = read_csv(SENATE_CSV_PATH)
-    except FileNotFoundError:
+    if params.INCLUDE_SENATE:
+        try:
+            senate_rows = read_csv(SENATE_CSV_PATH)
+        except FileNotFoundError:
+            senate_rows = []
+    else:
         senate_rows = []
 
     senate_abbr_remap = {
@@ -86,7 +90,7 @@ def build_site():
     except Exception:
         pass
 
-    if senate_rows:
+    if params.INCLUDE_SENATE and senate_rows:
         try:
             shutil.copy2(SENATE_CSV_PATH, OUT_DIR / "senate_margins.csv")
         except Exception:

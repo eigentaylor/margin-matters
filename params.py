@@ -77,6 +77,10 @@ INTERACTIVE_TESTER: bool = True
 # Clamp for PV slider in tester (in fraction units, e.g. 0.25 = +/-25pp)
 TESTER_PV_CAP: float = 0.5
 
+# Include senate data on state/national pages.
+# Set to True once the senate dataset has been audited and is ready for display.
+INCLUDE_SENATE: bool = False
+
 # Optional: define a custom table column ordering and labels for the HTML tables.
 # If set to None the code will fall back to the built-in heuristic order.
 # Example formats accepted:
