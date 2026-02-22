@@ -350,7 +350,7 @@ export function formatUnitTooltip(unit, opts) {
             if (voteParts.length) {
                 // On mobile, display each candidate on a separate line to avoid cutoff
                 const isMobile = (typeof window !== 'undefined' && window.innerWidth < 600);
-                const separator = isMobile ? '\n' : ' | ';
+                const separator = isMobile ? '\n' : '\n'; //' | '; // we can use newlines even on desktop since the tooltip will expand vertically as needed
                 rows.push(voteParts.join(separator));
                 // Add total votes line
                 if (totalVotes > 0) {
