@@ -100,6 +100,7 @@
     }
 
     const timestamp = data.lastUpdated;
+    window._lastUpdatedTimestamp = timestamp;
     // Find all elements with data-last-updated attribute and update them
     document.querySelectorAll('[data-last-updated]').forEach(el => {
       el.textContent = 'Last updated: ' + timestamp;

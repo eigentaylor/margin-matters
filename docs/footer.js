@@ -28,6 +28,26 @@
 
     // Inject the footer
     placeholder.innerHTML = createFooter(extraNote);
+
+    // Populate [data-last-updated] — last-updated.js may have already run before
+    // this element existed, so check the global it stores and fall back to polling.
+    const luEl = placeholder.querySelector('[data-last-updated]');
+    if (luEl) {
+      if (typeof window._lastUpdatedTimestamp === 'string') {
+        luEl.textContent = 'Last updated: ' + window._lastUpdatedTimestamp;
+      } else {
+        let tries = 0;
+        const timer = setInterval(function () {
+          tries++;
+          if (typeof window._lastUpdatedTimestamp === 'string') {
+            luEl.textContent = 'Last updated: ' + window._lastUpdatedTimestamp;
+            clearInterval(timer);
+          } else if (tries >= 20) {
+            clearInterval(timer);
+          }
+        }, 250);
+      }
+    }
   }
 
   // Wait for DOM to be ready
