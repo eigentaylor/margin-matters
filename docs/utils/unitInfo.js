@@ -219,7 +219,7 @@ export function calculateUnitVoteTallies(unit) {
     try {
         // Defer to the getUnitFinalVoteTotals and election-night snapshot when present
         const pathname = window.location && window.location.pathname;
-        const isIndexPage = !!(pathname && (pathname.endsWith('index.html') || pathname === '/'));
+        const isIndexPage = !!(pathname && (pathname.endsWith('index.html') || pathname === '/' || pathname.endsWith('/')));
         const isFutureMode = !!(typeof window !== 'undefined' && window._futureMode);
         if (!isIndexPage && !isFutureMode) return null;
 
