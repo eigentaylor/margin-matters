@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trending States • Margin Matters</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.svg" />
+  <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <script type="module" src="./utils/dataLoader.js"></script>
+  <script type="module" src="./utils/electionMap.js"></script>
+  <style>
+    .tw-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tw-controls label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .tw-controls select {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.95rem;
+    }
+
+    .tw-map-toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tw-map-toggle button {
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .tw-map-toggle button.active {
+      background: #2a3f5f;
+      border-color: var(--accent);
+    }
+
+    .tw-scatter-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .tw-scatter-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .tw-tooltip {
+      position: fixed;
+      display: none;
+      pointer-events: none;
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--fg);
+      z-index: 50;
+      max-width: 240px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+    }
+
+    .tw-tooltip strong {
+      color: #fff;
+    }
+
+    .tw-legend-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .tw-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .tw-swatch i {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .tw-map-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .tw-map-legend .bar {
+      flex: 1;
+      max-width: 260px;
+      height: 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .tw-rank-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .tw-rank-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .tw-rank-card h3 {
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+    }
+
+    .tw-rank-card .tw-sub {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+    }
+
+    .tw-rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tw-rank-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #121212;
+      border: 1px solid var(--border);
+      border-left: 5px solid #666;
+    }
+
+    .tw-rank-num {
+      color: var(--muted);
+      font-size: 0.78rem;
+      width: 22px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .tw-rank-abbr {
+      font-weight: 700;
+      min-width: 44px;
+      flex-shrink: 0;
+    }
+
+    .tw-rank-spark {
+      flex-shrink: 0;
+    }
+
+    .tw-rank-value {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-left: auto;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .tw-empty {
+      color: var(--muted);
+      font-size: 0.85rem;
+      padding: 8px 0;
+    }
+
+    .tw-methodology p {
+      margin: 0 0 8px;
+    }
+
+    .tw-methodology ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .tw-methodology li {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+
+    <div class="header">
+      <h1>Trending States</h1>
+      <span class="legend">Which states are shifting toward which party — and which are becoming more or less
+        competitive — based on their recent presidential elections.</span>
+    </div>
+
+    <div class="card tw-controls">
+      <label for="window-select">
+        Recent elections to consider
+        <select id="window-select"></select>
+      </label>
+      <span class="legend" id="window-range-label"></span>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Direction vs. competitiveness</h2>
+      <p class="legend">Each dot is a state (or, for Maine/Nebraska, a congressional district). Left/right shows
+        which party it's trending toward; up/down shows whether its elections are getting closer or more lopsided.
+        Hover a dot for details, click to open that state's page.</p>
+      <div class="tw-scatter-wrap">
+        <svg id="scatter" viewBox="0 0 900 620" aria-label="Scatter plot of state political trends"></svg>
+      </div>
+      <div class="tw-legend-swatches" id="scatter-legend"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Trend map</h2>
+      <div class="tw-map-toggle" id="map-toggle">
+        <button class="btn active" data-mode="direction" type="button">Direction</button>
+        <button class="btn" data-mode="competitiveness" type="button">Competitiveness</button>
+        <button class="btn" data-mode="swing-eta" type="button">Swing ETA</button>
+      </div>
+      <div id="map-wrap" class="center" style="margin-top:12px">
+        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="US map colored by state political trend"></svg>
+        <div id="mapTip" style="display:none"></div>
+      </div>
+      <div class="tw-map-legend" id="map-legend"></div>
+    </div>
+
+    <h2>Categories</h2>
+    <div class="tw-rank-grid">
+      <div class="card tw-rank-card">
+        <h3>Trending Democratic</h3>
+        <div class="tw-sub">Largest shift toward Democrats, relative to the national environment.</div>
+        <div class="tw-rank-list" id="list-trending-d"></div>
+      </div>
+      <div class="card tw-rank-card">
+        <h3>Trending Republican</h3>
+        <div class="tw-sub">Largest shift toward Republicans, relative to the national environment.</div>
+        <div class="tw-rank-list" id="list-trending-r"></div>
+      </div>
+      <div class="card tw-rank-card">
+        <h3>Emerging Battlegrounds</h3>
+        <div class="tw-sub">Margins narrowing fastest — these states are becoming more competitive.</div>
+        <div class="tw-rank-list" id="list-emerging"></div>
+      </div>
+      <div class="card tw-rank-card">
+        <h3>Solidifying States</h3>
+        <div class="tw-sub">Margins widening fastest — these states are becoming safer for one party.</div>
+        <div class="tw-rank-list" id="list-solidifying"></div>
+      </div>
+      <div class="card tw-rank-card">
+        <h3>Upcoming Swing States</h3>
+        <div class="tw-sub">Not swing states yet, but on track to cross into the swing band soonest, at their
+          current rate.</div>
+        <div class="tw-rank-list" id="list-upcoming-swing"></div>
+      </div>
+      <div class="card tw-rank-card">
+        <h3>Fading Battlegrounds</h3>
+        <div class="tw-sub">Swing states today that are trending toward becoming safe for one party soonest, at
+          their current rate.</div>
+        <div class="tw-rank-list" id="list-fading-battleground"></div>
+      </div>
+    </div>
+
+    <div class="card tw-methodology">
+      <strong>Methodology</strong>
+      <ul>
+        <li><strong>Relative margin</strong>: a state's presidential margin (D − R) minus the national margin that
+          year. Using relative margin instead of the raw margin filters out nationwide swings, so a state isn't
+          flagged as "trending" just because a wave hit every state that year — it isolates that state's own
+          trajectory.</li>
+        <li><strong>Direction trend</strong>: the slope of relative margin over the selected window of recent
+          elections (least-squares fit), shown in points per decade. Positive = trending Democratic, negative =
+          trending Republican.</li>
+        <li><strong>Competitiveness trend</strong>: the slope of the <em>distance from even</em> (|relative margin|)
+          over the same window. A shrinking distance means the state is becoming more competitive
+          ("Emerging Battlegrounds"); a growing distance means it's becoming safer for whichever party already leads
+          there ("Solidifying States").</li>
+        <li>Maine's and Nebraska's congressional districts (which each award their own electoral vote) are tracked
+          separately from their statewide results, since they're often targeted independently by campaigns.</li>
+        <li>A state can appear in two categories at once — e.g. a state can be trending Republican while also
+          becoming more competitive, if it started out safely Democratic and is drifting toward purple.</li>
+        <li>Categories require at least 3 elections of data and only include states actually moving in that
+          category's direction (so "Trending Democratic" never fills up with states that are actually trending
+          Republican, just less severely).</li>
+        <li><strong>Swing state ETA</strong>: a naive straight-line extrapolation of the competitiveness trend —
+          if a state keeps narrowing (or widening) at exactly its current rate, how many years until it crosses the
+          swing-state line (within 5 points of even, relative to the national environment)? Political trends don't
+          actually stay linear for decades, so treat this as a rough "at this rate" estimate, not a real forecast.
+          "Upcoming Swing States" and "Fading Battlegrounds" rank states by this ETA rather than by raw trend speed —
+          a state can trend quickly but still be decades from actually becoming competitive if it's starting from a
+          very safe margin.</li>
+      </ul>
+    </div>
+
+    <div id="footer-placeholder" data-extra-note="Trend calculations run in your browser from presidential_margins.csv.">
+    </div>
+  </div>
+
+  <div class="tw-tooltip" id="tw-tooltip"></div>
+
+  <script type="module" src="./trending-states.js"></script>
+  <script src="./header.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./footer.js"></script>
+</body>
+
+</html>
