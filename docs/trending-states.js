@@ -113,6 +113,35 @@ function swingEtaCompactLabel(eta) {
   return `~${yrs} yr${yrs === 1 ? '' : 's'} (${electionYear})`;
 }
 
+// Extrapolates the DIRECTION trend (not competitiveness) to estimate how long
+// until a state's relative margin crosses into the next lean category in
+// whichever direction it's currently heading. Unlike swingEta — which only
+// tracks the swing-band boundary specifically, and has nothing to say about a
+// state that's trending through the middle without yet re-widening on the
+// other side — this always has something to say as long as the state is
+// trending at all: a swing state trending D isn't "leaving swing" until it
+// re-widens past the band, but it's still on track to become a Tilt D state
+// well before that, and that's worth surfacing too.
+function computeNextCategoryEta(t) {
+  const rate = t.directionPerDecade;
+  if (!rate) return null;
+  const idx = CATEGORY_ORDER.indexOf(t.category);
+  const movingRight = rate > 0;
+  const targetIdx = movingRight ? idx + 1 : idx - 1;
+  if (targetIdx < 0 || targetIdx >= CATEGORY_ORDER.length) return null;
+  const boundary = movingRight ? CATEGORY_THRESHOLDS[t.category] : CATEGORY_THRESHOLDS[CATEGORY_ORDER[targetIdx]];
+  const distance = movingRight ? boundary - t.latestRelativeMargin : t.latestRelativeMargin - boundary;
+  if (distance <= 0) return null;
+  return { years: (distance / Math.abs(rate)) * 10, targetCategory: CATEGORY_ORDER[targetIdx] };
+}
+
+function nextCategoryEtaCompactLabel(eta) {
+  if (!eta || eta.years > 100) return null;
+  const yrs = Math.round(eta.years);
+  const electionYear = nextElectionYearAtOrAfter(CURRENT_YEAR + eta.years);
+  return `~${yrs} yr${yrs === 1 ? '' : 's'} → ${CATEGORY_LABELS[eta.targetCategory]} (${electionYear})`;
+}
+
 const WINDOW_OPTIONS = [3, 4, 5, 6, 7, 8];
 const DEFAULT_WINDOW = 5;
 
@@ -194,16 +223,24 @@ function computeUnitTrend(history, windowSize) {
 
   const years = windowed.map(d => d.year);
   const rel = windowed.map(d => d.relativeMargin);
-  const absRel = windowed.map(d => Math.abs(d.relativeMargin));
 
   const directionSlope = leastSquaresSlope(years, rel);
-  const competitivenessSlope = leastSquaresSlope(years, absRel);
   const latest = windowed[windowed.length - 1];
-  const competitivenessPerDecade = competitivenessSlope * 10;
+  const directionPerDecade = directionSlope * 10;
+
+  // Competitiveness trend = how fast the state is moving toward (or away from)
+  // an even relative margin. This is d/dt|x| = sign(x) * dx/dt: taking the sign
+  // of the *current* lean and combining it with the overall direction trend.
+  // Fitting a separate regression to |relative_margin| instead breaks down for
+  // any state whose lean crosses zero mid-window (e.g. NE-02 went from R-leaning
+  // to D-leaning over 2008-2024) — it fits a V-shape, which OLS badly
+  // misrepresents as "narrowing" even when the state is currently moving away
+  // from center on its new side.
+  const competitivenessPerDecade = directionPerDecade * Math.sign(latest.relativeMargin);
 
   return {
     windowed,
-    directionPerDecade: directionSlope * 10,
+    directionPerDecade,
     competitivenessPerDecade,
     latestRelativeMargin: latest.relativeMargin,
     latestYear: latest.year,
@@ -233,9 +270,12 @@ function directionLabel(directionPerDecade) {
   return fmtMagnitudePerDecade(directionPerDecade) + ' ' + word;
 }
 
-function competitivenessLabel(competitivenessPerDecade) {
-  const word = competitivenessPerDecade < 0 ? 'narrower/decade' : (competitivenessPerDecade > 0 ? 'wider/decade' : 'no change');
-  return fmtMagnitudePerDecade(competitivenessPerDecade) + ' ' + word;
+function competitivenessLabel(t) {
+  const party = t.latestRelativeMargin >= 0 ? 'D' : 'R';
+  const rate = t.competitivenessPerDecade;
+  if (rate === 0) return fmtMagnitudePerDecade(rate) + ' — flat';
+  const phrase = rate > 0 ? `toward solid ${party}` : `away from solid ${party}`;
+  return fmtMagnitudePerDecade(rate) + ' ' + phrase;
 }
 
 function fmtMargin(v) {
@@ -250,8 +290,9 @@ function tooltipBodyHtml(abbr, t) {
   return `<strong>${unitFullName(abbr)}</strong><br>` +
     `Current lean: ${fmtMargin(t.latestRelativeMargin)} (relative to nat'l)<br>` +
     `Direction: ${directionLabel(t.directionPerDecade)}<br>` +
-    `Competitiveness: ${competitivenessLabel(t.competitivenessPerDecade)}` +
-    (etaLine ? `<br>${etaLine}` : '');
+    `Competitiveness: ${competitivenessLabel(t)}` +
+    (etaLine ? `<br>${etaLine}` : '') +
+    `<br>2028 estimate: ${fmtMargin(computeProjectedMargin(t))}`;
 }
 
 // ---- Sparkline ----
@@ -336,26 +377,22 @@ function topByEta(trends, kind, limit = 8) {
   return entries.slice(0, limit);
 }
 
-// All of TODAY's swing states, ranked by how soon they'd stop being one if
-// their current trend continues. States trending the other way (still getting
-// more competitive, or flat) rank at the bottom rather than being dropped —
-// they're still current swing states, just not "fading" ones.
+// All of TODAY's swing states, ranked by how soon their classification would
+// change if their current trend continues — whether that's fully leaving
+// swing status, or just progressing toward a lean category on the way there.
+// Flat states (no meaningful next-category ETA) rank at the bottom rather
+// than being dropped — they're still current swing states either way.
 function fadingBattlegrounds(trends, limit = 8) {
   const entries = Array.from(trends.entries())
-    .map(([abbr, t]) => ({ abbr, trend: t }))
+    .map(([abbr, t]) => ({ abbr, trend: t, catEta: computeNextCategoryEta(t) }))
     .filter(e => e.trend.category === 'swing');
-  entries.sort((a, b) => {
-    const aLeaving = a.trend.swingEta.kind === 'leaving';
-    const bLeaving = b.trend.swingEta.kind === 'leaving';
-    if (aLeaving && bLeaving) return a.trend.swingEta.years - b.trend.swingEta.years;
-    if (aLeaving !== bLeaving) return aLeaving ? -1 : 1;
-    return b.trend.competitivenessPerDecade - a.trend.competitivenessPerDecade;
-  });
+  entries.sort((a, b) => (a.catEta ? a.catEta.years : Infinity) - (b.catEta ? b.catEta.years : Infinity));
   return entries.slice(0, limit);
 }
 
 function fadingBattlegroundLabel(t) {
-  return t.swingEta.kind === 'leaving' ? swingEtaCompactLabel(t.swingEta) : competitivenessLabel(t.competitivenessPerDecade);
+  const catLabel = nextCategoryEtaCompactLabel(computeNextCategoryEta(t));
+  return catLabel || competitivenessLabel(t);
 }
 
 function renderCategories(trends) {
@@ -368,8 +405,8 @@ function renderCategories(trends) {
 
   renderRankList('list-trending-d', trendingD, t => directionLabel(t.directionPerDecade));
   renderRankList('list-trending-r', trendingR, t => directionLabel(t.directionPerDecade));
-  renderRankList('list-emerging', emerging, t => competitivenessLabel(t.competitivenessPerDecade));
-  renderRankList('list-solidifying', solidifying, t => competitivenessLabel(t.competitivenessPerDecade));
+  renderRankList('list-emerging', emerging, t => competitivenessLabel(t));
+  renderRankList('list-solidifying', solidifying, t => competitivenessLabel(t));
   renderRankList('list-upcoming-swing', upcomingSwing, t => swingEtaCompactLabel(t.swingEta));
   renderRankList('list-fading-battleground', fading, fadingBattlegroundLabel);
 }
@@ -466,7 +503,7 @@ function renderScatter(trends) {
 // ---- 2028 scenario mode ----
 
 let scenarioNationalMargin = 0; // fraction, e.g. 0.03 = D+3
-let scenarioIncludeTrend = false;
+let scenarioIncludeTrend = true;
 
 // Holds each state's current lean relative to the national environment fixed,
 // and swaps in a hypothetical national margin — the standard "uniform swing"
@@ -662,14 +699,35 @@ function applyMapColors(trends, mode) {
     colorFn = (t) => directionTrendToColor(t.directionPerDecade * 100);
   }
 
+  // ME-AL/NE-AL have no visible area of their own on the map — the district
+  // overlay covers the entire state, so their statewide value would otherwise
+  // be neither visible nor clickable. abbrColors/unitColors feed ElectionMap's
+  // small-box overlay, which gives them (and other geographically tiny units)
+  // their own hoverable/clickable chip.
+  const abbrColors = new Map();
+  const unitColors = new Map();
+
   for (const [abbr, t] of trends.entries()) {
     const color = colorFn(t);
     if (DISTRICT_UNITS.has(abbr)) {
       window.ElectionMap.setDistrictFill(abbr, color);
     } else {
-      window.ElectionMap.setStateFill(mapFillKey(abbr), color);
+      const key = mapFillKey(abbr);
+      window.ElectionMap.setStateFill(key, color);
+      abbrColors.set(key, color);
+      if (abbr === 'ME-AL' || abbr === 'NE-AL') unitColors.set(abbr, color);
     }
   }
+
+  const evLookup = (unitOrAbbr) => {
+    let key = unitOrAbbr;
+    if (unitOrAbbr === 'ME') key = 'ME-AL';
+    if (unitOrAbbr === 'NE') key = 'NE-AL';
+    const t = trends.get(key);
+    return t ? t.electoralVotes : null;
+  };
+  window.ElectionMap.refreshDecorations(2024, evLookup, abbrColors, unitColors);
+
   renderMapLegend(mode);
 }
 
@@ -739,6 +797,7 @@ function initControls() {
   });
 
   const scenarioTrendCheckbox = document.getElementById('scenario-include-trend');
+  scenarioIncludeTrend = scenarioTrendCheckbox.checked; // sync JS state to the checkbox's actual default
   scenarioTrendCheckbox.addEventListener('change', () => {
     scenarioIncludeTrend = scenarioTrendCheckbox.checked;
     refreshScenario();

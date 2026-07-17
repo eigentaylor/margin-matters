@@ -270,7 +270,7 @@
           <input id="scenario-margin" type="range" min="-20" max="20" step="0.5" value="0" style="width:260px" />
         </label>
         <label style="flex-direction:row;align-items:center;gap:6px">
-          <input id="scenario-include-trend" type="checkbox" />
+          <input id="scenario-include-trend" type="checkbox" checked />
           Also apply each state's current trend forward to 2028
         </label>
       </div>
@@ -325,7 +325,8 @@
       <div class="card tw-rank-card">
         <h3>Fading Battlegrounds</h3>
         <div class="tw-sub">Today's swing states, ranked by how soon they'd stop being competitive if their current
-          trend continues. States still trending more competitive show that trend instead of an ETA.</div>
+          trend continues. States still trending more competitive instead show an ETA to their next lean category
+          (e.g. "Tilt D") — they're not leaving swing status, but they're still headed somewhere.</div>
         <div class="tw-rank-list" id="list-fading-battleground"></div>
       </div>
     </div>
@@ -340,10 +341,15 @@
         <li><strong>Direction trend</strong>: the slope of relative margin over the selected window of recent
           elections (least-squares fit), shown in points per decade. Positive = trending Democratic, negative =
           trending Republican.</li>
-        <li><strong>Competitiveness trend</strong>: the slope of the <em>distance from even</em> (|relative margin|)
-          over the same window. A shrinking distance means the state is becoming more competitive
-          ("Emerging Battlegrounds"); a growing distance means it's becoming safer for whichever party already leads
-          there ("Solidifying States").</li>
+        <li><strong>Competitiveness trend</strong>: how fast a state's relative margin is moving toward (or away
+          from) dead even — the rate its <em>distance from even</em> is shrinking or growing. Computed as
+          <code>sign(current relative margin) × direction trend</code>, which is the correct rate of change of a
+          distance-from-zero measure (rather than fitting a separate trend line to the distance itself, which
+          breaks down for any state whose lean has crossed from one party to the other within the trend window — the
+          distance dips down and rises back up, and a straight line through that shape can misread a state that's
+          actually solidifying on its new side as "narrowing"). A shrinking distance means the state is becoming
+          more competitive ("Emerging Battlegrounds"); a growing distance means it's becoming safer for whichever
+          party it currently leans toward ("Solidifying States").</li>
         <li>Maine's and Nebraska's congressional districts (which each award their own electoral vote) are tracked
           separately from their statewide results, since they're often targeted independently by campaigns.</li>
         <li>A state can appear in two categories at once — e.g. a state can be trending Republican while also
@@ -351,13 +357,15 @@
         <li>Categories require at least 3 elections of data and only include states actually moving in that
           category's direction (so "Trending Democratic" never fills up with states that are actually trending
           Republican, just less severely).</li>
-        <li><strong>Swing state ETA</strong>: a naive straight-line extrapolation of the competitiveness trend —
-          if a state keeps narrowing (or widening) at exactly its current rate, how many years until it crosses the
-          swing-state line (within 5 points of even, relative to the national environment)? Political trends don't
-          actually stay linear for decades, so treat this as a rough "at this rate" estimate, not a real forecast.
-          "Upcoming Swing States" and "Fading Battlegrounds" rank states by this ETA rather than by raw trend speed —
-          a state can trend quickly but still be decades from actually becoming competitive if it's starting from a
-          very safe margin.</li>
+        <li><strong>Swing state ETA</strong>: a naive straight-line extrapolation — if a state keeps moving at
+          exactly its current rate, how many years until it crosses the swing-state line (within 5 points of even,
+          relative to the national environment)? "Upcoming Swing States" ranks not-yet-competitive states by this.</li>
+        <li><strong>Next-category ETA</strong>: used for "Fading Battlegrounds," this instead extrapolates how many
+          years until a state's relative margin crosses into the <em>next lean category</em> in whichever direction
+          it's currently heading (e.g. "Swing" → "Tilt D") — a state can be on track to leave swing status
+          entirely, or just to keep drifting through it toward one side; either way, this gives every current swing
+          state an estimate, not just the ones already re-widening. Political trends don't actually stay linear for
+          decades, so treat every ETA on this page as a rough "at this rate" estimate, not a real forecast.</li>
       </ul>
     </div>
 

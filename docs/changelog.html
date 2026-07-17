@@ -33,6 +33,18 @@
 <li>Added a third trend-map mode, "Swing ETA," that lights up states by how soon they're projected to become (or stop being) a swing state</li>
 <li>Fixed the scatter plot being dominated by a couple of outlier states, which crushed the rest into an unreadable cluster — switched to a symlog scale so states near the middle get more room</li>
 <li>Fixed the competitiveness trend map rendering as solid gray due to a unit-conversion bug in the color thresholds</li>
+<li>Added "2028 Mode": a slider to set a hypothetical national popular-vote margin, holding each state's current lean relative to the national environment fixed (optionally also carrying its trend forward to 2028), plus a "Projected Battlegrounds" list and a fourth trend-map mode showing which states would actually be close under that scenario</li>
+<li>Distinguished this "close under a scenario" concept from the existing "Swing"/"Bellwether" language (which measures a state's margin relative to the national environment, not its absolute closeness) in the methodology notes, to match the terminology already used on the Bellwether Explorer page</li>
+<li>2028 Mode now also projects an electoral vote tally (D vs. R) for the chosen scenario, using each unit's real electoral vote weight — including Maine's and Nebraska's split-EV districts — so the projection reproduces the real electoral college structure automatically</li>
+<li>The 2028 Mode panel is now hidden until "2028 Projection" is selected on the trend map, instead of always showing</li>
+<li>"Fading Battlegrounds" now covers all of today's swing states (not just the ones already trending away), ranked by how soon they'd stop being competitive if their trend continues; states still trending more competitive show that trend instead of a meaningless ETA</li>
+<li>Fixed the competitiveness trend calculation: it previously fit a separate regression to |relative margin|, which breaks down for any state whose lean crosses zero within the trend window (e.g. NE-02, R-leaning as recently as 2016, now D-leaning) — it could badly misread a state that's actually solidifying as "narrowing." Replaced with <code>sign(current lean) × direction trend</code>, the correct derivative of |relative margin|, which is robust to that case</li>
+<li>"2028 Mode" now defaults to including each state's current trend, and its checkbox default reflects the actual page state instead of being hardcoded</li>
+<li>Every tooltip now shows a live "2028 estimate" reflecting the current 2028 Mode scenario settings</li>
+<li>Reworded the Emerging Battlegrounds / Solidifying States value labels from "pts/decade narrower/wider" to "pts/decade toward/away from solid D or R," naming which party's territory the trend points toward</li>
+<li>Fixed ME-AL and NE-AL having no way to be seen or interacted with on the trend map — the congressional-district overlay covers their entire visible area, so their statewide value was neither visible nor clickable. Wired up the map's existing (until now unused) small-state-box overlay, which also gives Rhode Island, DC, and the other geographically tiny states their own hoverable/clickable chip, and added persistent state labels to the map to match the rest of the site</li>
+<li>Unified "Fading Battlegrounds" around a single "next lean category" ETA (e.g. "~7 yrs → Tilt D") for every current swing state, not just the ones already re-widening — a state can be on track to leave swing status entirely, or just to keep drifting through it toward one side, and both now get a consistent, ranked estimate</li>
+<li>Updated the methodology notes to match the corrected competitiveness formula and the new next-category ETA concept</li>
 </ul>
                     </div>
                 </div>
