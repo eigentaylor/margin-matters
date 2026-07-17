@@ -280,17 +280,18 @@ function renderSparkline(svgSel, series) {
 
 // ---- Ranked lists ----
 
-function renderRankList(containerId, entries, valueLabelFn) {
+function renderRankList(containerId, entries, valueLabelFn, colorFn) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
   if (!entries.length) {
     container.innerHTML = '<div class="tw-empty">No units meet this criteria for the selected window.</div>';
     return;
   }
+  const getColor = colorFn || (entry => CATEGORY_COLORS[entry.trend.category]);
   entries.forEach((entry, i) => {
     const row = document.createElement('div');
     row.className = 'tw-rank-row';
-    row.style.borderLeftColor = CATEGORY_COLORS[entry.trend.category];
+    row.style.borderLeftColor = getColor(entry);
 
     const num = document.createElement('div');
     num.className = 'tw-rank-num';
@@ -335,20 +336,42 @@ function topByEta(trends, kind, limit = 8) {
   return entries.slice(0, limit);
 }
 
+// All of TODAY's swing states, ranked by how soon they'd stop being one if
+// their current trend continues. States trending the other way (still getting
+// more competitive, or flat) rank at the bottom rather than being dropped —
+// they're still current swing states, just not "fading" ones.
+function fadingBattlegrounds(trends, limit = 8) {
+  const entries = Array.from(trends.entries())
+    .map(([abbr, t]) => ({ abbr, trend: t }))
+    .filter(e => e.trend.category === 'swing');
+  entries.sort((a, b) => {
+    const aLeaving = a.trend.swingEta.kind === 'leaving';
+    const bLeaving = b.trend.swingEta.kind === 'leaving';
+    if (aLeaving && bLeaving) return a.trend.swingEta.years - b.trend.swingEta.years;
+    if (aLeaving !== bLeaving) return aLeaving ? -1 : 1;
+    return b.trend.competitivenessPerDecade - a.trend.competitivenessPerDecade;
+  });
+  return entries.slice(0, limit);
+}
+
+function fadingBattlegroundLabel(t) {
+  return t.swingEta.kind === 'leaving' ? swingEtaCompactLabel(t.swingEta) : competitivenessLabel(t.competitivenessPerDecade);
+}
+
 function renderCategories(trends) {
   const trendingD = topByCategory(trends, { sortKey: t => t.directionPerDecade, requirePositive: true });
   const trendingR = topByCategory(trends, { sortKey: t => t.directionPerDecade, requirePositive: false });
   const emerging = topByCategory(trends, { sortKey: t => -t.competitivenessPerDecade, requirePositive: true });
   const solidifying = topByCategory(trends, { sortKey: t => -t.competitivenessPerDecade, requirePositive: false });
   const upcomingSwing = topByEta(trends, 'arriving');
-  const fadingBattleground = topByEta(trends, 'leaving');
+  const fading = fadingBattlegrounds(trends);
 
   renderRankList('list-trending-d', trendingD, t => directionLabel(t.directionPerDecade));
   renderRankList('list-trending-r', trendingR, t => directionLabel(t.directionPerDecade));
   renderRankList('list-emerging', emerging, t => competitivenessLabel(t.competitivenessPerDecade));
   renderRankList('list-solidifying', solidifying, t => competitivenessLabel(t.competitivenessPerDecade));
   renderRankList('list-upcoming-swing', upcomingSwing, t => swingEtaCompactLabel(t.swingEta));
-  renderRankList('list-fading-battleground', fadingBattleground, t => swingEtaCompactLabel(t.swingEta));
+  renderRankList('list-fading-battleground', fading, fadingBattlegroundLabel);
 }
 
 // ---- Scatter plot ----
@@ -438,6 +461,69 @@ function renderScatter(trends) {
     .attr('stroke', 'rgba(0,0,0,0.7)')
     .attr('stroke-width', 2)
     .text(d => displayAbbr(d.abbr));
+}
+
+// ---- 2028 scenario mode ----
+
+let scenarioNationalMargin = 0; // fraction, e.g. 0.03 = D+3
+let scenarioIncludeTrend = false;
+
+// Holds each state's current lean relative to the national environment fixed,
+// and swaps in a hypothetical national margin — the standard "uniform swing"
+// projection. Optionally also carries the state's own trend forward half a
+// decade (2024 -> 2028) before applying it.
+function computeProjectedMargin(t) {
+  let lean = t.latestRelativeMargin;
+  if (scenarioIncludeTrend) lean += t.directionPerDecade * 0.4;
+  return lean + scenarioNationalMargin;
+}
+
+// Absolute-margin color scale matching the site's existing convention for
+// coloring raw margins (see docs/utils/siteState.js's colorForMargin) —
+// distinct from the trend-rate scales above, since this represents a
+// projected final margin, not a rate of change.
+function projectedMarginToColor(m) {
+  if (m <= -0.2) return '#8B0000';
+  if (m <= -0.1) return '#B22222';
+  if (m <= -0.05) return '#CD5C5C';
+  if (m < -0.01) return '#F08080';
+  if (m < 0.01) return '#8aa7ba';
+  if (m < 0.05) return '#87CEFA';
+  if (m < 0.1) return '#6495ED';
+  if (m < 0.2) return '#4169E1';
+  return '#00008B';
+}
+
+function renderBattlegrounds(trends) {
+  const entries = Array.from(trends.entries())
+    .map(([abbr, t]) => ({ abbr, trend: t, projected: computeProjectedMargin(t) }));
+  entries.sort((a, b) => Math.abs(a.projected) - Math.abs(b.projected));
+  renderRankList('list-battlegrounds', entries.slice(0, 10), t => fmtMargin(computeProjectedMargin(t)),
+    entry => projectedMarginToColor(entry.projected));
+}
+
+// Every unit already carries the correct real-world electoral vote weight —
+// ME-AL/NE-AL hold each state's 2 at-large votes, and the district units hold
+// their own 1 vote each — so summing by projected-margin sign reproduces the
+// real ME/NE split-EV system automatically.
+function renderScenarioEvBar(trends) {
+  let demEV = 0, repEV = 0, totalEV = 0;
+  for (const t of trends.values()) {
+    const ev = t.electoralVotes || 0;
+    totalEV += ev;
+    if (computeProjectedMargin(t) >= 0) demEV += ev; else repEV += ev;
+  }
+  const demPct = totalEV ? (demEV / totalEV * 100) : 0;
+  const repPct = totalEV ? (repEV / totalEV * 100) : 0;
+  document.getElementById('scenario-ev-fill-d').style.width = demPct + '%';
+  document.getElementById('scenario-ev-fill-r').style.width = repPct + '%';
+  document.getElementById('scenario-ev-text').textContent = `D ${demEV} – R ${repEV}`;
+
+  const toWin = Math.floor(totalEV / 2) + 1;
+  const note = document.getElementById('scenario-ev-note');
+  if (demEV >= toWin) note.textContent = `Democrats clear ${toWin} to win`;
+  else if (repEV >= toWin) note.textContent = `Republicans clear ${toWin} to win`;
+  else note.textContent = `${toWin} needed to win — no majority in this scenario`;
 }
 
 // ---- Map ----
@@ -542,7 +628,12 @@ async function ensureMap() {
 
 function renderMapLegend(mode) {
   const el = document.getElementById('map-legend');
-  if (mode === 'swing-eta') {
+  if (mode === 'scenario') {
+    el.innerHTML = '<span>Safe R</span>' +
+      '<span class="bar" style="background:linear-gradient(90deg,#8B0000,#F08080,#8aa7ba,#87CEFA,#00008B)"></span>' +
+      '<span>Safe D</span>' +
+      `<span style="margin-left:8px">at ${fmtMargin(scenarioNationalMargin)} national</span>`;
+  } else if (mode === 'swing-eta') {
     el.innerHTML = '<span>Becoming a swing state soon</span>' +
       '<span class="bar" style="background:linear-gradient(90deg,#ff3b30,#ff9500,#e0b800,#2a2a2a,#93c5fd,#3b82f6)"></span>' +
       '<span>Leaving swing status soon</span>';
@@ -559,7 +650,9 @@ function renderMapLegend(mode) {
 
 function applyMapColors(trends, mode) {
   let colorFn;
-  if (mode === 'swing-eta') {
+  if (mode === 'scenario') {
+    colorFn = (t) => projectedMarginToColor(computeProjectedMargin(t));
+  } else if (mode === 'swing-eta') {
     colorFn = (t) => swingEtaToColor(t.swingEta);
   } else if (mode === 'competitiveness') {
     // directionPerDecade/competitivenessPerDecade are fractions (e.g. 0.03 = 3 pts/decade);
@@ -592,6 +685,8 @@ function recomputeAndRender() {
   renderScatter(trends);
   renderScatterLegend();
   renderCategories(trends);
+  renderBattlegrounds(trends);
+  renderScenarioEvBar(trends);
   applyMapColors(trends, mapMode);
 
   const windowedYears = Array.from(byUnitData.values())
@@ -600,6 +695,13 @@ function recomputeAndRender() {
   if (label && windowedYears.length) {
     label.textContent = `Covers ${Math.min(...windowedYears)}–${Math.max(...windowedYears)}`;
   }
+}
+
+function refreshScenario() {
+  if (!currentTrends) return;
+  renderBattlegrounds(currentTrends);
+  renderScenarioEvBar(currentTrends);
+  if (mapMode === 'scenario') applyMapColors(currentTrends, mapMode);
 }
 
 function initControls() {
@@ -617,13 +719,29 @@ function initControls() {
   });
 
   const toggle = document.getElementById('map-toggle');
+  const scenarioCard = document.getElementById('scenario-card');
   toggle.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       toggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       mapMode = btn.dataset.mode;
+      scenarioCard.style.display = mapMode === 'scenario' ? '' : 'none';
       if (currentTrends) applyMapColors(currentTrends, mapMode);
     });
+  });
+
+  const scenarioSlider = document.getElementById('scenario-margin');
+  const scenarioReadout = document.getElementById('scenario-margin-readout');
+  scenarioSlider.addEventListener('input', () => {
+    scenarioNationalMargin = parseFloat(scenarioSlider.value) / 100;
+    scenarioReadout.textContent = fmtMargin(scenarioNationalMargin);
+    refreshScenario();
+  });
+
+  const scenarioTrendCheckbox = document.getElementById('scenario-include-trend');
+  scenarioTrendCheckbox.addEventListener('change', () => {
+    scenarioIncludeTrend = scenarioTrendCheckbox.checked;
+    refreshScenario();
   });
 }
 

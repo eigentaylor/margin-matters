@@ -248,12 +248,50 @@
         <button class="btn active" data-mode="direction" type="button">Direction</button>
         <button class="btn" data-mode="competitiveness" type="button">Competitiveness</button>
         <button class="btn" data-mode="swing-eta" type="button">Swing ETA</button>
+        <button class="btn" data-mode="scenario" type="button">2028 Projection</button>
       </div>
       <div id="map-wrap" class="center" style="margin-top:12px">
         <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="US map colored by state political trend"></svg>
         <div id="mapTip" style="display:none"></div>
       </div>
       <div class="tw-map-legend" id="map-legend"></div>
+    </div>
+
+    <div class="card" id="scenario-card" style="display:none">
+      <h2 style="margin-top:0">2028 Mode</h2>
+      <p class="legend">Set a hypothetical national environment and see which states would actually be
+        <em>close</em> — as opposed to the "Swing"/"Bellwether" states above, which track the national mood closely
+        regardless of who's winning nationally, these are the states that would be near 50/50 <em>in this specific
+          scenario</em>. Every state's current lean relative to the national environment is held fixed; only the
+        national number changes.</p>
+      <div class="tw-controls">
+        <label for="scenario-margin">
+          Hypothetical 2028 national margin: <strong id="scenario-margin-readout">EVEN</strong>
+          <input id="scenario-margin" type="range" min="-20" max="20" step="0.5" value="0" style="width:260px" />
+        </label>
+        <label style="flex-direction:row;align-items:center;gap:6px">
+          <input id="scenario-include-trend" type="checkbox" />
+          Also apply each state's current trend forward to 2028
+        </label>
+      </div>
+      <div id="scenario-ev-bar"
+        style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:14px">
+        <div id="scenario-ev-fill-d"
+          style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%">
+        </div>
+        <div id="scenario-ev-fill-r"
+          style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%">
+        </div>
+        <div style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+        <div id="scenario-ev-text"
+          style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:700;font-size:0.85em">
+          D 0 – R 0</div>
+      </div>
+      <div id="scenario-ev-note" class="legend" style="text-align:center;margin-top:4px"></div>
+      <h3 style="margin-bottom:4px;margin-top:16px">Projected Battlegrounds</h3>
+      <div class="tw-sub">States closest to an even split under this scenario — the closer to zero, the more
+        competitive.</div>
+      <div class="tw-rank-list" id="list-battlegrounds"></div>
     </div>
 
     <h2>Categories</h2>
@@ -286,8 +324,8 @@
       </div>
       <div class="card tw-rank-card">
         <h3>Fading Battlegrounds</h3>
-        <div class="tw-sub">Swing states today that are trending toward becoming safe for one party soonest, at
-          their current rate.</div>
+        <div class="tw-sub">Today's swing states, ranked by how soon they'd stop being competitive if their current
+          trend continues. States still trending more competitive show that trend instead of an ETA.</div>
         <div class="tw-rank-list" id="list-fading-battleground"></div>
       </div>
     </div>
