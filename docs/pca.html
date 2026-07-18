@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PCA Explorer • Margin Matters</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.svg" />
+  <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <!-- numeric.js for SVD (PCA), same dependency already used by future.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+  <script type="module" src="./utils/dataLoader.js"></script>
+  <script type="module" src="./utils/electionMap.js"></script>
+  <script type="module" src="./utils/pcaEngine.js"></script>
+  <style>
+    .pca-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    .pca-controls label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .pca-controls select,
+    .pca-controls input[type="number"] {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.95rem;
+    }
+
+    .pca-controls label.pca-checkbox {
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pca-controls .pca-hint {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .pca-map-toggle {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pca-map-toggle button {
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .pca-map-toggle button.active {
+      background: #2a3f5f;
+      border-color: var(--accent);
+    }
+
+    .pca-chart-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .pca-chart-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .pca-tooltip {
+      position: fixed;
+      display: none;
+      pointer-events: none;
+      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--fg);
+      z-index: 50;
+      max-width: 260px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+    }
+
+    .pca-tooltip strong {
+      color: #fff;
+    }
+
+    .pca-map-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .pca-map-legend .bar {
+      flex: 1;
+      max-width: 260px;
+      height: 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .pca-mode-pane {
+      display: none;
+      margin-top: 14px;
+    }
+
+    .pca-mode-pane.active {
+      display: block;
+    }
+
+    .pca-slider-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 700px) {
+      .pca-slider-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .pca-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pca-slider-row label {
+      flex: 0 0 auto;
+      min-width: 40px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .pca-slider-row input[type="range"] {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .pca-slider-row .pca-slider-value {
+      flex: 0 0 auto;
+      min-width: 56px;
+      text-align: right;
+      font-size: 0.82rem;
+    }
+
+    .pca-flip-list {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .pca-flip-list .flip-row {
+      color: var(--fg);
+    }
+
+    .pca-npv-rank {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .pca-npv-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      color: inherit;
+      font: inherit;
+    }
+
+    .pca-npv-row:hover,
+    .pca-npv-row.active {
+      background: #1b1b1b;
+    }
+
+    .pca-npv-row .pca-npv-bar-wrap {
+      flex: 1;
+      height: 10px;
+      background: #111;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .pca-npv-row .pca-npv-bar {
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .pca-npv-row .pca-npv-r2 {
+      min-width: 48px;
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .pca-methodology p {
+      margin: 0 0 8px;
+    }
+
+    .pca-methodology ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .pca-methodology li {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+
+    <div class="header">
+      <h1>PCA Explorer</h1>
+      <span class="legend">Principal component analysis on presidential margins across states, computed live in
+        your browser for whatever year range and metric you pick.</span>
+    </div>
+
+    <div class="card pca-controls">
+      <label for="pca-metric">
+        Metric
+        <select id="pca-metric">
+          <option value="pres_margin" selected>Raw margin (D − R)</option>
+          <option value="relative_margin">Relative margin (minus NPV)</option>
+          <option value="two_party_margin">Two-party margin</option>
+          <option value="two_party_relative_margin">Two-party relative margin</option>
+        </select>
+      </label>
+      <label for="pca-year-start">
+        From
+        <select id="pca-year-start"></select>
+      </label>
+      <label for="pca-year-end">
+        To
+        <select id="pca-year-end"></select>
+      </label>
+      <label for="pca-component-count">
+        Components to compute
+        <select id="pca-component-count"></select>
+      </label>
+      <label class="pca-checkbox" for="pca-split-districts" id="pca-split-districts-label">
+        <input type="checkbox" id="pca-split-districts" />
+        Split ME/NE districts
+      </label>
+      <label class="pca-checkbox" for="pca-varimax">
+        <input type="checkbox" id="pca-varimax" />
+        Varimax rotation
+      </label>
+      <span class="legend" id="pca-unit-summary"></span>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Scree plot</h2>
+      <p class="legend">How much of the year-to-year variation across states each component explains, individually
+        and cumulatively.</p>
+      <div class="pca-chart-wrap">
+        <svg id="pca-scree" viewBox="0 0 700 320" aria-label="Scree plot of explained variance"></svg>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Map explorer</h2>
+      <p class="legend">One map, three ways to color it: raw component loadings, a hypothetical reconstruction you
+        control with sliders, or how far a low-rank reconstruction of a real election misses the actual result.</p>
+      <div class="pca-map-toggle" id="pca-map-toggle">
+        <button class="btn active" data-mode="loadings" type="button">Loadings</button>
+        <button class="btn" data-mode="reconstruction" type="button">Reconstruction</button>
+        <button class="btn" data-mode="error" type="button">Historical error</button>
+      </div>
+
+      <div class="pca-mode-pane active" id="pca-pane-loadings">
+        <div class="pca-controls" style="margin-top:10px">
+          <label for="pca-loadings-component">
+            Component
+            <select id="pca-loadings-component"></select>
+          </label>
+        </div>
+      </div>
+
+      <div class="pca-mode-pane" id="pca-pane-reconstruction">
+        <div class="pca-controls" style="margin-top:10px">
+          <label for="pca-jump-year">
+            Jump to year
+            <select id="pca-jump-year"></select>
+          </label>
+          <label for="pca-assumed-npv" id="pca-assumed-npv-label" style="display:none">
+            Assumed national margin
+            <input type="number" id="pca-assumed-npv" step="0.5" value="0" style="width:90px" /> pts
+          </label>
+        </div>
+        <div class="pca-slider-grid" id="pca-slider-grid" style="margin-top:10px"></div>
+      </div>
+
+      <div class="pca-mode-pane" id="pca-pane-error">
+        <div class="pca-controls" style="margin-top:10px">
+          <label for="pca-error-year">
+            Election
+            <select id="pca-error-year"></select>
+          </label>
+          <label for="pca-error-k">
+            Components used
+            <select id="pca-error-k"></select>
+          </label>
+        </div>
+      </div>
+
+      <div id="pca-map-wrap" class="center" style="margin-top:14px">
+        <svg id="pca-map" width="100%" viewBox="0 0 975 610" aria-label="US map for PCA visualizations"></svg>
+      </div>
+      <div class="pca-map-legend" id="pca-map-legend"></div>
+
+      <div class="pca-mode-pane" id="pca-pane-reconstruction-ev">
+        <div id="pca-recon-ev-bar"
+          style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:14px">
+          <div id="pca-recon-ev-fill-d"
+            style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%">
+          </div>
+          <div id="pca-recon-ev-fill-r"
+            style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%">
+          </div>
+          <div style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+          <div id="pca-recon-ev-text"
+            style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:700;font-size:0.85em">
+            D 0 – R 0</div>
+        </div>
+        <div id="pca-recon-ev-note" class="legend" style="text-align:center;margin-top:4px"></div>
+      </div>
+
+      <div class="pca-mode-pane" id="pca-pane-error-flip">
+        <div class="pca-flip-list" id="pca-flip-list"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Component scores over time</h2>
+      <p class="legend">Each line is one component's score by election year.</p>
+      <div class="pca-chart-wrap">
+        <svg id="pca-scores-chart" viewBox="0 0 900 380" aria-label="Component scores over time"></svg>
+      </div>
+      <div class="tw-legend-swatches" id="pca-scores-legend"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Which component tracks the national popular vote?</h2>
+      <p class="legend">Least-squares fit between each component's score and that year's national margin. Click a
+        component to see the scatter and both regression lines (NPV as a function of the component, and vice
+        versa).</p>
+      <div class="pca-npv-rank" id="pca-npv-rank"></div>
+      <div class="pca-chart-wrap" style="margin-top:12px">
+        <svg id="pca-npv-scatter" viewBox="0 0 600 420" aria-label="Scatter of national margin vs component score"></svg>
+      </div>
+      <div class="legend" id="pca-npv-equations"></div>
+    </div>
+
+    <div class="card pca-methodology">
+      <strong>Methodology</strong>
+      <ul>
+        <li>Only "state-level" units are included by default: the 50 states + DC, with Maine and Nebraska
+          represented by their statewide (at-large) totals. Enable "Split ME/NE districts" to swap those two states'
+          totals for their congressional-district-level results instead, when the selected range fully supports it
+          (Maine from 1972, Nebraska from 1992).</li>
+        <li>A unit is only included if it has a value for <em>every</em> year in the selected range — no
+          imputation. That's why the default 1964–2024 range gives exactly 51 units (every state + DC has a result
+          in every one of those elections), while an earlier start year can drop states that joined the union or
+          weren't tracked yet (e.g. Alaska/Hawaii before 1960, DC before 1964).</li>
+        <li>Each unit's margin series is standardized (zero mean, unit variance) before PCA, matching the offline
+          <code>pca/do_pca.py</code> pipeline this page mirrors — so components reflect co-movement in trend, not
+          just which states have the widest margins.</li>
+        <li>Loadings are shown correlation-style (component direction scaled by the square root of its explained
+          variance), matching <code>pca/do_pca.py</code>'s convention.</li>
+        <li>Varimax rotation redistributes the loadings to be more concentrated (each component leans on fewer
+          states), which usually makes the loadings map easier to read at the cost of components no longer being
+          strictly ordered by variance explained.</li>
+        <li>The reconstruction and historical-error map modes both reconstruct a margin vector from a truncated
+          set of component scores — the same underlying computation either way, just fed hypothetical (slider)
+          scores or a real year's actual scores.</li>
+        <li>When the metric is a relative margin, the reconstructed values represent lean relative to an assumed
+          national environment (adjustable), not an absolute winner — set "Assumed national margin" to translate
+          that into an electoral college outcome.</li>
+      </ul>
+    </div>
+
+    <div id="footer-placeholder"
+      data-extra-note="PCA runs in your browser from presidential_margins.csv, via numeric.js's SVD.">
+    </div>
+  </div>
+
+  <div class="pca-tooltip" id="pca-tooltip"></div>
+
+  <script type="module" src="./pca.js"></script>
+  <script src="./header.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./footer.js"></script>
+</body>
+
+</html>

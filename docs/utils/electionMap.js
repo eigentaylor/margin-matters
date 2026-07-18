@@ -15,6 +15,32 @@ if (!window.d3 || !window.topojson) {
 
 const ID_TO_ABBR = { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
 
+// district_geo_url features occasionally include a spurious extra subpath —
+// a handful of points spanning a huge chunk of the viewBox — likely a
+// degenerate projection artifact from an out-of-domain coordinate under
+// d3.geoAlbersUsa. Left in place, it renders invisible (transparent fill)
+// but keeps pointer-events:auto, silently swallowing hover/click for
+// whatever real state/district is underneath it over a large area of the
+// map. Real district boundaries have hundreds of points, so any subpath
+// with only a few points but a bounding box spanning a large fraction of
+// the map is not real geometry — strip it.
+function stripSpuriousBoxSubpaths(dStr) {
+  if (!dStr) return dStr;
+  const VIEW_W = 975, VIEW_H = 610;
+  const subpaths = dStr.match(/M[^M]*/g);
+  if (!subpaths || subpaths.length < 2) return dStr;
+  return subpaths.filter(sp => {
+    const nums = sp.match(/-?\d+\.?\d*/g);
+    if (!nums || nums.length < 4) return true;
+    if (nums.length > 16) return true; // >8 points: real boundary detail, keep
+    const xs = [], ys = [];
+    for (let i = 0; i + 1 < nums.length; i += 2) { xs.push(parseFloat(nums[i])); ys.push(parseFloat(nums[i + 1])); }
+    const w = Math.max(...xs) - Math.min(...xs);
+    const h = Math.max(...ys) - Math.min(...ys);
+    return !(w > VIEW_W * 0.15 && h > VIEW_H * 0.15);
+  }).join('');
+}
+
 const ElectionMap = {
   statePaths: new Map(),
   districtPaths: new Map(),
@@ -35,7 +61,7 @@ const ElectionMap = {
     let x = cfg.x;
     if (!Number.isFinite(x)) {
       try {
-        const svg = d3.select('svg#map');
+        const svg = this._svg();
         const vb = svg.empty() ? [0, 0, 975, 610] : (svg.attr('viewBox') ? svg.attr('viewBox').split(/\s+/).map(Number) : [0, 0, 975, 610]);
         const width = vb[2] || 975;
         x = width - (cfg.right || 8) - (cfg.boxW || 86);
@@ -67,6 +93,20 @@ const ElectionMap = {
       } catch (e) { sel.attr('fill', color || '#2f2f2f'); }
     } catch (e) { }
   },
+  // Toggles the ME/NE congressional-district overlay's visibility and pointer
+  // interactivity as a single group. Consumers that don't always want the
+  // district split active (e.g. a "split ME/NE districts" checkbox that's
+  // off by default) should call this rather than leaving the overlay
+  // interactive but empty of data — a hidden/pointer-events:none overlay
+  // can never intercept hover/click for whatever's underneath it, which
+  // also sidesteps any malformed-geometry edge cases in the district
+  // GeoJSON when the overlay isn't in use anyway.
+  setDistrictsVisible(visible) {
+    if (!this._districtsGroup) return;
+    this._districtsGroup
+      .style('pointer-events', visible ? 'auto' : 'none')
+      .style('display', visible ? null : 'none');
+  },
   setDistrictFill(unit, color) {
     try {
       const sel = this.districtPaths.get(unit);
@@ -79,8 +119,18 @@ const ElectionMap = {
       } catch (e) { sel.attr('fill', color || 'transparent'); }
     } catch (e) { }
   },
+  // Returns a d3 selection for whichever SVG this instance was built against
+  // (falls back to the historical '#map' default). Every internal lookup
+  // should go through this rather than hardcoding 'svg#map' — pages that use
+  // a different id for their map svg (to avoid clashing with other elements)
+  // otherwise silently lose district clipping, state labels, and the
+  // small-state box overlay.
+  _svg() {
+    return d3.select(this._svgSelector || 'svg#map');
+  },
   async build(opts) {
     const svgSelector = (opts && opts.svgSelector) || '#map';
+    this._svgSelector = svgSelector;
     const topoUrl = (opts && opts.topoUrl) || 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
     const districtGeoUrl = opts && opts.districtGeoUrl; // optional
     this._handlers.state = (opts && opts.stateHandlers) || {};
@@ -235,7 +285,7 @@ const ElectionMap = {
   },
   _ensureLabelLayer() {
     if (this._labelLayer && !this._labelLayer.empty()) return this._labelLayer;
-    const svg = d3.select('svg#map'); if (svg.empty()) return null;
+    const svg = this._svg(); if (svg.empty()) return null;
     this._labelLayer = svg.append('g').attr('class', 'state-labels').attr('pointer-events', 'none');
     return this._labelLayer;
   },
@@ -289,7 +339,7 @@ const ElectionMap = {
   },
   renderSmallStateBoxes(year, abbrColors, unitColors) {
     this._lastYear = year; this._lastAbbrColors = abbrColors; this._lastUnitColors = unitColors;
-    const svg = d3.select('svg#map'); if (svg.empty()) return;
+    const svg = this._svg(); if (svg.empty()) return;
     let layer = svg.select('g.small-state-overlay'); if (layer.empty()) layer = svg.append('g').attr('class', 'small-state-overlay');
     const tiny = ['ME-AL', 'NE-AL', 'NH', 'VT', 'MA', 'RI', 'CT', 'NJ', 'DE', 'MD', 'DC'];
     const data = tiny.map(u => {
@@ -400,7 +450,7 @@ const ElectionMap = {
     this.renderSmallStateBoxes(year, abbrColorsMap, unitColorsMap);
   },
   async _loadDistricts(geoUrl) {
-    const svg = d3.select('#map');
+    const svg = this._svg();
     const defs = svg.select('defs').empty() ? svg.append('defs') : svg.select('defs');
     const mePath = d3.select('#state-ME');
     const nePath = d3.select('#state-NE');
@@ -419,6 +469,7 @@ const ElectionMap = {
 
     const geo = await d3.json(geoUrl);
     const dg = window.mapG.append('g').attr('class', 'districts').attr('pointer-events', 'auto');
+    this._districtsGroup = dg;
     const feats = (geo && geo.features) ? geo.features.slice() : [];
     try {
       feats.sort((a, b) => {
@@ -440,9 +491,7 @@ const ElectionMap = {
       const st = useUnit.slice(0, 2);
       const clip = st === 'ME' ? 'url(#clip-ME)' : (st === 'NE' ? 'url(#clip-NE)' : null);
       let dStr = window.mapPath(f);
-      if (dStr && dStr.startsWith('M-104,-4.4L1079,-4.4L1079,614.4L-104,614.4Z')) {
-        dStr = dStr.replace(/^M-104,-4\.4L1079,-4\.4L1079,614\.4L-104,614\.4Z/, '');
-      }
+      dStr = stripSpuriousBoxSubpaths(dStr);
       if (useUnit && dStr) districtDByUnit.set(useUnit, dStr);
 
       // halo
@@ -480,7 +529,7 @@ const ElectionMap = {
 
     // Mask to avoid NE-03 overlapping smaller districts
     try {
-      const svg = d3.select('#map');
+      const svg = this._svg();
       const defs = svg.select('defs');
       const ne03 = districtDByUnit.get('NE-03');
       if (ne03 && !defs.empty()) {
@@ -499,7 +548,7 @@ const ElectionMap = {
       }
     } catch (e) { }
 
-    try { d3.select('svg#map').select('g').select('.state-boundaries').raise(); } catch (e) { }
+    try { this._svg().select('g').select('.state-boundaries').raise(); } catch (e) { }
   }
 };
 

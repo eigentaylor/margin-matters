@@ -14,6 +14,7 @@
           <a class="btn" href="${prefix}/paths2028.html">2028 Paths</a>
           <a class="btn" href="${prefix}/ranker.html">Ranker</a>
           <a class="btn" href="${prefix}/trending-states.html">Trending States</a>
+          <a class="btn" href="${prefix}/pca.html">PCA Explorer</a>
           <a class="btn" href="${prefix}/trend-viewer.html">Trend Viewer</a>
           <a class="btn" href="${prefix}/bellwether-explorer.html">Bellwethers</a>
           <a class="btn" href="${prefix}/histograms.html">Histograms</a>
