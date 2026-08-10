@@ -219,6 +219,45 @@
       color: var(--muted);
     }
 
+    .tw-legend-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 10px;
+    }
+
+    .tw-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font: inherit;
+    }
+
+    .tw-swatch:hover {
+      background: #1b1b1b;
+    }
+
+    .tw-swatch.active {
+      color: var(--fg);
+      background: #1b1b1b;
+      border-color: var(--accent);
+    }
+
+    .tw-swatch i {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
     .pca-methodology p {
       margin: 0 0 8px;
     }
@@ -303,6 +342,9 @@
             Component
             <select id="pca-loadings-component"></select>
           </label>
+        </div>
+        <div class="pca-chart-wrap" style="margin-top:10px">
+          <svg id="pca-loadings-bar" aria-label="States ranked by component loading"></svg>
         </div>
       </div>
 

@@ -129,6 +129,7 @@ let sliderValues = [];
 let mapMode = 'loadings';
 let mapBuilt = false;
 let currentTooltipFn = () => '';
+let selectedScoreComponent = null;
 
 // ---- Controls: population ----
 
@@ -252,7 +253,7 @@ function fullRecompute() {
     pcaResult = null;
     active = null;
     document.getElementById('pca-unit-summary').textContent = 'Not enough overlapping data for this range/metric — try a wider year range.';
-    ['pca-scree', 'pca-map', 'pca-scores-chart', 'pca-npv-scatter'].forEach(id => d3.select('#' + id).selectAll('*').remove());
+    ['pca-scree', 'pca-map', 'pca-scores-chart', 'pca-npv-scatter', 'pca-loadings-bar'].forEach(id => d3.select('#' + id).selectAll('*').remove());
     return;
   }
   const { Xstd, mean, std } = window.PcaEngine.standardize(built.X);
@@ -348,28 +349,66 @@ function renderScoresChart() {
   const y = d3.scaleLinear().domain([-yMax, yMax]).range([innerH, 0]);
 
   g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', '#333');
-  g.append('g').attr('transform', `translate(0,${innerH})`)
-    .call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(Math.min(years.length, 10)))
-    .selectAll('text').attr('font-size', 10);
+  const xAxisG = g.append('g').attr('transform', `translate(0,${innerH})`)
+    .call(d3.axisBottom(x).tickFormat(d3.format('d')).tickValues(years));
+  const xAxisText = xAxisG.selectAll('text').attr('font-size', 10);
+  if (years.length > 14) {
+    xAxisText.attr('transform', 'rotate(-45)').style('text-anchor', 'end');
+  }
   g.append('g').call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('font-size', 10);
 
   for (let i = 0; i < nShow; i++) {
     const series = years.map((yr, idx) => ({ year: yr, v: active.scores[idx][i] }));
     const line = d3.line().x(d => x(d.year)).y(d => y(d.v)).curve(d3.curveMonotoneX);
     const color = SCORE_COLORS[i % SCORE_COLORS.length];
-    g.append('path').datum(series).attr('d', line).attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2);
+    g.append('path').datum(series).attr('data-pc', i).attr('d', line).attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2);
     g.selectAll(`circle.pt-${i}`).data(series).join('circle')
+      .attr('class', `pt-${i}`).attr('data-pc', i)
       .attr('cx', d => x(d.year)).attr('cy', d => y(d.v)).attr('r', 2.5).attr('fill', color);
   }
+
+  if (selectedScoreComponent != null && selectedScoreComponent >= nShow) selectedScoreComponent = null;
 
   const legend = document.getElementById('pca-scores-legend');
   legend.innerHTML = '';
   for (let i = 0; i < nShow; i++) {
-    const span = document.createElement('span');
-    span.className = 'tw-swatch';
-    span.innerHTML = `<i style="background:${SCORE_COLORS[i % SCORE_COLORS.length]}"></i>PC${i + 1}${varimaxOn ? ' (rotated)' : ''}`;
-    legend.appendChild(span);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tw-swatch' + (selectedScoreComponent === i ? ' active' : '');
+    btn.innerHTML = `<i style="background:${SCORE_COLORS[i % SCORE_COLORS.length]}"></i>PC${i + 1}${varimaxOn ? ' (rotated)' : ''}`;
+    btn.addEventListener('click', () => {
+      selectedScoreComponent = selectedScoreComponent === i ? null : i;
+      applyScoreSelection();
+    });
+    legend.appendChild(btn);
   }
+
+  applyScoreSelection();
+}
+
+function applyScoreSelection() {
+  const svg = d3.select('#pca-scores-chart');
+  const selected = selectedScoreComponent;
+  svg.selectAll('path[data-pc]').each(function () {
+    const pc = +this.getAttribute('data-pc');
+    const el = d3.select(this);
+    if (selected == null) {
+      el.attr('stroke-width', 2).attr('stroke-opacity', 1).style('filter', null);
+    } else if (pc === selected) {
+      el.attr('stroke-width', 3.5).attr('stroke-opacity', 1)
+        .style('filter', `drop-shadow(0 0 6px ${el.attr('stroke')})`);
+    } else {
+      el.attr('stroke-width', 2).attr('stroke-opacity', 0.15).style('filter', null);
+    }
+  });
+  svg.selectAll('circle[data-pc]').each(function () {
+    const pc = +this.getAttribute('data-pc');
+    const el = d3.select(this);
+    el.attr('fill-opacity', selected == null || pc === selected ? 1 : 0.15);
+  });
+  document.querySelectorAll('#pca-scores-legend .tw-swatch').forEach((btn, i) => {
+    btn.classList.toggle('active', selected === i);
+  });
 }
 
 // ---- Map: shared color-application plumbing ----
@@ -450,6 +489,59 @@ function renderLoadingsMode() {
   };
 
   renderMapLegend('loadings', { maxAbs, compIdx });
+  renderLoadingsBarChart(compIdx, maxAbs);
+}
+
+function renderLoadingsBarChart(compIdx, maxAbs) {
+  const svg = d3.select('#pca-loadings-bar');
+  svg.selectAll('*').remove();
+
+  const entries = pcaResult.units
+    .map((u, i) => ({ unit: u, v: active.loadings[i][compIdx] }))
+    .sort((a, b) => b.v - a.v);
+
+  const rowH = 14;
+  const W = 700, margin = { top: 6, right: 12, bottom: 6, left: 46 };
+  const innerW = W - margin.left - margin.right;
+  const innerH = entries.length * rowH;
+  const H = innerH + margin.top + margin.bottom;
+  svg.attr('viewBox', `0 0 ${W} ${H}`);
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const y = d3.scaleBand().domain(entries.map(e => e.unit)).range([0, innerH]).padding(0.15);
+  const x = d3.scaleLinear().domain([-maxAbs, maxAbs]).range([0, innerW]);
+
+  g.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', innerH).attr('stroke', '#333');
+
+  const rows = g.selectAll('g.loadings-bar-row').data(entries).join('g')
+    .attr('class', 'loadings-bar-row')
+    .style('cursor', 'pointer')
+    .on('mouseenter', (evt, d) => {
+      const tooltip = document.getElementById('pca-tooltip');
+      tooltip.style.display = 'block';
+      tooltip.innerHTML = `<strong>${unitFullName(d.unit)}</strong><br>PC${compIdx + 1} loading: ${d.v.toFixed(3)}`;
+      positionMapTip(evt);
+    })
+    .on('mousemove', (evt) => positionMapTip(evt))
+    .on('mouseleave', () => hideMapTip())
+    .on('click', (evt, d) => { window.open(unitLink(d.unit), '_blank'); });
+
+  rows.append('rect')
+    .attr('y', d => y(d.unit))
+    .attr('height', y.bandwidth())
+    .attr('x', d => Math.min(x(0), x(d.v)))
+    .attr('width', d => Math.abs(x(d.v) - x(0)))
+    .attr('fill', d => divergingColor(d.v, maxAbs));
+
+  rows.append('text')
+    .attr('x', -6)
+    .attr('y', d => y(d.unit) + y.bandwidth() / 2)
+    .attr('dy', '0.32em')
+    .attr('text-anchor', 'end')
+    .attr('font-size', 9)
+    .attr('fill', 'var(--muted)')
+    .text(d => displayAbbr(d.unit));
 }
 
 // ---- Map mode: interactive reconstruction ----
