@@ -11,9 +11,11 @@
 import { createSimulation, computeTodaySeed, PARAMS } from './utils/sim2028/engine.js';
 import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
+import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
 import { installElectionNight } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend } from './sim2028Charts.js';
 import { getStateName } from './utils/constants.js';
+import { lastNameFrom } from './utils/candidateNames.js';
 
 const state = {
   baseline: null,
@@ -25,7 +27,16 @@ const state = {
   // ?debug=true reveals the hidden truth in tooltips, the table and a summary
   // panel. Off by default: knowing the answer removes the whole point.
   debug: new URLSearchParams(location.search).get('debug') === 'true',
+  // What's currently glowing on the map — at most one source at a time, shared
+  // between the trendline legend (isolate one state) and the EV-by-rating badges
+  // (highlight a whole tier). {source:'trend', unit} | {source:'rating', key} | null.
+  mapHighlight: null,
+  // Which unit's tooltip is currently open, if any — lets refreshHoveredTip()
+  // keep it live while the mouse just sits there (see that function).
+  hoveredUnit: null,
 };
+
+const TREND_PALETTE = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4', '#f0c96e', '#c990e0', '#79d1a8', '#e88ea0', '#8fb8e0', '#d0a05a'];
 
 const $ = id => document.getElementById(id);
 
@@ -71,6 +82,11 @@ function fmtMargin(m) {
   if (!isFinite(m)) return '—';
   if (Math.abs(m) < 0.0005) return 'EVEN';
   return (m > 0 ? 'D+' : 'R+') + (Math.abs(m) * 100).toFixed(1);
+}
+/** Debug-panel only: an actual value instead of "EVEN" on a near-tie, 2 decimals for precision. */
+function fmtMarginPrecise(m) {
+  if (!isFinite(m)) return '—';
+  return (m >= 0 ? 'D+' : 'R+') + (Math.abs(m) * 100).toFixed(2);
 }
 function fmtPct(p) { return (p * 100).toFixed(0) + '%'; }
 
@@ -179,7 +195,7 @@ function showReturnsTip(evt, unit) {
     ];
     if (state.debug && state.sim) {
       const beta = state.baseline.beta.get(unit) || 1;
-      rows.push(['TRUE final', fmtMargin((state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv)]);
+      rows.push(['TRUE final', fmtMarginPrecise((state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv)]);
     }
     tip.innerHTML = `<div class="tip-name">${name}`
       + (rating ? ` <span class="s28-rating" style="background:${rating.color};color:#fff">${rating.label}</span>` : '')
@@ -195,19 +211,52 @@ function showReturnsTip(evt, unit) {
     ? `<span class="s28-rating" style="background:${s.leader === 'D' ? '#1e46aa' : '#9d1b1b'};color:#fff">Called</span>`
     : '<span class="s28-rating" style="background:#3a3a3a;color:#ddd">Counting</span>';
 
+  // Raw counted vote totals per candidate, with percentage of votes counted so
+  // far — the actual numbers behind "Margin", matching what future.html's
+  // tooltip shows via calculateUnitVoteTallies (not available on this page
+  // without tester.js, so computed directly off the same snapshot fields).
+  const dVotes = Math.max(0, s.dVotes || 0);
+  const rVotes = Math.max(0, s.rVotes || 0);
+  const oVotes = Math.max(0, s.oVotesTotal != null ? s.oVotesTotal : (s.oVotes || 0));
+  const totalCounted = dVotes + rVotes + oVotes;
+  const fmtVote = v => Math.round(v).toLocaleString('en-US');
+  const fmtVotePct = v => totalCounted > 0 ? ` (${(v / totalCounted * 100).toFixed(1)}%)` : '';
+  const dName = lastNameFrom(s.dCandidate) || 'Dem';
+  const rName = lastNameFrom(s.rCandidate) || 'Rep';
+
+  // Raw vote-count margin — a different number from the percentage-point
+  // "Margin" row above it, and the one that actually answers "by how many
+  // votes". Same convention as future.html's tooltip (leader name + vote gap).
+  const tally = [['D', dVotes, dName], ['R', rVotes, rName], ['O', oVotes, 'Other']]
+    .sort((a, b) => b[1] - a[1]);
+  const voteMargin = Math.max(0, tally[0][1] - tally[1][1]);
+  const voteMarginText = totalCounted > 0
+    ? `${tally[0][2]}+${fmtVote(voteMargin)} vote${voteMargin === 1 ? '' : 's'}`
+    : '—';
+  // Star the leading candidate, matching formatUnitTooltip's convention.
+  const star = party => tally[0][0] === party && totalCounted > 0 ? '*' : '';
+
   const rows = [
     ['Electoral votes', s.ev],
     ['Reporting', `${((s.reporting || 0) * 100).toFixed(0)}%`],
     ['Margin', s.marginStr || fmtMargin(s.margin)],
+    ['Vote margin', voteMarginText],
     ['Leader', leader || '—'],
-    ['Confidence', `${((s.confidence || 0) * 100).toFixed(0)}%`],
-    ['Votes counted', Math.round(s.countedVotes || 0).toLocaleString('en-US')],
-    ['Votes left', Math.round(s.remainingVotes || 0).toLocaleString('en-US')],
   ];
+  // Once called, a confidence percentage reads as hedging on a settled result —
+  // future.html's tooltip drops it at that point too, showing only "Called".
+  if (!s.called) rows.push(['Confidence', `${((s.confidence || 0) * 100).toFixed(0)}%`]);
+  rows.push(
+    [dName + star('D'), `${fmtVote(dVotes)}${fmtVotePct(dVotes)}`],
+    [rName + star('R'), `${fmtVote(rVotes)}${fmtVotePct(rVotes)}`],
+  );
+  if (oVotes > 0) rows.push(['Other' + star('O'), `${fmtVote(oVotes)}${fmtVotePct(oVotes)}`]);
+  if (totalCounted > 0) rows.push(['Total', `${fmtVote(totalCounted)} votes`]);
+  rows.push(['Votes left', fmtVote(s.remainingVotes || 0)]);
   if (state.debug && state.sim) {
     const beta = state.baseline.beta.get(unit) || 1;
     const trueMargin = (state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv;
-    rows.push(['TRUE final', fmtMargin(trueMargin)]);
+    rows.push(['TRUE final', fmtMarginPrecise(trueMargin)]);
   }
 
   tip.innerHTML = `<div class="tip-name">${name} ${badge}</div>`
@@ -217,6 +266,9 @@ function showReturnsTip(evt, unit) {
 }
 
 function showTip(evt, unit) {
+  // Remembered so refreshHoveredTip() can re-render this tooltip's CONTENT on a
+  // timer, without a new mouse event — see that function for why this matters.
+  state.hoveredUnit = unit;
   // Once we're on election night the polls are history, so this switches for the
   // rest of the session — no falling back if a snapshot happens to be missing.
   if (state.revealed || window._electionNightActive) {
@@ -236,10 +288,21 @@ function showTip(evt, unit) {
   const name = unit.includes('-') ? unit : (getStateName(unit) || unit);
   const prev = state.step > 0 ? pollMargins(state.sim.snapshots[state.step - 1]).get(unit) : null;
 
+  // "Lean" (margin relative to the nation) is an abstraction — it doesn't say who
+  // actually WON the state, since that also depends on the national environment
+  // that year. Pairing it with the raw margin gives both: the number that
+  // generalizes across years, and the number people actually recognize.
+  const historyRow = (label, leanMap, rawMap) => {
+    const lean = leanMap.get(unit);
+    const raw = rawMap.get(unit);
+    // Fixed-width box around the lean value so "(raw:" lands at the same spot
+    // on every row regardless of digit count — without changing what's shown.
+    return [label, `<span class="s28-num">${fmtMargin(lean)}</span> lean${raw != null ? ` (raw: ${fmtMargin(raw)})` : ''}`];
+  };
   const rows = [
     ['Electoral votes', state.baseline.ev.get(unit) || 0],
-    ['2024 lean', fmtMargin(state.baseline.rel2024.get(unit))],
-    ['2028 lean', fmtMargin(snap.pollRel.get(unit))],
+    historyRow('2020', state.baseline.relPrior, state.baseline.presMarginPrior),
+    historyRow('2024', state.baseline.rel2024, state.baseline.presMargin2024),
     ['Poll margin', fmtMargin(m)],
     ['80% range', band ? `${fmtMargin(band[0])} to ${fmtMargin(band[1])}` : '—'],
     ['D win prob', prob == null ? '—' : fmtPct(prob)],
@@ -247,8 +310,8 @@ function showTip(evt, unit) {
   if (prev != null) rows.push(['Since last step', `${m - prev >= 0 ? '+' : ''}${((m - prev) * 100).toFixed(1)}pt`]);
   if (state.debug) {
     const beta = state.baseline.beta.get(unit) || 1;
-    rows.push(['TRUE lean', fmtMargin(state.sim.truthRel.get(unit))]);
-    rows.push(['TRUE margin', fmtMargin((state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv)]);
+    rows.push(['TRUE lean', fmtMarginPrecise(state.sim.truthRel.get(unit))]);
+    rows.push(['TRUE margin', fmtMarginPrecise((state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv)]);
   }
 
   tip.innerHTML = `<div class="tip-name">${name}`
@@ -259,6 +322,9 @@ function showTip(evt, unit) {
 }
 
 function moveTip(evt) {
+  // No event on a content-only refresh (see refreshHoveredTip) — leave the
+  // tooltip where it already is rather than erroring on evt.clientX.
+  if (!evt) return;
   const tip = $('mapTip');
   const wrap = $('map-wrap');
   if (!tip || !wrap || tip.style.display === 'none') return;
@@ -274,8 +340,95 @@ function moveTip(evt) {
 }
 
 function hideTip() {
+  state.hoveredUnit = null;
   const tip = $('mapTip');
   if (tip) tip.style.display = 'none';
+}
+
+/**
+ * Re-render the currently-open tooltip's content in place, without moving it.
+ * election-night.js calls window.refreshActiveMapTip() on a timer (interval
+ * boundaries and requestAnimationFrame after every call) whenever that global
+ * exists — that convention is what future.html's tooltip system uses to stay
+ * live while the mouse sits still, and it's absent here without tester.js. This
+ * hooks the same call site rather than pulling in tester.js's tooltip stack,
+ * which is written against concepts this simulator doesn't have (proportional
+ * EV modes, flip scenarios, _curYear) and doesn't know about anything specific
+ * to this page (ratings, raw-margin pairs, the debug truth values).
+ */
+function refreshHoveredTip() {
+  if (!state.hoveredUnit) return;
+  showTip(null, state.hoveredUnit);
+}
+
+// -------------------------------------------------------------------- glow
+/**
+ * The Set of unit codes currently glowing on the map, derived fresh from
+ * state.mapHighlight each call so it always reflects the current step's
+ * margins (a 'rating' selection like "Lean D" has different members at
+ * different campaign steps). Returns null when nothing is selected.
+ */
+function highlightedUnitSet() {
+  const h = state.mapHighlight;
+  if (!h || !state.baseline) return null;
+  if (h.source === 'trend') return new Set([h.unit]);
+  if (h.source === 'rating') {
+    const margins = pollMargins(currentSnapshot());
+    const set = new Set();
+    for (const unit of state.baseline.units) {
+      if (ratingFor(margins.get(unit)).key === h.key) set.add(unit);
+    }
+    return set;
+  }
+  return null;
+}
+
+/** mode: null = clear (nothing selected), true = highlighted, false = dimmed. */
+function applyGlow(el, mode) {
+  if (!el) return;
+  if (mode === null) {
+    el.style.opacity = '';
+    el.style.filter = '';
+    el.style.stroke = '';
+    el.style.strokeWidth = '';
+    return;
+  }
+  if (mode) {
+    const fill = el.getAttribute('fill') || el.style.fill || '#7aa2f7';
+    el.style.opacity = '1';
+    el.style.stroke = '#ffffff';
+    el.style.strokeWidth = '2.4px';
+    el.style.filter = `drop-shadow(0 0 6px ${fill})`;
+  } else {
+    el.style.opacity = '0.25';
+    el.style.filter = '';
+    el.style.stroke = '';
+    el.style.strokeWidth = '';
+  }
+}
+
+/**
+ * Apply the current highlight set to every map element: full-size state
+ * shapes, ME/NE district shapes, and the small-state sidebar boxes. ME-AL/NE-AL
+ * have no shape of their own on the map besides the small box and the parent
+ * state's base fill, so selecting them also glows the parent "state-ME"/
+ * "state-NE" shape — that's the only visual surface their result has.
+ */
+function setMapGlow() {
+  const set = highlightedUnitSet();
+  document.querySelectorAll('#map path[id^="state-"]').forEach(el => {
+    const abbr = el.id.slice(6);
+    const on = set ? (set.has(abbr) || set.has(`${abbr}-AL`)) : null;
+    applyGlow(el, set ? on : null);
+  });
+  document.querySelectorAll('#map path[id^="district-"]').forEach(el => {
+    const unit = el.id.slice(9);
+    applyGlow(el, set ? set.has(unit) : null);
+  });
+  document.querySelectorAll('#map g.small-box').forEach(g => {
+    const unit = g.getAttribute('data-unit');
+    applyGlow(g.querySelector('rect'), set ? set.has(unit) : null);
+  });
 }
 
 // -------------------------------------------------------------------- renders
@@ -311,11 +464,23 @@ function renderDebug() {
   const { dem, rep } = evTally(margins);
   const snap = currentSnapshot();
 
+  // The analytic tipping point: the state whose OWN margin crossing zero is what
+  // pushes the winning coalition over 270, as a function of leans/elasticity/EV
+  // alone (see tippingPoint.js). Deliberately NOT evaluated at any particular
+  // NPV — that's the whole point of it being "independent of NPV."
+  const tp = analyticTippingPoint({
+    units: state.baseline.units, rel: sim.truthRel, beta: state.baseline.beta,
+    ev: state.baseline.ev, totalEv: state.baseline.totalEv,
+  });
+
+  // Closest true races at the ACTUAL national environment — a different,
+  // legitimately NPV-dependent question ("how close did each race really end up")
+  // shown separately so it's never confused with the tipping point above.
   const closest = state.baseline.simUnits
     .filter(u => (state.baseline.ev.get(u) || 0) > 0)
     .sort((a, b) => Math.abs(margins.get(a)) - Math.abs(margins.get(b)))
     .slice(0, 8)
-    .map(u => `${u} ${fmtMargin(margins.get(u))}`)
+    .map(u => `${u} ${fmtMarginPrecise(margins.get(u))}`)
     .join(' · ');
 
   // How many states really moved this cycle, and how turbulent was it?
@@ -326,11 +491,11 @@ function renderDebug() {
 
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
     <div class="s28-dbgrow"><span>True result</span><span>D ${dem} &ndash; R ${rep}</span></div>
-    <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMargin(sim.truthNpv)}</span></div>
-    <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMargin(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(1)}pt)</span></div>
+    <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(sim.truthNpv)}</span></div>
+    <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(2)}pt)</span></div>
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>
-    <div class="s28-dbgrow"><span>Tipping point (true)</span><span>${closest.split(' · ')[0]}</span></div>
-    <div style="margin-top:6px;color:var(--muted)">Closest true races: ${closest}</div>`;
+    <div class="s28-dbgrow"><span>Tipping point (true, NPV-independent)</span><span>${tp ? `${tp.unit} &mdash; flips EC at NPV ${fmtMarginPrecise(tp.npvThreshold)}` : '&mdash;'}</span></div>
+    <div style="margin-top:6px;color:var(--muted)">Closest true races (at the actual environment): ${closest}</div>`;
 }
 
 function renderForecast() {
@@ -358,48 +523,122 @@ function renderForecast() {
   renderHistogram('#s28Histogram', f);
 }
 
+const WITHIN5_CAP = 12; // legibility cap — a genuinely close national environment can put more than 12 states inside 5pts
+
 function renderTrendChart() {
   if (!state.sim) return;
-  const pick = $('s28TrendPick') ? $('s28TrendPick').value : 'national';
+  const pick = $('s28TrendPick') ? $('s28TrendPick').value : 'within5';
   const upto = state.step + 1;
   const labels = state.sim.labels.slice(0, upto);
   const sigmaNational = state.sim.params.poll.nationalSigma;
+  const note = $('s28TrendNote');
+  const legendEl = $('s28TrendLegend');
+
+  // Shared by every mode: white so it reads as "the reference line", not just
+  // another state in the palette.
+  const npvSeries = () => ({
+    label: 'NPV',
+    key: 'NPV',
+    color: '#f2f2f2',
+    values: state.sim.snapshots.slice(0, upto).map((s, i) => {
+      const [lo, hi] = npvBand(s.pollNpv, s.progress, sigmaNational, state.sim.params.forecast);
+      return { step: i, value: s.pollNpv, lo, hi };
+    }),
+  });
 
   let series;
+  let multiState = false;
+
   if (pick === 'national') {
-    series = [{
-      label: 'NPV',
-      color: '#7aa2f7',
-      values: state.sim.snapshots.slice(0, upto).map((s, i) => {
-        const [lo, hi] = npvBand(s.pollNpv, s.progress, sigmaNational, state.sim.params.forecast);
-        return { step: i, value: s.pollNpv, lo, hi };
-      }),
-    }];
-    const note = $('s28TrendNote');
+    series = [npvSeries()];
     if (note) {
       note.textContent = 'Shaded band is the 80% interval implied by the remaining polling uncertainty. '
         + 'It narrows as the campaign progresses but never closes — that residual is the polling error nobody can forecast away.';
     }
   } else {
-    // Six closest states at the current step.
+    multiState = true;
     const margins = pollMargins(currentSnapshot());
-    const closest = state.baseline.simUnits
-      .filter(u => (state.baseline.ev.get(u) || 0) > 0)
-      .sort((a, b) => Math.abs(margins.get(a)) - Math.abs(margins.get(b)))
-      .slice(0, 6);
-    const palette = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4'];
-    series = closest.map((unit, k) => ({
+    let units;
+    if (pick === 'within5') {
+      units = state.baseline.simUnits
+        .filter(u => (state.baseline.ev.get(u) || 0) > 0 && Math.abs(margins.get(u)) <= 0.05)
+        .sort((a, b) => Math.abs(margins.get(a)) - Math.abs(margins.get(b)));
+      if (note) {
+        note.textContent = units.length > WITHIN5_CAP
+          ? `${units.length} states are within 5 points — showing the closest ${WITHIN5_CAP} for legibility, plus NPV.`
+          : `${units.length} state${units.length === 1 ? '' : 's'} currently polling within 5 points, closest first, plus NPV.`;
+      }
+      units = units.slice(0, WITHIN5_CAP);
+    } else {
+      units = state.baseline.simUnits
+        .filter(u => (state.baseline.ev.get(u) || 0) > 0)
+        .sort((a, b) => Math.abs(margins.get(a)) - Math.abs(margins.get(b)))
+        .slice(0, 6);
+      if (note) note.textContent = 'The six closest states at the current step, plus NPV, as projected margins.';
+    }
+    // NPV first, so it's the first legend entry and reads as the anchor the
+    // state lines are moving relative to.
+    series = [npvSeries(), ...units.map((unit, k) => ({
       label: unit,
-      color: palette[k % palette.length],
+      key: unit,
+      color: TREND_PALETTE[k % TREND_PALETTE.length],
       values: state.sim.snapshots.slice(0, upto).map((s, i) => {
         const beta = state.baseline.beta.get(unit) || 1;
         return { step: i, value: (s.pollRel.get(unit) || 0) + beta * s.pollNpv };
       }),
-    }));
-    const note = $('s28TrendNote');
-    if (note) note.textContent = 'The six closest states at the current step, as projected margins.';
+    }))];
   }
+
   renderTrend('#s28Trend', series, labels);
+
+  if (legendEl) {
+    if (!multiState || !series.length) {
+      legendEl.classList.add('s28-hidden');
+      legendEl.innerHTML = '';
+    } else {
+      legendEl.classList.remove('s28-hidden');
+      const activeUnit = state.mapHighlight && state.mapHighlight.source === 'trend' ? state.mapHighlight.unit : null;
+      legendEl.innerHTML = series.map(s => {
+        const active = s.key === activeUnit ? ' active' : '';
+        return `<button type="button" class="tw-swatch${active}" data-unit="${s.key}">`
+          + `<i style="background:${s.color}"></i>${s.label}</button>`;
+      }).join('');
+    }
+  }
+
+  applyTrendIsolate();
+}
+
+/** Dim every trend-chart line except the isolated one, mirroring pca.js's applyScoreSelection. */
+function applyTrendIsolate() {
+  const h = state.mapHighlight;
+  const selected = h && h.source === 'trend' ? h.unit : null;
+  const svg = document.querySelector('#s28Trend svg');
+  if (!svg) return;
+  svg.querySelectorAll('[data-unit]').forEach(el => {
+    const mine = el.getAttribute('data-unit') === selected;
+    if (selected == null) {
+      el.style.opacity = '';
+      el.style.filter = '';
+    } else if (mine) {
+      el.style.opacity = '1';
+      const stroke = el.getAttribute('stroke') || el.getAttribute('fill');
+      el.style.filter = el.classList.contains('s28-trend-line') ? `drop-shadow(0 0 5px ${stroke})` : '';
+    } else {
+      el.style.opacity = '0.12';
+      el.style.filter = '';
+    }
+  });
+}
+
+function toggleTrendHighlight(unit) {
+  const cur = state.mapHighlight;
+  state.mapHighlight = (cur && cur.source === 'trend' && cur.unit === unit) ? null : { source: 'trend', unit };
+  applyTrendIsolate();
+  document.querySelectorAll('#s28TrendLegend .tw-swatch').forEach(btn => {
+    btn.classList.toggle('active', state.mapHighlight && state.mapHighlight.unit === btn.dataset.unit);
+  });
+  setMapGlow();
 }
 
 function renderMap() {
@@ -430,32 +669,63 @@ function renderMap() {
     window.ElectionMap.refreshDecorations(2028, evLookup, abbrColors, unitColors);
   } catch (e) { /* decorations are cosmetic */ }
 
-  const { dem, rep } = evTally(margins);
+  // Split by rating rather than a strict binary tally: a "D 258 | R 280" summary
+  // implies more certainty than a pile of Tilt-rated toss-ups actually supports.
   const total = state.baseline.totalEv;
+  const totals = evByRating(margins);
+  let dem = 0, tossup = 0, rep = 0;
+  for (const r of RATINGS) {
+    const v = totals.get(r.key) || 0;
+    if (r.key === 'tossup') tossup += v;
+    else if (r.party === 'D') dem += v;
+    else rep += v;
+  }
+  const demPct = dem / total * 100;
   const setW = (id, pct) => { const el = $(id); if (el) el.style.width = `${pct}%`; };
-  setW('evFillD', dem / total * 100);
+  setW('evFillD', demPct);
+  setW('evFillU', tossup / total * 100);
   setW('evFillR', rep / total * 100);
-  setW('evFillU', 0);
   setW('evFillO', 0);
+  // evFillD anchors from the bar's left edge and evFillR from its right edge,
+  // but evFillU (and evFillO) have no anchor of their own in the static markup —
+  // only election-night.js's own code positions them, dynamically, once it takes
+  // over. Left unset, the toss-up segment's WIDTH was correct but it rendered at
+  // the wrong spot, leaving a plain dark gap (the bar's own background showing
+  // through) between the D and R fills instead of an actual grey segment there.
+  const uEl = $('evFillU');
+  if (uEl) {
+    uEl.style.left = `${demPct}%`;
+    uEl.style.background = TOSSUP_COLOR;
+  }
   const txt = $('evText');
-  if (txt) txt.textContent = `D ${dem} | R ${rep}`;
+  if (txt) txt.textContent = `D ${dem} | Toss-up ${tossup} | R ${rep}`;
   const need = $('evNeededToWin');
   if (need) need.textContent = `${Math.floor(total / 2) + 1} to win — projection from current polls`;
   renderEvClass(margins);
+  setMapGlow();
 }
 
 function renderEvClass(margins) {
   const wrap = $('s28EvClass');
   if (!wrap) return;
   const note = $('s28EvClassNote');
-  if (note) note.textContent = 'Electoral votes by rating, from the current polls.';
+  if (note) note.textContent = 'Electoral votes by rating, from the current polls. Click a rating to highlight it on the map.';
   const totals = evByRating(margins);
+  const activeKey = state.mapHighlight && state.mapHighlight.source === 'rating' ? state.mapHighlight.key : null;
   wrap.innerHTML = RATINGS.slice().sort((a, b) => a.order - b.order).map(r => {
     const ev = totals.get(r.key) || 0;
     const dim = ev === 0 ? 'opacity:0.35;' : '';
-    return `<span class="s28-evcell" style="${dim}border-color:${r.color}">`
-      + `<span style="color:${r.color}">${r.label}</span><b>${ev}</b></span>`;
+    const active = r.key === activeKey ? ' active' : '';
+    return `<button type="button" class="s28-evcell${active}" data-rating="${r.key}" style="${dim}border-color:${r.color}">`
+      + `<span style="color:${r.color}">${r.label}</span><b>${ev}</b></button>`;
   }).join('');
+}
+
+function toggleRatingHighlight(key) {
+  const cur = state.mapHighlight;
+  state.mapHighlight = (cur && cur.source === 'rating' && cur.key === key) ? null : { source: 'rating', key };
+  renderMap();       // rebuilds badges (active state) + reapplies map glow
+  renderTrendChart(); // clears any stale trend-isolate dimming, since the two share one highlight slot
 }
 
 function renderTable() {
@@ -476,8 +746,10 @@ function renderTable() {
         unit,
         name: unit.includes('-') ? unit : (getStateName(unit) || unit),
         ev: state.baseline.ev.get(unit) || 0,
+        relPrior: state.baseline.relPrior.get(unit),
+        presMarginPrior: state.baseline.presMarginPrior.get(unit),
         rel2024: state.baseline.rel2024.get(unit),
-        lean: snap.pollRel.get(unit),
+        presMargin2024: state.baseline.presMargin2024.get(unit),
         margin: m,
         rating: ratingFor(m),
         change: prevMargins ? m - prevMargins.get(unit) : null,
@@ -511,8 +783,8 @@ function renderTable() {
     tr.innerHTML = `
       <td>${r.name}</td>
       <td>${r.ev}</td>
-      <td style="color:var(--muted)">${fmtMargin(r.rel2024)}</td>
-      <td style="color:var(--muted)">${fmtMargin(r.lean)}</td>
+      <td style="color:var(--muted)">${fmtMargin(r.relPrior)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMarginPrior)}</span></td>
+      <td style="color:var(--muted)">${fmtMargin(r.rel2024)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMargin2024)}</span></td>
       <td class="${cls}">${fmtMargin(r.margin)}</td>
       <td><span class="s28-rating" style="background:${r.rating.color};color:#fff">${r.rating.label}</span></td>
       <td style="color:var(--muted)">${deltaTxt}</td>
@@ -569,6 +841,10 @@ async function startCampaign() {
   const npvMode = $('s28NpvMode') ? $('s28NpvMode').value : 'surprise';
   const steps = Math.max(2, Math.min(12, parseInt($('s28Steps').value, 10) || 6));
   const manualNpv = parsePvText($('s28ManualNpv') ? $('s28ManualNpv').value : '0');
+  const turbInput = $('s28Turbulence');
+  const turbulenceOverride = turbInput && Number.isFinite(parseFloat(turbInput.value))
+    ? Math.max(0.1, Math.min(3, parseFloat(turbInput.value)))
+    : 0.5;
 
   const btn = $('s28Start');
   if (btn) { btn.disabled = true; btn.textContent = 'Simulating…'; }
@@ -578,10 +854,14 @@ async function startCampaign() {
       npvMode,
       manualNpv,
       baseline: state.baseline,
-      params: { campaign: { ...PARAMS.campaign, steps } },
+      params: {
+        campaign: { ...PARAMS.campaign, steps },
+        cycle: { ...PARAMS.cycle, turbulenceOverride },
+      },
     });
     state.step = 0;
     state.revealed = false;
+    state.mapHighlight = null;
     // Tear down any election night still in progress. It owns the map and holds
     // window._electionNightActive, which makes renderMap() bail out — without
     // this the restarted campaign would leave every state grey.
@@ -613,6 +893,9 @@ function goToElectionNight() {
   if (!state.sim) return;
   state.step = state.sim.snapshots.length - 1;
   state.revealed = true;
+  // Clear any glow/isolate styling — election night repaints the map itself
+  // and the polling-era highlight has nothing left to refer to.
+  if (state.mapHighlight) { state.mapHighlight = null; setMapGlow(); }
 
   installElectionNight({
     finalRel: state.sim.truthRel,
@@ -652,6 +935,10 @@ function goToElectionNight() {
 
 // ---------------------------------------------------------------------- init
 async function init() {
+  // See refreshHoveredTip's own comment: this is the exact hook election-night.js
+  // already calls on a timer, normally provided by tester.js (not loaded here).
+  window.refreshActiveMapTip = refreshHoveredTip;
+
   const seedInput = $('s28Seed');
   if (seedInput && !seedInput.value) seedInput.value = String(computeTodaySeed());
 
@@ -677,7 +964,26 @@ async function init() {
     startCampaign();
   });
   const pick = $('s28TrendPick');
-  if (pick) pick.addEventListener('change', renderTrendChart);
+  if (pick) pick.addEventListener('change', () => {
+    // A trend-isolate selection is scoped to whatever list was showing; switching
+    // which states are shown invalidates it rather than leaving every line dimmed.
+    if (state.mapHighlight && state.mapHighlight.source === 'trend') state.mapHighlight = null;
+    renderTrendChart();
+    setMapGlow();
+  });
+
+  // Event delegation: both legends rebuild their innerHTML on every render, so
+  // listeners live on the stable container instead of the buttons themselves.
+  const trendLegend = $('s28TrendLegend');
+  if (trendLegend) trendLegend.addEventListener('click', e => {
+    const btn = e.target.closest('.tw-swatch');
+    if (btn) toggleTrendHighlight(btn.dataset.unit);
+  });
+  const evClass = $('s28EvClass');
+  if (evClass) evClass.addEventListener('click', e => {
+    const btn = e.target.closest('.s28-evcell');
+    if (btn) toggleRatingHighlight(btn.dataset.rating);
+  });
 
   document.querySelectorAll('#s28Table th[data-sort]').forEach(th => {
     th.addEventListener('click', () => {

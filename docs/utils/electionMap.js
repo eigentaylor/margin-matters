@@ -350,7 +350,7 @@ const ElectionMap = {
     const width = vb[2] || 975; const boxW = Math.max(40, +(cfg.boxW || 86)); const boxH = Math.max(14, +(cfg.boxH || 20)); const gapY = Math.max(0, +(cfg.gapY || 4));
     const x = (typeof cfg.x === 'number' && isFinite(cfg.x)) ? cfg.x : (width - (cfg.right || 8) - boxW); const startY = +(cfg.y || 240);
     layer.selectAll('g.small-box').remove();
-    const groups = layer.selectAll('g.small-box').data(data, d => d.unit).join('g').attr('class', 'small-box');
+    const groups = layer.selectAll('g.small-box').data(data, d => d.unit).join('g').attr('class', 'small-box').attr('data-unit', d => d.unit);
     const self = ElectionMap;
     groups.each(function (d, i) {
       const g = d3.select(this); const gx = x; const gy = startY + i * (boxH + gapY); g.attr('transform', `translate(${gx},${gy})`);

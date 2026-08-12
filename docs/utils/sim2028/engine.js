@@ -28,10 +28,11 @@ import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
  */
 export const PARAMS = {
   /**
-   * Drift of the true lean from the trend-adjusted 2024 baseline. `scale`
-   * multiplies the (already shrunk) per-state volatility; at 0.7 a typical state's
-   * lean moves ~2pt per cycle and a volatile one ~4pt, which is what the historical
-   * record actually looks like once you strip out the national swing.
+   * Drift of the true lean from the 2024 baseline. `scale` multiplies the
+   * per-state volatility from baseline.js — which is itself measured from only
+   * 2016->2020->2024 (backtested; see baseline.js's trendWeight/sigmaWindow
+   * docs), so it already IS "a typical single-cycle move" in that state. `scale`
+   * near 1.0 reproduces that directly rather than needing a fudge factor.
    *
    * `turbulenceSigma` is the important one. Real cycles are NOT interchangeable:
    * 2008 and 2016 each moved 19 states by more than 6 points, while 2020 moved 3
@@ -39,13 +40,16 @@ export const PARAMS = {
    * every single time, so every simulated election feels like a realignment.
    * Drawing one lognormal turbulence multiplier per cycle reproduces the real
    * mix of quiet years and upheavals. 0 disables it (constant turbulence).
+   *
+   * `turbulenceOverride`, when set (the UI exposes this, default 1.0 = typical),
+   * pins that multiplier instead of drawing it — see createSimulation().
    */
   cycle: {
     regionShare: 0.70,
-    nationalSigma: 0.030,
-    scale: 0.70,
+    scale: 0.95,
     turbulenceSigma: 0.50,
     turbulenceRange: [0.30, 2.30],
+    turbulenceOverride: null,
   },
   /** Polling error. unitSigmas is flat: polling misses aren't proportional to volatility. */
   poll: { regionShare: 0.75, nationalSigma: 0.018, unitSigmas: 0.020 },
@@ -60,7 +64,10 @@ export const PARAMS = {
    * Nothing here should reshape a legitimate value — only bound absurd ones.
    */
   leanCap: 0.95,
-  baseline: { trendWindow: 5, sigmaWindow: 6, elasticityWindow: 6, trendWeight: 0.6, betaShrink: 0.5 },
+  // Restated explicitly (matches baseline.js's own defaults) so this object is
+  // self-documenting: trendWeight=0 and sigmaWindow=3 are the backtested choices
+  // described in baseline.js's docstring, not accidents of falling through.
+  baseline: { trendWindow: 5, sigmaWindow: 3, elasticityWindow: 6, trendWeight: 0, betaShrink: 0.5 },
 };
 
 /** Soft clip, lifted from future.js:36. Keeps extreme draws finite without a hard edge. */
@@ -79,9 +86,13 @@ export function computeTodaySeed() {
 /** Modes for choosing the national popular vote the election lands on. */
 export const NPV_MODES = {
   current2024: 'Use 2024 PV',
-  randomD: 'Random D tilt',
-  randomR: 'Random R tilt',
-  surprise: 'Surprise me',
+  realisticSurprise: 'Surprise me (realistic)',
+  realisticD: 'Realistic D tilt',
+  realisticR: 'Realistic R tilt',
+  fixedD2: 'D+2',
+  randomD: 'Random D tilt (wide)',
+  randomR: 'Random R tilt (wide)',
+  surprise: 'Surprise me (any outcome)',
   manual: 'Manual',
 };
 
@@ -98,11 +109,38 @@ export const NPV_MODES = {
  * cluster near even with occasional blowouts, instead of being equally likely
  * anywhere in a range. Polls still miss this value — that happens in campaign.js.
  */
+/**
+ * Bounds for the two 'realistic' modes, added alongside the wide/extreme ones
+ * rather than replacing them. Both are half-normal-plus-floor, same shape as
+ * randomD/randomR, just tamer: a small guaranteed margin, most mass fairly
+ * close to it, and a long-but-rare tail out to the cap. Not backtested (there's
+ * no data on 2028 yet, obviously) — just a tighter, explicitly-labeled band for
+ * "assume this election looks like the current environment" instead of the wide
+ * modes' "genuinely anything, including a 1964/1972/1936-scale landslide."
+ * Medians land near D+1.75 / R+0.75; caps (rarely hit, ~2% of draws) are D+5 /
+ * R+2, matching the user-specified "R+2 to D+5 at most" band.
+ *
+ * REALISTIC_SURPRISE is the same idea without forcing a winner: a normal draw
+ * centered at D+1.5 (between the two tilts) whose middle 90% (5th-95th
+ * percentile) works out to almost exactly [R+2.0, D+4.9], with a hard clip a
+ * little beyond that for the rare tail.
+ */
+const REALISTIC_D = { floor: 0.004, spread: 0.020, cap: 0.05 };
+const REALISTIC_R = { floor: 0.002, spread: 0.008, cap: 0.02 };
+const REALISTIC_SURPRISE = { center: 0.015, sd: 0.021, min: -0.03, max: 0.06 };
+
 export function chooseNpv(mode, rng, { npvBase = 0, manualValue = 0, spread = 0.045 } = {}) {
   switch (mode) {
     case 'randomD': return Math.min(0.30, Math.abs(randn(rng) * spread) + 0.005);
     case 'randomR': return -Math.min(0.30, Math.abs(randn(rng) * spread) + 0.005);
+    case 'realisticD': return Math.min(REALISTIC_D.cap, Math.abs(randn(rng) * REALISTIC_D.spread) + REALISTIC_D.floor);
+    case 'realisticR': return -Math.min(REALISTIC_R.cap, Math.abs(randn(rng) * REALISTIC_R.spread) + REALISTIC_R.floor);
+    case 'realisticSurprise': {
+      const v = REALISTIC_SURPRISE.center + randn(rng) * REALISTIC_SURPRISE.sd;
+      return Math.max(REALISTIC_SURPRISE.min, Math.min(REALISTIC_SURPRISE.max, v));
+    }
     case 'surprise': return Math.max(-0.30, Math.min(0.30, randn(rng) * spread));
+    case 'fixedD2': return 0.02;
     case 'manual': return manualValue;
     case 'current2024':
     default: return npvBase;
@@ -140,12 +178,13 @@ export async function createSimulation({
   // Both models draw only over simUnits — ME-AL/NE-AL are derived from their
   // districts afterwards, never drawn independently.
   // Cycle drift: sized from each state's own historical volatility.
+  // No nationalSigma here: only .drawRel is used on this model. The true
+  // national popular vote is set directly by chooseNpv() below, not drawn.
   const cycleModel = createRegionalErrorModel({
     units: base.simUnits,
     weights: base.weights,
     unitSigmas: base.sigma,
     regionShare: P.cycle.regionShare,
-    nationalSigma: P.cycle.nationalSigma,
   });
 
   // Polling error: flat across states, more correlated, much smaller.
@@ -162,11 +201,16 @@ export async function createSimulation({
 
   // --- hidden truth ---------------------------------------------------------
   // How turbulent is THIS cycle? One draw, applied to every state, so a calm year
-  // is calm everywhere and a realigning year shakes the whole map.
-  const turbulence = P.cycle.turbulenceSigma > 0
-    ? Math.max(P.cycle.turbulenceRange[0],
-      Math.min(P.cycle.turbulenceRange[1], Math.exp(randn(rng) * P.cycle.turbulenceSigma)))
-    : 1;
+  // is calm everywhere and a realigning year shakes the whole map. A user-supplied
+  // turbulenceOverride skips the draw entirely and pins it — useful for
+  // deliberately exploring "what would a calm/realigning cycle look like",
+  // rather than waiting for the dice to produce one.
+  const turbulence = (P.cycle.turbulenceOverride != null)
+    ? P.cycle.turbulenceOverride
+    : (P.cycle.turbulenceSigma > 0
+      ? Math.max(P.cycle.turbulenceRange[0],
+        Math.min(P.cycle.turbulenceRange[1], Math.exp(randn(rng) * P.cycle.turbulenceSigma)))
+      : 1);
   const cycleScale = P.cycle.scale * turbulence;
 
   const truthShock = cycleModel.drawRel(rng, cycleScale);

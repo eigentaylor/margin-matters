@@ -3,8 +3,9 @@
 /**
  * Derives the 2028 starting position for every unit from presidential_margins.csv.
  *
- * Produces four per-unit quantities the rest of the engine needs:
- *   base   - prior 2028 relative margin (2024 lean nudged along its trend)
+ * Produces four per-unit quantities the rest of the engine needs, plus
+ * `rel2024`/`relPrior` for display (real 2024/2020 history, not model inputs):
+ *   base   - prior 2028 relative margin (2024 lean, trendWeight nudge is 0 by default)
  *   sigma  - how volatile that unit's lean is cycle-to-cycle
  *   beta   - elasticity: how much of a national swing this unit actually absorbs
  *   weight - vote weight, used to keep relative margins centered
@@ -17,6 +18,14 @@ import { clamp } from '../mathUtils.js';
 
 /** Units that carry electoral votes. ME/NE appear only as split units in the CSV. */
 const EXCLUDED_UNITS = new Set(['NATIONAL', 'US', 'USA']);
+
+/**
+ * PLACEHOLDER 2028 candidates. The 2024 row's D_candidate/R_candidate are
+ * Harris/Trump — accurate for where every number here is measured FROM, but a
+ * strange thing to display as who's running in the simulated election itself.
+ * Swap freely; nothing else derives from these two strings.
+ */
+const PLACEHOLDER_CANDIDATES = { d: 'Jon Ossoff', r: 'JD Vance' };
 
 /**
  * Maine and Nebraska award two at-large electors on the STATEWIDE result, which
@@ -94,6 +103,7 @@ function groupByUnit(rows) {
     byUnit.get(unit).push({
       year,
       rel,
+      presMargin: Number.isFinite(+r.pres_margin) ? +r.pres_margin : null,
       presDelta: Number.isFinite(+r.pres_margin_delta) ? +r.pres_margin_delta : null,
       natDelta: Number.isFinite(+r.national_margin_delta) ? +r.national_margin_delta : null,
       ev: Number.isFinite(+r.electoral_votes) ? +r.electoral_votes : 0,
@@ -108,13 +118,24 @@ function groupByUnit(rows) {
  * @param {Array<object>} rows  parsed presidential_margins.csv rows (d3.autoType'd)
  * @param {object} [opts]
  * @param {number} [opts.baseYear=2024]
- * @param {number} [opts.trendWindow=5]       elections used for the trend slope
- * @param {number} [opts.sigmaWindow=6]       cycles used for volatility
+ * @param {number} [opts.trendWindow=5]       elections used to fit the (now inert
+ *        by default — see trendWeight) OLS trend slope
+ * @param {number} [opts.sigmaWindow=3]       elections used for volatility, i.e.
+ *        2 cycle-to-cycle deltas: 2016->2020 and 2020->2024. See trendWeight's
+ *        note — this window was chosen the same way, by backtesting.
  * @param {number} [opts.elasticityWindow=6]  cycles used for the elasticity fit
- * @param {number} [opts.trendWeight=0.6]     how much of the fitted trend to apply;
- *        0 disables the nudge entirely. A linear fit over 5 elections overshoots
- *        when a state has already flattened out (AZ) or reversed (MI), so this
- *        keeps the direction as a lean rather than a commitment.
+ * @param {number} [opts.trendWeight=0]       how much of the fitted OLS trend to
+ *        apply to the central 2028 lean. BACKTESTED AND FOUND HARMFUL: predicting
+ *        each of 2016/2020/2024 from only the elections before it, "just use the
+ *        prior election's lean" (trendWeight=0) beat every tested nonzero weight
+ *        (0.3, 0.6, 1.0) on median AND mean error, in all three target years, and
+ *        the trend's sign matched the actual direction of movement only 48-54% of
+ *        the time — indistinguishable from a coin flip. Worst offenders were
+ *        exactly the states a hand-drawn trend line looks most convincing for:
+ *        WI/MI/PA/OH/ME-02 continuing their post-2016 lean-right line and NC/GA
+ *        continuing left, all reversed course by 2024. Left at 0, not removed,
+ *        so the effect is easy to re-enable and re-test if a future backtest
+ *        (e.g. once 2028 is real data) tells a different story.
  * @param {number} [opts.betaShrink=0.5]      shrink elasticity toward 1. Six noisy
  *        cycles produce artifacts — AZ fits 0.43 purely because McCain was on the
  *        2008 ballot — so trust the estimate only halfway.
@@ -123,26 +144,33 @@ export function buildBaseline(rows, opts = {}) {
   const {
     baseYear = 2024,
     trendWindow = 5,
-    sigmaWindow = 6,
+    sigmaWindow = 3,
     elasticityWindow = 6,
-    trendWeight = 0.6,
+    trendWeight = 0,
     betaShrink = 0.5,
-    sigmaFloor = 0.015,
-    sigmaCap = 0.045,
-    sigmaShrink = 0.4,
+    sigmaFloor = 0.012,
+    sigmaCap = 0.06,
+    sigmaShrink = 0.55,
     betaRange = [0.35, 1.65],
   } = opts;
 
   const byUnit = groupByUnit(rows);
   const nationalRow = rows.find(r => r.abbr === 'NATIONAL' && +r.year === baseYear);
   const npvBase = nationalRow ? +nationalRow.national_margin : 0;
-  const candidates = {
-    d: (nationalRow && nationalRow.D_candidate) || 'Democrat',
-    r: (nationalRow && nationalRow.R_candidate) || 'Republican',
-  };
+  const candidates = { ...PLACEHOLDER_CANDIDATES };
 
   const units = [];
   const rel2024 = new Map();
+  // The prior cycle's lean, for display next to rel2024 as real history — the
+  // pair a pundit would actually look at. Not fed into `base` or `sigma`; those
+  // are governed entirely by trendWeight/sigmaWindow above.
+  const relPrior = new Map();
+  // The raw (not nation-relative) margin for the same two years. "Lean" is an
+  // abstraction — "PA is D+0.4 relative to the nation" doesn't say who WON PA,
+  // since that depends on the national environment too. The raw margin is the
+  // number people actually recognize ("Biden won PA by 1.2 in 2020").
+  const presMargin2024 = new Map();
+  const presMarginPrior = new Map();
   const trend = new Map();
   const base = new Map();
   const sigma = new Map();
@@ -153,6 +181,7 @@ export function buildBaseline(rows, opts = {}) {
   for (const [unit, hist] of byUnit) {
     const current = hist.find(h => h.year === baseYear);
     if (!current || !(current.ev > 0)) continue;
+    const prior = hist.find(h => h.year === baseYear - 4);
 
     // --- trend: OLS slope of relative margin over the last N elections ---
     const trendPts = hist.slice(-trendWindow);
@@ -175,6 +204,11 @@ export function buildBaseline(rows, opts = {}) {
 
     units.push(unit);
     rel2024.set(unit, current.rel);
+    if (current.presMargin != null) presMargin2024.set(unit, current.presMargin);
+    if (prior) {
+      relPrior.set(unit, prior.rel);
+      if (prior.presMargin != null) presMarginPrior.set(unit, prior.presMargin);
+    }
     trend.set(unit, perDecade);
     base.set(unit, current.rel + perDecade * CYCLE_FRACTION_OF_DECADE * trendWeight);
     sigma.set(unit, sd);
@@ -184,12 +218,20 @@ export function buildBaseline(rows, opts = {}) {
   }
 
   // --- shrink cycle volatility ----------------------------------------------
-  // The raw per-state sd overstates forward volatility badly. It is measured over
-  // an era containing genuine realignments (2008, 2016), so states that lurched
-  // once — ME-AL sits at 6.1pt — get treated as though they lurch every cycle,
-  // producing 10-17pt lean swings and a new political map every election.
-  // Shrink each state toward the cross-state median and cap the result, keeping
-  // the ordering (volatile states stay volatile) without the tail.
+  // sigmaWindow=3 deliberately measures only the 2016->2020->2024 era (2 deltas)
+  // rather than a longer window blending in 2008/2016-style realignment cycles —
+  // backtesting (see trendWeight above) showed 2020/2024 moved states roughly
+  // 2.5x LESS than 2016 did (median |change| 2.3-2.9pt vs 4.5pt), and a window
+  // wide enough to include 2008/2016 as "typical" was itself the reason a state
+  // that lurched once, like ME-02 (17pt in 2016 alone), got treated as if it
+  // lurches every cycle. But 2 deltas per state is a very small, noisy sample on
+  // its own, so this still shrinks each state part-way toward the cross-state
+  // median and caps the result — now protecting against sampling noise in a
+  // correctly-scoped window, not compensating for a wrongly-scoped one.
+  // The possibility of a 2016-style outlier cycle is handled separately, by
+  // engine.js's per-cycle turbulence multiplier — it belongs on the whole
+  // election at once (a realignment doesn't hit one state in isolation), not
+  // baked into any single state's baseline sigma.
   const sigmaValues = Array.from(sigma.values()).sort((a, b) => a - b);
   const medianSigma = sigmaValues.length
     ? sigmaValues[Math.floor(sigmaValues.length / 2)]
@@ -233,8 +275,8 @@ export function buildBaseline(rows, opts = {}) {
 
   const result = {
     units, simUnits, atLarge,
-    base, rel2024, trend, sigma, beta, ev, totalVotes, weights,
-    npvBase, candidates, baseYear,
+    base, rel2024, relPrior, presMargin2024, presMarginPrior, trend, sigma, beta, ev, totalVotes, weights,
+    npvBase, candidates, baseYear, priorYear: baseYear - 4,
     totalEv: Array.from(ev.values()).reduce((a, b) => a + b, 0),
   };
 

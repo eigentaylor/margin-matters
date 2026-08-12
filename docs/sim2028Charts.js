@@ -103,7 +103,10 @@ export function renderHistogram(container, forecast, opts = {}) {
  * campaign progresses — the visual point being that uncertainty shrinks but
  * never vanishes.
  *
- * @param {Array} series [{label, values:[{step, value, lo, hi}], color}]
+ * @param {Array} series [{label, key, values:[{step, value, lo, hi}], color}]
+ *        `key` (falls back to `label`) tags every drawn element for that series
+ *        with data-unit="<key>", so external code can select/dim/glow a single
+ *        series after the fact — see sim2028.js's trend-legend isolate feature.
  */
 export function renderTrend(container, series, stepLabels, opts = {}) {
   const made = freshSvg(container, opts.height || 260);
@@ -150,22 +153,27 @@ export function renderTrend(container, series, stepLabels, opts = {}) {
   const area = d3.area().x(d => x(d.step)).y0(d => y(d.lo)).y1(d => y(d.hi)).curve(d3.curveMonotoneX);
 
   for (const s of series) {
+    const key = s.key || s.label;
     if (s.values.some(v => v.lo != null)) {
       g.append('path')
         .datum(s.values.filter(v => v.lo != null))
+        .attr('data-unit', key).attr('class', 's28-trend-band')
         .attr('fill', s.color).attr('opacity', 0.16)
         .attr('d', area);
     }
     g.append('path')
       .datum(s.values)
+      .attr('data-unit', key).attr('class', 's28-trend-line')
       .attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', 2)
       .attr('d', line);
     g.selectAll(null).data(s.values).join('circle')
+      .attr('data-unit', key).attr('class', 's28-trend-dot')
       .attr('cx', d => x(d.step)).attr('cy', d => y(d.value)).attr('r', 2.5)
       .attr('fill', s.color);
 
     const last = s.values[s.values.length - 1];
     g.append('text')
+      .attr('data-unit', key).attr('class', 's28-trend-label')
       .attr('x', x(last.step) + 6).attr('y', y(last.value) + 3)
       .attr('fill', s.color).attr('font-size', 11)
       .text(`${s.label} ${fmtMargin(last.value)}`);

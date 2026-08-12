@@ -204,11 +204,65 @@
       gap: 6px;
       align-items: baseline;
       white-space: nowrap;
+      cursor: pointer;
+      background: none;
+      font: inherit;
+      color: inherit;
+    }
+
+    .s28-evcell:hover {
+      background: #1b1b1b;
+    }
+
+    .s28-evcell.active {
+      background: #1b1b1b;
+      border-color: var(--accent);
     }
 
     .s28-evcell b {
       font-variant-numeric: tabular-nums;
       font-size: 0.95rem;
+    }
+
+    /* Legend swatches — same pattern as pca.html's #pca-scores-legend, reused
+       here for the trendline "isolate a state" legend. */
+    .tw-legend-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 10px;
+    }
+
+    .tw-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font: inherit;
+    }
+
+    .tw-swatch:hover {
+      background: #1b1b1b;
+    }
+
+    .tw-swatch.active {
+      color: var(--fg);
+      background: #1b1b1b;
+      border-color: var(--accent);
+    }
+
+    .tw-swatch i {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+      flex: 0 0 auto;
     }
 
     /* election-night.js writes a label into every bar segment AND into #evText.
@@ -264,6 +318,16 @@
 
     #mapTip .tip-row span:last-child {
       color: var(--fg);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Fixed-width box around a margin value, so whatever follows it (e.g. the
+       2020/2024 tooltip rows' "(raw: ...)") starts at the same spot on every
+       row regardless of how many digits the value itself has. */
+    .s28-num {
+      display: inline-block;
+      min-width: 3.6em;
+      text-align: right;
       font-variant-numeric: tabular-nums;
     }
 
@@ -394,10 +458,18 @@
         </label>
         <label>National popular vote
           <select id="s28NpvMode">
-            <option value="surprise" selected>Surprise me</option>
-            <option value="current2024">Use 2024 PV (R+1.5)</option>
-            <option value="randomD">Random D tilt</option>
-            <option value="randomR">Random R tilt</option>
+            <optgroup label="Realistic (2028-plausible)">
+              <option value="realisticSurprise" selected>Surprise me (realistic)</option>
+              <option value="realisticD">Realistic D tilt</option>
+              <option value="realisticR">Realistic R tilt</option>
+              <option value="fixedD2">D+2</option>
+              <option value="current2024">Use 2024 PV (R+1.5)</option>
+            </optgroup>
+            <optgroup label="Wide / extreme">
+              <option value="surprise">Surprise me (any outcome)</option>
+              <option value="randomD">Random D tilt (wide, up to D+30)</option>
+              <option value="randomR">Random R tilt (wide, up to R+30)</option>
+            </optgroup>
             <option value="manual">Manual&hellip;</option>
           </select>
         </label>
@@ -406,6 +478,9 @@
         </label>
         <label>Campaign steps
           <input id="s28Steps" type="number" min="2" max="12" step="1" value="6" />
+        </label>
+        <label title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle turbulence
+          <input id="s28Turbulence" type="number" min="0.3" max="2.3" step="0.1" value="0.5" />
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>
@@ -486,12 +561,14 @@
       <div class="s28-grid" style="margin-bottom:8px">
         <label>Show
           <select id="s28TrendPick">
-            <option value="national" selected>National popular vote</option>
+            <option value="national">National popular vote</option>
             <option value="closest">Six closest states</option>
+            <option value="within5" selected>All states polling within 5 points</option>
           </select>
         </label>
       </div>
       <div class="s28-chart" id="s28Trend"></div>
+      <div class="tw-legend-swatches s28-hidden" id="s28TrendLegend"></div>
       <div class="s28-note" id="s28TrendNote"></div>
     </div>
 
@@ -504,9 +581,9 @@
             <tr>
               <th data-sort="name">State</th>
               <th data-sort="ev">EV</th>
+              <th data-sort="relPrior" title="2020 margin relative to the nation">2020 lean</th>
               <th data-sort="rel2024" title="2024 margin relative to the nation">2024 lean</th>
-              <th data-sort="lean" title="Polled margin relative to the nation">2028 lean</th>
-              <th data-sort="margin" title="Projected actual margin = lean + elasticity x national popular vote">Poll margin</th>
+              <th data-sort="margin" title="Projected actual margin = current simulated poll's lean + elasticity x national popular vote">Poll margin</th>
               <th data-sort="rating" title="Rating from the projected margin">Rating</th>
               <th data-sort="change">Change</th>
               <th data-sort="prob">D win prob</th>
