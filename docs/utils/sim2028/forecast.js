@@ -26,8 +26,8 @@ import { createRegionalErrorModel } from './errorModel.js';
  */
 export const DEFAULT_FORECAST_PARAMS = {
   sims: 3000,
-  rel: { startScale: 1.5, floorScale: 1.0 },
-  npv: { startScale: 3.4, floorScale: 1.0 },
+  rel: { startScale: 0.9, floorScale: 0.65 },
+  npv: { startScale: 1.8, floorScale: 0.65 },
 };
 
 /** Total EV needed to win, given the full EV pool. */
@@ -182,7 +182,7 @@ export function runForecast({ pollRel, pollNpv, baseline, progress, seed, params
     tieProb: ties / sims,
     evCounts,
     medianDemEv: quantile(0.5),
-    evRange80: [quantile(0.1), quantile(0.9)],
+    evRange90: [quantile(0.05), quantile(0.95)],
     stateProb,
     tippingPoint,
     tippingProb: tippingBest > 0 ? tippingBest / sims : 0,
@@ -190,12 +190,12 @@ export function runForecast({ pollRel, pollNpv, baseline, progress, seed, params
 }
 
 /**
- * 80% interval of the national margin implied by the remaining uncertainty.
+ * 90% interval of the national margin implied by the remaining uncertainty.
  * Drives the narrowing band on the trendline chart.
  */
 export function npvBand(pollNpv, progress, sigmaNational, params = DEFAULT_FORECAST_PARAMS) {
   const sd = sigmaNational * remainingScale(progress, params, 'npv');
-  return [pollNpv - 1.2816 * sd, pollNpv + 1.2816 * sd];
+  return [pollNpv - 1.645 * sd, pollNpv + 1.645 * sd];
 }
 
 export default { runForecast, remainingScale, npvBand, evsToWin, DEFAULT_FORECAST_PARAMS };

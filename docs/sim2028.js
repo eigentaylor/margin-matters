@@ -153,7 +153,7 @@ function evByRating(margins) {
   return totals;
 }
 
-/** 80% interval for a single unit's margin at the current step. */
+/** 90% interval for a single unit's margin at the current step. */
 function unitBand(unit, snap) {
   const f = currentForecast();
   if (!f || !snap) return null;
@@ -164,7 +164,7 @@ function unitBand(unit, snap) {
   // The two axes are independent, so their variances add.
   const total = Math.sqrt(sd * sd + (beta * npvSd) * (beta * npvSd));
   const m = (snap.pollRel.get(unit) || 0) + beta * snap.pollNpv;
-  return [m - 1.2816 * total, m + 1.2816 * total];
+  return [m - 1.645 * total, m + 1.645 * total];
 }
 
 // -------------------------------------------------------------------- tooltip
@@ -304,7 +304,7 @@ function showTip(evt, unit) {
     historyRow('2020', state.baseline.relPrior, state.baseline.presMarginPrior),
     historyRow('2024', state.baseline.rel2024, state.baseline.presMargin2024),
     ['Poll margin', fmtMargin(m)],
-    ['80% range', band ? `${fmtMargin(band[0])} to ${fmtMargin(band[1])}` : '—'],
+    ['90% range', band ? `${fmtMargin(band[0])} to ${fmtMargin(band[1])}` : '—'],
     ['D win prob', prob == null ? '—' : fmtPct(prob)],
   ];
   if (prev != null) rows.push(['Since last step', `${m - prev >= 0 ? '+' : ''}${((m - prev) * 100).toFixed(1)}pt`]);
@@ -509,7 +509,7 @@ function renderForecast() {
     setProb('s28RepProb', '—', 'Republican win');
     setProb('s28TieProb', '—', 'Exact tie');
     setProb('s28NatPoll', '—', 'National poll');
-    setProb('s28MedianEv', '—', 'Median EV / 80% range');
+    setProb('s28MedianEv', '—', 'Median EV / 90% range');
     setProb('s28Tipping', '—', 'Tipping point');
     return;
   }
@@ -518,7 +518,7 @@ function renderForecast() {
   setProb('s28DemProb', fmtPct(f.demWinProb), 'Democratic win');
   setProb('s28RepProb', fmtPct(f.repWinProb), 'Republican win');
   setProb('s28TieProb', f.tieProb > 0 ? (f.tieProb * 100).toFixed(1) + '%' : '<1%', 'Exact tie');
-  setProb('s28MedianEv', `${f.medianDemEv} D <span style="color:var(--muted);font-size:0.8em">(${f.evRange80[0]}–${f.evRange80[1]})</span>`, 'Median EV / 80% range');
+  setProb('s28MedianEv', `${f.medianDemEv} D <span style="color:var(--muted);font-size:0.8em">(${f.evRange90[0]}–${f.evRange90[1]})</span>`, 'Median EV / 90% range');
   setProb('s28Tipping', `${f.tippingPoint || '—'} <span style="color:var(--muted);font-size:0.8em">${fmtPct(f.tippingProb)}</span>`, 'Tipping point');
   renderHistogram('#s28Histogram', f);
 }
@@ -552,7 +552,7 @@ function renderTrendChart() {
   if (pick === 'national') {
     series = [npvSeries()];
     if (note) {
-      note.textContent = 'Shaded band is the 80% interval implied by the remaining polling uncertainty. '
+      note.textContent = 'Shaded band is the 90% interval implied by the remaining polling uncertainty. '
         + 'It narrows as the campaign progresses but never closes — that residual is the polling error nobody can forecast away.';
     }
   } else {
@@ -751,6 +751,7 @@ function renderTable() {
         rel2024: state.baseline.rel2024.get(unit),
         presMargin2024: state.baseline.presMargin2024.get(unit),
         margin: m,
+        band: unitBand(unit, snap),
         rating: ratingFor(m),
         change: prevMargins ? m - prevMargins.get(unit) : null,
         prob: f ? f.stateProb.get(unit) : null,
@@ -786,6 +787,7 @@ function renderTable() {
       <td style="color:var(--muted)">${fmtMargin(r.relPrior)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMarginPrior)}</span></td>
       <td style="color:var(--muted)">${fmtMargin(r.rel2024)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMargin2024)}</span></td>
       <td class="${cls}">${fmtMargin(r.margin)}</td>
+      <td style="color:var(--muted)">${r.band ? `±${((r.band[1] - r.band[0]) / 2 * 100).toFixed(1)}` : '—'}</td>
       <td><span class="s28-rating" style="background:${r.rating.color};color:#fff">${r.rating.label}</span></td>
       <td style="color:var(--muted)">${deltaTxt}</td>
       <td>${r.prob == null ? '—' : fmtPct(r.prob)}</td>`;

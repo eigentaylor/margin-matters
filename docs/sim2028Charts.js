@@ -99,7 +99,7 @@ export function renderHistogram(container, forecast, opts = {}) {
 }
 
 /**
- * Trendlines across campaign steps, with an 80% band that narrows as the
+ * Trendlines across campaign steps, with a 90% band that narrows as the
  * campaign progresses — the visual point being that uncertainty shrinks but
  * never vanishes.
  *

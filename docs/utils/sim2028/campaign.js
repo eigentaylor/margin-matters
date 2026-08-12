@@ -3,17 +3,31 @@
 /**
  * Campaign polling trajectory (brainstorm idea #3).
  *
- * Polls are the hidden truth plus an error that mean-reverts, AR(1)-style,
- * toward a TERMINAL BIAS drawn once at the start:
+ * Each poll is truth plus two independent ingredients:
  *
- *   e_0 = b + w_0                                  (w_0 wide, correlated)
- *   e_t = b + phi * (e_{t-1} - b) + sigma_t * eta_t
- *   poll_t = truth + e_t
+ *   - a MIRAGE BIAS `bias[u]`, drawn once and regionally correlated (so WI/MI/PA
+ *     miss together), whose influence is weighted by an "undecided share" u(p)
+ *     that shrinks across the campaign. Early on, when u(p) is large, the poll
+ *     can plausibly point the wrong way — a real, if close, state might read red
+ *     in June and blue in November, not because anyone was sampled wrong, but
+ *     because a large chunk of the electorate hadn't settled yet. That's the
+ *     "sometimes but not always" mirage: for close states bias[u] is often
+ *     comparable in size to the true margin, so it flips the apparent leader
+ *     some of the time; for safe states it's dwarfed by the true margin and
+ *     rarely does.
+ *   - a fresh SAMPLING WOBBLE, drawn independently every step rather than
+ *     decayed/carried over, representing "this month's poll is a new sample."
+ *     This is what keeps every step visibly bouncing, including late in the
+ *     campaign — a real poll never stops having sampling noise, even when the
+ *     electorate has mostly made up its mind.
  *
- * As t -> N the noise term dies and e_t -> b, so on election night the polls are
- * off by exactly the *correlated* miss. That's what produces "AZ was polling R+1
- * and broke blue" with NC/GA plausibly moving alongside it, rather than every
- * state missing independently.
+ *   u(p)       = uFloor + (u0 - uFloor) * (1 - p)^uPower
+ *   center_t   = truth + u(p_t) * bias
+ *   poll_t     = center_t + sampleNoise_t                  (sampleNoise_t fresh each t)
+ *
+ * As p -> 1 (Election Eve), u(p) -> uFloor (small but nonzero — the poll can
+ * still be "a little off" on the eve of the election) while sampleNoise_t never
+ * shrinks, so the poll never fully converges to truth — exactly like reality.
  *
  * Every error draw comes from the injected errorModel, so swapping the
  * correlation structure changes the campaign's texture without touching this file.
@@ -28,21 +42,20 @@ const CANONICAL_LABELS = ['June', 'July', 'August', 'September', 'October', 'Ele
  * Scales are multiples of the polling-error spec's sigmas (engine PARAMS.poll:
  * 2.0pt per state, 1.8pt national).
  *
- * The two axes are scaled SEPARATELY and very differently, because they behave
- * differently in a real campaign. What moves between June and November is mostly
- * the national environment — which candidate is ahead. A state's position
- * *relative* to the nation is far more stable and much better understood early:
- * nobody is genuinely unsure in June whether Florida is 12 points redder than
- * the country. Using one shared scale made June polls miss state leans by 12pt
- * and randomly promoted safe states into tossups.
+ * The two axes use SEPARATE undecided curves and sample-wobble sizes, because
+ * they behave differently in a real campaign. What moves between June and
+ * November is mostly the national environment — which candidate is ahead. A
+ * state's position *relative* to the nation is far more stable and much better
+ * understood early: nobody is genuinely unsure in June whether Florida is 12
+ * points redder than the country. Using one shared scale made June polls miss
+ * state leans by 12pt and randomly promoted safe states into tossups.
  */
 export const DEFAULT_CAMPAIGN_PARAMS = {
   steps: 6,
-  phi: 0.60, // mean-reversion toward the terminal bias
-  /** Relative-margin (state lean) error: modest and quick to settle. */
-  rel: { initialScale: 1.0, noiseScale: 0.5, noiseDecay: 0.55, terminalScale: 1.0 },
-  /** National popular vote error: large early, this is where the drama lives. */
-  npv: { initialScale: 3.0, noiseScale: 1.5, noiseDecay: 0.55, terminalScale: 1.0 },
+  /** Relative-margin (state lean) mirage + wobble: modest and quick to settle. */
+  rel: { u0: 0.5, uFloor: 0.06, uPower: 1.4, sampleScale: 0.55 },
+  /** National popular vote mirage + wobble: large early, this is where the drama lives. */
+  npv: { u0: 0.5, uFloor: 0.06, uPower: 1.4, sampleScale: 0.6 },
 };
 
 /** Human labels for an N-step campaign, always ending on election eve. */
@@ -57,19 +70,10 @@ export function campaignLabels(steps) {
   return out;
 }
 
-function addMaps(a, b) {
-  const out = new Map();
-  for (const [k, v] of a) out.set(k, v + (b.get(k) || 0));
-  return out;
-}
-
-function blendTowardBias(prev, bias, phi, shock) {
-  const out = new Map();
-  for (const [k, v] of prev) {
-    const bk = bias.get(k) || 0;
-    out.set(k, bk + phi * (v - bk) + (shock.get(k) || 0));
-  }
-  return out;
+/** Undecided-share weight on the mirage bias at campaign progress p (0=June, 1=Election Eve). */
+function undecidedWeight(progress, spec) {
+  const p = Math.max(0, Math.min(1, progress));
+  return spec.uFloor + (spec.u0 - spec.uFloor) * Math.pow(1 - p, spec.uPower);
 }
 
 /**
@@ -93,39 +97,42 @@ export function runCampaign({ truthRel, truthNpv, errorModel, rng, baseline, par
   };
   const labels = campaignLabels(p.steps);
 
-  // The election-day miss. Drawn once — everything else converges onto it.
-  const biasRel = errorModel.drawRel(rng, p.rel.terminalScale);
-  const biasNpv = errorModel.drawNpv(rng, p.npv.terminalScale);
-
-  // Opening polls: terminal bias plus a wide correlated wobble.
-  let errRel = addMaps(biasRel, errorModel.drawRel(rng, p.rel.initialScale));
-  let errNpv = biasNpv + errorModel.drawNpv(rng, p.npv.initialScale);
+  // The mirage ingredient. Drawn once, regionally correlated; its influence
+  // shrinks across the campaign as the undecided share does (undecidedWeight).
+  const biasRel = errorModel.drawRel(rng, 1.0);
+  const biasNpv = errorModel.drawNpv(rng, 1.0);
 
   const snapshots = [];
   for (let t = 0; t < p.steps; t++) {
-    if (t > 0) {
-      const relShock = p.rel.noiseScale * Math.pow(p.rel.noiseDecay, t);
-      const npvShock = p.npv.noiseScale * Math.pow(p.npv.noiseDecay, t);
-      errRel = blendTowardBias(errRel, biasRel, p.phi, errorModel.drawRel(rng, relShock));
-      errNpv = biasNpv + p.phi * (errNpv - biasNpv) + errorModel.drawNpv(rng, npvShock);
-    }
+    const progress = p.steps > 1 ? t / (p.steps - 1) : 1;
+    const uRel = undecidedWeight(progress, p.rel);
+    const uNpv = undecidedWeight(progress, p.npv);
+
+    // Fresh sample every step — this is what keeps the poll visibly bouncing
+    // all the way to Election Eve, instead of settling to a near-static number.
+    const wobbleRel = errorModel.drawRel(rng, p.rel.sampleScale);
+    const wobbleNpv = errorModel.drawNpv(rng, p.npv.sampleScale);
 
     // Poll only the simulated units, then re-derive at-large from the districts
     // so the statewide poll always agrees with its own district polls.
     const pollRel = new Map();
     for (const unit of errorModel.units) {
-      pollRel.set(unit, (truthRel.get(unit) || 0) + (errRel.get(unit) || 0));
+      const truth = truthRel.get(unit) || 0;
+      const center = truth + uRel * (biasRel.get(unit) || 0);
+      pollRel.set(unit, center + (wobbleRel.get(unit) || 0));
     }
     deriveAtLarge(pollRel, baseline);
+
+    const centerNpv = truthNpv + uNpv * biasNpv;
 
     snapshots.push({
       index: t,
       label: labels[t],
       isFinal: t === p.steps - 1,
       pollRel,
-      pollNpv: truthNpv + errNpv,
+      pollNpv: centerNpv + wobbleNpv,
       /** Fraction of the campaign elapsed; drives how much uncertainty remains. */
-      progress: p.steps > 1 ? t / (p.steps - 1) : 1,
+      progress,
     });
   }
 
