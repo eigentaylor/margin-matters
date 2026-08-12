@@ -48,7 +48,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   const THIRD_PARTY_COLOR = '#C9A400';
   // Simulation timing and pacing constants
   // BASE_MINUTES_PER_SECOND: how many simulated minutes pass per real second
-  const BASE_MINUTES_PER_SECOND = 6;
+  const BASE_MINUTES_PER_SECOND = 1.5;
   // Minimum reporting duration for a unit (in minutes)
   const MIN_DURATION = 160;
   // Early minimum delay before a call may be considered (minutes)
