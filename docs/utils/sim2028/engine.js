@@ -1,0 +1,246 @@
+'use strict';
+
+/**
+ * Seeded orchestrator for the 2028 campaign simulator.
+ *
+ * Flow:
+ *   baseline (2024 + trend)  ->  hidden truth  ->  campaign polls  ->  forecasts
+ *                                     \-------------------------------> election night
+ *
+ * The engine is pure and headless: it takes a seed and returns a fully-resolved
+ * simulation object. The page renders whatever step the user has advanced to.
+ * Given the same seed and PARAMS you always get the same election.
+ */
+
+import { mulberry32, randn } from '../randomUtils.js';
+import { loadBaseline, deriveAtLarge } from './baseline.js';
+import { createRegionalErrorModel } from './errorModel.js';
+import { runCampaign, DEFAULT_CAMPAIGN_PARAMS } from './campaign.js';
+import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
+
+/**
+ * Every tunable in one place. Overridable per-run and via URL query params.
+ *
+ * Note the two separate error specs. `cycle` is how far a state's lean can drift
+ * between 2024 and 2028 — a real, large movement, sized from each state's own
+ * history. `poll` is how wrong the polls are about that lean — a much smaller and
+ * more correlated quantity. Conflating them makes election-eve polls miss by 6pt.
+ */
+export const PARAMS = {
+  /**
+   * Drift of the true lean from the trend-adjusted 2024 baseline. `scale`
+   * multiplies the (already shrunk) per-state volatility; at 0.7 a typical state's
+   * lean moves ~2pt per cycle and a volatile one ~4pt, which is what the historical
+   * record actually looks like once you strip out the national swing.
+   *
+   * `turbulenceSigma` is the important one. Real cycles are NOT interchangeable:
+   * 2008 and 2016 each moved 19 states by more than 6 points, while 2020 moved 3
+   * and 2024 moved 1. A model with a fixed scale produces the average of those
+   * every single time, so every simulated election feels like a realignment.
+   * Drawing one lognormal turbulence multiplier per cycle reproduces the real
+   * mix of quiet years and upheavals. 0 disables it (constant turbulence).
+   */
+  cycle: {
+    regionShare: 0.70,
+    nationalSigma: 0.030,
+    scale: 0.70,
+    turbulenceSigma: 0.50,
+    turbulenceRange: [0.30, 2.30],
+  },
+  /** Polling error. unitSigmas is flat: polling misses aren't proportional to volatility. */
+  poll: { regionShare: 0.75, nationalSigma: 0.018, unitSigmas: 0.020 },
+  campaign: { ...DEFAULT_CAMPAIGN_PARAMS },
+  forecast: { ...DEFAULT_FORECAST_PARAMS },
+  /** Sd of the true national popular vote, for the random NPV modes. */
+  npvSpread: 0.045,
+  /**
+   * Hard bound on any single unit's lean. A hard clamp, NOT a softclip: tanh
+   * compresses well before its limit, so softclip(0.95) squashed DC's real
+   * D+86 lean down to D+68 and registered it as a fictitious 18pt "shock".
+   * Nothing here should reshape a legitimate value — only bound absurd ones.
+   */
+  leanCap: 0.95,
+  baseline: { trendWindow: 5, sigmaWindow: 6, elasticityWindow: 6, trendWeight: 0.6, betaShrink: 0.5 },
+};
+
+/** Soft clip, lifted from future.js:36. Keeps extreme draws finite without a hard edge. */
+export function softclip(x, L) { return L * Math.tanh(x / L); }
+
+/** Seed derived from today's date, matching future.js's computeTodaySeed convention. */
+export function computeTodaySeed() {
+  try {
+    const d = new Date();
+    return parseInt(`${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`, 10);
+  } catch (e) {
+    return 20280101;
+  }
+}
+
+/** Modes for choosing the national popular vote the election lands on. */
+export const NPV_MODES = {
+  current2024: 'Use 2024 PV',
+  randomD: 'Random D tilt',
+  randomR: 'Random R tilt',
+  surprise: 'Surprise me',
+  manual: 'Manual',
+};
+
+/**
+ * Pick the TRUE national popular vote for this election.
+ *
+ * This is the exact value the election lands on — not a centre that later gets
+ * perturbed. "Manual: D+3" must mean the Democrats really win the popular vote
+ * by 3, and "Use 2024 PV" must really mean R+1.5; adding a cycle shock on top
+ * made both settings advisory rather than binding.
+ *
+ * The random modes carry their own spread, so they need no extra noise. They're
+ * drawn normally rather than uniformly because real national environments
+ * cluster near even with occasional blowouts, instead of being equally likely
+ * anywhere in a range. Polls still miss this value — that happens in campaign.js.
+ */
+export function chooseNpv(mode, rng, { npvBase = 0, manualValue = 0, spread = 0.045 } = {}) {
+  switch (mode) {
+    case 'randomD': return Math.min(0.30, Math.abs(randn(rng) * spread) + 0.005);
+    case 'randomR': return -Math.min(0.30, Math.abs(randn(rng) * spread) + 0.005);
+    case 'surprise': return Math.max(-0.30, Math.min(0.30, randn(rng) * spread));
+    case 'manual': return manualValue;
+    case 'current2024':
+    default: return npvBase;
+  }
+}
+
+/**
+ * Build a complete simulation.
+ *
+ * @param {object} o
+ * @param {number} o.seed
+ * @param {string} [o.npvMode='surprise']
+ * @param {number} [o.manualNpv=0]
+ * @param {object} [o.params]    deep-ish overrides for PARAMS
+ * @param {object} [o.baseline]  pre-loaded baseline, to avoid re-reading the CSV
+ * @param {boolean} [o.skipForecasts=false] skip the Monte Carlo entirely. Only for
+ *        bulk calibration runs that care about the outcome, not the forecast.
+ */
+export async function createSimulation({
+  seed, npvMode = 'surprise', manualNpv = 0, params = {}, baseline = null, skipForecasts = false,
+}) {
+  const P = {
+    ...PARAMS,
+    ...params,
+    cycle: { ...PARAMS.cycle, ...(params.cycle || {}) },
+    poll: { ...PARAMS.poll, ...(params.poll || {}) },
+    campaign: { ...PARAMS.campaign, ...(params.campaign || {}) },
+    forecast: { ...PARAMS.forecast, ...(params.forecast || {}) },
+    baseline: { ...PARAMS.baseline, ...(params.baseline || {}) },
+  };
+
+  const base = baseline || await loadBaseline(P.baseline);
+  const rng = mulberry32(seed >>> 0);
+
+  // Both models draw only over simUnits — ME-AL/NE-AL are derived from their
+  // districts afterwards, never drawn independently.
+  // Cycle drift: sized from each state's own historical volatility.
+  const cycleModel = createRegionalErrorModel({
+    units: base.simUnits,
+    weights: base.weights,
+    unitSigmas: base.sigma,
+    regionShare: P.cycle.regionShare,
+    nationalSigma: P.cycle.nationalSigma,
+  });
+
+  // Polling error: flat across states, more correlated, much smaller.
+  const pollSpec = {
+    unitSigmas: P.poll.unitSigmas,
+    regionShare: P.poll.regionShare,
+    nationalSigma: P.poll.nationalSigma,
+  };
+  const pollModel = createRegionalErrorModel({
+    units: base.simUnits,
+    weights: base.weights,
+    ...pollSpec,
+  });
+
+  // --- hidden truth ---------------------------------------------------------
+  // How turbulent is THIS cycle? One draw, applied to every state, so a calm year
+  // is calm everywhere and a realigning year shakes the whole map.
+  const turbulence = P.cycle.turbulenceSigma > 0
+    ? Math.max(P.cycle.turbulenceRange[0],
+      Math.min(P.cycle.turbulenceRange[1], Math.exp(randn(rng) * P.cycle.turbulenceSigma)))
+    : 1;
+  const cycleScale = P.cycle.scale * turbulence;
+
+  const truthShock = cycleModel.drawRel(rng, cycleScale);
+  const truthRel = new Map();
+  for (const unit of base.simUnits) {
+    const raw = (base.base.get(unit) || 0) + (truthShock.get(unit) || 0);
+    truthRel.set(unit, Math.max(-P.leanCap, Math.min(P.leanCap, raw)));
+  }
+  deriveAtLarge(truthRel, base);
+
+  // The chosen value IS the outcome. No shock is added here, so a manual or
+  // 2024-matching popular vote lands exactly where the user asked.
+  const truthNpv = chooseNpv(npvMode, rng, {
+    npvBase: base.npvBase,
+    manualValue: manualNpv,
+    spread: P.npvSpread,
+  });
+
+  // --- campaign -------------------------------------------------------------
+  const campaign = runCampaign({
+    truthRel, truthNpv, errorModel: pollModel, rng, params: P.campaign, baseline: base,
+  });
+
+  // --- forecast per step ----------------------------------------------------
+  // Each step gets its own derived seed so the forecast stream is independent of
+  // the campaign stream; re-running a forecast can't shift the election itself.
+  const forecasts = skipForecasts ? [] : campaign.snapshots.map((snap, i) => runForecast({
+    pollRel: snap.pollRel,
+    pollNpv: snap.pollNpv,
+    baseline: base,
+    progress: snap.progress,
+    seed: (seed >>> 0) ^ (0x9E3779B9 * (i + 1)),
+    params: P.forecast,
+    pollSpec,
+  }));
+
+  return {
+    seed,
+    npvMode,
+    params: P,
+    baseline: base,
+    cycleModel,
+    pollModel,
+    turbulence,
+    cycleScale,
+    truthRel,
+    truthNpv,
+    snapshots: campaign.snapshots,
+    labels: campaign.labels,
+    forecasts,
+    terminalBiasNpv: campaign.terminalBiasNpv,
+    terminalBiasRel: campaign.terminalBiasRel,
+  };
+}
+
+/** Final absolute margins for the true result (what election night reveals). */
+export function truthMargins(sim) {
+  const out = new Map();
+  for (const unit of sim.baseline.units) {
+    const beta = sim.baseline.beta.get(unit) || 1;
+    out.set(unit, (sim.truthRel.get(unit) || 0) + beta * sim.truthNpv);
+  }
+  return out;
+}
+
+/** EV tally for the true result. */
+export function truthEv(sim) {
+  let dem = 0, rep = 0;
+  const margins = truthMargins(sim);
+  for (const unit of sim.baseline.units) {
+    const ev = sim.baseline.ev.get(unit) || 0;
+    if ((margins.get(unit) || 0) >= 0) dem += ev; else rep += ev;
+  }
+  return { dem, rep, total: sim.baseline.totalEv, margins };
+}
+
+export default { createSimulation, PARAMS, computeTodaySeed, chooseNpv, truthMargins, truthEv, NPV_MODES, softclip };

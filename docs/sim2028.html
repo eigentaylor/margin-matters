@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>2028 Campaign Simulator • Margin Matters</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.svg" />
+  <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <script type="module" src="./utils/dataLoader.js"></script>
+  <script type="module" src="./utils/electionMap.js"></script>
+  <style>
+    .s28-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 14px;
+    }
+
+    .s28-grid label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .s28-grid input,
+    .s28-grid select {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.95rem;
+      min-width: 150px;
+    }
+
+    .s28-steps {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+
+    .s28-step {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .s28-step.done {
+      border-color: #4a6fa5;
+      color: var(--fg);
+    }
+
+    .s28-step.current {
+      border-color: var(--accent);
+      background: #2a3f5f;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .s28-probrow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .s28-prob {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .s28-prob small {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .s28-prob.dem {
+      color: #7aa2f7;
+    }
+
+    .s28-prob.rep {
+      color: #e06c6c;
+    }
+
+    .s28-chart {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .s28-chart svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .s28-tablewrap {
+      max-height: 420px;
+      overflow-y: auto;
+      overflow-x: auto;
+    }
+
+    table.s28-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    table.s28-table th {
+      position: sticky;
+      top: 0;
+      background: var(--card);
+      text-align: right;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    table.s28-table th:first-child,
+    table.s28-table td:first-child {
+      text-align: left;
+    }
+
+    table.s28-table td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #222;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .s28-d {
+      color: #7aa2f7;
+    }
+
+    .s28-r {
+      color: #e06c6c;
+    }
+
+    .s28-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .s28-hidden {
+      display: none !important;
+    }
+
+    table.s28-table th[data-sort] {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    table.s28-table th[data-sort]:hover {
+      color: var(--fg);
+    }
+
+    table.s28-table th[data-sort]::after {
+      content: '';
+      font-size: 0.75em;
+      opacity: 0.75;
+    }
+
+    table.s28-table th[data-sort].sort-asc::after {
+      content: ' \25B2';
+    }
+
+    table.s28-table th[data-sort].sort-desc::after {
+      content: ' \25BC';
+    }
+
+    /* EV-by-rating breakdown under the bar */
+    .s28-evclass {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    .s28-evcell {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.78rem;
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      white-space: nowrap;
+    }
+
+    .s28-evcell b {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.95rem;
+    }
+
+    /* election-night.js writes a label into every bar segment AND into #evText.
+       Overlaid at the bar's centre those collide, so the summary sits below it. */
+    #evBar {
+      margin-bottom: 26px;
+    }
+
+    #evBar #evText {
+      top: calc(100% + 5px);
+      transform: translate(-50%, 0);
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    #evBar .ev-seg-label {
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+    }
+
+    .s28-rating {
+      font-size: 0.78rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    #mapTip {
+      position: absolute;
+      pointer-events: none;
+      background: #10131a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      z-index: 40;
+      max-width: 250px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+    }
+
+    #mapTip .tip-name {
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    #mapTip .tip-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+    }
+
+    #mapTip .tip-row span:last-child {
+      color: var(--fg);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .s28-step {
+      cursor: pointer;
+      font: inherit;
+      background: transparent;
+    }
+
+    .s28-debug {
+      margin-top: 12px;
+      border: 1px solid #7a4b12;
+      background: #1e1408;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      color: #f0c98a;
+    }
+
+    .s28-dbgrow {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 2px 0;
+    }
+
+    .s28-dbgrow span:last-child {
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .s28-sticky {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      background: rgba(18, 18, 20, 0.96);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(6px);
+    }
+
+    .s28-sticky-step {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--fg);
+      min-width: 168px;
+    }
+
+    .s28-sticky-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .s28-sticky .btn {
+      cursor: pointer;
+    }
+
+    .s28-sticky .btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .s28-sticky-go {
+      border-color: var(--accent);
+      background: #2a3f5f;
+    }
+
+    /* Keep the real footer clear of the fixed bar. */
+    body.s28-has-sticky {
+      padding-bottom: 76px;
+    }
+
+    @media (max-width: 640px) {
+      .s28-sticky {
+        justify-content: flex-start;
+        gap: 6px;
+      }
+
+      .s28-sticky-step {
+        min-width: 100%;
+      }
+
+      body.s28-has-sticky {
+        padding-bottom: 116px;
+      }
+    }
+
+    .s28-proto {
+      border: 1px solid #6b5a1f;
+      background: #241f0d;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      color: #e8d98a;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+    <div class="header">
+      <h1>2028 Campaign Simulator</h1>
+      <span class="legend">A single cycle, simulated properly &mdash; correlated polling error, a campaign that converges, then election night.</span>
+    </div>
+
+    <div class="s28-proto">
+      <strong>Prototype (v0.1).</strong> Unlisted experiment. The model is deliberately tunable and not yet calibrated to anyone's satisfaction &mdash; see <code>docs/utils/sim2028/</code>.
+    </div>
+
+    <!-- ---------- setup ---------- -->
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Setup</div>
+      <div class="s28-grid">
+        <label>Seed
+          <input id="s28Seed" type="number" step="1" />
+        </label>
+        <label>National popular vote
+          <select id="s28NpvMode">
+            <option value="surprise" selected>Surprise me</option>
+            <option value="current2024">Use 2024 PV (R+1.5)</option>
+            <option value="randomD">Random D tilt</option>
+            <option value="randomR">Random R tilt</option>
+            <option value="manual">Manual&hellip;</option>
+          </select>
+        </label>
+        <label id="s28ManualWrap" class="s28-hidden">Manual PV (e.g. D+3 or R+2)
+          <input id="s28ManualNpv" type="text" value="EVEN" />
+        </label>
+        <label>Campaign steps
+          <input id="s28Steps" type="number" min="2" max="12" step="1" value="6" />
+        </label>
+        <button id="s28Start" class="btn" type="button">Start campaign</button>
+        <button id="s28Reroll" class="btn" type="button">New random seed</button>
+      </div>
+      <div class="s28-note" style="margin-top:8px">
+        Everything is seeded &mdash; the same seed always produces the same election. The true result is
+        hidden until election night; you only see polls.
+      </div>
+    </div>
+
+    <!-- ---------- campaign ---------- -->
+    <div class="card" id="s28CampaignCard">
+      <div class="legend" style="text-align:left;margin-bottom:4px">Campaign</div>
+      <div class="s28-steps" id="s28StepPills"></div>
+      <div class="s28-grid">
+        <button id="s28First" class="btn" type="button" title="Back to the first month">&laquo; June</button>
+        <button id="s28Back" class="btn" type="button">&lsaquo; Back</button>
+        <button id="s28Advance" class="btn" type="button">Advance &rsaquo;</button>
+        <button id="s28RunAll" class="btn" type="button">Run to election eve</button>
+        <button id="s28ToNight" class="btn" type="button">Go to election night &rarr;</button>
+        <span class="s28-note" id="s28StepNote">Press &ldquo;Start campaign&rdquo; to begin.</span>
+      </div>
+      <div class="s28-note" style="margin-top:6px">Click any month above to jump straight to it.</div>
+      <div class="s28-debug s28-hidden" id="s28Debug"></div>
+    </div>
+
+    <!-- ---------- map ---------- -->
+    <!-- Map sits directly above the election-night controls so that, once the
+         returns start, the controls are within reach of the map and sit above
+         all the polling panels. -->
+    <div class="card" id="s28MapCard">
+      <div class="legend" style="text-align:left;margin-bottom:8px" id="s28MapTitle">Map &mdash; current polling</div>
+      <div id="map-wrap" class="center" style="position:relative">
+        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="Simulated 2028 polling map"></svg>
+        <div id="mapTip" style="display:none"></div>
+        <div id="smallStateBoxes" aria-label="Small state info boxes" style="display:none"></div>
+      </div>
+      <div id="evBar"
+        style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:8px">
+        <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+        <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
+        <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
+        <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
+        <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+        <!-- Positioned below the bar, not over it: election-night.js labels each
+             segment individually, and a centred overlay collides with them. -->
+        <div id="evText" style="position:absolute;left:50%">D 0 | R 0</div>
+      </div>
+      <div id="evNeededToWin" style="text-align:center;font-size:0.85em;color:var(--muted);margin-top:4px"></div>
+      <div class="s28-evclass" id="s28EvClass"></div>
+      <div class="s28-note" id="s28EvClassNote" style="text-align:center;margin-top:4px"></div>
+      <div id="pvTotals" class="pv-totals s28-hidden" style="margin-top:10px">
+        <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span id="pvDemPct" class="delta"></span></div>
+        <div class="pv-badge pv-o" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
+        <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span id="pvRepPct" class="delta"></span></div>
+        <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span></div>
+        <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
+      </div>
+    </div>
+
+    <!-- ---------- forecast ---------- -->
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Forecast</div>
+      <div class="s28-probrow">
+        <div class="s28-prob dem" id="s28DemProb">&mdash;<small>Democratic win</small></div>
+        <div class="s28-prob rep" id="s28RepProb">&mdash;<small>Republican win</small></div>
+        <div class="s28-prob" id="s28TieProb" style="color:var(--muted)">&mdash;<small>Exact tie</small></div>
+        <div class="s28-prob" id="s28NatPoll" style="font-size:1.1rem">&mdash;<small>National poll</small></div>
+        <div class="s28-prob" id="s28MedianEv" style="font-size:1.1rem">&mdash;<small>Median EV / 80% range</small></div>
+        <div class="s28-prob" id="s28Tipping" style="font-size:1.1rem">&mdash;<small>Tipping point</small></div>
+      </div>
+      <div class="s28-chart" id="s28Histogram"></div>
+    </div>
+
+    <!-- ---------- trendlines ---------- -->
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Polling trendlines</div>
+      <div class="s28-grid" style="margin-bottom:8px">
+        <label>Show
+          <select id="s28TrendPick">
+            <option value="national" selected>National popular vote</option>
+            <option value="closest">Six closest states</option>
+          </select>
+        </label>
+      </div>
+      <div class="s28-chart" id="s28Trend"></div>
+      <div class="s28-note" id="s28TrendNote"></div>
+    </div>
+
+    <!-- ---------- state table ---------- -->
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">State polling</div>
+      <div class="s28-tablewrap">
+        <table class="s28-table" id="s28Table">
+          <thead>
+            <tr>
+              <th data-sort="name">State</th>
+              <th data-sort="ev">EV</th>
+              <th data-sort="rel2024" title="2024 margin relative to the nation">2024 lean</th>
+              <th data-sort="lean" title="Polled margin relative to the nation">2028 lean</th>
+              <th data-sort="margin" title="Projected actual margin = lean + elasticity x national popular vote">Poll margin</th>
+              <th data-sort="rating" title="Rating from the projected margin">Rating</th>
+              <th data-sort="change">Change</th>
+              <th data-sort="prob">D win prob</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="s28-note" style="margin-top:6px">
+        Sorted by closeness. &ldquo;Poll&rdquo; is the projected margin at the current national popular vote.
+      </div>
+    </div>
+
+    <!-- ---------- election night ---------- -->
+    <div class="card s28-hidden" id="s28NightCard">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Election night simulator</div>
+      <div id="electionNightCard"
+        style="background:transparent;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <button id="enToggle" class="btn" style="min-width:96px">Start</button>
+          <button id="enReset" class="btn" style="min-width:96px">Reset</button>
+          <label for="enSpeed" class="legend" style="font-size:0.9rem">Speed</label>
+          <select id="enSpeed" class="btn"
+            style="min-width:120px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+            <option value="0.1">0.1&times;</option>
+            <option value="0.25">0.25&times;</option>
+            <option value="0.5" selected>0.5&times;</option>
+            <option value="1">1&times;</option>
+            <option value="2">2&times;</option>
+            <option value="4">4&times;</option>
+            <option value="8">8&times;</option>
+          </select>
+          <span id="enPhase" class="legend" style="font-size:0.9rem;color:var(--muted)">Idle</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <label for="enPvMode" class="legend" style="font-size:0.9rem">PV selection</label>
+          <select id="enPvMode" class="btn"
+            style="min-width:200px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+            <option value="current" selected>Use simulated result</option>
+          </select>
+          <span id="enPvDisplay" class="legend" style="font-size:0.9rem;color:var(--muted)">PV: &mdash;</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label for="enProgress" class="legend" style="min-width:110px;font-size:0.9rem">Progress</label>
+          <input id="enProgress" type="range" min="0" max="1" step="0.001" value="0" style="flex:1" />
+          <span id="enTime" class="legend" style="font-size:0.9rem">19:00</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label for="enConfidence" class="legend" style="min-width:110px;font-size:0.9rem">Call threshold</label>
+          <input id="enConfidence" type="range" min="0" max="1" step="0.01" value="0.3" style="flex:1" />
+          <span id="enConfidenceVal" class="legend" style="font-size:0.9rem">0.3</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <label for="enLogInterval" class="legend" style="font-size:0.9rem">Log interval</label>
+          <select id="enLogInterval" class="btn"
+            style="min-width:100px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
+            <option value="5" selected>5 min</option>
+            <option value="10">10 min</option>
+            <option value="15">15 min</option>
+          </select>
+          <button id="enDownloadTxt" class="btn" style="min-width:110px" disabled>Download TXT</button>
+          <button id="enDownloadCsv" class="btn" style="min-width:110px" disabled>Download CSV</button>
+        </div>
+      </div>
+      <div class="s28-note" style="margin-top:8px" id="s28NightNote"></div>
+    </div>
+
+    <!-- election-night.js reads the year from this slider; fixed at 2028 here -->
+    <input id="yearSlider" type="range" min="2028" max="2028" step="4" value="2028" class="s28-hidden" />
+    <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" class="s28-hidden" />
+
+    <div id="footer-placeholder" data-extra-note="Prototype: simulated 2028 data, not a forecast."></div>
+  </div>
+
+  <!-- Sticky campaign controls. Hidden once election night starts: from that
+       point the map is driven by the returns, so stepping through months would
+       desync the map from the panels. The night controls live under the map. -->
+  <div class="s28-sticky s28-hidden" id="s28Sticky">
+    <span class="s28-sticky-step" id="s28StickyStep">&mdash;</span>
+    <div class="s28-sticky-btns">
+      <button id="s28StickyFirst" class="btn" type="button" title="Back to the first month">&laquo;</button>
+      <button id="s28StickyBack" class="btn" type="button">&lsaquo; Back</button>
+      <button id="s28StickyAdvance" class="btn" type="button">Advance &rsaquo;</button>
+      <button id="s28StickyEve" class="btn" type="button">Election eve</button>
+      <button id="s28StickyNight" class="btn s28-sticky-go" type="button">Election night &rarr;</button>
+    </div>
+  </div>
+
+  <div id="enLogPanel" aria-live="polite" aria-label="Election night call log">
+    <div class="en-log-header">Call log</div>
+    <div id="enLog" class="en-log-body"></div>
+    <div id="enVictory" class="en-log-victory" style="display:none"></div>
+    <div id="enLogUncalled" class="en-log-uncalled"></div>
+  </div>
+
+  <script type="module" src="./sim2028.js"></script>
+  <script type="module" src="./election-night.js"></script>
+  <script src="./header.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./footer.js"></script>
+</body>
+
+</html>
