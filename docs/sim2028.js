@@ -836,6 +836,112 @@ function renderAll() {
   }
 }
 
+// -------------------------------------------------------------- url sharing
+/**
+ * Setting-toggled controls only fire their handlers on user interaction, so a
+ * value restored by the browser on reload (or set programmatically from the
+ * URL below) can leave the manual-PV box hidden even though "Manual…" is the
+ * selected option. Call this any time s28NpvMode's value may have changed
+ * without a 'change' event, including once unconditionally on load.
+ */
+function syncManualNpvVisibility() {
+  const npvMode = $('s28NpvMode');
+  const wrap = $('s28ManualWrap');
+  if (npvMode && wrap) wrap.classList.toggle('s28-hidden', npvMode.value !== 'manual');
+}
+
+/** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence, nailbiter.
+ * Campaign steps is deliberately left out — that control is hidden for now. */
+function buildSettingsParams() {
+  const params = new URLSearchParams();
+  const seedInput = $('s28Seed');
+  const npvMode = $('s28NpvMode');
+  const manualNpv = $('s28ManualNpv');
+  const turbInput = $('s28Turbulence');
+  const nailbiterEl = $('s28Nailbiter');
+  if (seedInput && seedInput.value !== '') params.set('seed', seedInput.value);
+  if (npvMode && npvMode.value) params.set('npv', npvMode.value);
+  if (npvMode && npvMode.value === 'manual' && manualNpv) params.set('manualNpv', manualNpv.value);
+  if (turbInput && turbInput.value !== '') params.set('turbulence', turbInput.value);
+  params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
+  return params;
+}
+
+/**
+ * Full URL for the current setup. `includeDebug` keeps `?debug=true` (when
+ * active) appended after every setting param — the address bar wants it kept,
+ * but a link handed to someone else should never carry it along.
+ */
+function buildShareUrl({ includeDebug }) {
+  const params = buildSettingsParams();
+  if (includeDebug && state.debug) params.set('debug', 'true');
+  const url = new URL(location.href);
+  url.search = params.toString();
+  return url.toString();
+}
+
+/** Keep the address bar in sync with whatever setup is currently loaded. */
+function syncAddressBar() {
+  try { history.replaceState(null, '', buildShareUrl({ includeDebug: true })); } catch (e) { /* ignore */ }
+}
+
+/** Prefill the setup controls from URL params, so a shared link reproduces the same run. */
+function applySettingsFromUrl() {
+  const params = new URLSearchParams(location.search);
+  const seedInput = $('s28Seed');
+  const npvMode = $('s28NpvMode');
+  const manualNpv = $('s28ManualNpv');
+  const turbInput = $('s28Turbulence');
+  const nailbiterEl = $('s28Nailbiter');
+
+  if (params.has('seed') && seedInput) {
+    const v = parseInt(params.get('seed'), 10);
+    if (Number.isFinite(v)) seedInput.value = String(v);
+  }
+  if (params.has('npv') && npvMode) {
+    const v = params.get('npv');
+    if ([...npvMode.options].some(o => o.value === v)) npvMode.value = v;
+  }
+  if (params.has('manualNpv') && manualNpv) manualNpv.value = params.get('manualNpv');
+  if (params.has('turbulence') && turbInput) {
+    const v = parseFloat(params.get('turbulence'));
+    if (Number.isFinite(v)) turbInput.value = String(v);
+  }
+  if (params.has('nailbiter') && nailbiterEl) {
+    const v = params.get('nailbiter').toLowerCase();
+    nailbiterEl.checked = (v === '1' || v === 'true');
+  }
+}
+
+/** Copy a shareable link (never includes ?debug) to the clipboard, with a legacy-copy fallback. */
+async function shareCurrentSetup() {
+  const btn = $('s28Share');
+  const url = buildShareUrl({ includeDebug: false });
+  let copied = false;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(url);
+      copied = true;
+    }
+  } catch (e) { /* fall through to legacy copy */ }
+  if (!copied) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      copied = document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) { /* ignore */ }
+  }
+  if (btn) {
+    btn.textContent = copied ? 'Copied!' : 'Copy failed';
+    setTimeout(() => { btn.textContent = 'Share URL'; }, 1500);
+  }
+}
+
 // ------------------------------------------------------------------- actions
 async function startCampaign() {
   const seedInput = $('s28Seed');
@@ -882,6 +988,7 @@ async function startCampaign() {
     const panel = $('enLogPanel');
     if (panel) panel.style.display = 'none';
     renderAll();
+    syncAddressBar();
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Start campaign'; }
   }
@@ -952,18 +1059,21 @@ async function init() {
   const seedInput = $('s28Seed');
   if (seedInput && !seedInput.value) seedInput.value = String(computeTodaySeed());
 
+  // A shared link's params win over the today-seed default above.
+  applySettingsFromUrl();
+  // Unconditional: fixes the manual-PV box staying hidden on reload/shared-link
+  // loads where s28NpvMode ends up "manual" without a 'change' event ever firing.
+  syncManualNpvVisibility();
+
   const npvMode = $('s28NpvMode');
-  if (npvMode) {
-    npvMode.addEventListener('change', () => {
-      $('s28ManualWrap').classList.toggle('s28-hidden', npvMode.value !== 'manual');
-    });
-  }
+  if (npvMode) npvMode.addEventListener('change', syncManualNpvVisibility);
   // The in-card and sticky-footer controls drive the same actions.
   const on = (ids, fn) => [].concat(ids).forEach(id => {
     const el = $(id);
     if (el) el.addEventListener('click', fn);
   });
   on('s28Start', startCampaign);
+  on('s28Share', shareCurrentSetup);
   on(['s28First', 's28StickyFirst'], () => goToStep(0));
   on(['s28Back', 's28StickyBack'], () => goToStep(state.step - 1));
   on(['s28Advance', 's28StickyAdvance'], () => goToStep(state.step + 1));

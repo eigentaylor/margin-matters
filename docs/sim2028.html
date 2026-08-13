@@ -491,7 +491,7 @@
         <label id="s28ManualWrap" class="s28-hidden">Manual PV (e.g. D+3 or R+2)
           <input id="s28ManualNpv" type="text" value="EVEN" />
         </label>
-        <label>Campaign steps
+        <label class="s28-hidden">Campaign steps
           <input id="s28Steps" type="number" min="2" max="12" step="1" value="6" />
         </label>
         <label title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle turbulence
@@ -504,6 +504,7 @@
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>
+        <button id="s28Share" class="btn" type="button" title="Copy a link that reproduces this exact setup">Share URL</button>
       </div>
       <div class="s28-note" style="margin-top:8px">
         Everything is seeded &mdash; the same seed always produces the same election. The true result is
