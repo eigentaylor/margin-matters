@@ -847,6 +847,8 @@ async function startCampaign() {
   const turbulenceOverride = turbInput && Number.isFinite(parseFloat(turbInput.value))
     ? Math.max(0.1, Math.min(3, parseFloat(turbInput.value)))
     : 0.5;
+  const nailbiterEl = $('s28Nailbiter');
+  const nailbiterOn = !!(nailbiterEl && nailbiterEl.checked);
 
   const btn = $('s28Start');
   if (btn) { btn.disabled = true; btn.textContent = 'Simulating…'; }
@@ -856,6 +858,7 @@ async function startCampaign() {
       npvMode,
       manualNpv,
       baseline: state.baseline,
+      nailbiter: nailbiterOn,
       params: {
         campaign: { ...PARAMS.campaign, steps },
         cycle: { ...PARAMS.cycle, turbulenceOverride },
