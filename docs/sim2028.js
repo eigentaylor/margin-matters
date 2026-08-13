@@ -236,10 +236,12 @@ function showReturnsTip(evt, unit) {
   // Star the leading candidate, matching formatUnitTooltip's convention.
   const star = party => tally[0][0] === party && totalCounted > 0 ? '*' : '';
 
+  const finalPoll = pollMargins(currentSnapshot()).get(unit);
   const rows = [
     ['Electoral votes', s.ev],
-    ['Reporting', `${((s.reporting || 0) * 100).toFixed(0)}%`],
+    ['Reporting', `${((s.reporting || 0) * 100).toFixed(2)}%`],
     ['Margin', s.marginStr || fmtMargin(s.margin)],
+    ['Final poll', finalPoll == null ? '—' : fmtMargin(finalPoll)],
     ['Vote margin', voteMarginText],
     ['Leader', leader || '—'],
   ];
@@ -973,7 +975,6 @@ async function startCampaign() {
     state.step = 0;
     state.revealed = false;
     state.mapHighlight = null;
-    window._s28FinalPollByUnit = null;
     // Tear down any election night still in progress. It owns the map and holds
     // window._electionNightActive, which makes renderMap() bail out — without
     // this the restarted campaign would leave every state grey.
@@ -1009,10 +1010,6 @@ function goToElectionNight() {
   // Clear any glow/isolate styling — election night repaints the map itself
   // and the polling-era highlight has nothing left to refer to.
   if (state.mapHighlight) { state.mapHighlight = null; setMapGlow(); }
-
-  // Snapshot the final poll (Election Eve) per-unit margins so the returns
-  // tooltip can show them alongside the actual count — see tooltipManager.js.
-  window._s28FinalPollByUnit = pollMargins(currentSnapshot());
 
   installElectionNight({
     finalRel: state.sim.truthRel,

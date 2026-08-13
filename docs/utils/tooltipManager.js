@@ -427,21 +427,6 @@ export function formatUnitTooltip(unit, opts) {
         })();
         if (reportingText) rows.push(reportingText);
 
-        // 2028 simulator election night: show the final pre-election poll for
-        // comparison against the returns, when the campaign supplied one.
-        const lastPollText = (function () {
-            try {
-                if (!window._electionNightActive) return '';
-                const pollMap = window._s28FinalPollByUnit;
-                if (!pollMap || typeof pollMap.get !== 'function') return '';
-                const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
-                const val = pollMap.has(keyUnit) ? pollMap.get(keyUnit) : pollMap.get(unit);
-                if (val == null || !isFinite(val)) return '';
-                return `Last poll: ${leanStr(val)}`;
-            } catch (e) { return ''; }
-        })();
-        if (lastPollText) rows.push(lastPollText);
-
         // Called/confidence info
         if (info) {
             if (info.called) {
