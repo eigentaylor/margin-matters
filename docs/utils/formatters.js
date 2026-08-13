@@ -26,6 +26,13 @@ export function formatLeader(code) {
     return 'No call';
 }
 
+export function formatLeaderShort(code) {
+    if (code === 'D') return 'D';
+    if (code === 'R') return 'R';
+    if (code === 'O') return 'Other';
+    return 'No call';
+}
+
 export function formatMarginText(marginStr, leader) {
     if (marginStr === 'None') return 'None';
     if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';
