@@ -26,7 +26,7 @@ import { createRegionalErrorModel } from './errorModel.js';
  */
 export const NAILBITER_DEFAULTS = {
   /** Natural margins beyond this (in vote-share terms, e.g. 0.08 = 8pt) are left untouched. */
-  closeThreshold: 0.08,
+  closeThreshold: 0.04,
   /** Fraction of the remaining natural margin pulled toward 0 for units inside the threshold. */
   squeeze: 0.65,
   /** Multiplier on each unit's own baseline.sigma for the one-time reorder draw. */
