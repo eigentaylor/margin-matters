@@ -40,6 +40,21 @@
       min-width: 150px;
     }
 
+    .s28-grid input[type="checkbox"] {
+      min-width: 0;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      accent-color: var(--accent);
+    }
+
+    .s28-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 34px;
+    }
+
     .s28-steps {
       display: flex;
       gap: 6px;
@@ -481,6 +496,11 @@
         </label>
         <label title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle turbulence
           <input id="s28Turbulence" type="number" min="0.3" max="2.3" step="0.1" value="0.5" />
+        </label>
+        <label title="A second pass, applied after this run's national popular vote is chosen: any state whose margin already landed close to zero gets nudged closer (and can swap order with its neighbors). States that aren't naturally close are left alone, so a landslide NPV still reads as a landslide. May change which candidate wins vs. the same settings with it off.">Nailbiter mode
+          <span class="s28-checkbox-row">
+            <input id="s28Nailbiter" type="checkbox" />
+          </span>
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>

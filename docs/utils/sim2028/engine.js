@@ -17,6 +17,7 @@ import { loadBaseline, deriveAtLarge } from './baseline.js';
 import { createRegionalErrorModel } from './errorModel.js';
 import { runCampaign, DEFAULT_CAMPAIGN_PARAMS } from './campaign.js';
 import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
+import { computeNailbiterShift } from './nailbiter.js';
 
 /**
  * Every tunable in one place. Overridable per-run and via URL query params.
@@ -161,6 +162,7 @@ export function chooseNpv(mode, rng, { npvBase = 0, manualValue = 0, spread = 0.
  */
 export async function createSimulation({
   seed, npvMode = 'surprise', manualNpv = 0, params = {}, baseline = null, skipForecasts = false,
+  nailbiter = false,
 }) {
   const P = {
     ...PARAMS,
@@ -228,6 +230,20 @@ export async function createSimulation({
     manualValue: manualNpv,
     spread: P.npvSpread,
   });
+
+  // Nailbiter mode: a second pass, now that npv is known, that nudges only the
+  // units whose margin already landed close to zero — see nailbiter.js.
+  if (nailbiter) {
+    const shift = computeNailbiterShift({
+      truthRel, beta: base.beta, npv: truthNpv,
+      units: base.simUnits, weights: base.weights, sigma: base.sigma,
+      seed, params: (nailbiter === true) ? {} : nailbiter,
+    });
+    for (const unit of base.simUnits) {
+      truthRel.set(unit, (truthRel.get(unit) || 0) + (shift.get(unit) || 0));
+    }
+    deriveAtLarge(truthRel, base);
+  }
 
   // --- campaign -------------------------------------------------------------
   const campaign = runCampaign({
