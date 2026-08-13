@@ -852,7 +852,7 @@ function syncManualNpvVisibility() {
   if (npvMode && wrap) wrap.classList.toggle('s28-hidden', npvMode.value !== 'manual');
 }
 
-/** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence, nailbiter.
+/** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence, nailbiter, elasticity.
  * Campaign steps is deliberately left out — that control is hidden for now. */
 function buildSettingsParams() {
   const params = new URLSearchParams();
@@ -861,11 +861,13 @@ function buildSettingsParams() {
   const manualNpv = $('s28ManualNpv');
   const turbInput = $('s28Turbulence');
   const nailbiterEl = $('s28Nailbiter');
+  const elasticityEl = $('s28Elasticity');
   if (seedInput && seedInput.value !== '') params.set('seed', seedInput.value);
   if (npvMode && npvMode.value) params.set('npv', npvMode.value);
   if (npvMode && npvMode.value === 'manual' && manualNpv) params.set('manualNpv', manualNpv.value);
   if (turbInput && turbInput.value !== '') params.set('turbulence', turbInput.value);
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
+  params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
   return params;
 }
 
@@ -895,6 +897,7 @@ function applySettingsFromUrl() {
   const manualNpv = $('s28ManualNpv');
   const turbInput = $('s28Turbulence');
   const nailbiterEl = $('s28Nailbiter');
+  const elasticityEl = $('s28Elasticity');
 
   if (params.has('seed') && seedInput) {
     const v = parseInt(params.get('seed'), 10);
@@ -912,6 +915,10 @@ function applySettingsFromUrl() {
   if (params.has('nailbiter') && nailbiterEl) {
     const v = params.get('nailbiter').toLowerCase();
     nailbiterEl.checked = (v === '1' || v === 'true');
+  }
+  if (params.has('elasticity') && elasticityEl) {
+    const v = params.get('elasticity').toLowerCase();
+    elasticityEl.checked = (v === '1' || v === 'true');
   }
 }
 
@@ -957,6 +964,14 @@ async function startCampaign() {
     : 0.5;
   const nailbiterEl = $('s28Nailbiter');
   const nailbiterOn = !!(nailbiterEl && nailbiterEl.checked);
+  const elasticityEl = $('s28Elasticity');
+  // Missing checkbox defaults on, same as every other boolean control here.
+  const elasticityOn = !elasticityEl || elasticityEl.checked;
+  // Repoint the shared baseline's `beta` at the fitted or uniform (all-1)
+  // map before building the run — every downstream reader (engine.js,
+  // forecast.js, electionNightBridge.js, this file's own tooltips/table)
+  // just calls baseline.beta.get(unit), so this one swap covers all of them.
+  if (state.baseline) state.baseline.beta = elasticityOn ? state.baseline.betaFitted : state.baseline.betaUniform;
 
   const btn = $('s28Start');
   if (btn) { btn.disabled = true; btn.textContent = 'Simulating…'; }

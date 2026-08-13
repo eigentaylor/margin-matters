@@ -63,10 +63,11 @@ export function leastSquaresSlope(xs, ys) {
 /**
  * Slope of y on x forced through the origin: sum(xy)/sum(x^2).
  *
- * Used for elasticity because the intercept is meaningless here — if the nation
- * doesn't move, a state shouldn't systematically move either (that drift is the
- * trend term, handled separately). Through-origin is also far more stable than
- * full OLS on the ~6 points we have.
+ * The intercept is meaningless here — if the nation doesn't move, a state
+ * shouldn't systematically move either (that drift is the trend term, handled
+ * separately) — but least-squares itself is not robust: a single anomalous
+ * cycle can dominate a fit this small. See medianRatioThroughOrigin below,
+ * used for the actual elasticity fit instead.
  */
 export function slopeThroughOrigin(xs, ys) {
   let num = 0, den = 0;
@@ -75,6 +76,31 @@ export function slopeThroughOrigin(xs, ys) {
     den += xs[i] * xs[i];
   }
   return den > 1e-12 ? num / den : 1;
+}
+
+/**
+ * Robust through-origin slope: the median of each point's own y/x ratio
+ * (Theil-Sen restricted to pairings with the origin, rather than every pair
+ * of points — the natural through-origin analogue).
+ *
+ * Favorite-son/home-state anomalies (Palin on the ticket for AK in 2008,
+ * McCain for AZ in 2008, Romney for UT in 2012, ...) always cost TWO points
+ * out of the ~6-cycle elasticity window: the anomalous cycle itself (that
+ * state barely moves with, or moves opposite, a national wave) and the
+ * reversion cycle right after (it swings back, again against the national
+ * grain). slopeThroughOrigin's sum(xy)/sum(x^2) has no defense against that —
+ * squared residuals give the worst points the most leverage. A median
+ * tolerates close to half the sample being like this before it moves much.
+ */
+export function medianRatioThroughOrigin(xs, ys) {
+  const ratios = [];
+  for (let i = 0; i < xs.length; i++) {
+    if (Math.abs(xs[i]) > 1e-9) ratios.push(ys[i] / xs[i]);
+  }
+  if (!ratios.length) return 1;
+  ratios.sort((a, b) => a - b);
+  const mid = Math.floor(ratios.length / 2);
+  return ratios.length % 2 ? ratios[mid] : (ratios[mid - 1] + ratios[mid]) / 2;
 }
 
 /** Sample standard deviation. */
@@ -137,8 +163,9 @@ function groupByUnit(rows) {
  *        so the effect is easy to re-enable and re-test if a future backtest
  *        (e.g. once 2028 is real data) tells a different story.
  * @param {number} [opts.betaShrink=0.5]      shrink elasticity toward 1. Six noisy
- *        cycles produce artifacts — AZ fits 0.43 purely because McCain was on the
- *        2008 ballot — so trust the estimate only halfway.
+ *        cycles is still a small sample even with medianRatioThroughOrigin's
+ *        robustness to favorite-son-style anomalies (AZ/McCain '08, AK/Palin
+ *        '08, UT/Romney '12) — trust the estimate only halfway.
  */
 export function buildBaseline(rows, opts = {}) {
   const {
@@ -198,7 +225,7 @@ export function buildBaseline(rows, opts = {}) {
     const elPts = hist.slice(-elasticityWindow)
       .filter(p => p.presDelta != null && p.natDelta != null && Math.abs(p.natDelta) > 1e-6);
     const fitBeta = elPts.length >= 2
-      ? slopeThroughOrigin(elPts.map(p => p.natDelta), elPts.map(p => p.presDelta))
+      ? medianRatioThroughOrigin(elPts.map(p => p.natDelta), elPts.map(p => p.presDelta))
       : 1;
     const rawBeta = 1 + betaShrink * (fitBeta - 1);
 
@@ -262,10 +289,17 @@ export function buildBaseline(rows, opts = {}) {
   // swing of X must move the national margin by X, not by X * mean(beta).
   let betaMean = 0;
   for (const unit of simUnits) betaMean += betaRaw.get(unit) * weights.get(unit);
-  const beta = new Map();
+  const betaFitted = new Map();
   for (const unit of simUnits) {
-    beta.set(unit, betaMean > 1e-9 ? betaRaw.get(unit) / betaMean : 1);
+    betaFitted.set(unit, betaMean > 1e-9 ? betaRaw.get(unit) / betaMean : 1);
   }
+
+  // Uniform alternative: every unit absorbs a national swing 1:1. Lets the
+  // "Elasticity" toggle A/B the fitted per-unit betas above against the null
+  // hypothesis that they're not adding anything real — flip it off and see
+  // whether results feel better or worse.
+  const betaUniform = new Map();
+  for (const unit of simUnits) betaUniform.set(unit, 1);
 
   // The relative margins should already be vote-centered; enforce it so the
   // trend nudge can't smuggle in a national tilt.
@@ -275,7 +309,11 @@ export function buildBaseline(rows, opts = {}) {
 
   const result = {
     units, simUnits, atLarge,
-    base, rel2024, relPrior, presMargin2024, presMarginPrior, trend, sigma, beta, ev, totalVotes, weights,
+    base, rel2024, relPrior, presMargin2024, presMarginPrior, trend, sigma, ev, totalVotes, weights,
+    // `beta` is the active map the rest of the engine reads; defaults to the
+    // fitted values. sim2028.js repoints it to betaUniform when the
+    // Elasticity toggle is off, ahead of each createSimulation() call.
+    beta: betaFitted, betaFitted, betaUniform,
     npvBase, candidates, baseYear, priorYear: baseYear - 4,
     totalEv: Array.from(ev.values()).reduce((a, b) => a + b, 0),
   };
@@ -283,7 +321,8 @@ export function buildBaseline(rows, opts = {}) {
   // At-large base/beta are the vote-weighted aggregate of their districts, which
   // makes margin_AL = rel_AL + beta_AL * npv hold exactly.
   deriveAtLarge(base, result);
-  deriveAtLarge(beta, result);
+  deriveAtLarge(betaFitted, result);
+  deriveAtLarge(betaUniform, result);
   return result;
 }
 
@@ -311,4 +350,4 @@ export async function loadBaseline(opts = {}) {
   return buildBaseline(rows, opts);
 }
 
-export default { buildBaseline, loadBaseline, leastSquaresSlope, slopeThroughOrigin, stdev };
+export default { buildBaseline, loadBaseline, leastSquaresSlope, slopeThroughOrigin, medianRatioThroughOrigin, stdev };

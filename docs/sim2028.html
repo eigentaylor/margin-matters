@@ -502,6 +502,11 @@
             <input id="s28Nailbiter" type="checkbox" />
           </span>
         </label>
+        <label title="On: each state's simulated swing is scaled by its own historically-fitted elasticity (how much of a national wave it actually absorbs) — so e.g. a heavily-elastic swing state moves more than a national wave, an inelastic one moves less. Off: every state moves exactly with the national popular vote (beta=1 everywhere). Toggle to A/B whether the per-state fit is actually adding anything.">Elasticity
+          <span class="s28-checkbox-row">
+            <input id="s28Elasticity" type="checkbox" checked />
+          </span>
+        </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>
         <button id="s28Share" class="btn" type="button" title="Copy a link that reproduces this exact setup">Share URL</button>
