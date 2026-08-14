@@ -497,6 +497,9 @@
         <label title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle turbulence
           <input id="s28Turbulence" type="number" min="0.3" max="2.3" step="0.1" value="0.5" />
         </label>
+        <label title="How accurate the polls turn out to be this cycle, as a multiplier on typical polling error. 1.0 = typical. Roughly 0.55 = as clean a call as 2024, 1.9 = as foggy a miss as 2016/2020. This is hidden from the forecast itself — only the final result reveals it.">Polling accuracy this cycle
+          <input id="s28PollTurbulence" type="number" min="0.55" max="1.9" step="0.1" value="1.0" />
+        </label>
         <label title="A second pass, applied after this run's national popular vote is chosen: any state whose margin already landed close to zero gets nudged closer (and can swap order with its neighbors). States that aren't naturally close are left alone, so a landslide NPV still reads as a landslide. May change which candidate wins vs. the same settings with it off.">Nailbiter mode
           <span class="s28-checkbox-row">
             <input id="s28Nailbiter" type="checkbox" />
@@ -505,6 +508,11 @@
         <label title="On: each state's simulated swing is scaled by its own historically-fitted elasticity (how much of a national wave it actually absorbs) — so e.g. a heavily-elastic swing state moves more than a national wave, an inelastic one moves less. Off: every state moves exactly with the national popular vote (beta=1 everywhere). Toggle to A/B whether the per-state fit is actually adding anything.">Elasticity
           <span class="s28-checkbox-row">
             <input id="s28Elasticity" type="checkbox" checked />
+          </span>
+        </label>
+        <label title="Off (default): polling error and win-probability bands stay wide, research-calibrated — close races feel genuinely uncertain deep into the campaign, and only a real landslide NPV calls confidently. On: switches to the original, narrower assumptions — smaller polling misses and win probabilities that resolve to decisive calls sooner.">Confident forecasts
+          <span class="s28-checkbox-row">
+            <input id="s28ConfidentForecasts" type="checkbox" />
           </span>
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>

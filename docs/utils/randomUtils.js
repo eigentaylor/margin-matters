@@ -24,14 +24,19 @@ export function randn(rng) {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-export function randStudentT4(rng) {
+/** Student's t with `df` degrees of freedom (df >= 1, integer). Fatter tails at low df. */
+export function randStudentT(rng, df) {
   const z = randn(rng);
   let v = 0;
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < df; i++) {
     const g = randn(rng);
     v += g * g;
   }
-  return z / Math.sqrt(v / 4);
+  return z / Math.sqrt(v / df);
+}
+
+export function randStudentT4(rng) {
+  return randStudentT(rng, 4);
 }
 
 // Backwards compatibility on window (some legacy code expects globals)
@@ -41,6 +46,7 @@ try {
     try { window.mulberry32 = mulberry32; } catch (e) { }
     try { window.randn = randn; } catch (e) { }
     try { window.randStudentT4 = randStudentT4; } catch (e) { }
+    try { window.randStudentT = randStudentT; } catch (e) { }
   }
 } catch (e) { }
 
@@ -48,5 +54,6 @@ export default {
   hashCode,
   mulberry32,
   randn,
+  randStudentT,
   randStudentT4
 };
