@@ -1974,8 +1974,16 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       if (st.thirdPartyDominant) return;
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
       if (isCalled) {
-        if (st.callLeader === 'D') fixedDEv += st.ev;
-        else if (st.callLeader === 'R') fixedREv += st.ev;
+        // A called unit is normally fixed on its (observed) call - but if
+        // that call has since been publicly corrected (maybeEmitMiscall
+        // already logged the correction, which only happens once this
+        // unit's own count has finished), the true winner is no longer
+        // hidden information: it's sitting in the call log. Keep the MC in
+        // sync with that reveal instead of locking the win probability to
+        // a call that has already been announced wrong on-screen.
+        const effectiveLeader = (st.misCallLogged && st.winner) ? st.winner : st.callLeader;
+        if (effectiveLeader === 'D') fixedDEv += st.ev;
+        else if (effectiveLeader === 'R') fixedREv += st.ev;
         return;
       }
       if (st.type === 'atlarge') liveAl.push(st);
@@ -2315,7 +2323,11 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       reporting,
       ev: st.ev,
       evAllocations: callAllocation,
-      finalAllocations: st.evAllocations ? { ...st.evAllocations } : null,
+      // Starts equal to the call allocation (not the ground-truth final
+      // one) so a fresh call never shows a premature "EV X → Y" arrow;
+      // updateCallLog()'s per-frame refresh reveals the true allocation
+      // only once this unit's count has actually finished (see there).
+      finalAllocations: callAllocation ? { ...callAllocation } : null,
       confidence,
       threshold: thresholdUsed,
       dVotes: metrics ? metrics.dVotesCounted : null,
@@ -2899,7 +2911,18 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
         record.topThirdShare = live.topThirdShare;
         record.totalThirdShare = live.totalThirdShare;
         if (live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
-        if (live.evAllocations) record.finalAllocations = { ...live.evAllocations };
+        // st.evAllocations is a static, ground-truth allocation (the true
+        // final winner's split, computed once in buildStateData) - only
+        // reveal it once this unit's own count has effectively finished,
+        // the same moment maybeEmitMiscall() would log a correction notice.
+        // Otherwise a call that later turns out wrong shows the "EV R 6 →
+        // D 6" arrow the instant it's called, spoiling the outcome before
+        // anything has actually been corrected on-screen.
+        if (live.reporting >= 1 - EPS && live.evAllocations) {
+          record.finalAllocations = { ...live.evAllocations };
+        } else if (record.evAllocations) {
+          record.finalAllocations = { ...record.evAllocations };
+        }
       }
       const tallyWinner = record.actualWinner || record.leader;
       if (tallyWinner === 'D') dRunning += record.ev || 0;
