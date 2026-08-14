@@ -94,6 +94,28 @@ export const PARAMS = {
   baseline: { trendWindow: 5, sigmaWindow: 3, elasticityWindow: 6, trendWeight: 0, betaShrink: 0.5 },
 };
 
+/**
+ * The doc-recommended values for the base constants each reference comment
+ * above points at, as an actual overlay instead of just prose — lets the UI
+ * offer an on/off toggle so the numbers can be felt out in play rather than
+ * only reasoned about. Off by default (PARAMS above is unchanged); flipping
+ * this on is a deliberate A/B, not a silent behavior change.
+ *
+ *   nationalSigma 0.018 -> 0.025  (doc: 0.02-0.03)
+ *   regionShare   0.75  -> 0.87   (doc: same-region corr 0.6-0.9 => share 0.77-0.95)
+ *   unitSigmas    unchanged        (doc: ~0.02, already matched)
+ *   forecast floorScale 0.65 -> 1.0 on both axes — with nationalSigma/unitSigmas
+ *   now representing the doc's target magnitude directly, the extra floor
+ *   shrinkage was what pulled the election-eve band artificially tight.
+ */
+export const RECOMMENDED_CALIBRATION = {
+  poll: { regionShare: 0.87, nationalSigma: 0.025 },
+  forecast: {
+    rel: { floorScale: 1.0 },
+    npv: { floorScale: 1.0 },
+  },
+};
+
 /** Soft clip, lifted from future.js:36. Keeps extreme draws finite without a hard edge. */
 export function softclip(x, L) { return L * Math.tanh(x / L); }
 

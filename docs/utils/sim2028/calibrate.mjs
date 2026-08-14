@@ -17,6 +17,11 @@
  * global. baseline.js's own field coercion (`+r.year` etc.) means the CSV can be
  * handed in as plain strings; no d3.autoType equivalent is needed.
  *
+ * Also runs the same sweep with RECOMMENDED_CALIBRATION applied (the toggle
+ * exposed in the UI as "Doc-recommended calibration"), printed side by side
+ * with the baseline — the fast, numeric half of "try both and see which feels
+ * better," complementing the interactive UI toggle.
+ *
  * Usage: node docs/utils/sim2028/calibrate.mjs [numRuns]
  */
 
@@ -25,7 +30,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { buildBaseline } from './baseline.js';
-import { createSimulation, PARAMS } from './engine.js';
+import { createSimulation, PARAMS, RECOMMENDED_CALIBRATION } from './engine.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CSV_PATH = path.join(__dirname, '..', '..', 'presidential_margins.csv');
@@ -75,11 +80,22 @@ function median(xs) {
   return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
 }
 
-async function main() {
-  const numRuns = parseInt(process.argv[2], 10) || 1500;
-
-  const rows = loadRows(CSV_PATH);
-  const baseline = buildBaseline(rows, PARAMS.baseline);
+/** Run the sweep once under a given poll/forecast params override (mirrors the
+ * merge sim2028.js's startCampaign() does for the "Doc-recommended calibration"
+ * toggle: poll spreads flat, forecast is rebuilt per-axis so floorScale can't
+ * wipe out startScale). Note: `forecast` here only affects the (skipped) Monte
+ * Carlo confidence band, not the truth-vs-poll gap this script measures — the
+ * `forecast` override is accepted/threaded through for completeness/parity
+ * with the UI toggle, but only the `poll` half (nationalSigma/regionShare)
+ * moves these particular numbers. */
+async function runSweep(numRuns, baseline, { poll = {}, forecast = {} } = {}) {
+  const params = {
+    poll: { ...PARAMS.poll, ...poll },
+    forecast: {
+      rel: { ...PARAMS.forecast.rel, ...(forecast.rel || {}) },
+      npv: { ...PARAMS.forecast.npv, ...(forecast.npv || {}) },
+    },
+  };
 
   const nationalErrs = [];
   const stateMaes = [];
@@ -90,6 +106,7 @@ async function main() {
       seed: 1_000_003 * (i + 1),
       baseline,
       skipForecasts: true,
+      params,
     });
 
     const final = sim.snapshots[sim.snapshots.length - 1];
@@ -106,29 +123,41 @@ async function main() {
     pollTurbulences.push(sim.pollTurbulence);
   }
 
-  console.log(`\n=== Calibration over ${numRuns} runs ===\n`);
-  console.log('Overall (all runs pooled):');
+  return { nationalErrs, stateMaes, pollTurbulences };
+}
+
+function report(label, { nationalErrs, stateMaes, pollTurbulences }) {
+  console.log(`--- ${label} ---`);
   console.log(`  National error:  mean ${mean(nationalErrs).toFixed(2)}pt   median ${median(nationalErrs).toFixed(2)}pt`);
   console.log(`  State MAE:       mean ${mean(stateMaes).toFixed(2)}pt   median ${median(stateMaes).toFixed(2)}pt`);
-  console.log('  Doc cheat-sheet: national good/bad ~2/4.5pt | state MAE good/bad ~2.2-2.9/5.1pt\n');
 
-  // Break out by tercile of the drawn pollTurbulence, to confirm the mechanism
-  // actually reproduces a good-year/bad-year split rather than one flat average.
   const idx = pollTurbulences.map((_, i) => i).sort((a, b) => pollTurbulences[a] - pollTurbulences[b]);
   const third = Math.floor(idx.length / 3);
   const buckets = [
-    ['Low pollTurbulence (clean, ~2024-style)', idx.slice(0, third)],
-    ['Mid pollTurbulence (typical)', idx.slice(third, 2 * third)],
-    ['High pollTurbulence (foggy, ~2016/2020-style)', idx.slice(2 * third)],
+    ['low (clean, ~2024-style)', idx.slice(0, third)],
+    ['mid (typical)', idx.slice(third, 2 * third)],
+    ['high (foggy, ~2016/2020-style)', idx.slice(2 * third)],
   ];
-  console.log('By pollTurbulence tercile:');
-  for (const [label, indices] of buckets) {
+  for (const [bucketLabel, indices] of buckets) {
     const nat = mean(indices.map(i => nationalErrs[i]));
     const st = mean(indices.map(i => stateMaes[i]));
     const turb = mean(indices.map(i => pollTurbulences[i]));
-    console.log(`  ${label}: turbulence ${turb.toFixed(2)}x | national ${nat.toFixed(2)}pt | state MAE ${st.toFixed(2)}pt`);
+    console.log(`    pollTurbulence ${bucketLabel}: ${turb.toFixed(2)}x | national ${nat.toFixed(2)}pt | state MAE ${st.toFixed(2)}pt`);
   }
   console.log('');
+}
+
+async function main() {
+  const numRuns = parseInt(process.argv[2], 10) || 1500;
+
+  const rows = loadRows(CSV_PATH);
+  const baseline = buildBaseline(rows, PARAMS.baseline);
+
+  console.log(`\n=== Calibration over ${numRuns} runs ===`);
+  console.log('Doc cheat-sheet: national good/bad ~2/4.5pt | state MAE good/bad ~2.2-2.9/5.1pt\n');
+
+  report('Baseline (current app defaults)', await runSweep(numRuns, baseline));
+  report('Doc-recommended calibration', await runSweep(numRuns, baseline, RECOMMENDED_CALIBRATION));
 }
 
 main().catch(err => {
