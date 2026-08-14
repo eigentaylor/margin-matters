@@ -2147,6 +2147,16 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       }
     });
     state.unitPosteriors = posteriors;
+    // Solved every frame, like state.unitPosteriors above (O(units+regions),
+    // trivial even 480x in a tight fast-forward loop) - NOT gated behind
+    // `settled`/the MC's own throttle below. collectLogEntry() (the
+    // interval-log/export snapshot) runs during every intermediate step of
+    // a big seek, not just the final settled one; if this were throttled
+    // the same as the expensive MC, every exported timeline entry from a
+    // fast-forwarded run would freeze at whatever swing estimate existed
+    // before the seek started, defeating the point of a scrubbable
+    // "when did the model notice" timeline.
+    state.swingEstimate = solveLiveSwing(swingObservations);
 
     if (!settled) return;
 
@@ -2155,7 +2165,6 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     if (!isFirst && !isFinal && timeMinutes - state.lastProbUpdateTime < PROB_UPDATE_INTERVAL_MINUTES) return;
     state.lastProbUpdateTime = timeMinutes;
 
-    state.swingEstimate = solveLiveSwing(swingObservations);
     state.nationalWinProb = runNationalWinProbabilityMC(timeMinutes, posteriors);
     renderWinProbLine(state.nationalWinProb);
 
@@ -3676,7 +3685,17 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         pvMargin: totalCounted > 0 ? ((totalDVotes - totalRVotes) / totalCounted) : 0,
         npvCalledFor: state.npvCallRecord ? state.npvCallRecord.leader : null,
         npvCalledAtMinutes: state.npvCallRecord ? state.npvCallRecord.time : null,
-        npvConfidence: state.npvCallRecord ? state.npvCallRecord.confidence : null
+        npvConfidence: state.npvCallRecord ? state.npvCallRecord.confidence : null,
+        // Live swing hierarchy (docs/utils/electionNight/liveSwing.js) at
+        // this checkpoint - a scrubbable timeline of when the model's own
+        // honest signal noticed a national/regional swing away from the
+        // priors, useful for reviewing how a given night unfolded.
+        swingNational: state.swingEstimate ? state.swingEstimate.national.mean : null,
+        swingNationalSigma: state.swingEstimate ? state.swingEstimate.national.sigma : null,
+        swingRegions: state.swingEstimate
+          ? Object.fromEntries(Array.from(state.swingEstimate.regions.entries())
+            .map(([region, r]) => [region, { mean: r.mean, sigma: r.sigma, nObs: r.nObs }]))
+          : {}
       },
       units
     };
@@ -3775,6 +3794,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       lines.push(`Pop Vote:    D: ${s.totalDVotes.toLocaleString()}  R: ${s.totalRVotes.toLocaleString()}  O: ${s.totalOVotes.toLocaleString()}  (${pvDir}+${pvPct}%)`);
       lines.push(`Total Counted: ${s.totalCounted.toLocaleString()}`);
       lines.push(`NPV Called:  ${s.npvCalledFor ? `${s.npvCalledFor} at ${formatTimeLabel(s.npvCalledAtMinutes)} (confidence ${s.npvConfidence.toFixed(2)})` : '-'}`);
+      if (s.swingNational != null) {
+        const swingPct = Math.abs(s.swingNational * 100).toFixed(2);
+        const swingLabel = s.swingNational > 0 ? `R+${swingPct}` : (s.swingNational < 0 ? `D+${swingPct}` : 'EVEN');
+        const swingSigmaPct = s.swingNationalSigma != null ? (s.swingNationalSigma * 100).toFixed(2) : '?';
+        const regionParts = Object.entries(s.swingRegions || {})
+          .map(([region, r]) => `${region}: ${(r.mean * 100 >= 0 ? '+' : '')}${(r.mean * 100).toFixed(1)}pt (n=${r.nObs})`);
+        lines.push(`Live Swing:  National ${swingLabel}pt (+/-${swingSigmaPct}pt)${regionParts.length ? '  |  ' + regionParts.join(', ') : ''}`);
+      }
       lines.push('');
 
       // Header for state table
@@ -3822,6 +3849,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       'SummaryPhantomDEV', 'SummaryPhantomREV', 'SummaryPhantomOEV',
       'SummaryDVotes', 'SummaryRVotes', 'SummaryOVotes', 'SummaryTotalCounted', 'SummaryPVMargin',
       'SummaryNpvCalledFor', 'SummaryNpvCalledAtMinutes', 'SummaryNpvConfidence',
+      'SummarySwingNational', 'SummarySwingNationalSigma',
       'Unit', 'Abbr', 'EV', 'Reporting', 'Leader', 'Called', 'CalledFor',
       'Margin', 'MarginStr', 'Confidence',
       'DVotes', 'RVotes', 'OVotes', 'CountedVotes', 'RemainingVotes',
@@ -3844,6 +3872,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           s.phantomDEV, s.phantomREV, s.phantomOEV,
           s.totalDVotes, s.totalRVotes, s.totalOVotes, s.totalCounted, s.pvMargin.toFixed(6),
           s.npvCalledFor || '', s.npvCalledAtMinutes != null ? s.npvCalledAtMinutes.toFixed(2) : '', s.npvConfidence != null ? s.npvConfidence.toFixed(4) : '',
+          s.swingNational != null ? s.swingNational.toFixed(6) : '', s.swingNationalSigma != null ? s.swingNationalSigma.toFixed(6) : '',
           u.unit,
           u.abbr,
           u.ev,
