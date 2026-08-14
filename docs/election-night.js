@@ -2058,6 +2058,13 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     const rng = mulberry32(seed >>> 0);
     const marginByUnit = new Map();
     const demEvSamples = new Float64Array(PROB_MC_SIMS);
+    // Per-unit D-win tally across the same sims, mirroring
+    // docs/utils/sim2028/forecast.js's own demWinCounts/stateProb pattern -
+    // lets the "still counting" cards show a win% that reflects the shared
+    // swing signal (e.g. other Rust Belt states trending R) rather than
+    // only that unit's own reported votes.
+    const demWinCounts = new Int32Array(n);
+    const alDemWinCounts = new Int32Array(liveAl.length);
     let demWins = 0;
 
     for (let s = 0; s < PROB_MC_SIMS; s++) {
@@ -2068,9 +2075,10 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         const delta = unitSwingDelta(swing, st.unitKey, regionByUnit.get(st.unitKey), sample, rng, drawFn);
         const margin = st.priorMargin - delta;
         marginByUnit.set(st.unitKey, margin);
-        if (margin >= 0) demEv += st.ev;
+        if (margin >= 0) { demEv += st.ev; demWinCounts[i]++; }
       }
-      for (const st of liveAl) {
+      for (let a = 0; a < liveAl.length; a++) {
+        const st = liveAl[a];
         const parts = state.atLargeParts ? state.atLargeParts.get(st.unitKey) : null;
         if (!parts || !parts.length) continue;
         let acc = 0, wsum = 0;
@@ -2080,11 +2088,15 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           acc += m * p.weight;
           wsum += p.weight;
         }
-        if (wsum > EPS && acc / wsum >= 0) demEv += st.ev;
+        if (wsum > EPS && acc / wsum >= 0) { demEv += st.ev; alDemWinCounts[a]++; }
       }
       demEvSamples[s] = demEv;
       if (demEv >= needed) demWins++;
     }
+
+    const stateProb = new Map();
+    for (let i = 0; i < n; i++) stateProb.set(liveUnits[i].unitKey, demWinCounts[i] / PROB_MC_SIMS);
+    for (let a = 0; a < liveAl.length; a++) stateProb.set(liveAl[a].unitKey, alDemWinCounts[a] / PROB_MC_SIMS);
 
     // [5%,95%] EV quantile spread, same computation forecast.js's own
     // evRange90 already does — exposed for docs/utils/electionNight/
@@ -2099,7 +2111,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // false-100% guard in docs/utils/formatters.js) since the exact-math
     // locked/impossible cases above already handle real certainty.
     const rawProbD = demWins / PROB_MC_SIMS;
-    return { probD: Math.min(0.999, Math.max(0.001, rawProbD)), locked: false, sims: PROB_MC_SIMS, evRange90 };
+    return { probD: Math.min(0.999, Math.max(0.001, rawProbD)), locked: false, sims: PROB_MC_SIMS, evRange90, stateProb };
   }
 
   // Called every renderAt() frame. The cheap per-unit posteriors always
@@ -2901,6 +2913,15 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           ev: isFinite(st.ev) ? st.ev : 0,
           winProb: (() => {
             if (st.thirdPartyDominant) return null;
+            // Prefer the Monte Carlo's own per-unit tally when available -
+            // it reflects the shared swing signal (e.g. a Rust Belt state
+            // trending R because its neighbors are), not just this unit's
+            // own reported votes. Falls back to the simpler posterior-only
+            // estimate before the first MC run, or for a called unit (the
+            // MC only tallies live units).
+            const mcProb = state.nationalWinProb && state.nationalWinProb.stateProb
+              ? state.nationalWinProb.stateProb.get(st.unitKey) : null;
+            if (isFinite(mcProb)) return mcProb;
             const post = state.unitPosteriors ? state.unitPosteriors.get(st.unitKey) : null;
             return post ? winProbFromPosterior(post.margin, post.sigma) : null;
           })()
