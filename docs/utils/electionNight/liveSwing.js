@@ -33,6 +33,27 @@
  * and the `+ sigmaR^2` term in each region's tau is a principled floor - "no
  * matter how well-counted one region is, it's still only one noisy sample of
  * the shared national mood" - not an arbitrary minimum-sample cutoff.
+ *
+ * KNOWN LIMITATION (documented, not silently swept under the rug): sigmaN/
+ * sigmaR/sigmaI are derived from POLL_ERROR_SPEC, which is calibrated to
+ * MODERN state-level polling error and applied uniformly across all 41
+ * historical years by buildSyntheticPollPriors() - including 1864-1930s
+ * elections with no scientific polling and very different political
+ * geography than docs/utils/sim2028/regions.js's hand-curated (modern)
+ * regional buckets assume. docs/utils/electionNight/validateWinProb.mjs's
+ * "swing honesty" check (comparing the solved national swing's z-score
+ * against a standard-normal expectation across the historical corpus) shows
+ * this mismatch concretely: the z-score distribution is wider than a
+ * well-calibrated model would produce (std well above 1), concentrated in
+ * pre-1940 years - the solve is honest about ITS OWN math (verified by the
+ * unit tests in tests/liveSwing.test.mjs) but inherits a real limitation
+ * from applying one modern calibration everywhere. This does not appear to
+ * meaningfully hurt the live win-probability's own calibration (measured
+ * MAE improved, not worsened, once this module was wired in - see
+ * validateWinProb.mjs's output) or the swing-recovery accuracy (worst
+ * historical cases still converge to within a few points of the true final
+ * swing) - but a year-aware or dynamically-estimated calibration is the
+ * natural next step if this is ever revisited.
  */
 
 import { regionOf } from '../sim2028/regions.js';

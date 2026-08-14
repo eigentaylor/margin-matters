@@ -4,11 +4,13 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
 import { getUnitCandidateLastNames } from './utils/candidateNames.js';
-import { hashCode, mulberry32, randn, randStudentT, randStudentT4 } from './utils/randomUtils.js';
+import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
 import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
+import { regionOf } from './utils/sim2028/regions.js';
+import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
 
 (function () {
   'use strict';
@@ -208,6 +210,8 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     lastNationalTotals: null,
     atLargeParts: null,
     unitPosteriors: null,
+    swingEstimate: null,
+    priorNpvMargin: 0,
     nationalWinProb: null,
     lastProbUpdateTime: -Infinity,
     confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
@@ -612,6 +616,8 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     state.lastNationalTotals = null;
     state.atLargeParts = null;
     state.unitPosteriors = null;
+    state.swingEstimate = null;
+    state.priorNpvMargin = 0;
     state.nationalWinProb = null;
     state.lastProbUpdateTime = -Infinity;
     // Initialize log state for this simulation
@@ -698,6 +704,19 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       buildSyntheticPollPriors(data, year, pvValue);
     }
     state.atLargeParts = buildAtLargeParts(data);
+    // Vote-weighted mean of the frozen priors - debug/validation only (e.g.
+    // docs/utils/electionNight/validateWinProb.mjs's swing-recovery check),
+    // never read by the live algorithm. A derived summary of the already-
+    // public prior, not a ground-truth leak.
+    state.priorNpvMargin = (() => {
+      let acc = 0, wsum = 0;
+      data.forEach(st => {
+        if (!st.pvWeight || !isFinite(st.priorMargin)) return;
+        acc += st.priorMargin * st.totalVotes;
+        wsum += st.totalVotes;
+      });
+      return wsum > EPS ? acc / wsum : 0;
+    })();
 
     let minStart = Infinity;
     let maxEnd = -Infinity;
@@ -853,6 +872,8 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     state.lastNationalTotals = null;
     state.atLargeParts = null;
     state.unitPosteriors = null;
+    state.swingEstimate = null;
+    state.priorNpvMargin = 0;
     state.nationalWinProb = null;
     state.lastProbUpdateTime = -Infinity;
     // Reset log state
@@ -1967,12 +1988,14 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
   // party's total — a majority of the TRUE EV pool is required, mirroring
   // real 1824/1836-style outcomes) are FIXED, not resampled: a called unit
   // shouldn't flip in the simulation, and fixing it shrinks compute as the
-  // night progresses. Everything else is drawn fresh every simulation via
-  // the same correlated-region error model docs/utils/sim2028/forecast.js
-  // uses, fed each live unit's current posterior (§computeUnitPosterior) as
-  // its draw sigma. At-large (ME-AL/NE-AL) units are never drawn directly —
-  // each draw derives their margin as the vote-weighted composite of their
-  // districts' margins for that same draw (state.atLargeParts).
+  // night progresses. Everything else is drawn fresh every simulation from
+  // the live swing hierarchy (docs/utils/electionNight/liveSwing.js,
+  // state.swingEstimate) rather than independent per-unit noise, which is
+  // what lets already-reported units inform not-yet-reported ones in the
+  // same region/nationally. At-large (ME-AL/NE-AL) units are never drawn
+  // directly — each draw derives their margin as the vote-weighted
+  // composite of their districts' margins for that same draw
+  // (state.atLargeParts).
   function runNationalWinProbabilityMC(timeMinutes, posteriors) {
     const totalPool = state.totalEvPool || 538;
     const needed = Math.floor(totalPool / 2) + 1;
@@ -2013,42 +2036,24 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       return { probD: (hardLockedD || impossibleR) ? 1 : 0, locked: true, sims: 0, evRange90: null };
     }
 
-    // createRegionalErrorModel's drawRelInto() vote-weighted-recenters every
-    // draw to exactly zero (docs/utils/sim2028/errorModel.js:119-122) - by
-    // design, per that file's own comment: "the national factor deliberately
-    // lives on the NPV axis instead" (drawNpv), added back on top. That
-    // national axis is never added back here, even though each unit's own
-    // posterior sigma was built assuming sqrt(unitSigmas^2+nationalSigma^2)
-    // - i.e. a nationwide-correlated component worth roughly 61% of the
-    // variance. Split each unit's sigma into its national-shared and
-    // region/idiosyncratic-shared portions (both derived straight from
-    // POLL_ERROR_SPEC, no independently-tunable constants), feed only the
-    // smaller relative portion to the regional model, and draw one shared
-    // national shock per simulation - restoring the missing correlation
-    // without changing any unit's marginal variance.
-    const NAT_SHARE = POLL_ERROR_SPEC.nationalSigma / Math.hypot(POLL_ERROR_SPEC.nationalSigma, POLL_ERROR_SPEC.unitSigmas);
-    const REL_SHARE = POLL_ERROR_SPEC.unitSigmas / Math.hypot(POLL_ERROR_SPEC.nationalSigma, POLL_ERROR_SPEC.unitSigmas);
-
-    const units = liveUnits.map(st => st.unitKey);
-    const weights = new Map(liveUnits.map(st => [st.unitKey, st.totalVotes]));
-    const unitSigmaMap = new Map();
-    const natSigmaMap = new Map();
-    liveUnits.forEach(st => {
-      const post = posteriors.get(st.unitKey);
-      const fullSigma = Math.max(1e-4, post ? post.sigma : REMAINING_DELTA_SIGMA_BASE);
-      unitSigmaMap.set(st.unitKey, fullSigma * REL_SHARE);
-      natSigmaMap.set(st.unitKey, fullSigma * NAT_SHARE);
-    });
-    const model = createRegionalErrorModel({
-      units,
-      weights,
-      unitSigmas: unitSigmaMap,
-      regionShare: POLL_ERROR_SPEC.regionShare,
-      df: POLL_ERROR_SPEC.df
-    });
+    // Sample from the live swing hierarchy (docs/utils/electionNight/
+    // liveSwing.js) instead of independent, memoryless noise per unit.
+    // state.swingEstimate is solved just before this call (same throttle,
+    // updateNationalWinProbability) from every currently-reporting unit's
+    // own deviation from its frozen prior - this is what actually restores
+    // the missing national/regional correlation (createRegionalErrorModel's
+    // drawRelInto() vote-weighted-recenters every draw to exactly zero by
+    // design: "the national factor deliberately lives on the NPV axis
+    // instead," docs/utils/sim2028/errorModel.js:30-31,119-122) AND lets
+    // already-reported units inform not-yet-reported ones, safely - see
+    // liveSwing.js's module docstring for why a couple of noisy early
+    // reporters can't swing this on their own.
+    const swing = state.swingEstimate || solveLiveSwing([]);
+    const allRegions = new Set(liveUnits.map(st => regionOf(st.unitKey)).filter(Boolean));
+    const regionByUnit = new Map(liveUnits.map(st => [st.unitKey, regionOf(st.unitKey)]));
+    const drawFn = makeNormalizedTDraw(POLL_ERROR_SPEC.df);
 
     const n = liveUnits.length;
-    const err = new Float64Array(n);
     const seed = hashCode(`prob:${state.year}:${state.pvRandomSeed || 0}:${Math.round(timeMinutes)}`);
     const rng = mulberry32(seed >>> 0);
     const marginByUnit = new Map();
@@ -2056,18 +2061,12 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     let demWins = 0;
 
     for (let s = 0; s < PROB_MC_SIMS; s++) {
-      model.drawRelInto(rng, 1, err);
-      // Shared national shock: one draw per simulation, scaled per-unit by
-      // that unit's own natSigma so every live unit moves in the same
-      // direction that draw, magnitude-weighted by its own uncertainty -
-      // same t-distribution convention drawRelInto already uses internally.
-      const zN = randStudentT(rng, POLL_ERROR_SPEC.df);
+      const sample = sampleSwing(swing, allRegions, rng, drawFn);
       let demEv = fixedDEv;
       for (let i = 0; i < n; i++) {
         const st = liveUnits[i];
-        const post = posteriors.get(st.unitKey);
-        const natSigma = natSigmaMap.get(st.unitKey) || 0;
-        const margin = (post ? post.margin : 0) + err[i] + natSigma * zN;
+        const delta = unitSwingDelta(swing, st.unitKey, regionByUnit.get(st.unitKey), sample, rng, drawFn);
+        const margin = st.priorMargin - delta;
         marginByUnit.set(st.unitKey, margin);
         if (margin >= 0) demEv += st.ev;
       }
@@ -2113,9 +2112,27 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     if (!state.stateData.length) return;
 
     const posteriors = new Map();
+    // Built in the same pass as the (already-every-frame) posteriors loop
+    // so the live-swing solve below doesn't need a second walk over
+    // state.stateData. Includes ALREADY-CALLED units too, not just live
+    // ones - a unit called early with a healthy vote count is one of the
+    // most informative observations about the national mood, even though
+    // its own EVs are already fixed for the MC (see liveSwing.js).
+    const swingObservations = [];
     state.stateData.forEach(st => {
       if (st.thirdPartyDominant || !st.latestMetrics) return;
       posteriors.set(st.unitKey, computeUnitPosterior(st, st.latestMetrics));
+      if (st.priorSigma > 0) {
+        const obs = computeUnitObservation(st, st.latestMetrics);
+        if (obs.hasObs) {
+          swingObservations.push({
+            unitKey: st.unitKey,
+            priorMargin: st.priorMargin,
+            observedMargin: obs.observedMargin,
+            obsSigma: obs.obsSigma
+          });
+        }
+      }
     });
     state.unitPosteriors = posteriors;
 
@@ -2126,6 +2143,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     if (!isFirst && !isFinal && timeMinutes - state.lastProbUpdateTime < PROB_UPDATE_INTERVAL_MINUTES) return;
     state.lastProbUpdateTime = timeMinutes;
 
+    state.swingEstimate = solveLiveSwing(swingObservations);
     state.nationalWinProb = runNationalWinProbabilityMC(timeMinutes, posteriors);
     renderWinProbLine(state.nationalWinProb);
 
@@ -2154,7 +2172,24 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
           // EV margin (share of the full pool) — the more relevant signal
           // for "was this actually an electoral-college landslide" when
           // deciding whether an early high-confidence call was justified.
-          actualEvMargin: (state.nationalFinalDEv - state.nationalFinalREv) / Math.max(1, state.totalEvPool || 538)
+          actualEvMargin: (state.nationalFinalDEv - state.nationalFinalREv) / Math.max(1, state.totalEvPool || 538),
+          // Live swing hierarchy (docs/utils/electionNight/liveSwing.js) —
+          // swingNationalZ is the "honesty" statistic: across many samples
+          // it should look roughly standard-normal. A nonzero early-game
+          // mean is the fingerprint of systematic early-count contamination
+          // (see createBiasParams's center-compression bias), not a real
+          // national swing — this is what tells us whether that risk is
+          // actually a problem, rather than guessing at a correction.
+          swingNational: state.swingEstimate ? state.swingEstimate.national.mean : null,
+          swingNationalSigma: state.swingEstimate ? state.swingEstimate.national.sigma : null,
+          swingNationalZ: (state.swingEstimate && state.swingEstimate.national.sigma > EPS)
+            ? state.swingEstimate.national.mean / state.swingEstimate.national.sigma : null,
+          swingRegions: state.swingEstimate
+            ? Object.fromEntries(Array.from(state.swingEstimate.regions.entries())
+              .map(([region, r]) => [region, { mean: r.mean, sigma: r.sigma, nObs: r.nObs }]))
+            : {},
+          swingNObs: state.swingEstimate ? state.swingEstimate.nObs : 0,
+          priorNpvMargin: state.priorNpvMargin
         });
       }
     } catch (e) { /* debug instrumentation only */ }
