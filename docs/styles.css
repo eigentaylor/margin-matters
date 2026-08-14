@@ -63,11 +63,21 @@ a:hover {
   transition: margin 0.3s ease
 }
 
-/* Shift container left when election night panel is visible on medium screens */
-@media (min-width: 1200px) and (max-width: 1700px) {
+/* Shift the main container left to make room for the election-night call
+   log's dedicated sidebar (see the #enLogPanel min-width:1201px rules) so
+   it never overlaps the map. Below that width the log panel becomes a
+   collapsible bottom sheet instead (see max-width:1200px rules) and no
+   shift is needed. */
+@media (min-width: 1201px) {
   .container.en-active {
     margin-left: auto;
-    margin-right: calc(280px + 32px);
+    margin-right: calc(380px + 32px);
+  }
+}
+
+@media (min-width: 1600px) {
+  .container.en-active {
+    margin-right: calc(440px + 32px);
   }
 }
 
@@ -1830,6 +1840,36 @@ body.slider-dragging * {
   #enLogPanel {
     padding: 12px;
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Above the bottom-sheet breakpoint, give the call log its own full-height
+   sidebar along the right edge instead of a floating card, so it actually
+   uses the room the wide layout has to spare rather than competing for a
+   small overlay footprint. */
+@media (min-width: 1201px) {
+  #enLogPanel {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 380px;
+    max-height: none;
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.4);
+    padding: 20px 18px;
+  }
+
+  .en-log-body {
+    max-height: none;
+  }
+}
+
+@media (min-width: 1600px) {
+  #enLogPanel {
+    width: 440px;
   }
 }
 
