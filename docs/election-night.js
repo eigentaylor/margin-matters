@@ -37,6 +37,23 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     return Math.max(MIN_SPEED_MULTIPLIER, Math.min(MAX_SPEED_MULTIPLIER, v));
   }
 
+  // Round to 3 decimals to avoid float noise (e.g. 0.5 - 0.05 = 0.44999999999999996)
+  // while still preserving any finer value the user typed directly.
+  function roundSpeed(v) {
+    return Math.round(v * 1000) / 1000;
+  }
+
+  // Clamp/apply a new speed value to state and sync the input's displayed
+  // value. Shared by the text input's blur/change handler and the +/-
+  // stepper buttons so they all funnel through the same validation.
+  function setSpeed(v) {
+    const clamped = clampSpeed(v);
+    const finalVal = clamped != null ? clamped : state.speedMultiplier;
+    state.speedMultiplier = finalVal;
+    if (elements.speed) elements.speed.value = String(finalVal);
+    return finalVal;
+  }
+
   const formatLean = value => {
     if (!isFinite(value)) return 'ERROR';
     if (typeof leanStr === 'function') return leanStr(value);
@@ -72,6 +89,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   const MIN_SPEED_MULTIPLIER = 0.01;
   const MAX_SPEED_MULTIPLIER = 100;
   const DEFAULT_SPEED_MULTIPLIER = 0.5;
+  const SPEED_STEP = 0.05;
   // Visual constants for uncalled/tossup styling
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
@@ -165,6 +183,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     npvMisCallLogged: false,
     nationalFinalDVotes: 0,
     nationalFinalRVotes: 0,
+    lastNationalTotals: null,
     confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
     pvRandomCache: null,
     pvRandomCacheMode: null,
@@ -183,6 +202,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     toggle: null,
     reset: null,
     speed: null,
+    speedDown: null,
+    speedUp: null,
     pvMode: null,
     pvDisplay: null,
     timeLabel: null,
@@ -245,6 +266,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     elements.toggle = document.getElementById('enToggle');
     elements.reset = document.getElementById('enReset');
     elements.speed = document.getElementById('enSpeed');
+    elements.speedDown = document.getElementById('enSpeedDown');
+    elements.speedUp = document.getElementById('enSpeedUp');
     elements.pvMode = document.getElementById('enPvMode');
     elements.pvDisplay = document.getElementById('enPvDisplay');
     elements.timeLabel = document.getElementById('enTime');
@@ -316,15 +339,16 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         const val = clampSpeed(parseFloat(elements.speed.value));
         if (val != null) state.speedMultiplier = val;
       });
-      elements.speed.addEventListener('change', () => {
-        // On blur/commit, snap the field's displayed value to the clamped
-        // number so invalid input (0, negative, non-numeric, absurdly
-        // large) doesn't linger visibly.
-        const val = clampSpeed(parseFloat(elements.speed.value));
-        const finalVal = val != null ? val : state.speedMultiplier;
-        state.speedMultiplier = finalVal;
-        elements.speed.value = String(finalVal);
-      });
+      // On blur/commit, snap the field's displayed value to the clamped
+      // number so invalid input (0, negative, non-numeric, absurdly
+      // large) doesn't linger visibly.
+      elements.speed.addEventListener('change', () => setSpeed(parseFloat(elements.speed.value)));
+    }
+    if (elements.speedDown) {
+      elements.speedDown.addEventListener('click', () => setSpeed(roundSpeed(state.speedMultiplier - SPEED_STEP)));
+    }
+    if (elements.speedUp) {
+      elements.speedUp.addEventListener('click', () => setSpeed(roundSpeed(state.speedMultiplier + SPEED_STEP)));
     }
 
     if (elements.pvMode) {
@@ -450,6 +474,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.callRecords = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
+    state.lastNationalTotals = null;
     // Initialize log state for this simulation
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -654,6 +679,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.callRecords = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
+    state.lastNationalTotals = null;
     // Reset log state
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -1442,6 +1468,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       maybeEmitMiscall(st, metrics, timeMinutes);
     });
 
+    state.lastNationalTotals = { dCounted, rCounted, oCounted, countedVotes };
     maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
     maybeEmitNpvMiscall(countedVotes, timeMinutes);
 
@@ -1603,6 +1630,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       try {
         const computedColor = result.color;
         const computedColorMargin = result.colorMargin;
+        const computedConfidence = result.confidence;
         const computedCountedVotes = isFinite(result.countedVotes) ? result.countedVotes : 0;
 
         // Merge target metrics but preserve computed color/colorMargin when
@@ -1612,6 +1640,12 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           result.color = computedColor;
           result.colorMargin = computedColorMargin;
         }
+        // targetMetrics.confidence is a hardcoded 1 (see buildStateData),
+        // which would claim false certainty on a genuine exact-vote tie.
+        // calculateConfidence() already correctly returns 0 for a tie at
+        // full reporting (no clear leader), so always prefer the freshly
+        // computed value over the hardcoded one.
+        result.confidence = computedConfidence;
       } catch (e) {
         // Fallback to simple merge if anything goes wrong
         result = { ...result, ...st.targetMetrics };
@@ -1684,6 +1718,30 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (dCounted >= rCounted && dCounted >= oCounted) return 'D';
     if (rCounted >= dCounted && rCounted >= oCounted) return 'R';
     return 'O';
+  }
+
+  // Accent color for an uncalled/still-counting race: blends from neutral
+  // gray toward the leader's full-saturation party color (the same
+  // safeMarginToColor scale the map uses) as confidence approaches the
+  // active call threshold, so a race visibly "pops" the closer it gets to
+  // being called. Mirrors the reporting-driven brighten effect already
+  // used for map coloring (see the blendColors/NEUTRAL_COLOR usage in
+  // computeMetrics), but driven by confidence-vs-threshold instead.
+  function confidenceAccentColor(leader, margin, confidence, threshold) {
+    if (!leader) return NEUTRAL_COLOR;
+    const baseColor = leader === 'O' ? THIRD_PARTY_COLOR : safeMarginToColor(margin || 0, false);
+    const safeThreshold = Math.max(EPS, isFinite(threshold) ? threshold : DEFAULT_CONFIDENCE_THRESHOLD);
+    const closeness = Math.max(0, Math.min(1, (isFinite(confidence) ? confidence : 0) / safeThreshold));
+    const intensity = Math.pow(closeness, 0.6);
+    return intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, intensity);
+  }
+
+  // Full-saturation accent color for an already-called line (state or NPV):
+  // no blending needed since the outcome is settled, just the party's
+  // margin-shaded color from the same scale the map/uncalled cards use.
+  function calledAccentColor(leader, margin) {
+    if (!leader) return NEUTRAL_COLOR;
+    return leader === 'O' ? THIRD_PARTY_COLOR : safeMarginToColor(margin || 0, false);
   }
 
   function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
@@ -2312,6 +2370,34 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         return (a.displayLabel || '').localeCompare(b.displayLabel || '');
       });
 
+    // National popular vote has no EV weight to score against the state
+    // races above, so pin it as its own leading card (when not yet called
+    // and counting has started) rather than force it into that scoring.
+    let npvUncalledCandidate = null;
+    if (!state.npvCallRecord && state.lastNationalTotals && state.totalEligibleVotes > EPS) {
+      const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
+      if (countedVotes > EPS) {
+        const leader = nationalLeader(dCounted, rCounted, oCounted);
+        const margin = countedVotes > EPS ? (dCounted - rCounted) / countedVotes : 0;
+        npvUncalledCandidate = {
+          isNpv: true,
+          unitKey: 'NPV',
+          displayLabel: 'National Popular Vote',
+          confidence: (() => {
+            const c = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+            return isFinite(c) ? c : 0;
+          })(),
+          reporting: countedVotes / state.totalEligibleVotes,
+          remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
+          leader,
+          margin,
+          marginStr: leader === 'O' ? 'Other lead' : formatLean(margin),
+          voteMargin: Math.round(dCounted - rCounted),
+          ev: 0
+        };
+      }
+    }
+
     const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
     const callLines = [];
     const signatureParts = [];
@@ -2355,12 +2441,16 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const infoJoined = infoParts.filter(Boolean).join(', ');
       const evSigCall = record.evAllocations ? `${record.evAllocations.D || 0}-${record.evAllocations.R || 0}-${record.evAllocations.O || 0}` : 'na';
       const evSigFinal = record.finalAllocations ? `${record.finalAllocations.D || 0}-${record.finalAllocations.R || 0}-${record.finalAllocations.O || 0}` : 'na';
+      const callNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
+        ? (record.dVotes - record.rVotes) / record.countedVotes
+        : 0;
       const callLine = {
         kind: 'call',
         time: record.time,
-        className: 'en-log-entry',
+        className: 'en-log-entry en-log-called',
         text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${infoJoined})`,
-        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}:${evSigCall}:${evSigFinal}`
+        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}:${evSigCall}:${evSigFinal}`,
+        accentColor: calledAccentColor(record.leader, callNumericMargin)
       };
       callLines.push(callLine);
       signatureParts.push(callLine.signature);
@@ -2427,12 +2517,16 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       .filter(rec => rec.kind === 'npv_call')
       .map(record => {
         const text = formatNpvCallText(record);
+        const npvNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
+          ? (record.dVotes - record.rVotes) / record.countedVotes
+          : 0;
         return {
           kind: 'npv_call',
           time: record.time,
-          className: 'en-log-entry en-log-npv',
+          className: 'en-log-entry en-log-npv en-log-called',
           text,
-          signature: `npv_call:${record.leader}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}`
+          signature: `npv_call:${record.leader}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}`,
+          accentColor: calledAccentColor(record.leader, npvNumericMargin)
         };
       });
     npvLines.forEach(line => signatureParts.push(line.signature));
@@ -2469,6 +2563,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const repVal = isFinite(c.reporting) ? c.reporting : -1;
       return `${c.unitKey}:${confVal.toFixed(3)}:${repVal.toFixed(3)}`;
     });
+    if (npvUncalledCandidate) {
+      const confVal = isFinite(npvUncalledCandidate.confidence) ? npvUncalledCandidate.confidence : -1;
+      const repVal = isFinite(npvUncalledCandidate.reporting) ? npvUncalledCandidate.reporting : -1;
+      uncalledSignatureParts.unshift(`NPV:${confVal.toFixed(3)}:${repVal.toFixed(3)}`);
+    }
     const uncalledSignature = uncalledSignatureParts.join('|');
 
     const shouldUpdateLog = readySignature !== state.lastLogKey;
@@ -2489,6 +2588,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
             const line = document.createElement('div');
             line.className = lineInfo.className;
             line.textContent = lineInfo.text;
+            if (lineInfo.accentColor) {
+              line.style.borderLeftColor = lineInfo.accentColor;
+              const [r, g, b] = hexToRgb(lineInfo.accentColor);
+              line.style.background = `rgba(${r}, ${g}, ${b}, 0.1)`;
+            }
             frag.appendChild(line);
           });
           logEl.appendChild(frag);
@@ -2508,23 +2612,24 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       if (elements.logUncalled) {
         const container = elements.logUncalled;
         container.innerHTML = '';
-        if (uncalledCandidates.length) {
+        const allUncalled = npvUncalledCandidate ? [npvUncalledCandidate, ...uncalledCandidates] : uncalledCandidates;
+        if (allUncalled.length) {
           const title = document.createElement('div');
           title.className = 'en-log-section-title';
           title.textContent = 'STILL COUNTING (UNCALLED)';
           container.appendChild(title);
           const cardsContainer = document.createElement('div');
           cardsContainer.className = 'en-log-uncalled-cards';
-          uncalledCandidates.forEach(candidate => {
+          const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+          allUncalled.forEach(candidate => {
             const card = document.createElement('div');
-            card.className = 'en-log-uncalled-card';
+            card.className = candidate.isNpv ? 'en-log-uncalled-card en-log-npv-card' : 'en-log-uncalled-card';
             const label = candidate.ev > 0
               ? `${candidate.displayLabel} (${candidate.ev} EV)`
               : candidate.displayLabel;
+            // Leader is conveyed by the card's accent color/glow (below)
+            // rather than a "D/R lead" text line.
             const infoParts = [];
-            if (candidate.leader) {
-              infoParts.push(`${formatLeaderShort(candidate.leader)} lead`);
-            }
             const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
             if (marginDisplay && marginDisplay !== 'None') {
               if (marginDisplay === 'EVEN') {
@@ -2547,6 +2652,16 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
               infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
             }
             card.textContent = `${label} – ${infoParts.join(' · ')}`;
+
+            const accentColor = confidenceAccentColor(candidate.leader, candidate.margin, candidate.confidence, threshold);
+            card.style.borderLeftColor = accentColor;
+            const [ar, ag, ab] = hexToRgb(accentColor);
+            const closeness = threshold > EPS ? Math.min(1, (candidate.confidence || 0) / threshold) : 0;
+            card.style.background = `rgba(${ar}, ${ag}, ${ab}, ${(0.05 + closeness * 0.16).toFixed(3)})`;
+            if (closeness >= 0.85) {
+              card.classList.add('en-log-hot');
+              card.style.setProperty('--en-pulse-color', `rgba(${ar}, ${ag}, ${ab}, 0.55)`);
+            }
             cardsContainer.appendChild(card);
           });
           container.appendChild(cardsContainer);

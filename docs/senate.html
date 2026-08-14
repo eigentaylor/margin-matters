@@ -80,9 +80,13 @@
               <button id="enToggle" class="btn" style="min-width:96px">Start</button>
               <button id="enReset" class="btn" style="min-width:96px">Reset</button>
               <label for="enSpeed" class="legend" style="font-size:0.9rem">Speed</label>
-              <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="0.5"
-                placeholder="0.5" aria-label="Simulation speed multiplier"
-                style="min-width:70px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
+              <div class="nav-btn-group">
+                <button id="enSpeedDown" class="nav-btn" type="button" title="Decrease speed">−</button>
+                <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="0.5"
+                  placeholder="0.5" aria-label="Simulation speed multiplier"
+                  style="min-width:60px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
+                <button id="enSpeedUp" class="nav-btn" type="button" title="Increase speed">+</button>
+              </div>
               <span class="legend" style="font-size:0.85rem">×</span>
               <span id="enPhase" class="legend" style="font-size:0.9rem;color:var(--muted)">Idle</span>
             </div>

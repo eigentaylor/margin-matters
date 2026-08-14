@@ -1717,15 +1717,39 @@ body.slider-dragging * {
   padding: 8px 10px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid rgba(255, 255, 255, 0.15);
   background: rgba(0, 0, 0, 0.35);
   color: rgba(255, 255, 255, 0.88);
   font-size: 0.9rem;
-  line-height: 1.35
+  line-height: 1.35;
+  transition: border-left-color 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .en-log-uncalled-card:hover {
   border-color: rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08)
+}
+
+/* Pulses gently once a still-counting race is close to crossing the call
+   threshold; --en-pulse-color is set inline per-card to match its accent. */
+.en-log-uncalled-card.en-log-hot {
+  animation: en-log-pulse 1.7s ease-in-out infinite;
+}
+
+@keyframes en-log-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+  50% { box-shadow: 0 0 12px 1px var(--en-pulse-color, rgba(255, 255, 255, 0.3)); }
+}
+
+.en-log-entry.en-log-called {
+  border-left: 4px solid transparent;
+  padding-left: 8px;
+  transition: border-left-color 0.4s ease;
+}
+
+.en-log-uncalled-card.en-log-npv-card {
+  border-style: dashed;
+  font-weight: 600;
 }
 
 #enConfidence {
