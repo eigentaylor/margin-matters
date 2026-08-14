@@ -33,9 +33,13 @@ export function formatLeaderShort(code) {
     return 'No call';
 }
 
-export function formatMarginText(marginStr, leader) {
+export function formatMarginText(marginStr, leader, voteMargin) {
     if (marginStr === 'None') return 'None';
     if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';
+    if (leader !== 'O' && isFinite(voteMargin) && Math.round(voteMargin) !== 0) {
+        const rawSign = voteMargin > 0 ? 'D' : 'R';
+        return `${marginStr} (${rawSign}+${Math.abs(Math.round(voteMargin)).toLocaleString('en-US')})`;
+    }
     return marginStr;
 }
 

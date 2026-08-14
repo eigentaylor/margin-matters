@@ -2326,18 +2326,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     // Leader is conveyed by the card's accent color/glow (below) rather
     // than a "D/R lead" text line.
     const infoParts = [];
-    const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
+    const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader, candidate.voteMargin);
     if (marginDisplay && marginDisplay !== 'None') {
-      if (marginDisplay === 'EVEN') {
-        infoParts.push('EVEN');
-      } else {
-        let marginText = `Margin ${marginDisplay}`;
-        if (candidate.leader !== 'O' && isFinite(candidate.voteMargin) && candidate.voteMargin !== 0) {
-          const rawSign = candidate.voteMargin > 0 ? 'D' : 'R';
-          marginText += ` (${rawSign}+${Math.abs(candidate.voteMargin).toLocaleString('en-US')})`;
-        }
-        infoParts.push(marginText);
-      }
+      infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
     }
     infoParts.push(formatConfidenceText(candidate.confidence));
     // Use shared formatter so votes-left is shown when available
@@ -2483,7 +2474,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
       const leaderText = formatLeader(record.leader);
       const reportingText = formatReportingText(record.reporting, record.remainingVotes);
-      const marginText = formatMarginText(record.marginStr, record.leader);
+      const callVoteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
+      const marginText = formatMarginText(record.marginStr, record.leader, callVoteMargin);
       const confidenceText = formatConfidenceText(record.confidence);
       const evText = formatEvAllocationsForLog(record.evAllocations, record.finalAllocations);
       const infoParts = [reportingText, marginText, confidenceText];
