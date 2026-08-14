@@ -1,5 +1,7 @@
 'use strict';
 
+import { POLL_ERROR_SPEC } from './pollCalibration.js';
+
 /**
  * Hands the simulated 2028 result to the existing election-night simulator
  * (brainstorm idea #8) without loading tester.js.
@@ -137,9 +139,22 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
 /**
  * Install the globals election-night.js reads, then prepare the simulation.
  * Safe to call repeatedly — it resets any in-flight simulation first.
+ *
+ * @param {Map<string,number>} [pollMarginByUnit] the Election-Eve poll's
+ *   implied absolute margin per unit (see sim2028.js's pollMargins()) — the
+ *   actual "prior" a voter would have seen before results came in, distinct
+ *   from `finalRel`/`npv` (the hidden truth the rows above are built from).
+ *   When supplied, published as window._enPollPrior for election-night.js's
+ *   live win-probability estimate to seed itself from instead of having to
+ *   synthesize its own poll (which is what index.html/future.html, with no
+ *   real 2028 polls, fall back to).
  */
-export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1 }) {
+export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null }) {
   const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale });
+
+  window._enPollPrior = pollMarginByUnit
+    ? { year: YEAR, marginByUnit: pollMarginByUnit, spec: POLL_ERROR_SPEC }
+    : null;
 
   const byYear = (window._byYearMap instanceof Map) ? window._byYearMap : new Map();
   byYear.set(YEAR, rows);

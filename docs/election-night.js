@@ -7,6 +7,8 @@ import { getUnitCandidateLastNames } from './utils/candidateNames.js';
 import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
+import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
+import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
 
 (function () {
   'use strict';
@@ -97,6 +99,24 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
   // Display update interval for throttling expensive UI work
   const DISPLAY_UPDATE_INTERVAL = 1; // minutes between display updates (counting is continuous)
+  // National win-probability estimate: how uncertain the not-yet-counted
+  // portion of a unit's vote could still be relative to what's counted so
+  // far, expressed as a margin std-dev (see computeUnitPosterior). Larger
+  // for MAIL_HEAVY_STATES, matching the same real-world "late mail ballots
+  // skew differently than election-day votes" fact createBiasParams already
+  // encodes generatively — here it's the analogous observational-uncertainty
+  // fact. Starting guesses, meant to be tuned against
+  // docs/utils/electionNight/validateWinProb.mjs, the same way
+  // CONFIDENCE_JUNCTION_RAW was validated rather than shipped on guesswork.
+  const REMAINING_DELTA_SIGMA_BASE = 0.12;
+  const REMAINING_DELTA_SIGMA_MAIL_HEAVY = 0.22;
+  // Monte Carlo draw count for the win-probability tally, and how often
+  // (in simulated minutes) the expensive tally re-runs — independent of
+  // DISPLAY_UPDATE_INTERVAL, which only throttles the real-time RAF path;
+  // this also has to protect advanceDeterministic()'s synchronous
+  // fast-forward loop, which DISPLAY_UPDATE_INTERVAL never sees.
+  const PROB_MC_SIMS = 2000;
+  const PROB_UPDATE_INTERVAL_MINUTES = 3;
   // Reporting jump debug threshold (fraction, e.g. 0.12 = 12 percentage points)
   const REPORTING_JUMP_THRESHOLD = 0.12;
   // Maximum reporting step when densifying schedules (fraction, e.g. 0.005 = 0.5%)
@@ -183,7 +203,13 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     npvMisCallLogged: false,
     nationalFinalDVotes: 0,
     nationalFinalRVotes: 0,
+    nationalFinalDEv: 0,
+    nationalFinalREv: 0,
     lastNationalTotals: null,
+    atLargeParts: null,
+    unitPosteriors: null,
+    nationalWinProb: null,
+    lastProbUpdateTime: -Infinity,
     confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
     pvRandomCache: null,
     pvRandomCacheMode: null,
@@ -211,6 +237,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     phase: null,
     log: null,
     logHeader: null,
+    winProb: null,
     logUncalled: null,
     logPanel: null,
     confidence: null,
@@ -275,6 +302,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     elements.phase = document.getElementById('enPhase');
     elements.log = document.getElementById('enLog');
     elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
+    elements.winProb = document.getElementById('enWinProb');
     elements.logUncalled = document.getElementById('enLogUncalled');
     elements.logPanel = document.getElementById('enLogPanel');
     // Hide the call log panel by default until the election-night simulation is active
@@ -437,6 +465,99 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     updateToggleLabel();
   }
 
+  // --- National win-probability: prior establishment ------------------
+  //
+  // Two sources for a per-unit poll-like prior (st.priorMargin/st.priorSigma):
+  // bridged real 2028 polls (window._enPollPrior, set once by
+  // docs/utils/sim2028/electionNightBridge.js when coming from sim2028.html),
+  // or a synthesized prior for pages with no real polls (index.html/
+  // future.html). Both paths converge on the same per-unit contract so the
+  // live win-probability code downstream doesn't need to know which ran.
+  // Neither path sets a prior for at-large (ME-AL/NE-AL) units — those are
+  // always derived from their districts' draws, never sampled directly (see
+  // buildAtLargeParts/runNationalWinProbabilityMC).
+  //
+  // buildSyntheticPollPriors() is the ONE place allowed to read a unit's
+  // ground-truth dTwoPartyFinal/rTwoPartyFinal — it runs once, at prepare
+  // time, before the animation starts, exactly mirroring how
+  // docs/utils/sim2028/campaign.js generates its own polls from a hidden
+  // truth. After this call, st.priorMargin/st.priorSigma are a frozen,
+  // poll-like PUBLIC fact for the rest of the night — nothing downstream
+  // (computeUnitPosterior, runNationalWinProbabilityMC) may ever read
+  // dTwoPartyFinal/rTwoPartyFinal/biasParams/closeness again.
+  function buildSyntheticPollPriors(data, year, pvValue) {
+    const simUnits = data.filter(st => st.pvWeight && !st.thirdPartyDominant);
+    data.forEach(st => { if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; } });
+    if (!simUnits.length) return;
+    const units = simUnits.map(st => st.unitKey);
+    const weights = new Map(simUnits.map(st => [st.unitKey, st.totalVotes]));
+    const unitSigmaMap = new Map(simUnits.map(st => [st.unitKey, POLL_ERROR_SPEC.unitSigmas]));
+
+    const model = createRegionalErrorModel({
+      units,
+      weights,
+      unitSigmas: unitSigmaMap,
+      regionShare: POLL_ERROR_SPEC.regionShare,
+      nationalSigma: POLL_ERROR_SPEC.nationalSigma,
+      df: POLL_ERROR_SPEC.df
+    });
+
+    // Deterministic given (year, resolved pvValue) alone: re-seeking within
+    // a run never changes pvValue, so this reproduces the same synthetic
+    // poll every time; a fresh prepareSimulation() with a newly-rolled
+    // random PV mode naturally rerolls it too, since pvValue itself
+    // changed. Mirrors the pvRandomCache seeding pattern used elsewhere.
+    const seed = hashCode(`prior:${year}:${Math.round((pvValue || 0) * 1e6)}`);
+    const rng = mulberry32(seed >>> 0);
+    const errOut = new Float64Array(units.length);
+    model.drawRelInto(rng, 1, errOut);
+    const nationalErr = model.drawNpv(rng, 1);
+
+    const totalSigma = Math.sqrt(POLL_ERROR_SPEC.unitSigmas ** 2 + POLL_ERROR_SPEC.nationalSigma ** 2);
+    simUnits.forEach((st, i) => {
+      // ONE-TIME allowed peek at ground truth — see comment above.
+      const truthMargin = st.dTwoPartyFinal - st.rTwoPartyFinal;
+      st.priorMargin = clampMargin(truthMargin + errOut[i] + nationalErr);
+      st.priorSigma = totalSigma;
+    });
+  }
+
+  function applyBridgedPollPriors(data, prior) {
+    const spec = prior.spec || POLL_ERROR_SPEC;
+    const totalSigma = Math.sqrt(spec.unitSigmas ** 2 + spec.nationalSigma ** 2);
+    data.forEach(st => {
+      if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; return; }
+      if (!st.pvWeight) return; // at-large: derived, no direct prior
+      const margin = prior.marginByUnit ? prior.marginByUnit.get(st.unitKey) : null;
+      if (isFinite(margin)) {
+        st.priorMargin = clampMargin(margin);
+        st.priorSigma = totalSigma;
+      } else {
+        // No poll data for this particular unit (shouldn't normally
+        // happen) — fall back to a one-off synthetic prior just for it.
+        st.priorMargin = clampMargin(st.dTwoPartyFinal - st.rTwoPartyFinal);
+        st.priorSigma = totalSigma;
+      }
+    });
+  }
+
+  // At-large (ME-AL/NE-AL) units are always derived from their component
+  // districts' simulated margins (vote-weighted composite) rather than
+  // sampled independently in the win-probability Monte Carlo — a statewide
+  // result can never contradict the districts that compose it. Built once
+  // per prepared simulation, mirroring docs/utils/sim2028/forecast.js's own
+  // alParts pattern.
+  function buildAtLargeParts(data) {
+    const map = new Map();
+    data.forEach(st => {
+      if (st.type !== 'atlarge') return;
+      const districts = data.filter(d => d.abbr === st.abbr && d.type === 'district');
+      const totalW = districts.reduce((sum, d) => sum + d.totalVotes, 0) || 1;
+      map.set(st.unitKey, districts.map(d => ({ unitKey: d.unitKey, weight: d.totalVotes / totalW })));
+    });
+    return map;
+  }
+
   /**
    * Prepare the simulation data for the selected year and PV scenario.
    * This builds per-unit state objects, computes simStart/simEnd, and
@@ -475,6 +596,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.lastNationalTotals = null;
+    state.atLargeParts = null;
+    state.unitPosteriors = null;
+    state.nationalWinProb = null;
+    state.lastProbUpdateTime = -Infinity;
     // Initialize log state for this simulation
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -510,6 +635,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
     if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.winProb) elements.winProb.textContent = '';
     if (elements.victory) {
       elements.victory.textContent = '';
       elements.victory.className = 'en-log-victory';
@@ -544,6 +670,21 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.totalEligibleVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.totalVotes : 0), 0);
     state.nationalFinalDVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.dVotesCounted : 0), 0);
     state.nationalFinalRVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.rVotesCounted : 0), 0);
+    // Ground-truth ELECTORAL COLLEGE winner (distinct from the popular vote
+    // above — they can and do disagree, e.g. 2016). Summed over every
+    // EV-bearing unit (state/at-large/district all count separately here,
+    // unlike the vote totals above, since each has its own non-overlapping
+    // electors) — used only by debug/validation instrumentation, never by
+    // the live win-probability algorithm itself.
+    state.nationalFinalDEv = data.reduce((sum, st) => sum + (st.winner === 'D' ? st.ev : 0), 0);
+    state.nationalFinalREv = data.reduce((sum, st) => sum + (st.winner === 'R' ? st.ev : 0), 0);
+
+    if (window._enPollPrior && window._enPollPrior.year === year) {
+      applyBridgedPollPriors(data, window._enPollPrior);
+    } else {
+      buildSyntheticPollPriors(data, year, pvValue);
+    }
+    state.atLargeParts = buildAtLargeParts(data);
 
     let minStart = Infinity;
     let maxEnd = -Infinity;
@@ -613,16 +754,17 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const stepSize = remaining / segmentsLeft;
       current = Math.max(state.simStart, Math.min(state.simEnd, current + stepSize));
       state.currentTime = current;
-      renderAt(current);
+      // Intermediate steps of a fast-forward seek are never painted (this
+      // loop is fully synchronous, no yield to the browser between calls),
+      // so anything expensive gated on "settled" (see
+      // updateNationalWinProbability) is skipped here and only computed
+      // once, after the loop, on the final settled render below.
+      renderAt(current, { settled: false });
       if (direction > 0 && current >= clamped - EPS) break;
       if (direction < 0 && current <= clamped + EPS) break;
     }
-    if (Math.abs(current - clamped) > EPS) {
-      state.currentTime = clamped;
-      renderAt(clamped);
-    } else {
-      state.currentTime = clamped;
-    }
+    state.currentTime = clamped;
+    renderAt(clamped);
   }
 
   function seekToProgress(progress) {
@@ -683,6 +825,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.lastNationalTotals = null;
+    state.atLargeParts = null;
+    state.unitPosteriors = null;
+    state.nationalWinProb = null;
+    state.lastProbUpdateTime = -Infinity;
     // Reset log state
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -702,6 +848,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
     if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.winProb) elements.winProb.textContent = '';
     if (elements.victory) {
       elements.victory.textContent = '';
       elements.victory.className = 'en-log-victory';
@@ -1321,8 +1468,13 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
    * tallies, and then updates UI widgets (EV bar, PV display, progress
    * slider, and the call log).
    */
-  function renderAt(timeMinutes) {
+  function renderAt(timeMinutes, opts = {}) {
     if (!state.stateData.length) return;
+    // "Settled" frames are ones the browser actually paints (real-time RAF
+    // ticks, or the single call after a fast-forward seek finishes) — see
+    // advanceDeterministic()'s intermediate-step calls, which pass
+    // {settled:false} since nothing there is ever visible.
+    const settled = opts.settled !== false;
 
     const phase = getPhase(timeMinutes);
     const phaseName = phase ? phase.name : 'Final';
@@ -1475,6 +1627,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.lastNationalTotals = { dCounted, rCounted, oCounted, countedVotes };
     maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
     maybeEmitNpvMiscall(countedVotes, timeMinutes);
+    updateNationalWinProbability(timeMinutes, settled);
 
     flushSmallBoxes();
 
@@ -1722,6 +1875,218 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (dCounted >= rCounted && dCounted >= oCounted) return 'D';
     if (rCounted >= dCounted && rCounted >= oCounted) return 'R';
     return 'O';
+  }
+
+  // Live per-unit posterior for the national win-probability estimate:
+  // combines this unit's frozen poll-like prior (st.priorMargin/priorSigma,
+  // see buildSyntheticPollPriors/applyBridgedPollPriors) with the currently
+  // OBSERVABLE partial count via inverse-variance weighting. The
+  // observation uncertainty shrinks as reporting increases and is inflated
+  // for MAIL_HEAVY_STATES, derived from the identity
+  //   finalMargin = reporting*observedMargin + (1-reporting)*remainingBatchMargin
+  // by modeling only the genuinely uncertain term (how differently the
+  // not-yet-counted batch might vote) as Normal(0, deltaSigma^2):
+  //   obsSigma(reporting) = (1-reporting) * deltaSigma
+  // This satisfies both boundaries with no special-casing: reporting->1
+  // makes obsSigma->0 (posterior converges to the observed count);
+  // reporting->0 still needs one explicit guard below, since observedMargin
+  // is genuinely undefined (0/0) before any votes are counted, not just
+  // numerically unstable. Reads only st.abbr and st.priorMargin/priorSigma
+  // (frozen public facts) plus metrics.dVotesCounted/rVotesCounted/
+  // reporting (legitimately observable) — never st.dShareFinal/rShareFinal/
+  // biasParams/closeness.
+  function computeUnitPosterior(st, metrics) {
+    if (!(st.priorSigma > 0)) return { margin: st.priorMargin || 0, sigma: 0 };
+    const dV = metrics ? metrics.dVotesCounted : 0;
+    const rV = metrics ? metrics.rVotesCounted : 0;
+    const twoPartyCounted = dV + rV;
+    if (!(twoPartyCounted > EPS)) return { margin: st.priorMargin, sigma: st.priorSigma };
+
+    const observedMargin = (dV - rV) / twoPartyCounted;
+    const reporting = metrics && isFinite(metrics.reporting) ? metrics.reporting : 0;
+    const deltaSigma = MAIL_HEAVY_STATES.has(st.abbr) ? REMAINING_DELTA_SIGMA_MAIL_HEAVY : REMAINING_DELTA_SIGMA_BASE;
+    const obsSigma = Math.max(0, 1 - reporting) * deltaSigma;
+    if (obsSigma <= EPS) return { margin: observedMargin, sigma: 0 };
+
+    const priorPrec = 1 / (st.priorSigma * st.priorSigma);
+    const obsPrec = 1 / (obsSigma * obsSigma);
+    const totalPrec = priorPrec + obsPrec;
+    return {
+      margin: (st.priorMargin * priorPrec + observedMargin * obsPrec) / totalPrec,
+      sigma: Math.sqrt(1 / totalPrec)
+    };
+  }
+
+  // Monte Carlo national win-probability tally. Already-called units (and
+  // third-party-dominant ones, which never count toward either major
+  // party's total — a majority of the TRUE EV pool is required, mirroring
+  // real 1824/1836-style outcomes) are FIXED, not resampled: a called unit
+  // shouldn't flip in the simulation, and fixing it shrinks compute as the
+  // night progresses. Everything else is drawn fresh every simulation via
+  // the same correlated-region error model docs/utils/sim2028/forecast.js
+  // uses, fed each live unit's current posterior (§computeUnitPosterior) as
+  // its draw sigma. At-large (ME-AL/NE-AL) units are never drawn directly —
+  // each draw derives their margin as the vote-weighted composite of their
+  // districts' margins for that same draw (state.atLargeParts).
+  function runNationalWinProbabilityMC(timeMinutes, posteriors) {
+    const totalPool = state.totalEvPool || 538;
+    const needed = Math.floor(totalPool / 2) + 1;
+
+    let fixedDEv = 0, fixedREv = 0;
+    const liveUnits = [];
+    const liveAl = [];
+    state.stateData.forEach(st => {
+      if (st.thirdPartyDominant) return;
+      const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
+      if (isCalled) {
+        if (st.callLeader === 'D') fixedDEv += st.ev;
+        else if (st.callLeader === 'R') fixedREv += st.ev;
+        return;
+      }
+      if (st.type === 'atlarge') liveAl.push(st);
+      else liveUnits.push(st);
+    });
+
+    if (!liveUnits.length && !liveAl.length) {
+      return { probD: fixedDEv >= needed ? 1 : 0, locked: true, sims: 0, evRange90: null };
+    }
+
+    const liveEvTotal = liveUnits.reduce((sum, st) => sum + st.ev, 0) + liveAl.reduce((sum, st) => sum + st.ev, 0);
+    const hardLockedD = fixedDEv >= needed;
+    const hardLockedR = fixedREv >= needed;
+    const impossibleR = fixedREv + liveEvTotal < needed;
+    const impossibleD = fixedDEv + liveEvTotal < needed;
+    if (hardLockedD || hardLockedR || impossibleD || impossibleR) {
+      return { probD: (hardLockedD || impossibleR) ? 1 : 0, locked: true, sims: 0, evRange90: null };
+    }
+
+    const units = liveUnits.map(st => st.unitKey);
+    const weights = new Map(liveUnits.map(st => [st.unitKey, st.totalVotes]));
+    const unitSigmaMap = new Map(liveUnits.map(st => {
+      const post = posteriors.get(st.unitKey);
+      return [st.unitKey, Math.max(1e-4, post ? post.sigma : REMAINING_DELTA_SIGMA_BASE)];
+    }));
+    const model = createRegionalErrorModel({
+      units,
+      weights,
+      unitSigmas: unitSigmaMap,
+      regionShare: POLL_ERROR_SPEC.regionShare,
+      df: POLL_ERROR_SPEC.df
+    });
+
+    const n = liveUnits.length;
+    const err = new Float64Array(n);
+    const seed = hashCode(`prob:${state.year}:${state.pvRandomSeed || 0}:${Math.round(timeMinutes)}`);
+    const rng = mulberry32(seed >>> 0);
+    const marginByUnit = new Map();
+    const demEvSamples = new Float64Array(PROB_MC_SIMS);
+    let demWins = 0;
+
+    for (let s = 0; s < PROB_MC_SIMS; s++) {
+      model.drawRelInto(rng, 1, err);
+      let demEv = fixedDEv;
+      for (let i = 0; i < n; i++) {
+        const st = liveUnits[i];
+        const post = posteriors.get(st.unitKey);
+        const margin = (post ? post.margin : 0) + err[i];
+        marginByUnit.set(st.unitKey, margin);
+        if (margin >= 0) demEv += st.ev;
+      }
+      for (const st of liveAl) {
+        const parts = state.atLargeParts ? state.atLargeParts.get(st.unitKey) : null;
+        if (!parts || !parts.length) continue;
+        let acc = 0, wsum = 0;
+        for (const p of parts) {
+          const m = marginByUnit.has(p.unitKey) ? marginByUnit.get(p.unitKey)
+            : (posteriors.get(p.unitKey) ? posteriors.get(p.unitKey).margin : 0);
+          acc += m * p.weight;
+          wsum += p.weight;
+        }
+        if (wsum > EPS && acc / wsum >= 0) demEv += st.ev;
+      }
+      demEvSamples[s] = demEv;
+      if (demEv >= needed) demWins++;
+    }
+
+    // [5%,95%] EV quantile spread, same computation forecast.js's own
+    // evRange90 already does — exposed for docs/utils/electionNight/
+    // validateWinProb.mjs's CI-narrows-over-time check, not used elsewhere.
+    const sortedEv = Array.from(demEvSamples).sort((a, b) => a - b);
+    const quantile = q => sortedEv[Math.min(sortedEv.length - 1, Math.max(0, Math.round(q * (sortedEv.length - 1))))];
+    const evRange90 = [quantile(0.05), quantile(0.95)];
+
+    // Even a genuinely ~100%-but-not-mathematically-locked race can show a
+    // literal N/N on a finite sample by chance — clamp away from the
+    // extremes here (mirrors formatConfidenceText's own never-claim-a-
+    // false-100% guard in docs/utils/formatters.js) since the exact-math
+    // locked/impossible cases above already handle real certainty.
+    const rawProbD = demWins / PROB_MC_SIMS;
+    return { probD: Math.min(0.999, Math.max(0.001, rawProbD)), locked: false, sims: PROB_MC_SIMS, evRange90 };
+  }
+
+  // Called every renderAt() frame. The cheap per-unit posteriors always
+  // refresh (trivial even 480x in a tight fast-forward loop), but the
+  // expensive Monte Carlo tally only runs on "settled" frames (ones the
+  // browser will actually paint) AND its own independent throttle —
+  // separate from DISPLAY_UPDATE_INTERVAL, which only guards the real-time
+  // RAF path and never sees advanceDeterministic()'s synchronous loop.
+  function updateNationalWinProbability(timeMinutes, settled) {
+    if (!state.stateData.length) return;
+
+    const posteriors = new Map();
+    state.stateData.forEach(st => {
+      if (st.thirdPartyDominant || !st.latestMetrics) return;
+      posteriors.set(st.unitKey, computeUnitPosterior(st, st.latestMetrics));
+    });
+    state.unitPosteriors = posteriors;
+
+    if (!settled) return;
+
+    const isFirst = state.lastProbUpdateTime === -Infinity;
+    const isFinal = timeMinutes >= state.simEnd - EPS;
+    if (!isFirst && !isFinal && timeMinutes - state.lastProbUpdateTime < PROB_UPDATE_INTERVAL_MINUTES) return;
+    state.lastProbUpdateTime = timeMinutes;
+
+    state.nationalWinProb = runNationalWinProbabilityMC(timeMinutes, posteriors);
+    renderWinProbLine(state.nationalWinProb);
+
+    // Debug-only instrumentation for docs/utils/electionNight/validateWinProb.mjs
+    // (gated the same way ENABLE_EN_COLOR_CALL_LOG gates window._enCallLog).
+    // actualWinner is ground truth — fine to read here since this is
+    // test-only instrumentation never consulted by the live algorithm.
+    try {
+      if (window.ENABLE_EN_PROB_LOG) {
+        window._enProbLog = window._enProbLog || [];
+        window._enProbLog.push({
+          time: timeMinutes,
+          nationalReporting: state.totalEligibleVotes > EPS
+            ? state.lastNationalTotals.countedVotes / state.totalEligibleVotes : 0,
+          probD: state.nationalWinProb.probD,
+          evRange90: state.nationalWinProb.evRange90,
+          // probD is a probability of winning the ELECTORAL COLLEGE, so it
+          // must be graded against the EC outcome, not the popular vote —
+          // they disagree often enough (2016, 2000, 1888, 1876...) that
+          // grading against the wrong one would misreport a well-calibrated
+          // model as overconfident/miscalibrated in those years.
+          actualWinner: state.nationalFinalDEv >= Math.floor((state.totalEvPool || 538) / 2) + 1 ? 'D' : 'R',
+          // Popular-vote margin, kept as informational context.
+          actualMargin: (state.nationalFinalDVotes - state.nationalFinalRVotes)
+            / Math.max(EPS, state.nationalFinalDVotes + state.nationalFinalRVotes),
+          // EV margin (share of the full pool) — the more relevant signal
+          // for "was this actually an electoral-college landslide" when
+          // deciding whether an early high-confidence call was justified.
+          actualEvMargin: (state.nationalFinalDEv - state.nationalFinalREv) / Math.max(1, state.totalEvPool || 538)
+        });
+      }
+    } catch (e) { /* debug instrumentation only */ }
+  }
+
+  function renderWinProbLine(result) {
+    if (!elements.winProb) return;
+    if (!result || !isFinite(result.probD)) { elements.winProb.textContent = ''; return; }
+    const dPct = (result.probD * 100).toFixed(1);
+    const rPct = ((1 - result.probD) * 100).toFixed(1);
+    elements.winProb.innerHTML = `<span class="en-winprob-d">D ${dPct}%</span> — <span class="en-winprob-r">R ${rPct}%</span> to win`;
   }
 
   // Accent color for an uncalled/still-counting race: blends from neutral

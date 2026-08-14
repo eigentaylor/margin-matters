@@ -1608,6 +1608,25 @@ body.slider-dragging * {
   color: var(--accent);
 }
 
+.en-winprob {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  opacity: 0.9;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.en-winprob-d {
+  color: #9ec8ff;
+  font-weight: 700;
+}
+
+.en-winprob-r {
+  color: #ffb9b9;
+  font-weight: 700;
+}
+
 .en-log-body {
   flex: 1 1 auto;
   overflow-y: auto;

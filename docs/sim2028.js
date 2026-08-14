@@ -1062,10 +1062,19 @@ function goToElectionNight() {
   // and the polling-era highlight has nothing left to refer to.
   if (state.mapHighlight) { state.mapHighlight = null; setMapGlow(); }
 
+  // The final ("Election Eve") poll snapshot — this is the actual prior a
+  // voter would have seen, distinct from state.sim.truthRel/truthNpv (the
+  // hidden truth the vote totals below are built from). Threading it
+  // through lets election-night.js's live win-probability estimate start
+  // from these real polls instead of having to synthesize its own.
+  const finalPoll = currentSnapshot();
+  const pollMarginByUnit = pollMargins(finalPoll);
+
   installElectionNight({
     finalRel: state.sim.truthRel,
     npv: state.sim.truthNpv,
     baseline: state.baseline,
+    pollMarginByUnit,
   });
 
   // Controls belong directly under the map and above every polling panel, so
@@ -1090,7 +1099,6 @@ function goToElectionNight() {
   if (note) {
     // Deliberately does not name the winner or the EV count — election-night.js
     // reveals those state by state, which is the whole point of the handoff.
-    const finalPoll = currentSnapshot();
     note.textContent = `Final polls had the national popular vote at ${fmtMargin(finalPoll.pollNpv)}.`
       + ' Press Start above to watch the returns come in.';
   }
