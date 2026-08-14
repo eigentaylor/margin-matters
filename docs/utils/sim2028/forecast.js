@@ -24,18 +24,20 @@ import { createRegionalErrorModel } from './errorModel.js';
  * national environment in June than about any state's lean relative to it.
  * floorScale is the election-day miss, which nobody can forecast away.
  *
- * Reference (not yet applied — left as-is this pass, see engine.js PARAMS.poll's
- * own reference note): at floorScale=0.65, election-eve national sd works out to
- * ~1.2pt and per-state sd to ~1.3pt (before combining), both under the doc's
- * "good year" figures (national ~2pt, state ~2pt independent + regional layers,
- * ~3.5pt total RMSE per Shirani-Mehr et al.) — a candidate to raise in a future
- * tuning pass, now that pollTurbulence (engine.js) separately covers the
- * good-year/bad-year spread on top of whatever this baseline ends up being.
+ * floorScale=1.0 means the forecast never discounts below engine.js
+ * PARAMS.poll's full nationalSigma/unitSigmas, even at Election Eve — matched
+ * to the research doc's empirical "good year" figures (national ~2pt, state
+ * ~2pt independent + regional layers, ~3.5pt total RMSE per Shirani-Mehr et
+ * al.). This is what keeps close races reading as genuinely uncertain deep
+ * into the campaign instead of resolving to false-confident 90%+ calls; only
+ * a real landslide NPV is far enough from 50-50 to call confidently regardless.
+ * The UI's "Confident forecasts" toggle swaps this back to 0.65 (engine.js's
+ * LEGACY_CALIBRATION) for the original, narrower/more-decisive behavior.
  */
 export const DEFAULT_FORECAST_PARAMS = {
   sims: 3000,
-  rel: { startScale: 0.9, floorScale: 0.65 },
-  npv: { startScale: 1.8, floorScale: 0.65 },
+  rel: { startScale: 0.9, floorScale: 1.0 },
+  npv: { startScale: 1.8, floorScale: 1.0 },
 };
 
 /** Total EV needed to win, given the full EV pool. */

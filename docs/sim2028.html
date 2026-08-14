@@ -510,9 +510,9 @@
             <input id="s28Elasticity" type="checkbox" checked />
           </span>
         </label>
-        <label title="On: nationalSigma/regionShare/forecast-floor are nudged to the research doc's empirical targets (national error SD ~2.5pt, same-region corr ~0.76, no extra floor shrinkage on the election-eve band) instead of this app's original, slightly-lower defaults. Off: original values. A/B the same seed both ways to feel out whether the doc's numbers play better.">Doc-recommended calibration
+        <label title="Off (default): polling error and win-probability bands stay wide, research-calibrated — close races feel genuinely uncertain deep into the campaign, and only a real landslide NPV calls confidently. On: switches to the original, narrower assumptions — smaller polling misses and win probabilities that resolve to decisive calls sooner.">Confident forecasts
           <span class="s28-checkbox-row">
-            <input id="s28RecommendedCalibration" type="checkbox" />
+            <input id="s28ConfidentForecasts" type="checkbox" />
           </span>
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>

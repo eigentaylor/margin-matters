@@ -8,7 +8,7 @@
  * and the handoff to election-night.js.
  */
 
-import { createSimulation, computeTodaySeed, PARAMS, RECOMMENDED_CALIBRATION } from './utils/sim2028/engine.js';
+import { createSimulation, computeTodaySeed, PARAMS, LEGACY_CALIBRATION } from './utils/sim2028/engine.js';
 import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
@@ -497,7 +497,7 @@ function renderDebug() {
     <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(2)}pt)</span></div>
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>
     <div class="s28-dbgrow"><span>Polling accuracy this cycle</span><span>${sim.pollTurbulence.toFixed(2)}&times; typical &mdash; ${sim.pollTurbulence < 0.85 ? '2024-style, clean' : sim.pollTurbulence > 1.15 ? '2016/2020-style, foggy' : 'about average'}</span></div>
-    <div class="s28-dbgrow"><span>Calibration</span><span>${sim.params.poll.nationalSigma === RECOMMENDED_CALIBRATION.poll.nationalSigma ? 'doc-recommended (nationalSigma 2.5pt, regionShare 0.87, floor 1.0x)' : 'baseline (nationalSigma 1.8pt, regionShare 0.75, floor 0.65x)'}</span></div>
+    <div class="s28-dbgrow"><span>Calibration</span><span>${sim.params.poll.nationalSigma === LEGACY_CALIBRATION.poll.nationalSigma ? 'confident (nationalSigma 1.8pt, regionShare 0.75, floor 0.65x)' : 'default (nationalSigma 2.5pt, regionShare 0.87, floor 1.0x)'}</span></div>
     <div class="s28-dbgrow"><span>Tipping point (true, NPV-independent)</span><span>${tp ? `${tp.unit} &mdash; flips EC at NPV ${fmtMarginPrecise(tp.npvThreshold)}` : '&mdash;'}</span></div>
     <div style="margin-top:6px;color:var(--muted)">Closest true races (at the actual environment): ${closest}</div>`;
 }
@@ -855,7 +855,7 @@ function syncManualNpvVisibility() {
 }
 
 /** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence,
- * pollTurbulence, nailbiter, elasticity.
+ * pollTurbulence, nailbiter, elasticity, confident.
  * Campaign steps is deliberately left out — that control is hidden for now. */
 function buildSettingsParams() {
   const params = new URLSearchParams();
@@ -866,7 +866,7 @@ function buildSettingsParams() {
   const pollTurbInput = $('s28PollTurbulence');
   const nailbiterEl = $('s28Nailbiter');
   const elasticityEl = $('s28Elasticity');
-  const recCalEl = $('s28RecommendedCalibration');
+  const confidentEl = $('s28ConfidentForecasts');
   if (seedInput && seedInput.value !== '') params.set('seed', seedInput.value);
   if (npvMode && npvMode.value) params.set('npv', npvMode.value);
   if (npvMode && npvMode.value === 'manual' && manualNpv) params.set('manualNpv', manualNpv.value);
@@ -874,7 +874,7 @@ function buildSettingsParams() {
   if (pollTurbInput && pollTurbInput.value !== '') params.set('pollTurbulence', pollTurbInput.value);
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
   params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
-  params.set('recCal', (recCalEl && recCalEl.checked) ? '1' : '0');
+  params.set('confident', (confidentEl && confidentEl.checked) ? '1' : '0');
   return params;
 }
 
@@ -906,7 +906,7 @@ function applySettingsFromUrl() {
   const pollTurbInput = $('s28PollTurbulence');
   const nailbiterEl = $('s28Nailbiter');
   const elasticityEl = $('s28Elasticity');
-  const recCalEl = $('s28RecommendedCalibration');
+  const confidentEl = $('s28ConfidentForecasts');
 
   if (params.has('seed') && seedInput) {
     const v = parseInt(params.get('seed'), 10);
@@ -933,9 +933,9 @@ function applySettingsFromUrl() {
     const v = params.get('elasticity').toLowerCase();
     elasticityEl.checked = (v === '1' || v === 'true');
   }
-  if (params.has('recCal') && recCalEl) {
-    const v = params.get('recCal').toLowerCase();
-    recCalEl.checked = (v === '1' || v === 'true');
+  if (params.has('confident') && confidentEl) {
+    const v = params.get('confident').toLowerCase();
+    confidentEl.checked = (v === '1' || v === 'true');
   }
 }
 
@@ -988,8 +988,8 @@ async function startCampaign() {
   const elasticityEl = $('s28Elasticity');
   // Missing checkbox defaults on, same as every other boolean control here.
   const elasticityOn = !elasticityEl || elasticityEl.checked;
-  const recCalEl = $('s28RecommendedCalibration');
-  const recCalOn = !!(recCalEl && recCalEl.checked);
+  const confidentEl = $('s28ConfidentForecasts');
+  const confidentOn = !!(confidentEl && confidentEl.checked);
   // Repoint the shared baseline's `beta` at the fitted or uniform (all-1)
   // map before building the run — every downstream reader (engine.js,
   // forecast.js, electionNightBridge.js, this file's own tooltips/table)
@@ -1011,15 +1011,15 @@ async function startCampaign() {
         poll: {
           ...PARAMS.poll,
           turbulenceOverride: pollTurbulenceOverride,
-          ...(recCalOn ? RECOMMENDED_CALIBRATION.poll : {}),
+          ...(confidentOn ? LEGACY_CALIBRATION.poll : {}),
         },
-        // Merged per-axis (not spread at the top level) so the recommended
-        // preset's floorScale can't silently wipe out startScale — engine.js's
-        // own params merge is shallow on `forecast`, so `rel`/`npv` need to be
+        // Merged per-axis (not spread at the top level) so the legacy preset's
+        // floorScale can't silently wipe out startScale — engine.js's own
+        // params merge is shallow on `forecast`, so `rel`/`npv` need to be
         // fully rebuilt here rather than partially overridden.
         forecast: {
-          rel: { ...PARAMS.forecast.rel, ...(recCalOn ? RECOMMENDED_CALIBRATION.forecast.rel : {}) },
-          npv: { ...PARAMS.forecast.npv, ...(recCalOn ? RECOMMENDED_CALIBRATION.forecast.npv : {}) },
+          rel: { ...PARAMS.forecast.rel, ...(confidentOn ? LEGACY_CALIBRATION.forecast.rel : {}) },
+          npv: { ...PARAMS.forecast.npv, ...(confidentOn ? LEGACY_CALIBRATION.forecast.npv : {}) },
         },
       },
     });

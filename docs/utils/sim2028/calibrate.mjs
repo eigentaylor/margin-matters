@@ -17,10 +17,11 @@
  * global. baseline.js's own field coercion (`+r.year` etc.) means the CSV can be
  * handed in as plain strings; no d3.autoType equivalent is needed.
  *
- * Also runs the same sweep with RECOMMENDED_CALIBRATION applied (the toggle
- * exposed in the UI as "Doc-recommended calibration"), printed side by side
- * with the baseline — the fast, numeric half of "try both and see which feels
- * better," complementing the interactive UI toggle.
+ * Also runs the same sweep with LEGACY_CALIBRATION applied (the toggle exposed
+ * in the UI as "Confident forecasts" — the original, narrower assumptions from
+ * before this doc-calibration pass), printed side by side with the new
+ * default — the fast, numeric half of "try both and see which feels better,"
+ * complementing the interactive UI toggle.
  *
  * Usage: node docs/utils/sim2028/calibrate.mjs [numRuns]
  */
@@ -30,7 +31,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { buildBaseline } from './baseline.js';
-import { createSimulation, PARAMS, RECOMMENDED_CALIBRATION } from './engine.js';
+import { createSimulation, PARAMS, LEGACY_CALIBRATION } from './engine.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CSV_PATH = path.join(__dirname, '..', '..', 'presidential_margins.csv');
@@ -81,10 +82,10 @@ function median(xs) {
 }
 
 /** Run the sweep once under a given poll/forecast params override (mirrors the
- * merge sim2028.js's startCampaign() does for the "Doc-recommended calibration"
- * toggle: poll spreads flat, forecast is rebuilt per-axis so floorScale can't
- * wipe out startScale). Note: `forecast` here only affects the (skipped) Monte
- * Carlo confidence band, not the truth-vs-poll gap this script measures — the
+ * merge sim2028.js's startCampaign() does for the "Confident forecasts" toggle:
+ * poll spreads flat, forecast is rebuilt per-axis so floorScale can't wipe out
+ * startScale). Note: `forecast` here only affects the (skipped) Monte Carlo
+ * confidence band, not the truth-vs-poll gap this script measures — the
  * `forecast` override is accepted/threaded through for completeness/parity
  * with the UI toggle, but only the `poll` half (nationalSigma/regionShare)
  * moves these particular numbers. */
@@ -156,8 +157,8 @@ async function main() {
   console.log(`\n=== Calibration over ${numRuns} runs ===`);
   console.log('Doc cheat-sheet: national good/bad ~2/4.5pt | state MAE good/bad ~2.2-2.9/5.1pt\n');
 
-  report('Baseline (current app defaults)', await runSweep(numRuns, baseline));
-  report('Doc-recommended calibration', await runSweep(numRuns, baseline, RECOMMENDED_CALIBRATION));
+  report('Default (doc-calibrated)', await runSweep(numRuns, baseline));
+  report('Confident forecasts (legacy calibration)', await runSweep(numRuns, baseline, LEGACY_CALIBRATION));
 }
 
 main().catch(err => {

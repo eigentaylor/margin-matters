@@ -57,14 +57,20 @@ export const PARAMS = {
    * volatility. `df` gives the error draws fat tails (Student's t) instead of
    * Gaussian — see errorModel.js. 6 sits mid-range of the doc-cited 3-10.
    *
-   * Reference (not yet applied — base constants intentionally left as-is this
-   * pass; these are targets for a future joint tuning pass):
-   *   nationalSigma: doc's "national margin error SD" ~= 0.02-0.03 (current 0.018)
-   *   unitSigmas:    doc's "state-specific independent error SD" ~= 0.02 (current 0.020, matches)
-   *   regionShare:   doc's "same-region correlation" 0.6-0.9 => share 0.77-0.95 (current 0.75 => corr 0.56, a bit low)
-   *   (forecast.js's DEFAULT_FORECAST_PARAMS.floorScale has its own reference note.)
-   * Sources: Shirani-Mehr et al. 2018 (JASA); AAPOR 2016/2020; 538/Silver Bulletin
-   * and Economist methodology write-ups; Decision Desk HQ (HDSR 2022).
+   * nationalSigma/regionShare are calibrated to the research doc's empirical
+   * targets (national margin error SD ~2-3pt; same-region correlation ~0.6-0.9,
+   * i.e. share ~0.77-0.95): nationalSigma 0.025 (2.5pt), regionShare 0.87 (=>
+   * corr 0.76). unitSigmas (0.020) already matched the doc's ~0.02 and is
+   * unchanged. (forecast.js's DEFAULT_FORECAST_PARAMS.floorScale has its own
+   * matching note — together these are what keep close races feeling genuinely
+   * uncertain deep into the campaign instead of resolving to false-confident
+   * 90%+ calls.) Sources: Shirani-Mehr et al. 2018 (JASA); AAPOR 2016/2020;
+   * 538/Silver Bulletin and Economist methodology write-ups; Decision Desk HQ
+   * (HDSR 2022).
+   *
+   * The UI's "Confident forecasts" toggle swaps these (and the floorScale
+   * pair) for LEGACY_CALIBRATION below — the original, narrower assumptions —
+   * for anyone who preferred the tighter, more decisive calls.
    *
    * `turbulenceSigma`/`turbulenceRange`/`turbulenceOverride` mirror `cycle`'s
    * fields above, but scale how ACCURATE the polls are this cycle rather than how
@@ -74,7 +80,7 @@ export const PARAMS = {
    * a good year is roughly 0.6x a typical one, a bad year roughly 1.4x.
    */
   poll: {
-    regionShare: 0.75, nationalSigma: 0.018, unitSigmas: 0.020, df: 6,
+    regionShare: 0.87, nationalSigma: 0.025, unitSigmas: 0.020, df: 6,
     turbulenceSigma: 0.35, turbulenceRange: [0.55, 1.9], turbulenceOverride: null,
   },
   campaign: { ...DEFAULT_CAMPAIGN_PARAMS },
@@ -95,24 +101,21 @@ export const PARAMS = {
 };
 
 /**
- * The doc-recommended values for the base constants each reference comment
- * above points at, as an actual overlay instead of just prose — lets the UI
- * offer an on/off toggle so the numbers can be felt out in play rather than
- * only reasoned about. Off by default (PARAMS above is unchanged); flipping
- * this on is a deliberate A/B, not a silent behavior change.
+ * The ORIGINAL (pre-research-doc) base constants, kept as an opt-in overlay
+ * for the UI's "Confident forecasts" toggle — flipping it on swaps PARAMS.poll
+ * and DEFAULT_FORECAST_PARAMS's floorScale back to these narrower, more
+ * decisive-calling values, for anyone who wants the tighter feel back rather
+ * than the doc-calibrated defaults above.
  *
- *   nationalSigma 0.018 -> 0.025  (doc: 0.02-0.03)
- *   regionShare   0.75  -> 0.87   (doc: same-region corr 0.6-0.9 => share 0.77-0.95)
- *   unitSigmas    unchanged        (doc: ~0.02, already matched)
- *   forecast floorScale 0.65 -> 1.0 on both axes — with nationalSigma/unitSigmas
- *   now representing the doc's target magnitude directly, the extra floor
- *   shrinkage was what pulled the election-eve band artificially tight.
+ *   nationalSigma 0.025 -> 0.018
+ *   regionShare   0.87  -> 0.75
+ *   forecast floorScale 1.0 -> 0.65 on both axes
  */
-export const RECOMMENDED_CALIBRATION = {
-  poll: { regionShare: 0.87, nationalSigma: 0.025 },
+export const LEGACY_CALIBRATION = {
+  poll: { regionShare: 0.75, nationalSigma: 0.018 },
   forecast: {
-    rel: { floorScale: 1.0 },
-    npv: { floorScale: 1.0 },
+    rel: { floorScale: 0.65 },
+    npv: { floorScale: 0.65 },
   },
 };
 
