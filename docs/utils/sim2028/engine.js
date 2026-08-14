@@ -52,8 +52,31 @@ export const PARAMS = {
     turbulenceRange: [0.30, 2.30],
     turbulenceOverride: null,
   },
-  /** Polling error. unitSigmas is flat: polling misses aren't proportional to volatility. */
-  poll: { regionShare: 0.75, nationalSigma: 0.018, unitSigmas: 0.020 },
+  /**
+   * Polling error. unitSigmas is flat: polling misses aren't proportional to
+   * volatility. `df` gives the error draws fat tails (Student's t) instead of
+   * Gaussian — see errorModel.js. 6 sits mid-range of the doc-cited 3-10.
+   *
+   * Reference (not yet applied — base constants intentionally left as-is this
+   * pass; these are targets for a future joint tuning pass):
+   *   nationalSigma: doc's "national margin error SD" ~= 0.02-0.03 (current 0.018)
+   *   unitSigmas:    doc's "state-specific independent error SD" ~= 0.02 (current 0.020, matches)
+   *   regionShare:   doc's "same-region correlation" 0.6-0.9 => share 0.77-0.95 (current 0.75 => corr 0.56, a bit low)
+   *   (forecast.js's DEFAULT_FORECAST_PARAMS.floorScale has its own reference note.)
+   * Sources: Shirani-Mehr et al. 2018 (JASA); AAPOR 2016/2020; 538/Silver Bulletin
+   * and Economist methodology write-ups; Decision Desk HQ (HDSR 2022).
+   *
+   * `turbulenceSigma`/`turbulenceRange`/`turbulenceOverride` mirror `cycle`'s
+   * fields above, but scale how ACCURATE the polls are this cycle rather than how
+   * far the true lean drifts — see the pollTurbulence draw in createSimulation().
+   * Calibrated so the multiplier's range roughly reproduces the observed spread
+   * of state polling MAE across 2016 (~5.1pt) / 2020 (~5.1pt) / 2024 (~2.2-2.9pt):
+   * a good year is roughly 0.6x a typical one, a bad year roughly 1.4x.
+   */
+  poll: {
+    regionShare: 0.75, nationalSigma: 0.018, unitSigmas: 0.020, df: 6,
+    turbulenceSigma: 0.35, turbulenceRange: [0.55, 1.9], turbulenceOverride: null,
+  },
   campaign: { ...DEFAULT_CAMPAIGN_PARAMS },
   forecast: { ...DEFAULT_FORECAST_PARAMS },
   /** Sd of the true national popular vote, for the random NPV modes. */
@@ -189,17 +212,17 @@ export async function createSimulation({
     regionShare: P.cycle.regionShare,
   });
 
-  // Polling error: flat across states, more correlated, much smaller.
+  // Polling error: flat across states, more correlated, much smaller. This is
+  // also the spec the FORECASTER believes in (see forecast.js) — it stays the
+  // unscaled "typical year" baseline even after pollTurbulence below, since a
+  // real forecaster doesn't get to know in advance whether this cycle will poll
+  // clean or foggy.
   const pollSpec = {
     unitSigmas: P.poll.unitSigmas,
     regionShare: P.poll.regionShare,
     nationalSigma: P.poll.nationalSigma,
+    df: P.poll.df,
   };
-  const pollModel = createRegionalErrorModel({
-    units: base.simUnits,
-    weights: base.weights,
-    ...pollSpec,
-  });
 
   // --- hidden truth ---------------------------------------------------------
   // How turbulent is THIS cycle? One draw, applied to every state, so a calm year
@@ -214,6 +237,30 @@ export async function createSimulation({
         Math.min(P.cycle.turbulenceRange[1], Math.exp(randn(rng) * P.cycle.turbulenceSigma)))
       : 1);
   const cycleScale = P.cycle.scale * turbulence;
+
+  // How ACCURATE is polling this cycle? Same shape as turbulence above, but
+  // scales the hidden poll-generation error rather than the true lean drift.
+  // This is what lets one simulated election land as a clean, 2024-style call
+  // and another as a foggy, 2020-style miss — the forecaster below never sees
+  // this draw, only its consequences, exactly like a real forecaster wouldn't
+  // know in advance which kind of polling year they're in.
+  const pollTurbulence = (P.poll.turbulenceOverride != null)
+    ? P.poll.turbulenceOverride
+    : (P.poll.turbulenceSigma > 0
+      ? Math.max(P.poll.turbulenceRange[0],
+        Math.min(P.poll.turbulenceRange[1], Math.exp(randn(rng) * P.poll.turbulenceSigma)))
+      : 1);
+
+  // The actual (hidden) poll-generation process for THIS run — scaled by
+  // pollTurbulence. campaign.js only ever sees this model, never the unscaled
+  // pollSpec that the forecaster (forecast.js) uses.
+  const pollModel = createRegionalErrorModel({
+    units: base.simUnits,
+    weights: base.weights,
+    ...pollSpec,
+    unitSigmas: pollSpec.unitSigmas * pollTurbulence,
+    nationalSigma: pollSpec.nationalSigma * pollTurbulence,
+  });
 
   const truthShock = cycleModel.drawRel(rng, cycleScale);
   const truthRel = new Map();
@@ -272,6 +319,7 @@ export async function createSimulation({
     pollModel,
     turbulence,
     cycleScale,
+    pollTurbulence,
     truthRel,
     truthNpv,
     snapshots: campaign.snapshots,

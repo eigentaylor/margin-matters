@@ -29,9 +29,16 @@
  *
  * The national factor deliberately lives on the NPV axis instead, which is what
  * keeps "adjust leans" and "NPV moves independently" from double-counting.
+ *
+ * ## Distribution shape
+ *
+ * `z_region` and `z_u` are Gaussian by default. Setting `spec.df` switches both to
+ * Student's t with that many degrees of freedom instead — real polling misses are
+ * fat-tailed, not Gaussian (AAPOR/538 replications: df roughly 3-10), so a Gaussian
+ * assumption quietly rules out a real "2016" or "2020"-sized miss as near-impossible.
  */
 
-import { randn } from '../randomUtils.js';
+import { randn, randStudentT } from '../randomUtils.js';
 import { regionOf, REGION_KEYS } from './regions.js';
 
 export const DEFAULT_SPEC = {
@@ -41,6 +48,14 @@ export const DEFAULT_SPEC = {
   regionShare: 0.7,
   /** Sd of the national popular-vote error. */
   nationalSigma: 0.02,
+  /**
+   * Degrees of freedom for a fat-tailed (Student's t) draw instead of Gaussian.
+   * null/undefined = Gaussian (unchanged default behavior). Real polling misses
+   * are fat-tailed — AAPOR/538 replications put this around 3-10; low df means a
+   * large outlier miss (a "2016" or "2020") happens more than a Gaussian would
+   * ever allow. Applies to both the regional factor and the idiosyncratic draw.
+   */
+  df: null,
 };
 
 /**
@@ -80,6 +95,8 @@ export function createRegionalErrorModel(spec) {
   }
 
   const regionZ = new Float64Array(REGION_KEYS.length);
+  const df = s.df;
+  const draw = df ? (rng) => randStudentT(rng, df) : randn;
 
   /**
    * Vectorized draw. Fills `out` (length n) with relative-margin errors that are
@@ -90,12 +107,12 @@ export function createRegionalErrorModel(spec) {
    * or the national tilt gets counted twice — here and again in the NPV.
    */
   function drawRelInto(rng, scale, out) {
-    for (let r = 0; r < regionZ.length; r++) regionZ[r] = randn(rng);
+    for (let r = 0; r < regionZ.length; r++) regionZ[r] = draw(rng);
 
     let acc = 0;
     for (let i = 0; i < n; i++) {
       const shared = regionIdx[i] >= 0 ? regionZ[regionIdx[i]] : 0;
-      const v = sdArr[i] * scale * (regionShare * shared + idioShare * randn(rng));
+      const v = sdArr[i] * scale * (regionShare * shared + idioShare * draw(rng));
       out[i] = v;
       acc += v * weightArray[i];
     }
@@ -116,7 +133,7 @@ export function createRegionalErrorModel(spec) {
   }
 
   function drawNpv(rng, scale = 1) {
-    return randn(rng) * s.nationalSigma * scale;
+    return draw(rng) * s.nationalSigma * scale;
   }
 
   return { units: unitList, unitIndex, spec: s, drawRel, drawRelInto, drawNpv };

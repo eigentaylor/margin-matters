@@ -497,6 +497,9 @@
         <label title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle turbulence
           <input id="s28Turbulence" type="number" min="0.3" max="2.3" step="0.1" value="0.5" />
         </label>
+        <label title="How accurate the polls turn out to be this cycle, as a multiplier on typical polling error. 1.0 = typical. Roughly 0.55 = as clean a call as 2024, 1.9 = as foggy a miss as 2016/2020. This is hidden from the forecast itself — only the final result reveals it.">Polling accuracy this cycle
+          <input id="s28PollTurbulence" type="number" min="0.55" max="1.9" step="0.1" value="1.0" />
+        </label>
         <label title="A second pass, applied after this run's national popular vote is chosen: any state whose margin already landed close to zero gets nudged closer (and can swap order with its neighbors). States that aren't naturally close are left alone, so a landslide NPV still reads as a landslide. May change which candidate wins vs. the same settings with it off.">Nailbiter mode
           <span class="s28-checkbox-row">
             <input id="s28Nailbiter" type="checkbox" />

@@ -23,6 +23,14 @@ import { createRegionalErrorModel } from './errorModel.js';
  * split across the same two axes: the forecaster is much less sure about the
  * national environment in June than about any state's lean relative to it.
  * floorScale is the election-day miss, which nobody can forecast away.
+ *
+ * Reference (not yet applied — left as-is this pass, see engine.js PARAMS.poll's
+ * own reference note): at floorScale=0.65, election-eve national sd works out to
+ * ~1.2pt and per-state sd to ~1.3pt (before combining), both under the doc's
+ * "good year" figures (national ~2pt, state ~2pt independent + regional layers,
+ * ~3.5pt total RMSE per Shirani-Mehr et al.) — a candidate to raise in a future
+ * tuning pass, now that pollTurbulence (engine.js) separately covers the
+ * good-year/bad-year spread on top of whatever this baseline ends up being.
  */
 export const DEFAULT_FORECAST_PARAMS = {
   sims: 3000,

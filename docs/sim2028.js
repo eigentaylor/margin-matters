@@ -496,6 +496,7 @@ function renderDebug() {
     <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(sim.truthNpv)}</span></div>
     <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(2)}pt)</span></div>
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>
+    <div class="s28-dbgrow"><span>Polling accuracy this cycle</span><span>${sim.pollTurbulence.toFixed(2)}&times; typical &mdash; ${sim.pollTurbulence < 0.85 ? '2024-style, clean' : sim.pollTurbulence > 1.15 ? '2016/2020-style, foggy' : 'about average'}</span></div>
     <div class="s28-dbgrow"><span>Tipping point (true, NPV-independent)</span><span>${tp ? `${tp.unit} &mdash; flips EC at NPV ${fmtMarginPrecise(tp.npvThreshold)}` : '&mdash;'}</span></div>
     <div style="margin-top:6px;color:var(--muted)">Closest true races (at the actual environment): ${closest}</div>`;
 }
@@ -852,7 +853,8 @@ function syncManualNpvVisibility() {
   if (npvMode && wrap) wrap.classList.toggle('s28-hidden', npvMode.value !== 'manual');
 }
 
-/** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence, nailbiter, elasticity.
+/** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence,
+ * pollTurbulence, nailbiter, elasticity.
  * Campaign steps is deliberately left out — that control is hidden for now. */
 function buildSettingsParams() {
   const params = new URLSearchParams();
@@ -860,12 +862,14 @@ function buildSettingsParams() {
   const npvMode = $('s28NpvMode');
   const manualNpv = $('s28ManualNpv');
   const turbInput = $('s28Turbulence');
+  const pollTurbInput = $('s28PollTurbulence');
   const nailbiterEl = $('s28Nailbiter');
   const elasticityEl = $('s28Elasticity');
   if (seedInput && seedInput.value !== '') params.set('seed', seedInput.value);
   if (npvMode && npvMode.value) params.set('npv', npvMode.value);
   if (npvMode && npvMode.value === 'manual' && manualNpv) params.set('manualNpv', manualNpv.value);
   if (turbInput && turbInput.value !== '') params.set('turbulence', turbInput.value);
+  if (pollTurbInput && pollTurbInput.value !== '') params.set('pollTurbulence', pollTurbInput.value);
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
   params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
   return params;
@@ -896,6 +900,7 @@ function applySettingsFromUrl() {
   const npvMode = $('s28NpvMode');
   const manualNpv = $('s28ManualNpv');
   const turbInput = $('s28Turbulence');
+  const pollTurbInput = $('s28PollTurbulence');
   const nailbiterEl = $('s28Nailbiter');
   const elasticityEl = $('s28Elasticity');
 
@@ -911,6 +916,10 @@ function applySettingsFromUrl() {
   if (params.has('turbulence') && turbInput) {
     const v = parseFloat(params.get('turbulence'));
     if (Number.isFinite(v)) turbInput.value = String(v);
+  }
+  if (params.has('pollTurbulence') && pollTurbInput) {
+    const v = parseFloat(params.get('pollTurbulence'));
+    if (Number.isFinite(v)) pollTurbInput.value = String(v);
   }
   if (params.has('nailbiter') && nailbiterEl) {
     const v = params.get('nailbiter').toLowerCase();
@@ -962,6 +971,10 @@ async function startCampaign() {
   const turbulenceOverride = turbInput && Number.isFinite(parseFloat(turbInput.value))
     ? Math.max(0.1, Math.min(3, parseFloat(turbInput.value)))
     : 0.5;
+  const pollTurbInput = $('s28PollTurbulence');
+  const pollTurbulenceOverride = pollTurbInput && Number.isFinite(parseFloat(pollTurbInput.value))
+    ? Math.max(0.3, Math.min(3, parseFloat(pollTurbInput.value)))
+    : 1.0;
   const nailbiterEl = $('s28Nailbiter');
   const nailbiterOn = !!(nailbiterEl && nailbiterEl.checked);
   const elasticityEl = $('s28Elasticity');
@@ -985,6 +998,7 @@ async function startCampaign() {
       params: {
         campaign: { ...PARAMS.campaign, steps },
         cycle: { ...PARAMS.cycle, turbulenceOverride },
+        poll: { ...PARAMS.poll, turbulenceOverride: pollTurbulenceOverride },
       },
     });
     state.step = 0;
