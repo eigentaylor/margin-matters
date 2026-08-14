@@ -1,5 +1,5 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatMarginText, formatReportingText, formatConfidenceText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/mathUtils.js';
@@ -2182,6 +2182,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           leader: metrics.leader,
           margin: rawMargin,
           marginStr: metrics.countedMarginStr,
+          voteMargin: (isFinite(metrics.dVotesCounted) && isFinite(metrics.rVotesCounted))
+            ? Math.round(metrics.dVotesCounted - metrics.rVotesCounted)
+            : null,
           ev: isFinite(st.ev) ? st.ev : 0
         };
       })
@@ -2403,11 +2406,20 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
               : candidate.displayLabel;
             const infoParts = [];
             if (candidate.leader) {
-              infoParts.push(`${formatLeader(candidate.leader)} lead`);
+              infoParts.push(`${formatLeaderShort(candidate.leader)} lead`);
             }
             const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
             if (marginDisplay && marginDisplay !== 'None') {
-              infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
+              if (marginDisplay === 'EVEN') {
+                infoParts.push('EVEN');
+              } else {
+                let marginText = `Margin ${marginDisplay}`;
+                if (candidate.leader !== 'O' && isFinite(candidate.voteMargin) && candidate.voteMargin !== 0) {
+                  const rawSign = candidate.voteMargin > 0 ? 'D' : 'R';
+                  marginText += ` (${rawSign}+${Math.abs(candidate.voteMargin).toLocaleString('en-US')})`;
+                }
+                infoParts.push(marginText);
+              }
             }
             const confPct = Math.max(0, Math.min(100, Math.round((candidate.confidence || 0) * 100)));
             infoParts.push(`Confidence ${confPct}%`);
