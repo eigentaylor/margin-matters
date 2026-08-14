@@ -2317,7 +2317,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 
   // Builds one "still counting" card (used for both state races and the
   // NPV sub-section below them) — shared so both stay in sync visually.
-  function buildUncalledCardElement(candidate, threshold) {
+  function buildUncalledCardElement(candidate, threshold, options) {
+    const suppressPulse = !!(options && options.suppressPulse);
     const card = document.createElement('div');
     card.className = 'en-log-uncalled-card';
     const label = candidate.ev > 0
@@ -2345,7 +2346,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     const [ar, ag, ab] = hexToRgb(accentColor);
     const closeness = threshold > EPS ? Math.min(1, (candidate.confidence || 0) / threshold) : 0;
     card.style.background = `rgba(${ar}, ${ag}, ${ab}, ${(0.05 + closeness * 0.16).toFixed(3)})`;
-    if (closeness >= 0.85) {
+    if (closeness >= 0.85 && !suppressPulse) {
       card.classList.add('en-log-hot');
       card.style.setProperty('--en-pulse-color', `rgba(${ar}, ${ag}, ${ab}, 0.55)`);
     }
@@ -2412,16 +2413,20 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       });
 
     // National popular vote has no EV weight to score against the state
-    // races above, so pin it as its own leading card (when not yet called
-    // and counting has started) rather than force it into that scoring.
-    let npvUncalledCandidate = null;
-    if (!state.npvCallRecord && state.lastNationalTotals && state.totalEligibleVotes > EPS) {
+    // races above, so it gets its own small dedicated card rather than
+    // being forced into that scoring. Unlike a state, it stays visible
+    // here for the whole night (before AND after it's called) — it's
+    // meant as an ongoing watch item, not something that disappears once
+    // decided, since the underlying count keeps moving regardless.
+    let npvWatchCandidate = null;
+    if (state.lastNationalTotals && state.totalEligibleVotes > EPS) {
       const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
       if (countedVotes > EPS) {
         const leader = nationalLeader(dCounted, rCounted, oCounted);
         const margin = countedVotes > EPS ? (dCounted - rCounted) / countedVotes : 0;
-        npvUncalledCandidate = {
+        npvWatchCandidate = {
           isNpv: true,
+          isCalled: !!state.npvCallRecord,
           unitKey: 'NPV',
           displayLabel: 'National Popular Vote',
           confidence: (() => {
@@ -2558,6 +2563,21 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     const npvLines = readyEvents
       .filter(rec => rec.kind === 'npv_call')
       .map(record => {
+        // Keep the call-log line live after the call, same as state calls
+        // refresh from state.snapshot — the underlying national count
+        // keeps moving even once a leader has been called. The called
+        // `leader` itself is a committed historical fact and stays fixed;
+        // only the numeric vote/confidence/reporting readout refreshes.
+        if (state.lastNationalTotals) {
+          const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
+          record.dVotes = dCounted;
+          record.rVotes = rCounted;
+          record.oVotes = oCounted;
+          record.countedVotes = countedVotes;
+          if (state.totalEligibleVotes > EPS) record.reporting = countedVotes / state.totalEligibleVotes;
+          const liveConfidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+          if (isFinite(liveConfidence)) record.confidence = liveConfidence;
+        }
         const text = formatNpvCallText(record);
         const npvNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
           ? (record.dVotes - record.rVotes) / record.countedVotes
@@ -2605,10 +2625,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const repVal = isFinite(c.reporting) ? c.reporting : -1;
       return `${c.unitKey}:${confVal.toFixed(3)}:${repVal.toFixed(3)}`;
     });
-    if (npvUncalledCandidate) {
-      const confVal = isFinite(npvUncalledCandidate.confidence) ? npvUncalledCandidate.confidence : -1;
-      const repVal = isFinite(npvUncalledCandidate.reporting) ? npvUncalledCandidate.reporting : -1;
-      uncalledSignatureParts.unshift(`NPV:${confVal.toFixed(3)}:${repVal.toFixed(3)}`);
+    if (npvWatchCandidate) {
+      const confVal = isFinite(npvWatchCandidate.confidence) ? npvWatchCandidate.confidence : -1;
+      const repVal = isFinite(npvWatchCandidate.reporting) ? npvWatchCandidate.reporting : -1;
+      uncalledSignatureParts.unshift(`NPV:${confVal.toFixed(3)}:${repVal.toFixed(3)}:${npvWatchCandidate.isCalled ? 1 : 0}`);
     }
     const uncalledSignature = uncalledSignatureParts.join('|');
 
@@ -2670,14 +2690,17 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         // NPV gets its own small, quieter sub-section below the state
         // races rather than competing for attention at the top of the
         // list — it's a "glance at it occasionally" signal, not a race.
-        if (npvUncalledCandidate) {
+        // Unlike the state cards above, it stays here all night (before
+        // and after being called) as an ongoing watch item, since the
+        // underlying national count keeps moving either way.
+        if (npvWatchCandidate) {
           const npvTitle = document.createElement('div');
           npvTitle.className = 'en-log-section-title en-log-section-title-sub';
-          npvTitle.textContent = 'National popular vote';
+          npvTitle.textContent = npvWatchCandidate.isCalled ? 'National popular vote (called)' : 'National popular vote';
           container.appendChild(npvTitle);
           const npvContainer = document.createElement('div');
           npvContainer.className = 'en-log-uncalled-cards';
-          const npvCard = buildUncalledCardElement(npvUncalledCandidate, threshold);
+          const npvCard = buildUncalledCardElement(npvWatchCandidate, threshold, { suppressPulse: npvWatchCandidate.isCalled });
           npvCard.classList.add('en-log-npv-strip');
           npvContainer.appendChild(npvCard);
           container.appendChild(npvContainer);
