@@ -498,8 +498,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     } catch (e) { /* ignore */ }
     // Show the call log panel when the election-night simulation is prepared
     try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) { }
-    // Shift container left on medium screens to avoid overlap
+    // Shift container left on medium screens to avoid overlap. Also flagged
+    // on body so other fixed page-wide elements (e.g. the proportional-EV
+    // toggle footer) can shrink away from the call log sidebar too.
     try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { }
+    try { document.body.classList.add('en-active'); } catch (e) { }
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
@@ -708,6 +711,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
     // Remove en-active class to restore container centering
     try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { }
+    try { document.body.classList.remove('en-active'); } catch (e) { }
 
     // Remove phantom EV fill elements and clean up right-anchor on evFillR
     try {

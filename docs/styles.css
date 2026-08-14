@@ -1123,7 +1123,23 @@ hr {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  pointer-events: auto
+  pointer-events: auto;
+  transition: right 0.3s ease
+}
+
+/* Keep this bar clear of the election-night call log sidebar (z-index 2100
+   would otherwise sit on top of and cover its bottom edge — see the
+   #enLogPanel min-width:1201px sidebar rules). */
+@media (min-width: 1201px) {
+  body.en-active .delta-toggle-footer {
+    right: 380px;
+  }
+}
+
+@media (min-width: 1600px) {
+  body.en-active .delta-toggle-footer {
+    right: 440px;
+  }
 }
 
 .delta-toggle-footer .toggle-group {
