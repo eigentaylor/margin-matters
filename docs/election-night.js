@@ -4,7 +4,7 @@ import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
 import { getUnitCandidateLastNames } from './utils/candidateNames.js';
-import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
+import { hashCode, mulberry32, randn, randStudentT, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
@@ -2003,12 +2003,32 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       return { probD: (hardLockedD || impossibleR) ? 1 : 0, locked: true, sims: 0, evRange90: null };
     }
 
+    // createRegionalErrorModel's drawRelInto() vote-weighted-recenters every
+    // draw to exactly zero (docs/utils/sim2028/errorModel.js:119-122) - by
+    // design, per that file's own comment: "the national factor deliberately
+    // lives on the NPV axis instead" (drawNpv), added back on top. That
+    // national axis is never added back here, even though each unit's own
+    // posterior sigma was built assuming sqrt(unitSigmas^2+nationalSigma^2)
+    // - i.e. a nationwide-correlated component worth roughly 61% of the
+    // variance. Split each unit's sigma into its national-shared and
+    // region/idiosyncratic-shared portions (both derived straight from
+    // POLL_ERROR_SPEC, no independently-tunable constants), feed only the
+    // smaller relative portion to the regional model, and draw one shared
+    // national shock per simulation - restoring the missing correlation
+    // without changing any unit's marginal variance.
+    const NAT_SHARE = POLL_ERROR_SPEC.nationalSigma / Math.hypot(POLL_ERROR_SPEC.nationalSigma, POLL_ERROR_SPEC.unitSigmas);
+    const REL_SHARE = POLL_ERROR_SPEC.unitSigmas / Math.hypot(POLL_ERROR_SPEC.nationalSigma, POLL_ERROR_SPEC.unitSigmas);
+
     const units = liveUnits.map(st => st.unitKey);
     const weights = new Map(liveUnits.map(st => [st.unitKey, st.totalVotes]));
-    const unitSigmaMap = new Map(liveUnits.map(st => {
+    const unitSigmaMap = new Map();
+    const natSigmaMap = new Map();
+    liveUnits.forEach(st => {
       const post = posteriors.get(st.unitKey);
-      return [st.unitKey, Math.max(1e-4, post ? post.sigma : REMAINING_DELTA_SIGMA_BASE)];
-    }));
+      const fullSigma = Math.max(1e-4, post ? post.sigma : REMAINING_DELTA_SIGMA_BASE);
+      unitSigmaMap.set(st.unitKey, fullSigma * REL_SHARE);
+      natSigmaMap.set(st.unitKey, fullSigma * NAT_SHARE);
+    });
     const model = createRegionalErrorModel({
       units,
       weights,
@@ -2027,11 +2047,17 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
 
     for (let s = 0; s < PROB_MC_SIMS; s++) {
       model.drawRelInto(rng, 1, err);
+      // Shared national shock: one draw per simulation, scaled per-unit by
+      // that unit's own natSigma so every live unit moves in the same
+      // direction that draw, magnitude-weighted by its own uncertainty -
+      // same t-distribution convention drawRelInto already uses internally.
+      const zN = randStudentT(rng, POLL_ERROR_SPEC.df);
       let demEv = fixedDEv;
       for (let i = 0; i < n; i++) {
         const st = liveUnits[i];
         const post = posteriors.get(st.unitKey);
-        const margin = (post ? post.margin : 0) + err[i];
+        const natSigma = natSigmaMap.get(st.unitKey) || 0;
+        const margin = (post ? post.margin : 0) + err[i] + natSigma * zN;
         marginByUnit.set(st.unitKey, margin);
         if (margin >= 0) demEv += st.ev;
       }
