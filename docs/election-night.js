@@ -1,5 +1,5 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/mathUtils.js';
@@ -28,6 +28,14 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   const clampByte = typeof sharedClampByte === 'function'
     ? sharedClampByte
     : (v => Math.max(0, Math.min(255, v | 0)));
+
+  // Clamp a user-entered speed multiplier to a safe range; returns null
+  // for unparseable/non-finite input so callers can leave the current
+  // value untouched instead of clobbering it with a bad number.
+  function clampSpeed(v) {
+    if (!isFinite(v)) return null;
+    return Math.max(MIN_SPEED_MULTIPLIER, Math.min(MAX_SPEED_MULTIPLIER, v));
+  }
 
   const formatLean = value => {
     if (!isFinite(value)) return 'ERROR';
@@ -60,6 +68,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   // Confidence threshold defaults and reporting cutoffs
   const DEFAULT_CONFIDENCE_THRESHOLD = 0.3;
   const MIN_REPORTING_TO_CALL = 0.2;
+  // Bounds and default for the free-text simulation speed multiplier input
+  const MIN_SPEED_MULTIPLIER = 0.01;
+  const MAX_SPEED_MULTIPLIER = 100;
+  const DEFAULT_SPEED_MULTIPLIER = 0.5;
   // Visual constants for uncalled/tossup styling
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
@@ -125,7 +137,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     pvMode: 'current',
     pvValue: 0,
     targetPvLabel: 'EVEN',
-    speedMultiplier: 1,
+    speedMultiplier: DEFAULT_SPEED_MULTIPLIER,
     minutesPerSecond: BASE_MINUTES_PER_SECOND,
     currentTime: 0,
     simStart: 0,
@@ -149,6 +161,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     prevAbbrColors: null,
     boxesDirty: false,
     callRecords: [],
+    npvCallRecord: null,
+    npvMisCallLogged: false,
+    nationalFinalDVotes: 0,
+    nationalFinalRVotes: 0,
     confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
     pvRandomCache: null,
     pvRandomCacheMode: null,
@@ -296,9 +312,18 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
 
     if (elements.speed) {
+      elements.speed.addEventListener('input', () => {
+        const val = clampSpeed(parseFloat(elements.speed.value));
+        if (val != null) state.speedMultiplier = val;
+      });
       elements.speed.addEventListener('change', () => {
-        const val = parseFloat(elements.speed.value);
-        if (isFinite(val) && val > 0) state.speedMultiplier = val;
+        // On blur/commit, snap the field's displayed value to the clamped
+        // number so invalid input (0, negative, non-numeric, absurdly
+        // large) doesn't linger visibly.
+        const val = clampSpeed(parseFloat(elements.speed.value));
+        const finalVal = val != null ? val : state.speedMultiplier;
+        state.speedMultiplier = finalVal;
+        elements.speed.value = String(finalVal);
       });
     }
 
@@ -423,6 +448,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       : new Map();
     state.boxesDirty = false;
     state.callRecords = [];
+    state.npvCallRecord = null;
+    state.npvMisCallLogged = false;
     // Initialize log state for this simulation
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -487,6 +514,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (typeof window.updateAll === 'function') window.updateAll();
 
     state.totalEligibleVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.totalVotes : 0), 0);
+    state.nationalFinalDVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.dVotesCounted : 0), 0);
+    state.nationalFinalRVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.rVotesCounted : 0), 0);
 
     let minStart = Infinity;
     let maxEnd = -Infinity;
@@ -623,6 +652,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.abbrColorMap = null;
     state.boxesDirty = false;
     state.callRecords = [];
+    state.npvCallRecord = null;
+    state.npvMisCallLogged = false;
     // Reset log state
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -1411,6 +1442,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       maybeEmitMiscall(st, metrics, timeMinutes);
     });
 
+    maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
+    maybeEmitNpvMiscall(countedVotes, timeMinutes);
+
     flushSmallBoxes();
 
     window._electionNightSnapshot = state.snapshot;
@@ -1636,6 +1670,74 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     return Math.min(1, Math.max(0, voteGap / Math.max(EPS, remainingVotes)));
   }
 
+  // National-level analog of calculateConfidence, reusing the same
+  // worst-case-remaining-ballots math against the running national totals
+  // instead of a single state's. `calculateConfidence` only inspects its
+  // `stats` argument, so a truthy placeholder stands in for `st`.
+  function calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes) {
+    const remainingVotes = Math.max(0, state.totalEligibleVotes - countedVotes);
+    return calculateConfidence(true, { countedVotes, dCounted, rCounted, oCounted, remainingVotes });
+  }
+
+  function nationalLeader(dCounted, rCounted, oCounted) {
+    if (dCounted <= EPS && rCounted <= EPS && oCounted <= EPS) return null;
+    if (dCounted >= rCounted && dCounted >= oCounted) return 'D';
+    if (rCounted >= dCounted && rCounted >= oCounted) return 'R';
+    return 'O';
+  }
+
+  function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
+    if (state.npvCallRecord) return;
+    const leader = nationalLeader(dCounted, rCounted, oCounted);
+    if (!leader) return;
+    const reporting = state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 0;
+    if (reporting < MIN_REPORTING_TO_CALL) return;
+    const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold))) return;
+
+    const record = {
+      kind: 'npv_call',
+      time: currentTime,
+      leader,
+      confidence,
+      threshold,
+      reporting,
+      dVotes: dCounted,
+      rVotes: rCounted,
+      oVotes: oCounted,
+      countedVotes
+    };
+    state.npvCallRecord = record;
+    state.callRecords.push(record);
+    recordNpvCallLogEntry(currentTime, leader);
+    triggerTipRefresh();
+  }
+
+  function maybeEmitNpvMiscall(countedVotes, currentTime) {
+    if (!state.npvCallRecord || state.npvMisCallLogged) return;
+    if (countedVotes < state.totalEligibleVotes - EPS) return;
+    const calledLeader = state.npvCallRecord.leader;
+    const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    if (calledLeader === finalLeader) return;
+    state.npvMisCallLogged = true;
+    const correctionTime = Math.max(currentTime, state.npvCallRecord.time + 0.01);
+    const thresholdText = isFinite(state.npvCallRecord.threshold)
+      ? ` (threshold ${state.npvCallRecord.threshold.toFixed(2)})`
+      : '';
+    const message = `${formatTimeLabel(correctionTime)} – Correction: National popular vote finishes for ${formatLeader(finalLeader)}. Previously called for ${formatLeader(calledLeader)} at ${formatTimeLabel(state.npvCallRecord.time)}${thresholdText}.`;
+    state.callRecords.push({
+      kind: 'notice',
+      noticeType: 'npv_miscall',
+      time: correctionTime,
+      text: message,
+      calledLeader,
+      finalLeader
+    });
+    triggerTipRefresh();
+    state.lastLogKey = '';
+  }
+
   function maybeEmitMiscall(st, metrics, currentTime) {
     if (!st || !st.callRecord || st.misCallLogged) return;
     if (st.callRecord.kind !== 'call') return;
@@ -1748,22 +1850,23 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     try {
       const unit = st && st.unitKey ? st.unitKey : null;
       const abbr = unit && unit.length >= 2 ? unit.slice(0, 2) : null;
-      if (abbr === 'ME' || abbr === 'NE') {
-        const entry = {
-          time: st.callRecord.time,
-          unit: st.unitKey,
-          leader: st.callRecord.leader,
-          actualWinner: st.callRecord.actualWinner,
-          reporting: st.callRecord.reporting,
-          confidence: st.callRecord.confidence,
-          marginStr: st.callRecord.marginStr
-        };
-        if (window.ENABLE_EN_COLOR_CALL_LOG) {
-          window._enCallLog = window._enCallLog || [];
-          window._enCallLog.push(entry);
-        }
-        if (window.DEBUG_ELECTION_NIGHT) console.log('[EN-CALL]', entry);
+      const entry = {
+        time: st.callRecord.time,
+        unit: st.unitKey,
+        leader: st.callRecord.leader,
+        actualWinner: st.callRecord.actualWinner,
+        reporting: st.callRecord.reporting,
+        confidence: st.callRecord.confidence,
+        marginStr: st.callRecord.marginStr
+      };
+      // Pushed for every unit (not just ME/NE) so offline validation tooling
+      // (docs/utils/electionNight/validateConfidence.mjs) can compute a
+      // historical miscall rate against every call, not just ME/NE districts.
+      if (window.ENABLE_EN_COLOR_CALL_LOG) {
+        window._enCallLog = window._enCallLog || [];
+        window._enCallLog.push(entry);
       }
+      if (window.DEBUG_ELECTION_NIGHT && (abbr === 'ME' || abbr === 'NE')) console.log('[EN-CALL]', entry);
     } catch (e) { console.warn('EN call log failed', e); }
     triggerTipRefresh();
   }
@@ -2160,7 +2263,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       .slice()
       .sort((a, b) => {
         if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
-        const orderMap = { call: 0, notice: 1, outcome: 2 };
+        const orderMap = { call: 0, npv_call: 1, notice: 2, outcome: 3 };
         const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
         const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
         if (orderA !== orderB) return orderA - orderB;
@@ -2320,6 +2423,20 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
     }
 
+    const npvLines = readyEvents
+      .filter(rec => rec.kind === 'npv_call')
+      .map(record => {
+        const text = formatNpvCallText(record);
+        return {
+          kind: 'npv_call',
+          time: record.time,
+          className: 'en-log-entry en-log-npv',
+          text,
+          signature: `npv_call:${record.leader}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}`
+        };
+      });
+    npvLines.forEach(line => signatureParts.push(line.signature));
+
     const noticeLines = readyEvents
       .filter(rec => rec.kind === 'notice')
       .map(rec => {
@@ -2335,7 +2452,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     noticeLines.forEach(line => signatureParts.push(line.signature));
     if (outcomeLine) signatureParts.push(outcomeLine.signature);
 
-    let renderLines = [...callLines, ...noticeLines];
+    let renderLines = [...callLines, ...npvLines, ...noticeLines];
     if (outcomeLine) renderLines.push(outcomeLine);
     renderLines.sort((a, b) => {
       if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
@@ -2421,8 +2538,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
                 infoParts.push(marginText);
               }
             }
-            const confPct = Math.max(0, Math.min(100, Math.round((candidate.confidence || 0) * 100)));
-            infoParts.push(`Confidence ${confPct}%`);
+            infoParts.push(formatConfidenceText(candidate.confidence));
             // Use shared formatter so votes-left is shown when available
             try {
               const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
@@ -2851,7 +2967,10 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         totalRVotes: Math.round(totalRVotes),
         totalOVotes: Math.round(totalOVotes),
         totalCounted: Math.round(totalCounted),
-        pvMargin: totalCounted > 0 ? ((totalDVotes - totalRVotes) / totalCounted) : 0
+        pvMargin: totalCounted > 0 ? ((totalDVotes - totalRVotes) / totalCounted) : 0,
+        npvCalledFor: state.npvCallRecord ? state.npvCallRecord.leader : null,
+        npvCalledAtMinutes: state.npvCallRecord ? state.npvCallRecord.time : null,
+        npvConfidence: state.npvCallRecord ? state.npvCallRecord.confidence : null
       },
       units
     };
@@ -2894,6 +3013,15 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   }
 
   /**
+   * Force record a national popular vote call event log entry (bypasses interval check).
+   */
+  function recordNpvCallLogEntry(timeMinutes, leader) {
+    const entry = collectLogEntry(timeMinutes, 'npv_call', { leader });
+    state.logEntries.push(entry);
+    updateDownloadButtons();
+  }
+
+  /**
    * Enable/disable download buttons based on whether we have log entries.
    */
   function updateDownloadButtons() {
@@ -2925,7 +3053,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.logEntries.forEach((entry, idx) => {
       const eventLabel = entry.eventType === 'call'
         ? `[CALL: ${entry.eventData?.unitKey || '?'} for ${entry.eventData?.leader || '?'}]`
-        : '[INTERVAL]';
+        : entry.eventType === 'npv_call'
+          ? `[NPV CALL: ${entry.eventData?.leader || '?'}]`
+          : '[INTERVAL]';
 
       lines.push('-'.repeat(80));
       lines.push(`${entry.timeLabel} ${eventLabel}`);
@@ -2938,6 +3068,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const pvDir = s.pvMargin > 0 ? 'D' : (s.pvMargin < 0 ? 'R' : 'TIE');
       lines.push(`Pop Vote:    D: ${s.totalDVotes.toLocaleString()}  R: ${s.totalRVotes.toLocaleString()}  O: ${s.totalOVotes.toLocaleString()}  (${pvDir}+${pvPct}%)`);
       lines.push(`Total Counted: ${s.totalCounted.toLocaleString()}`);
+      lines.push(`NPV Called:  ${s.npvCalledFor ? `${s.npvCalledFor} at ${formatTimeLabel(s.npvCalledAtMinutes)} (confidence ${s.npvConfidence.toFixed(2)})` : '-'}`);
       lines.push('');
 
       // Header for state table
@@ -2984,6 +3115,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       'SummaryCalledDEV', 'SummaryCalledREV', 'SummaryCalledOEV',
       'SummaryPhantomDEV', 'SummaryPhantomREV', 'SummaryPhantomOEV',
       'SummaryDVotes', 'SummaryRVotes', 'SummaryOVotes', 'SummaryTotalCounted', 'SummaryPVMargin',
+      'SummaryNpvCalledFor', 'SummaryNpvCalledAtMinutes', 'SummaryNpvConfidence',
       'Unit', 'Abbr', 'EV', 'Reporting', 'Leader', 'Called', 'CalledFor',
       'Margin', 'MarginStr', 'Confidence',
       'DVotes', 'RVotes', 'OVotes', 'CountedVotes', 'RemainingVotes',
@@ -3005,6 +3137,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           s.calledDEV, s.calledREV, s.calledOEV,
           s.phantomDEV, s.phantomREV, s.phantomOEV,
           s.totalDVotes, s.totalRVotes, s.totalOVotes, s.totalCounted, s.pvMargin.toFixed(6),
+          s.npvCalledFor || '', s.npvCalledAtMinutes != null ? s.npvCalledAtMinutes.toFixed(2) : '', s.npvConfidence != null ? s.npvConfidence.toFixed(4) : '',
           u.unit,
           u.abbr,
           u.ev,

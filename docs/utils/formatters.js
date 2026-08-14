@@ -51,9 +51,45 @@ export function formatReportingText(reporting, remainingVotes) {
     return base;
 }
 
+// Raw confidence (from calculateConfidence) is a worst-case-remaining-ballots
+// ratio: historically, calls made at raw confidence >= 0.3 have essentially
+// always matched the eventual result, so displaying "30%" reads as far
+// shakier than it is. This remaps the raw [0,1] value to a display-only
+// [0,1] value for percentage formatting: raw 0.3 -> display 0.99, and
+// raw 0.3-1.0 gets squished into display 0.99-1.0. The junction point was
+// chosen to match the existing default call threshold; see
+// docs/utils/electionNight/validateConfidence.mjs for the historical
+// miscall-rate check that justified it. This must never be used anywhere
+// that affects call decisions or exported/raw data — display only.
+const CONFIDENCE_JUNCTION_RAW = 0.3;
+const CONFIDENCE_JUNCTION_DISPLAY = 0.99;
+
+export function rescaleConfidenceForDisplay(rawConfidence) {
+    if (!isFinite(rawConfidence)) return NaN;
+    const raw = Math.max(0, Math.min(1, rawConfidence));
+    if (raw >= 1 - 1e-9) return 1;
+    if (raw <= CONFIDENCE_JUNCTION_RAW) {
+        return (raw / CONFIDENCE_JUNCTION_RAW) * CONFIDENCE_JUNCTION_DISPLAY;
+    }
+    const t = (raw - CONFIDENCE_JUNCTION_RAW) / (1 - CONFIDENCE_JUNCTION_RAW);
+    return CONFIDENCE_JUNCTION_DISPLAY + t * (1 - CONFIDENCE_JUNCTION_DISPLAY);
+}
+
 export function formatConfidenceText(confidence) {
     if (!isFinite(confidence)) return 'Confidence —';
-    return `Confidence ${(confidence * 100).toFixed(0)}%`;
+    const display = rescaleConfidenceForDisplay(confidence);
+    if (display >= 1 - 1e-9) return 'Confidence 100%';
+    const pct = display * 100;
+    // Never let a sub-certainty value round up to a false "100%".
+    return `Confidence ${pct >= 99.95 ? '99.9' : pct.toFixed(0)}%`;
+}
+
+export function formatNpvCallText(record) {
+    const leaderText = formatLeader(record.leader);
+    const pvPct = record.countedVotes > 0.000005
+        ? (Math.abs(record.dVotes - record.rVotes) / record.countedVotes * 100).toFixed(1)
+        : '0.0';
+    return `${formatTimeLabel(record.time)} – National popular vote called for ${leaderText} (${formatConfidenceText(record.confidence)}, margin ${pvPct}%)`;
 }
 
 export function formatEvAllocationsForLog(callAlloc, finalAlloc) {

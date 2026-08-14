@@ -167,16 +167,10 @@
           <button id="enToggle" class="btn" style="min-width:96px">Start</button>
           <button id="enReset" class="btn" style="min-width:96px">Reset</button>
           <label for="enSpeed" class="legend" style="font-size:0.9rem">Speed</label>
-          <select id="enSpeed" class="btn"
-            style="min-width:120px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px">
-            <option value="0.1">0.1×</option>
-            <option value="0.25">0.25×</option>
-            <option value="0.5" selected>0.5×</option>
-            <option value="1">1×</option>
-            <option value="2">2×</option>
-            <option value="4">4×</option>
-            <option value="8">8×</option>
-          </select>
+          <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="0.5"
+            placeholder="0.5" aria-label="Simulation speed multiplier"
+            style="min-width:70px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
+          <span class="legend" style="font-size:0.85rem">×</span>
           <span id="enPhase" class="legend" style="font-size:0.9rem;color:var(--muted)">Idle</span>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">

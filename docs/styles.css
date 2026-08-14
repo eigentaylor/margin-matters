@@ -1643,6 +1643,11 @@ body.slider-dragging * {
   font-style: italic;
 }
 
+.en-log-npv {
+  color: #b9a6ff;
+  font-weight: 600;
+}
+
 .en-log-victory {
   display: none;
   margin-top: 10px;
