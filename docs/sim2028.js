@@ -1030,15 +1030,13 @@ async function startCampaign() {
     // window._electionNightActive, which makes renderMap() bail out — without
     // this the restarted campaign would leave every state grey.
     if (typeof window.resetElectionNightSimulation === 'function') {
-      try { window.resetElectionNightSimulation(false); } catch (e) { /* never ran */ }
+      try { window.resetElectionNightSimulation(false, true); } catch (e) { /* never ran */ }
     }
     $('s28NightCard').classList.add('s28-hidden');
     const pvTotals = $('pvTotals');
     if (pvTotals) pvTotals.classList.add('s28-hidden');
     const mapTitle = $('s28MapTitle');
     if (mapTitle) mapTitle.textContent = 'Map — current polling';
-    const panel = $('enLogPanel');
-    if (panel) panel.style.display = 'none';
     renderAll();
     syncAddressBar();
   } finally {

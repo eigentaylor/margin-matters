@@ -192,7 +192,7 @@ export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1
   if (yearSlider) yearSlider.value = String(YEAR);
 
   if (typeof window.resetElectionNightSimulation === 'function') {
-    try { window.resetElectionNightSimulation(false); } catch (e) { /* not yet prepared */ }
+    try { window.resetElectionNightSimulation(false, true); } catch (e) { /* not yet prepared */ }
   }
   if (typeof window.prepareElectionNightSimulation === 'function') {
     window.prepareElectionNightSimulation();

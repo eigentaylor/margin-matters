@@ -679,6 +679,41 @@ hr {
   color: #fff
 }
 
+/* Election night's call-log sidebar narrows the main content column,
+   which puts .pv-totals' plain flex-wrap closer to its wrap threshold —
+   as vote-count digit widths change frame to frame, badges hunt between
+   fitting on one row and wrapping, causing visible flicker. Pin a
+   deterministic 3-over-2 grid instead, scoped to exactly the width/mode
+   where the regression appears. */
+@media (min-width: 1201px) {
+  body.en-active .pv-totals {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    flex-wrap: unset;
+  }
+
+  body.en-active .pv-badge.pv-d {
+    grid-column: 1 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-o {
+    grid-column: 3 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-r {
+    grid-column: 5 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-margin {
+    grid-column: 2 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-total {
+    grid-column: 4 / span 2;
+  }
+}
+
 /* Align raw values and inline delta consistently inside table cells */
 .cell-inner {
   display: inline-grid;
@@ -1598,6 +1633,16 @@ body.slider-dragging * {
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
   z-index: 1400;
   backdrop-filter: blur(8px);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease, visibility 0s linear 0s;
+}
+
+#enLogPanel.en-log-closed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
 }
 
 .en-log-header {
@@ -1606,6 +1651,48 @@ body.slider-dragging * {
   letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+.en-log-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.en-log-close {
+  flex: 0 0 auto;
+  appearance: none;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.en-log-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.en-log-year {
+  font-size: 0.7rem;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--muted);
+  opacity: 0.8;
+  margin-top: 2px;
 }
 
 .en-winprob {
@@ -1844,11 +1931,14 @@ body.slider-dragging * {
   .en-log-header {
     cursor: pointer;
     user-select: none;
+  }
+
+  .en-log-header-main {
     position: relative;
     padding-right: 30px;
   }
 
-  .en-log-header::after {
+  .en-log-header-main::after {
     content: '';
     position: absolute;
     right: 0;
@@ -1862,7 +1952,7 @@ body.slider-dragging * {
     transition: transform 0.3s ease;
   }
 
-  #enLogPanel.collapsed .en-log-header::after {
+  #enLogPanel.collapsed .en-log-header-main::after {
     transform: translateY(-50%) rotate(0deg);
   }
 

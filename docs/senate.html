@@ -201,8 +201,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
-    <div id="enLogPanel" aria-live="polite" aria-label="Election night call log">
-      <div class="en-log-header">Call log</div>
+    <div id="enLogPanel" class="en-log-closed" aria-live="polite" aria-label="Election night call log">
+      <div class="en-log-header">
+        <div class="en-log-header-main">
+          <span id="enLogHeaderText" class="en-log-header-text">Call log</span>
+          <button id="enLogClose" class="en-log-close" type="button" aria-label="Close call log">&times;</button>
+        </div>
+        <div id="enLogYear" class="en-log-year"></div>
+      </div>
       <div id="enLog" class="en-log-body"></div>
       <div id="enVictory" class="en-log-victory" style="display:none"></div>
       <div id="enLogUncalled" class="en-log-uncalled"></div>

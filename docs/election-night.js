@@ -1,8 +1,8 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatWinProbText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
-import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/mathUtils.js';
+import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
 import { getUnitCandidateLastNames } from './utils/candidateNames.js';
 import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
@@ -302,11 +302,24 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     elements.phase = document.getElementById('enPhase');
     elements.log = document.getElementById('enLog');
     elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
+    elements.logHeaderText = document.getElementById('enLogHeaderText');
+    elements.logClose = document.getElementById('enLogClose');
+    elements.logYear = document.getElementById('enLogYear');
     elements.winProb = document.getElementById('enWinProb');
     elements.logUncalled = document.getElementById('enLogUncalled');
     elements.logPanel = document.getElementById('enLogPanel');
-    // Hide the call log panel by default until the election-night simulation is active
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
+    // The panel starts hidden via the `en-log-closed` class already present
+    // in the markup (opacity/visibility transition) so there's no JS-driven
+    // FOUC-style show/hide flicker on load.
+
+    if (elements.logClose) {
+      elements.logClose.addEventListener('click', (e) => {
+        // Stop the click from also reaching the mobile collapse-toggle
+        // listener on the header row below.
+        e.stopPropagation();
+        hideLogPanel();
+      });
+    }
 
     // Mobile collapse/expand functionality for call log
     if (elements.logHeader && elements.logPanel) {
@@ -337,6 +350,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     if (elements.toggle) {
       elements.toggle.addEventListener('click', () => {
         //console.log('ELECTION NIGHT TOGGLE CLICK');
+        showLogPanel();
         if (!state.prepared) {
           // Start should roll random PV now (at click time). Clear any cached random PV so
           // resolvePvValue will draw fresh values based on the current time/seed.
@@ -359,7 +373,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     }
 
     if (elements.reset) {
-      elements.reset.addEventListener('click', () => resetSimulation(true));
+      elements.reset.addEventListener('click', () => resetSimulation(true, true));
     }
 
     if (elements.speed) {
@@ -611,6 +625,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     updateDownloadButtons();
 
     state.year = year;
+    if (elements.logYear) elements.logYear.textContent = String(year);
 
     // If a proportional EV toggle exists, save its previous state and disable it during election night
     try {
@@ -621,20 +636,18 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
         prop.disabled = true;
       }
     } catch (e) { /* ignore */ }
-    // Show the call log panel when the election-night simulation is prepared
-    try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) { }
-    // Shift container left on medium screens to avoid overlap. Also flagged
-    // on body so other fixed page-wide elements (e.g. the proportional-EV
-    // toggle footer) can shrink away from the call log sidebar too.
-    try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { }
-    try { document.body.classList.add('en-active'); } catch (e) { }
+    // Show the call log panel when the election-night simulation is prepared.
+    // Also shifts the container left on medium screens to avoid overlap
+    // (flagged on body too so other fixed page-wide elements, e.g. the
+    // proportional-EV toggle footer, can shrink away from the sidebar).
+    showLogPanel();
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
     state.lastUncalledKey = '';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
-    if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.logHeaderText) elements.logHeaderText.textContent = 'Call log';
     if (elements.winProb) elements.winProb.textContent = '';
     if (elements.victory) {
       elements.victory.textContent = '';
@@ -801,7 +814,19 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     advanceDeterministic(targetTime);
   }
 
-  function resetSimulation(restorePv) {
+  function showLogPanel() {
+    try { if (elements.logPanel) elements.logPanel.classList.remove('en-log-closed'); } catch (e) { /* ignore */ }
+    try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { /* ignore */ }
+    try { document.body.classList.add('en-active'); } catch (e) { /* ignore */ }
+  }
+
+  function hideLogPanel() {
+    try { if (elements.logPanel) elements.logPanel.classList.add('en-log-closed'); } catch (e) { /* ignore */ }
+    try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { /* ignore */ }
+    try { document.body.classList.remove('en-active'); } catch (e) { /* ignore */ }
+  }
+
+  function resetSimulation(restorePv, hidePanel = false) {
     if (state.rafId) cancelAnimationFrame(state.rafId);
     state.rafId = null;
     state.running = false;
@@ -817,6 +842,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     state.lastLogKey = '';
     state.lastUncalledKey = '';
     state.year = null;
+    if (elements.logYear) elements.logYear.textContent = '';
     state.totalEvPool = 538;
     state.unitColorMap = null;
     state.abbrColorMap = null;
@@ -847,7 +873,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     if (elements.pvDisplay) elements.pvDisplay.textContent = 'PV: —';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
-    if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.logHeaderText) elements.logHeaderText.textContent = 'Call log';
     if (elements.winProb) elements.winProb.textContent = '';
     if (elements.victory) {
       elements.victory.textContent = '';
@@ -855,10 +881,10 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       elements.victory.style.display = 'none';
     }
 
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
-    // Remove en-active class to restore container centering
-    try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { }
-    try { document.body.classList.remove('en-active'); } catch (e) { }
+    // Resetting simulation state (e.g. from an incidental Year/PV slider
+    // drag) should not itself close the panel — only an explicit "close"
+    // action does that. See showLogPanel/hideLogPanel.
+    if (hidePanel) hideLogPanel();
 
     // Remove phantom EV fill elements and clean up right-anchor on evFillR
     try {
@@ -1917,6 +1943,15 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     };
   }
 
+  // P(D wins the unit) implied by its posterior margin/sigma, for display in
+  // the "still counting" cards. A degenerate zero-sigma posterior (no prior,
+  // e.g. before any bridged/synthetic prior was established) resolves to a
+  // hard 0/1 rather than a coin-flip.
+  function winProbFromPosterior(margin, sigma) {
+    if (!(sigma > 0)) return margin >= 0 ? 1 : 0;
+    return normalCdf(margin / sigma);
+  }
+
   // Monte Carlo national win-probability tally. Already-called units (and
   // third-party-dominant ones, which never count toward either major
   // party's total — a majority of the TRUE EV pool is required, mirroring
@@ -2113,6 +2148,25 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     return leader === 'O' ? THIRD_PARTY_COLOR : safeMarginToColor(margin || 0, false);
   }
 
+  // Resolves a leader code to the actual candidate's last name when one is
+  // known, for personalized call-log text ("Called Ohio for Vance" instead
+  // of "...for Republicans"). Returns null (letting callers fall back to
+  // formatLeader) for real years/units with no candidate on record, and for
+  // every synthetic year — docs/future.js hardcodes dCandidate:'D'/rCandidate:'R'
+  // on every row it generates, including its NATIONAL row, so this
+  // placeholder-sentinel check makes future.html fall back automatically
+  // with no page-specific branching needed. unitKey='NATIONAL' resolves the
+  // national ticket the same way, since every data source election-night.js
+  // reads from (real CSV rows, docs/future.js, the sim2028 bridge) includes
+  // a NATIONAL row.
+  function resolveCandidateLastName(leader, unitKey) {
+    if (leader !== 'D' && leader !== 'R' && leader !== 'O') return null;
+    const names = getUnitCandidateLastNames(unitKey, { year: state.year });
+    const name = names ? names[leader] : null;
+    if (!name || name === 'D' || name === 'R' || name === 'O') return null;
+    return name;
+  }
+
   function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
     if (state.npvCallRecord) return;
     const leader = nationalLeader(dCounted, rCounted, oCounted);
@@ -2127,6 +2181,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       kind: 'npv_call',
       time: currentTime,
       leader,
+      candidateName: resolveCandidateLastName(leader, 'NATIONAL'),
       confidence,
       threshold,
       reporting,
@@ -2152,7 +2207,9 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     const thresholdText = isFinite(state.npvCallRecord.threshold)
       ? ` (threshold ${state.npvCallRecord.threshold.toFixed(2)})`
       : '';
-    const message = `${formatTimeLabel(correctionTime)} – Correction: National popular vote finishes for ${formatLeader(finalLeader)}. Previously called for ${formatLeader(calledLeader)} at ${formatTimeLabel(state.npvCallRecord.time)}${thresholdText}.`;
+    const finalLeaderText = resolveCandidateLastName(finalLeader, 'NATIONAL') || formatLeader(finalLeader);
+    const calledLeaderText = state.npvCallRecord.candidateName || formatLeader(calledLeader);
+    const message = `${formatTimeLabel(correctionTime)} – Correction: National popular vote finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${formatTimeLabel(state.npvCallRecord.time)}${thresholdText}.`;
     state.callRecords.push({
       kind: 'notice',
       noticeType: 'npv_miscall',
@@ -2174,8 +2231,8 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     if (!metrics || metrics.reporting < 1 - EPS) return;
     st.misCallLogged = true;
     const correctionTime = Math.max(currentTime, st.callRecord.time + 0.01);
-    const finalLeaderText = formatLeader(finalLeader);
-    const calledLeaderText = formatLeader(calledLeader);
+    const finalLeaderText = resolveCandidateLastName(finalLeader, st.unitKey) || formatLeader(finalLeader);
+    const calledLeaderText = st.callRecord.candidateName || formatLeader(calledLeader);
     const callTimeStr = formatTimeLabel(st.callRecord.time);
     const thresholdText = isFinite(st.callRecord.threshold)
       ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
@@ -2252,6 +2309,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       displayLabel: formatUnitLabel(st.unitKey),
       time: callTime,
       leader: calledLeader,
+      candidateName: resolveCandidateLastName(calledLeader, st.unitKey),
       actualWinner: st.winner,
       marginStr: effectiveMarginStr,
       reporting,
@@ -2697,6 +2755,10 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
       infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
     }
     infoParts.push(formatConfidenceText(candidate.confidence));
+    if ((candidate.leader === 'D' || candidate.leader === 'R') && isFinite(candidate.winProb)) {
+      const leaderProb = candidate.leader === 'D' ? candidate.winProb : (1 - candidate.winProb);
+      infoParts.push(formatWinProbText(leaderProb));
+    }
     // Use shared formatter so votes-left is shown when available
     try {
       const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
@@ -2720,7 +2782,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
 
   function updateCallLog(currentTime) {
     const timeLabel = formatTimeLabel(currentTime);
-    if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
+    if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
     if (!elements.log && !elements.logUncalled && !elements.victory) return;
 
     const readyEvents = state.callRecords
@@ -2753,7 +2815,12 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
           voteMargin: (isFinite(metrics.dVotesCounted) && isFinite(metrics.rVotesCounted))
             ? Math.round(metrics.dVotesCounted - metrics.rVotesCounted)
             : null,
-          ev: isFinite(st.ev) ? st.ev : 0
+          ev: isFinite(st.ev) ? st.ev : 0,
+          winProb: (() => {
+            if (st.thirdPartyDominant) return null;
+            const post = state.unitPosteriors ? state.unitPosteriors.get(st.unitKey) : null;
+            return post ? winProbFromPosterior(post.margin, post.sigma) : null;
+          })()
         };
       })
       .sort((a, b) => {
@@ -2842,7 +2909,7 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
         if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
         else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
       }
-      const leaderText = formatLeader(record.leader);
+      const leaderText = record.candidateName || formatLeader(record.leader);
       const reportingText = formatReportingText(record.reporting, record.remainingVotes);
       const callVoteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
       const marginText = formatMarginText(record.marginStr, record.leader, callVoteMargin);
@@ -2887,15 +2954,20 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
     let outcomeClass = '';
     if (outcome) {
       const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
+      const winnerName = outcome.type !== 'T' ? resolveCandidateLastName(outcome.type, 'NATIONAL') : null;
       if (outcome.type === 'D') {
         const latestTotal = finalD;
         outcome.total = latestTotal;
-        outcomeMessage = `Democrats clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
+        outcomeMessage = winnerName
+          ? `${winnerName} clinches the presidency with ${latestTotal} EV (needed ${majority}).`
+          : `Democrats clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
         outcomeClass = ' win-dem';
       } else if (outcome.type === 'R') {
         const latestTotal = finalR;
         outcome.total = latestTotal;
-        outcomeMessage = `Republicans clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
+        outcomeMessage = winnerName
+          ? `${winnerName} clinches the presidency with ${latestTotal} EV (needed ${majority}).`
+          : `Republicans clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
         outcomeClass = ' win-rep';
       } else {
         const latestOther = finalO;
@@ -3730,8 +3802,8 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
   }
 
 
-  window.resetElectionNightSimulation = function (restorePv = true) {
-    resetSimulation(restorePv);
+  window.resetElectionNightSimulation = function (restorePv = true, hidePanel = false) {
+    resetSimulation(restorePv, hidePanel);
   };
 
   window.prepareElectionNightSimulation = function () {

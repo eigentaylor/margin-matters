@@ -88,8 +88,14 @@ export function formatConfidenceText(confidence) {
     return `Confidence ${pct >= 99.95 ? '99.9' : pct.toFixed(0)}%`;
 }
 
+export function formatWinProbText(winProb) {
+    if (!isFinite(winProb)) return '';
+    const pct = Math.max(0, Math.min(100, Math.round(winProb * 100)));
+    return `Win prob ${pct}%`;
+}
+
 export function formatNpvCallText(record) {
-    const leaderText = formatLeader(record.leader);
+    const leaderText = record.candidateName || formatLeader(record.leader);
     const pvPct = record.countedVotes > 0.000005
         ? (Math.abs(record.dVotes - record.rVotes) / record.countedVotes * 100).toFixed(1)
         : '0.0';
