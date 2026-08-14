@@ -2311,6 +2311,52 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
   }
 
+  // Builds one "still counting" card (used for both state races and the
+  // NPV sub-section below them) — shared so both stay in sync visually.
+  function buildUncalledCardElement(candidate, threshold) {
+    const card = document.createElement('div');
+    card.className = 'en-log-uncalled-card';
+    const label = candidate.ev > 0
+      ? `${candidate.displayLabel} (${candidate.ev} EV)`
+      : candidate.displayLabel;
+    // Leader is conveyed by the card's accent color/glow (below) rather
+    // than a "D/R lead" text line.
+    const infoParts = [];
+    const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
+    if (marginDisplay && marginDisplay !== 'None') {
+      if (marginDisplay === 'EVEN') {
+        infoParts.push('EVEN');
+      } else {
+        let marginText = `Margin ${marginDisplay}`;
+        if (candidate.leader !== 'O' && isFinite(candidate.voteMargin) && candidate.voteMargin !== 0) {
+          const rawSign = candidate.voteMargin > 0 ? 'D' : 'R';
+          marginText += ` (${rawSign}+${Math.abs(candidate.voteMargin).toLocaleString('en-US')})`;
+        }
+        infoParts.push(marginText);
+      }
+    }
+    infoParts.push(formatConfidenceText(candidate.confidence));
+    // Use shared formatter so votes-left is shown when available
+    try {
+      const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
+      infoParts.push(repText);
+    } catch (e) {
+      infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
+    }
+    card.textContent = `${label} – ${infoParts.join(' · ')}`;
+
+    const accentColor = confidenceAccentColor(candidate.leader, candidate.margin, candidate.confidence, threshold);
+    card.style.borderLeftColor = accentColor;
+    const [ar, ag, ab] = hexToRgb(accentColor);
+    const closeness = threshold > EPS ? Math.min(1, (candidate.confidence || 0) / threshold) : 0;
+    card.style.background = `rgba(${ar}, ${ag}, ${ab}, ${(0.05 + closeness * 0.16).toFixed(3)})`;
+    if (closeness >= 0.85) {
+      card.classList.add('en-log-hot');
+      card.style.setProperty('--en-pulse-color', `rgba(${ar}, ${ag}, ${ab}, 0.55)`);
+    }
+    return card;
+  }
+
   function updateCallLog(currentTime) {
     const timeLabel = formatTimeLabel(currentTime);
     if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
@@ -2612,59 +2658,33 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       if (elements.logUncalled) {
         const container = elements.logUncalled;
         container.innerHTML = '';
-        const allUncalled = npvUncalledCandidate ? [npvUncalledCandidate, ...uncalledCandidates] : uncalledCandidates;
-        if (allUncalled.length) {
+        const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+        if (uncalledCandidates.length) {
           const title = document.createElement('div');
           title.className = 'en-log-section-title';
           title.textContent = 'STILL COUNTING (UNCALLED)';
           container.appendChild(title);
           const cardsContainer = document.createElement('div');
           cardsContainer.className = 'en-log-uncalled-cards';
-          const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
-          allUncalled.forEach(candidate => {
-            const card = document.createElement('div');
-            card.className = candidate.isNpv ? 'en-log-uncalled-card en-log-npv-card' : 'en-log-uncalled-card';
-            const label = candidate.ev > 0
-              ? `${candidate.displayLabel} (${candidate.ev} EV)`
-              : candidate.displayLabel;
-            // Leader is conveyed by the card's accent color/glow (below)
-            // rather than a "D/R lead" text line.
-            const infoParts = [];
-            const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
-            if (marginDisplay && marginDisplay !== 'None') {
-              if (marginDisplay === 'EVEN') {
-                infoParts.push('EVEN');
-              } else {
-                let marginText = `Margin ${marginDisplay}`;
-                if (candidate.leader !== 'O' && isFinite(candidate.voteMargin) && candidate.voteMargin !== 0) {
-                  const rawSign = candidate.voteMargin > 0 ? 'D' : 'R';
-                  marginText += ` (${rawSign}+${Math.abs(candidate.voteMargin).toLocaleString('en-US')})`;
-                }
-                infoParts.push(marginText);
-              }
-            }
-            infoParts.push(formatConfidenceText(candidate.confidence));
-            // Use shared formatter so votes-left is shown when available
-            try {
-              const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
-              infoParts.push(repText);
-            } catch (e) {
-              infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
-            }
-            card.textContent = `${label} – ${infoParts.join(' · ')}`;
-
-            const accentColor = confidenceAccentColor(candidate.leader, candidate.margin, candidate.confidence, threshold);
-            card.style.borderLeftColor = accentColor;
-            const [ar, ag, ab] = hexToRgb(accentColor);
-            const closeness = threshold > EPS ? Math.min(1, (candidate.confidence || 0) / threshold) : 0;
-            card.style.background = `rgba(${ar}, ${ag}, ${ab}, ${(0.05 + closeness * 0.16).toFixed(3)})`;
-            if (closeness >= 0.85) {
-              card.classList.add('en-log-hot');
-              card.style.setProperty('--en-pulse-color', `rgba(${ar}, ${ag}, ${ab}, 0.55)`);
-            }
-            cardsContainer.appendChild(card);
+          uncalledCandidates.forEach(candidate => {
+            cardsContainer.appendChild(buildUncalledCardElement(candidate, threshold));
           });
           container.appendChild(cardsContainer);
+        }
+        // NPV gets its own small, quieter sub-section below the state
+        // races rather than competing for attention at the top of the
+        // list — it's a "glance at it occasionally" signal, not a race.
+        if (npvUncalledCandidate) {
+          const npvTitle = document.createElement('div');
+          npvTitle.className = 'en-log-section-title en-log-section-title-sub';
+          npvTitle.textContent = 'National popular vote';
+          container.appendChild(npvTitle);
+          const npvContainer = document.createElement('div');
+          npvContainer.className = 'en-log-uncalled-cards';
+          const npvCard = buildUncalledCardElement(npvUncalledCandidate, threshold);
+          npvCard.classList.add('en-log-npv-strip');
+          npvContainer.appendChild(npvCard);
+          container.appendChild(npvContainer);
         }
       }
     }

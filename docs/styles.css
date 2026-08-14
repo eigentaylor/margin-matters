@@ -1747,9 +1747,17 @@ body.slider-dragging * {
   transition: border-left-color 0.4s ease;
 }
 
-.en-log-uncalled-card.en-log-npv-card {
+.en-log-section-title-sub {
+  margin-top: 10px;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.en-log-uncalled-card.en-log-npv-strip {
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  opacity: 0.82;
   border-style: dashed;
-  font-weight: 600;
 }
 
 #enConfidence {
