@@ -6,7 +6,7 @@
  * (docs/election-night.js: computeUnitPosterior / runNationalWinProbabilityMC
  * / updateNationalWinProbability).
  *
- * Checks two things a live-updating win probability absolutely must get
+ * Checks several things a live-updating win probability absolutely must get
  * right, or it's actively misleading:
  *   1. Calibration — across many historical elections, races the model
  *      called "~70% D" should actually go D roughly 70% of the time,
@@ -15,6 +15,18 @@
  *      the model should still be leaning heavily on its polling-based prior
  *      (which carries real uncertainty), not snapping to near-certainty
  *      before there's a legitimate reason to.
+ *   3. Swing honesty — the live swing hierarchy (docs/utils/electionNight/
+ *      liveSwing.js) infers a shared national/regional swing from
+ *      currently-reporting units' own deviation from their priors. Its
+ *      z-score (mean/sigma) should look roughly standard-normal across the
+ *      corpus; a systematically nonzero early-game mean is the fingerprint
+ *      of contamination (e.g. createBiasParams's early-count center-
+ *      compression bias, which the earliest-reporting states share) being
+ *      misread as a real national swing, not a bug in the math itself.
+ *   4. Swing recovery — does the solved national swing actually converge on
+ *      the true final national swing (priorNpvMargin vs. the real outcome)
+ *      as reporting completes? This is also the "when did the model notice"
+ *      pivot-point data a future commentary system would want.
  *
  * Like validateConfidence.mjs, this does NOT reimplement the posterior/
  * Monte-Carlo math in Node — it lives entirely inside election-night.js's
@@ -25,8 +37,10 @@
  * window._enProbLog array (gated behind window.ENABLE_EN_PROB_LOG, mirroring
  * the existing window.ENABLE_EN_COLOR_CALL_LOG / window._enCallLog pattern)
  * pushed from inside updateNationalWinProbability() with
- * {time, nationalReporting, probD, actualWinner, actualMargin} per entry —
- * actualWinner/actualMargin are ground truth, fine to read here since this
+ * {time, nationalReporting, probD, evRange90, actualWinner, actualMargin,
+ * actualEvMargin, swingNational, swingNationalSigma, swingNationalZ,
+ * swingRegions, swingNObs, priorNpvMargin} per entry — actualWinner/
+ * actualMargin/priorNpvMargin are ground truth, fine to read here since this
  * is test-only instrumentation the live algorithm itself never consults.
  *
  * Usage:
@@ -48,43 +62,10 @@
  * docs/election-night.js and re-run.
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { chromium } from 'playwright';
+import { resolveBaseUrl, installCdnFallbacks, launchChromium } from './harness.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = path.join(__dirname, '..', '..', '..');
-
-const BASE_URL = process.argv[2] || 'http://127.0.0.1:8080';
+const BASE_URL = resolveBaseUrl();
 const PAGE_URL = `${BASE_URL}/index.html`;
-
-// index.html loads d3/topojson-client/us-atlas from a public CDN, which this
-// sandboxed environment's egress policy blocks. Serve the same versions from
-// local node_modules instead (installed via `npm install --no-save d3@7
-// topojson-client@3 us-atlas@3`) so the page can still initialize offline.
-const CDN_ROUTES = [
-  { match: 'https://cdn.jsdelivr.net/npm/d3@7', file: path.join(REPO_ROOT, 'node_modules/d3/dist/d3.js'), contentType: 'application/javascript' },
-  { match: 'https://cdn.jsdelivr.net/npm/topojson-client@3', file: path.join(REPO_ROOT, 'node_modules/topojson-client/dist/topojson-client.js'), contentType: 'application/javascript' },
-  { match: 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json', file: path.join(REPO_ROOT, 'node_modules/us-atlas/states-10m.json'), contentType: 'application/json' }
-];
-
-async function installCdnFallbacks(page) {
-  for (const route of CDN_ROUTES) {
-    if (!fs.existsSync(route.file)) {
-      throw new Error(`Missing local fallback for ${route.match}: ${route.file}. Run: npm install --no-save d3@7 topojson-client@3 us-atlas@3`);
-    }
-  }
-  await page.route('https://cdn.jsdelivr.net/**', async (routeHandle) => {
-    const url = routeHandle.request().url();
-    const found = CDN_ROUTES.find(r => url === r.match || url.startsWith(`${r.match}/`) || url.startsWith(`${r.match}?`));
-    if (!found) {
-      await routeHandle.abort();
-      return;
-    }
-    await routeHandle.fulfill({ status: 200, contentType: found.contentType, body: fs.readFileSync(found.file) });
-  });
-}
 
 const PROB_BUCKETS = Array.from({ length: 10 }, (_, i) => ({
   label: `[${i * 10}-${(i + 1) * 10}%)`,
@@ -128,9 +109,7 @@ async function runYear(page, year) {
 }
 
 async function main() {
-  const browser = await chromium.launch(
-    process.env.PLAYWRIGHT_CHROMIUM_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH } : {}
-  );
+  const browser = await launchChromium();
   const page = await browser.newPage();
   await page.addInitScript(() => { window.ENABLE_EN_PROB_LOG = true; });
   page.on('pageerror', err => console.error('[page exception]', err));
@@ -147,6 +126,21 @@ async function main() {
   const overconfidentEarly = [];
   const spreadByReportingDecile = new Map(); // reporting-decile index -> [ev spread, ...]
   let totalSamples = 0;
+
+  // Early-game confidence: direct measurement of "how far from a coin flip
+  // is the model when almost nothing has been counted" — the thing actually
+  // asked about, not just a pass/fail overconfidence flag.
+  const earlyGameDeviations = []; // |probD-0.5| for nationalReporting < 0.15
+
+  // Swing honesty: z-scores of the live swing hierarchy's national estimate,
+  // bucketed by whether the sample is "early" (reporting < 0.15) or not.
+  const swingZAll = [];
+  const swingZEarly = [];
+
+  // Swing recovery: per-year, the final checkpoint's |solved - true| swing
+  // error, and the first reporting fraction at which that error drops below
+  // 1pt (the "when did the model notice" pivot point).
+  const swingRecoveryByYear = [];
 
   for (const year of years) {
     let entries;
@@ -180,7 +174,31 @@ async function main() {
         if (!spreadByReportingDecile.has(decile)) spreadByReportingDecile.set(decile, []);
         spreadByReportingDecile.get(decile).push(spread);
       }
+
+      if (e.nationalReporting < 0.15) earlyGameDeviations.push(Math.abs(e.probD - 0.5));
+
+      if (isFinite(e.swingNationalZ)) {
+        swingZAll.push(e.swingNationalZ);
+        if (e.nationalReporting < 0.15) swingZEarly.push(e.swingNationalZ);
+      }
     });
+
+    // Swing recovery: compare the solved national swing against the true
+    // final national swing (priorNpvMargin - actualMargin) at the last
+    // checkpoint, and find the first reporting fraction where they're
+    // within 1pt of each other — the "when did the model notice" pivot.
+    const lastEntry = entries.length ? entries[entries.length - 1] : null;
+    if (lastEntry && isFinite(lastEntry.priorNpvMargin) && isFinite(lastEntry.actualMargin)) {
+      const trueSwing = lastEntry.priorNpvMargin - lastEntry.actualMargin;
+      const finalSwing = isFinite(lastEntry.swingNational) ? lastEntry.swingNational : null;
+      const finalError = finalSwing != null ? Math.abs(finalSwing - trueSwing) : null;
+      let noticedAt = null;
+      for (const e of entries) {
+        if (!isFinite(e.swingNational)) continue;
+        if (Math.abs(e.swingNational - trueSwing) < 0.01) { noticedAt = e.nationalReporting; break; }
+      }
+      swingRecoveryByYear.push({ year, trueSwing, finalSwing, finalError, noticedAt });
+    }
 
     console.log(`  ${year}: ${entries.length} probability samples`);
   }
@@ -204,6 +222,40 @@ async function main() {
   } else {
     console.log('  None found.');
   }
+
+  console.log('\n=== Early-game confidence (mean |probD-0.5|, reporting < 15%) ===');
+  const meanEarlyDeviation = earlyGameDeviations.length
+    ? earlyGameDeviations.reduce((a, b) => a + b, 0) / earlyGameDeviations.length : null;
+  console.log(meanEarlyDeviation != null
+    ? `  ${(meanEarlyDeviation * 100).toFixed(1)}pt from a coin flip on average (n=${earlyGameDeviations.length}) — 0pt would be a permanent coin flip, 50pt would be permanent certainty.`
+    : '  no early-game samples');
+
+  console.log('\n=== Swing honesty (live-swing z-score should look ~standard-normal) ===');
+  function meanOf(arr) { return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : null; }
+  function stdOf(arr) {
+    if (arr.length < 2) return null;
+    const m = meanOf(arr);
+    return Math.sqrt(arr.reduce((a, b) => a + (b - m) ** 2, 0) / arr.length);
+  }
+  const zMeanAll = meanOf(swingZAll);
+  const zStdAll = stdOf(swingZAll);
+  const zMeanEarly = meanOf(swingZEarly);
+  const outlierCount = swingZAll.filter(z => Math.abs(z) > 3).length;
+  const outlierRate = swingZAll.length ? outlierCount / swingZAll.length : null;
+  console.log(`  all samples (n=${swingZAll.length}): mean=${zMeanAll != null ? zMeanAll.toFixed(2) : 'n/a'}  std=${zStdAll != null ? zStdAll.toFixed(2) : 'n/a'} (expect mean~0, std~1)`);
+  console.log(`  early samples, reporting<15% (n=${swingZEarly.length}): mean=${zMeanEarly != null ? zMeanEarly.toFixed(2) : 'n/a'} (expect ~0 — a nonzero mean here is the fingerprint of early-count contamination, e.g. createBiasParams's center-compression bias, being misread as a real national swing)`);
+  console.log(`  |z|>3 outlier rate: ${outlierRate != null ? (outlierRate * 100).toFixed(1) + '%' : 'n/a'} (n=${outlierCount})`);
+  const swingHonestyOk = (zMeanEarly == null || Math.abs(zMeanEarly) < 0.5) && (outlierRate == null || outlierRate < 0.05);
+  console.log(`  ${swingHonestyOk ? 'OK' : 'FLAGGED'} — ${swingHonestyOk ? 'no sign of systematic early-count contamination' : 'early-game z-scores look systematically biased, not just noisy'}`);
+
+  console.log('\n=== Swing recovery (does the solved swing converge on the true final swing?) ===');
+  const finalErrors = swingRecoveryByYear.map(r => r.finalError).filter(isFinite);
+  const meanFinalError = meanOf(finalErrors);
+  console.log(`  mean |solved - true| national swing at final checkpoint: ${meanFinalError != null ? (meanFinalError * 100).toFixed(2) + 'pt' : 'n/a'} (n=${finalErrors.length})`);
+  const worstRecovery = swingRecoveryByYear.slice().sort((a, b) => (b.finalError || 0) - (a.finalError || 0)).slice(0, 5);
+  worstRecovery.forEach(r => {
+    console.log(`  ${r.year}: true swing=${(r.trueSwing * 100).toFixed(1)}pt  solved=${r.finalSwing != null ? (r.finalSwing * 100).toFixed(1) + 'pt' : 'n/a'}  error=${r.finalError != null ? (r.finalError * 100).toFixed(1) + 'pt' : 'n/a'}  noticed at reporting=${r.noticedAt != null ? (r.noticedAt * 100).toFixed(0) + '%' : 'never (<1pt)'}`);
+  });
 
   console.log('\n=== CI narrows as reporting increases (mean [5%,95%] EV spread per reporting decile) ===');
   const avgSpreadByDecile = [];

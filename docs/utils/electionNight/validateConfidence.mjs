@@ -45,43 +45,10 @@
  *     the upper piece below 100% until reporting is fully complete instead.
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { chromium } from 'playwright';
+import { resolveBaseUrl, installCdnFallbacks, launchChromium } from './harness.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = path.join(__dirname, '..', '..', '..');
-
-const BASE_URL = process.argv[2] || 'http://127.0.0.1:8080';
+const BASE_URL = resolveBaseUrl();
 const PAGE_URL = `${BASE_URL}/index.html`;
-
-// index.html loads d3/topojson-client/us-atlas from a public CDN, which this
-// sandboxed environment's egress policy blocks. Serve the same versions from
-// local node_modules instead (installed via `npm install --no-save d3@7
-// topojson-client@3 us-atlas@3`) so the page can still initialize offline.
-const CDN_ROUTES = [
-  { match: 'https://cdn.jsdelivr.net/npm/d3@7', file: path.join(REPO_ROOT, 'node_modules/d3/dist/d3.js'), contentType: 'application/javascript' },
-  { match: 'https://cdn.jsdelivr.net/npm/topojson-client@3', file: path.join(REPO_ROOT, 'node_modules/topojson-client/dist/topojson-client.js'), contentType: 'application/javascript' },
-  { match: 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json', file: path.join(REPO_ROOT, 'node_modules/us-atlas/states-10m.json'), contentType: 'application/json' }
-];
-
-async function installCdnFallbacks(page) {
-  for (const route of CDN_ROUTES) {
-    if (!fs.existsSync(route.file)) {
-      throw new Error(`Missing local fallback for ${route.match}: ${route.file}. Run: npm install --no-save d3@7 topojson-client@3 us-atlas@3`);
-    }
-  }
-  await page.route('https://cdn.jsdelivr.net/**', async (routeHandle) => {
-    const url = routeHandle.request().url();
-    const found = CDN_ROUTES.find(r => url === r.match || url.startsWith(`${r.match}/`) || url.startsWith(`${r.match}?`));
-    if (!found) {
-      await routeHandle.abort();
-      return;
-    }
-    await routeHandle.fulfill({ status: 200, contentType: found.contentType, body: fs.readFileSync(found.file) });
-  });
-}
 
 const CONFIDENCE_BUCKETS = [
   { label: '[0.3-0.5)', min: 0.3, max: 0.5 },
@@ -146,9 +113,7 @@ async function runYear(page, year) {
 }
 
 async function main() {
-  const browser = await chromium.launch(
-    process.env.PLAYWRIGHT_CHROMIUM_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH } : {}
-  );
+  const browser = await launchChromium();
   const page = await browser.newPage();
   await page.addInitScript(() => { window.ENABLE_EN_COLOR_CALL_LOG = true; });
   page.on('pageerror', err => console.error('[page exception]', err));
