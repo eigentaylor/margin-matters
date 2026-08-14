@@ -1921,24 +1921,34 @@ import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
   // (frozen public facts) plus metrics.dVotesCounted/rVotesCounted/
   // reporting (legitimately observable) — never st.dShareFinal/rShareFinal/
   // biasParams/closeness.
-  function computeUnitPosterior(st, metrics) {
-    if (!(st.priorSigma > 0)) return { margin: st.priorMargin || 0, sigma: 0 };
+  // Extracted so the live-swing solve (docs/utils/electionNight/liveSwing.js)
+  // can reuse the exact same "how much do we know from this unit's own
+  // partial count, and how sure are we of it" logic without duplicating it -
+  // the swing solve needs the raw observation, not the prior-blended
+  // posterior computeUnitPosterior below builds from it.
+  function computeUnitObservation(st, metrics) {
     const dV = metrics ? metrics.dVotesCounted : 0;
     const rV = metrics ? metrics.rVotesCounted : 0;
     const twoPartyCounted = dV + rV;
-    if (!(twoPartyCounted > EPS)) return { margin: st.priorMargin, sigma: st.priorSigma };
-
+    if (!(twoPartyCounted > EPS)) return { observedMargin: null, obsSigma: null, hasObs: false };
     const observedMargin = (dV - rV) / twoPartyCounted;
     const reporting = metrics && isFinite(metrics.reporting) ? metrics.reporting : 0;
     const deltaSigma = MAIL_HEAVY_STATES.has(st.abbr) ? REMAINING_DELTA_SIGMA_MAIL_HEAVY : REMAINING_DELTA_SIGMA_BASE;
     const obsSigma = Math.max(0, 1 - reporting) * deltaSigma;
-    if (obsSigma <= EPS) return { margin: observedMargin, sigma: 0 };
+    return { observedMargin, obsSigma, hasObs: true };
+  }
+
+  function computeUnitPosterior(st, metrics) {
+    if (!(st.priorSigma > 0)) return { margin: st.priorMargin || 0, sigma: 0 };
+    const obs = computeUnitObservation(st, metrics);
+    if (!obs.hasObs) return { margin: st.priorMargin, sigma: st.priorSigma };
+    if (obs.obsSigma <= EPS) return { margin: obs.observedMargin, sigma: 0 };
 
     const priorPrec = 1 / (st.priorSigma * st.priorSigma);
-    const obsPrec = 1 / (obsSigma * obsSigma);
+    const obsPrec = 1 / (obs.obsSigma * obs.obsSigma);
     const totalPrec = priorPrec + obsPrec;
     return {
-      margin: (st.priorMargin * priorPrec + observedMargin * obsPrec) / totalPrec,
+      margin: (st.priorMargin * priorPrec + obs.observedMargin * obsPrec) / totalPrec,
       sigma: Math.sqrt(1 / totalPrec)
     };
   }
