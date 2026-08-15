@@ -54,8 +54,36 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     const clamped = clampSpeed(v);
     const finalVal = clamped != null ? clamped : state.speedMultiplier;
     state.speedMultiplier = finalVal;
-    if (elements.speed) elements.speed.value = String(finalVal);
+    setSpeedFieldValue(finalVal);
     return finalVal;
+  }
+
+  // The playback controls exist in two places at once (the sidebar panel
+  // and the footer bar shown during election night mode) so a fresh page
+  // load always has a working Start button regardless of body.en-active -
+  // these helpers keep both copies of each control in sync rather than
+  // duplicating every read/write site.
+  function setSpeedFieldValue(v) {
+    const str = String(v);
+    if (elements.speed) elements.speed.value = str;
+    if (elements.speedFooter) elements.speedFooter.value = str;
+  }
+  function setToggleText(text) {
+    if (elements.toggle) elements.toggle.textContent = text;
+    if (elements.toggleFooter) elements.toggleFooter.textContent = text;
+  }
+  function setPhaseText(text) {
+    if (elements.phase) elements.phase.textContent = text;
+    if (elements.phaseFooter) elements.phaseFooter.textContent = text;
+  }
+  function setTimeText(text) {
+    if (elements.timeLabel) elements.timeLabel.textContent = text;
+    if (elements.timeLabelFooter) elements.timeLabelFooter.textContent = text;
+  }
+  function setProgressValue(v) {
+    const str = String(v);
+    if (elements.progress) elements.progress.value = str;
+    if (elements.progressFooter) elements.progressFooter.value = str;
   }
 
   const formatLean = value => {
@@ -329,6 +357,18 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     elements.timeLabel = document.getElementById('enTime');
     elements.progress = document.getElementById('enProgress');
     elements.phase = document.getElementById('enPhase');
+    // Second, duplicate copy of the playback controls, shown in the
+    // footer bar during election night mode - see setToggleText/
+    // setPhaseText/setTimeText/setProgressValue/setSpeedFieldValue above,
+    // which keep both copies in sync.
+    elements.toggleFooter = document.getElementById('enToggleFooter');
+    elements.resetFooter = document.getElementById('enResetFooter');
+    elements.speedFooter = document.getElementById('enSpeedFooter');
+    elements.speedDownFooter = document.getElementById('enSpeedDownFooter');
+    elements.speedUpFooter = document.getElementById('enSpeedUpFooter');
+    elements.timeLabelFooter = document.getElementById('enTimeFooter');
+    elements.progressFooter = document.getElementById('enProgressFooter');
+    elements.phaseFooter = document.getElementById('enPhaseFooter');
     elements.log = document.getElementById('enLog');
     elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
     elements.logHeaderText = document.getElementById('enLogHeaderText');
@@ -376,51 +416,59 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     elements.confidenceVal = document.getElementById('enConfidenceVal');
     elements.victory = document.getElementById('enVictory');
 
-    if (elements.toggle) {
-      elements.toggle.addEventListener('click', () => {
-        //console.log('ELECTION NIGHT TOGGLE CLICK');
-        showLogPanel();
-        if (!state.prepared) {
-          // Start should roll random PV now (at click time). Clear any cached random PV so
-          // resolvePvValue will draw fresh values based on the current time/seed.
-          state.pvRandomCache = null;
-          state.pvRandomCacheMode = null;
-          state.pvRandomCacheYear = null;
-          state.pvRandomSeed = null;
-          startSimulation();
-        } else if (state.running) {
-          pauseSimulation();
-        } else {
-          if (state.currentTime >= state.simEnd - EPS) {
-            state.currentTime = state.simStart;
-            renderAt(state.currentTime);
-          }
-          startSimulation();
+    function handleToggleClick() {
+      //console.log('ELECTION NIGHT TOGGLE CLICK');
+      showLogPanel();
+      if (!state.prepared) {
+        // Start should roll random PV now (at click time). Clear any cached random PV so
+        // resolvePvValue will draw fresh values based on the current time/seed.
+        state.pvRandomCache = null;
+        state.pvRandomCacheMode = null;
+        state.pvRandomCacheYear = null;
+        state.pvRandomSeed = null;
+        startSimulation();
+      } else if (state.running) {
+        pauseSimulation();
+      } else {
+        if (state.currentTime >= state.simEnd - EPS) {
+          state.currentTime = state.simStart;
+          renderAt(state.currentTime);
         }
-        updateToggleLabel();
-      });
+        startSimulation();
+      }
+      updateToggleLabel();
     }
+    if (elements.toggle) elements.toggle.addEventListener('click', handleToggleClick);
+    if (elements.toggleFooter) elements.toggleFooter.addEventListener('click', handleToggleClick);
 
-    if (elements.reset) {
-      elements.reset.addEventListener('click', () => resetSimulation(true, true));
+    function handleResetClick() { resetSimulation(true, true); }
+    if (elements.reset) elements.reset.addEventListener('click', handleResetClick);
+    if (elements.resetFooter) elements.resetFooter.addEventListener('click', handleResetClick);
+
+    // Either speed field can be the one the user edits directly; read from
+    // whichever fired the event so setSpeedFieldValue can sync the other.
+    function handleSpeedInput(el) {
+      const val = clampSpeed(parseFloat(el.value));
+      if (val != null) state.speedMultiplier = val;
     }
-
+    function handleSpeedChange(el) { setSpeed(parseFloat(el.value)); }
     if (elements.speed) {
-      elements.speed.addEventListener('input', () => {
-        const val = clampSpeed(parseFloat(elements.speed.value));
-        if (val != null) state.speedMultiplier = val;
-      });
+      elements.speed.addEventListener('input', () => handleSpeedInput(elements.speed));
       // On blur/commit, snap the field's displayed value to the clamped
       // number so invalid input (0, negative, non-numeric, absurdly
       // large) doesn't linger visibly.
-      elements.speed.addEventListener('change', () => setSpeed(parseFloat(elements.speed.value)));
+      elements.speed.addEventListener('change', () => handleSpeedChange(elements.speed));
     }
-    if (elements.speedDown) {
-      elements.speedDown.addEventListener('click', () => setSpeed(roundSpeed(state.speedMultiplier - SPEED_STEP)));
+    if (elements.speedFooter) {
+      elements.speedFooter.addEventListener('input', () => handleSpeedInput(elements.speedFooter));
+      elements.speedFooter.addEventListener('change', () => handleSpeedChange(elements.speedFooter));
     }
-    if (elements.speedUp) {
-      elements.speedUp.addEventListener('click', () => setSpeed(roundSpeed(state.speedMultiplier + SPEED_STEP)));
-    }
+    function handleSpeedDown() { setSpeed(roundSpeed(state.speedMultiplier - SPEED_STEP)); }
+    function handleSpeedUp() { setSpeed(roundSpeed(state.speedMultiplier + SPEED_STEP)); }
+    if (elements.speedDown) elements.speedDown.addEventListener('click', handleSpeedDown);
+    if (elements.speedDownFooter) elements.speedDownFooter.addEventListener('click', handleSpeedDown);
+    if (elements.speedUp) elements.speedUp.addEventListener('click', handleSpeedUp);
+    if (elements.speedUpFooter) elements.speedUpFooter.addEventListener('click', handleSpeedUp);
 
     if (elements.pvMode) {
       elements.pvMode.addEventListener('change', () => {
@@ -438,21 +486,25 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       });
     }
 
+    function handleProgressInput(el) {
+      if (state.suppressProgressEvent) return;
+      const raw = parseFloat(el.value);
+      const clamped = Math.max(0, Math.min(1, isFinite(raw) ? raw : 0));
+      if (!state.prepared) {
+        prepareSimulation();
+        if (!state.prepared) return;
+      }
+      const wasRunning = state.running;
+      if (wasRunning) pauseSimulation();
+      seekToProgress(clamped);
+      if (wasRunning) startSimulation();
+      updateToggleLabel();
+    }
     if (elements.progress) {
-      elements.progress.addEventListener('input', () => {
-        if (state.suppressProgressEvent) return;
-        const raw = parseFloat(elements.progress.value);
-        const clamped = Math.max(0, Math.min(1, isFinite(raw) ? raw : 0));
-        if (!state.prepared) {
-          prepareSimulation();
-          if (!state.prepared) return;
-        }
-        const wasRunning = state.running;
-        if (wasRunning) pauseSimulation();
-        seekToProgress(clamped);
-        if (wasRunning) startSimulation();
-        updateToggleLabel();
-      });
+      elements.progress.addEventListener('input', () => handleProgressInput(elements.progress));
+    }
+    if (elements.progressFooter) {
+      elements.progressFooter.addEventListener('input', () => handleProgressInput(elements.progressFooter));
     }
 
     const yearSlider = document.getElementById('yearSlider');
@@ -760,13 +812,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.currentTime = state.simStart;
     state.lastTimestamp = null;
 
-    if (elements.progress) {
-      state.suppressProgressEvent = true;
-      elements.progress.value = '0';
-      state.suppressProgressEvent = false;
-    }
-    if (elements.phase) elements.phase.textContent = 'Phase: Early';
-    if (elements.timeLabel) elements.timeLabel.textContent = `${formatTimeLabel(state.simStart)} ET`;
+    state.suppressProgressEvent = true;
+    setProgressValue(0);
+    state.suppressProgressEvent = false;
+    setPhaseText('Phase: Early');
+    setTimeText(`${formatTimeLabel(state.simStart)} ET`);
     if (elements.pvDisplay) {
       elements.pvDisplay.textContent = (state.pvMode === 'current')
         ? `PV: ${state.targetPvLabel}`
@@ -852,8 +902,8 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         elements.confidence.value = String(Math.max(0, Math.min(1, savedConfidence)));
       }
       updateConfidenceLabel(savedConfidence);
-      if (elements.speed && isFinite(savedSpeed) && savedSpeed > 0) {
-        elements.speed.value = String(savedSpeed);
+      if (isFinite(savedSpeed) && savedSpeed > 0) {
+        setSpeedFieldValue(savedSpeed);
       }
     }
     advanceDeterministic(targetTime);
@@ -911,13 +961,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.confidenceThreshold = getConfidenceSliderValue();
     updateConfidenceLabel(state.confidenceThreshold);
 
-    if (elements.progress) {
-      state.suppressProgressEvent = true;
-      elements.progress.value = '0';
-      state.suppressProgressEvent = false;
-    }
-    if (elements.phase) elements.phase.textContent = 'Idle';
-    if (elements.timeLabel) elements.timeLabel.textContent = '19:00';
+    state.suppressProgressEvent = true;
+    setProgressValue(0);
+    state.suppressProgressEvent = false;
+    setPhaseText('Idle');
+    setTimeText('19:00');
     if (elements.pvDisplay) elements.pvDisplay.textContent = 'PV: —';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
@@ -1552,8 +1600,8 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
 
     const phase = getPhase(timeMinutes);
     const phaseName = phase ? phase.name : 'Final';
-    if (elements.phase) elements.phase.textContent = `Phase: ${phaseName}`;
-    if (elements.timeLabel) elements.timeLabel.textContent = `${formatTimeLabel(timeMinutes)} ET`;
+    setPhaseText(`Phase: ${phaseName}`);
+    setTimeText(`${formatTimeLabel(timeMinutes)} ET`);
 
     let dEV = 0, rEV = 0, oEV = 0;
     // Track uncalled state leanings for phantom EV display
@@ -2906,10 +2954,10 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   }
 
   function updateProgressSlider(timeMinutes) {
-    if (!elements.progress) return;
+    if (!elements.progress && !elements.progressFooter) return;
     const value = (timeMinutes - state.simStart) / (state.simEnd - state.simStart);
     state.suppressProgressEvent = true;
-    elements.progress.value = String(Math.max(0, Math.min(1, value)));
+    setProgressValue(Math.max(0, Math.min(1, value)));
     state.suppressProgressEvent = false;
   }
 
@@ -3606,11 +3654,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   }
 
   function updateToggleLabel() {
-    if (!elements.toggle) return;
-    if (state.running) elements.toggle.textContent = 'Pause';
-    else if (!state.prepared) elements.toggle.textContent = 'Start';
-    else if (state.currentTime >= state.simEnd - EPS) elements.toggle.textContent = 'Replay';
-    else elements.toggle.textContent = 'Resume';
+    if (!elements.toggle && !elements.toggleFooter) return;
+    if (state.running) setToggleText('Pause');
+    else if (!state.prepared) setToggleText('Start');
+    else if (state.currentTime >= state.simEnd - EPS) setToggleText('Replay');
+    else setToggleText('Resume');
   }
 
   function determineWinner(dShare, rShare, oShare) {
