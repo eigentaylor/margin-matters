@@ -22,6 +22,48 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 15, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Election Night</h2>
+<br/>
+<ul>
+<li>Added a live national win-probability estimate that updates throughout the night as states report, based on a Bayesian model of each state's remaining uncertainty</li>
+<li>The estimate now accounts for a shared national swing, not just each state's own results in isolation — a Monte Carlo bug meant the national mood was previously assumed to be known with total certainty, which made the early estimate overconfident</li>
+<li>Built a hierarchical "live swing" model: as states report, it infers a shared national swing and regional swings (New England, Rust Belt, South, etc.) from how those states are over/underperforming their pre-election priors — the foundation for a future "Clinton is underperforming in the Rust Belt" style narrative feature</li>
+<li>Tuned the pacing of the win-probability estimate to feel less like a spreadsheet and more like an actual election night: it now starts more uncertain and narrows more gradually as real results come in, rather than converging to near-certainty the moment a handful of states report</li>
+<li>Removed the per-state win% from "still counting" cards — it could read as suspiciously precise for a race that's genuinely a toss-up; the existing confidence/margin info already tells that story</li>
+<li>Fixed the win-probability estimate getting stuck on a state's original call and not updating after that call was later corrected</li>
+<li>Fixed the EV allocation arrow revealing a state's corrected result before the correction was actually made</li>
+<li>Fixed vote counting on very close races: it used to freeze near 100% for a stretch and then jump straight to the final result once the state finished reporting; counting now proceeds smoothly all the way to completion</li>
+<li>Fixed the reporting percentage showing "100.0% counted" while ballots were still left to count; it only shows 100% once every ballot is in</li>
+<li>The map's hover tooltips now show the same rescaled, easier-to-read confidence percentage as the call log, instead of a much shakier-looking raw value</li>
+<li>Reworked the call log panel: it's a dedicated full-height sidebar on wide screens, colorized by leader, and includes the national popular vote and vote-margin figures alongside each call</li>
+<li>Added a downloadable call-log export (txt/csv) with a full timeline of the model's swing estimates, useful for reviewing how a given night's results unfolded</li>
+<li>Various smaller fixes: candidate last names in call announcements, a year label in the call log header, free-text speed input instead of a dropdown, and a fixed confidence display for exact ties</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 13, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Election Night</h2>
+<br/>
+<ul>
+<li>Slight adjustment to the formatting of the call log</li>
+<li>Shortened the leader text: "Republicans lead" -> "R lead"</li>
+<li>Added raw margin: "R+23.5" -> "R+23.5 (R+18,111)"</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         August 10, 2026
                     </div>
                     <div class='changelog-content'>
