@@ -1,5 +1,5 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatWinProbText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
@@ -112,6 +112,30 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   // CONFIDENCE_JUNCTION_RAW was validated rather than shipped on guesswork.
   const REMAINING_DELTA_SIGMA_BASE = 0.12;
   const REMAINING_DELTA_SIGMA_MAIL_HEAVY = 0.22;
+  // "Pacing" damper for the live win-probability MC — deliberately, openly
+  // fake extra uncertainty layered ONLY on the shared national/regional
+  // swing terms (docs/utils/electionNight/liveSwing.js) right before they
+  // feed the Monte Carlo, not on the underlying solve itself (so
+  // state.swingEstimate/the exported timeline/debug log stay honest).
+  // The honest swing math is real and validated (see liveSwing.js), but a
+  // handful of early-reporting states (KY/IN/VA/SC/GA) is a small, non-
+  // representative sample — the model can't yet tell "these states are
+  // just noisy tonight" from "the whole country is swinging", so a real
+  // signal from them can legitimately swing the national number fast and
+  // hard right out of the gate. Mathematically honest, but it collapses
+  // the suspense a live election-night broadcast is supposed to have.
+  // PACING_MEAN_SCALE_START (0..1) trusts only this fraction of the
+  // observed national/regional swing at 0% national reporting — this is
+  // the lever that actually slows the aggregate win% down (see
+  // applyPacingDamper's comment for why sigma alone doesn't). 1 = fully
+  // honest immediately. PACING_MULTIPLIER_START widens sigma on top for
+  // extra cushion. Both ease back to "honest" (scale/mult = 1) by
+  // PACING_DECAY_REPORTING national reporting fraction. Purely a feel/
+  // pacing knob, tune by eye against a real replay (e.g. 2016) — there's
+  // no "correct" value to validate against.
+  const PACING_MEAN_SCALE_START = 0.15;
+  const PACING_MULTIPLIER_START = 3.5;
+  const PACING_DECAY_REPORTING = 0.85;
   // Monte Carlo draw count for the win-probability tally, and how often
   // (in simulated minutes) the expensive tally re-runs — independent of
   // DISPLAY_UPDATE_INTERVAL, which only throttles the real-time RAF path;
@@ -1983,6 +2007,56 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     return normalCdf(margin / sigma);
   }
 
+  // Smoothstep-eased pacing factors (see PACING_MULTIPLIER_START/
+  // PACING_MEAN_SCALE_START/PACING_DECAY_REPORTING above): both ease from
+  // their "early night" extreme back to 1 (fully honest) as
+  // nationalReporting approaches PACING_DECAY_REPORTING. meanScale trusts
+  // only a fraction of the observed swing early on — this is the part that
+  // actually slows the aggregate win% down, since widening sigma ALONE
+  // doesn't: every state gets nudged by the SAME shared mean shift, so the
+  // aggregate EV total still moves fast even if each individual state's own
+  // probability reads less extreme. sigmaMult adds extra cushion on top.
+  function pacingFactors(nationalReporting) {
+    const r = Math.max(0, Math.min(1, isFinite(nationalReporting) ? nationalReporting : 0));
+    const t = PACING_DECAY_REPORTING > 0 ? Math.min(1, r / PACING_DECAY_REPORTING) : 1;
+    const eased = t * t * (3 - 2 * t);
+    return {
+      meanScale: PACING_MEAN_SCALE_START + (1 - PACING_MEAN_SCALE_START) * eased,
+      sigmaMult: PACING_MULTIPLIER_START + (1 - PACING_MULTIPLIER_START) * eased
+    };
+  }
+
+  // Returns a shallow-cloned swing hierarchy with pacing applied to ONLY the
+  // shared national/regional terms (national.mean/sigma, each region's
+  // dbar/sigma, and the base sigmaR fallback for an unobserved region) —
+  // deliberately NOT sigmaI or any per-unit byUnit entry (obs.d), since
+  // those drive a unit's OWN reporting-driven certainty and must stay
+  // exact: unitSwingDelta's conditional shrinkage (obs.a -> 1 at full
+  // reporting) means a fully-counted state's margin collapses to exactly
+  // what was counted regardless of how damped N/R are — only the "borrowed"
+  // info about OTHER, not-yet-reported units gets paced. Scaling a region's
+  // dbar by the SAME meanScale as national.mean is what makes
+  // sampleSwing()'s `k*(dbar - N)` recompute correctly damped, rather than
+  // just shifting a region's mean relative to an already-shrunk N.
+  // state.swingEstimate itself is never mutated — the export timeline/debug
+  // log still see the real, undamped signal.
+  function applyPacingDamper(swing, nationalReporting) {
+    if (!swing) return swing;
+    const { meanScale, sigmaMult } = pacingFactors(nationalReporting);
+    if (meanScale >= 1 - EPS && sigmaMult <= 1 + EPS) return swing;
+    const regions = new Map(Array.from(swing.regions, ([key, r]) => [key, {
+      ...r,
+      dbar: r.dbar * meanScale,
+      sigma: r.sigma * sigmaMult
+    }]));
+    return {
+      ...swing,
+      national: { mean: swing.national.mean * meanScale, sigma: swing.national.sigma * sigmaMult },
+      regions,
+      sigmaR: swing.sigmaR * sigmaMult
+    };
+  }
+
   // Monte Carlo national win-probability tally. Already-called units (and
   // third-party-dominant ones, which never count toward either major
   // party's total — a majority of the TRUE EV pool is required, mirroring
@@ -2048,7 +2122,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // already-reported units inform not-yet-reported ones, safely - see
     // liveSwing.js's module docstring for why a couple of noisy early
     // reporters can't swing this on their own.
-    const swing = state.swingEstimate || solveLiveSwing([]);
+    // Pacing damper (see PACING_MEAN_SCALE_START/PACING_MULTIPLIER_START/
+    // PACING_DECAY_REPORTING): damps only the shared national/regional
+    // terms early in the night, easing back to the honest math as overall
+    // reporting increases. state.swingEstimate itself is untouched - the
+    // export timeline/debug log still see the real, undamped signal.
+    const nationalReporting = state.totalEligibleVotes > EPS && state.lastNationalTotals
+      ? state.lastNationalTotals.countedVotes / state.totalEligibleVotes : 0;
+    const swing = applyPacingDamper(state.swingEstimate || solveLiveSwing([]), nationalReporting);
     const allRegions = new Set(liveUnits.map(st => regionOf(st.unitKey)).filter(Boolean));
     const regionByUnit = new Map(liveUnits.map(st => [st.unitKey, regionOf(st.unitKey)]));
     const drawFn = makeNormalizedTDraw(POLL_ERROR_SPEC.df);
@@ -2859,10 +2940,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
     }
     infoParts.push(formatConfidenceText(candidate.confidence));
-    if ((candidate.leader === 'D' || candidate.leader === 'R') && isFinite(candidate.winProb)) {
-      const leaderProb = candidate.leader === 'D' ? candidate.winProb : (1 - candidate.winProb);
-      infoParts.push(formatWinProbText(leaderProb));
-    }
+    // Per-state win% (candidate.winProb, from the swing-aware MC's
+    // stateProb) is deliberately NOT shown here - it inherits certainty
+    // from OTHER states' trends (that's the whole point of the swing
+    // mechanism), which reads as "cartoonishly accurate" on a card for a
+    // state whose own count is still a toss-up. Confidence already tells
+    // that story ("this specific race is too close to call") without the
+    // spoiler. winProb/stateProb are kept and still used elsewhere (the
+    // downloadable log timeline, debug instrumentation).
     // Use shared formatter so votes-left is shown when available
     try {
       const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
