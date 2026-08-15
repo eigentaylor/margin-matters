@@ -3532,16 +3532,24 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // Apply ease-out so counting slows near the end: easeOut(n) = 1 - (1 - n)^power
     const power = (st && isFinite(st.easePower)) ? Math.max(1, st.easePower) : 2.0;
     const eased = 1 - Math.pow(1 - normalized, power);
-    // Apply tiny deterministic jitter that vanishes at 0 and 1: jitter * n * (1-n)
+    // Apply tiny deterministic jitter that vanishes at 0 and 1: jitter * n * (1-n).
+    // The extra (1-n)^2 taper keeps it from fighting the eased curve's own
+    // slope right at the tail - without it, a positive jitterParam could
+    // make the combined curve dip just before the boundary (reporting
+    // briefly going backwards) once the old hard clamp (removed above) was
+    // no longer there to mask it.
     const jitterParam = (st && isFinite(st.reportJitter)) ? st.reportJitter : 0;
-    const jitterTerm = jitterParam * normalized * (1 - normalized);
-    const reported = clamp01(eased + jitterTerm);
-    // Never allow reported to reach 1.0 before the endTime. Cap at 0.999 until end.
+    const jitterTerm = jitterParam * normalized * Math.pow(1 - normalized, 3);
+    // Scale into [0, CAP_BEFORE_END] instead of clamping there: eased can
+    // saturate near 1 well before normalized does (steepest for close
+    // races, where easePower runs highest), and a hard clamp at that point
+    // used to freeze the displayed count at an identical value for a long
+    // real-time stretch, then snap straight to 1 at the very end - the
+    // "freeze then jump" bug. Scaling keeps it creeping continuously all
+    // the way to the boundary, where the final `timeMinutes >= ...` check
+    // above still resolves it to exactly 1.
     const CAP_BEFORE_END = 0.999;
-    if (timeMinutes < st.startTime + st.duration - EPS && reported >= CAP_BEFORE_END) {
-      return CAP_BEFORE_END;
-    }
-    return reported;
+    return clamp01(CAP_BEFORE_END * (eased + jitterTerm));
   }
 
   function updateToggleLabel() {
