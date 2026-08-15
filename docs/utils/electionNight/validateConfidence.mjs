@@ -3,7 +3,7 @@
 
 /**
  * Historical validation for the election-night confidence-display rescale
- * (docs/utils/formatters.js: rescaleConfidenceForDisplay / CONFIDENCE_JUNCTION_RAW).
+ * (docs/utils/formatters.js: rescaleConfidenceForDisplay / DEFAULT_CONFIDENCE_JUNCTION_RAW).
  *
  * The rescale only changes how a raw confidence value is *displayed*
  * (e.g. raw 0.3 -> "99%") — it never changes when a call actually fires
@@ -38,7 +38,7 @@
  * instead (see installCdnFallbacks below) so the page can still initialize.
  *
  * Decision rule (see the plan / commit message for full reasoning):
- *   - Zero miscalls at raw confidence >= 0.3 => ship CONFIDENCE_JUNCTION_RAW = 0.3.
+ *   - Zero miscalls at raw confidence >= 0.3 => ship DEFAULT_CONFIDENCE_JUNCTION_RAW = 0.3.
  *   - Miscalls cluster just above 0.3 but vanish above some r* => raise the
  *     junction to r* (display only; the call threshold itself stays as-is).
  *   - Any miscall at raw confidence >= 0.999 => don't squish that far; cap
@@ -192,11 +192,11 @@ async function main() {
   console.log('\n=== Decision ===');
   const highConfMiscalls = miscallDetails.filter(d => d.confidence >= 0.999);
   if (miscallDetails.length === 0) {
-    console.log('SAFE: no miscalls at raw confidence >= 0.3. Ship CONFIDENCE_JUNCTION_RAW = 0.3 as designed.');
+    console.log('SAFE: no miscalls at raw confidence >= 0.3. Ship DEFAULT_CONFIDENCE_JUNCTION_RAW = 0.3 as designed.');
   } else if (highConfMiscalls.length === 0) {
     const minMiscallConf = Math.min(...miscallDetails.map(d => d.confidence));
     console.log(`CAUTION: ${miscallDetails.length} miscall(s) found, lowest at raw confidence ${minMiscallConf.toFixed(4)}.`);
-    console.log(`Consider raising CONFIDENCE_JUNCTION_RAW above ${minMiscallConf.toFixed(2)} in docs/utils/formatters.js before shipping.`);
+    console.log(`Consider raising DEFAULT_CONFIDENCE_JUNCTION_RAW above ${minMiscallConf.toFixed(2)} in docs/utils/formatters.js before shipping.`);
   } else {
     console.log(`UNSAFE: ${highConfMiscalls.length} miscall(s) found at raw confidence >= 0.999 (deep in the squished display band).`);
     console.log('Do not ship the aggressive squish as-is — cap the upper display piece below 100% (e.g. floor at 99.5%) instead.');

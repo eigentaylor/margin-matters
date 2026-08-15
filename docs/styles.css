@@ -1177,6 +1177,25 @@ hr {
   }
 }
 
+/* Election night mode swaps the proportional-EV footer for the playback
+   footer (they occupy the same fixed bottom bar) - the EC breakdown and
+   proportional toggle aren't relevant mid-simulation, and the transport
+   controls are more useful there than buried in the sidebar panel. */
+#enPlaybackFooter {
+  display: none;
+}
+
+/* !important: testerInit.js sets propEvFooter's display as an inline
+   style (propEvFooter.style.display = 'flex'), which otherwise beats any
+   plain class/ID rule regardless of source order. */
+body.en-active #propEvFooter {
+  display: none !important;
+}
+
+body.en-active #enPlaybackFooter {
+  display: flex;
+}
+
 .delta-toggle-footer .toggle-group {
   display: flex;
   align-items: center;

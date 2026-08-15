@@ -62,32 +62,38 @@ export function formatReportingText(reporting, remainingVotes) {
 }
 
 // Raw confidence (from calculateConfidence) is a worst-case-remaining-ballots
-// ratio: historically, calls made at raw confidence >= 0.3 have essentially
-// always matched the eventual result, so displaying "30%" reads as far
-// shakier than it is. This remaps the raw [0,1] value to a display-only
-// [0,1] value for percentage formatting: raw 0.3 -> display 0.99, and
-// raw 0.3-1.0 gets squished into display 0.99-1.0. The junction point was
-// chosen to match the existing default call threshold; see
-// docs/utils/electionNight/validateConfidence.mjs for the historical
-// miscall-rate check that justified it. This must never be used anywhere
-// that affects call decisions or exported/raw data — display only.
-const CONFIDENCE_JUNCTION_RAW = 0.3;
+// ratio: historically, calls made at raw confidence >= the call threshold
+// have essentially always matched the eventual result (see
+// docs/utils/electionNight/validateConfidence.mjs's historical miscall-rate
+// check, run at the default threshold of 0.3), so displaying that raw value
+// directly reads as far shakier than it is. This remaps the raw [0,1] value
+// to a display-only [0,1] value for percentage formatting: the caller's own
+// call-threshold setting -> display 0.99, and raw values above it get
+// squished into display 0.99-1.0. Tying the junction to the actual
+// threshold (instead of a hardcoded 0.3) keeps this honest if someone sets
+// a very different threshold - a race called "early" at a threshold of 0.05
+// still shows ~99% once it clears THAT bar, and a threshold of 0.9 doesn't
+// pretend a call was locked in long before it actually would have been.
+// This must never be used anywhere that affects call decisions or
+// exported/raw data — display only.
+const DEFAULT_CONFIDENCE_JUNCTION_RAW = 0.3;
 const CONFIDENCE_JUNCTION_DISPLAY = 0.99;
 
-export function rescaleConfidenceForDisplay(rawConfidence) {
+export function rescaleConfidenceForDisplay(rawConfidence, junctionRaw = DEFAULT_CONFIDENCE_JUNCTION_RAW) {
     if (!isFinite(rawConfidence)) return NaN;
     const raw = Math.max(0, Math.min(1, rawConfidence));
+    const junction = Math.max(1e-6, Math.min(1 - 1e-6, isFinite(junctionRaw) ? junctionRaw : DEFAULT_CONFIDENCE_JUNCTION_RAW));
     if (raw >= 1 - 1e-9) return 1;
-    if (raw <= CONFIDENCE_JUNCTION_RAW) {
-        return (raw / CONFIDENCE_JUNCTION_RAW) * CONFIDENCE_JUNCTION_DISPLAY;
+    if (raw <= junction) {
+        return (raw / junction) * CONFIDENCE_JUNCTION_DISPLAY;
     }
-    const t = (raw - CONFIDENCE_JUNCTION_RAW) / (1 - CONFIDENCE_JUNCTION_RAW);
+    const t = (raw - junction) / (1 - junction);
     return CONFIDENCE_JUNCTION_DISPLAY + t * (1 - CONFIDENCE_JUNCTION_DISPLAY);
 }
 
-export function formatConfidenceText(confidence) {
+export function formatConfidenceText(confidence, junctionRaw = DEFAULT_CONFIDENCE_JUNCTION_RAW) {
     if (!isFinite(confidence)) return 'Confidence —';
-    const display = rescaleConfidenceForDisplay(confidence);
+    const display = rescaleConfidenceForDisplay(confidence, junctionRaw);
     if (display >= 1 - 1e-9) return 'Confidence 100%';
     const pct = display * 100;
     // Never let a sub-certainty value round up to a false "100%".
@@ -100,12 +106,12 @@ export function formatWinProbText(winProb) {
     return `Win prob ${pct}%`;
 }
 
-export function formatNpvCallText(record) {
+export function formatNpvCallText(record, junctionRaw) {
     const leaderText = record.candidateName || formatLeader(record.leader);
     const pvPct = record.countedVotes > 0.000005
         ? (Math.abs(record.dVotes - record.rVotes) / record.countedVotes * 100).toFixed(1)
         : '0.0';
-    return `${formatTimeLabel(record.time)} – National popular vote called for ${leaderText} (${formatConfidenceText(record.confidence)}, margin ${pvPct}%)`;
+    return `${formatTimeLabel(record.time)} – National popular vote called for ${leaderText} (${formatConfidenceText(record.confidence, junctionRaw)}, margin ${pvPct}%)`;
 }
 
 export function formatEvAllocationsForLog(callAlloc, finalAlloc) {

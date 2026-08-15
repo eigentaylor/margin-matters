@@ -107,20 +107,9 @@
           <div id="electionNightCard" class="card"
             style="background:transparent;border:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:10px">
             <div class="legend" style="text-align:left">Election night simulator</div>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-              <button id="enToggle" class="btn" style="min-width:96px">Start</button>
-              <button id="enReset" class="btn" style="min-width:96px">Reset</button>
-              <label for="enSpeed" class="legend" style="font-size:0.9rem">Speed</label>
-              <div class="nav-btn-group">
-                <button id="enSpeedDown" class="nav-btn" type="button" title="Decrease speed">−</button>
-                <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="0.5"
-                  placeholder="0.5" aria-label="Simulation speed multiplier"
-                  style="min-width:60px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
-                <button id="enSpeedUp" class="nav-btn" type="button" title="Increase speed">+</button>
-              </div>
-              <span class="legend" style="font-size:0.85rem">×</span>
-              <span id="enPhase" class="legend" style="font-size:0.9rem;color:var(--muted)">Idle</span>
-            </div>
+            <div class="legend" style="font-size:0.85rem;text-align:left;color:var(--muted)">Playback controls
+              (start/pause, reset, speed, and the progress scrubber) are in the footer bar at the bottom of the
+              screen once the simulation is prepared.</div>
             <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
               <label for="enPvMode" class="legend" style="font-size:0.9rem">PV selection</label>
               <select id="enPvMode" class="btn"
@@ -131,11 +120,6 @@
                 <option value="randomAny">Surprise me</option>
               </select>
               <span id="enPvDisplay" class="legend" style="font-size:0.9rem;color:var(--muted)">PV: —</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <label for="enProgress" class="legend" style="min-width:110px;font-size:0.9rem">Progress</label>
-              <input id="enProgress" type="range" min="0" max="1" step="0.001" value="0" style="flex:1" />
-              <span id="enTime" class="legend" style="font-size:0.9rem">19:00</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px">
               <label for="enConfidence" class="legend" style="min-width:110px;font-size:0.9rem">Call threshold</label>
@@ -602,6 +586,28 @@
         <label for="propEvToggle">Proportional Electoral Votes</label>
       </div>
       <button id="evBreakdownBtn" class="btn" style="margin-left:12px">View EV Breakdown</button>
+    </div>
+
+    <!-- Election Night Playback Footer: replaces the proportional-EV footer
+         above while election night mode is active (body.en-active, see
+         styles.css), since the EC breakdown/proportional toggle aren't
+         relevant mid-simulation and the playback transport controls are
+         more useful reachable without scrolling. -->
+    <div class="delta-toggle-footer en-playback-footer" id="enPlaybackFooter">
+      <button id="enToggle" class="btn" style="min-width:88px">Start</button>
+      <button id="enReset" class="btn" style="min-width:70px">Reset</button>
+      <div class="nav-btn-group">
+        <button id="enSpeedDown" class="nav-btn" type="button" title="Decrease speed">−</button>
+        <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="0.5"
+          placeholder="0.5" aria-label="Simulation speed multiplier"
+          style="min-width:52px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
+        <button id="enSpeedUp" class="nav-btn" type="button" title="Increase speed">+</button>
+      </div>
+      <span class="legend" style="font-size:0.8rem">×</span>
+      <label for="enProgress" class="legend" style="font-size:0.85rem">Progress</label>
+      <input id="enProgress" type="range" min="0" max="1" step="0.001" value="0" style="flex:1;min-width:120px" />
+      <span id="enTime" class="legend" style="font-size:0.9rem;min-width:60px;text-align:right">19:00</span>
+      <span id="enPhase" class="legend" style="font-size:0.85rem;color:var(--muted);min-width:60px">Idle</span>
     </div>
 
     <!-- EV Breakdown Modal -->

@@ -416,7 +416,9 @@ export function formatUnitTooltip(unit, opts) {
 
         // Called/confidence info. Shares formatConfidenceText with the
         // call-log cards so the tooltip's confidence reads on the same
-        // rescaled (30%->99% junction) display scale, not the raw value.
+        // rescaled display scale, junctioned to the live call-threshold
+        // setting (window._electionNightConfidenceThreshold, kept in sync
+        // by updateCallLog since this module has no access to `state`).
         if (info) {
             if (info.called) {
                 rows.push('Called');
@@ -424,7 +426,8 @@ export function formatUnitTooltip(unit, opts) {
                 const reporting = (info.reporting != null && isFinite(info.reporting)) ? info.reporting : 0;
                 const confidence = (info.confidence != null && isFinite(info.confidence)) ? info.confidence : null;
                 if (reporting > EPS && confidence != null) {
-                    rows.push(formatConfidenceText(confidence));
+                    const threshold = isFinite(window._electionNightConfidenceThreshold) ? window._electionNightConfidenceThreshold : undefined;
+                    rows.push(formatConfidenceText(confidence, threshold));
                 }
             }
         }

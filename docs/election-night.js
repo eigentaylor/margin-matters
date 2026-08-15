@@ -227,6 +227,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     callRecords: [],
     npvCallRecord: null,
     npvMisCallLogged: false,
+    outcomeAnnouncedType: null,
     nationalFinalDVotes: 0,
     nationalFinalRVotes: 0,
     nationalFinalDEv: 0,
@@ -637,6 +638,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.callRecords = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
+    state.outcomeAnnouncedType = null;
     state.lastNationalTotals = null;
     state.atLargeParts = null;
     state.unitPosteriors = null;
@@ -893,6 +895,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.callRecords = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
+    state.outcomeAnnouncedType = null;
     state.lastNationalTotals = null;
     state.atLargeParts = null;
     state.unitPosteriors = null;
@@ -1639,6 +1642,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         called: isCalled,
         leader: metrics.leader,
         confidence: metrics.confidence,
+        misCallLogged: st.misCallLogged,
         dVotes: metrics.dVotesCounted,
         rVotes: metrics.rVotesCounted,
         oVotes: metrics.oVotesCounted,
@@ -2909,6 +2913,13 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.suppressProgressEvent = false;
   }
 
+  // The confidence display rescale (formatConfidenceText) needs a
+  // clamped, always-finite threshold; this is the same fallback pattern
+  // used everywhere else state.confidenceThreshold is read.
+  function effectiveConfidenceThreshold() {
+    return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+  }
+
   function getConfidenceSliderValue() {
     if (!elements.confidence) return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     const raw = parseFloat(elements.confidence.value);
@@ -2939,7 +2950,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     if (marginDisplay && marginDisplay !== 'None') {
       infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
     }
-    infoParts.push(formatConfidenceText(candidate.confidence));
+    infoParts.push(formatConfidenceText(candidate.confidence, effectiveConfidenceThreshold()));
     // Per-state win% (candidate.winProb, from the swing-aware MC's
     // stateProb) is deliberately NOT shown here - it inherits certainty
     // from OTHER states' trends (that's the whole point of the swing
@@ -2970,6 +2981,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   }
 
   function updateCallLog(currentTime) {
+    // Exposed so the map's hover tooltip (tooltipManager.js, a separate
+    // module with no access to this closure's `state`) can rescale its own
+    // confidence display against the same live call-threshold setting
+    // instead of a hardcoded value.
+    try { window._electionNightConfidenceThreshold = effectiveConfidenceThreshold(); } catch (e) { /* ignore */ }
     const timeLabel = formatTimeLabel(currentTime);
     if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
     if (!elements.log && !elements.logUncalled && !elements.victory) return;
@@ -3110,7 +3126,17 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           record.finalAllocations = { ...record.evAllocations };
         }
       }
-      const tallyWinner = record.actualWinner || record.leader;
+      // record.actualWinner is ground truth, stashed on the call record at
+      // call time for later validation - it must only feed the "clinches
+      // the presidency" tally once a wrong call has actually been publicly
+      // corrected (live.misCallLogged), the same gate registerCall's own
+      // effectiveLeader uses. Using it unconditionally meant this tally -
+      // and the victory banner built from it - silently used the true
+      // final winner for every miscalled state from the moment it was
+      // (wrongly) called, so the declared national outcome could never be
+      // wrong even while the individual call/EV allocation shown for that
+      // state still was.
+      const tallyWinner = (live && live.misCallLogged && record.actualWinner) ? record.actualWinner : record.leader;
       if (tallyWinner === 'D') dRunning += record.ev || 0;
       else if (tallyWinner === 'R') rRunning += record.ev || 0;
       else oRunning += record.ev || 0;
@@ -3122,7 +3148,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       const reportingText = formatReportingText(record.reporting, record.remainingVotes);
       const callVoteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
       const marginText = formatMarginText(record.marginStr, record.leader, callVoteMargin);
-      const confidenceText = formatConfidenceText(record.confidence);
+      const confidenceText = formatConfidenceText(record.confidence, effectiveConfidenceThreshold());
       const evText = formatEvAllocationsForLog(record.evAllocations, record.finalAllocations);
       const infoParts = [reportingText, marginText, confidenceText];
       if (evText) infoParts.push(evText);
@@ -3194,6 +3220,34 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       };
     }
 
+    // If a correction to an underlying state call changes who (if anyone)
+    // has actually secured a majority, log that reversal explicitly rather
+    // than letting the victory banner silently swap - a national outcome
+    // flip is a big enough event to call out on its own, the same way a
+    // single state's correction already gets its own notice.
+    const newOutcomeType = outcome ? outcome.type : null;
+    if (state.outcomeAnnouncedType != null && newOutcomeType !== state.outcomeAnnouncedType) {
+      const reversalTime = Math.max(currentTime, (outcome && outcome.time != null) ? outcome.time : currentTime);
+      let reversalText;
+      if (newOutcomeType === 'D' || newOutcomeType === 'R') {
+        const newWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL')
+          || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
+        reversalText = `${formatTimeLabel(reversalTime)} – Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead.`;
+      } else if (newOutcomeType === 'T') {
+        reversalText = `${formatTimeLabel(reversalTime)} – Correction: following a corrected state call, the Electoral College is now projected to tie.`;
+      } else {
+        reversalText = `${formatTimeLabel(reversalTime)} – Correction: following a corrected state call, no candidate has secured a majority. The race is not yet decided.`;
+      }
+      state.callRecords.push({
+        kind: 'notice',
+        noticeType: 'outcome-reversal',
+        time: reversalTime,
+        text: reversalText
+      });
+      state.lastLogKey = '';
+    }
+    state.outcomeAnnouncedType = newOutcomeType;
+
     if (elements.victory) {
       if (outcomeLine) {
         elements.victory.textContent = outcomeMessage || '';
@@ -3224,7 +3278,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           const liveConfidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
           if (isFinite(liveConfidence)) record.confidence = liveConfidence;
         }
-        const text = formatNpvCallText(record);
+        const text = formatNpvCallText(record, effectiveConfidenceThreshold());
         const npvNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
           ? (record.dVotes - record.rVotes) / record.countedVotes
           : 0;
