@@ -2,7 +2,7 @@
 import { getUnitFinalVoteTotals, calculateUnitVoteTallies } from './unitInfo.js';
 import { calculateUnitProportionalEVs, calculateUnitWinnerTakeAllEVs, isProportionalEvMode } from './evAllocation.js';
 import { EPS } from './constants.js';
-import { leanStr } from './formatters.js';
+import { leanStr, formatReportingText, formatConfidenceText } from './formatters.js';
 import { isUnitFlipped } from './flipScenarios.js';
 import { lastNameFrom, getUnitCandidateLastNames, deriveCandidateNames } from './candidateNames.js';
 
@@ -406,28 +406,17 @@ export function formatUnitTooltip(unit, opts) {
         if (cappedMarginStr) basicParts.push(cappedMarginStr);
         if (basicParts.length) rows.unshift(basicParts.join(' · '));
 
-        // Election night reporting info
-        const reportingText = (function () {
-            if (!window._electionNightActive) return '';
-            if (!info || info.reporting == null) return '';
-            const value = Number(info.reporting);
-            if (!isFinite(value) || value < 0) return '';
-            const pct = Math.max(0, Math.min(100, value * 100));
-            // Prefer using explicit remainingVotes when available on the info/snapshot
-            const remaining = (info.remainingVotes != null && isFinite(info.remainingVotes)) ? Math.max(0, Math.round(info.remainingVotes)) : null;
-            // Only display 100.0% when there are truly no votes remaining
-            let baseLabel;
-            if (remaining === 0) baseLabel = '100.0% counted';
-            else baseLabel = `${pct.toFixed(1)}% counted`;
-            // Append votes-left suffix when remainingVotes is provided and > 0
-            if (remaining != null && remaining > 0) {
-                return `${baseLabel} (${remaining.toLocaleString('en-US')} votes left)`;
-            }
-            return baseLabel;
-        })();
-        if (reportingText) rows.push(reportingText);
+        // Election night reporting info. Shares formatReportingText with the
+        // call-log cards so "100.0% counted" only ever appears once
+        // remainingVotes is truly zero, not just once it rounds there.
+        const reportingText = (window._electionNightActive && info && info.reporting != null)
+            ? formatReportingText(info.reporting, info.remainingVotes)
+            : '';
+        if (reportingText && reportingText !== '0% reporting') rows.push(reportingText);
 
-        // Called/confidence info
+        // Called/confidence info. Shares formatConfidenceText with the
+        // call-log cards so the tooltip's confidence reads on the same
+        // rescaled (30%->99% junction) display scale, not the raw value.
         if (info) {
             if (info.called) {
                 rows.push('Called');
@@ -435,8 +424,7 @@ export function formatUnitTooltip(unit, opts) {
                 const reporting = (info.reporting != null && isFinite(info.reporting)) ? info.reporting : 0;
                 const confidence = (info.confidence != null && isFinite(info.confidence)) ? info.confidence : null;
                 if (reporting > EPS && confidence != null) {
-                    const pct = Math.max(0, Math.min(100, Math.round(confidence * 100)));
-                    rows.push(`Confidence ${pct}%`);
+                    rows.push(formatConfidenceText(confidence));
                 }
             }
         }

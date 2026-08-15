@@ -50,7 +50,13 @@ export function formatReportingText(reporting, remainingVotes) {
     const pct = Math.max(0, Math.min(100, value * 100));
     // If remainingVotes provided and is numeric, use it to decide 100% and append votes-left
     const rem = (remainingVotes != null && isFinite(remainingVotes)) ? Math.max(0, Math.round(remainingVotes)) : null;
-    const base = (rem === 0) ? '100.0% counted' : `${pct.toFixed(1)}% counted`;
+    // pct.toFixed(1) rounds anything >= 99.95% up to "100.0" on its own,
+    // which - whenever ballots are actually still left (rem > 0) - produced
+    // a contradictory "100.0% counted (N votes left)" line. Cap the
+    // displayed percentage just below 100 until rem is known to be exactly
+    // zero, so "100.0%" only ever appears once every ballot is counted.
+    const displayPct = (rem != null && rem > 0) ? Math.min(99.9, pct) : pct;
+    const base = (rem === 0) ? '100.0% counted' : `${displayPct.toFixed(1)}% counted`;
     if (rem != null && rem > 0) return `${base} (${rem.toLocaleString('en-US')} votes left)`;
     return base;
 }
