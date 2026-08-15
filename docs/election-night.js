@@ -3540,16 +3540,15 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // no longer there to mask it.
     const jitterParam = (st && isFinite(st.reportJitter)) ? st.reportJitter : 0;
     const jitterTerm = jitterParam * normalized * Math.pow(1 - normalized, 3);
-    // Scale into [0, CAP_BEFORE_END] instead of clamping there: eased can
-    // saturate near 1 well before normalized does (steepest for close
-    // races, where easePower runs highest), and a hard clamp at that point
-    // used to freeze the displayed count at an identical value for a long
-    // real-time stretch, then snap straight to 1 at the very end - the
-    // "freeze then jump" bug. Scaling keeps it creeping continuously all
-    // the way to the boundary, where the final `timeMinutes >= ...` check
-    // above still resolves it to exactly 1.
-    const CAP_BEFORE_END = 0.999;
-    return clamp01(CAP_BEFORE_END * (eased + jitterTerm));
+    // No artificial ceiling below 1 here (an earlier version capped this at
+    // 0.999 and jumped straight to 1 at the boundary - that pinned the last
+    // slice of votes flat until the exact final tick, then revealed all of
+    // them, and the ground-truth ties/results, in one discrete jump). The
+    // eased curve itself already can't reach 1 before normalized does (its
+    // remaining term (1-normalized)^power is strictly positive), so it's
+    // safe to let it approach 1 on its own - the last votes keep trickling
+    // in continuously all the way to the true end instead of teleporting.
+    return clamp01(eased + jitterTerm);
   }
 
   function updateToggleLabel() {
