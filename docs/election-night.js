@@ -115,7 +115,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   // Time offset (minutes) used so times like "19:00" map to ET minutes
   const TIME_OFFSET_MIN = 180;
   // Confidence threshold defaults and reporting cutoffs
-  const DEFAULT_CONFIDENCE_THRESHOLD = 0.3;
+  const DEFAULT_CONFIDENCE_THRESHOLD = 0.5;
   const MIN_REPORTING_TO_CALL = 0.2;
   // Bounds and default for the free-text simulation speed multiplier input
   const MIN_SPEED_MULTIPLIER = 0.01;
@@ -256,6 +256,10 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     npvCallRecord: null,
     npvMisCallLogged: false,
     outcomeAnnouncedType: null,
+    outcomeAnnouncedTotal: null,
+    allCalledAnnounced: false,
+    lastOutcomeBannerText: '',
+    lastOutcomeBannerClass: '',
     nationalFinalDVotes: 0,
     nationalFinalRVotes: 0,
     nationalFinalDEv: 0,
@@ -691,6 +695,10 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
+    state.outcomeAnnouncedTotal = null;
+    state.allCalledAnnounced = false;
+    state.lastOutcomeBannerText = '';
+    state.lastOutcomeBannerClass = '';
     state.lastNationalTotals = null;
     state.atLargeParts = null;
     state.unitPosteriors = null;
@@ -946,6 +954,10 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
+    state.outcomeAnnouncedTotal = null;
+    state.allCalledAnnounced = false;
+    state.lastOutcomeBannerText = '';
+    state.lastOutcomeBannerClass = '';
     state.lastNationalTotals = null;
     state.atLargeParts = null;
     state.unitPosteriors = null;
@@ -1166,6 +1178,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
 
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
+      // duration is otherwise a pure function of closeness/speed, so any
+      // two units sharing both (e.g. several same-speed blowout states,
+      // where closeness clamps to 0 for every margin >=12pt) would finish
+      // reporting at the exact same simulated minute. A slight per-unit
+      // noise (deterministic via the seeded rng, so results stay
+      // reproducible) spreads those finishes out without meaningfully
+      // changing how long any single state takes to count.
+      duration *= 1 + (rng() - 0.5) * 0.12; // +/-6%
       const jitter = (rng() - 0.5) * 24;
       // Per-unit ease and jitter parameters (deterministic per-unit)
       // Make easePower scale with closeness: closer races (closeness->1)
@@ -3028,6 +3048,29 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     return card;
   }
 
+  // Shared by every static outcome message (initial clinch, correction,
+  // final tally) so their wording/thresholds can't drift from each other.
+  function outcomeMessageText(type, dEv, rEv, oEv, majority) {
+    if (type === 'D') {
+      const winnerName = resolveCandidateLastName('D', 'NATIONAL');
+      return winnerName
+        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority}).`
+        : `Democrats clinch the presidency with ${dEv} EV (needed ${majority}).`;
+    }
+    if (type === 'R') {
+      const winnerName = resolveCandidateLastName('R', 'NATIONAL');
+      return winnerName
+        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority}).`
+        : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
+    }
+    return `Electoral College tie: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}.`;
+  }
+  function outcomeClassFor(type) {
+    if (type === 'D') return ' win-dem';
+    if (type === 'R') return ' win-rep';
+    return ' tie';
+  }
+
   function updateCallLog(currentTime) {
     // Exposed so the map's hover tooltip (tooltipManager.js, a separate
     // module with no access to this closure's `state`) can rescale its own
@@ -3150,17 +3193,40 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       const live = state.snapshot.get(record.unitKey);
       if (live) {
         record.reporting = live.reporting;
-        record.marginStr = live.marginStr;
-        record.confidence = live.confidence;
-        record.dVotes = live.dVotes;
-        record.rVotes = live.rVotes;
-        record.oVotes = live.oVotes;
-        record.oVotesTotal = live.oVotesTotal;
         record.countedVotes = live.countedVotes;
         record.remainingVotes = live.remainingVotes;
-        record.topThirdShare = live.topThirdShare;
-        record.totalThirdShare = live.totalThirdShare;
-        if (live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
+        // The margin/vote numbers on a call keep refreshing from the live
+        // count as long as it still agrees with the leader actually
+        // announced - but freeze them the moment it first disagrees.
+        // Without this, a call that's later found wrong would show its
+        // own final, opposite-signed margin ("Called Florida for Gore
+        // (R+537)") well before reporting reaches the ~100% threshold
+        // maybeEmitMiscall() waits for to log the separate Correction:
+        // notice - the announced leader and its own displayed margin
+        // would visibly contradict each other for a stretch of the night.
+        if (!record.marginFrozen && live.leader && live.leader !== record.leader) {
+          record.marginFrozen = true;
+        }
+        if (!record.marginFrozen) {
+          record.marginStr = live.marginStr;
+          record.confidence = live.confidence;
+          record.dVotes = live.dVotes;
+          record.rVotes = live.rVotes;
+          record.oVotes = live.oVotes;
+          record.oVotesTotal = live.oVotesTotal;
+          record.topThirdShare = live.topThirdShare;
+          record.totalThirdShare = live.totalThirdShare;
+        }
+        // st.evCalledAllocations gets silently swapped to the ground-truth
+        // split by maybeEmitMiscall() once a call is confirmed wrong (see
+        // its own comment) - refreshing record.evAllocations from it
+        // unconditionally meant that swap leaked into this call's own "EV"
+        // badge too, converging it with record.finalAllocations below and
+        // collapsing the intended "EV D 25 -> R 25" arrow into a single,
+        // contradicting "EV R 25" sitting right next to "Called ... for
+        // Gore." Freezing it alongside the margin (record.marginFrozen)
+        // keeps it showing what was actually announced at call time.
+        if (!record.marginFrozen && live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
         // st.evAllocations is a static, ground-truth allocation (the true
         // final winner's split, computed once in buildStateData) - only
         // reveal it once this unit's own count has effectively finished,
@@ -3232,74 +3298,95 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       };
     }
 
-    let outcomeLine = null;
-    let outcomeMessage = null;
-    let outcomeClass = '';
-    if (outcome) {
-      const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
-      const winnerName = outcome.type !== 'T' ? resolveCandidateLastName(outcome.type, 'NATIONAL') : null;
-      if (outcome.type === 'D') {
-        const latestTotal = finalD;
-        outcome.total = latestTotal;
-        outcomeMessage = winnerName
-          ? `${winnerName} clinches the presidency with ${latestTotal} EV (needed ${majority}).`
-          : `Democrats clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
-        outcomeClass = ' win-dem';
-      } else if (outcome.type === 'R') {
-        const latestTotal = finalR;
-        outcome.total = latestTotal;
-        outcomeMessage = winnerName
-          ? `${winnerName} clinches the presidency with ${latestTotal} EV (needed ${majority}).`
-          : `Republicans clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
-        outcomeClass = ' win-rep';
-      } else {
-        const latestOther = finalO;
-        outcome.other = latestOther;
-        outcomeMessage = `Electoral College tie: D ${finalD} | R ${finalR}${latestOther ? ` | Other ${latestOther}` : ''}.`;
-        outcomeClass = ' tie';
+    // Outcome messages ("X clinches the presidency with N EV") are logged
+    // as fixed, point-in-time entries rather than a single continuously
+    // recomputed line - once announced, the EV total embedded in a given
+    // message never changes, even as more states report normally
+    // afterward. Three distinct milestones each get their own message:
+    //   1. the first moment any candidate secures a majority ("clinch")
+    //   2. a correction that actually changes who's projected to win, if
+    //      any (kept as its own message, not a silent edit to #1)
+    //   3. once every state has been called, one final tally - "clinches
+    //      with 283 EV" on the initial call, then "clinches with 306 EV"
+    //      once the last state comes in - skipped if it'd just repeat the
+    //      total from whichever of #1/#2 already announced it.
+    const newOutcomeType = outcome ? outcome.type : null;
+    const newOutcomeTotal = outcome
+      ? (outcome.type === 'D' ? finalD : (outcome.type === 'R' ? finalR : finalD))
+      : null;
+
+    if (newOutcomeType !== state.outcomeAnnouncedType) {
+      if (state.outcomeAnnouncedType == null && newOutcomeType) {
+        const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
+        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
+        const className = outcomeClassFor(newOutcomeType);
+        state.callRecords.push({
+          kind: 'notice',
+          noticeType: 'outcome-clinch',
+          time: outcome.time != null ? outcome.time : currentTime,
+          text: `${timeStr} – ${message}`,
+          outcomeClassName: className
+        });
+        state.lastOutcomeBannerText = message;
+        state.lastOutcomeBannerClass = className;
+        state.lastLogKey = '';
+      } else if (state.outcomeAnnouncedType != null) {
+        const reversalTime = Math.max(currentTime, (outcome && outcome.time != null) ? outcome.time : currentTime);
+        let reversalText;
+        let reversalBanner = '';
+        let reversalClass = '';
+        if (newOutcomeType === 'D' || newOutcomeType === 'R') {
+          const newWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL')
+            || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
+          reversalBanner = `${newWinnerName} is now projected to win the presidency instead, following a corrected state call.`;
+          reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead.`;
+          reversalClass = outcomeClassFor(newOutcomeType);
+        } else if (newOutcomeType === 'T') {
+          reversalBanner = 'The Electoral College is now projected to tie, following a corrected state call.';
+          reversalText = 'Correction: following a corrected state call, the Electoral College is now projected to tie.';
+          reversalClass = ' tie';
+        } else {
+          reversalText = 'Correction: following a corrected state call, no candidate has secured a majority. The race is not yet decided.';
+        }
+        state.callRecords.push({
+          kind: 'notice',
+          noticeType: 'outcome-reversal',
+          time: reversalTime,
+          text: `${formatTimeLabel(reversalTime)} – ${reversalText}`,
+          outcomeClassName: reversalClass
+        });
+        state.lastOutcomeBannerText = reversalBanner;
+        state.lastOutcomeBannerClass = reversalClass;
+        state.lastLogKey = '';
       }
-      const outcomeText = `${timeStr} – ${outcomeMessage}`;
-      outcomeLine = {
-        kind: 'outcome',
-        time: outcome.time != null ? outcome.time : currentTime,
-        className: `en-log-entry en-log-outcome${outcomeClass}`,
-        text: outcomeText,
-        signature: `outcome:${outcome.type}:${outcomeText}`
-      };
+      state.outcomeAnnouncedType = newOutcomeType;
+      state.outcomeAnnouncedTotal = newOutcomeTotal;
     }
 
-    // If a correction to an underlying state call changes who (if anyone)
-    // has actually secured a majority, log that reversal explicitly rather
-    // than letting the victory banner silently swap - a national outcome
-    // flip is a big enough event to call out on its own, the same way a
-    // single state's correction already gets its own notice.
-    const newOutcomeType = outcome ? outcome.type : null;
-    if (state.outcomeAnnouncedType != null && newOutcomeType !== state.outcomeAnnouncedType) {
-      const reversalTime = Math.max(currentTime, (outcome && outcome.time != null) ? outcome.time : currentTime);
-      let reversalText;
-      if (newOutcomeType === 'D' || newOutcomeType === 'R') {
-        const newWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL')
-          || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
-        reversalText = `${formatTimeLabel(reversalTime)} – Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead.`;
-      } else if (newOutcomeType === 'T') {
-        reversalText = `${formatTimeLabel(reversalTime)} – Correction: following a corrected state call, the Electoral College is now projected to tie.`;
-      } else {
-        reversalText = `${formatTimeLabel(reversalTime)} – Correction: following a corrected state call, no candidate has secured a majority. The race is not yet decided.`;
+    if (allCalled && !state.allCalledAnnounced) {
+      state.allCalledAnnounced = true;
+      if (newOutcomeType && newOutcomeType !== 'T' && newOutcomeTotal !== state.outcomeAnnouncedTotal) {
+        const timeStr = formatTimeLabel(currentTime);
+        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
+        const className = outcomeClassFor(newOutcomeType);
+        state.callRecords.push({
+          kind: 'notice',
+          noticeType: 'outcome-final',
+          time: currentTime,
+          text: `${timeStr} – ${message}`,
+          outcomeClassName: className
+        });
+        state.lastOutcomeBannerText = message;
+        state.lastOutcomeBannerClass = className;
+        state.outcomeAnnouncedTotal = newOutcomeTotal;
+        state.lastLogKey = '';
       }
-      state.callRecords.push({
-        kind: 'notice',
-        noticeType: 'outcome-reversal',
-        time: reversalTime,
-        text: reversalText
-      });
-      state.lastLogKey = '';
     }
-    state.outcomeAnnouncedType = newOutcomeType;
 
     if (elements.victory) {
-      if (outcomeLine) {
-        elements.victory.textContent = outcomeMessage || '';
-        elements.victory.className = `en-log-victory${outcomeClass}`;
+      if (state.lastOutcomeBannerText) {
+        elements.victory.textContent = state.lastOutcomeBannerText;
+        elements.victory.className = `en-log-victory${state.lastOutcomeBannerClass || ''}`;
         elements.victory.style.display = '';
       } else {
         elements.victory.textContent = '';
@@ -3345,19 +3432,24 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       .filter(rec => rec.kind === 'notice')
       .map(rec => {
         const text = rec.text || `${formatTimeLabel(rec.time)} – ${rec.noticeType || 'Notice'}${rec.displayLabel ? `: ${rec.displayLabel}` : ''}`;
+        // The three outcome-milestone notice types (clinch/reversal/final)
+        // reuse the old ephemeral banner-only line's bold en-log-outcome
+        // styling (plus its win-dem/win-rep/tie accent) instead of the
+        // plain italic notice style used for ordinary state corrections.
+        const className = rec.outcomeClassName
+          ? `en-log-entry en-log-outcome${rec.outcomeClassName}`
+          : 'en-log-entry en-log-notice';
         return {
           kind: 'notice',
           time: rec.time,
-          className: 'en-log-entry en-log-notice',
+          className,
           text,
           signature: `${rec.kind}:${rec.noticeType || ''}:${rec.unitKey || ''}:${rec.time.toFixed(3)}:${text}`
         };
       });
     noticeLines.forEach(line => signatureParts.push(line.signature));
-    if (outcomeLine) signatureParts.push(outcomeLine.signature);
 
     let renderLines = [...callLines, ...npvLines, ...noticeLines];
-    if (outcomeLine) renderLines.push(outcomeLine);
     renderLines.sort((a, b) => {
       if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
       const orderMap = { call: 0, notice: 1, outcome: 2 };

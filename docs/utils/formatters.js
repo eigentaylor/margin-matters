@@ -76,7 +76,7 @@ export function formatReportingText(reporting, remainingVotes) {
 // pretend a call was locked in long before it actually would have been.
 // This must never be used anywhere that affects call decisions or
 // exported/raw data — display only.
-const DEFAULT_CONFIDENCE_JUNCTION_RAW = 0.3;
+const DEFAULT_CONFIDENCE_JUNCTION_RAW = 0.5;
 const CONFIDENCE_JUNCTION_DISPLAY = 0.99;
 
 export function rescaleConfidenceForDisplay(rawConfidence, junctionRaw = DEFAULT_CONFIDENCE_JUNCTION_RAW) {
