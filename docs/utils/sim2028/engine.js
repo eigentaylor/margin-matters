@@ -18,6 +18,7 @@ import { createRegionalErrorModel } from './errorModel.js';
 import { runCampaign, DEFAULT_CAMPAIGN_PARAMS } from './campaign.js';
 import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
 import { computeNailbiterShift } from './nailbiter.js';
+import { POLL_ERROR_SPEC } from './pollCalibration.js';
 
 /**
  * Every tunable in one place. Overridable per-run and via URL query params.
@@ -80,7 +81,7 @@ export const PARAMS = {
    * a good year is roughly 0.6x a typical one, a bad year roughly 1.4x.
    */
   poll: {
-    regionShare: 0.87, nationalSigma: 0.025, unitSigmas: 0.020, df: 6,
+    ...POLL_ERROR_SPEC,
     turbulenceSigma: 0.35, turbulenceRange: [0.55, 1.9], turbulenceOverride: null,
   },
   campaign: { ...DEFAULT_CAMPAIGN_PARAMS },

@@ -63,11 +63,21 @@ a:hover {
   transition: margin 0.3s ease
 }
 
-/* Shift container left when election night panel is visible on medium screens */
-@media (min-width: 1200px) and (max-width: 1700px) {
+/* Shift the main container left to make room for the election-night call
+   log's dedicated sidebar (see the #enLogPanel min-width:1201px rules) so
+   it never overlaps the map. Below that width the log panel becomes a
+   collapsible bottom sheet instead (see max-width:1200px rules) and no
+   shift is needed. */
+@media (min-width: 1201px) {
   .container.en-active {
     margin-left: auto;
-    margin-right: calc(280px + 32px);
+    margin-right: calc(380px + 32px);
+  }
+}
+
+@media (min-width: 1600px) {
+  .container.en-active {
+    margin-right: calc(440px + 32px);
   }
 }
 
@@ -669,6 +679,41 @@ hr {
   color: #fff
 }
 
+/* Election night's call-log sidebar narrows the main content column,
+   which puts .pv-totals' plain flex-wrap closer to its wrap threshold —
+   as vote-count digit widths change frame to frame, badges hunt between
+   fitting on one row and wrapping, causing visible flicker. Pin a
+   deterministic 3-over-2 grid instead, scoped to exactly the width/mode
+   where the regression appears. */
+@media (min-width: 1201px) {
+  body.en-active .pv-totals {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    flex-wrap: unset;
+  }
+
+  body.en-active .pv-badge.pv-d {
+    grid-column: 1 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-o {
+    grid-column: 3 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-r {
+    grid-column: 5 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-margin {
+    grid-column: 2 / span 2;
+  }
+
+  body.en-active .pv-badge.pv-total {
+    grid-column: 4 / span 2;
+  }
+}
+
 /* Align raw values and inline delta consistently inside table cells */
 .cell-inner {
   display: inline-grid;
@@ -1113,7 +1158,42 @@ hr {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  pointer-events: auto
+  pointer-events: auto;
+  transition: right 0.3s ease
+}
+
+/* Keep this bar clear of the election-night call log sidebar (z-index 2100
+   would otherwise sit on top of and cover its bottom edge — see the
+   #enLogPanel min-width:1201px sidebar rules). */
+@media (min-width: 1201px) {
+  body.en-active .delta-toggle-footer {
+    right: 380px;
+  }
+}
+
+@media (min-width: 1600px) {
+  body.en-active .delta-toggle-footer {
+    right: 440px;
+  }
+}
+
+/* Election night mode swaps the proportional-EV footer for the playback
+   footer (they occupy the same fixed bottom bar) - the EC breakdown and
+   proportional toggle aren't relevant mid-simulation, and the transport
+   controls are more useful there than buried in the sidebar panel. */
+#enPlaybackFooter {
+  display: none;
+}
+
+/* !important: testerInit.js sets propEvFooter's display as an inline
+   style (propEvFooter.style.display = 'flex'), which otherwise beats any
+   plain class/ID rule regardless of source order. */
+body.en-active #propEvFooter {
+  display: none !important;
+}
+
+body.en-active #enPlaybackFooter {
+  display: flex;
 }
 
 .delta-toggle-footer .toggle-group {
@@ -1572,6 +1652,16 @@ body.slider-dragging * {
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
   z-index: 1400;
   backdrop-filter: blur(8px);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease, visibility 0s linear 0s;
+}
+
+#enLogPanel.en-log-closed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
 }
 
 .en-log-header {
@@ -1580,6 +1670,67 @@ body.slider-dragging * {
   letter-spacing: 0.6px;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+.en-log-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.en-log-close {
+  flex: 0 0 auto;
+  appearance: none;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.en-log-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.en-log-year {
+  font-size: 0.7rem;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--muted);
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.en-winprob {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  opacity: 0.9;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.en-winprob-d {
+  color: #9ec8ff;
+  font-weight: 700;
+}
+
+.en-winprob-r {
+  color: #ffb9b9;
+  font-weight: 700;
 }
 
 .en-log-body {
@@ -1641,6 +1792,11 @@ body.slider-dragging * {
 .en-log-notice {
   color: #f0d28c;
   font-style: italic;
+}
+
+.en-log-npv {
+  color: #b9a6ff;
+  font-weight: 600;
 }
 
 .en-log-victory {
@@ -1712,15 +1868,47 @@ body.slider-dragging * {
   padding: 8px 10px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid rgba(255, 255, 255, 0.15);
   background: rgba(0, 0, 0, 0.35);
   color: rgba(255, 255, 255, 0.88);
   font-size: 0.9rem;
-  line-height: 1.35
+  line-height: 1.35;
+  transition: border-left-color 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 .en-log-uncalled-card:hover {
   border-color: rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08)
+}
+
+/* Pulses gently once a still-counting race is close to crossing the call
+   threshold; --en-pulse-color is set inline per-card to match its accent. */
+.en-log-uncalled-card.en-log-hot {
+  animation: en-log-pulse 1.7s ease-in-out infinite;
+}
+
+@keyframes en-log-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+  50% { box-shadow: 0 0 12px 1px var(--en-pulse-color, rgba(255, 255, 255, 0.3)); }
+}
+
+.en-log-entry.en-log-called {
+  border-left: 4px solid transparent;
+  padding-left: 8px;
+  transition: border-left-color 0.4s ease;
+}
+
+.en-log-section-title-sub {
+  margin-top: 10px;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.en-log-uncalled-card.en-log-npv-strip {
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  opacity: 0.82;
+  border-style: dashed;
 }
 
 #enConfidence {
@@ -1762,11 +1950,14 @@ body.slider-dragging * {
   .en-log-header {
     cursor: pointer;
     user-select: none;
+  }
+
+  .en-log-header-main {
     position: relative;
     padding-right: 30px;
   }
 
-  .en-log-header::after {
+  .en-log-header-main::after {
     content: '';
     position: absolute;
     right: 0;
@@ -1780,7 +1971,7 @@ body.slider-dragging * {
     transition: transform 0.3s ease;
   }
 
-  #enLogPanel.collapsed .en-log-header::after {
+  #enLogPanel.collapsed .en-log-header-main::after {
     transform: translateY(-50%) rotate(0deg);
   }
 
@@ -1793,6 +1984,36 @@ body.slider-dragging * {
   #enLogPanel {
     padding: 12px;
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Above the bottom-sheet breakpoint, give the call log its own full-height
+   sidebar along the right edge instead of a floating card, so it actually
+   uses the room the wide layout has to spare rather than competing for a
+   small overlay footprint. */
+@media (min-width: 1201px) {
+  #enLogPanel {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 380px;
+    max-height: none;
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.4);
+    padding: 20px 18px;
+  }
+
+  .en-log-body {
+    max-height: none;
+  }
+}
+
+@media (min-width: 1600px) {
+  #enLogPanel {
+    width: 440px;
   }
 }
 

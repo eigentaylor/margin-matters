@@ -36,12 +36,22 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function normalCdf(z) {
+  if (!isFinite(z)) return z > 0 ? 1 : 0;
+  const sign = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.SQRT2;
+  const t = 1 / (1 + 0.3275911 * x);
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+  return 0.5 * (1 + sign * y);
+}
+
 const MathUtils = {
   clampMargin,
   clamp01,
   clampShare,
   clampByte,
-  clamp
+  clamp,
+  normalCdf
 };
 
 const globalScope = (typeof window !== 'undefined') ? window : (typeof globalThis !== 'undefined' ? globalThis : null);
@@ -62,5 +72,6 @@ export {
   clamp01,
   clampShare,
   clampByte,
-  clamp
+  clamp,
+  normalCdf
 };
