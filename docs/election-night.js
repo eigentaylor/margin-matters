@@ -3195,38 +3195,30 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         record.reporting = live.reporting;
         record.countedVotes = live.countedVotes;
         record.remainingVotes = live.remainingVotes;
-        // The margin/vote numbers on a call keep refreshing from the live
-        // count as long as it still agrees with the leader actually
-        // announced - but freeze them the moment it first disagrees.
-        // Without this, a call that's later found wrong would show its
-        // own final, opposite-signed margin ("Called Florida for Gore
-        // (R+537)") well before reporting reaches the ~100% threshold
-        // maybeEmitMiscall() waits for to log the separate Correction:
-        // notice - the announced leader and its own displayed margin
-        // would visibly contradict each other for a stretch of the night.
-        if (!record.marginFrozen && live.leader && live.leader !== record.leader) {
-          record.marginFrozen = true;
-        }
-        if (!record.marginFrozen) {
-          record.marginStr = live.marginStr;
-          record.confidence = live.confidence;
-          record.dVotes = live.dVotes;
-          record.rVotes = live.rVotes;
-          record.oVotes = live.oVotes;
-          record.oVotesTotal = live.oVotesTotal;
-          record.topThirdShare = live.topThirdShare;
-          record.totalThirdShare = live.totalThirdShare;
-        }
+        // The margin/vote numbers on a call keep live-refreshing from the
+        // current count for as long as the unit reports - by design, this
+        // is what lets a wrong call visibly diverge from what was
+        // announced (e.g. "Called Florida for Gore" ending up next to its
+        // true "R+0.0 (R+537)" final margin) as a preview of the
+        // Correction: notice that follows once reporting fully completes,
+        // rather than hiding that drama by freezing the numbers.
+        record.marginStr = live.marginStr;
+        record.confidence = live.confidence;
+        record.dVotes = live.dVotes;
+        record.rVotes = live.rVotes;
+        record.oVotes = live.oVotes;
+        record.oVotesTotal = live.oVotesTotal;
+        record.topThirdShare = live.topThirdShare;
+        record.totalThirdShare = live.totalThirdShare;
         // st.evCalledAllocations gets silently swapped to the ground-truth
         // split by maybeEmitMiscall() once a call is confirmed wrong (see
-        // its own comment) - refreshing record.evAllocations from it
-        // unconditionally meant that swap leaked into this call's own "EV"
-        // badge too, converging it with record.finalAllocations below and
-        // collapsing the intended "EV D 25 -> R 25" arrow into a single,
-        // contradicting "EV R 25" sitting right next to "Called ... for
-        // Gore." Freezing it alongside the margin (record.marginFrozen)
-        // keeps it showing what was actually announced at call time.
-        if (!record.marginFrozen && live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
+        // its own comment) - refreshing record.evAllocations from it past
+        // that point would converge it with record.finalAllocations below
+        // and collapse the intended "EV D 25 -> R 25" arrow into a single
+        // value. Freeze it at the exact moment the correction fires
+        // (live.misCallLogged) so the arrow keeps showing what was
+        // actually called vs. what it was corrected to.
+        if (!live.misCallLogged && live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
         // st.evAllocations is a static, ground-truth allocation (the true
         // final winner's split, computed once in buildStateData) - only
         // reveal it once this unit's own count has effectively finished,
@@ -3363,7 +3355,17 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       state.outcomeAnnouncedTotal = newOutcomeTotal;
     }
 
-    if (allCalled && !state.allCalledAnnounced) {
+    // Wait for the current (corrected-where-known) tally to exactly match
+    // the true final EV split, rather than just "every state has been
+    // called" - the latter can fire this on a still-wrong tally if the
+    // last state(s) called haven't had their correction land yet,
+    // producing an awkward "final" message immediately followed by a
+    // correction. This deliberately peeks at ground truth (nationalFinalDEv/
+    // REv, already computed at prepare time) purely to time this one
+    // display moment correctly - it never feeds back into any call or
+    // probability decision.
+    const matchesGroundTruth = finalD === state.nationalFinalDEv && finalR === state.nationalFinalREv;
+    if (matchesGroundTruth && !state.allCalledAnnounced) {
       state.allCalledAnnounced = true;
       if (newOutcomeType && newOutcomeType !== 'T' && newOutcomeTotal !== state.outcomeAnnouncedTotal) {
         const timeStr = formatTimeLabel(currentTime);
