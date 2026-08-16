@@ -2882,6 +2882,15 @@ body.shift-vectors-page {
   animation: en-cp-overlay-in 0.25s ease-out;
 }
 
+/* Author-stylesheet `display` rules always beat the browser's built-in
+   `[hidden] { display: none }` UA rule regardless of specificity, so
+   without this the base rule above would keep the overlay visible forever
+   even after JS sets the `hidden` property - this selector's higher
+   specificity (class + attribute vs. class alone) is what actually wins. */
+.en-checkpoint-overlay[hidden] {
+  display: none;
+}
+
 .en-checkpoint-overlay.en-checkpoint-closing {
   animation: en-cp-overlay-out 0.2s ease-in forwards;
 }
@@ -2925,6 +2934,10 @@ body.shift-vectors-page {
 
 .en-cp-reveal .en-cp-check {
   animation: en-cp-badge-pop 0.4s 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.en-cp-reveal .en-cp-stats {
+  animation: en-cp-fade-up 0.4s 0.75s ease-out both;
 }
 
 @keyframes en-cp-slide-down {
@@ -3088,6 +3101,99 @@ body.shift-vectors-page {
   margin-top: 8px;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.75);
+}
+
+/* Lower-third-style stats strip: running EV total, D/R vote split with
+   mini candidate avatars, and a margin/reporting line. */
+.en-cp-stats {
+  padding: 0 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.en-cp-evtotal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.en-cp-evtotal-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.en-cp-evtotal-num {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.en-cp-votes-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.en-cp-votes-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.72;
+  transition: opacity 0.3s ease;
+}
+
+.en-cp-votes-side.en-cp-votes-leading {
+  opacity: 1;
+}
+
+.en-cp-votes-r {
+  flex-direction: row-reverse;
+}
+
+.en-cp-votes-num {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.en-cp-mini-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  flex: 0 0 auto;
+}
+
+.en-cp-mini-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.85);
+  flex: 0 0 auto;
+}
+
+.en-cp-stats-line {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
 }
 
 /* Outcome-clinch layout: distinct, more dramatic full-bleed card rather

@@ -1117,6 +1117,36 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
   }
 
   /**
+   * D/R/O electoral vote totals from every call already "ready" as of
+   * `uptoTime`, mirroring updateCallLog()'s own dRunning/rRunning/oRunning
+   * accumulation (same records, same misCallLogged correction-swap rule) so
+   * the popup's running EV count never disagrees with the call log's.
+   *
+   * Reads state.stateData directly rather than state.snapshot: this is
+   * called from buildCheckpointSlides() for a correction that may have
+   * *just* fired in the very same renderAt() pass that triggered this
+   * checkpoint, and state.snapshot's copy of misCallLogged for that unit is
+   * captured earlier in that same pass, before maybeEmitMiscall() flips the
+   * flag - stale by exactly one render frame for the one unit that matters
+   * most. state.stateData's st.misCallLogged is the live value.
+   */
+  function computeRunningEvTally(uptoTime) {
+    const readyCalls = state.callRecords
+      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && uptoTime >= rec.time - EPS)
+      .slice()
+      .sort((a, b) => (a.time - b.time) || (a.unitKey || '').localeCompare(b.unitKey || ''));
+    let d = 0, r = 0, o = 0;
+    readyCalls.forEach(record => {
+      const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
+      const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
+      if (tallyWinner === 'D') d += record.ev || 0;
+      else if (tallyWinner === 'R') r += record.ev || 0;
+      else o += record.ev || 0;
+    });
+    return { D: d, R: r, O: o };
+  }
+
+  /**
    * Turn the queued call/correction/outcome-clinch records into the plain
    * slide descriptors updatePopup.showCheckpoint() renders, resolving each
    * one's portrait up front (async - the manifest fetch is cached after the
@@ -1133,33 +1163,35 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0)
         };
       }
-      if (record.noticeType === 'miscall') {
-        const leader = record.finalLeader;
-        return {
-          kind: 'correction',
-          unitKey: record.unitKey,
-          stateName: formatUnitLabel(record.unitKey),
-          ev: record.ev,
-          leader,
-          candidateName: resolveCandidateFullName(leader, record.unitKey),
-          previousCandidateName: record.previousCandidateName,
-          accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0)
-        };
-      }
-      // Plain state call
-      const leader = record.leader;
+      const isCorrection = record.noticeType === 'miscall';
+      const leader = isCorrection ? record.finalLeader : record.leader;
+      const oppositeLeader = leader === 'D' ? 'R' : (leader === 'R' ? 'D' : null);
+      const runningEv = computeRunningEvTally(record.time)[leader] || 0;
+      const voteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
       return {
-        kind: 'call',
+        kind: isCorrection ? 'correction' : 'call',
         unitKey: record.unitKey,
         stateName: formatUnitLabel(record.unitKey),
         ev: record.ev,
         leader,
+        oppositeLeader,
         candidateName: resolveCandidateFullName(leader, record.unitKey),
-        accentColor: calledAccentColor(leader, marginFromCallRecord(record))
+        oppositeCandidateName: oppositeLeader ? resolveCandidateFullName(oppositeLeader, record.unitKey) : null,
+        previousCandidateName: isCorrection ? record.previousCandidateName : null,
+        accentColor: calledAccentColor(leader, isCorrection ? (CHECKPOINT_DEFAULT_MARGIN[leader] || 0) : marginFromCallRecord(record)),
+        runningEv,
+        runningEvBefore: Math.max(0, runningEv - (record.ev || 0)),
+        dVotes: record.dVotes,
+        rVotes: record.rVotes,
+        reportingText: formatReportingText(record.reporting, record.remainingVotes),
+        marginText: formatMarginText(record.marginStr, leader, voteMargin)
       };
     });
     await Promise.all(specs.map(async spec => {
       spec.portraitUrl = await getPortraitUrlForName(state.year, spec.candidateName);
+      spec.oppositePortraitUrl = spec.oppositeCandidateName
+        ? await getPortraitUrlForName(state.year, spec.oppositeCandidateName)
+        : null;
     }));
     return specs;
   }
@@ -2663,7 +2695,15 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       calledLeader,
       finalLeader,
       ev: st.ev,
-      previousCandidateName: resolveCandidateFullName(calledLeader, st.unitKey) || calledLeaderText
+      previousCandidateName: resolveCandidateFullName(calledLeader, st.unitKey) || calledLeaderText,
+      // Final (reporting >= 100%) vote stats for the checkpoint popup's
+      // stats strip - same fields registerCall() stores on a call record.
+      reporting: metrics.reporting,
+      dVotes: metrics.dVotesCounted,
+      rVotes: metrics.rVotesCounted,
+      countedVotes: metrics.countedVotes,
+      remainingVotes: metrics.remainingVotes,
+      marginStr: metrics.countedMarginStr
     };
     state.callRecords.push(correctionRecord);
     notePendingCheckpointEvent(correctionRecord, correctionTime);

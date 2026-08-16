@@ -7,14 +7,16 @@
 // CSS-driven reveals and calls back when the whole batch has been shown.
 //
 // Slide shapes (all fields plain strings/numbers, no DOM):
-//   { kind: 'call', stateName, ev, leader, candidateName, portraitUrl, accentColor }
-//   { kind: 'correction', stateName, ev, leader, candidateName, portraitUrl,
-//     accentColor, previousCandidateName }
-//   { kind: 'outcome', candidateName, portraitUrl, accentColor, outcomeText }
+//   { kind: 'call'|'correction', stateName, ev, leader, oppositeLeader,
+//     candidateName, portraitUrl, oppositeCandidateName, oppositePortraitUrl,
+//     accentColor, previousCandidateName (correction only), runningEv,
+//     runningEvBefore, dVotes, rVotes, reportingText, marginText }
+//   { kind: 'outcome', candidateName, portraitUrl, accentColor }
 
-const CALL_SLIDE_MS = 2200;
-const CORRECTION_SLIDE_MS = 2800;
+const CALL_SLIDE_MS = 3400;
+const CORRECTION_SLIDE_MS = 4000;
 const OUTCOME_SLIDE_MS = 4500;
+const EV_COUNTER_MS = 900;
 
 let overlayEl = null;
 let cardEl = null;
@@ -92,6 +94,76 @@ function buildPhotoMarkup(slide) {
   </div>`;
 }
 
+function formatVotes(n) {
+  return isFinite(n) ? Math.round(n).toLocaleString('en-US') : '—';
+}
+
+// Small circular avatar for the D/R vote-count row (distinct from the main
+// buildPhotoMarkup() photo, which is bigger and always the slide's winner).
+function buildMiniAvatar(portraitUrl, name, partyCode) {
+  if (portraitUrl) {
+    return `<img class="en-cp-mini-avatar" src="${portraitUrl}" alt="${name || ''}" />`;
+  }
+  return `<span class="en-cp-mini-avatar en-cp-mini-avatar-fallback">${partyCode || ''}</span>`;
+}
+
+function buildVotesRowMarkup(slide) {
+  if (!isFinite(slide.dVotes) && !isFinite(slide.rVotes)) return '';
+  const dPortrait = slide.leader === 'D' ? slide.portraitUrl : (slide.oppositeLeader === 'D' ? slide.oppositePortraitUrl : null);
+  const rPortrait = slide.leader === 'R' ? slide.portraitUrl : (slide.oppositeLeader === 'R' ? slide.oppositePortraitUrl : null);
+  const dName = slide.leader === 'D' ? slide.candidateName : (slide.oppositeLeader === 'D' ? slide.oppositeCandidateName : 'D');
+  const rName = slide.leader === 'R' ? slide.candidateName : (slide.oppositeLeader === 'R' ? slide.oppositeCandidateName : 'R');
+  return `
+    <div class="en-cp-votes-row">
+      <div class="en-cp-votes-side en-cp-votes-d${slide.leader === 'D' ? ' en-cp-votes-leading' : ''}">
+        ${buildMiniAvatar(dPortrait, dName, 'D')}
+        <span class="en-cp-votes-num">${formatVotes(slide.dVotes)}</span>
+      </div>
+      <div class="en-cp-votes-side en-cp-votes-r${slide.leader === 'R' ? ' en-cp-votes-leading' : ''}">
+        <span class="en-cp-votes-num">${formatVotes(slide.rVotes)}</span>
+        ${buildMiniAvatar(rPortrait, rName, 'R')}
+      </div>
+    </div>`;
+}
+
+function buildStatsMarkup(slide) {
+  const evTotalLine = (slide.leader === 'D' || slide.leader === 'R') && isFinite(slide.runningEv)
+    ? `<div class="en-cp-evtotal">
+        <span class="en-cp-evtotal-label">${(slide.candidateName || '').split(/\s+/).pop()}'s electoral vote total</span>
+        <span class="en-cp-evtotal-num" data-count-from="${slide.runningEvBefore}" data-count-to="${slide.runningEv}">${slide.runningEvBefore}</span>
+      </div>`
+    : '';
+  const votesRow = buildVotesRowMarkup(slide);
+  const statsLine = [slide.marginText, slide.reportingText].filter(Boolean).join(' · ');
+  if (!evTotalLine && !votesRow && !statsLine) return '';
+  return `<div class="en-cp-stats">
+    ${evTotalLine}
+    ${votesRow}
+    ${statsLine ? `<div class="en-cp-stats-line">${statsLine}</div>` : ''}
+  </div>`;
+}
+
+// Animates a counter element's text from data-count-from to data-count-to,
+// e.g. a state's electoral votes landing and the total visibly ticking up
+// by that state's own count. Plain rAF + easing, no dependency.
+function animateEvCounters(root) {
+  const els = root.querySelectorAll('.en-cp-evtotal-num[data-count-to]');
+  els.forEach(el => {
+    const from = Number(el.dataset.countFrom) || 0;
+    const to = Number(el.dataset.countTo);
+    if (!isFinite(to) || to === from) { el.textContent = String(isFinite(to) ? to : from); return; }
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - start) / EV_COUNTER_MS);
+      const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      const value = Math.round(from + (to - from) * eased);
+      el.textContent = String(value);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
 function renderCallOrCorrection(slide) {
   const { first, last } = splitName(slide.candidateName);
   const isCorrection = slide.kind === 'correction';
@@ -118,7 +190,9 @@ function renderCallOrCorrection(slide) {
         </div>
         ${prevLine}
       </div>
-    </div>`;
+    </div>
+    ${buildStatsMarkup(slide)}`;
+  animateEvCounters(cardEl);
 }
 
 function renderOutcome(slide) {
@@ -183,13 +257,17 @@ function finishCheckpoint() {
   if (overlayEl) {
     overlayEl.classList.add('en-checkpoint-closing');
     setTimeout(() => {
-      if (overlayEl) {
-        overlayEl.hidden = true;
-        overlayEl.classList.remove('en-checkpoint-closing');
-      }
+      if (overlayEl) overlayEl.hidden = true;
+      // cb() (which resumes the sim) only runs once the overlay is
+      // actually hidden, not before - otherwise a checkpoint that fires
+      // again immediately on resume would call showCheckpoint() while this
+      // timeout is still pending, and this timeout would then stomp the
+      // brand new popup by forcing it hidden out from under itself.
+      if (typeof cb === 'function') cb();
     }, 220);
+  } else if (typeof cb === 'function') {
+    cb();
   }
-  if (typeof cb === 'function') cb();
 }
 
 /**
@@ -207,6 +285,11 @@ export function showCheckpoint(slides, options = {}) {
   activeSlides = slides;
   activeIndex = 0;
   activeOnComplete = options.onComplete || null;
+  // Clear any leftover closing state from a previous checkpoint (defensive
+  // - finishCheckpoint() no longer removes it itself, so a fresh open is
+  // the single place this ever gets cleared) before revealing, so the
+  // entrance animation on the base .en-checkpoint-overlay rule plays clean.
+  overlayEl.classList.remove('en-checkpoint-closing');
   overlayEl.hidden = false;
   renderSlide(0);
 }
