@@ -24,7 +24,13 @@ export function randn(rng) {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-/** Student's t with `df` degrees of freedom (df >= 1, integer). Fatter tails at low df. */
+/**
+ * Student's t with `df` degrees of freedom (df >= 1, integer). Fatter tails at low df.
+ * NOT variance-normalized: Var(t_df) = df/(df-2) for df>2 (e.g. 1.5 at df=6), not 1.
+ * Callers building an inference (not just a draw) around this must scale their
+ * assumed sigma by sqrt(df/(df-2)) to match the realized draw distribution, or
+ * normalize the draw itself (z * sqrt((df-2)/df)) - don't assume Var=1 silently.
+ */
 export function randStudentT(rng, df) {
   const z = randn(rng);
   let v = 0;

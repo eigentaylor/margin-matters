@@ -1,12 +1,16 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
-import { clamp01 as sharedClamp01, clampByte as sharedClampByte } from './utils/mathUtils.js';
+import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
 import { getUnitCandidateLastNames } from './utils/candidateNames.js';
 import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
+import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
+import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
+import { regionOf } from './utils/sim2028/regions.js';
+import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
 
 (function () {
   'use strict';
@@ -28,6 +32,59 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   const clampByte = typeof sharedClampByte === 'function'
     ? sharedClampByte
     : (v => Math.max(0, Math.min(255, v | 0)));
+
+  // Clamp a user-entered speed multiplier to a safe range; returns null
+  // for unparseable/non-finite input so callers can leave the current
+  // value untouched instead of clobbering it with a bad number.
+  function clampSpeed(v) {
+    if (!isFinite(v)) return null;
+    return Math.max(MIN_SPEED_MULTIPLIER, Math.min(MAX_SPEED_MULTIPLIER, v));
+  }
+
+  // Round to 3 decimals to avoid float noise (e.g. 0.5 - 0.05 = 0.44999999999999996)
+  // while still preserving any finer value the user typed directly.
+  function roundSpeed(v) {
+    return Math.round(v * 1000) / 1000;
+  }
+
+  // Clamp/apply a new speed value to state and sync the input's displayed
+  // value. Shared by the text input's blur/change handler and the +/-
+  // stepper buttons so they all funnel through the same validation.
+  function setSpeed(v) {
+    const clamped = clampSpeed(v);
+    const finalVal = clamped != null ? clamped : state.speedMultiplier;
+    state.speedMultiplier = finalVal;
+    setSpeedFieldValue(finalVal);
+    return finalVal;
+  }
+
+  // The playback controls exist in two places at once (the sidebar panel
+  // and the footer bar shown during election night mode) so a fresh page
+  // load always has a working Start button regardless of body.en-active -
+  // these helpers keep both copies of each control in sync rather than
+  // duplicating every read/write site.
+  function setSpeedFieldValue(v) {
+    const str = String(v);
+    if (elements.speed) elements.speed.value = str;
+    if (elements.speedFooter) elements.speedFooter.value = str;
+  }
+  function setToggleText(text) {
+    if (elements.toggle) elements.toggle.textContent = text;
+    if (elements.toggleFooter) elements.toggleFooter.textContent = text;
+  }
+  function setPhaseText(text) {
+    if (elements.phase) elements.phase.textContent = text;
+    if (elements.phaseFooter) elements.phaseFooter.textContent = text;
+  }
+  function setTimeText(text) {
+    if (elements.timeLabel) elements.timeLabel.textContent = text;
+    if (elements.timeLabelFooter) elements.timeLabelFooter.textContent = text;
+  }
+  function setProgressValue(v) {
+    const str = String(v);
+    if (elements.progress) elements.progress.value = str;
+    if (elements.progressFooter) elements.progressFooter.value = str;
+  }
 
   const formatLean = value => {
     if (!isFinite(value)) return 'ERROR';
@@ -58,8 +115,13 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   // Time offset (minutes) used so times like "19:00" map to ET minutes
   const TIME_OFFSET_MIN = 180;
   // Confidence threshold defaults and reporting cutoffs
-  const DEFAULT_CONFIDENCE_THRESHOLD = 0.3;
+  const DEFAULT_CONFIDENCE_THRESHOLD = 0.5;
   const MIN_REPORTING_TO_CALL = 0.2;
+  // Bounds and default for the free-text simulation speed multiplier input
+  const MIN_SPEED_MULTIPLIER = 0.01;
+  const MAX_SPEED_MULTIPLIER = 100;
+  const DEFAULT_SPEED_MULTIPLIER = 0.5;
+  const SPEED_STEP = 0.05;
   // Visual constants for uncalled/tossup styling
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
@@ -67,6 +129,48 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   const FLIP_MARGIN_EPS = 0; // small margin to represent a flipped outcome without zero
   // Display update interval for throttling expensive UI work
   const DISPLAY_UPDATE_INTERVAL = 1; // minutes between display updates (counting is continuous)
+  // National win-probability estimate: how uncertain the not-yet-counted
+  // portion of a unit's vote could still be relative to what's counted so
+  // far, expressed as a margin std-dev (see computeUnitPosterior). Larger
+  // for MAIL_HEAVY_STATES, matching the same real-world "late mail ballots
+  // skew differently than election-day votes" fact createBiasParams already
+  // encodes generatively — here it's the analogous observational-uncertainty
+  // fact. Starting guesses, meant to be tuned against
+  // docs/utils/electionNight/validateWinProb.mjs, the same way
+  // CONFIDENCE_JUNCTION_RAW was validated rather than shipped on guesswork.
+  const REMAINING_DELTA_SIGMA_BASE = 0.12;
+  const REMAINING_DELTA_SIGMA_MAIL_HEAVY = 0.22;
+  // "Pacing" damper for the live win-probability MC — deliberately, openly
+  // fake extra uncertainty layered ONLY on the shared national/regional
+  // swing terms (docs/utils/electionNight/liveSwing.js) right before they
+  // feed the Monte Carlo, not on the underlying solve itself (so
+  // state.swingEstimate/the exported timeline/debug log stay honest).
+  // The honest swing math is real and validated (see liveSwing.js), but a
+  // handful of early-reporting states (KY/IN/VA/SC/GA) is a small, non-
+  // representative sample — the model can't yet tell "these states are
+  // just noisy tonight" from "the whole country is swinging", so a real
+  // signal from them can legitimately swing the national number fast and
+  // hard right out of the gate. Mathematically honest, but it collapses
+  // the suspense a live election-night broadcast is supposed to have.
+  // PACING_MEAN_SCALE_START (0..1) trusts only this fraction of the
+  // observed national/regional swing at 0% national reporting — this is
+  // the lever that actually slows the aggregate win% down (see
+  // applyPacingDamper's comment for why sigma alone doesn't). 1 = fully
+  // honest immediately. PACING_MULTIPLIER_START widens sigma on top for
+  // extra cushion. Both ease back to "honest" (scale/mult = 1) by
+  // PACING_DECAY_REPORTING national reporting fraction. Purely a feel/
+  // pacing knob, tune by eye against a real replay (e.g. 2016) — there's
+  // no "correct" value to validate against.
+  const PACING_MEAN_SCALE_START = 0.15;
+  const PACING_MULTIPLIER_START = 3.5;
+  const PACING_DECAY_REPORTING = 0.85;
+  // Monte Carlo draw count for the win-probability tally, and how often
+  // (in simulated minutes) the expensive tally re-runs — independent of
+  // DISPLAY_UPDATE_INTERVAL, which only throttles the real-time RAF path;
+  // this also has to protect advanceDeterministic()'s synchronous
+  // fast-forward loop, which DISPLAY_UPDATE_INTERVAL never sees.
+  const PROB_MC_SIMS = 2000;
+  const PROB_UPDATE_INTERVAL_MINUTES = 3;
   // Reporting jump debug threshold (fraction, e.g. 0.12 = 12 percentage points)
   const REPORTING_JUMP_THRESHOLD = 0.12;
   // Maximum reporting step when densifying schedules (fraction, e.g. 0.005 = 0.5%)
@@ -125,7 +229,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     pvMode: 'current',
     pvValue: 0,
     targetPvLabel: 'EVEN',
-    speedMultiplier: 1,
+    speedMultiplier: DEFAULT_SPEED_MULTIPLIER,
     minutesPerSecond: BASE_MINUTES_PER_SECOND,
     currentTime: 0,
     simStart: 0,
@@ -149,6 +253,24 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     prevAbbrColors: null,
     boxesDirty: false,
     callRecords: [],
+    npvCallRecord: null,
+    npvMisCallLogged: false,
+    outcomeAnnouncedType: null,
+    outcomeAnnouncedTotal: null,
+    allCalledAnnounced: false,
+    lastOutcomeBannerText: '',
+    lastOutcomeBannerClass: '',
+    nationalFinalDVotes: 0,
+    nationalFinalRVotes: 0,
+    nationalFinalDEv: 0,
+    nationalFinalREv: 0,
+    lastNationalTotals: null,
+    atLargeParts: null,
+    unitPosteriors: null,
+    swingEstimate: null,
+    priorNpvMargin: 0,
+    nationalWinProb: null,
+    lastProbUpdateTime: -Infinity,
     confidenceThreshold: DEFAULT_CONFIDENCE_THRESHOLD,
     pvRandomCache: null,
     pvRandomCacheMode: null,
@@ -167,6 +289,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     toggle: null,
     reset: null,
     speed: null,
+    speedDown: null,
+    speedUp: null,
     pvMode: null,
     pvDisplay: null,
     timeLabel: null,
@@ -174,6 +298,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     phase: null,
     log: null,
     logHeader: null,
+    winProb: null,
     logUncalled: null,
     logPanel: null,
     confidence: null,
@@ -229,17 +354,45 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     elements.toggle = document.getElementById('enToggle');
     elements.reset = document.getElementById('enReset');
     elements.speed = document.getElementById('enSpeed');
+    elements.speedDown = document.getElementById('enSpeedDown');
+    elements.speedUp = document.getElementById('enSpeedUp');
     elements.pvMode = document.getElementById('enPvMode');
     elements.pvDisplay = document.getElementById('enPvDisplay');
     elements.timeLabel = document.getElementById('enTime');
     elements.progress = document.getElementById('enProgress');
     elements.phase = document.getElementById('enPhase');
+    // Second, duplicate copy of the playback controls, shown in the
+    // footer bar during election night mode - see setToggleText/
+    // setPhaseText/setTimeText/setProgressValue/setSpeedFieldValue above,
+    // which keep both copies in sync.
+    elements.toggleFooter = document.getElementById('enToggleFooter');
+    elements.resetFooter = document.getElementById('enResetFooter');
+    elements.speedFooter = document.getElementById('enSpeedFooter');
+    elements.speedDownFooter = document.getElementById('enSpeedDownFooter');
+    elements.speedUpFooter = document.getElementById('enSpeedUpFooter');
+    elements.timeLabelFooter = document.getElementById('enTimeFooter');
+    elements.progressFooter = document.getElementById('enProgressFooter');
+    elements.phaseFooter = document.getElementById('enPhaseFooter');
     elements.log = document.getElementById('enLog');
     elements.logHeader = document.querySelector('#enLogPanel .en-log-header');
+    elements.logHeaderText = document.getElementById('enLogHeaderText');
+    elements.logClose = document.getElementById('enLogClose');
+    elements.logYear = document.getElementById('enLogYear');
+    elements.winProb = document.getElementById('enWinProb');
     elements.logUncalled = document.getElementById('enLogUncalled');
     elements.logPanel = document.getElementById('enLogPanel');
-    // Hide the call log panel by default until the election-night simulation is active
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
+    // The panel starts hidden via the `en-log-closed` class already present
+    // in the markup (opacity/visibility transition) so there's no JS-driven
+    // FOUC-style show/hide flicker on load.
+
+    if (elements.logClose) {
+      elements.logClose.addEventListener('click', (e) => {
+        // Stop the click from also reaching the mobile collapse-toggle
+        // listener on the header row below.
+        e.stopPropagation();
+        hideLogPanel();
+      });
+    }
 
     // Mobile collapse/expand functionality for call log
     if (elements.logHeader && elements.logPanel) {
@@ -267,40 +420,59 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     elements.confidenceVal = document.getElementById('enConfidenceVal');
     elements.victory = document.getElementById('enVictory');
 
-    if (elements.toggle) {
-      elements.toggle.addEventListener('click', () => {
-        //console.log('ELECTION NIGHT TOGGLE CLICK');
-        if (!state.prepared) {
-          // Start should roll random PV now (at click time). Clear any cached random PV so
-          // resolvePvValue will draw fresh values based on the current time/seed.
-          state.pvRandomCache = null;
-          state.pvRandomCacheMode = null;
-          state.pvRandomCacheYear = null;
-          state.pvRandomSeed = null;
-          startSimulation();
-        } else if (state.running) {
-          pauseSimulation();
-        } else {
-          if (state.currentTime >= state.simEnd - EPS) {
-            state.currentTime = state.simStart;
-            renderAt(state.currentTime);
-          }
-          startSimulation();
+    function handleToggleClick() {
+      //console.log('ELECTION NIGHT TOGGLE CLICK');
+      showLogPanel();
+      if (!state.prepared) {
+        // Start should roll random PV now (at click time). Clear any cached random PV so
+        // resolvePvValue will draw fresh values based on the current time/seed.
+        state.pvRandomCache = null;
+        state.pvRandomCacheMode = null;
+        state.pvRandomCacheYear = null;
+        state.pvRandomSeed = null;
+        startSimulation();
+      } else if (state.running) {
+        pauseSimulation();
+      } else {
+        if (state.currentTime >= state.simEnd - EPS) {
+          state.currentTime = state.simStart;
+          renderAt(state.currentTime);
         }
-        updateToggleLabel();
-      });
+        startSimulation();
+      }
+      updateToggleLabel();
     }
+    if (elements.toggle) elements.toggle.addEventListener('click', handleToggleClick);
+    if (elements.toggleFooter) elements.toggleFooter.addEventListener('click', handleToggleClick);
 
-    if (elements.reset) {
-      elements.reset.addEventListener('click', () => resetSimulation(true));
+    function handleResetClick() { resetSimulation(true, true); }
+    if (elements.reset) elements.reset.addEventListener('click', handleResetClick);
+    if (elements.resetFooter) elements.resetFooter.addEventListener('click', handleResetClick);
+
+    // Either speed field can be the one the user edits directly; read from
+    // whichever fired the event so setSpeedFieldValue can sync the other.
+    function handleSpeedInput(el) {
+      const val = clampSpeed(parseFloat(el.value));
+      if (val != null) state.speedMultiplier = val;
     }
-
+    function handleSpeedChange(el) { setSpeed(parseFloat(el.value)); }
     if (elements.speed) {
-      elements.speed.addEventListener('change', () => {
-        const val = parseFloat(elements.speed.value);
-        if (isFinite(val) && val > 0) state.speedMultiplier = val;
-      });
+      elements.speed.addEventListener('input', () => handleSpeedInput(elements.speed));
+      // On blur/commit, snap the field's displayed value to the clamped
+      // number so invalid input (0, negative, non-numeric, absurdly
+      // large) doesn't linger visibly.
+      elements.speed.addEventListener('change', () => handleSpeedChange(elements.speed));
     }
+    if (elements.speedFooter) {
+      elements.speedFooter.addEventListener('input', () => handleSpeedInput(elements.speedFooter));
+      elements.speedFooter.addEventListener('change', () => handleSpeedChange(elements.speedFooter));
+    }
+    function handleSpeedDown() { setSpeed(roundSpeed(state.speedMultiplier - SPEED_STEP)); }
+    function handleSpeedUp() { setSpeed(roundSpeed(state.speedMultiplier + SPEED_STEP)); }
+    if (elements.speedDown) elements.speedDown.addEventListener('click', handleSpeedDown);
+    if (elements.speedDownFooter) elements.speedDownFooter.addEventListener('click', handleSpeedDown);
+    if (elements.speedUp) elements.speedUp.addEventListener('click', handleSpeedUp);
+    if (elements.speedUpFooter) elements.speedUpFooter.addEventListener('click', handleSpeedUp);
 
     if (elements.pvMode) {
       elements.pvMode.addEventListener('change', () => {
@@ -318,21 +490,25 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       });
     }
 
+    function handleProgressInput(el) {
+      if (state.suppressProgressEvent) return;
+      const raw = parseFloat(el.value);
+      const clamped = Math.max(0, Math.min(1, isFinite(raw) ? raw : 0));
+      if (!state.prepared) {
+        prepareSimulation();
+        if (!state.prepared) return;
+      }
+      const wasRunning = state.running;
+      if (wasRunning) pauseSimulation();
+      seekToProgress(clamped);
+      if (wasRunning) startSimulation();
+      updateToggleLabel();
+    }
     if (elements.progress) {
-      elements.progress.addEventListener('input', () => {
-        if (state.suppressProgressEvent) return;
-        const raw = parseFloat(elements.progress.value);
-        const clamped = Math.max(0, Math.min(1, isFinite(raw) ? raw : 0));
-        if (!state.prepared) {
-          prepareSimulation();
-          if (!state.prepared) return;
-        }
-        const wasRunning = state.running;
-        if (wasRunning) pauseSimulation();
-        seekToProgress(clamped);
-        if (wasRunning) startSimulation();
-        updateToggleLabel();
-      });
+      elements.progress.addEventListener('input', () => handleProgressInput(elements.progress));
+    }
+    if (elements.progressFooter) {
+      elements.progressFooter.addEventListener('input', () => handleProgressInput(elements.progressFooter));
     }
 
     const yearSlider = document.getElementById('yearSlider');
@@ -388,6 +564,99 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     updateToggleLabel();
   }
 
+  // --- National win-probability: prior establishment ------------------
+  //
+  // Two sources for a per-unit poll-like prior (st.priorMargin/st.priorSigma):
+  // bridged real 2028 polls (window._enPollPrior, set once by
+  // docs/utils/sim2028/electionNightBridge.js when coming from sim2028.html),
+  // or a synthesized prior for pages with no real polls (index.html/
+  // future.html). Both paths converge on the same per-unit contract so the
+  // live win-probability code downstream doesn't need to know which ran.
+  // Neither path sets a prior for at-large (ME-AL/NE-AL) units — those are
+  // always derived from their districts' draws, never sampled directly (see
+  // buildAtLargeParts/runNationalWinProbabilityMC).
+  //
+  // buildSyntheticPollPriors() is the ONE place allowed to read a unit's
+  // ground-truth dTwoPartyFinal/rTwoPartyFinal — it runs once, at prepare
+  // time, before the animation starts, exactly mirroring how
+  // docs/utils/sim2028/campaign.js generates its own polls from a hidden
+  // truth. After this call, st.priorMargin/st.priorSigma are a frozen,
+  // poll-like PUBLIC fact for the rest of the night — nothing downstream
+  // (computeUnitPosterior, runNationalWinProbabilityMC) may ever read
+  // dTwoPartyFinal/rTwoPartyFinal/biasParams/closeness again.
+  function buildSyntheticPollPriors(data, year, pvValue) {
+    const simUnits = data.filter(st => st.pvWeight && !st.thirdPartyDominant);
+    data.forEach(st => { if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; } });
+    if (!simUnits.length) return;
+    const units = simUnits.map(st => st.unitKey);
+    const weights = new Map(simUnits.map(st => [st.unitKey, st.totalVotes]));
+    const unitSigmaMap = new Map(simUnits.map(st => [st.unitKey, POLL_ERROR_SPEC.unitSigmas]));
+
+    const model = createRegionalErrorModel({
+      units,
+      weights,
+      unitSigmas: unitSigmaMap,
+      regionShare: POLL_ERROR_SPEC.regionShare,
+      nationalSigma: POLL_ERROR_SPEC.nationalSigma,
+      df: POLL_ERROR_SPEC.df
+    });
+
+    // Deterministic given (year, resolved pvValue) alone: re-seeking within
+    // a run never changes pvValue, so this reproduces the same synthetic
+    // poll every time; a fresh prepareSimulation() with a newly-rolled
+    // random PV mode naturally rerolls it too, since pvValue itself
+    // changed. Mirrors the pvRandomCache seeding pattern used elsewhere.
+    const seed = hashCode(`prior:${year}:${Math.round((pvValue || 0) * 1e6)}`);
+    const rng = mulberry32(seed >>> 0);
+    const errOut = new Float64Array(units.length);
+    model.drawRelInto(rng, 1, errOut);
+    const nationalErr = model.drawNpv(rng, 1);
+
+    const totalSigma = Math.sqrt(POLL_ERROR_SPEC.unitSigmas ** 2 + POLL_ERROR_SPEC.nationalSigma ** 2);
+    simUnits.forEach((st, i) => {
+      // ONE-TIME allowed peek at ground truth — see comment above.
+      const truthMargin = st.dTwoPartyFinal - st.rTwoPartyFinal;
+      st.priorMargin = clampMargin(truthMargin + errOut[i] + nationalErr);
+      st.priorSigma = totalSigma;
+    });
+  }
+
+  function applyBridgedPollPriors(data, prior) {
+    const spec = prior.spec || POLL_ERROR_SPEC;
+    const totalSigma = Math.sqrt(spec.unitSigmas ** 2 + spec.nationalSigma ** 2);
+    data.forEach(st => {
+      if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; return; }
+      if (!st.pvWeight) return; // at-large: derived, no direct prior
+      const margin = prior.marginByUnit ? prior.marginByUnit.get(st.unitKey) : null;
+      if (isFinite(margin)) {
+        st.priorMargin = clampMargin(margin);
+        st.priorSigma = totalSigma;
+      } else {
+        // No poll data for this particular unit (shouldn't normally
+        // happen) — fall back to a one-off synthetic prior just for it.
+        st.priorMargin = clampMargin(st.dTwoPartyFinal - st.rTwoPartyFinal);
+        st.priorSigma = totalSigma;
+      }
+    });
+  }
+
+  // At-large (ME-AL/NE-AL) units are always derived from their component
+  // districts' simulated margins (vote-weighted composite) rather than
+  // sampled independently in the win-probability Monte Carlo — a statewide
+  // result can never contradict the districts that compose it. Built once
+  // per prepared simulation, mirroring docs/utils/sim2028/forecast.js's own
+  // alParts pattern.
+  function buildAtLargeParts(data) {
+    const map = new Map();
+    data.forEach(st => {
+      if (st.type !== 'atlarge') return;
+      const districts = data.filter(d => d.abbr === st.abbr && d.type === 'district');
+      const totalW = districts.reduce((sum, d) => sum + d.totalVotes, 0) || 1;
+      map.set(st.unitKey, districts.map(d => ({ unitKey: d.unitKey, weight: d.totalVotes / totalW })));
+    });
+    return map;
+  }
+
   /**
    * Prepare the simulation data for the selected year and PV scenario.
    * This builds per-unit state objects, computes simStart/simEnd, and
@@ -423,6 +692,20 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       : new Map();
     state.boxesDirty = false;
     state.callRecords = [];
+    state.npvCallRecord = null;
+    state.npvMisCallLogged = false;
+    state.outcomeAnnouncedType = null;
+    state.outcomeAnnouncedTotal = null;
+    state.allCalledAnnounced = false;
+    state.lastOutcomeBannerText = '';
+    state.lastOutcomeBannerClass = '';
+    state.lastNationalTotals = null;
+    state.atLargeParts = null;
+    state.unitPosteriors = null;
+    state.swingEstimate = null;
+    state.priorNpvMargin = 0;
+    state.nationalWinProb = null;
+    state.lastProbUpdateTime = -Infinity;
     // Initialize log state for this simulation
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -434,6 +717,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     updateDownloadButtons();
 
     state.year = year;
+    if (elements.logYear) elements.logYear.textContent = String(year);
 
     // If a proportional EV toggle exists, save its previous state and disable it during election night
     try {
@@ -444,17 +728,19 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         prop.disabled = true;
       }
     } catch (e) { /* ignore */ }
-    // Show the call log panel when the election-night simulation is prepared
-    try { if (elements.logPanel) elements.logPanel.style.display = ''; } catch (e) { }
-    // Shift container left on medium screens to avoid overlap
-    try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { }
+    // Show the call log panel when the election-night simulation is prepared.
+    // Also shifts the container left on medium screens to avoid overlap
+    // (flagged on body too so other fixed page-wide elements, e.g. the
+    // proportional-EV toggle footer, can shrink away from the sidebar).
+    showLogPanel();
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
     state.lastUncalledKey = '';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
-    if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.logHeaderText) elements.logHeaderText.textContent = 'Call log';
+    if (elements.winProb) elements.winProb.textContent = '';
     if (elements.victory) {
       elements.victory.textContent = '';
       elements.victory.className = 'en-log-victory';
@@ -487,6 +773,36 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (typeof window.updateAll === 'function') window.updateAll();
 
     state.totalEligibleVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.totalVotes : 0), 0);
+    state.nationalFinalDVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.dVotesCounted : 0), 0);
+    state.nationalFinalRVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.rVotesCounted : 0), 0);
+    // Ground-truth ELECTORAL COLLEGE winner (distinct from the popular vote
+    // above — they can and do disagree, e.g. 2016). Summed over every
+    // EV-bearing unit (state/at-large/district all count separately here,
+    // unlike the vote totals above, since each has its own non-overlapping
+    // electors) — used only by debug/validation instrumentation, never by
+    // the live win-probability algorithm itself.
+    state.nationalFinalDEv = data.reduce((sum, st) => sum + (st.winner === 'D' ? st.ev : 0), 0);
+    state.nationalFinalREv = data.reduce((sum, st) => sum + (st.winner === 'R' ? st.ev : 0), 0);
+
+    if (window._enPollPrior && window._enPollPrior.year === year) {
+      applyBridgedPollPriors(data, window._enPollPrior);
+    } else {
+      buildSyntheticPollPriors(data, year, pvValue);
+    }
+    state.atLargeParts = buildAtLargeParts(data);
+    // Vote-weighted mean of the frozen priors - debug/validation only (e.g.
+    // docs/utils/electionNight/validateWinProb.mjs's swing-recovery check),
+    // never read by the live algorithm. A derived summary of the already-
+    // public prior, not a ground-truth leak.
+    state.priorNpvMargin = (() => {
+      let acc = 0, wsum = 0;
+      data.forEach(st => {
+        if (!st.pvWeight || !isFinite(st.priorMargin)) return;
+        acc += st.priorMargin * st.totalVotes;
+        wsum += st.totalVotes;
+      });
+      return wsum > EPS ? acc / wsum : 0;
+    })();
 
     let minStart = Infinity;
     let maxEnd = -Infinity;
@@ -504,13 +820,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.currentTime = state.simStart;
     state.lastTimestamp = null;
 
-    if (elements.progress) {
-      state.suppressProgressEvent = true;
-      elements.progress.value = '0';
-      state.suppressProgressEvent = false;
-    }
-    if (elements.phase) elements.phase.textContent = 'Phase: Early';
-    if (elements.timeLabel) elements.timeLabel.textContent = `${formatTimeLabel(state.simStart)} ET`;
+    state.suppressProgressEvent = true;
+    setProgressValue(0);
+    state.suppressProgressEvent = false;
+    setPhaseText('Phase: Early');
+    setTimeText(`${formatTimeLabel(state.simStart)} ET`);
     if (elements.pvDisplay) {
       elements.pvDisplay.textContent = (state.pvMode === 'current')
         ? `PV: ${state.targetPvLabel}`
@@ -556,16 +870,17 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const stepSize = remaining / segmentsLeft;
       current = Math.max(state.simStart, Math.min(state.simEnd, current + stepSize));
       state.currentTime = current;
-      renderAt(current);
+      // Intermediate steps of a fast-forward seek are never painted (this
+      // loop is fully synchronous, no yield to the browser between calls),
+      // so anything expensive gated on "settled" (see
+      // updateNationalWinProbability) is skipped here and only computed
+      // once, after the loop, on the final settled render below.
+      renderAt(current, { settled: false });
       if (direction > 0 && current >= clamped - EPS) break;
       if (direction < 0 && current <= clamped + EPS) break;
     }
-    if (Math.abs(current - clamped) > EPS) {
-      state.currentTime = clamped;
-      renderAt(clamped);
-    } else {
-      state.currentTime = clamped;
-    }
+    state.currentTime = clamped;
+    renderAt(clamped);
   }
 
   function seekToProgress(progress) {
@@ -595,14 +910,26 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         elements.confidence.value = String(Math.max(0, Math.min(1, savedConfidence)));
       }
       updateConfidenceLabel(savedConfidence);
-      if (elements.speed && isFinite(savedSpeed) && savedSpeed > 0) {
-        elements.speed.value = String(savedSpeed);
+      if (isFinite(savedSpeed) && savedSpeed > 0) {
+        setSpeedFieldValue(savedSpeed);
       }
     }
     advanceDeterministic(targetTime);
   }
 
-  function resetSimulation(restorePv) {
+  function showLogPanel() {
+    try { if (elements.logPanel) elements.logPanel.classList.remove('en-log-closed'); } catch (e) { /* ignore */ }
+    try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { /* ignore */ }
+    try { document.body.classList.add('en-active'); } catch (e) { /* ignore */ }
+  }
+
+  function hideLogPanel() {
+    try { if (elements.logPanel) elements.logPanel.classList.add('en-log-closed'); } catch (e) { /* ignore */ }
+    try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { /* ignore */ }
+    try { document.body.classList.remove('en-active'); } catch (e) { /* ignore */ }
+  }
+
+  function resetSimulation(restorePv, hidePanel = false) {
     if (state.rafId) cancelAnimationFrame(state.rafId);
     state.rafId = null;
     state.running = false;
@@ -618,11 +945,26 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.lastLogKey = '';
     state.lastUncalledKey = '';
     state.year = null;
+    if (elements.logYear) elements.logYear.textContent = '';
     state.totalEvPool = 538;
     state.unitColorMap = null;
     state.abbrColorMap = null;
     state.boxesDirty = false;
     state.callRecords = [];
+    state.npvCallRecord = null;
+    state.npvMisCallLogged = false;
+    state.outcomeAnnouncedType = null;
+    state.outcomeAnnouncedTotal = null;
+    state.allCalledAnnounced = false;
+    state.lastOutcomeBannerText = '';
+    state.lastOutcomeBannerClass = '';
+    state.lastNationalTotals = null;
+    state.atLargeParts = null;
+    state.unitPosteriors = null;
+    state.swingEstimate = null;
+    state.priorNpvMargin = 0;
+    state.nationalWinProb = null;
+    state.lastProbUpdateTime = -Infinity;
     // Reset log state
     state.logEntries = [];
     state.lastLogTime = -Infinity;
@@ -631,26 +973,26 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.confidenceThreshold = getConfidenceSliderValue();
     updateConfidenceLabel(state.confidenceThreshold);
 
-    if (elements.progress) {
-      state.suppressProgressEvent = true;
-      elements.progress.value = '0';
-      state.suppressProgressEvent = false;
-    }
-    if (elements.phase) elements.phase.textContent = 'Idle';
-    if (elements.timeLabel) elements.timeLabel.textContent = '19:00';
+    state.suppressProgressEvent = true;
+    setProgressValue(0);
+    state.suppressProgressEvent = false;
+    setPhaseText('Idle');
+    setTimeText('19:00');
     if (elements.pvDisplay) elements.pvDisplay.textContent = 'PV: —';
     if (elements.log) elements.log.innerHTML = '';
     if (elements.logUncalled) elements.logUncalled.innerHTML = '';
-    if (elements.logHeader) elements.logHeader.textContent = 'Call log';
+    if (elements.logHeaderText) elements.logHeaderText.textContent = 'Call log';
+    if (elements.winProb) elements.winProb.textContent = '';
     if (elements.victory) {
       elements.victory.textContent = '';
       elements.victory.className = 'en-log-victory';
       elements.victory.style.display = 'none';
     }
 
-    try { if (elements.logPanel) elements.logPanel.style.display = 'none'; } catch (e) { }
-    // Remove en-active class to restore container centering
-    try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { }
+    // Resetting simulation state (e.g. from an incidental Year/PV slider
+    // drag) should not itself close the panel — only an explicit "close"
+    // action does that. See showLogPanel/hideLogPanel.
+    if (hidePanel) hideLogPanel();
 
     // Remove phantom EV fill elements and clean up right-anchor on evFillR
     try {
@@ -836,6 +1178,14 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
+      // duration is otherwise a pure function of closeness/speed, so any
+      // two units sharing both (e.g. several same-speed blowout states,
+      // where closeness clamps to 0 for every margin >=12pt) would finish
+      // reporting at the exact same simulated minute. A slight per-unit
+      // noise (deterministic via the seeded rng, so results stay
+      // reproducible) spreads those finishes out without meaningfully
+      // changing how long any single state takes to count.
+      duration *= 1 + (rng() - 0.5) * 0.12; // +/-6%
       const jitter = (rng() - 0.5) * 24;
       // Per-unit ease and jitter parameters (deterministic per-unit)
       // Make easePower scale with closeness: closer races (closeness->1)
@@ -1260,13 +1610,18 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
    * tallies, and then updates UI widgets (EV bar, PV display, progress
    * slider, and the call log).
    */
-  function renderAt(timeMinutes) {
+  function renderAt(timeMinutes, opts = {}) {
     if (!state.stateData.length) return;
+    // "Settled" frames are ones the browser actually paints (real-time RAF
+    // ticks, or the single call after a fast-forward seek finishes) — see
+    // advanceDeterministic()'s intermediate-step calls, which pass
+    // {settled:false} since nothing there is ever visible.
+    const settled = opts.settled !== false;
 
     const phase = getPhase(timeMinutes);
     const phaseName = phase ? phase.name : 'Final';
-    if (elements.phase) elements.phase.textContent = `Phase: ${phaseName}`;
-    if (elements.timeLabel) elements.timeLabel.textContent = `${formatTimeLabel(timeMinutes)} ET`;
+    setPhaseText(`Phase: ${phaseName}`);
+    setTimeText(`${formatTimeLabel(timeMinutes)} ET`);
 
     let dEV = 0, rEV = 0, oEV = 0;
     // Track uncalled state leanings for phantom EV display
@@ -1355,6 +1710,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         called: isCalled,
         leader: metrics.leader,
         confidence: metrics.confidence,
+        misCallLogged: st.misCallLogged,
         dVotes: metrics.dVotesCounted,
         rVotes: metrics.rVotesCounted,
         oVotes: metrics.oVotesCounted,
@@ -1410,6 +1766,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       state.snapshot.set(st.unitKey, snapshot);
       maybeEmitMiscall(st, metrics, timeMinutes);
     });
+
+    state.lastNationalTotals = { dCounted, rCounted, oCounted, countedVotes };
+    maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
+    maybeEmitNpvMiscall(countedVotes, timeMinutes);
+    updateNationalWinProbability(timeMinutes, settled);
 
     flushSmallBoxes();
 
@@ -1569,6 +1930,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       try {
         const computedColor = result.color;
         const computedColorMargin = result.colorMargin;
+        const computedConfidence = result.confidence;
         const computedCountedVotes = isFinite(result.countedVotes) ? result.countedVotes : 0;
 
         // Merge target metrics but preserve computed color/colorMargin when
@@ -1578,6 +1940,12 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           result.color = computedColor;
           result.colorMargin = computedColorMargin;
         }
+        // targetMetrics.confidence is a hardcoded 1 (see buildStateData),
+        // which would claim false certainty on a genuine exact-vote tie.
+        // calculateConfidence() already correctly returns 0 for a tie at
+        // full reporting (no clear leader), so always prefer the freshly
+        // computed value over the hardcoded one.
+        result.confidence = computedConfidence;
       } catch (e) {
         // Fallback to simple merge if anything goes wrong
         result = { ...result, ...st.targetMetrics };
@@ -1636,6 +2004,477 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     return Math.min(1, Math.max(0, voteGap / Math.max(EPS, remainingVotes)));
   }
 
+  // National-level analog of calculateConfidence, reusing the same
+  // worst-case-remaining-ballots math against the running national totals
+  // instead of a single state's. `calculateConfidence` only inspects its
+  // `stats` argument, so a truthy placeholder stands in for `st`.
+  function calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes) {
+    const remainingVotes = Math.max(0, state.totalEligibleVotes - countedVotes);
+    return calculateConfidence(true, { countedVotes, dCounted, rCounted, oCounted, remainingVotes });
+  }
+
+  function nationalLeader(dCounted, rCounted, oCounted) {
+    if (dCounted <= EPS && rCounted <= EPS && oCounted <= EPS) return null;
+    if (dCounted >= rCounted && dCounted >= oCounted) return 'D';
+    if (rCounted >= dCounted && rCounted >= oCounted) return 'R';
+    return 'O';
+  }
+
+  // Live per-unit posterior for the national win-probability estimate:
+  // combines this unit's frozen poll-like prior (st.priorMargin/priorSigma,
+  // see buildSyntheticPollPriors/applyBridgedPollPriors) with the currently
+  // OBSERVABLE partial count via inverse-variance weighting. The
+  // observation uncertainty shrinks as reporting increases and is inflated
+  // for MAIL_HEAVY_STATES, derived from the identity
+  //   finalMargin = reporting*observedMargin + (1-reporting)*remainingBatchMargin
+  // by modeling only the genuinely uncertain term (how differently the
+  // not-yet-counted batch might vote) as Normal(0, deltaSigma^2):
+  //   obsSigma(reporting) = (1-reporting) * deltaSigma
+  // This satisfies both boundaries with no special-casing: reporting->1
+  // makes obsSigma->0 (posterior converges to the observed count);
+  // reporting->0 still needs one explicit guard below, since observedMargin
+  // is genuinely undefined (0/0) before any votes are counted, not just
+  // numerically unstable. Reads only st.abbr and st.priorMargin/priorSigma
+  // (frozen public facts) plus metrics.dVotesCounted/rVotesCounted/
+  // reporting (legitimately observable) — never st.dShareFinal/rShareFinal/
+  // biasParams/closeness.
+  // Extracted so the live-swing solve (docs/utils/electionNight/liveSwing.js)
+  // can reuse the exact same "how much do we know from this unit's own
+  // partial count, and how sure are we of it" logic without duplicating it -
+  // the swing solve needs the raw observation, not the prior-blended
+  // posterior computeUnitPosterior below builds from it.
+  function computeUnitObservation(st, metrics) {
+    const dV = metrics ? metrics.dVotesCounted : 0;
+    const rV = metrics ? metrics.rVotesCounted : 0;
+    const twoPartyCounted = dV + rV;
+    if (!(twoPartyCounted > EPS)) return { observedMargin: null, obsSigma: null, hasObs: false };
+    const observedMargin = (dV - rV) / twoPartyCounted;
+    const reporting = metrics && isFinite(metrics.reporting) ? metrics.reporting : 0;
+    const deltaSigma = MAIL_HEAVY_STATES.has(st.abbr) ? REMAINING_DELTA_SIGMA_MAIL_HEAVY : REMAINING_DELTA_SIGMA_BASE;
+    const obsSigma = Math.max(0, 1 - reporting) * deltaSigma;
+    return { observedMargin, obsSigma, hasObs: true };
+  }
+
+  function computeUnitPosterior(st, metrics) {
+    if (!(st.priorSigma > 0)) return { margin: st.priorMargin || 0, sigma: 0 };
+    const obs = computeUnitObservation(st, metrics);
+    if (!obs.hasObs) return { margin: st.priorMargin, sigma: st.priorSigma };
+    if (obs.obsSigma <= EPS) return { margin: obs.observedMargin, sigma: 0 };
+
+    const priorPrec = 1 / (st.priorSigma * st.priorSigma);
+    const obsPrec = 1 / (obs.obsSigma * obs.obsSigma);
+    const totalPrec = priorPrec + obsPrec;
+    return {
+      margin: (st.priorMargin * priorPrec + obs.observedMargin * obsPrec) / totalPrec,
+      sigma: Math.sqrt(1 / totalPrec)
+    };
+  }
+
+  // P(D wins the unit) implied by its posterior margin/sigma, for display in
+  // the "still counting" cards. A degenerate zero-sigma posterior (no prior,
+  // e.g. before any bridged/synthetic prior was established) resolves to a
+  // hard 0/1 rather than a coin-flip.
+  function winProbFromPosterior(margin, sigma) {
+    if (!(sigma > 0)) return margin >= 0 ? 1 : 0;
+    return normalCdf(margin / sigma);
+  }
+
+  // Smoothstep-eased pacing factors (see PACING_MULTIPLIER_START/
+  // PACING_MEAN_SCALE_START/PACING_DECAY_REPORTING above): both ease from
+  // their "early night" extreme back to 1 (fully honest) as
+  // nationalReporting approaches PACING_DECAY_REPORTING. meanScale trusts
+  // only a fraction of the observed swing early on — this is the part that
+  // actually slows the aggregate win% down, since widening sigma ALONE
+  // doesn't: every state gets nudged by the SAME shared mean shift, so the
+  // aggregate EV total still moves fast even if each individual state's own
+  // probability reads less extreme. sigmaMult adds extra cushion on top.
+  function pacingFactors(nationalReporting) {
+    const r = Math.max(0, Math.min(1, isFinite(nationalReporting) ? nationalReporting : 0));
+    const t = PACING_DECAY_REPORTING > 0 ? Math.min(1, r / PACING_DECAY_REPORTING) : 1;
+    const eased = t * t * (3 - 2 * t);
+    return {
+      meanScale: PACING_MEAN_SCALE_START + (1 - PACING_MEAN_SCALE_START) * eased,
+      sigmaMult: PACING_MULTIPLIER_START + (1 - PACING_MULTIPLIER_START) * eased
+    };
+  }
+
+  // Returns a shallow-cloned swing hierarchy with pacing applied to ONLY the
+  // shared national/regional terms (national.mean/sigma, each region's
+  // dbar/sigma, and the base sigmaR fallback for an unobserved region) —
+  // deliberately NOT sigmaI or any per-unit byUnit entry (obs.d), since
+  // those drive a unit's OWN reporting-driven certainty and must stay
+  // exact: unitSwingDelta's conditional shrinkage (obs.a -> 1 at full
+  // reporting) means a fully-counted state's margin collapses to exactly
+  // what was counted regardless of how damped N/R are — only the "borrowed"
+  // info about OTHER, not-yet-reported units gets paced. Scaling a region's
+  // dbar by the SAME meanScale as national.mean is what makes
+  // sampleSwing()'s `k*(dbar - N)` recompute correctly damped, rather than
+  // just shifting a region's mean relative to an already-shrunk N.
+  // state.swingEstimate itself is never mutated — the export timeline/debug
+  // log still see the real, undamped signal.
+  function applyPacingDamper(swing, nationalReporting) {
+    if (!swing) return swing;
+    const { meanScale, sigmaMult } = pacingFactors(nationalReporting);
+    if (meanScale >= 1 - EPS && sigmaMult <= 1 + EPS) return swing;
+    const regions = new Map(Array.from(swing.regions, ([key, r]) => [key, {
+      ...r,
+      dbar: r.dbar * meanScale,
+      sigma: r.sigma * sigmaMult
+    }]));
+    return {
+      ...swing,
+      national: { mean: swing.national.mean * meanScale, sigma: swing.national.sigma * sigmaMult },
+      regions,
+      sigmaR: swing.sigmaR * sigmaMult
+    };
+  }
+
+  // Monte Carlo national win-probability tally. Already-called units (and
+  // third-party-dominant ones, which never count toward either major
+  // party's total — a majority of the TRUE EV pool is required, mirroring
+  // real 1824/1836-style outcomes) are FIXED, not resampled: a called unit
+  // shouldn't flip in the simulation, and fixing it shrinks compute as the
+  // night progresses. Everything else is drawn fresh every simulation from
+  // the live swing hierarchy (docs/utils/electionNight/liveSwing.js,
+  // state.swingEstimate) rather than independent per-unit noise, which is
+  // what lets already-reported units inform not-yet-reported ones in the
+  // same region/nationally. At-large (ME-AL/NE-AL) units are never drawn
+  // directly — each draw derives their margin as the vote-weighted
+  // composite of their districts' margins for that same draw
+  // (state.atLargeParts).
+  function runNationalWinProbabilityMC(timeMinutes, posteriors) {
+    const totalPool = state.totalEvPool || 538;
+    const needed = Math.floor(totalPool / 2) + 1;
+
+    let fixedDEv = 0, fixedREv = 0;
+    const liveUnits = [];
+    const liveAl = [];
+    state.stateData.forEach(st => {
+      if (st.thirdPartyDominant) return;
+      const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
+      if (isCalled) {
+        // A called unit is normally fixed on its (observed) call - but if
+        // that call has since been publicly corrected (maybeEmitMiscall
+        // already logged the correction, which only happens once this
+        // unit's own count has finished), the true winner is no longer
+        // hidden information: it's sitting in the call log. Keep the MC in
+        // sync with that reveal instead of locking the win probability to
+        // a call that has already been announced wrong on-screen.
+        const effectiveLeader = (st.misCallLogged && st.winner) ? st.winner : st.callLeader;
+        if (effectiveLeader === 'D') fixedDEv += st.ev;
+        else if (effectiveLeader === 'R') fixedREv += st.ev;
+        return;
+      }
+      if (st.type === 'atlarge') liveAl.push(st);
+      else liveUnits.push(st);
+    });
+
+    if (!liveUnits.length && !liveAl.length) {
+      return { probD: fixedDEv >= needed ? 1 : 0, locked: true, sims: 0, evRange90: null };
+    }
+
+    const liveEvTotal = liveUnits.reduce((sum, st) => sum + st.ev, 0) + liveAl.reduce((sum, st) => sum + st.ev, 0);
+    const hardLockedD = fixedDEv >= needed;
+    const hardLockedR = fixedREv >= needed;
+    const impossibleR = fixedREv + liveEvTotal < needed;
+    const impossibleD = fixedDEv + liveEvTotal < needed;
+    if (hardLockedD || hardLockedR || impossibleD || impossibleR) {
+      return { probD: (hardLockedD || impossibleR) ? 1 : 0, locked: true, sims: 0, evRange90: null };
+    }
+
+    // Sample from the live swing hierarchy (docs/utils/electionNight/
+    // liveSwing.js) instead of independent, memoryless noise per unit.
+    // state.swingEstimate is solved just before this call (same throttle,
+    // updateNationalWinProbability) from every currently-reporting unit's
+    // own deviation from its frozen prior - this is what actually restores
+    // the missing national/regional correlation (createRegionalErrorModel's
+    // drawRelInto() vote-weighted-recenters every draw to exactly zero by
+    // design: "the national factor deliberately lives on the NPV axis
+    // instead," docs/utils/sim2028/errorModel.js:30-31,119-122) AND lets
+    // already-reported units inform not-yet-reported ones, safely - see
+    // liveSwing.js's module docstring for why a couple of noisy early
+    // reporters can't swing this on their own.
+    // Pacing damper (see PACING_MEAN_SCALE_START/PACING_MULTIPLIER_START/
+    // PACING_DECAY_REPORTING): damps only the shared national/regional
+    // terms early in the night, easing back to the honest math as overall
+    // reporting increases. state.swingEstimate itself is untouched - the
+    // export timeline/debug log still see the real, undamped signal.
+    const nationalReporting = state.totalEligibleVotes > EPS && state.lastNationalTotals
+      ? state.lastNationalTotals.countedVotes / state.totalEligibleVotes : 0;
+    const swing = applyPacingDamper(state.swingEstimate || solveLiveSwing([]), nationalReporting);
+    const allRegions = new Set(liveUnits.map(st => regionOf(st.unitKey)).filter(Boolean));
+    const regionByUnit = new Map(liveUnits.map(st => [st.unitKey, regionOf(st.unitKey)]));
+    const drawFn = makeNormalizedTDraw(POLL_ERROR_SPEC.df);
+
+    const n = liveUnits.length;
+    const seed = hashCode(`prob:${state.year}:${state.pvRandomSeed || 0}:${Math.round(timeMinutes)}`);
+    const rng = mulberry32(seed >>> 0);
+    const marginByUnit = new Map();
+    const demEvSamples = new Float64Array(PROB_MC_SIMS);
+    // Per-unit D-win tally across the same sims, mirroring
+    // docs/utils/sim2028/forecast.js's own demWinCounts/stateProb pattern -
+    // lets the "still counting" cards show a win% that reflects the shared
+    // swing signal (e.g. other Rust Belt states trending R) rather than
+    // only that unit's own reported votes.
+    const demWinCounts = new Int32Array(n);
+    const alDemWinCounts = new Int32Array(liveAl.length);
+    let demWins = 0;
+
+    for (let s = 0; s < PROB_MC_SIMS; s++) {
+      const sample = sampleSwing(swing, allRegions, rng, drawFn);
+      let demEv = fixedDEv;
+      for (let i = 0; i < n; i++) {
+        const st = liveUnits[i];
+        const delta = unitSwingDelta(swing, st.unitKey, regionByUnit.get(st.unitKey), sample, rng, drawFn);
+        const margin = st.priorMargin - delta;
+        marginByUnit.set(st.unitKey, margin);
+        if (margin >= 0) { demEv += st.ev; demWinCounts[i]++; }
+      }
+      for (let a = 0; a < liveAl.length; a++) {
+        const st = liveAl[a];
+        const parts = state.atLargeParts ? state.atLargeParts.get(st.unitKey) : null;
+        if (!parts || !parts.length) continue;
+        let acc = 0, wsum = 0;
+        for (const p of parts) {
+          const m = marginByUnit.has(p.unitKey) ? marginByUnit.get(p.unitKey)
+            : (posteriors.get(p.unitKey) ? posteriors.get(p.unitKey).margin : 0);
+          acc += m * p.weight;
+          wsum += p.weight;
+        }
+        if (wsum > EPS && acc / wsum >= 0) { demEv += st.ev; alDemWinCounts[a]++; }
+      }
+      demEvSamples[s] = demEv;
+      if (demEv >= needed) demWins++;
+    }
+
+    const stateProb = new Map();
+    for (let i = 0; i < n; i++) stateProb.set(liveUnits[i].unitKey, demWinCounts[i] / PROB_MC_SIMS);
+    for (let a = 0; a < liveAl.length; a++) stateProb.set(liveAl[a].unitKey, alDemWinCounts[a] / PROB_MC_SIMS);
+
+    // [5%,95%] EV quantile spread, same computation forecast.js's own
+    // evRange90 already does — exposed for docs/utils/electionNight/
+    // validateWinProb.mjs's CI-narrows-over-time check, not used elsewhere.
+    const sortedEv = Array.from(demEvSamples).sort((a, b) => a - b);
+    const quantile = q => sortedEv[Math.min(sortedEv.length - 1, Math.max(0, Math.round(q * (sortedEv.length - 1))))];
+    const evRange90 = [quantile(0.05), quantile(0.95)];
+
+    // Even a genuinely ~100%-but-not-mathematically-locked race can show a
+    // literal N/N on a finite sample by chance — clamp away from the
+    // extremes here (mirrors formatConfidenceText's own never-claim-a-
+    // false-100% guard in docs/utils/formatters.js) since the exact-math
+    // locked/impossible cases above already handle real certainty.
+    const rawProbD = demWins / PROB_MC_SIMS;
+    return { probD: Math.min(0.999, Math.max(0.001, rawProbD)), locked: false, sims: PROB_MC_SIMS, evRange90, stateProb };
+  }
+
+  // Called every renderAt() frame. The cheap per-unit posteriors always
+  // refresh (trivial even 480x in a tight fast-forward loop), but the
+  // expensive Monte Carlo tally only runs on "settled" frames (ones the
+  // browser will actually paint) AND its own independent throttle —
+  // separate from DISPLAY_UPDATE_INTERVAL, which only guards the real-time
+  // RAF path and never sees advanceDeterministic()'s synchronous loop.
+  function updateNationalWinProbability(timeMinutes, settled) {
+    if (!state.stateData.length) return;
+
+    const posteriors = new Map();
+    // Built in the same pass as the (already-every-frame) posteriors loop
+    // so the live-swing solve below doesn't need a second walk over
+    // state.stateData. Includes ALREADY-CALLED units too, not just live
+    // ones - a unit called early with a healthy vote count is one of the
+    // most informative observations about the national mood, even though
+    // its own EVs are already fixed for the MC (see liveSwing.js).
+    const swingObservations = [];
+    state.stateData.forEach(st => {
+      if (st.thirdPartyDominant || !st.latestMetrics) return;
+      posteriors.set(st.unitKey, computeUnitPosterior(st, st.latestMetrics));
+      if (st.priorSigma > 0) {
+        const obs = computeUnitObservation(st, st.latestMetrics);
+        if (obs.hasObs) {
+          swingObservations.push({
+            unitKey: st.unitKey,
+            priorMargin: st.priorMargin,
+            observedMargin: obs.observedMargin,
+            obsSigma: obs.obsSigma
+          });
+        }
+      }
+    });
+    state.unitPosteriors = posteriors;
+    // Solved every frame, like state.unitPosteriors above (O(units+regions),
+    // trivial even 480x in a tight fast-forward loop) - NOT gated behind
+    // `settled`/the MC's own throttle below. collectLogEntry() (the
+    // interval-log/export snapshot) runs during every intermediate step of
+    // a big seek, not just the final settled one; if this were throttled
+    // the same as the expensive MC, every exported timeline entry from a
+    // fast-forwarded run would freeze at whatever swing estimate existed
+    // before the seek started, defeating the point of a scrubbable
+    // "when did the model notice" timeline.
+    state.swingEstimate = solveLiveSwing(swingObservations);
+
+    if (!settled) return;
+
+    const isFirst = state.lastProbUpdateTime === -Infinity;
+    const isFinal = timeMinutes >= state.simEnd - EPS;
+    if (!isFirst && !isFinal && timeMinutes - state.lastProbUpdateTime < PROB_UPDATE_INTERVAL_MINUTES) return;
+    state.lastProbUpdateTime = timeMinutes;
+
+    state.nationalWinProb = runNationalWinProbabilityMC(timeMinutes, posteriors);
+    renderWinProbLine(state.nationalWinProb);
+
+    // Debug-only instrumentation for docs/utils/electionNight/validateWinProb.mjs
+    // (gated the same way ENABLE_EN_COLOR_CALL_LOG gates window._enCallLog).
+    // actualWinner is ground truth — fine to read here since this is
+    // test-only instrumentation never consulted by the live algorithm.
+    try {
+      if (window.ENABLE_EN_PROB_LOG) {
+        window._enProbLog = window._enProbLog || [];
+        window._enProbLog.push({
+          time: timeMinutes,
+          nationalReporting: state.totalEligibleVotes > EPS
+            ? state.lastNationalTotals.countedVotes / state.totalEligibleVotes : 0,
+          probD: state.nationalWinProb.probD,
+          evRange90: state.nationalWinProb.evRange90,
+          // probD is a probability of winning the ELECTORAL COLLEGE, so it
+          // must be graded against the EC outcome, not the popular vote —
+          // they disagree often enough (2016, 2000, 1888, 1876...) that
+          // grading against the wrong one would misreport a well-calibrated
+          // model as overconfident/miscalibrated in those years.
+          actualWinner: state.nationalFinalDEv >= Math.floor((state.totalEvPool || 538) / 2) + 1 ? 'D' : 'R',
+          // Popular-vote margin, kept as informational context.
+          actualMargin: (state.nationalFinalDVotes - state.nationalFinalRVotes)
+            / Math.max(EPS, state.nationalFinalDVotes + state.nationalFinalRVotes),
+          // EV margin (share of the full pool) — the more relevant signal
+          // for "was this actually an electoral-college landslide" when
+          // deciding whether an early high-confidence call was justified.
+          actualEvMargin: (state.nationalFinalDEv - state.nationalFinalREv) / Math.max(1, state.totalEvPool || 538),
+          // Live swing hierarchy (docs/utils/electionNight/liveSwing.js) —
+          // swingNationalZ is the "honesty" statistic: across many samples
+          // it should look roughly standard-normal. A nonzero early-game
+          // mean is the fingerprint of systematic early-count contamination
+          // (see createBiasParams's center-compression bias), not a real
+          // national swing — this is what tells us whether that risk is
+          // actually a problem, rather than guessing at a correction.
+          swingNational: state.swingEstimate ? state.swingEstimate.national.mean : null,
+          swingNationalSigma: state.swingEstimate ? state.swingEstimate.national.sigma : null,
+          swingNationalZ: (state.swingEstimate && state.swingEstimate.national.sigma > EPS)
+            ? state.swingEstimate.national.mean / state.swingEstimate.national.sigma : null,
+          swingRegions: state.swingEstimate
+            ? Object.fromEntries(Array.from(state.swingEstimate.regions.entries())
+              .map(([region, r]) => [region, { mean: r.mean, sigma: r.sigma, nObs: r.nObs }]))
+            : {},
+          swingNObs: state.swingEstimate ? state.swingEstimate.nObs : 0,
+          priorNpvMargin: state.priorNpvMargin
+        });
+      }
+    } catch (e) { /* debug instrumentation only */ }
+  }
+
+  function renderWinProbLine(result) {
+    if (!elements.winProb) return;
+    if (!result || !isFinite(result.probD)) { elements.winProb.textContent = ''; return; }
+    const dPct = (result.probD * 100).toFixed(1);
+    const rPct = ((1 - result.probD) * 100).toFixed(1);
+    elements.winProb.innerHTML = `<span class="en-winprob-d">D ${dPct}%</span> — <span class="en-winprob-r">R ${rPct}%</span> to win`;
+  }
+
+  // Accent color for an uncalled/still-counting race: blends from neutral
+  // gray toward the leader's full-saturation party color (the same
+  // safeMarginToColor scale the map uses) as confidence approaches the
+  // active call threshold, so a race visibly "pops" the closer it gets to
+  // being called. Mirrors the reporting-driven brighten effect already
+  // used for map coloring (see the blendColors/NEUTRAL_COLOR usage in
+  // computeMetrics), but driven by confidence-vs-threshold instead.
+  function confidenceAccentColor(leader, margin, confidence, threshold) {
+    if (!leader) return NEUTRAL_COLOR;
+    const baseColor = leader === 'O' ? THIRD_PARTY_COLOR : safeMarginToColor(margin || 0, false);
+    const safeThreshold = Math.max(EPS, isFinite(threshold) ? threshold : DEFAULT_CONFIDENCE_THRESHOLD);
+    const closeness = Math.max(0, Math.min(1, (isFinite(confidence) ? confidence : 0) / safeThreshold));
+    const intensity = Math.pow(closeness, 0.6);
+    return intensity <= 0 ? NEUTRAL_COLOR : blendColors(NEUTRAL_COLOR, baseColor, intensity);
+  }
+
+  // Full-saturation accent color for an already-called line (state or NPV):
+  // no blending needed since the outcome is settled, just the party's
+  // margin-shaded color from the same scale the map/uncalled cards use.
+  function calledAccentColor(leader, margin) {
+    if (!leader) return NEUTRAL_COLOR;
+    return leader === 'O' ? THIRD_PARTY_COLOR : safeMarginToColor(margin || 0, false);
+  }
+
+  // Resolves a leader code to the actual candidate's last name when one is
+  // known, for personalized call-log text ("Called Ohio for Vance" instead
+  // of "...for Republicans"). Returns null (letting callers fall back to
+  // formatLeader) for real years/units with no candidate on record, and for
+  // every synthetic year — docs/future.js hardcodes dCandidate:'D'/rCandidate:'R'
+  // on every row it generates, including its NATIONAL row, so this
+  // placeholder-sentinel check makes future.html fall back automatically
+  // with no page-specific branching needed. unitKey='NATIONAL' resolves the
+  // national ticket the same way, since every data source election-night.js
+  // reads from (real CSV rows, docs/future.js, the sim2028 bridge) includes
+  // a NATIONAL row.
+  function resolveCandidateLastName(leader, unitKey) {
+    if (leader !== 'D' && leader !== 'R' && leader !== 'O') return null;
+    const names = getUnitCandidateLastNames(unitKey, { year: state.year });
+    const name = names ? names[leader] : null;
+    if (!name || name === 'D' || name === 'R' || name === 'O') return null;
+    return name;
+  }
+
+  function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
+    if (state.npvCallRecord) return;
+    const leader = nationalLeader(dCounted, rCounted, oCounted);
+    if (!leader) return;
+    const reporting = state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 0;
+    if (reporting < MIN_REPORTING_TO_CALL) return;
+    const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold))) return;
+
+    const record = {
+      kind: 'npv_call',
+      time: currentTime,
+      leader,
+      candidateName: resolveCandidateLastName(leader, 'NATIONAL'),
+      confidence,
+      threshold,
+      reporting,
+      dVotes: dCounted,
+      rVotes: rCounted,
+      oVotes: oCounted,
+      countedVotes
+    };
+    state.npvCallRecord = record;
+    state.callRecords.push(record);
+    recordNpvCallLogEntry(currentTime, leader);
+    triggerTipRefresh();
+  }
+
+  function maybeEmitNpvMiscall(countedVotes, currentTime) {
+    if (!state.npvCallRecord || state.npvMisCallLogged) return;
+    if (countedVotes < state.totalEligibleVotes - EPS) return;
+    const calledLeader = state.npvCallRecord.leader;
+    const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    if (calledLeader === finalLeader) return;
+    state.npvMisCallLogged = true;
+    const correctionTime = Math.max(currentTime, state.npvCallRecord.time + 0.01);
+    const thresholdText = isFinite(state.npvCallRecord.threshold)
+      ? ` (threshold ${state.npvCallRecord.threshold.toFixed(2)})`
+      : '';
+    const finalLeaderText = resolveCandidateLastName(finalLeader, 'NATIONAL') || formatLeader(finalLeader);
+    const calledLeaderText = state.npvCallRecord.candidateName || formatLeader(calledLeader);
+    const message = `${formatTimeLabel(correctionTime)} – Correction: National popular vote finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${formatTimeLabel(state.npvCallRecord.time)}${thresholdText}.`;
+    state.callRecords.push({
+      kind: 'notice',
+      noticeType: 'npv_miscall',
+      time: correctionTime,
+      text: message,
+      calledLeader,
+      finalLeader
+    });
+    triggerTipRefresh();
+    state.lastLogKey = '';
+  }
+
   function maybeEmitMiscall(st, metrics, currentTime) {
     if (!st || !st.callRecord || st.misCallLogged) return;
     if (st.callRecord.kind !== 'call') return;
@@ -1645,8 +2484,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     if (!metrics || metrics.reporting < 1 - EPS) return;
     st.misCallLogged = true;
     const correctionTime = Math.max(currentTime, st.callRecord.time + 0.01);
-    const finalLeaderText = formatLeader(finalLeader);
-    const calledLeaderText = formatLeader(calledLeader);
+    const finalLeaderText = resolveCandidateLastName(finalLeader, st.unitKey) || formatLeader(finalLeader);
+    const calledLeaderText = st.callRecord.candidateName || formatLeader(calledLeader);
     const callTimeStr = formatTimeLabel(st.callRecord.time);
     const thresholdText = isFinite(st.callRecord.threshold)
       ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
@@ -1723,12 +2562,17 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       displayLabel: formatUnitLabel(st.unitKey),
       time: callTime,
       leader: calledLeader,
+      candidateName: resolveCandidateLastName(calledLeader, st.unitKey),
       actualWinner: st.winner,
       marginStr: effectiveMarginStr,
       reporting,
       ev: st.ev,
       evAllocations: callAllocation,
-      finalAllocations: st.evAllocations ? { ...st.evAllocations } : null,
+      // Starts equal to the call allocation (not the ground-truth final
+      // one) so a fresh call never shows a premature "EV X → Y" arrow;
+      // updateCallLog()'s per-frame refresh reveals the true allocation
+      // only once this unit's count has actually finished (see there).
+      finalAllocations: callAllocation ? { ...callAllocation } : null,
       confidence,
       threshold: thresholdUsed,
       dVotes: metrics ? metrics.dVotesCounted : null,
@@ -1748,22 +2592,23 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     try {
       const unit = st && st.unitKey ? st.unitKey : null;
       const abbr = unit && unit.length >= 2 ? unit.slice(0, 2) : null;
-      if (abbr === 'ME' || abbr === 'NE') {
-        const entry = {
-          time: st.callRecord.time,
-          unit: st.unitKey,
-          leader: st.callRecord.leader,
-          actualWinner: st.callRecord.actualWinner,
-          reporting: st.callRecord.reporting,
-          confidence: st.callRecord.confidence,
-          marginStr: st.callRecord.marginStr
-        };
-        if (window.ENABLE_EN_COLOR_CALL_LOG) {
-          window._enCallLog = window._enCallLog || [];
-          window._enCallLog.push(entry);
-        }
-        if (window.DEBUG_ELECTION_NIGHT) console.log('[EN-CALL]', entry);
+      const entry = {
+        time: st.callRecord.time,
+        unit: st.unitKey,
+        leader: st.callRecord.leader,
+        actualWinner: st.callRecord.actualWinner,
+        reporting: st.callRecord.reporting,
+        confidence: st.callRecord.confidence,
+        marginStr: st.callRecord.marginStr
+      };
+      // Pushed for every unit (not just ME/NE) so offline validation tooling
+      // (docs/utils/electionNight/validateConfidence.mjs) can compute a
+      // historical miscall rate against every call, not just ME/NE districts.
+      if (window.ENABLE_EN_COLOR_CALL_LOG) {
+        window._enCallLog = window._enCallLog || [];
+        window._enCallLog.push(entry);
       }
+      if (window.DEBUG_ELECTION_NIGHT && (abbr === 'ME' || abbr === 'NE')) console.log('[EN-CALL]', entry);
     } catch (e) { console.warn('EN call log failed', e); }
     triggerTipRefresh();
   }
@@ -2129,11 +2974,18 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   }
 
   function updateProgressSlider(timeMinutes) {
-    if (!elements.progress) return;
+    if (!elements.progress && !elements.progressFooter) return;
     const value = (timeMinutes - state.simStart) / (state.simEnd - state.simStart);
     state.suppressProgressEvent = true;
-    elements.progress.value = String(Math.max(0, Math.min(1, value)));
+    setProgressValue(Math.max(0, Math.min(1, value)));
     state.suppressProgressEvent = false;
+  }
+
+  // The confidence display rescale (formatConfidenceText) needs a
+  // clamped, always-finite threshold; this is the same fallback pattern
+  // used everywhere else state.confidenceThreshold is read.
+  function effectiveConfidenceThreshold() {
+    return Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
   }
 
   function getConfidenceSliderValue() {
@@ -2150,9 +3002,83 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     }
   }
 
+  // Builds one "still counting" card (used for both state races and the
+  // NPV sub-section below them) — shared so both stay in sync visually.
+  function buildUncalledCardElement(candidate, threshold, options) {
+    const suppressPulse = !!(options && options.suppressPulse);
+    const card = document.createElement('div');
+    card.className = 'en-log-uncalled-card';
+    const label = candidate.ev > 0
+      ? `${candidate.displayLabel} (${candidate.ev} EV)`
+      : candidate.displayLabel;
+    // Leader is conveyed by the card's accent color/glow (below) rather
+    // than a "D/R lead" text line.
+    const infoParts = [];
+    const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader, candidate.voteMargin);
+    if (marginDisplay && marginDisplay !== 'None') {
+      infoParts.push(marginDisplay === 'EVEN' ? 'EVEN' : `Margin ${marginDisplay}`);
+    }
+    infoParts.push(formatConfidenceText(candidate.confidence, effectiveConfidenceThreshold()));
+    // Per-state win% (candidate.winProb, from the swing-aware MC's
+    // stateProb) is deliberately NOT shown here - it inherits certainty
+    // from OTHER states' trends (that's the whole point of the swing
+    // mechanism), which reads as "cartoonishly accurate" on a card for a
+    // state whose own count is still a toss-up. Confidence already tells
+    // that story ("this specific race is too close to call") without the
+    // spoiler. winProb/stateProb are kept and still used elsewhere (the
+    // downloadable log timeline, debug instrumentation).
+    // Use shared formatter so votes-left is shown when available
+    try {
+      const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
+      infoParts.push(repText);
+    } catch (e) {
+      infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
+    }
+    card.textContent = `${label} – ${infoParts.join(' · ')}`;
+
+    const accentColor = confidenceAccentColor(candidate.leader, candidate.margin, candidate.confidence, threshold);
+    card.style.borderLeftColor = accentColor;
+    const [ar, ag, ab] = hexToRgb(accentColor);
+    const closeness = threshold > EPS ? Math.min(1, (candidate.confidence || 0) / threshold) : 0;
+    card.style.background = `rgba(${ar}, ${ag}, ${ab}, ${(0.05 + closeness * 0.16).toFixed(3)})`;
+    if (closeness >= 0.85 && !suppressPulse) {
+      card.classList.add('en-log-hot');
+      card.style.setProperty('--en-pulse-color', `rgba(${ar}, ${ag}, ${ab}, 0.55)`);
+    }
+    return card;
+  }
+
+  // Shared by every static outcome message (initial clinch, correction,
+  // final tally) so their wording/thresholds can't drift from each other.
+  function outcomeMessageText(type, dEv, rEv, oEv, majority) {
+    if (type === 'D') {
+      const winnerName = resolveCandidateLastName('D', 'NATIONAL');
+      return winnerName
+        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority}).`
+        : `Democrats clinch the presidency with ${dEv} EV (needed ${majority}).`;
+    }
+    if (type === 'R') {
+      const winnerName = resolveCandidateLastName('R', 'NATIONAL');
+      return winnerName
+        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority}).`
+        : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
+    }
+    return `Electoral College tie: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}.`;
+  }
+  function outcomeClassFor(type) {
+    if (type === 'D') return ' win-dem';
+    if (type === 'R') return ' win-rep';
+    return ' tie';
+  }
+
   function updateCallLog(currentTime) {
+    // Exposed so the map's hover tooltip (tooltipManager.js, a separate
+    // module with no access to this closure's `state`) can rescale its own
+    // confidence display against the same live call-threshold setting
+    // instead of a hardcoded value.
+    try { window._electionNightConfidenceThreshold = effectiveConfidenceThreshold(); } catch (e) { /* ignore */ }
     const timeLabel = formatTimeLabel(currentTime);
-    if (elements.logHeader) elements.logHeader.textContent = `Call log ${timeLabel} ET`;
+    if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
     if (!elements.log && !elements.logUncalled && !elements.victory) return;
 
     const readyEvents = state.callRecords
@@ -2160,7 +3086,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       .slice()
       .sort((a, b) => {
         if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
-        const orderMap = { call: 0, notice: 1, outcome: 2 };
+        const orderMap = { call: 0, npv_call: 1, notice: 2, outcome: 3 };
         const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
         const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
         if (orderA !== orderB) return orderA - orderB;
@@ -2185,7 +3111,21 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           voteMargin: (isFinite(metrics.dVotesCounted) && isFinite(metrics.rVotesCounted))
             ? Math.round(metrics.dVotesCounted - metrics.rVotesCounted)
             : null,
-          ev: isFinite(st.ev) ? st.ev : 0
+          ev: isFinite(st.ev) ? st.ev : 0,
+          winProb: (() => {
+            if (st.thirdPartyDominant) return null;
+            // Prefer the Monte Carlo's own per-unit tally when available -
+            // it reflects the shared swing signal (e.g. a Rust Belt state
+            // trending R because its neighbors are), not just this unit's
+            // own reported votes. Falls back to the simpler posterior-only
+            // estimate before the first MC run, or for a called unit (the
+            // MC only tallies live units).
+            const mcProb = state.nationalWinProb && state.nationalWinProb.stateProb
+              ? state.nationalWinProb.stateProb.get(st.unitKey) : null;
+            if (isFinite(mcProb)) return mcProb;
+            const post = state.unitPosteriors ? state.unitPosteriors.get(st.unitKey) : null;
+            return post ? winProbFromPosterior(post.margin, post.sigma) : null;
+          })()
         };
       })
       .sort((a, b) => {
@@ -2209,6 +3149,38 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         return (a.displayLabel || '').localeCompare(b.displayLabel || '');
       });
 
+    // National popular vote has no EV weight to score against the state
+    // races above, so it gets its own small dedicated card rather than
+    // being forced into that scoring. Unlike a state, it stays visible
+    // here for the whole night (before AND after it's called) — it's
+    // meant as an ongoing watch item, not something that disappears once
+    // decided, since the underlying count keeps moving regardless.
+    let npvWatchCandidate = null;
+    if (state.lastNationalTotals && state.totalEligibleVotes > EPS) {
+      const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
+      if (countedVotes > EPS) {
+        const leader = nationalLeader(dCounted, rCounted, oCounted);
+        const margin = countedVotes > EPS ? (dCounted - rCounted) / countedVotes : 0;
+        npvWatchCandidate = {
+          isNpv: true,
+          isCalled: !!state.npvCallRecord,
+          unitKey: 'NPV',
+          displayLabel: 'National Popular Vote',
+          confidence: (() => {
+            const c = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+            return isFinite(c) ? c : 0;
+          })(),
+          reporting: countedVotes / state.totalEligibleVotes,
+          remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
+          leader,
+          margin,
+          marginStr: leader === 'O' ? 'Other lead' : formatLean(margin),
+          voteMargin: Math.round(dCounted - rCounted),
+          ev: 0
+        };
+      }
+    }
+
     const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');
     const callLines = [];
     const signatureParts = [];
@@ -2221,20 +3193,56 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const live = state.snapshot.get(record.unitKey);
       if (live) {
         record.reporting = live.reporting;
+        record.countedVotes = live.countedVotes;
+        record.remainingVotes = live.remainingVotes;
+        // The margin/vote numbers on a call keep live-refreshing from the
+        // current count for as long as the unit reports - by design, this
+        // is what lets a wrong call visibly diverge from what was
+        // announced (e.g. "Called Florida for Gore" ending up next to its
+        // true "R+0.0 (R+537)" final margin) as a preview of the
+        // Correction: notice that follows once reporting fully completes,
+        // rather than hiding that drama by freezing the numbers.
         record.marginStr = live.marginStr;
         record.confidence = live.confidence;
         record.dVotes = live.dVotes;
         record.rVotes = live.rVotes;
         record.oVotes = live.oVotes;
         record.oVotesTotal = live.oVotesTotal;
-        record.countedVotes = live.countedVotes;
-        record.remainingVotes = live.remainingVotes;
         record.topThirdShare = live.topThirdShare;
         record.totalThirdShare = live.totalThirdShare;
-        if (live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
-        if (live.evAllocations) record.finalAllocations = { ...live.evAllocations };
+        // st.evCalledAllocations gets silently swapped to the ground-truth
+        // split by maybeEmitMiscall() once a call is confirmed wrong (see
+        // its own comment) - refreshing record.evAllocations from it past
+        // that point would converge it with record.finalAllocations below
+        // and collapse the intended "EV D 25 -> R 25" arrow into a single
+        // value. Freeze it at the exact moment the correction fires
+        // (live.misCallLogged) so the arrow keeps showing what was
+        // actually called vs. what it was corrected to.
+        if (!live.misCallLogged && live.evCalledAllocations) record.evAllocations = { ...live.evCalledAllocations };
+        // st.evAllocations is a static, ground-truth allocation (the true
+        // final winner's split, computed once in buildStateData) - only
+        // reveal it once this unit's own count has effectively finished,
+        // the same moment maybeEmitMiscall() would log a correction notice.
+        // Otherwise a call that later turns out wrong shows the "EV R 6 →
+        // D 6" arrow the instant it's called, spoiling the outcome before
+        // anything has actually been corrected on-screen.
+        if (live.reporting >= 1 - EPS && live.evAllocations) {
+          record.finalAllocations = { ...live.evAllocations };
+        } else if (record.evAllocations) {
+          record.finalAllocations = { ...record.evAllocations };
+        }
       }
-      const tallyWinner = record.actualWinner || record.leader;
+      // record.actualWinner is ground truth, stashed on the call record at
+      // call time for later validation - it must only feed the "clinches
+      // the presidency" tally once a wrong call has actually been publicly
+      // corrected (live.misCallLogged), the same gate registerCall's own
+      // effectiveLeader uses. Using it unconditionally meant this tally -
+      // and the victory banner built from it - silently used the true
+      // final winner for every miscalled state from the moment it was
+      // (wrongly) called, so the declared national outcome could never be
+      // wrong even while the individual call/EV allocation shown for that
+      // state still was.
+      const tallyWinner = (live && live.misCallLogged && record.actualWinner) ? record.actualWinner : record.leader;
       if (tallyWinner === 'D') dRunning += record.ev || 0;
       else if (tallyWinner === 'R') rRunning += record.ev || 0;
       else oRunning += record.ev || 0;
@@ -2242,22 +3250,27 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
         else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
       }
-      const leaderText = formatLeader(record.leader);
+      const leaderText = record.candidateName || formatLeader(record.leader);
       const reportingText = formatReportingText(record.reporting, record.remainingVotes);
-      const marginText = formatMarginText(record.marginStr, record.leader);
-      const confidenceText = formatConfidenceText(record.confidence);
+      const callVoteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
+      const marginText = formatMarginText(record.marginStr, record.leader, callVoteMargin);
+      const confidenceText = formatConfidenceText(record.confidence, effectiveConfidenceThreshold());
       const evText = formatEvAllocationsForLog(record.evAllocations, record.finalAllocations);
       const infoParts = [reportingText, marginText, confidenceText];
       if (evText) infoParts.push(evText);
       const infoJoined = infoParts.filter(Boolean).join(', ');
       const evSigCall = record.evAllocations ? `${record.evAllocations.D || 0}-${record.evAllocations.R || 0}-${record.evAllocations.O || 0}` : 'na';
       const evSigFinal = record.finalAllocations ? `${record.finalAllocations.D || 0}-${record.finalAllocations.R || 0}-${record.finalAllocations.O || 0}` : 'na';
+      const callNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
+        ? (record.dVotes - record.rVotes) / record.countedVotes
+        : 0;
       const callLine = {
         kind: 'call',
         time: record.time,
-        className: 'en-log-entry',
+        className: 'en-log-entry en-log-called',
         text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${infoJoined})`,
-        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}:${evSigCall}:${evSigFinal}`
+        signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}:${evSigCall}:${evSigFinal}`,
+        accentColor: calledAccentColor(record.leader, callNumericMargin)
       };
       callLines.push(callLine);
       signatureParts.push(callLine.signature);
@@ -2277,41 +3290,105 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       };
     }
 
-    let outcomeLine = null;
-    let outcomeMessage = null;
-    let outcomeClass = '';
-    if (outcome) {
-      const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
-      if (outcome.type === 'D') {
-        const latestTotal = finalD;
-        outcome.total = latestTotal;
-        outcomeMessage = `Democrats clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
-        outcomeClass = ' win-dem';
-      } else if (outcome.type === 'R') {
-        const latestTotal = finalR;
-        outcome.total = latestTotal;
-        outcomeMessage = `Republicans clinch the presidency with ${latestTotal} EV (needed ${majority}).`;
-        outcomeClass = ' win-rep';
-      } else {
-        const latestOther = finalO;
-        outcome.other = latestOther;
-        outcomeMessage = `Electoral College tie: D ${finalD} | R ${finalR}${latestOther ? ` | Other ${latestOther}` : ''}.`;
-        outcomeClass = ' tie';
+    // Outcome messages ("X clinches the presidency with N EV") are logged
+    // as fixed, point-in-time entries rather than a single continuously
+    // recomputed line - once announced, the EV total embedded in a given
+    // message never changes, even as more states report normally
+    // afterward. Three distinct milestones each get their own message:
+    //   1. the first moment any candidate secures a majority ("clinch")
+    //   2. a correction that actually changes who's projected to win, if
+    //      any (kept as its own message, not a silent edit to #1)
+    //   3. once every state has been called, one final tally - "clinches
+    //      with 283 EV" on the initial call, then "clinches with 306 EV"
+    //      once the last state comes in - skipped if it'd just repeat the
+    //      total from whichever of #1/#2 already announced it.
+    const newOutcomeType = outcome ? outcome.type : null;
+    const newOutcomeTotal = outcome
+      ? (outcome.type === 'D' ? finalD : (outcome.type === 'R' ? finalR : finalD))
+      : null;
+
+    if (newOutcomeType !== state.outcomeAnnouncedType) {
+      if (state.outcomeAnnouncedType == null && newOutcomeType) {
+        const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
+        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
+        const className = outcomeClassFor(newOutcomeType);
+        state.callRecords.push({
+          kind: 'notice',
+          noticeType: 'outcome-clinch',
+          time: outcome.time != null ? outcome.time : currentTime,
+          text: `${timeStr} – ${message}`,
+          outcomeClassName: className
+        });
+        state.lastOutcomeBannerText = message;
+        state.lastOutcomeBannerClass = className;
+        state.lastLogKey = '';
+      } else if (state.outcomeAnnouncedType != null) {
+        const reversalTime = Math.max(currentTime, (outcome && outcome.time != null) ? outcome.time : currentTime);
+        let reversalText;
+        let reversalBanner = '';
+        let reversalClass = '';
+        if (newOutcomeType === 'D' || newOutcomeType === 'R') {
+          const newWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL')
+            || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
+          reversalBanner = `${newWinnerName} is now projected to win the presidency instead, following a corrected state call.`;
+          reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead.`;
+          reversalClass = outcomeClassFor(newOutcomeType);
+        } else if (newOutcomeType === 'T') {
+          reversalBanner = 'The Electoral College is now projected to tie, following a corrected state call.';
+          reversalText = 'Correction: following a corrected state call, the Electoral College is now projected to tie.';
+          reversalClass = ' tie';
+        } else {
+          reversalText = 'Correction: following a corrected state call, no candidate has secured a majority. The race is not yet decided.';
+        }
+        state.callRecords.push({
+          kind: 'notice',
+          noticeType: 'outcome-reversal',
+          time: reversalTime,
+          text: `${formatTimeLabel(reversalTime)} – ${reversalText}`,
+          outcomeClassName: reversalClass
+        });
+        state.lastOutcomeBannerText = reversalBanner;
+        state.lastOutcomeBannerClass = reversalClass;
+        state.lastLogKey = '';
       }
-      const outcomeText = `${timeStr} – ${outcomeMessage}`;
-      outcomeLine = {
-        kind: 'outcome',
-        time: outcome.time != null ? outcome.time : currentTime,
-        className: `en-log-entry en-log-outcome${outcomeClass}`,
-        text: outcomeText,
-        signature: `outcome:${outcome.type}:${outcomeText}`
-      };
+      state.outcomeAnnouncedType = newOutcomeType;
+      state.outcomeAnnouncedTotal = newOutcomeTotal;
+    }
+
+    // Wait for the current (corrected-where-known) tally to exactly match
+    // the true final EV split, rather than just "every state has been
+    // called" - the latter can fire this on a still-wrong tally if the
+    // last state(s) called haven't had their correction land yet,
+    // producing an awkward "final" message immediately followed by a
+    // correction. This deliberately peeks at ground truth (nationalFinalDEv/
+    // REv, already computed at prepare time) purely to time this one
+    // display moment correctly - it never feeds back into any call or
+    // probability decision.
+    const matchesGroundTruth = finalD === state.nationalFinalDEv && finalR === state.nationalFinalREv;
+    if (matchesGroundTruth && !state.allCalledAnnounced) {
+      state.allCalledAnnounced = true;
+      if (newOutcomeType && newOutcomeType !== 'T' && newOutcomeTotal !== state.outcomeAnnouncedTotal) {
+        const timeStr = formatTimeLabel(currentTime);
+        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
+        const className = outcomeClassFor(newOutcomeType);
+        state.callRecords.push({
+          kind: 'notice',
+          noticeType: 'outcome-final',
+          time: currentTime,
+          text: `${timeStr} – ${message}`,
+          outcomeClassName: className
+        });
+        state.lastOutcomeBannerText = message;
+        state.lastOutcomeBannerClass = className;
+        state.outcomeAnnouncedTotal = newOutcomeTotal;
+        state.lastLogKey = '';
+      }
     }
 
     if (elements.victory) {
-      if (outcomeLine) {
-        elements.victory.textContent = outcomeMessage || '';
-        elements.victory.className = `en-log-victory${outcomeClass}`;
+      if (state.lastOutcomeBannerText) {
+        elements.victory.textContent = state.lastOutcomeBannerText;
+        elements.victory.className = `en-log-victory${state.lastOutcomeBannerClass || ''}`;
         elements.victory.style.display = '';
       } else {
         elements.victory.textContent = '';
@@ -2320,23 +3397,61 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       }
     }
 
+    const npvLines = readyEvents
+      .filter(rec => rec.kind === 'npv_call')
+      .map(record => {
+        // Keep the call-log line live after the call, same as state calls
+        // refresh from state.snapshot — the underlying national count
+        // keeps moving even once a leader has been called. The called
+        // `leader` itself is a committed historical fact and stays fixed;
+        // only the numeric vote/confidence/reporting readout refreshes.
+        if (state.lastNationalTotals) {
+          const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
+          record.dVotes = dCounted;
+          record.rVotes = rCounted;
+          record.oVotes = oCounted;
+          record.countedVotes = countedVotes;
+          if (state.totalEligibleVotes > EPS) record.reporting = countedVotes / state.totalEligibleVotes;
+          const liveConfidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+          if (isFinite(liveConfidence)) record.confidence = liveConfidence;
+        }
+        const text = formatNpvCallText(record, effectiveConfidenceThreshold());
+        const npvNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
+          ? (record.dVotes - record.rVotes) / record.countedVotes
+          : 0;
+        return {
+          kind: 'npv_call',
+          time: record.time,
+          className: 'en-log-entry en-log-npv en-log-called',
+          text,
+          signature: `npv_call:${record.leader}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}`,
+          accentColor: calledAccentColor(record.leader, npvNumericMargin)
+        };
+      });
+    npvLines.forEach(line => signatureParts.push(line.signature));
+
     const noticeLines = readyEvents
       .filter(rec => rec.kind === 'notice')
       .map(rec => {
         const text = rec.text || `${formatTimeLabel(rec.time)} – ${rec.noticeType || 'Notice'}${rec.displayLabel ? `: ${rec.displayLabel}` : ''}`;
+        // The three outcome-milestone notice types (clinch/reversal/final)
+        // reuse the old ephemeral banner-only line's bold en-log-outcome
+        // styling (plus its win-dem/win-rep/tie accent) instead of the
+        // plain italic notice style used for ordinary state corrections.
+        const className = rec.outcomeClassName
+          ? `en-log-entry en-log-outcome${rec.outcomeClassName}`
+          : 'en-log-entry en-log-notice';
         return {
           kind: 'notice',
           time: rec.time,
-          className: 'en-log-entry en-log-notice',
+          className,
           text,
           signature: `${rec.kind}:${rec.noticeType || ''}:${rec.unitKey || ''}:${rec.time.toFixed(3)}:${text}`
         };
       });
     noticeLines.forEach(line => signatureParts.push(line.signature));
-    if (outcomeLine) signatureParts.push(outcomeLine.signature);
 
-    let renderLines = [...callLines, ...noticeLines];
-    if (outcomeLine) renderLines.push(outcomeLine);
+    let renderLines = [...callLines, ...npvLines, ...noticeLines];
     renderLines.sort((a, b) => {
       if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
       const orderMap = { call: 0, notice: 1, outcome: 2 };
@@ -2352,6 +3467,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const repVal = isFinite(c.reporting) ? c.reporting : -1;
       return `${c.unitKey}:${confVal.toFixed(3)}:${repVal.toFixed(3)}`;
     });
+    if (npvWatchCandidate) {
+      const confVal = isFinite(npvWatchCandidate.confidence) ? npvWatchCandidate.confidence : -1;
+      const repVal = isFinite(npvWatchCandidate.reporting) ? npvWatchCandidate.reporting : -1;
+      uncalledSignatureParts.unshift(`NPV:${confVal.toFixed(3)}:${repVal.toFixed(3)}:${npvWatchCandidate.isCalled ? 1 : 0}`);
+    }
     const uncalledSignature = uncalledSignatureParts.join('|');
 
     const shouldUpdateLog = readySignature !== state.lastLogKey;
@@ -2372,6 +3492,11 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
             const line = document.createElement('div');
             line.className = lineInfo.className;
             line.textContent = lineInfo.text;
+            if (lineInfo.accentColor) {
+              line.style.borderLeftColor = lineInfo.accentColor;
+              const [r, g, b] = hexToRgb(lineInfo.accentColor);
+              line.style.background = `rgba(${r}, ${g}, ${b}, 0.1)`;
+            }
             frag.appendChild(line);
           });
           logEl.appendChild(frag);
@@ -2391,6 +3516,7 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       if (elements.logUncalled) {
         const container = elements.logUncalled;
         container.innerHTML = '';
+        const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
         if (uncalledCandidates.length) {
           const title = document.createElement('div');
           title.className = 'en-log-section-title';
@@ -2399,41 +3525,27 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           const cardsContainer = document.createElement('div');
           cardsContainer.className = 'en-log-uncalled-cards';
           uncalledCandidates.forEach(candidate => {
-            const card = document.createElement('div');
-            card.className = 'en-log-uncalled-card';
-            const label = candidate.ev > 0
-              ? `${candidate.displayLabel} (${candidate.ev} EV)`
-              : candidate.displayLabel;
-            const infoParts = [];
-            if (candidate.leader) {
-              infoParts.push(`${formatLeaderShort(candidate.leader)} lead`);
-            }
-            const marginDisplay = formatMarginText(candidate.marginStr, candidate.leader);
-            if (marginDisplay && marginDisplay !== 'None') {
-              if (marginDisplay === 'EVEN') {
-                infoParts.push('EVEN');
-              } else {
-                let marginText = `Margin ${marginDisplay}`;
-                if (candidate.leader !== 'O' && isFinite(candidate.voteMargin) && candidate.voteMargin !== 0) {
-                  const rawSign = candidate.voteMargin > 0 ? 'D' : 'R';
-                  marginText += ` (${rawSign}+${Math.abs(candidate.voteMargin).toLocaleString('en-US')})`;
-                }
-                infoParts.push(marginText);
-              }
-            }
-            const confPct = Math.max(0, Math.min(100, Math.round((candidate.confidence || 0) * 100)));
-            infoParts.push(`Confidence ${confPct}%`);
-            // Use shared formatter so votes-left is shown when available
-            try {
-              const repText = formatReportingText(candidate.reporting, candidate.remainingVotes);
-              infoParts.push(repText);
-            } catch (e) {
-              infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
-            }
-            card.textContent = `${label} – ${infoParts.join(' · ')}`;
-            cardsContainer.appendChild(card);
+            cardsContainer.appendChild(buildUncalledCardElement(candidate, threshold));
           });
           container.appendChild(cardsContainer);
+        }
+        // NPV gets its own small, quieter sub-section below the state
+        // races rather than competing for attention at the top of the
+        // list — it's a "glance at it occasionally" signal, not a race.
+        // Unlike the state cards above, it stays here all night (before
+        // and after being called) as an ongoing watch item, since the
+        // underlying national count keeps moving either way.
+        if (npvWatchCandidate) {
+          const npvTitle = document.createElement('div');
+          npvTitle.className = 'en-log-section-title en-log-section-title-sub';
+          npvTitle.textContent = npvWatchCandidate.isCalled ? 'National popular vote (called)' : 'National popular vote';
+          container.appendChild(npvTitle);
+          const npvContainer = document.createElement('div');
+          npvContainer.className = 'en-log-uncalled-cards';
+          const npvCard = buildUncalledCardElement(npvWatchCandidate, threshold, { suppressPulse: npvWatchCandidate.isCalled });
+          npvCard.classList.add('en-log-npv-strip');
+          npvContainer.appendChild(npvCard);
+          container.appendChild(npvContainer);
         }
       }
     }
@@ -2616,24 +3728,31 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     // Apply ease-out so counting slows near the end: easeOut(n) = 1 - (1 - n)^power
     const power = (st && isFinite(st.easePower)) ? Math.max(1, st.easePower) : 2.0;
     const eased = 1 - Math.pow(1 - normalized, power);
-    // Apply tiny deterministic jitter that vanishes at 0 and 1: jitter * n * (1-n)
+    // Apply tiny deterministic jitter that vanishes at 0 and 1: jitter * n * (1-n).
+    // The extra (1-n)^2 taper keeps it from fighting the eased curve's own
+    // slope right at the tail - without it, a positive jitterParam could
+    // make the combined curve dip just before the boundary (reporting
+    // briefly going backwards) once the old hard clamp (removed above) was
+    // no longer there to mask it.
     const jitterParam = (st && isFinite(st.reportJitter)) ? st.reportJitter : 0;
-    const jitterTerm = jitterParam * normalized * (1 - normalized);
-    const reported = clamp01(eased + jitterTerm);
-    // Never allow reported to reach 1.0 before the endTime. Cap at 0.999 until end.
-    const CAP_BEFORE_END = 0.999;
-    if (timeMinutes < st.startTime + st.duration - EPS && reported >= CAP_BEFORE_END) {
-      return CAP_BEFORE_END;
-    }
-    return reported;
+    const jitterTerm = jitterParam * normalized * Math.pow(1 - normalized, 3);
+    // No artificial ceiling below 1 here (an earlier version capped this at
+    // 0.999 and jumped straight to 1 at the boundary - that pinned the last
+    // slice of votes flat until the exact final tick, then revealed all of
+    // them, and the ground-truth ties/results, in one discrete jump). The
+    // eased curve itself already can't reach 1 before normalized does (its
+    // remaining term (1-normalized)^power is strictly positive), so it's
+    // safe to let it approach 1 on its own - the last votes keep trickling
+    // in continuously all the way to the true end instead of teleporting.
+    return clamp01(eased + jitterTerm);
   }
 
   function updateToggleLabel() {
-    if (!elements.toggle) return;
-    if (state.running) elements.toggle.textContent = 'Pause';
-    else if (!state.prepared) elements.toggle.textContent = 'Start';
-    else if (state.currentTime >= state.simEnd - EPS) elements.toggle.textContent = 'Replay';
-    else elements.toggle.textContent = 'Resume';
+    if (!elements.toggle && !elements.toggleFooter) return;
+    if (state.running) setToggleText('Pause');
+    else if (!state.prepared) setToggleText('Start');
+    else if (state.currentTime >= state.simEnd - EPS) setToggleText('Replay');
+    else setToggleText('Resume');
   }
 
   function determineWinner(dShare, rShare, oShare) {
@@ -2851,7 +3970,20 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
         totalRVotes: Math.round(totalRVotes),
         totalOVotes: Math.round(totalOVotes),
         totalCounted: Math.round(totalCounted),
-        pvMargin: totalCounted > 0 ? ((totalDVotes - totalRVotes) / totalCounted) : 0
+        pvMargin: totalCounted > 0 ? ((totalDVotes - totalRVotes) / totalCounted) : 0,
+        npvCalledFor: state.npvCallRecord ? state.npvCallRecord.leader : null,
+        npvCalledAtMinutes: state.npvCallRecord ? state.npvCallRecord.time : null,
+        npvConfidence: state.npvCallRecord ? state.npvCallRecord.confidence : null,
+        // Live swing hierarchy (docs/utils/electionNight/liveSwing.js) at
+        // this checkpoint - a scrubbable timeline of when the model's own
+        // honest signal noticed a national/regional swing away from the
+        // priors, useful for reviewing how a given night unfolded.
+        swingNational: state.swingEstimate ? state.swingEstimate.national.mean : null,
+        swingNationalSigma: state.swingEstimate ? state.swingEstimate.national.sigma : null,
+        swingRegions: state.swingEstimate
+          ? Object.fromEntries(Array.from(state.swingEstimate.regions.entries())
+            .map(([region, r]) => [region, { mean: r.mean, sigma: r.sigma, nObs: r.nObs }]))
+          : {}
       },
       units
     };
@@ -2894,6 +4026,15 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   }
 
   /**
+   * Force record a national popular vote call event log entry (bypasses interval check).
+   */
+  function recordNpvCallLogEntry(timeMinutes, leader) {
+    const entry = collectLogEntry(timeMinutes, 'npv_call', { leader });
+    state.logEntries.push(entry);
+    updateDownloadButtons();
+  }
+
+  /**
    * Enable/disable download buttons based on whether we have log entries.
    */
   function updateDownloadButtons() {
@@ -2925,7 +4066,9 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
     state.logEntries.forEach((entry, idx) => {
       const eventLabel = entry.eventType === 'call'
         ? `[CALL: ${entry.eventData?.unitKey || '?'} for ${entry.eventData?.leader || '?'}]`
-        : '[INTERVAL]';
+        : entry.eventType === 'npv_call'
+          ? `[NPV CALL: ${entry.eventData?.leader || '?'}]`
+          : '[INTERVAL]';
 
       lines.push('-'.repeat(80));
       lines.push(`${entry.timeLabel} ${eventLabel}`);
@@ -2938,6 +4081,15 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       const pvDir = s.pvMargin > 0 ? 'D' : (s.pvMargin < 0 ? 'R' : 'TIE');
       lines.push(`Pop Vote:    D: ${s.totalDVotes.toLocaleString()}  R: ${s.totalRVotes.toLocaleString()}  O: ${s.totalOVotes.toLocaleString()}  (${pvDir}+${pvPct}%)`);
       lines.push(`Total Counted: ${s.totalCounted.toLocaleString()}`);
+      lines.push(`NPV Called:  ${s.npvCalledFor ? `${s.npvCalledFor} at ${formatTimeLabel(s.npvCalledAtMinutes)} (confidence ${s.npvConfidence.toFixed(2)})` : '-'}`);
+      if (s.swingNational != null) {
+        const swingPct = Math.abs(s.swingNational * 100).toFixed(2);
+        const swingLabel = s.swingNational > 0 ? `R+${swingPct}` : (s.swingNational < 0 ? `D+${swingPct}` : 'EVEN');
+        const swingSigmaPct = s.swingNationalSigma != null ? (s.swingNationalSigma * 100).toFixed(2) : '?';
+        const regionParts = Object.entries(s.swingRegions || {})
+          .map(([region, r]) => `${region}: ${(r.mean * 100 >= 0 ? '+' : '')}${(r.mean * 100).toFixed(1)}pt (n=${r.nObs})`);
+        lines.push(`Live Swing:  National ${swingLabel}pt (+/-${swingSigmaPct}pt)${regionParts.length ? '  |  ' + regionParts.join(', ') : ''}`);
+      }
       lines.push('');
 
       // Header for state table
@@ -2984,6 +4136,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
       'SummaryCalledDEV', 'SummaryCalledREV', 'SummaryCalledOEV',
       'SummaryPhantomDEV', 'SummaryPhantomREV', 'SummaryPhantomOEV',
       'SummaryDVotes', 'SummaryRVotes', 'SummaryOVotes', 'SummaryTotalCounted', 'SummaryPVMargin',
+      'SummaryNpvCalledFor', 'SummaryNpvCalledAtMinutes', 'SummaryNpvConfidence',
+      'SummarySwingNational', 'SummarySwingNationalSigma',
       'Unit', 'Abbr', 'EV', 'Reporting', 'Leader', 'Called', 'CalledFor',
       'Margin', 'MarginStr', 'Confidence',
       'DVotes', 'RVotes', 'OVotes', 'CountedVotes', 'RemainingVotes',
@@ -3005,6 +4159,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
           s.calledDEV, s.calledREV, s.calledOEV,
           s.phantomDEV, s.phantomREV, s.phantomOEV,
           s.totalDVotes, s.totalRVotes, s.totalOVotes, s.totalCounted, s.pvMargin.toFixed(6),
+          s.npvCalledFor || '', s.npvCalledAtMinutes != null ? s.npvCalledAtMinutes.toFixed(2) : '', s.npvConfidence != null ? s.npvConfidence.toFixed(4) : '',
+          s.swingNational != null ? s.swingNational.toFixed(6) : '', s.swingNationalSigma != null ? s.swingNationalSigma.toFixed(6) : '',
           u.unit,
           u.abbr,
           u.ev,
@@ -3078,8 +4234,8 @@ import { prepareAtLargeData } from './utils/atLargeAggregator.js';
   }
 
 
-  window.resetElectionNightSimulation = function (restorePv = true) {
-    resetSimulation(restorePv);
+  window.resetElectionNightSimulation = function (restorePv = true, hidePanel = false) {
+    resetSimulation(restorePv, hidePanel);
   };
 
   window.prepareElectionNightSimulation = function () {
