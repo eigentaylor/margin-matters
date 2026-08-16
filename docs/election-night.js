@@ -1164,7 +1164,10 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
    * Turn the queued call/correction/outcome-clinch records into the plain
    * slide descriptors updatePopup.showCheckpoint() renders, resolving each
    * one's portrait up front (async - the manifest fetch is cached after the
-   * first call, so this resolves quickly).
+   * first call, so this resolves quickly). Also appends a trailing "races
+   * to watch" slide (reusing buildUncalledCandidates(), the same sort the
+   * call log's "still counting" sidebar uses) when anything is still
+   * uncalled at this point in the night.
    */
   async function buildCheckpointSlides(records) {
     const specs = records.map(record => {
@@ -1180,12 +1183,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       const isCorrection = record.noticeType === 'miscall';
       const leader = isCorrection ? record.finalLeader : record.leader;
       const oppositeLeader = leader === 'D' ? 'R' : (leader === 'R' ? 'D' : null);
-      const runningEv = computeRunningEvTally(record.time)[leader] || 0;
       const voteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
       return {
         kind: isCorrection ? 'correction' : 'call',
         unitKey: record.unitKey,
-        stateName: formatUnitLabel(record.unitKey),
+        stateName: formatUnitLabel(record.unitKey, state.year),
         ev: record.ev,
         leader,
         oppositeLeader,
@@ -1193,10 +1195,15 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         oppositeCandidateName: oppositeLeader ? resolveCandidateFullName(oppositeLeader, record.unitKey) : null,
         previousCandidateName: isCorrection ? record.previousCandidateName : null,
         accentColor: calledAccentColor(leader, isCorrection ? (CHECKPOINT_DEFAULT_MARGIN[leader] || 0) : marginFromCallRecord(record)),
-        runningEv,
-        runningEvBefore: Math.max(0, runningEv - (record.ev || 0)),
+        // Full D/R/O running tally as of this record, for the persistent
+        // scoreboard panel (see updatePopup.js's renderTallyPanel) - it
+        // animates from whatever it's currently showing to this value the
+        // moment this slide starts, rather than each slide carrying its
+        // own separate "X's EV total" box.
+        tallyAfter: computeRunningEvTally(record.time),
         dVotes: record.dVotes,
         rVotes: record.rVotes,
+        countedVotes: record.countedVotes,
         reportingText: formatReportingText(record.reporting, record.remainingVotes),
         marginText: formatMarginText(record.marginStr, leader, voteMargin)
       };
@@ -1207,7 +1214,40 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         ? await getPortraitUrlForName(state.year, spec.oppositeCandidateName)
         : null;
     }));
+
+    const uncalled = buildUncalledCandidates();
+    if (uncalled.length) {
+      const threshold = effectiveConfidenceThreshold();
+      const RACES_TO_SHOW = 6;
+      specs.push({
+        kind: 'races',
+        candidates: uncalled.slice(0, RACES_TO_SHOW).map(c => ({
+          displayLabel: c.displayLabel,
+          ev: c.ev,
+          marginText: formatMarginText(c.marginStr, c.leader, c.voteMargin),
+          confidenceText: formatConfidenceText(c.confidence, threshold),
+          reportingText: formatReportingText(c.reporting, c.remainingVotes),
+          accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold)
+        }))
+      });
+    }
+
     return specs;
+  }
+
+  /** National-ticket D/R name + portrait, resolved once per checkpoint for
+   * the persistent scoreboard panel (which doesn't change per-slide). */
+  async function resolveScoreboardPanelInfo() {
+    const dName = resolveCandidateFullName('D', 'NATIONAL');
+    const rName = resolveCandidateFullName('R', 'NATIONAL');
+    const [dPortrait, rPortrait] = await Promise.all([
+      getPortraitUrlForName(state.year, dName),
+      getPortraitUrlForName(state.year, rName)
+    ]);
+    return {
+      D: { name: dName, portraitUrl: dPortrait },
+      R: { name: rName, portraitUrl: rPortrait }
+    };
   }
 
   /**
@@ -1335,8 +1375,18 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     pauseSimulation();
     state.checkpointActive = true;
 
-    buildCheckpointSlides(records).then(slides => {
+    // Scoreboard starting point: the tally as of just before this batch's
+    // first event, so the panel animates from where it actually was, not
+    // from zero.
+    const firstEventTime = next.events.reduce((min, ev) => Math.min(min, ev.time), Infinity);
+    const startingTally = computeRunningEvTally(isFinite(firstEventTime) ? firstEventTime - EPS : currentTime);
+    const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD)) ? state.nationalWinProb.probD : null;
+
+    Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
       showCheckpoint(slides, {
+        startingTally,
+        winProb,
+        panelInfo,
         onComplete: () => {
           state.checkpointActive = false;
           if (state.currentTime < state.simEnd - EPS) startSimulation();
@@ -2781,12 +2831,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const thresholdText = isFinite(st.callRecord.threshold)
       ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
       : '';
-    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
+    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey, state.year)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
     const correctionRecord = {
       kind: 'notice',
       noticeType: 'miscall',
       unitKey: st.unitKey,
-      displayLabel: formatUnitLabel(st.unitKey),
+      displayLabel: formatUnitLabel(st.unitKey, state.year),
       time: correctionTime,
       text: message,
       calledLeader,
@@ -2861,7 +2911,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     st.callRecord = {
       kind: 'call',
       unitKey: st.unitKey,
-      displayLabel: formatUnitLabel(st.unitKey),
+      displayLabel: formatUnitLabel(st.unitKey, state.year),
       time: callTime,
       leader: calledLeader,
       candidateName: resolveCandidateLastName(calledLeader, st.unitKey),
@@ -3373,29 +3423,15 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     return ' tie';
   }
 
-  function updateCallLog(currentTime) {
-    // Exposed so the map's hover tooltip (tooltipManager.js, a separate
-    // module with no access to this closure's `state`) can rescale its own
-    // confidence display against the same live call-threshold setting
-    // instead of a hardcoded value.
-    try { window._electionNightConfidenceThreshold = effectiveConfidenceThreshold(); } catch (e) { /* ignore */ }
-    const timeLabel = formatTimeLabel(currentTime);
-    if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
-    if (!elements.log && !elements.logUncalled && !elements.victory) return;
-
-    const readyEvents = state.callRecords
-      .filter(rec => rec && currentTime >= rec.time - EPS)
-      .slice()
-      .sort((a, b) => {
-        if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
-        const orderMap = { call: 0, npv_call: 1, notice: 2, outcome: 3 };
-        const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
-        const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
-        if (orderA !== orderB) return orderA - orderB;
-        return (a.unitKey || '').localeCompare(b.unitKey || '');
-      });
-
-    const uncalledCandidates = (state.stateData || [])
+  /**
+   * Every not-yet-called race with any reporting so far, sorted by
+   * importance/interest (rewards high EV, confidence near the call
+   * threshold, and a small margin). Used both by the always-visible "still
+   * counting" call-log sidebar and by the checkpoint popup's "races to
+   * watch" slide, so both surfaces agree on what's worth watching.
+   */
+  function buildUncalledCandidates() {
+    return (state.stateData || [])
       .filter(st => st && st.calledAt == null && st.latestMetrics && st.latestMetrics.reporting > EPS)
       .map(st => {
         const metrics = st.latestMetrics;
@@ -3403,7 +3439,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const rawMargin = isFinite(metrics.countedMargin) ? metrics.countedMargin : (isFinite(metrics.margin) ? metrics.margin : 0);
         return {
           unitKey: st.unitKey,
-          displayLabel: formatUnitLabel(st.unitKey),
+          displayLabel: formatUnitLabel(st.unitKey, state.year),
           confidence: isFinite(metrics.confidence) ? metrics.confidence : 0,
           reporting: isFinite(metrics.reporting) ? metrics.reporting : 0,
           remainingVotes: isFinite(metrics.remainingVotes) ? Math.max(0, Math.round(metrics.remainingVotes)) : null,
@@ -3450,6 +3486,31 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         if (Math.abs(confDiff) > EPS) return confDiff;
         return (a.displayLabel || '').localeCompare(b.displayLabel || '');
       });
+  }
+
+  function updateCallLog(currentTime) {
+    // Exposed so the map's hover tooltip (tooltipManager.js, a separate
+    // module with no access to this closure's `state`) can rescale its own
+    // confidence display against the same live call-threshold setting
+    // instead of a hardcoded value.
+    try { window._electionNightConfidenceThreshold = effectiveConfidenceThreshold(); } catch (e) { /* ignore */ }
+    const timeLabel = formatTimeLabel(currentTime);
+    if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
+    if (!elements.log && !elements.logUncalled && !elements.victory) return;
+
+    const readyEvents = state.callRecords
+      .filter(rec => rec && currentTime >= rec.time - EPS)
+      .slice()
+      .sort((a, b) => {
+        if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
+        const orderMap = { call: 0, npv_call: 1, notice: 2, outcome: 3 };
+        const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
+        const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
+        if (orderA !== orderB) return orderA - orderB;
+        return (a.unitKey || '').localeCompare(b.unitKey || '');
+      });
+
+    const uncalledCandidates = buildUncalledCandidates();
 
     // National popular vote has no EV weight to score against the state
     // races above, so it gets its own small dedicated card rather than

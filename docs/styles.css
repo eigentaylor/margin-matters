@@ -2936,7 +2936,8 @@ body.shift-vectors-page {
   animation: en-cp-badge-pop 0.4s 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.en-cp-reveal .en-cp-stats {
+.en-cp-reveal .en-cp-compare,
+.en-cp-reveal .en-cp-races-list {
   animation: en-cp-fade-up 0.4s 0.75s ease-out both;
 }
 
@@ -3012,13 +3013,17 @@ body.shift-vectors-page {
   height: clamp(96px, 24vw, 160px);
   border-radius: 10px;
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.85) inset;
 }
 
 .en-cp-photo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* contain, not cover: shows the whole portrait rather than cropping it
+     to fill the box - .en-cp-photo-wrap's background fills any letterbox
+     gap left by a portrait whose aspect ratio doesn't match the box. */
+  object-fit: contain;
   display: block;
 }
 
@@ -3103,67 +3108,94 @@ body.shift-vectors-page {
   color: rgba(255, 255, 255, 0.75);
 }
 
-/* Lower-third-style stats strip: running EV total, D/R vote split with
-   mini candidate avatars, and a margin/reporting line. */
-.en-cp-stats {
-  padding: 0 24px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* Two-row D-vs-R vote comparison table (leader's row first): a broadcast-
+   scoreboard-style readout, closer to how real election-night graphics
+   present vote counts than a single dense line of text. */
+.en-cp-compare {
+  margin: 0 24px 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.22);
 }
 
-.en-cp-evtotal {
+.en-cp-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  opacity: 0.68;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.en-cp-compare-row + .en-cp-compare-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.en-cp-compare-row.en-cp-compare-leading {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.en-cp-compare-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.en-cp-compare-votes {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.25);
+  gap: 8px;
+  flex: 0 0 auto;
 }
 
-.en-cp-evtotal-label {
-  font-size: 0.8rem;
+.en-cp-compare-ahead {
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.en-cp-evtotal-num {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #fff;
-  font-variant-numeric: tabular-nums;
-}
-
-.en-cp-votes-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.en-cp-votes-side {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  opacity: 0.72;
-  transition: opacity 0.3s ease;
-}
-
-.en-cp-votes-side.en-cp-votes-leading {
-  opacity: 1;
-}
-
-.en-cp-votes-r {
-  flex-direction: row-reverse;
-}
-
-.en-cp-votes-num {
-  font-size: 1.05rem;
+.en-cp-compare-count {
+  font-size: 1rem;
   font-weight: 800;
   color: #fff;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.en-cp-compare-check {
+  font-weight: 900;
+  color: #f2dfa1;
+}
+
+.en-cp-compare-pct {
+  flex: 0 0 auto;
+  min-width: 3.2em;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.en-cp-compare-row.en-cp-compare-leading .en-cp-compare-pct-d {
+  background: #1e4bd1;
+}
+
+.en-cp-compare-row.en-cp-compare-leading .en-cp-compare-pct-r {
+  background: #b22222;
 }
 
 .en-cp-mini-avatar {
@@ -3191,9 +3223,102 @@ body.shift-vectors-page {
 }
 
 .en-cp-stats-line {
+  margin: 0 24px 18px;
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.75);
   text-align: center;
+}
+
+/* Persistent scoreboard: stays on screen for the whole checkpoint (not
+   recreated per slide - see updatePopup.js's tallyEl), ticking up as each
+   call/correction slide starts. Pinned to a corner rather than centered
+   alongside the card so it doesn't compete with the main reveal. */
+.en-cp-tally {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+}
+
+.en-cp-tally-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  min-width: 150px;
+}
+
+.en-cp-tally-box .en-cp-mini-avatar,
+.en-cp-tally-box .en-cp-mini-avatar-fallback {
+  width: 36px;
+  height: 36px;
+}
+
+.en-cp-tally-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.en-cp-tally-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.en-cp-tally-num {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.en-cp-tally-box.en-cp-tally-d .en-cp-tally-num { color: #7fa8ff; }
+.en-cp-tally-box.en-cp-tally-r .en-cp-tally-num { color: #ff9b9b; }
+
+.en-cp-tally-prob {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 720px) {
+  .en-cp-tally {
+    top: 10px;
+    left: 10px;
+    gap: 6px;
+    transform: scale(0.85);
+    transform-origin: top left;
+  }
+
+  .en-cp-tally-box {
+    min-width: 0;
+  }
+}
+
+/* "Races to watch" slide: reuses the .en-log-uncalled-card look from the
+   call-log sidebar for visual consistency, in a wider, scrollable card. */
+.en-checkpoint-races {
+  width: min(92vw, 560px);
+}
+
+.en-cp-races-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 22px 26px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.en-checkpoint-races .en-log-uncalled-card {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* Outcome-clinch layout: distinct, more dramatic full-bleed card rather

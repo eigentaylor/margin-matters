@@ -135,19 +135,40 @@ export function formatEvAllocationsForLog(callAlloc, finalAlloc) {
     return text ? `EV ${text}` : '';
 }
 
-export function formatUnitLabel(unit) {
+// Maine and Nebraska split their electoral votes by congressional district
+// starting with the 1972 and 1992 elections respectively - before that,
+// their CSV rows are still labeled "-AL" (a data-modeling artifact, not a
+// historical fact), so calling a pre-split year's statewide result
+// "at-large" is anachronistic. Year is optional so callers that don't have
+// one handy still get the pre-existing (post-split) wording.
+const DISTRICT_SPLIT_YEAR = { ME: 1972, NE: 1992 };
+
+function ordinalSuffix(n) {
+    const v = n % 100;
+    if (v >= 11 && v <= 13) return `${n}th`;
+    switch (n % 10) {
+        case 1: return `${n}st`;
+        case 2: return `${n}nd`;
+        case 3: return `${n}rd`;
+        default: return `${n}th`;
+    }
+}
+
+export function formatUnitLabel(unit, year) {
     if (!unit) return unit;
     if (/^[A-Z]{2}$/.test(unit)) return getStateName(unit) || unit;
     if (/-AL$/.test(unit)) {
         const abbr = unit.slice(0, 2);
         const name = getStateName(abbr) || abbr;
+        const splitYear = DISTRICT_SPLIT_YEAR[abbr];
+        if (splitYear != null && isFinite(year) && year < splitYear) return name;
         return `${name} at-large`;
     }
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
         const abbr = unit.slice(0, 2);
-        const district = unit.slice(3);
+        const district = parseInt(unit.slice(3), 10);
         const name = getStateName(abbr) || abbr;
-        return `${name} ${district}`;
+        return `${name}'s ${ordinalSuffix(district)} Congressional District`;
     }
     return unit;
 }
