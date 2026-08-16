@@ -3570,7 +3570,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority}).`
         : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
     }
-    return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election would be decided by the House of Representatives.`;
+    return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election will be decided by the House of Representatives.`;
   }
   function outcomeClassFor(type) {
     if (type === 'D') return ' win-dem';
