@@ -3022,7 +3022,7 @@ body.shift-vectors-page {
   border-radius: 10px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.25);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.85) inset;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .en-cp-photo {
@@ -3087,8 +3087,37 @@ body.shift-vectors-page {
   font-weight: 900;
 }
 
+/* A correction is a much bigger deal than a routine call - louder, bigger,
+   redder badge than the plain "WINNER" pill, plus the card-level shake/
+   flash keyframes below. */
 .en-cp-badge-corrected {
-  background: #ffb4a1;
+  background: linear-gradient(135deg, #ff3b30, #b3001b);
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 6px 14px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(179, 0, 27, 0.6);
+}
+
+@keyframes en-cp-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-9px); }
+  30% { transform: translateX(8px); }
+  45% { transform: translateX(-6px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  90% { transform: translateX(1px); }
+}
+
+@keyframes en-cp-correction-flash {
+  0% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 0 0 7px rgba(255, 59, 48, 0.9); }
+  100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 0 0 7px rgba(255, 59, 48, 0); }
+}
+
+.en-checkpoint-card.en-checkpoint-correction.en-cp-reveal,
+.en-checkpoint-card.en-checkpoint-uncalled.en-cp-reveal {
+  animation: en-cp-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both,
+    en-cp-correction-flash 1s ease-out both;
 }
 
 .en-cp-name {
@@ -3164,12 +3193,25 @@ body.shift-vectors-page {
 }
 
 .en-cp-compare-ahead {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: rgba(255, 255, 255, 0.65);
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.en-cp-compare-margin-badge {
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: none;
+  letter-spacing: 0.01em;
 }
 
 .en-cp-compare-count {
@@ -3206,6 +3248,10 @@ body.shift-vectors-page {
   background: #b22222;
 }
 
+.en-cp-compare-row.en-cp-compare-leading .en-cp-compare-pct-o {
+  background: #C9A400;
+}
+
 .en-cp-mini-avatar {
   width: 28px;
   height: 28px;
@@ -3237,13 +3283,6 @@ body.shift-vectors-page {
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.en-cp-stats-margin {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
-  white-space: nowrap;
 }
 
 .en-cp-stats-bar-track {
@@ -3334,6 +3373,30 @@ body.shift-vectors-page {
 .en-cp-tally-box.en-cp-tally-d .en-cp-tally-num { color: #7fa8ff; }
 .en-cp-tally-box.en-cp-tally-r .en-cp-tally-num { color: #ff9b9b; }
 
+/* Transient "+N"/"-N" chip that pops up next to a tally number when a
+   correction moves EVs from one party to the other - makes the swing itself
+   legible, not just the before/after totals. */
+.en-cp-tally-delta {
+  position: relative;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(3px) scale(0.9);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.en-cp-tally-delta-show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.en-cp-tally-delta-up { background: #2ecc71; }
+.en-cp-tally-delta-down { background: #ff3b30; }
+
 .en-cp-tally-prob {
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.65);
@@ -3376,8 +3439,6 @@ body.shift-vectors-page {
   flex-direction: column;
   gap: 10px;
   padding: 18px 22px 26px;
-  max-height: 60vh;
-  overflow-y: auto;
 }
 
 .en-cp-race-card {
@@ -3392,7 +3453,7 @@ body.shift-vectors-page {
   background: rgba(0, 0, 0, 0.35);
 }
 
-.en-cp-race-main {
+.en-cp-race-info {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
@@ -3437,7 +3498,7 @@ body.shift-vectors-page {
   transition: width 0.6s ease-out;
 }
 
-.en-cp-race-bottom {
+.en-cp-race-meta {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -3446,9 +3507,51 @@ body.shift-vectors-page {
   flex-wrap: wrap;
 }
 
-.en-cp-race-margin {
-  font-weight: 700;
+/* Square (not circular) portrait crop, per the request - sits between the
+   info block and the colored margin badge. */
+.en-cp-race-portrait {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+
+.en-cp-race-portrait-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.en-cp-race-margin-block {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 4.2em;
+}
+
+.en-cp-race-margin-pct {
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 900;
   color: #fff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.en-cp-race-margin-raw {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
 }
 
 /* Outcome-clinch layout: distinct, more dramatic full-bleed card rather
@@ -3503,7 +3606,8 @@ body.shift-vectors-page {
    the clean-majority variant (winner portrait + name), adding just the
    D-R-O tally line underneath; the no-majority variant is its own layout,
    both candidates side by side with no single "winner" photo. */
-.en-checkpoint-final {
+.en-checkpoint-final,
+.en-checkpoint-uncalled {
   width: min(92vw, 620px);
 }
 

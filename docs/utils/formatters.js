@@ -33,14 +33,20 @@ export function formatLeaderShort(code) {
     return 'No call';
 }
 
+// The "(D+11,003)"-style raw-vote-count suffix used both inline in
+// formatMarginText() and standalone (e.g. the races-to-watch card's smaller
+// sub-line under its colored margin badge, which wants just this part).
+export function formatRawMarginText(leader, voteMargin) {
+    if (leader === 'O' || !isFinite(voteMargin) || Math.round(voteMargin) === 0) return '';
+    const rawSign = voteMargin > 0 ? 'D' : 'R';
+    return `${rawSign}+${Math.abs(Math.round(voteMargin)).toLocaleString('en-US')}`;
+}
+
 export function formatMarginText(marginStr, leader, voteMargin) {
     if (marginStr === 'None') return 'None';
     if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';
-    if (leader !== 'O' && isFinite(voteMargin) && Math.round(voteMargin) !== 0) {
-        const rawSign = voteMargin > 0 ? 'D' : 'R';
-        return `${marginStr} (${rawSign}+${Math.abs(Math.round(voteMargin)).toLocaleString('en-US')})`;
-    }
-    return marginStr;
+    const raw = formatRawMarginText(leader, voteMargin);
+    return raw ? `${marginStr} (${raw})` : marginStr;
 }
 
 export function formatReportingText(reporting, remainingVotes) {
@@ -163,7 +169,11 @@ export function formatUnitLabel(unit, year, opts) {
         const name = getStateName(abbr) || abbr;
         const splitYear = DISTRICT_SPLIT_YEAR[abbr];
         if (splitYear != null && isFinite(year) && year < splitYear) return name;
-        return short ? unit : `${name} at-large`;
+        // Unlike the numbered-district case below, "at-large" is short
+        // enough to keep spelled out even in the checkpoint popup's tight
+        // header - only the raw unit key ("ME-AL") would be saved by
+        // shortening it, which reads far worse than "Maine at-large".
+        return `${name} at-large`;
     }
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
         // "NE-03" reads fine on its own for the checkpoint popup's tight

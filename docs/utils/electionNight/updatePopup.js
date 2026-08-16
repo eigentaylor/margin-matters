@@ -7,19 +7,28 @@
 // CSS-driven reveals and calls back when the whole batch has been shown.
 //
 // Slide shapes (all fields plain strings/numbers, no DOM):
-//   { kind: 'call'|'correction', stateName, ev, leader, oppositeLeader,
-//     candidateName, portraitUrl, oppositeCandidateName, oppositePortraitUrl,
-//     accentColor, previousCandidateName (correction only), isNpv (national
-//     popular vote call/correction - hides the EV badge), timeLabel,
-//     tallyAfter: {D,R,O}, dVotes, rVotes, countedVotes, reportingPct,
-//     reportingText, marginText }
+//   { kind: 'call'|'correction', stateName, ev, leader, candidateName,
+//     portraitUrl, dCandidateName, dPortraitUrl, rCandidateName,
+//     rPortraitUrl, oCandidateName?, oPortraitUrl?, oVotes? (third comparison
+//     row - only present when a third party took a material share of this
+//     unit), accentColor, previousCandidateName (correction only), isNpv
+//     (national popular vote call/correction - hides the EV badge),
+//     timeLabel, tallyAfter: {D,R,O}, dVotes, rVotes, countedVotes,
+//     reportingPct, reportingText, marginText, marginPctText (plain "D+4.1"
+//     form, no raw-vote suffix - used for the comparison row's colored
+//     margin badge) }
 //   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel }
+//   { kind: 'uncalled', dCandidateName, rCandidateName, dPortraitUrl,
+//     rPortraitUrl, dEv, rEv, accentColor, tallyAfter, timeLabel } - a
+//     correction knocked the previously-projected majority holder back
+//     below majority with nobody else reaching it either; mid-count
+//     analogue of the 'final' no-majority case.
 //   { kind: 'final', winner: 'D'|'R'|null (null = no majority reached),
 //     dEv, rEv, oEv, majority, dCandidateName, rCandidateName,
 //     dPortraitUrl, rPortraitUrl, accentColor, tallyAfter, timeLabel }
 //   { kind: 'races', candidates: [{ unitKey, displayLabel, ev, leader,
-//     candidateName, portraitUrl, reporting, marginText, confidenceText,
-//     reportingText, accentColor }] }
+//     candidateName, portraitUrl, reporting, marginText, marginPctText,
+//     rawMarginText, confidenceText, reportingText, accentColor }] }
 //
 // showCheckpoint(slides, options) options:
 //   onComplete, startingTally: {D,R,O}, winProb: number|null (national D
@@ -47,7 +56,7 @@ let displayedTally = { D: 0, R: 0 };
 
 function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
-  if (slide.kind === 'final') return FINAL_SLIDE_MS;
+  if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races') return RACES_SLIDE_MS;
   if (slide.kind === 'correction') return CORRECTION_SLIDE_MS;
   return CALL_SLIDE_MS;
@@ -139,9 +148,13 @@ function buildMiniAvatar(portraitUrl, name, partyCode) {
 }
 
 /**
- * Two-row D-vs-R vote comparison (leader's row first), each with a photo
+ * Two- or three-row vote comparison (leader's row first): D and R always,
+ * plus a third O row whenever the slide carries an oCandidateName (a
+ * third-party candidate who took a materially competitive share of this
+ * unit - see O_ROW_THRESHOLD in election-night.js). Each row gets a photo
  * chip, name, raw vote count, and a big share-of-total percentage badge;
- * the leading row also gets an "ahead by" figure and a checkmark.
+ * the leading row also gets a colored margin badge and an "ahead by"
+ * figure plus a checkmark.
  */
 function buildComparisonMarkup(slide) {
   if (!isFinite(slide.dVotes) && !isFinite(slide.rVotes)) return '';
@@ -149,34 +162,35 @@ function buildComparisonMarkup(slide) {
     ? slide.countedVotes
     : (isFinite(slide.dVotes) && isFinite(slide.rVotes) ? slide.dVotes + slide.rVotes : null);
   const pctOf = (votes) => (total && isFinite(votes)) ? (votes / total * 100) : null;
-  const aheadBy = (isFinite(slide.dVotes) && isFinite(slide.rVotes)) ? Math.abs(slide.dVotes - slide.rVotes) : null;
 
   const sides = [
-    {
-      code: 'D',
-      votes: slide.dVotes,
-      pct: pctOf(slide.dVotes),
-      portrait: slide.leader === 'D' ? slide.portraitUrl : (slide.oppositeLeader === 'D' ? slide.oppositePortraitUrl : null),
-      name: slide.leader === 'D' ? slide.candidateName : (slide.oppositeLeader === 'D' ? slide.oppositeCandidateName : 'Democrat')
-    },
-    {
-      code: 'R',
-      votes: slide.rVotes,
-      pct: pctOf(slide.rVotes),
-      portrait: slide.leader === 'R' ? slide.portraitUrl : (slide.oppositeLeader === 'R' ? slide.oppositePortraitUrl : null),
-      name: slide.leader === 'R' ? slide.candidateName : (slide.oppositeLeader === 'R' ? slide.oppositeCandidateName : 'Republican')
-    }
+    { code: 'D', votes: slide.dVotes, pct: pctOf(slide.dVotes), portrait: slide.dPortraitUrl, name: slide.dCandidateName || 'Democrat' },
+    { code: 'R', votes: slide.rVotes, pct: pctOf(slide.rVotes), portrait: slide.rPortraitUrl, name: slide.rCandidateName || 'Republican' }
   ];
+  if (slide.oCandidateName) {
+    sides.push({ code: 'O', votes: slide.oVotes, pct: pctOf(slide.oVotes), portrait: slide.oPortraitUrl, name: slide.oCandidateName });
+  }
   // Leader's row first, matching how a broadcast leaderboard reads. Sorts
   // on slide.leader itself (the authoritative call), not raw vote count -
   // they always agree in practice, but this guarantees the row order can
   // never visually contradict which row gets the checkmark/"ahead" badge.
   sides.sort((a, b) => (b.code === slide.leader ? 1 : 0) - (a.code === slide.leader ? 1 : 0));
 
+  // "Ahead by" is the leader's margin over the strongest of the other rows
+  // actually shown - not always D-vs-R, since a third row can be the
+  // runner-up (or the leader) when it's present.
+  const leaderSide = sides.find(s => s.code === slide.leader);
+  const bestOtherVotes = sides.reduce((max, s) => (s.code !== slide.leader && isFinite(s.votes) && s.votes > max) ? s.votes : max, -Infinity);
+  const aheadBy = (leaderSide && isFinite(leaderSide.votes) && bestOtherVotes > -Infinity)
+    ? Math.abs(leaderSide.votes - bestOtherVotes) : null;
+
   const rows = sides.map(side => {
     const isLeading = side.code === slide.leader;
+    const marginBadge = (isLeading && slide.marginPctText && slide.marginPctText !== 'None')
+      ? `<span class="en-cp-compare-margin-badge" style="background:${slide.accentColor}">${slide.marginPctText}</span>`
+      : '';
     const aheadLine = (isLeading && aheadBy != null)
-      ? `<div class="en-cp-compare-ahead">${formatVotes(aheadBy)} ahead</div>`
+      ? `<div class="en-cp-compare-ahead">${marginBadge}${formatVotes(aheadBy)} ahead</div>`
       : '';
     const check = isLeading ? '<span class="en-cp-compare-check">&#10003;</span>' : '';
     const pctText = side.pct != null ? `${side.pct.toFixed(1)}%` : '—';
@@ -199,16 +213,14 @@ function buildComparisonMarkup(slide) {
 // Margin as a compact label plus a filled progress bar for percent-counted
 // (no "votes left" - that's covered by the bar filling in over the night).
 function buildStatsLineMarkup(slide) {
-  const hasMargin = slide.marginText && slide.marginText !== 'None';
-  const pct = isFinite(slide.reportingPct) ? Math.round(Math.max(0, Math.min(1, slide.reportingPct)) * 100) : null;
-  if (!hasMargin && pct == null) return '';
-  const marginPart = hasMargin ? `<span class="en-cp-stats-margin">${slide.marginText}</span>` : '';
-  const barPart = pct != null ? `
+  const pctNum = isFinite(slide.reportingPct) ? Math.max(0, Math.min(1, slide.reportingPct)) * 100 : null;
+  if (pctNum == null) return '';
+  const barPart = `
       <div class="en-cp-stats-bar-track">
-        <div class="en-cp-stats-bar-fill" style="width:${pct}%"></div>
+        <div class="en-cp-stats-bar-fill" style="width:${pctNum}%"></div>
       </div>
-      <span class="en-cp-stats-bar-pct">${pct}% counted</span>` : '';
-  return `<div class="en-cp-stats-line">${marginPart}${barPart}</div>`;
+      <span class="en-cp-stats-bar-pct">${pctNum.toFixed(1)}% counted</span>`;
+  return `<div class="en-cp-stats-line">${barPart}</div>`;
 }
 
 // Animates an element's displayed integer from `from` to `to` over
@@ -233,8 +245,8 @@ function renderTallyPanelStructure(panelInfo, winProb, majority) {
   const partyBox = (code) => {
     const p = info[code] || {};
     const last = lastNameOf(p.name) || (code === 'D' ? 'Democrat' : 'Republican');
-    const probText = (code === 'D' && isFinite(winProb)) ? `${(winProb * 100).toFixed(0)}% to win`
-      : (code === 'R' && isFinite(winProb)) ? `${((1 - winProb) * 100).toFixed(0)}% to win`
+    const probText = (code === 'D' && isFinite(winProb)) ? `${(winProb * 100).toFixed(1)}% to win`
+      : (code === 'R' && isFinite(winProb)) ? `${((1 - winProb) * 100).toFixed(1)}% to win`
         : '';
     return `<div class="en-cp-tally-box en-cp-tally-${code.toLowerCase()}">
       ${buildMiniAvatar(p.portraitUrl, p.name, code)}
@@ -259,10 +271,33 @@ function setTallyImmediate(tally) {
   if (tallyBoxes && tallyBoxes.R) tallyBoxes.R.textContent = String(displayedTally.R);
 }
 
-function animateTallyTo(tally) {
+// A correction is a much bigger deal than a routine call, so on top of the
+// tally panel's number actually counting down on one side and up on the
+// other (already correct - animateCounter is direction-agnostic), flag a
+// transient "+N"/"-N" chip next to whichever number just moved, so the
+// swing itself is legible at a glance instead of only implied by the
+// before/after numbers.
+function showTallyDelta(code, delta) {
+  if (!tallyBoxes || !tallyBoxes[code] || !delta) return;
+  const numEl = tallyBoxes[code];
+  const parent = numEl.parentElement;
+  if (!parent) return;
+  const chip = document.createElement('span');
+  chip.className = `en-cp-tally-delta ${delta > 0 ? 'en-cp-tally-delta-up' : 'en-cp-tally-delta-down'}`;
+  chip.textContent = delta > 0 ? `+${delta}` : String(delta);
+  parent.appendChild(chip);
+  requestAnimationFrame(() => chip.classList.add('en-cp-tally-delta-show'));
+  setTimeout(() => chip.remove(), 2400);
+}
+
+function animateTallyTo(tally, showDelta) {
   if (!tally) return;
   const nextD = isFinite(tally.D) ? tally.D : displayedTally.D;
   const nextR = isFinite(tally.R) ? tally.R : displayedTally.R;
+  if (showDelta) {
+    showTallyDelta('D', nextD - displayedTally.D);
+    showTallyDelta('R', nextR - displayedTally.R);
+  }
   if (tallyBoxes && tallyBoxes.D) animateCounter(tallyBoxes.D, displayedTally.D, nextD);
   if (tallyBoxes && tallyBoxes.R) animateCounter(tallyBoxes.R, displayedTally.R, nextR);
   displayedTally = { D: nextD, R: nextR };
@@ -271,7 +306,7 @@ function animateTallyTo(tally) {
 function renderCallOrCorrection(slide) {
   const { first, last } = splitName(slide.candidateName);
   const isCorrection = slide.kind === 'correction';
-  const badgeLabel = isCorrection ? 'CORRECTED' : 'WINNER';
+  const badgeLabel = isCorrection ? '&#9888; CORRECTION' : 'WINNER';
   const badgeClass = isCorrection ? 'en-cp-badge-corrected' : 'en-cp-badge-winner';
   const prevLine = isCorrection && slide.previousCandidateName
     ? `<div class="en-cp-prev">Previously called for ${slide.previousCandidateName}</div>`
@@ -293,7 +328,7 @@ function renderCallOrCorrection(slide) {
     <div class="en-cp-body">
       ${buildPhotoMarkup(slide)}
       <div class="en-cp-result">
-        <div class="en-cp-check ${badgeClass}"><span class="en-cp-checkmark">&#10003;</span> ${badgeLabel}</div>
+        <div class="en-cp-check ${badgeClass}">${isCorrection ? '' : '<span class="en-cp-checkmark">&#10003;</span> '}${badgeLabel}</div>
         <div class="en-cp-name">
           ${first ? `<span class="en-cp-first">${first}</span>` : ''}
           <span class="en-cp-last">${last}</span>
@@ -303,7 +338,7 @@ function renderCallOrCorrection(slide) {
     </div>
     ${buildComparisonMarkup(slide)}
     ${buildStatsLineMarkup(slide)}`;
-  animateTallyTo(slide.tallyAfter);
+  animateTallyTo(slide.tallyAfter, isCorrection);
 }
 
 function renderOutcome(slide) {
@@ -372,6 +407,37 @@ function renderFinal(slide) {
   animateTallyTo(slide.tallyAfter);
 }
 
+/**
+ * Mid-count analogue of renderFinal()'s no-majority branch: a correction
+ * just knocked the previously-projected majority holder back below majority
+ * with nobody else reaching it, so the race is undecided again - but unlike
+ * 'final', this isn't the end of the night, so it reads as "Breaking news"
+ * (more to come) rather than "Final" (decided by the House).
+ */
+function renderUncalled(slide) {
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
+  const rName = lastNameOf(slide.rCandidateName) || 'Republican';
+  cardEl.innerHTML = `
+    <div class="en-cp-breaking">Breaking news${timeLabel}</div>
+    <div class="en-cp-final-nomajority">
+      <div class="en-cp-final-nomajority-photos">
+        ${buildMiniAvatar(slide.dPortraitUrl, dName, 'D')}
+        ${buildMiniAvatar(slide.rPortraitUrl, rName, 'R')}
+      </div>
+      <div class="en-cp-final-nomajority-text">
+        <div class="en-cp-outcome-name">No longer decided</div>
+        <div class="en-cp-final-tally">
+          <span class="en-cp-final-d">${slide.dEv} D</span>
+          <span class="en-cp-final-sep">–</span>
+          <span class="en-cp-final-r">${slide.rEv} R</span>
+        </div>
+        <div class="en-cp-outcome-label">No candidate currently has a projected majority</div>
+      </div>
+    </div>`;
+  animateTallyTo(slide.tallyAfter, true);
+}
+
 // Each race gets a colorful mini-card: leader portrait, state + EVs, a
 // percent-counted progress bar, confidence, and margin (both percent and
 // raw vote figure - formatMarginText() already combines those into one
@@ -380,13 +446,13 @@ function renderFinal(slide) {
 function renderRaces(slide) {
   const candidates = Array.isArray(slide.candidates) ? slide.candidates : [];
   const cards = candidates.map(c => {
-    const pct = isFinite(c.reporting) ? Math.round(Math.max(0, Math.min(1, c.reporting)) * 100) : 0;
-    const marginLine = c.marginText && c.marginText !== 'None' ? c.marginText : 'EVEN';
+    const pct = isFinite(c.reporting) ? Math.max(0, Math.min(1, c.reporting)) * 100 : 0;
     const accent = c.accentColor || '#8a8a8a';
+    const marginPctText = c.marginPctText && c.marginPctText !== 'None' ? c.marginPctText : 'EVEN';
+    const rawMarginText = c.rawMarginText || '';
     return `
       <div class="en-cp-race-card" style="--en-race-accent:${accent}">
-        ${buildMiniAvatar(c.portraitUrl, c.candidateName, partyLetter(c.leader))}
-        <div class="en-cp-race-main">
+        <div class="en-cp-race-info">
           <div class="en-cp-race-top">
             <span class="en-cp-race-state">${c.displayLabel}</span>
             ${c.ev > 0 ? `<span class="en-cp-race-ev">${c.ev} EV</span>` : ''}
@@ -394,11 +460,17 @@ function renderRaces(slide) {
           <div class="en-cp-race-bar-track">
             <div class="en-cp-race-bar-fill" style="width:${pct}%"></div>
           </div>
-          <div class="en-cp-race-bottom">
-            <span class="en-cp-race-margin">${marginLine}</span>
-            <span class="en-cp-race-pct">${pct}% in</span>
+          <div class="en-cp-race-meta">
+            <span class="en-cp-race-pct">${pct.toFixed(1)}% in</span>
             <span class="en-cp-race-confidence">${c.confidenceText || ''}</span>
           </div>
+        </div>
+        ${c.portraitUrl
+          ? `<img class="en-cp-race-portrait" src="${c.portraitUrl}" alt="${c.candidateName || ''}" />`
+          : `<span class="en-cp-race-portrait en-cp-race-portrait-fallback">${partyLetter(c.leader)}</span>`}
+        <div class="en-cp-race-margin-block">
+          <div class="en-cp-race-margin-pct" style="background:${accent}">${marginPctText}</div>
+          ${rawMarginText ? `<div class="en-cp-race-margin-raw">${rawMarginText}</div>` : ''}
         </div>
       </div>`;
   }).join('');
@@ -426,6 +498,7 @@ function renderSlide(index) {
   overlayEl.style.setProperty('--en-cp-accent', accent);
   if (slide.kind === 'outcome') renderOutcome(slide);
   else if (slide.kind === 'final') renderFinal(slide);
+  else if (slide.kind === 'uncalled') renderUncalled(slide);
   else if (slide.kind === 'races') renderRaces(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
