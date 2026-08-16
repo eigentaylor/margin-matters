@@ -11,7 +11,7 @@ import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
 import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
 import { regionOf } from './utils/sim2028/regions.js';
 import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
-import { shouldFireCheckpoint } from './utils/electionNight/checkpointScheduler.js';
+import { groupEventsIntoCheckpoints, findNextCheckpoint } from './utils/electionNight/checkpointScheduler.js';
 import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
 import { showCheckpoint } from './utils/electionNight/updatePopup.js';
 
@@ -284,15 +284,17 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     logEntries: [],
     logInterval: 5, // minutes between log entries (min 5)
     lastLogTime: -Infinity, // last time a log entry was recorded
-    // Checkpoint "state call update" popup: events (call/correction/
-    // outcome-clinch records) waiting to be shown, grouped and flushed by
-    // checkpointScheduler.shouldFireCheckpoint() - see maybeFireCheckpoint().
+    // Checkpoint "state call update" popup: state.plannedCheckpoints is a
+    // deterministic schedule computed once (computePlannedCheckpoints())
+    // from the same pure call-decision functions the live sim itself uses,
+    // not accumulated reactively as calls happen - that's what makes it
+    // immune to rewinding/seeking dumping a huge backlog at once (seeking
+    // only moves checkpointCursorTime, it never fires anything itself; see
+    // maybeFireCheckpoint()).
     updatesEnabled: true,
     checkpointActive: false,
-    checkpointPending: [],
-    checkpointLastEventTime: -Infinity,
-    checkpointBatchStartTime: -Infinity,
-    checkpointForce: false
+    plannedCheckpoints: [],
+    checkpointCursorTime: 0
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -557,6 +559,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const val = getConfidenceSliderValue();
         state.confidenceThreshold = val;
         updateConfidenceLabel(val);
+        // Re-project the checkpoint schedule so still-uncalled units'
+        // projected call times reflect the new threshold - already-decided
+        // units are unaffected (computePlannedCheckpoints prefers their
+        // real st.calledAt), and the cursor isn't touched, so nothing
+        // already shown gets re-surfaced.
+        if (state.prepared) state.plannedCheckpoints = computePlannedCheckpoints();
       });
     } else {
       updateConfidenceLabel(state.confidenceThreshold);
@@ -714,10 +722,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     state.boxesDirty = false;
     state.callRecords = [];
     state.checkpointActive = false;
-    state.checkpointPending = [];
-    state.checkpointLastEventTime = -Infinity;
-    state.checkpointBatchStartTime = -Infinity;
-    state.checkpointForce = false;
+    state.plannedCheckpoints = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
@@ -858,6 +863,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     }
 
     renderAt(state.currentTime);
+    // Deterministic checkpoint schedule for the whole night, computed once
+    // now that state.stateData/simStart/simEnd/confidenceThreshold are all
+    // final - see computePlannedCheckpoints() for why this replaces the old
+    // reactive "queue events as they happen live" approach.
+    state.checkpointCursorTime = state.simStart;
+    state.plannedCheckpoints = computePlannedCheckpoints();
     state.prepared = true;
     updateToggleLabel();
   }
@@ -941,6 +952,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       }
     }
     advanceDeterministic(targetTime);
+    // Any explicit seek - forward or backward - silently jumps the
+    // checkpoint cursor to match, rather than leaving skipped-over
+    // checkpoints sitting there to all fire at once on the next tick. Only
+    // organic forward playback in tick() ever surfaces a checkpoint popup.
+    state.checkpointCursorTime = state.currentTime;
   }
 
   function showLogPanel() {
@@ -978,10 +994,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     state.boxesDirty = false;
     state.callRecords = [];
     state.checkpointActive = false;
-    state.checkpointPending = [];
-    state.checkpointLastEventTime = -Infinity;
-    state.checkpointBatchStartTime = -Infinity;
-    state.checkpointForce = false;
+    state.plannedCheckpoints = [];
+    state.checkpointCursorTime = 0;
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
@@ -1197,33 +1211,129 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
   }
 
   /**
-   * Check whether the pending checkpoint queue should be flushed into a
-   * popup right now (see checkpointScheduler.shouldFireCheckpoint for the
-   * grouping rules), and if so, pause and show it. Only called from the
-   * live tick() loop, never from a manual scrub via #enProgress - dragging
-   * the timeline should stay a free jump, not something that pops up a
-   * checkpoint mid-drag.
+   * Project when (and for whom) a not-yet-called unit *would* be called,
+   * using the exact same pure decision functions the live sim uses
+   * (computeMetrics/shouldCallState/shouldForceCall), just stepping through
+   * time in a coarse offline loop instead of being driven by real ticks.
+   * Already-called units (st.calledAt != null - matters when this gets
+   * re-run mid-run, e.g. after a confidence-threshold change) just report
+   * what actually happened instead of re-deriving it.
+   */
+  function projectUnitCallEvent(st) {
+    if (st.calledAt != null) return { time: st.calledAt, leader: st.callLeader };
+    if (st.instantCall) {
+      const phaseName = (getPhase(st.startTime) || {}).name || 'Final';
+      return { time: st.startTime, leader: computeMetrics(st, st.startTime, phaseName).leader };
+    }
+    const STEP = 2; // simulated minutes; cheap enough at this resolution over the whole night
+    for (let t = st.startTime; t <= state.simEnd; t += STEP) {
+      const phaseName = (getPhase(t) || {}).name || 'Final';
+      const metrics = computeMetrics(st, t, phaseName);
+      if (shouldCallState(st, metrics, t) || shouldForceCall(st, metrics, t)) {
+        return { time: t, leader: metrics.leader };
+      }
+    }
+    return { time: state.simEnd, leader: st.winner };
+  }
+
+  /**
+   * Compute the whole night's checkpoint schedule deterministically, up
+   * front - this is what makes checkpoints immune to rewinding: the result
+   * only depends on state.stateData/simEnd/confidenceThreshold, never on
+   * live event-arrival order, so seeking around can't pile events up. Run
+   * once per prepareSimulation() and again whenever confidenceThreshold
+   * changes mid-run (see its slider's change handler) so still-uncalled
+   * units' projections stay current while already-decided ones stay locked
+   * to what really happened.
+   */
+  function computePlannedCheckpoints() {
+    const data = state.stateData || [];
+    if (!data.length) return [];
+    const totalPool = state.totalEvPool || 538;
+    const majority = Math.floor(totalPool / 2) + 1;
+
+    // One call event per unit, plus a correction event if the projected/
+    // real call doesn't match the ground-truth winner.
+    const timeline = [];
+    data.forEach(st => {
+      const call = projectUnitCallEvent(st);
+      const ev = isFinite(st.ev) ? st.ev : 0;
+      timeline.push({ kind: 'call', unitKey: st.unitKey, ev, leader: call.leader, time: call.time });
+      if (call.leader !== st.winner) {
+        const correctionTime = Math.max(call.time, st.instantCall ? st.startTime : st.startTime + st.duration);
+        timeline.push({ kind: 'correction', unitKey: st.unitKey, ev, leader: st.winner, time: correctionTime });
+      }
+    });
+    timeline.sort((a, b) => (a.time - b.time) || (a.kind === 'call' ? -1 : 1) - (b.kind === 'call' ? -1 : 1));
+
+    // Replay in time order to find the national outcome-clinch moment,
+    // mirroring computeRunningEvTally()'s call/correction swap rule (a
+    // correction subtracts the unit's EVs from whoever it was previously
+    // attributed to and adds them to the corrected leader).
+    let dRunning = 0, rRunning = 0;
+    const attributedTo = new Map();
+    let outcomeEvent = null;
+    timeline.forEach(ev => {
+      const prevLeader = attributedTo.get(ev.unitKey);
+      if (prevLeader === 'D') dRunning -= ev.ev;
+      else if (prevLeader === 'R') rRunning -= ev.ev;
+      attributedTo.set(ev.unitKey, ev.leader);
+      if (ev.leader === 'D') dRunning += ev.ev;
+      else if (ev.leader === 'R') rRunning += ev.ev;
+      if (!outcomeEvent) {
+        if (dRunning >= majority) outcomeEvent = { kind: 'outcome', leader: 'D', time: ev.time, forceFlag: true };
+        else if (rRunning >= majority) outcomeEvent = { kind: 'outcome', leader: 'R', time: ev.time, forceFlag: true };
+      }
+    });
+    if (outcomeEvent) timeline.push(outcomeEvent);
+
+    return groupEventsIntoCheckpoints(timeline);
+  }
+
+  /**
+   * Resolve a planned checkpoint's abstract event list (kind + unitKey)
+   * back to the concrete, already-populated records in state.callRecords /
+   * state.stateData - by the time this runs, real playback has genuinely
+   * ticked past every one of these moments, so they're guaranteed to
+   * exist (skipped gracefully if not - e.g. a live threshold change made a
+   * projected correction not actually happen).
+   */
+  function resolveCheckpointRecords(events) {
+    const records = [];
+    (events || []).forEach(ev => {
+      if (ev.kind === 'call') {
+        const st = (state.stateData || []).find(s => s && s.unitKey === ev.unitKey);
+        if (st && st.callRecord) records.push(st.callRecord);
+      } else if (ev.kind === 'correction') {
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
+        if (rec) records.push(rec);
+      } else if (ev.kind === 'outcome') {
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'outcome-clinch' && r.outcomeLeader === ev.leader);
+        if (rec) records.push(rec);
+      }
+    });
+    return records;
+  }
+
+  /**
+   * Check whether real forward playback has just ticked past the next
+   * planned checkpoint, and if so, pause and show it. Only called from the
+   * live tick() loop, never from a manual scrub via #enProgress - seeking
+   * only moves state.checkpointCursorTime (see seekToProgress()), it never
+   * fires anything itself, so dragging the timeline (in either direction)
+   * stays a silent jump instead of surfacing whatever it skipped over.
    */
   function maybeFireCheckpoint(currentTime) {
     if (!state.updatesEnabled || state.checkpointActive) return;
-    if (!state.checkpointPending.length) return;
-    const fire = shouldFireCheckpoint({
-      pendingCount: state.checkpointPending.length,
-      lastEventTime: state.checkpointLastEventTime,
-      batchStartTime: state.checkpointBatchStartTime,
-      currentTime,
-      simEnd: state.simEnd,
-      forceFlag: state.checkpointForce
-    });
-    if (!fire) return;
+    const next = findNextCheckpoint(state.plannedCheckpoints, state.checkpointCursorTime, currentTime, EPS);
+    if (!next) return;
+    state.checkpointCursorTime = next.time;
+
+    const records = resolveCheckpointRecords(next.events);
+    if (!records.length) return; // nothing to show; the cursor already advanced past it
 
     pauseSimulation();
     state.checkpointActive = true;
-    const records = state.checkpointPending;
-    state.checkpointPending = [];
-    state.checkpointLastEventTime = -Infinity;
-    state.checkpointBatchStartTime = -Infinity;
-    state.checkpointForce = false;
 
     buildCheckpointSlides(records).then(slides => {
       showCheckpoint(slides, {
@@ -2601,19 +2711,6 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     return name || resolveCandidateLastName(leader, unitKey);
   }
 
-  // Queue an already-pushed state.callRecords entry (a call, a correction
-  // notice, or an outcome-clinch notice) for the next checkpoint popup, and
-  // track timing so checkpointScheduler.shouldFireCheckpoint() can decide
-  // when to flush the batch. `force` fires the checkpoint immediately,
-  // ignoring the usual quiet-gap wait - used for the outcome-clinch moment.
-  function notePendingCheckpointEvent(record, currentTime, opts = {}) {
-    if (!record) return;
-    state.checkpointPending.push(record);
-    if (state.checkpointPending.length === 1) state.checkpointBatchStartTime = currentTime;
-    state.checkpointLastEventTime = currentTime;
-    if (opts.force) state.checkpointForce = true;
-  }
-
   function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
     if (state.npvCallRecord) return;
     const leader = nationalLeader(dCounted, rCounted, oCounted);
@@ -2706,7 +2803,6 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       marginStr: metrics.countedMarginStr
     };
     state.callRecords.push(correctionRecord);
-    notePendingCheckpointEvent(correctionRecord, correctionTime);
     st.evCalledAllocations = st.evAllocations ? { ...st.evAllocations } : null;
     triggerTipRefresh();
     state.lastLogKey = '';
@@ -2791,7 +2887,6 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
-    notePendingCheckpointEvent(st.callRecord, callTime);
 
     // Record a log entry for this call event (bypasses interval check)
     recordCallLogEntry(callTime, st.unitKey, calledLeader);
@@ -3529,13 +3624,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           outcomeLeader: newOutcomeType
         };
         state.callRecords.push(clinchRecord);
-        // Only D/R clinches are "X elected president" moments for the
-        // checkpoint popup (v0.1) - a projected EC tie ('T') has no winner
-        // to announce yet, so it's skipped here and stays a call-log-only
-        // notice.
-        if (newOutcomeType === 'D' || newOutcomeType === 'R') {
-          notePendingCheckpointEvent(clinchRecord, clinchTime, { force: true });
-        }
+        // The checkpoint popup's own "X elected president" moment (D/R
+        // only - a projected EC tie ('T') has no winner to announce) is
+        // driven independently by computePlannedCheckpoints()'s own outcome
+        // projection, resolved back to this exact record via outcomeLeader
+        // in resolveCheckpointRecords() - nothing to wire up here.
         state.lastOutcomeBannerText = message;
         state.lastOutcomeBannerClass = className;
         state.lastLogKey = '';
