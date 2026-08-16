@@ -1177,7 +1177,60 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           kind: 'outcome',
           leader,
           candidateName: resolveCandidateFullName(leader, 'NATIONAL'),
-          accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0)
+          accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
+      if (record.noticeType === 'final-tally') {
+        const { dEv, rEv, oEv, majority } = record;
+        const winner = dEv >= majority ? 'D' : (rEv >= majority ? 'R' : null);
+        return {
+          kind: 'final',
+          winner,
+          dEv, rEv, oEv, majority,
+          dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
+          rCandidateName: resolveCandidateFullName('R', 'NATIONAL'),
+          accentColor: winner ? calledAccentColor(winner, CHECKPOINT_DEFAULT_MARGIN[winner] || 0) : '#8a8a8a',
+          tallyAfter: { D: dEv, R: rEv },
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
+      // National popular vote call/correction - same shape as a state
+      // call/correction (so it flows through the same renderer), just
+      // sourced from state.callRecords' npv_call/npv_miscall entries
+      // instead of a per-unit record, and flagged isNpv so the popup hides
+      // the "Electoral votes" badge (the NPV carries no EV weight itself).
+      if (record.kind === 'npv_call' || record.noticeType === 'npv_miscall') {
+        const isNpvCorrection = record.noticeType === 'npv_miscall';
+        const totals = isNpvCorrection ? (state.lastNationalTotals || {}) : record;
+        const leader = isNpvCorrection ? record.finalLeader : record.leader;
+        const oppositeLeader = leader === 'D' ? 'R' : (leader === 'R' ? 'D' : null);
+        const dVotes = totals.dVotes ?? totals.dCounted;
+        const rVotes = totals.rVotes ?? totals.rCounted;
+        const countedVotes = totals.countedVotes;
+        const voteMargin = (isFinite(dVotes) && isFinite(rVotes)) ? (dVotes - rVotes) : null;
+        const marginStr = leader === 'O' ? 'Other lead' : formatLean(voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : 0);
+        const reporting = isNpvCorrection
+          ? (state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 1)
+          : record.reporting;
+        return {
+          kind: isNpvCorrection ? 'correction' : 'call',
+          isNpv: true,
+          unitKey: 'NPV',
+          stateName: 'National Popular Vote',
+          ev: null,
+          leader,
+          oppositeLeader,
+          candidateName: resolveCandidateFullName(leader, 'NATIONAL'),
+          oppositeCandidateName: oppositeLeader ? resolveCandidateFullName(oppositeLeader, 'NATIONAL') : null,
+          previousCandidateName: isNpvCorrection ? (resolveCandidateFullName(record.calledLeader, 'NATIONAL')) : null,
+          accentColor: calledAccentColor(leader, voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : (CHECKPOINT_DEFAULT_MARGIN[leader] || 0)),
+          tallyAfter: computeRunningEvTally(record.time),
+          dVotes, rVotes, countedVotes,
+          reportingPct: isFinite(reporting) ? Math.max(0, Math.min(1, reporting)) : null,
+          reportingText: formatReportingText(reporting, null),
+          marginText: formatMarginText(marginStr, leader, voteMargin),
+          timeLabel: formatTimeLabel(record.time)
         };
       }
       const isCorrection = record.noticeType === 'miscall';
@@ -1187,7 +1240,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       return {
         kind: isCorrection ? 'correction' : 'call',
         unitKey: record.unitKey,
-        stateName: formatUnitLabel(record.unitKey, state.year),
+        stateName: formatUnitLabel(record.unitKey, state.year, { short: true }),
         ev: record.ev,
         leader,
         oppositeLeader,
@@ -1204,11 +1257,18 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         dVotes: record.dVotes,
         rVotes: record.rVotes,
         countedVotes: record.countedVotes,
+        reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
         reportingText: formatReportingText(record.reporting, record.remainingVotes),
-        marginText: formatMarginText(record.marginStr, leader, voteMargin)
+        marginText: formatMarginText(record.marginStr, leader, voteMargin),
+        timeLabel: formatTimeLabel(record.time)
       };
     });
     await Promise.all(specs.map(async spec => {
+      if (spec.kind === 'final') {
+        spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
+        spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
+        return;
+      }
       spec.portraitUrl = await getPortraitUrlForName(state.year, spec.candidateName);
       spec.oppositePortraitUrl = spec.oppositeCandidateName
         ? await getPortraitUrlForName(state.year, spec.oppositeCandidateName)
@@ -1219,17 +1279,23 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     if (uncalled.length) {
       const threshold = effectiveConfidenceThreshold();
       const RACES_TO_SHOW = 6;
-      specs.push({
-        kind: 'races',
-        candidates: uncalled.slice(0, RACES_TO_SHOW).map(c => ({
-          displayLabel: c.displayLabel,
+      const candidates = await Promise.all(uncalled.slice(0, RACES_TO_SHOW).map(async c => {
+        const candidateName = c.leader === 'D' || c.leader === 'R' ? resolveCandidateFullName(c.leader, c.unitKey) : null;
+        return {
+          unitKey: c.unitKey,
+          displayLabel: formatUnitLabel(c.unitKey, state.year, { short: true }),
           ev: c.ev,
+          leader: c.leader,
+          candidateName,
+          portraitUrl: candidateName ? await getPortraitUrlForName(state.year, candidateName) : null,
+          reporting: c.reporting,
           marginText: formatMarginText(c.marginStr, c.leader, c.voteMargin),
           confidenceText: formatConfidenceText(c.confidence, threshold),
           reportingText: formatReportingText(c.reporting, c.remainingVotes),
           accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold)
-        }))
-      });
+        };
+      }));
+      specs.push({ kind: 'races', candidates });
     }
 
     return specs;
@@ -1277,6 +1343,42 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
   }
 
   /**
+   * Project when (and for whom) the national popular vote would be called,
+   * mirroring maybeRegisterNpvCall()'s live trigger exactly - but that live
+   * version depends on an *aggregate* across every pvWeight unit's own
+   * reporting fraction at a given moment, not one unit's state, so unlike
+   * projectUnitCallEvent() this has to re-sum the whole electorate at each
+   * step rather than project a single unit in isolation.
+   */
+  function projectNpvCallEvent() {
+    const data = (state.stateData || []).filter(st => st.pvWeight);
+    if (!data.length || !(state.totalEligibleVotes > EPS)) return null;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const STEP = 2;
+    for (let t = state.simStart; t <= state.simEnd; t += STEP) {
+      const phaseName = (getPhase(t) || {}).name || 'Final';
+      let dCounted = 0, rCounted = 0, oCounted = 0, countedVotes = 0;
+      data.forEach(st => {
+        const metrics = computeMetrics(st, t, phaseName);
+        const counted = st.totalVotes * metrics.reporting;
+        dCounted += counted * metrics.dShare;
+        rCounted += counted * metrics.rShare;
+        oCounted += counted * metrics.oShare;
+        countedVotes += counted;
+      });
+      const leader = nationalLeader(dCounted, rCounted, oCounted);
+      if (!leader) continue;
+      const reporting = countedVotes / state.totalEligibleVotes;
+      if (reporting < MIN_REPORTING_TO_CALL) continue;
+      const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+      if (reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold)) {
+        return { time: t, leader };
+      }
+    }
+    return null;
+  }
+
+  /**
    * Compute the whole night's checkpoint schedule deterministically, up
    * front - this is what makes checkpoints immune to rewinding: the result
    * only depends on state.stateData/simEnd/confidenceThreshold, never on
@@ -1304,6 +1406,19 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         timeline.push({ kind: 'correction', unitKey: st.unitKey, ev, leader: st.winner, time: correctionTime });
       }
     });
+
+    // National popular vote gets its own checkpoint-worthy call/correction
+    // pair, same as any unit above - it just has no EV weight of its own,
+    // so it never participates in the majority replay below.
+    const npvCall = projectNpvCallEvent();
+    if (npvCall) {
+      timeline.push({ kind: 'npv', unitKey: 'NPV', ev: 0, leader: npvCall.leader, time: npvCall.time });
+      const npvFinalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+      if (npvCall.leader !== npvFinalLeader) {
+        timeline.push({ kind: 'npv_correction', unitKey: 'NPV', ev: 0, leader: npvFinalLeader, time: state.simEnd });
+      }
+    }
+
     timeline.sort((a, b) => (a.time - b.time) || (a.kind === 'call' ? -1 : 1) - (b.kind === 'call' ? -1 : 1));
 
     // Replay in time order to find the national outcome-clinch moment,
@@ -1327,6 +1442,27 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     });
     if (outcomeEvent) timeline.push(outcomeEvent);
 
+    // Always append one final, standalone checkpoint after every other
+    // event, showing the true final EV split - independent of the
+    // outcome-clinch projection above (which only ever fires for a clean
+    // D/R majority), so this is also the only place a no-majority/"decided
+    // by the House" result ever gets a checkpoint slide. Times it after
+    // simEnd's own last event so it always groups into its own checkpoint
+    // batch rather than the last few calls' checkpoint.
+    const lastEventTime = timeline.reduce((max, ev) => Math.max(max, ev.time), state.simStart);
+    const finalD = state.nationalFinalDEv || 0;
+    const finalR = state.nationalFinalREv || 0;
+    const finalO = Math.max(0, totalPool - finalD - finalR);
+    timeline.push({
+      kind: 'final',
+      time: Math.max(lastEventTime, state.simEnd),
+      forceFlag: true,
+      dEv: finalD,
+      rEv: finalR,
+      oEv: finalO,
+      majority
+    });
+
     return groupEventsIntoCheckpoints(timeline);
   }
 
@@ -1348,8 +1484,17 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
         if (rec) records.push(rec);
       } else if (ev.kind === 'outcome') {
-        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'outcome-clinch' && r.outcomeLeader === ev.leader);
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.outcomeLeader === ev.leader && r.noticeType === 'outcome-clinch');
         if (rec) records.push(rec);
+      } else if (ev.kind === 'npv') {
+        if (state.npvCallRecord) records.push(state.npvCallRecord);
+      } else if (ev.kind === 'npv_correction') {
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'npv_miscall');
+        if (rec) records.push(rec);
+      } else if (ev.kind === 'final') {
+        // Self-contained - synthesized entirely from ground truth at
+        // prepare time, so there's no live record to look up.
+        records.push({ kind: 'notice', noticeType: 'final-tally', time: ev.time, dEv: ev.dEv, rEv: ev.rEv, oEv: ev.oEv, majority: ev.majority });
       }
     });
     return records;
@@ -1381,11 +1526,13 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const firstEventTime = next.events.reduce((min, ev) => Math.min(min, ev.time), Infinity);
     const startingTally = computeRunningEvTally(isFinite(firstEventTime) ? firstEventTime - EPS : currentTime);
     const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD)) ? state.nationalWinProb.probD : null;
+    const majority = Math.floor((state.totalEvPool || 538) / 2) + 1;
 
     Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
       showCheckpoint(slides, {
         startingTally,
         winProb,
+        majority,
         panelInfo,
         onComplete: () => {
           state.checkpointActive = false;
@@ -1422,9 +1569,17 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     if (shouldUpdateDisplay) {
       state.lastDisplayUpdate = state.currentTime;
       renderAt(state.currentTime);
+      // Only check for a checkpoint crossing right after renderAt() has run
+      // at (at least) this same currentTime - renderAt() is the only place
+      // that calls registerCall() and populates st.callRecord, so checking
+      // here guarantees any unit whose projected call time is <= currentTime
+      // already has a real record for resolveCheckpointRecords() to find.
+      // Checking on every raw tick (as this used to) could cross a planned
+      // checkpoint's time on a frame where renderAt() hadn't caught up yet,
+      // silently dropping whichever units hadn't been registered - most
+      // visible when a checkpoint groups a burst of near-simultaneous calls.
+      maybeFireCheckpoint(state.currentTime);
     }
-
-    maybeFireCheckpoint(state.currentTime);
     if (state.checkpointActive) return; // paused for the popup; its onComplete() resumes ticking
 
     if (state.currentTime >= state.simEnd - EPS) {
@@ -3415,7 +3570,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority}).`
         : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
     }
-    return `Electoral College tie: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}.`;
+    return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election would be decided by the House of Representatives.`;
   }
   function outcomeClassFor(type) {
     if (type === 'D') return ' win-dem';
@@ -3644,7 +3799,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const finalO = oRunning;
     const totalCalled = finalD + finalR + finalO;
     const allCalled = totalCalled >= totalPool - EPS;
-    if (!outcome && allCalled && Math.abs(dRunning - rRunning) <= EPS) {
+    // Covers an exact tie AND any other deadlock where neither side reaches
+    // a majority (e.g. a third-party candidate takes enough EVs to deny
+    // both) - previously this only fired on the exact-tie case, silently
+    // showing nothing for the more common non-tied no-majority scenario.
+    if (!outcome && allCalled && dRunning < majority && rRunning < majority) {
       outcome = {
         type: 'T',
         time: readyCalls.length ? readyCalls[readyCalls.length - 1].time : currentTime,

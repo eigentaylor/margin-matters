@@ -187,4 +187,34 @@ import { groupEventsIntoCheckpoints, findNextCheckpoint, DEFAULT_SCHEDULER_OPTIO
   console.log('PASS: a big forward skip silently suppresses everything it jumped over');
 })();
 
+// --- 12. mixed event kinds (call/correction/npv/final) group like any other -
+(function testMixedEventKindsGroupNormally() {
+  // groupEventsIntoCheckpoints() is generic over event shape - it only ever
+  // looks at .time/.forceFlag - so election-night.js's newer 'npv'/
+  // 'npv_correction'/'final' event kinds should group exactly like
+  // 'call'/'correction' do: an npv call near a burst of state calls joins
+  // their batch, and the always-forced, always-last 'final' event gets its
+  // own standalone checkpoint.
+  const events = [
+    { kind: 'call', time: 100 },
+    { kind: 'npv', time: 102 },
+    { kind: 'correction', time: 104 },
+    { kind: 'outcome', time: 105, forceFlag: true },
+    { kind: 'npv_correction', time: 400 },
+    { kind: 'final', time: 500, forceFlag: true }
+  ];
+  const checkpoints = groupEventsIntoCheckpoints(events);
+  // The outcome's forceFlag closes the first batch (call/npv/correction/
+  // outcome) immediately; the npv_correction then sits alone (nothing else
+  // nearby); the final event, also forced, closes its own batch last.
+  assert.strictEqual(checkpoints.length, 3);
+  assert.strictEqual(checkpoints[0].time, 105);
+  assert.deepStrictEqual(checkpoints[0].events.map(e => e.kind), ['call', 'npv', 'correction', 'outcome']);
+  assert.strictEqual(checkpoints[1].time, 400);
+  assert.strictEqual(checkpoints[1].events[0].kind, 'npv_correction');
+  assert.strictEqual(checkpoints[2].time, 500);
+  assert.strictEqual(checkpoints[2].events[0].kind, 'final');
+  console.log('PASS: mixed call/npv/correction/final event kinds group like any other event');
+})();
+
 console.log('\nAll checkpointScheduler tests passed.');

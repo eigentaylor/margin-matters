@@ -2966,19 +2966,27 @@ body.shift-vectors-page {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   padding: 18px 22px;
   background: rgba(0, 0, 0, 0.28);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .en-cp-state {
-  font-size: clamp(1.3rem, 4vw, 2rem);
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Most state names are short enough to sit on one line at the large
+     clamp() size, but "National Popular Vote" (and any other long label)
+     needs to shrink rather than overlap the EV badge pinned to the right. */
+  font-size: clamp(1rem, 4vw, 2rem);
   font-weight: 900;
   letter-spacing: 0.02em;
   color: #fff;
+  overflow-wrap: break-word;
 }
 
 .en-cp-ev {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -3224,9 +3232,52 @@ body.shift-vectors-page {
 
 .en-cp-stats-line {
   margin: 0 24px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.en-cp-stats-margin {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.75);
-  text-align: center;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+.en-cp-stats-bar-track {
+  flex: 1 1 140px;
+  max-width: 220px;
+  height: 8px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.en-cp-stats-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #2ecc71, #7ee08a);
+  transition: width 0.6s ease-out;
+}
+
+.en-cp-stats-bar-pct {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+/* Small secondary timestamp - reads under the big state name in the call/
+   correction header, or under "Breaking news"/"Final" in the outcome and
+   final slides. */
+.en-cp-time {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: none;
+  margin-top: 2px;
 }
 
 /* Persistent scoreboard: stays on screen for the whole checkpoint (not
@@ -3288,6 +3339,16 @@ body.shift-vectors-page {
   color: rgba(255, 255, 255, 0.65);
 }
 
+.en-cp-tally-majority {
+  align-self: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
 @media (max-width: 720px) {
   .en-cp-tally {
     top: 10px;
@@ -3302,8 +3363,10 @@ body.shift-vectors-page {
   }
 }
 
-/* "Races to watch" slide: reuses the .en-log-uncalled-card look from the
-   call-log sidebar for visual consistency, in a wider, scrollable card. */
+/* "Races to watch" slide: a colorful mini-card per race (portrait, EVs, a
+   percent-counted bar, confidence, margin) rather than a plain text line -
+   --en-race-accent is set inline per-card from the same confidence-based
+   color the call-log sidebar already uses. */
 .en-checkpoint-races {
   width: min(92vw, 560px);
 }
@@ -3311,14 +3374,81 @@ body.shift-vectors-page {
 .en-cp-races-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   padding: 18px 22px 26px;
   max-height: 60vh;
   overflow-y: auto;
 }
 
-.en-checkpoint-races .en-log-uncalled-card {
-  background: rgba(0, 0, 0, 0.3);
+.en-cp-race-card {
+  --en-race-accent: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--en-race-accent);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.en-cp-race-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.en-cp-race-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.en-cp-race-state {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.en-cp-race-ev {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.en-cp-race-bar-track {
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.en-cp-race-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--en-race-accent);
+  transition: width 0.6s ease-out;
+}
+
+.en-cp-race-bottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.72);
+  flex-wrap: wrap;
+}
+
+.en-cp-race-margin {
+  font-weight: 700;
+  color: #fff;
 }
 
 /* Outcome-clinch layout: distinct, more dramatic full-bleed card rather
@@ -3367,6 +3497,71 @@ body.shift-vectors-page {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.9);
+}
+
+/* Final-tally capstone slide: reuses .en-cp-breaking/.en-cp-outcome-* for
+   the clean-majority variant (winner portrait + name), adding just the
+   D-R-O tally line underneath; the no-majority variant is its own layout,
+   both candidates side by side with no single "winner" photo. */
+.en-checkpoint-final {
+  width: min(92vw, 620px);
+}
+
+.en-cp-final-tally {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 24px 32px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.en-cp-final-d { color: #7fa8ff; }
+.en-cp-final-r { color: #ff9b9b; }
+
+.en-cp-final-sep {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.en-cp-final-o {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.en-cp-final-nomajority {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 24px 42px;
+  text-align: center;
+}
+
+.en-cp-final-nomajority-photos {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.en-cp-final-nomajority-photos .en-cp-mini-avatar,
+.en-cp-final-nomajority-photos .en-cp-mini-avatar-fallback {
+  width: 64px;
+  height: 64px;
+  font-size: 1.1rem;
+}
+
+.en-cp-final-nomajority-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.en-cp-final-nomajority-text .en-cp-outcome-name {
+  font-size: clamp(1.4rem, 5vw, 2rem);
 }
 
 .en-checkpoint-progress {

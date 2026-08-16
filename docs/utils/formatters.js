@@ -154,17 +154,22 @@ function ordinalSuffix(n) {
     }
 }
 
-export function formatUnitLabel(unit, year) {
+export function formatUnitLabel(unit, year, opts) {
     if (!unit) return unit;
+    const short = !!(opts && opts.short);
     if (/^[A-Z]{2}$/.test(unit)) return getStateName(unit) || unit;
     if (/-AL$/.test(unit)) {
         const abbr = unit.slice(0, 2);
         const name = getStateName(abbr) || abbr;
         const splitYear = DISTRICT_SPLIT_YEAR[abbr];
         if (splitYear != null && isFinite(year) && year < splitYear) return name;
-        return `${name} at-large`;
+        return short ? unit : `${name} at-large`;
     }
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
+        // "NE-03" reads fine on its own for the checkpoint popup's tight
+        // header space - the verbose "Nebraska's 3rd Congressional
+        // District" form is reserved for the call log, where there's room.
+        if (short) return unit;
         const abbr = unit.slice(0, 2);
         const district = parseInt(unit.slice(3), 10);
         const name = getStateName(abbr) || abbr;

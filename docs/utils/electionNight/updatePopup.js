@@ -9,20 +9,27 @@
 // Slide shapes (all fields plain strings/numbers, no DOM):
 //   { kind: 'call'|'correction', stateName, ev, leader, oppositeLeader,
 //     candidateName, portraitUrl, oppositeCandidateName, oppositePortraitUrl,
-//     accentColor, previousCandidateName (correction only),
-//     tallyAfter: {D,R,O}, dVotes, rVotes, countedVotes, reportingText,
-//     marginText }
-//   { kind: 'outcome', candidateName, portraitUrl, accentColor }
-//   { kind: 'races', candidates: [{ displayLabel, ev, marginText,
-//     confidenceText, reportingText, accentColor }] }
+//     accentColor, previousCandidateName (correction only), isNpv (national
+//     popular vote call/correction - hides the EV badge), timeLabel,
+//     tallyAfter: {D,R,O}, dVotes, rVotes, countedVotes, reportingPct,
+//     reportingText, marginText }
+//   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel }
+//   { kind: 'final', winner: 'D'|'R'|null (null = no majority reached),
+//     dEv, rEv, oEv, majority, dCandidateName, rCandidateName,
+//     dPortraitUrl, rPortraitUrl, accentColor, tallyAfter, timeLabel }
+//   { kind: 'races', candidates: [{ unitKey, displayLabel, ev, leader,
+//     candidateName, portraitUrl, reporting, marginText, confidenceText,
+//     reportingText, accentColor }] }
 //
 // showCheckpoint(slides, options) options:
 //   onComplete, startingTally: {D,R,O}, winProb: number|null (national D
-//   win probability, 0..1), panelInfo: { D: {name, portraitUrl}, R: {...} }
+//   win probability, 0..1), majority: number|null (EVs needed to win),
+//   panelInfo: { D: {name, portraitUrl}, R: {...} }
 
 const CALL_SLIDE_MS = 3400;
 const CORRECTION_SLIDE_MS = 4000;
 const OUTCOME_SLIDE_MS = 4500;
+const FINAL_SLIDE_MS = 6000;
 const RACES_SLIDE_MS = 6000;
 const COUNTER_MS = 900;
 
@@ -40,6 +47,7 @@ let displayedTally = { D: 0, R: 0 };
 
 function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
+  if (slide.kind === 'final') return FINAL_SLIDE_MS;
   if (slide.kind === 'races') return RACES_SLIDE_MS;
   if (slide.kind === 'correction') return CORRECTION_SLIDE_MS;
   return CALL_SLIDE_MS;
@@ -77,6 +85,9 @@ function ensureOverlay() {
     if (e.code === 'Space' || e.code === 'Enter') {
       e.preventDefault();
       skipToNext();
+    } else if (e.code === 'ArrowLeft') {
+      e.preventDefault();
+      skipToPrevious();
     }
   });
 
@@ -185,9 +196,19 @@ function buildComparisonMarkup(slide) {
   return `<div class="en-cp-compare">${rows}</div>`;
 }
 
+// Margin as a compact label plus a filled progress bar for percent-counted
+// (no "votes left" - that's covered by the bar filling in over the night).
 function buildStatsLineMarkup(slide) {
-  const text = [slide.marginText, slide.reportingText].filter(Boolean).join(' · ');
-  return text ? `<div class="en-cp-stats-line">${text}</div>` : '';
+  const hasMargin = slide.marginText && slide.marginText !== 'None';
+  const pct = isFinite(slide.reportingPct) ? Math.round(Math.max(0, Math.min(1, slide.reportingPct)) * 100) : null;
+  if (!hasMargin && pct == null) return '';
+  const marginPart = hasMargin ? `<span class="en-cp-stats-margin">${slide.marginText}</span>` : '';
+  const barPart = pct != null ? `
+      <div class="en-cp-stats-bar-track">
+        <div class="en-cp-stats-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <span class="en-cp-stats-bar-pct">${pct}% counted</span>` : '';
+  return `<div class="en-cp-stats-line">${marginPart}${barPart}</div>`;
 }
 
 // Animates an element's displayed integer from `from` to `to` over
@@ -207,7 +228,7 @@ function animateCounter(el, from, to) {
 }
 
 /** Build (once per checkpoint) the persistent scoreboard's two party boxes. */
-function renderTallyPanelStructure(panelInfo, winProb) {
+function renderTallyPanelStructure(panelInfo, winProb, majority) {
   const info = panelInfo || {};
   const partyBox = (code) => {
     const p = info[code] || {};
@@ -224,7 +245,8 @@ function renderTallyPanelStructure(panelInfo, winProb) {
       </div>
     </div>`;
   };
-  tallyEl.innerHTML = partyBox('D') + partyBox('R');
+  const majorityLine = isFinite(majority) ? `<div class="en-cp-tally-majority">${majority} to win</div>` : '';
+  tallyEl.innerHTML = partyBox('D') + majorityLine + partyBox('R');
   tallyBoxes = {
     D: tallyEl.querySelector('.en-cp-tally-num[data-party="D"]'),
     R: tallyEl.querySelector('.en-cp-tally-num[data-party="R"]')
@@ -254,13 +276,19 @@ function renderCallOrCorrection(slide) {
   const prevLine = isCorrection && slide.previousCandidateName
     ? `<div class="en-cp-prev">Previously called for ${slide.previousCandidateName}</div>`
     : '';
-  cardEl.innerHTML = `
-    <div class="en-cp-header">
-      <div class="en-cp-state">${(slide.stateName || '').toUpperCase()}</div>
-      <div class="en-cp-ev">
+  // The national popular vote carries no EV weight of its own, so its slide
+  // swaps the EV badge for a plain "informational" tag instead of a "0".
+  const evBadge = slide.isNpv
+    ? `<div class="en-cp-ev"><span class="en-cp-ev-label">National vote</span></div>`
+    : `<div class="en-cp-ev">
         <span class="en-cp-ev-label">Electoral votes</span>
         <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
-      </div>
+      </div>`;
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  cardEl.innerHTML = `
+    <div class="en-cp-header">
+      <div class="en-cp-state">${(slide.stateName || '').toUpperCase()}${timeLabel}</div>
+      ${evBadge}
     </div>
     <div class="en-cp-body">
       ${buildPhotoMarkup(slide)}
@@ -279,8 +307,9 @@ function renderCallOrCorrection(slide) {
 }
 
 function renderOutcome(slide) {
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
   cardEl.innerHTML = `
-    <div class="en-cp-breaking">Breaking news</div>
+    <div class="en-cp-breaking">Breaking news${timeLabel}</div>
     <div class="en-cp-outcome-body">
       ${buildPhotoMarkup(slide)}
       <div class="en-cp-outcome-text">
@@ -290,19 +319,94 @@ function renderOutcome(slide) {
     </div>`;
 }
 
+/**
+ * The night's capstone slide - always shown once, after every other event
+ * (see computePlannedCheckpoints()'s 'final' event in election-night.js).
+ * Two variants: a clean final tally when someone reached a majority, or a
+ * "no majority" result (covers both an exact tie and any other deadlock)
+ * showing both candidates side by side with a House-of-Representatives note.
+ */
+function renderFinal(slide) {
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
+  const rName = lastNameOf(slide.rCandidateName) || 'Republican';
+  if (slide.winner) {
+    const isD = slide.winner === 'D';
+    const winnerName = isD ? dName : rName;
+    const winnerPortrait = isD ? slide.dPortraitUrl : slide.rPortraitUrl;
+    cardEl.innerHTML = `
+      <div class="en-cp-breaking en-cp-final-breaking">Final${timeLabel}</div>
+      <div class="en-cp-outcome-body">
+        ${buildPhotoMarkup({ leader: slide.winner, portraitUrl: winnerPortrait, candidateName: winnerName })}
+        <div class="en-cp-outcome-text">
+          <div class="en-cp-outcome-name">${winnerName.toUpperCase()}</div>
+          <div class="en-cp-outcome-label">Elected President</div>
+        </div>
+      </div>
+      <div class="en-cp-final-tally">
+        <span class="en-cp-final-d">${slide.dEv} D</span>
+        <span class="en-cp-final-sep">–</span>
+        <span class="en-cp-final-r">${slide.rEv} R</span>
+        ${slide.oEv ? `<span class="en-cp-final-o">(${slide.oEv} Other)</span>` : ''}
+      </div>`;
+  } else {
+    cardEl.innerHTML = `
+      <div class="en-cp-breaking en-cp-final-breaking">Final${timeLabel}</div>
+      <div class="en-cp-final-nomajority">
+        <div class="en-cp-final-nomajority-photos">
+          ${buildMiniAvatar(slide.dPortraitUrl, dName, 'D')}
+          ${buildMiniAvatar(slide.rPortraitUrl, rName, 'R')}
+        </div>
+        <div class="en-cp-final-nomajority-text">
+          <div class="en-cp-outcome-name">No majority</div>
+          <div class="en-cp-final-tally">
+            <span class="en-cp-final-d">${slide.dEv} D</span>
+            <span class="en-cp-final-sep">–</span>
+            <span class="en-cp-final-r">${slide.rEv} R</span>
+            ${slide.oEv ? `<span class="en-cp-final-o">(${slide.oEv} Other)</span>` : ''}
+          </div>
+          <div class="en-cp-outcome-label">Decided by the House of Representatives</div>
+        </div>
+      </div>`;
+  }
+  animateTallyTo(slide.tallyAfter);
+}
+
+// Each race gets a colorful mini-card: leader portrait, state + EVs, a
+// percent-counted progress bar, confidence, and margin (both percent and
+// raw vote figure - formatMarginText() already combines those into one
+// string upstream). Inspired by a broadcast "key race alert" panel, not a
+// copy of one - one card per race rather than a dense table.
 function renderRaces(slide) {
   const candidates = Array.isArray(slide.candidates) ? slide.candidates : [];
-  const rows = candidates.map(c => {
-    const parts = [c.marginText && c.marginText !== 'None' ? `Margin ${c.marginText}` : null, c.confidenceText, c.reportingText]
-      .filter(Boolean).join(' · ');
-    const label = c.ev > 0 ? `${c.displayLabel} (${c.ev} EV)` : c.displayLabel;
-    return `<div class="en-log-uncalled-card" style="border-left-color:${c.accentColor || 'transparent'}">${label} – ${parts}</div>`;
+  const cards = candidates.map(c => {
+    const pct = isFinite(c.reporting) ? Math.round(Math.max(0, Math.min(1, c.reporting)) * 100) : 0;
+    const marginLine = c.marginText && c.marginText !== 'None' ? c.marginText : 'EVEN';
+    const accent = c.accentColor || '#8a8a8a';
+    return `
+      <div class="en-cp-race-card" style="--en-race-accent:${accent}">
+        ${buildMiniAvatar(c.portraitUrl, c.candidateName, partyLetter(c.leader))}
+        <div class="en-cp-race-main">
+          <div class="en-cp-race-top">
+            <span class="en-cp-race-state">${c.displayLabel}</span>
+            ${c.ev > 0 ? `<span class="en-cp-race-ev">${c.ev} EV</span>` : ''}
+          </div>
+          <div class="en-cp-race-bar-track">
+            <div class="en-cp-race-bar-fill" style="width:${pct}%"></div>
+          </div>
+          <div class="en-cp-race-bottom">
+            <span class="en-cp-race-margin">${marginLine}</span>
+            <span class="en-cp-race-pct">${pct}% in</span>
+            <span class="en-cp-race-confidence">${c.confidenceText || ''}</span>
+          </div>
+        </div>
+      </div>`;
   }).join('');
   cardEl.innerHTML = `
     <div class="en-cp-header en-cp-races-header">
       <div class="en-cp-state">Races to watch</div>
     </div>
-    <div class="en-cp-races-list">${rows}</div>`;
+    <div class="en-cp-races-list">${cards}</div>`;
 }
 
 function renderProgress(total, index) {
@@ -321,6 +425,7 @@ function renderSlide(index) {
   cardEl.style.setProperty('--en-cp-accent', accent);
   overlayEl.style.setProperty('--en-cp-accent', accent);
   if (slide.kind === 'outcome') renderOutcome(slide);
+  else if (slide.kind === 'final') renderFinal(slide);
   else if (slide.kind === 'races') renderRaces(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
@@ -343,6 +448,17 @@ function skipToNext() {
     finishCheckpoint();
     return;
   }
+  renderSlide(activeIndex);
+}
+
+// Left-arrow: step back to re-watch a call already shown within this
+// checkpoint's own batch (the common case being "I blinked and missed one"
+// during a burst of near-simultaneous calls). Scoped to the current
+// checkpoint only - it doesn't reach back into a previously closed one.
+function skipToPrevious() {
+  if (!activeSlides || activeIndex <= 0) return;
+  clearTimeout(advanceTimer);
+  activeIndex -= 1;
   renderSlide(activeIndex);
 }
 
@@ -392,7 +508,7 @@ export function showCheckpoint(slides, options = {}) {
   // entrance animation on the base .en-checkpoint-overlay rule plays clean.
   overlayEl.classList.remove('en-checkpoint-closing');
   overlayEl.hidden = false;
-  renderTallyPanelStructure(options.panelInfo, options.winProb);
+  renderTallyPanelStructure(options.panelInfo, options.winProb, options.majority);
   setTallyImmediate(options.startingTally);
   renderSlide(0);
 }

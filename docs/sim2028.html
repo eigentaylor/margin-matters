@@ -684,6 +684,32 @@
       <div class="s28-note" style="margin-top:8px" id="s28NightNote"></div>
     </div>
 
+    <!-- Election Night Playback Footer: a second, duplicate set of the
+         same playback controls from the sidebar panel above, shown while
+         election night mode is active (body.en-active, see styles.css) so
+         they're reachable without scrolling back up. Start/reset/etc.
+         still work from the original sidebar controls too - these mirror
+         each other via election-night.js rather than replacing them.
+         Mirrors docs/index.html's #enPlaybackFooter verbatim - same IDs,
+         same structure - since election-night.js's own init() binds these
+         null-safely and doesn't care which page it's running on. -->
+    <div class="delta-toggle-footer en-playback-footer" id="enPlaybackFooter">
+      <button id="enToggleFooter" class="btn" style="min-width:88px">Start</button>
+      <button id="enResetFooter" class="btn" style="min-width:70px">Reset</button>
+      <div class="nav-btn-group">
+        <button id="enSpeedDownFooter" class="nav-btn" type="button" title="Decrease speed">−</button>
+        <input id="enSpeedFooter" type="text" inputmode="decimal" class="btn" value="0.5"
+          placeholder="0.5" aria-label="Simulation speed multiplier"
+          style="min-width:52px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
+        <button id="enSpeedUpFooter" class="nav-btn" type="button" title="Increase speed">+</button>
+      </div>
+      <span class="legend" style="font-size:0.8rem">×</span>
+      <label for="enProgressFooter" class="legend" style="font-size:0.85rem">Progress</label>
+      <input id="enProgressFooter" type="range" min="0" max="1" step="0.001" value="0" style="flex:1;min-width:120px" />
+      <span id="enTimeFooter" class="legend" style="font-size:0.9rem;min-width:60px;text-align:right">19:00</span>
+      <span id="enPhaseFooter" class="legend" style="font-size:0.85rem;color:var(--muted);min-width:60px">Idle</span>
+    </div>
+
     <!-- election-night.js reads the year from this slider; fixed at 2028 here -->
     <input id="yearSlider" type="range" min="2028" max="2028" step="4" value="2028" class="s28-hidden" />
     <input id="pvSlider" type="range" min="0" max="1" step="1" value="0" class="s28-hidden" />
