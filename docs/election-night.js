@@ -3,7 +3,7 @@ import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatRepor
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
-import { getUnitCandidateLastNames } from './utils/candidateNames.js';
+import { getUnitCandidateLastNames, getUnitCandidateFullNames } from './utils/candidateNames.js';
 import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
@@ -11,6 +11,9 @@ import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
 import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
 import { regionOf } from './utils/sim2028/regions.js';
 import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
+import { shouldFireCheckpoint } from './utils/electionNight/checkpointScheduler.js';
+import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
+import { showCheckpoint } from './utils/electionNight/updatePopup.js';
 
 (function () {
   'use strict';
@@ -280,7 +283,16 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // Simulation log state
     logEntries: [],
     logInterval: 5, // minutes between log entries (min 5)
-    lastLogTime: -Infinity // last time a log entry was recorded
+    lastLogTime: -Infinity, // last time a log entry was recorded
+    // Checkpoint "state call update" popup: events (call/correction/
+    // outcome-clinch records) waiting to be shown, grouped and flushed by
+    // checkpointScheduler.shouldFireCheckpoint() - see maybeFireCheckpoint().
+    updatesEnabled: true,
+    checkpointActive: false,
+    checkpointPending: [],
+    checkpointLastEventTime: -Infinity,
+    checkpointBatchStartTime: -Infinity,
+    checkpointForce: false
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -306,7 +318,8 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     victory: null,
     logInterval: null,
     downloadTxt: null,
-    downloadCsv: null
+    downloadCsv: null,
+    updatesToggle: null
   };
 
   /**
@@ -419,6 +432,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     elements.confidence = document.getElementById('enConfidence');
     elements.confidenceVal = document.getElementById('enConfidenceVal');
     elements.victory = document.getElementById('enVictory');
+
+    elements.updatesToggle = document.getElementById('enUpdatesToggle');
+    if (elements.updatesToggle) {
+      state.updatesEnabled = !!elements.updatesToggle.checked;
+      elements.updatesToggle.addEventListener('change', () => {
+        state.updatesEnabled = !!elements.updatesToggle.checked;
+      });
+    }
 
     function handleToggleClick() {
       //console.log('ELECTION NIGHT TOGGLE CLICK');
@@ -692,6 +713,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       : new Map();
     state.boxesDirty = false;
     state.callRecords = [];
+    state.checkpointActive = false;
+    state.checkpointPending = [];
+    state.checkpointLastEventTime = -Infinity;
+    state.checkpointBatchStartTime = -Infinity;
+    state.checkpointForce = false;
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
@@ -951,6 +977,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.abbrColorMap = null;
     state.boxesDirty = false;
     state.callRecords = [];
+    state.checkpointActive = false;
+    state.checkpointPending = [];
+    state.checkpointLastEventTime = -Infinity;
+    state.checkpointBatchStartTime = -Infinity;
+    state.checkpointForce = false;
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
@@ -1071,6 +1102,111 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     updateToggleLabel();
   }
 
+  // Rough accent margin for records that don't carry a precise counted
+  // vote margin (corrections/outcome-clinch) - just enough to pick a
+  // clearly-D or clearly-R shade via calledAccentColor's existing scale,
+  // not meant to be pixel-accurate.
+  const CHECKPOINT_DEFAULT_MARGIN = { D: 0.18, R: -0.18 };
+
+  function marginFromCallRecord(record) {
+    if (!record) return 0;
+    if (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS) {
+      return (record.dVotes - record.rVotes) / record.countedVotes;
+    }
+    return CHECKPOINT_DEFAULT_MARGIN[record.leader] || 0;
+  }
+
+  /**
+   * Turn the queued call/correction/outcome-clinch records into the plain
+   * slide descriptors updatePopup.showCheckpoint() renders, resolving each
+   * one's portrait up front (async - the manifest fetch is cached after the
+   * first call, so this resolves quickly).
+   */
+  async function buildCheckpointSlides(records) {
+    const specs = records.map(record => {
+      if (record.noticeType === 'outcome-clinch') {
+        const leader = record.outcomeLeader;
+        return {
+          kind: 'outcome',
+          leader,
+          candidateName: resolveCandidateFullName(leader, 'NATIONAL'),
+          accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0)
+        };
+      }
+      if (record.noticeType === 'miscall') {
+        const leader = record.finalLeader;
+        return {
+          kind: 'correction',
+          unitKey: record.unitKey,
+          stateName: formatUnitLabel(record.unitKey),
+          ev: record.ev,
+          leader,
+          candidateName: resolveCandidateFullName(leader, record.unitKey),
+          previousCandidateName: record.previousCandidateName,
+          accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0)
+        };
+      }
+      // Plain state call
+      const leader = record.leader;
+      return {
+        kind: 'call',
+        unitKey: record.unitKey,
+        stateName: formatUnitLabel(record.unitKey),
+        ev: record.ev,
+        leader,
+        candidateName: resolveCandidateFullName(leader, record.unitKey),
+        accentColor: calledAccentColor(leader, marginFromCallRecord(record))
+      };
+    });
+    await Promise.all(specs.map(async spec => {
+      spec.portraitUrl = await getPortraitUrlForName(state.year, spec.candidateName);
+    }));
+    return specs;
+  }
+
+  /**
+   * Check whether the pending checkpoint queue should be flushed into a
+   * popup right now (see checkpointScheduler.shouldFireCheckpoint for the
+   * grouping rules), and if so, pause and show it. Only called from the
+   * live tick() loop, never from a manual scrub via #enProgress - dragging
+   * the timeline should stay a free jump, not something that pops up a
+   * checkpoint mid-drag.
+   */
+  function maybeFireCheckpoint(currentTime) {
+    if (!state.updatesEnabled || state.checkpointActive) return;
+    if (!state.checkpointPending.length) return;
+    const fire = shouldFireCheckpoint({
+      pendingCount: state.checkpointPending.length,
+      lastEventTime: state.checkpointLastEventTime,
+      batchStartTime: state.checkpointBatchStartTime,
+      currentTime,
+      simEnd: state.simEnd,
+      forceFlag: state.checkpointForce
+    });
+    if (!fire) return;
+
+    pauseSimulation();
+    state.checkpointActive = true;
+    const records = state.checkpointPending;
+    state.checkpointPending = [];
+    state.checkpointLastEventTime = -Infinity;
+    state.checkpointBatchStartTime = -Infinity;
+    state.checkpointForce = false;
+
+    buildCheckpointSlides(records).then(slides => {
+      showCheckpoint(slides, {
+        onComplete: () => {
+          state.checkpointActive = false;
+          if (state.currentTime < state.simEnd - EPS) startSimulation();
+        }
+      });
+    }).catch(err => {
+      console.warn('Failed to build checkpoint slides', err);
+      state.checkpointActive = false;
+      if (state.currentTime < state.simEnd - EPS) startSimulation();
+    });
+  }
+
   /**
    * RAF tick handler. Converts elapsed wall-clock time (timestamp)
    * into simulated minutes using speedMultiplier and minutesPerSecond,
@@ -1095,6 +1231,9 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       state.lastDisplayUpdate = state.currentTime;
       renderAt(state.currentTime);
     }
+
+    maybeFireCheckpoint(state.currentTime);
+    if (state.checkpointActive) return; // paused for the popup; its onComplete() resumes ticking
 
     if (state.currentTime >= state.simEnd - EPS) {
       pauseSimulation();
@@ -2420,6 +2559,29 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     return name;
   }
 
+  // Same idea as resolveCandidateLastName() but returns the untouched full
+  // name (e.g. "Kamala Harris") for the checkpoint popup, which wants a
+  // real name to display rather than a call-log-style last name.
+  function resolveCandidateFullName(leader, unitKey) {
+    if (leader !== 'D' && leader !== 'R' && leader !== 'O') return null;
+    const names = getUnitCandidateFullNames(unitKey, { year: state.year });
+    const name = names ? names[leader] : null;
+    return name || resolveCandidateLastName(leader, unitKey);
+  }
+
+  // Queue an already-pushed state.callRecords entry (a call, a correction
+  // notice, or an outcome-clinch notice) for the next checkpoint popup, and
+  // track timing so checkpointScheduler.shouldFireCheckpoint() can decide
+  // when to flush the batch. `force` fires the checkpoint immediately,
+  // ignoring the usual quiet-gap wait - used for the outcome-clinch moment.
+  function notePendingCheckpointEvent(record, currentTime, opts = {}) {
+    if (!record) return;
+    state.checkpointPending.push(record);
+    if (state.checkpointPending.length === 1) state.checkpointBatchStartTime = currentTime;
+    state.checkpointLastEventTime = currentTime;
+    if (opts.force) state.checkpointForce = true;
+  }
+
   function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
     if (state.npvCallRecord) return;
     const leader = nationalLeader(dCounted, rCounted, oCounted);
@@ -2491,7 +2653,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
       : '';
     const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
-    state.callRecords.push({
+    const correctionRecord = {
       kind: 'notice',
       noticeType: 'miscall',
       unitKey: st.unitKey,
@@ -2499,8 +2661,12 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       time: correctionTime,
       text: message,
       calledLeader,
-      finalLeader
-    });
+      finalLeader,
+      ev: st.ev,
+      previousCandidateName: resolveCandidateFullName(calledLeader, st.unitKey) || calledLeaderText
+    };
+    state.callRecords.push(correctionRecord);
+    notePendingCheckpointEvent(correctionRecord, correctionTime);
     st.evCalledAllocations = st.evAllocations ? { ...st.evAllocations } : null;
     triggerTipRefresh();
     state.lastLogKey = '';
@@ -2585,6 +2751,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       totalThirdShare: metrics ? metrics.totalThirdShare : null
     };
     state.callRecords.push(st.callRecord);
+    notePendingCheckpointEvent(st.callRecord, callTime);
 
     // Record a log entry for this call event (bypasses interval check)
     recordCallLogEntry(callTime, st.unitKey, calledLeader);
@@ -3312,13 +3479,23 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
         const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
         const className = outcomeClassFor(newOutcomeType);
-        state.callRecords.push({
+        const clinchTime = outcome.time != null ? outcome.time : currentTime;
+        const clinchRecord = {
           kind: 'notice',
           noticeType: 'outcome-clinch',
-          time: outcome.time != null ? outcome.time : currentTime,
+          time: clinchTime,
           text: `${timeStr} – ${message}`,
-          outcomeClassName: className
-        });
+          outcomeClassName: className,
+          outcomeLeader: newOutcomeType
+        };
+        state.callRecords.push(clinchRecord);
+        // Only D/R clinches are "X elected president" moments for the
+        // checkpoint popup (v0.1) - a projected EC tie ('T') has no winner
+        // to announce yet, so it's skipped here and stays a call-log-only
+        // notice.
+        if (newOutcomeType === 'D' || newOutcomeType === 'R') {
+          notePendingCheckpointEvent(clinchRecord, clinchTime, { force: true });
+        }
         state.lastOutcomeBannerText = message;
         state.lastOutcomeBannerClass = className;
         state.lastLogKey = '';

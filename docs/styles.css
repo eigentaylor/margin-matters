@@ -2864,3 +2864,331 @@ body.shift-vectors-page {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Election night checkpoint "state called" update popup. Sits above
+   everything else (including #enLogPanel's z-index 2200 mobile sheet) so
+   it fully covers the screen while the sim is paused for it. */
+.en-checkpoint-overlay {
+  --en-cp-accent: #2f2f2f;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--en-cp-accent) 55%, #000 45%) 0%, color-mix(in srgb, var(--en-cp-accent) 30%, #000 70%) 55%, #000 100%);
+  animation: en-cp-overlay-in 0.25s ease-out;
+}
+
+.en-checkpoint-overlay.en-checkpoint-closing {
+  animation: en-cp-overlay-out 0.2s ease-in forwards;
+}
+
+@keyframes en-cp-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes en-cp-overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.en-checkpoint-card {
+  --en-cp-accent: #2f2f2f;
+  width: min(92vw, 720px);
+  border-radius: 16px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--en-cp-accent) 92%, #000 8%) 0%, color-mix(in srgb, var(--en-cp-accent) 70%, #000 30%) 100%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* Re-added on every slide (with a forced reflow) so the reveal replays
+   even when consecutive slides share the same kind/class. */
+.en-cp-reveal .en-cp-header,
+.en-cp-reveal .en-cp-breaking {
+  animation: en-cp-slide-down 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.en-cp-reveal .en-cp-photo-wrap {
+  animation: en-cp-photo-in 0.45s 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.en-cp-reveal .en-cp-result,
+.en-cp-reveal .en-cp-outcome-text {
+  animation: en-cp-fade-up 0.4s 0.3s ease-out both;
+}
+
+.en-cp-reveal .en-cp-check {
+  animation: en-cp-badge-pop 0.4s 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes en-cp-slide-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes en-cp-photo-in {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes en-cp-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes en-cp-badge-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.en-cp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: rgba(0, 0, 0, 0.28);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.en-cp-state {
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.en-cp-ev {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #fff;
+}
+
+.en-cp-ev-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+.en-cp-ev-num {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.en-cp-body {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 26px 24px;
+}
+
+.en-cp-photo-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(96px, 24vw, 160px);
+  height: clamp(96px, 24vw, 160px);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.85) inset;
+}
+
+.en-cp-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.en-cp-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.en-cp-photo-placeholder {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.en-cp-party-badge {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.85rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.en-cp-result {
+  min-width: 0;
+}
+
+.en-cp-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: #1a1a1a;
+  background: #f2dfa1;
+  margin-bottom: 8px;
+}
+
+.en-cp-checkmark {
+  font-weight: 900;
+}
+
+.en-cp-badge-corrected {
+  background: #ffb4a1;
+}
+
+.en-cp-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  color: #fff;
+}
+
+.en-cp-first {
+  font-size: clamp(1.1rem, 3.4vw, 1.6rem);
+  font-weight: 700;
+  opacity: 0.92;
+}
+
+.en-cp-last {
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.en-cp-prev {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Outcome-clinch layout: distinct, more dramatic full-bleed card rather
+   than a bigger version of the per-state card. */
+.en-checkpoint-outcome {
+  width: min(92vw, 620px);
+}
+
+.en-cp-breaking {
+  padding: 10px 22px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.en-cp-outcome-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 36px 24px 42px;
+  text-align: center;
+}
+
+.en-checkpoint-outcome .en-cp-photo-wrap {
+  width: clamp(120px, 30vw, 180px);
+  height: clamp(120px, 30vw, 180px);
+  border-radius: 50%;
+}
+
+.en-cp-outcome-name {
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.en-cp-outcome-label {
+  margin-top: 4px;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.en-checkpoint-progress {
+  position: absolute;
+  bottom: 46px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.en-cp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.en-cp-dot-active {
+  background: #fff;
+}
+
+.en-checkpoint-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .en-checkpoint-overlay,
+  .en-checkpoint-overlay.en-checkpoint-closing,
+  .en-cp-reveal .en-cp-header,
+  .en-cp-reveal .en-cp-breaking,
+  .en-cp-reveal .en-cp-photo-wrap,
+  .en-cp-reveal .en-cp-result,
+  .en-cp-reveal .en-cp-outcome-text,
+  .en-cp-reveal .en-cp-check {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .en-cp-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .en-cp-name {
+    align-items: center;
+  }
+}
