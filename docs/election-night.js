@@ -2913,9 +2913,9 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     let demWins = 0;
     let tieWins = 0;
     // Every live/al unit is a binary D-or-R draw, so whatever EV a draw
-    // doesn't give to D goes to R - repEv for that draw is just this fixed
-    // total minus the draw's demEv, no separate per-unit R tracking needed.
-    const contestedTotal = fixedDEv + fixedREv + liveEvTotal;
+    // doesn't give to D goes to R - repEv for that draw is just
+    // contestedTotal (computed above) minus the draw's demEv, no separate
+    // per-unit R tracking needed.
 
     for (let s = 0; s < PROB_MC_SIMS; s++) {
       const sample = sampleSwing(swing, allRegions, rng, drawFn);
