@@ -816,9 +816,10 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     // EV-bearing unit (state/at-large/district all count separately here,
     // unlike the vote totals above, since each has its own non-overlapping
     // electors) — used only by debug/validation instrumentation, never by
-    // the live win-probability algorithm itself.
-    state.nationalFinalDEv = data.reduce((sum, st) => sum + (st.winner === 'D' ? st.ev : 0), 0);
-    state.nationalFinalREv = data.reduce((sum, st) => sum + (st.winner === 'R' ? st.ev : 0), 0);
+    // the live win-probability algorithm itself. Uses precomputed evAllocations
+    // (which handle split-elector states like 1960 AL/MS) instead of blunt winner/ev.
+    state.nationalFinalDEv = data.reduce((sum, st) => sum + ((st.evAllocations && st.evAllocations.D) || 0), 0);
+    state.nationalFinalREv = data.reduce((sum, st) => sum + ((st.evAllocations && st.evAllocations.R) || 0), 0);
 
     if (window._enPollPrior && window._enPollPrior.year === year) {
       applyBridgedPollPriors(data, window._enPollPrior);
@@ -1196,10 +1197,18 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     let d = 0, r = 0, o = 0;
     readyCalls.forEach(record => {
       const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
-      const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
-      if (tallyWinner === 'D') d += record.ev || 0;
-      else if (tallyWinner === 'R') r += record.ev || 0;
-      else o += record.ev || 0;
+      const alloc = (st && st.misCallLogged && st.evAllocations) ? st.evAllocations : record.evAllocations;
+      if (alloc) {
+        d += alloc.D || 0;
+        r += alloc.R || 0;
+        o += alloc.O || 0;
+      } else {
+        // Fallback for record types that don't have evAllocations (e.g., outcome notices).
+        const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
+        if (tallyWinner === 'D') d += record.ev || 0;
+        else if (tallyWinner === 'R') r += record.ev || 0;
+        else o += record.ev || 0;
+      }
     });
     return { D: d, R: r, O: o };
   }
@@ -1213,8 +1222,10 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
    * call log's "still counting" sidebar uses) when anything is still
    * uncalled at this point in the night.
    */
-  async function buildCheckpointSlides(records) {
+  async function buildCheckpointSlides(records, startingTally) {
+    let runningTally = startingTally ? { D: startingTally.D || 0, R: startingTally.R || 0, O: startingTally.O || 0 } : { D: 0, R: 0, O: 0 };
     const specs = records.map(record => {
+      const spec_tallyBefore = { D: runningTally.D, R: runningTally.R, O: runningTally.O };
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
         const leader = record.outcomeLeader;
         if (leader === 'D' || leader === 'R') {
@@ -1225,7 +1236,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
             candidateName,
             outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader) : null,
             accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
-            timeLabel: formatTimeLabel(record.time)
+            timeLabel: formatTimeLabel(record.time),
+            tallyBefore: spec_tallyBefore
           };
         }
         // leader is null: a correction just knocked the previously-projected
@@ -1235,6 +1247,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         // "seqable" comment above where outcomeSeq is stamped for why the
         // literal end-of-night case is left to the 'final' event instead.)
         const uncalledTally = computeRunningEvTally(record.time);
+        runningTally = uncalledTally;
         return {
           kind: 'uncalled',
           dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
@@ -1242,6 +1255,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           dEv: uncalledTally.D,
           rEv: uncalledTally.R,
           accentColor: '#8a8a8a',
+          tallyBefore: spec_tallyBefore,
           tallyAfter: uncalledTally,
           timeLabel: formatTimeLabel(record.time)
         };
@@ -1252,6 +1266,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const dCandidateName = resolveCandidateFullName('D', 'NATIONAL');
         const rCandidateName = resolveCandidateFullName('R', 'NATIONAL');
         const winnerName = winner === 'D' ? dCandidateName : (winner === 'R' ? rCandidateName : null);
+        const finalTally = { D: dEv, R: rEv, O: oEv || 0 };
+        runningTally = finalTally;
         return {
           kind: 'final',
           winner,
@@ -1260,7 +1276,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           rCandidateName,
           outcomeLabel: winnerName ? getPresidencyOutcomeLabel(state.year, winner) : null,
           accentColor: winner ? calledAccentColor(winner, CHECKPOINT_DEFAULT_MARGIN[winner] || 0) : '#8a8a8a',
-          tallyAfter: { D: dEv, R: rEv },
+          tallyBefore: spec_tallyBefore,
+          tallyAfter: finalTally,
           timeLabel: formatTimeLabel(record.time)
         };
       }
@@ -1287,6 +1304,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
         const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
         const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
+        const npvTallyAfter = computeRunningEvTally(record.time);
+        runningTally = npvTallyAfter;
         return {
           kind: isNpvCorrection ? 'correction' : 'call',
           isNpv: true,
@@ -1304,7 +1323,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           oCandidateName,
           previousCandidateName: isNpvCorrection ? (resolveCandidateFullName(record.calledLeader, 'NATIONAL')) : null,
           accentColor: calledAccentColor(leader, voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : (CHECKPOINT_DEFAULT_MARGIN[leader] || 0)),
-          tallyAfter: computeRunningEvTally(record.time),
+          tallyBefore: spec_tallyBefore,
+          tallyAfter: npvTallyAfter,
           dVotes, rVotes, oVotes, countedVotes,
           reportingPct: isFinite(reporting) ? Math.max(0, Math.min(1, reporting)) : null,
           reportingText: formatReportingText(reporting, null),
@@ -1323,6 +1343,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       // future strong third-party years.
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
       const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
+      const stateTallyAfter = computeRunningEvTally(record.time);
+      runningTally = stateTallyAfter;
       return {
         kind: isCorrection ? 'correction' : 'call',
         unitKey: record.unitKey,
@@ -1348,7 +1370,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         // animates from whatever it's currently showing to this value the
         // moment this slide starts, rather than each slide carrying its
         // own separate "X's EV total" box.
-        tallyAfter: computeRunningEvTally(record.time),
+        tallyBefore: spec_tallyBefore,
+        tallyAfter: stateTallyAfter,
         dVotes: record.dVotes,
         rVotes: record.rVotes,
         countedVotes: record.countedVotes,
@@ -1697,7 +1720,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     // pop in mid-checkpoint the moment the first O state gets called.
     const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
 
-    Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
+    Promise.all([buildCheckpointSlides(records, startingTally), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
       showCheckpoint(slides, {
         startingTally,
         winProb,

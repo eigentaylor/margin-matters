@@ -314,20 +314,23 @@ function showTallyDelta(code, delta) {
   setTimeout(() => chip.remove(), 2400);
 }
 
-function animateTallyTo(tally, showDelta) {
-  if (!tally) return;
-  const nextD = isFinite(tally.D) ? tally.D : displayedTally.D;
-  const nextR = isFinite(tally.R) ? tally.R : displayedTally.R;
-  const nextO = isFinite(tally.O) ? tally.O : displayedTally.O;
+function animateTallyTo(fromTally, toTally, showDelta) {
+  if (!toTally) return;
+  const fromD = (fromTally && isFinite(fromTally.D)) ? fromTally.D : 0;
+  const fromR = (fromTally && isFinite(fromTally.R)) ? fromTally.R : 0;
+  const fromO = (fromTally && isFinite(fromTally.O)) ? fromTally.O : 0;
+  const toD = isFinite(toTally.D) ? toTally.D : fromD;
+  const toR = isFinite(toTally.R) ? toTally.R : fromR;
+  const toO = isFinite(toTally.O) ? toTally.O : fromO;
   if (showDelta) {
-    showTallyDelta('D', nextD - displayedTally.D);
-    showTallyDelta('R', nextR - displayedTally.R);
-    showTallyDelta('O', nextO - displayedTally.O);
+    showTallyDelta('D', toD - fromD);
+    showTallyDelta('R', toR - fromR);
+    showTallyDelta('O', toO - fromO);
   }
-  if (tallyBoxes && tallyBoxes.D) animateCounter(tallyBoxes.D, displayedTally.D, nextD);
-  if (tallyBoxes && tallyBoxes.R) animateCounter(tallyBoxes.R, displayedTally.R, nextR);
-  if (tallyBoxes && tallyBoxes.O) animateCounter(tallyBoxes.O, displayedTally.O, nextO);
-  displayedTally = { D: nextD, R: nextR, O: nextO };
+  if (tallyBoxes && tallyBoxes.D) animateCounter(tallyBoxes.D, fromD, toD);
+  if (tallyBoxes && tallyBoxes.R) animateCounter(tallyBoxes.R, fromR, toR);
+  if (tallyBoxes && tallyBoxes.O) animateCounter(tallyBoxes.O, fromO, toO);
+  displayedTally = { D: toD, R: toR, O: toO };
 }
 
 function renderCallOrCorrection(slide) {
@@ -365,7 +368,7 @@ function renderCallOrCorrection(slide) {
     </div>
     ${buildComparisonMarkup(slide)}
     ${buildStatsLineMarkup(slide)}`;
-  animateTallyTo(slide.tallyAfter, isCorrection);
+  animateTallyTo(slide.tallyBefore, slide.tallyAfter, isCorrection);
 }
 
 function renderOutcome(slide) {
@@ -431,7 +434,7 @@ function renderFinal(slide) {
         </div>
       </div>`;
   }
-  animateTallyTo(slide.tallyAfter);
+  animateTallyTo(slide.tallyBefore, slide.tallyAfter);
 }
 
 /**
@@ -462,7 +465,7 @@ function renderUncalled(slide) {
         <div class="en-cp-outcome-label">No candidate currently has a projected majority</div>
       </div>
     </div>`;
-  animateTallyTo(slide.tallyAfter, true);
+  animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
 }
 
 // Each race gets a colorful mini-card: leader portrait, state + EVs, a
