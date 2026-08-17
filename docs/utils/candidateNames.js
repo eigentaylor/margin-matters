@@ -46,6 +46,37 @@ export function getUnitCandidateLastNames(unit, opts) {
   } catch (e) { return { D: 'D', R: 'R', O: 'O' }; }
 }
 
+// Same lookup as getUnitCandidateLastNames but returns the untouched full
+// name string (e.g. "Robert M. La Follette") instead of just the last name -
+// for displays that want the whole name rather than a call-log-style label.
+export function getUnitCandidateFullNames(unit, opts) {
+  try {
+    const options = opts || {};
+    let year = (options.year != null && isFinite(options.year)) ? Number(options.year) : (typeof window._curYear === 'number' ? window._curYear : null);
+    if (!isFinite(year)) year = null;
+    if (!unit) return { D: null, R: null, O: null };
+    const keyUnit = (unit === 'ME' || unit === 'NE') ? (unit + '-AL') : unit;
+    const rows = (typeof window.getRowsForYear === 'function') ? window.getRowsForYear(year) : null;
+    const row = (rows && rows.length) ? rows.find(x => x.unit === keyUnit) : null;
+
+    const names = { D: null, R: null, O: null };
+    if (row) {
+      try {
+        if (row.dCandidate) names.D = String(row.dCandidate);
+        if (row.rCandidate) names.R = String(row.rCandidate);
+        if (row.thirdPartyResults && typeof row.thirdPartyResults === 'object') {
+          const entries = Object.entries(row.thirdPartyResults).map(([nm, v]) => ({ name: nm, votes: Number(v) || 0 }));
+          if (entries.length) {
+            entries.sort((a, b) => b.votes - a.votes);
+            const top = entries[0]; if (top && top.name) names.O = String(top.name);
+          }
+        }
+      } catch (e) { }
+    }
+    return names;
+  } catch (e) { return { D: null, R: null, O: null }; }
+}
+
 // Derive candidate labels using available info (prefer snapshot/info over CSV rows)
 export function deriveCandidateNames(info, unit, opts) {
   try {

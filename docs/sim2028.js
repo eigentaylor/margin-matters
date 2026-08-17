@@ -1055,7 +1055,14 @@ function goToStep(i) {
 function goToElectionNight() {
   if (!state.sim) return;
   state.step = state.sim.snapshots.length - 1;
-  state.revealed = true;
+  // state.revealed itself is NOT set here - it flips (via the
+  // onElectionNightActiveChange hook registered in init()) only once the
+  // user actually presses Start over on the election night card, not the
+  // instant they scroll down to it. Setting it eagerly here used to hide
+  // the sticky campaign footer (and, before election-night.js's own fix,
+  // swap out the page footer) before there was anything to watch,
+  // breaking the ability to navigate back through the campaign without a
+  // reload.
   // Clear any glow/isolate styling — election night repaints the map itself
   // and the polling-era highlight has nothing left to refer to.
   if (state.mapHighlight) { state.mapHighlight = null; setMapGlow(); }
@@ -1109,6 +1116,18 @@ async function init() {
   // See refreshHoveredTip's own comment: this is the exact hook election-night.js
   // already calls on a timer, normally provided by tester.js (not loaded here).
   window.refreshActiveMapTip = refreshHoveredTip;
+
+  // election-night.js calls this the moment it actually goes active (Start
+  // pressed) or fully resets (Reset pressed, or a fresh campaign tears down
+  // a prior in-progress night) - not merely when goToElectionNight() hands
+  // off data to it. Keeps the sticky campaign footer's visibility (and
+  // renderAll()'s other election-night-aware bits) in lockstep with that
+  // same moment instead of hiding it the instant the user scrolls down to
+  // the election night card.
+  window.onElectionNightActiveChange = (active) => {
+    state.revealed = !!active;
+    renderAll();
+  };
 
   const seedInput = $('s28Seed');
   if (seedInput && !seedInput.value) seedInput.value = String(computeTodaySeed());

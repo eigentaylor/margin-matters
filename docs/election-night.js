@@ -1,9 +1,10 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatOtherLean, formatLeader, formatLeaderShort, formatMarginText, formatRawMarginText, formatOtherRawMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { getPresidencyOutcomeLabel } from './utils/electionNight/presidentOrdinals.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
-import { getUnitCandidateLastNames } from './utils/candidateNames.js';
+import { getUnitCandidateLastNames, getUnitCandidateFullNames } from './utils/candidateNames.js';
 import { hashCode, mulberry32, randn, randStudentT4 } from './utils/randomUtils.js';
 import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colorUtils.js';
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
@@ -11,6 +12,9 @@ import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
 import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
 import { regionOf } from './utils/sim2028/regions.js';
 import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
+import { groupEventsIntoCheckpoints, findNextCheckpoint } from './utils/electionNight/checkpointScheduler.js';
+import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
+import { showCheckpoint } from './utils/electionNight/updatePopup.js';
 
 (function () {
   'use strict';
@@ -115,7 +119,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   // Time offset (minutes) used so times like "19:00" map to ET minutes
   const TIME_OFFSET_MIN = 180;
   // Confidence threshold defaults and reporting cutoffs
-  const DEFAULT_CONFIDENCE_THRESHOLD = 0.5;
+  const DEFAULT_CONFIDENCE_THRESHOLD = 0.15;
   const MIN_REPORTING_TO_CALL = 0.2;
   // Bounds and default for the free-text simulation speed multiplier input
   const MIN_SPEED_MULTIPLIER = 0.01;
@@ -280,7 +284,18 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // Simulation log state
     logEntries: [],
     logInterval: 5, // minutes between log entries (min 5)
-    lastLogTime: -Infinity // last time a log entry was recorded
+    lastLogTime: -Infinity, // last time a log entry was recorded
+    // Checkpoint "state call update" popup: state.plannedCheckpoints is a
+    // deterministic schedule computed once (computePlannedCheckpoints())
+    // from the same pure call-decision functions the live sim itself uses,
+    // not accumulated reactively as calls happen - that's what makes it
+    // immune to rewinding/seeking dumping a huge backlog at once (seeking
+    // only moves checkpointCursorTime, it never fires anything itself; see
+    // maybeFireCheckpoint()).
+    updatesEnabled: true,
+    checkpointActive: false,
+    plannedCheckpoints: [],
+    checkpointCursorTime: 0
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -306,7 +321,8 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     victory: null,
     logInterval: null,
     downloadTxt: null,
-    downloadCsv: null
+    downloadCsv: null,
+    updatesToggle: null
   };
 
   /**
@@ -419,6 +435,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     elements.confidence = document.getElementById('enConfidence');
     elements.confidenceVal = document.getElementById('enConfidenceVal');
     elements.victory = document.getElementById('enVictory');
+
+    elements.updatesToggle = document.getElementById('enUpdatesToggle');
+    if (elements.updatesToggle) {
+      state.updatesEnabled = !!elements.updatesToggle.checked;
+      elements.updatesToggle.addEventListener('change', () => {
+        state.updatesEnabled = !!elements.updatesToggle.checked;
+      });
+    }
 
     function handleToggleClick() {
       //console.log('ELECTION NIGHT TOGGLE CLICK');
@@ -536,6 +560,12 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         const val = getConfidenceSliderValue();
         state.confidenceThreshold = val;
         updateConfidenceLabel(val);
+        // Re-project the checkpoint schedule so still-uncalled units'
+        // projected call times reflect the new threshold - already-decided
+        // units are unaffected (computePlannedCheckpoints prefers their
+        // real st.calledAt), and the cursor isn't touched, so nothing
+        // already shown gets re-surfaced.
+        if (state.prepared) state.plannedCheckpoints = computePlannedCheckpoints();
       });
     } else {
       updateConfidenceLabel(state.confidenceThreshold);
@@ -692,10 +722,13 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       : new Map();
     state.boxesDirty = false;
     state.callRecords = [];
+    state.checkpointActive = false;
+    state.plannedCheckpoints = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
+    state.outcomeSeq = 0;
     state.allCalledAnnounced = false;
     state.lastOutcomeBannerText = '';
     state.lastOutcomeBannerClass = '';
@@ -728,11 +761,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         prop.disabled = true;
       }
     } catch (e) { /* ignore */ }
-    // Show the call log panel when the election-night simulation is prepared.
-    // Also shifts the container left on medium screens to avoid overlap
-    // (flagged on body too so other fixed page-wide elements, e.g. the
-    // proportional-EV toggle footer, can shrink away from the sidebar).
-    showLogPanel();
+    // Deliberately does NOT call showLogPanel() here - preparing (which
+    // happens the instant a host page like sim2028.js hands off to election
+    // night, before the user has pressed Start) used to flip body.en-active
+    // immediately, which swaps out the host page's own footer/campaign
+    // controls out from under it before there's anything to watch. Only
+    // handleToggleClick()'s Start/Resume branch calls showLogPanel() now, so
+    // the log panel/footer swap/host-page hooks all wait for an actual
+    // Start.
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
@@ -832,7 +868,22 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     }
 
     renderAt(state.currentTime);
+    // Deterministic checkpoint schedule for the whole night, computed once
+    // now that state.stateData/simStart/simEnd/confidenceThreshold are all
+    // final - see computePlannedCheckpoints() for why this replaces the old
+    // reactive "queue events as they happen live" approach.
+    state.checkpointCursorTime = state.simStart;
+    state.plannedCheckpoints = computePlannedCheckpoints();
     state.prepared = true;
+    // Changing the call threshold mid-election-night reshuffles the whole
+    // checkpoint schedule out from under the live cursor (still-uncalled
+    // units re-project, already-decided ones don't) - lock the control once
+    // prepared so the only way to change it is resetSimulation() below,
+    // which rebuilds the schedule from scratch instead of patching it live.
+    if (elements.confidence) {
+      elements.confidence.disabled = true;
+      elements.confidence.title = 'Reset to change the call threshold';
+    }
     updateToggleLabel();
   }
 
@@ -915,18 +966,28 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       }
     }
     advanceDeterministic(targetTime);
+    // Any explicit seek - forward or backward - silently jumps the
+    // checkpoint cursor to match, rather than leaving skipped-over
+    // checkpoints sitting there to all fire at once on the next tick. Only
+    // organic forward playback in tick() ever surfaces a checkpoint popup.
+    state.checkpointCursorTime = state.currentTime;
   }
 
   function showLogPanel() {
     try { if (elements.logPanel) elements.logPanel.classList.remove('en-log-closed'); } catch (e) { /* ignore */ }
     try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { /* ignore */ }
     try { document.body.classList.add('en-active'); } catch (e) { /* ignore */ }
+    // Optional hook for a host page (e.g. sim2028.js) that has its own UI to
+    // hide/restore in step with election night actually going active - see
+    // hideLogPanel()'s matching call for the reverse direction.
+    try { if (typeof window.onElectionNightActiveChange === 'function') window.onElectionNightActiveChange(true); } catch (e) { /* ignore */ }
   }
 
   function hideLogPanel() {
     try { if (elements.logPanel) elements.logPanel.classList.add('en-log-closed'); } catch (e) { /* ignore */ }
     try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { /* ignore */ }
     try { document.body.classList.remove('en-active'); } catch (e) { /* ignore */ }
+    try { if (typeof window.onElectionNightActiveChange === 'function') window.onElectionNightActiveChange(false); } catch (e) { /* ignore */ }
   }
 
   function resetSimulation(restorePv, hidePanel = false) {
@@ -951,10 +1012,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     state.abbrColorMap = null;
     state.boxesDirty = false;
     state.callRecords = [];
+    state.checkpointActive = false;
+    state.plannedCheckpoints = [];
+    state.checkpointCursorTime = 0;
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
+    state.outcomeSeq = 0;
     state.allCalledAnnounced = false;
     state.lastOutcomeBannerText = '';
     state.lastOutcomeBannerClass = '';
@@ -972,6 +1037,10 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
 
     state.confidenceThreshold = getConfidenceSliderValue();
     updateConfidenceLabel(state.confidenceThreshold);
+    if (elements.confidence) {
+      elements.confidence.disabled = false;
+      elements.confidence.title = '';
+    }
 
     state.suppressProgressEvent = true;
     setProgressValue(0);
@@ -1071,6 +1140,582 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     updateToggleLabel();
   }
 
+  // Rough accent margin for records that don't carry a precise counted
+  // vote margin (corrections/outcome-clinch) - just enough to pick a
+  // clearly-D or clearly-R shade via calledAccentColor's existing scale,
+  // not meant to be pixel-accurate.
+  const CHECKPOINT_DEFAULT_MARGIN = { D: 0.18, R: -0.18 };
+
+  // Minimum top-third-party vote share (of a unit's total) for the
+  // checkpoint popup's state-call comparison to add a third row for them -
+  // gates on the data itself rather than a hardcoded list of years, so a
+  // Wallace/Perot/Taft-caliber showing surfaces automatically while routine
+  // Libertarian/Green-caliber background noise stays out of the way.
+  const O_ROW_THRESHOLD = 0.05;
+
+  // How far before state.simEnd the two "fires at the very last possible
+  // moment" event sources (the NPV correction, and projectUnitCallEvent's
+  // dead-end fallback below) are pinned, instead of exactly at simEnd like
+  // the trailing 'final' checkpoint event itself. Every unit's reporting
+  // reaches 100% by simEnd-30 at the latest (simEnd = maxEnd+30, and maxEnd
+  // is itself the latest startTime+duration across every unit) - so 15
+  // minutes of headroom below that comfortably covers both the live
+  // registration actually landing first and groupEventsIntoCheckpoints'
+  // 12-minute quiet-gap rule seeing a real gap, guaranteeing 'final' never
+  // ties with (and gets merged into the same checkpoint batch as) either of
+  // these again. See computePlannedCheckpoints()'s 'final' event comment.
+  const FINAL_CHECKPOINT_GAP_MINUTES = 15;
+
+  function marginFromCallRecord(record) {
+    if (!record) return 0;
+    if (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS) {
+      return (record.dVotes - record.rVotes) / record.countedVotes;
+    }
+    return CHECKPOINT_DEFAULT_MARGIN[record.leader] || 0;
+  }
+
+  /**
+   * D/R/O electoral vote totals from every call already "ready" as of
+   * `uptoTime`, mirroring updateCallLog()'s own dRunning/rRunning/oRunning
+   * accumulation (same records, same misCallLogged correction-swap rule) so
+   * the popup's running EV count never disagrees with the call log's.
+   *
+   * Reads state.stateData directly rather than state.snapshot: this is
+   * called from buildCheckpointSlides() for a correction that may have
+   * *just* fired in the very same renderAt() pass that triggered this
+   * checkpoint, and state.snapshot's copy of misCallLogged for that unit is
+   * captured earlier in that same pass, before maybeEmitMiscall() flips the
+   * flag - stale by exactly one render frame for the one unit that matters
+   * most. state.stateData's st.misCallLogged is the live value.
+   */
+  function computeRunningEvTally(uptoTime) {
+    const readyCalls = state.callRecords
+      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && uptoTime >= rec.time - EPS)
+      .slice()
+      .sort((a, b) => (a.time - b.time) || (a.unitKey || '').localeCompare(b.unitKey || ''));
+    let d = 0, r = 0, o = 0;
+    readyCalls.forEach(record => {
+      const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
+      const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
+      if (tallyWinner === 'D') d += record.ev || 0;
+      else if (tallyWinner === 'R') r += record.ev || 0;
+      else o += record.ev || 0;
+    });
+    return { D: d, R: r, O: o };
+  }
+
+  /**
+   * Turn the queued call/correction/outcome-clinch records into the plain
+   * slide descriptors updatePopup.showCheckpoint() renders, resolving each
+   * one's portrait up front (async - the manifest fetch is cached after the
+   * first call, so this resolves quickly). Also appends a trailing "races
+   * to watch" slide (reusing buildUncalledCandidates(), the same sort the
+   * call log's "still counting" sidebar uses) when anything is still
+   * uncalled at this point in the night.
+   */
+  async function buildCheckpointSlides(records) {
+    const specs = records.map(record => {
+      if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
+        const leader = record.outcomeLeader;
+        if (leader === 'D' || leader === 'R') {
+          const candidateName = resolveCandidateFullName(leader, 'NATIONAL');
+          return {
+            kind: 'outcome',
+            leader,
+            candidateName,
+            outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader) : null,
+            accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
+            timeLabel: formatTimeLabel(record.time)
+          };
+        }
+        // leader is null: a correction just knocked the previously-projected
+        // majority holder back below majority with nobody else reaching it -
+        // the mid-count analogue of the 'final' slide's no-majority variant.
+        // (This branch only ever reaches here pre-allCalled - see the
+        // "seqable" comment above where outcomeSeq is stamped for why the
+        // literal end-of-night case is left to the 'final' event instead.)
+        const uncalledTally = computeRunningEvTally(record.time);
+        return {
+          kind: 'uncalled',
+          dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
+          rCandidateName: resolveCandidateFullName('R', 'NATIONAL'),
+          dEv: uncalledTally.D,
+          rEv: uncalledTally.R,
+          accentColor: '#8a8a8a',
+          tallyAfter: uncalledTally,
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
+      if (record.noticeType === 'final-tally') {
+        const { dEv, rEv, oEv, majority } = record;
+        const winner = dEv >= majority ? 'D' : (rEv >= majority ? 'R' : null);
+        const dCandidateName = resolveCandidateFullName('D', 'NATIONAL');
+        const rCandidateName = resolveCandidateFullName('R', 'NATIONAL');
+        const winnerName = winner === 'D' ? dCandidateName : (winner === 'R' ? rCandidateName : null);
+        return {
+          kind: 'final',
+          winner,
+          dEv, rEv, oEv, majority,
+          dCandidateName,
+          rCandidateName,
+          outcomeLabel: winnerName ? getPresidencyOutcomeLabel(state.year, winner) : null,
+          accentColor: winner ? calledAccentColor(winner, CHECKPOINT_DEFAULT_MARGIN[winner] || 0) : '#8a8a8a',
+          tallyAfter: { D: dEv, R: rEv },
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
+      // National popular vote call/correction - same shape as a state
+      // call/correction (so it flows through the same renderer), just
+      // sourced from state.callRecords' npv_call/npv_miscall entries
+      // instead of a per-unit record, and flagged isNpv so the popup hides
+      // the "Electoral votes" badge (the NPV carries no EV weight itself).
+      if (record.kind === 'npv_call' || record.noticeType === 'npv_miscall') {
+        const isNpvCorrection = record.noticeType === 'npv_miscall';
+        const totals = isNpvCorrection ? (state.lastNationalTotals || {}) : record;
+        const leader = isNpvCorrection ? record.finalLeader : record.leader;
+        const dVotes = totals.dVotes ?? totals.dCounted;
+        const rVotes = totals.rVotes ?? totals.rCounted;
+        const oVotes = totals.oVotes ?? totals.oCounted;
+        const countedVotes = totals.countedVotes;
+        const voteMargin = (isFinite(dVotes) && isFinite(rVotes)) ? (dVotes - rVotes) : null;
+        const marginStr = leader === 'O'
+          ? formatOtherLean(oVotes, dVotes, rVotes, countedVotes)
+          : formatLean(voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : 0);
+        const reporting = isNpvCorrection
+          ? (state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 1)
+          : record.reporting;
+        // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
+        const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
+        const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
+        return {
+          kind: isNpvCorrection ? 'correction' : 'call',
+          isNpv: true,
+          unitKey: 'NPV',
+          stateName: 'National Popular Vote',
+          ev: null,
+          leader,
+          // Always resolve both major-party candidates by name, regardless
+          // of who's actually leading - see the state-call branch below for
+          // why (the old leader/oppositeLeader indirection dropped both
+          // names whenever a third party led).
+          dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
+          rCandidateName: resolveCandidateFullName('R', 'NATIONAL'),
+          candidateName: resolveCandidateFullName(leader, 'NATIONAL'),
+          oCandidateName,
+          previousCandidateName: isNpvCorrection ? (resolveCandidateFullName(record.calledLeader, 'NATIONAL')) : null,
+          accentColor: calledAccentColor(leader, voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : (CHECKPOINT_DEFAULT_MARGIN[leader] || 0)),
+          tallyAfter: computeRunningEvTally(record.time),
+          dVotes, rVotes, oVotes, countedVotes,
+          reportingPct: isFinite(reporting) ? Math.max(0, Math.min(1, reporting)) : null,
+          reportingText: formatReportingText(reporting, null),
+          marginText: formatMarginText(marginStr, leader, voteMargin),
+          marginPctText: marginStr,
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
+      const isCorrection = record.noticeType === 'miscall';
+      const leader = isCorrection ? record.finalLeader : record.leader;
+      const voteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
+      // A third-party candidate who took a real (not routine-noise) share of
+      // this unit's vote gets a third comparison row alongside D and R -
+      // gated on the data itself (not a hardcoded year list) so it surfaces
+      // for Wallace/Perot/Taft-caliber showings without needing upkeep for
+      // future strong third-party years.
+      const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
+      const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
+      return {
+        kind: isCorrection ? 'correction' : 'call',
+        unitKey: record.unitKey,
+        stateName: formatUnitLabel(record.unitKey, state.year, { short: true }),
+        ev: record.ev,
+        leader,
+        // Always resolve both major-party candidates by name/portrait,
+        // regardless of who actually won this unit - previously this only
+        // resolved the loser (oppositeLeader) relative to the winner, so a
+        // third-party win (leader='O') left oppositeLeader null and the
+        // comparison row showed generic "Democrat"/"Republican" placeholders
+        // with no portraits instead of the real candidates.
+        dCandidateName: resolveCandidateFullName('D', record.unitKey),
+        rCandidateName: resolveCandidateFullName('R', record.unitKey),
+        candidateName: resolveCandidateFullName(leader, record.unitKey),
+        oCandidateName,
+        oVotes: record.oVotes,
+        previousCandidateName: isCorrection ? record.previousCandidateName : null,
+        accentColor: calledAccentColor(leader, isCorrection ? (CHECKPOINT_DEFAULT_MARGIN[leader] || 0) : marginFromCallRecord(record)),
+        marginPctText: record.marginStr,
+        // Full D/R/O running tally as of this record, for the persistent
+        // scoreboard panel (see updatePopup.js's renderTallyPanel) - it
+        // animates from whatever it's currently showing to this value the
+        // moment this slide starts, rather than each slide carrying its
+        // own separate "X's EV total" box.
+        tallyAfter: computeRunningEvTally(record.time),
+        dVotes: record.dVotes,
+        rVotes: record.rVotes,
+        countedVotes: record.countedVotes,
+        reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
+        reportingText: formatReportingText(record.reporting, record.remainingVotes),
+        marginText: formatMarginText(record.marginStr, leader, voteMargin),
+        timeLabel: formatTimeLabel(record.time)
+      };
+    });
+    await Promise.all(specs.map(async spec => {
+      if (spec.kind === 'final' || spec.kind === 'uncalled') {
+        spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
+        spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
+        return;
+      }
+      spec.portraitUrl = await getPortraitUrlForName(state.year, spec.candidateName);
+      spec.dPortraitUrl = spec.dCandidateName ? await getPortraitUrlForName(state.year, spec.dCandidateName) : null;
+      spec.rPortraitUrl = spec.rCandidateName ? await getPortraitUrlForName(state.year, spec.rCandidateName) : null;
+      spec.oPortraitUrl = spec.oCandidateName ? await getPortraitUrlForName(state.year, spec.oCandidateName) : null;
+    }));
+
+    const uncalled = buildUncalledCandidates();
+    if (uncalled.length) {
+      const threshold = effectiveConfidenceThreshold();
+      const RACES_TO_SHOW = 6;
+      const candidates = await Promise.all(uncalled.slice(0, RACES_TO_SHOW).map(async c => {
+        // Resolve the leading candidate's name/portrait regardless of party -
+        // resolveCandidateFullName() already handles 'O' correctly (reads
+        // the CSV's thirdPartyResults), it was just never called for it here.
+        const candidateName = resolveCandidateFullName(c.leader, c.unitKey);
+        return {
+          unitKey: c.unitKey,
+          displayLabel: formatUnitLabel(c.unitKey, state.year, { short: true }),
+          ev: c.ev,
+          leader: c.leader,
+          candidateName,
+          portraitUrl: candidateName ? await getPortraitUrlForName(state.year, candidateName) : null,
+          reporting: c.reporting,
+          marginText: formatMarginText(c.marginStr, c.leader, c.voteMargin),
+          marginPctText: c.marginStr,
+          rawMarginText: c.leader === 'O'
+            ? formatOtherRawMarginText(c.oVotes, c.dVotes, c.rVotes)
+            : formatRawMarginText(c.leader, c.voteMargin),
+          confidenceText: formatConfidenceText(c.confidence, threshold),
+          reportingText: formatReportingText(c.reporting, c.remainingVotes),
+          accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold)
+        };
+      }));
+      specs.push({ kind: 'races', candidates });
+    }
+
+    return specs;
+  }
+
+  /** National-ticket D/R name + portrait, resolved once per checkpoint for
+   * the persistent scoreboard panel (which doesn't change per-slide). */
+  async function resolveScoreboardPanelInfo() {
+    const dName = resolveCandidateFullName('D', 'NATIONAL');
+    const rName = resolveCandidateFullName('R', 'NATIONAL');
+    const oName = resolveCandidateFullName('O', 'NATIONAL');
+    const [dPortrait, rPortrait, oPortrait] = await Promise.all([
+      getPortraitUrlForName(state.year, dName),
+      getPortraitUrlForName(state.year, rName),
+      getPortraitUrlForName(state.year, oName)
+    ]);
+    return {
+      D: { name: dName, portraitUrl: dPortrait },
+      R: { name: rName, portraitUrl: rPortrait },
+      O: { name: oName, portraitUrl: oPortrait }
+    };
+  }
+
+  /**
+   * Project when (and for whom) a not-yet-called unit *would* be called,
+   * using the exact same pure decision functions the live sim uses
+   * (computeMetrics/shouldCallState/shouldForceCall), just stepping through
+   * time in a coarse offline loop instead of being driven by real ticks.
+   * Already-called units (st.calledAt != null - matters when this gets
+   * re-run mid-run, e.g. after a confidence-threshold change) just report
+   * what actually happened instead of re-deriving it.
+   */
+  function projectUnitCallEvent(st) {
+    if (st.calledAt != null) return { time: st.calledAt, leader: st.callLeader };
+    if (st.instantCall) {
+      const phaseName = (getPhase(st.startTime) || {}).name || 'Final';
+      return { time: st.startTime, leader: computeMetrics(st, st.startTime, phaseName).leader };
+    }
+    const STEP = 2; // simulated minutes; cheap enough at this resolution over the whole night
+    for (let t = st.startTime; t <= state.simEnd; t += STEP) {
+      const phaseName = (getPhase(t) || {}).name || 'Final';
+      const metrics = computeMetrics(st, t, phaseName);
+      if (shouldCallState(st, metrics, t) || shouldForceCall(st, metrics, t)) {
+        return { time: t, leader: metrics.leader };
+      }
+    }
+    // Dead-end fallback: no sampled moment in the projection loop ever
+    // qualified. Pinned FINAL_CHECKPOINT_GAP_MINUTES before simEnd (not
+    // exactly at it) so this can never tie with the trailing 'final' event -
+    // see that constant's comment.
+    return { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: st.winner };
+  }
+
+  /**
+   * Project when (and for whom) the national popular vote would be called,
+   * mirroring maybeRegisterNpvCall()'s live trigger exactly - but that live
+   * version depends on an *aggregate* across every pvWeight unit's own
+   * reporting fraction at a given moment, not one unit's state, so unlike
+   * projectUnitCallEvent() this has to re-sum the whole electorate at each
+   * step rather than project a single unit in isolation.
+   */
+  function projectNpvCallEvent() {
+    const data = (state.stateData || []).filter(st => st.pvWeight);
+    if (!data.length || !(state.totalEligibleVotes > EPS)) return null;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const STEP = 2;
+    for (let t = state.simStart; t <= state.simEnd; t += STEP) {
+      const phaseName = (getPhase(t) || {}).name || 'Final';
+      let dCounted = 0, rCounted = 0, oCounted = 0, countedVotes = 0;
+      data.forEach(st => {
+        const metrics = computeMetrics(st, t, phaseName);
+        const counted = st.totalVotes * metrics.reporting;
+        dCounted += counted * metrics.dShare;
+        rCounted += counted * metrics.rShare;
+        oCounted += counted * metrics.oShare;
+        countedVotes += counted;
+      });
+      const leader = nationalLeader(dCounted, rCounted, oCounted);
+      if (!leader) continue;
+      const reporting = countedVotes / state.totalEligibleVotes;
+      if (reporting < MIN_REPORTING_TO_CALL) continue;
+      const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+      if (reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold)) {
+        return { time: t, leader };
+      }
+    }
+    // Dead-end fallback: a razor-thin national margin (1880's ~0.1% is the
+    // extreme case) can keep calculateNationalConfidence short of
+    // `threshold` for the entire night, while MIN_REPORTING_TO_CALL and the
+    // pvWeight exclusion (ME/NE's at-large rows before their district
+    // split) can keep the reporting>=1.0 fallback above from ever exactly
+    // landing either - silently never calling the NPV at all instead of
+    // just calling it late. Mirrors projectUnitCallEvent's own dead-end
+    // fallback: pin it just before simEnd using the real historical
+    // national winner (the same finalLeader check maybeEmitNpvMiscall()
+    // uses to decide whether a call needs correcting).
+    const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    return { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: finalLeader };
+  }
+
+  /**
+   * Compute the whole night's checkpoint schedule deterministically, up
+   * front - this is what makes checkpoints immune to rewinding: the result
+   * only depends on state.stateData/simEnd/confidenceThreshold, never on
+   * live event-arrival order, so seeking around can't pile events up. Run
+   * once per prepareSimulation() and again whenever confidenceThreshold
+   * changes mid-run (see its slider's change handler) so still-uncalled
+   * units' projections stay current while already-decided ones stay locked
+   * to what really happened.
+   */
+  function computePlannedCheckpoints() {
+    const data = state.stateData || [];
+    if (!data.length) return [];
+    const totalPool = state.totalEvPool || 538;
+    const majority = Math.floor(totalPool / 2) + 1;
+
+    // One call event per unit, plus a correction event if the projected/
+    // real call doesn't match the ground-truth winner.
+    const timeline = [];
+    data.forEach(st => {
+      const call = projectUnitCallEvent(st);
+      const ev = isFinite(st.ev) ? st.ev : 0;
+      timeline.push({ kind: 'call', unitKey: st.unitKey, ev, leader: call.leader, time: call.time });
+      if (call.leader !== st.winner) {
+        const correctionTime = Math.max(call.time, st.instantCall ? st.startTime : st.startTime + st.duration);
+        timeline.push({ kind: 'correction', unitKey: st.unitKey, ev, leader: st.winner, time: correctionTime });
+      }
+    });
+
+    // National popular vote gets its own checkpoint-worthy call/correction
+    // pair, same as any unit above - it just has no EV weight of its own,
+    // so it never participates in the majority replay below.
+    const npvCall = projectNpvCallEvent();
+    if (npvCall) {
+      timeline.push({ kind: 'npv', unitKey: 'NPV', ev: 0, leader: npvCall.leader, time: npvCall.time });
+      const npvFinalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+      if (npvCall.leader !== npvFinalLeader) {
+        // Same FINAL_CHECKPOINT_GAP_MINUTES headroom as projectUnitCallEvent's
+        // dead-end fallback above, and for the same reason: this used to be
+        // pinned to exactly state.simEnd, which reliably tied with the
+        // trailing 'final' event and merged into its checkpoint batch.
+        timeline.push({ kind: 'npv_correction', unitKey: 'NPV', ev: 0, leader: npvFinalLeader, time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES });
+      }
+    }
+
+    timeline.sort((a, b) => (a.time - b.time) || (a.kind === 'call' ? -1 : 1) - (b.kind === 'call' ? -1 : 1));
+
+    // Replay in time order to find every national outcome transition,
+    // mirroring computeRunningEvTally()'s call/correction swap rule (a
+    // correction subtracts the unit's EVs from whoever it was previously
+    // attributed to and adds them to the corrected leader). Tracks every
+    // change of projected majority-holder, not just the first - a
+    // correction can later flip who's projected to win (D->R directly), or
+    // knock the current holder back below majority with nobody else
+    // reaching it (D/R->null, resolved by buildCheckpointSlides() into the
+    // new 'uncalled' slide) - both used to be silently dropped since only
+    // the very first clinch ever got a projected/schedulable event. `seq`
+    // gives resolveCheckpointRecords() a stable way to match each projected
+    // transition back to the live record updateCallLog() pushes for it,
+    // independent of leader value (which can repeat, e.g. D->null->D).
+    let dRunning = 0, rRunning = 0, oRunning = 0;
+    const attributedTo = new Map();
+    let currentOutcomeType = null;
+    let outcomeSeq = 0;
+    const bumpRunning = (leader, delta) => {
+      if (leader === 'D') dRunning += delta;
+      else if (leader === 'R') rRunning += delta;
+      else if (leader === 'O') oRunning += delta;
+    };
+    timeline.forEach(ev => {
+      const prevLeader = attributedTo.get(ev.unitKey);
+      bumpRunning(prevLeader, -ev.ev);
+      attributedTo.set(ev.unitKey, ev.leader);
+      bumpRunning(ev.leader, ev.ev);
+      // Mirrors runNationalWinProbabilityMC's impossibleD/impossibleR check:
+      // once the EV still not yet attributed to anyone can no longer close
+      // either side's gap to majority, the outcome is a locked no-majority
+      // deadlock - project that the moment it's knowable, not only once
+      // every last unit has actually been attributed (remainingEv === 0 is
+      // just the tail case of this same check).
+      const remainingEv = Math.max(0, totalPool - dRunning - rRunning - oRunning);
+      const impossibleD = dRunning + remainingEv < majority;
+      const impossibleR = rRunning + remainingEv < majority;
+      const newType = dRunning >= majority ? 'D' : (rRunning >= majority ? 'R' : (impossibleD && impossibleR ? 'T' : null));
+      if (newType !== currentOutcomeType) {
+        currentOutcomeType = newType;
+        timeline.push({ kind: 'outcome', leader: newType, time: ev.time, forceFlag: true, seq: outcomeSeq++ });
+      }
+    });
+
+    // Always append one final, standalone event showing the true final EV
+    // split - independent of the outcome-clinch projection above (which
+    // only ever fires for a clean D/R majority), so this is also the only
+    // place a no-majority/"decided by the House" result ever gets a
+    // checkpoint slide. Timed to tie exactly with the last real event
+    // (rather than out at state.simEnd, ~30 simulated minutes later) so
+    // groupEventsIntoCheckpoints() folds it into that same checkpoint's
+    // slide sequence instead of opening a fresh batch of its own - a
+    // standalone batch this late would depend on live playback actually
+    // resuming after the prior checkpoint closes to ever get shown, which
+    // isn't guaranteed (tick() clamps currentTime to simEnd, which can land
+    // exactly on the tick that shows the second-to-last checkpoint, and
+    // nothing then restarts the RAF loop for a checkpoint scheduled later).
+    // Being forceFlag'd and pushed last (stable sort keeps ties in push
+    // order) means it still always flushes as the final slide of whatever
+    // batch it lands in.
+    const lastEventTime = timeline.reduce((max, ev) => Math.max(max, ev.time), state.simStart);
+    const finalD = state.nationalFinalDEv || 0;
+    const finalR = state.nationalFinalREv || 0;
+    const finalO = Math.max(0, totalPool - finalD - finalR);
+    timeline.push({
+      kind: 'final',
+      time: lastEventTime,
+      forceFlag: true,
+      dEv: finalD,
+      rEv: finalR,
+      oEv: finalO,
+      majority
+    });
+
+    return groupEventsIntoCheckpoints(timeline);
+  }
+
+  /**
+   * Resolve a planned checkpoint's abstract event list (kind + unitKey)
+   * back to the concrete, already-populated records in state.callRecords /
+   * state.stateData - by the time this runs, real playback has genuinely
+   * ticked past every one of these moments, so they're guaranteed to
+   * exist (skipped gracefully if not - e.g. a live threshold change made a
+   * projected correction not actually happen).
+   */
+  function resolveCheckpointRecords(events) {
+    const records = [];
+    (events || []).forEach(ev => {
+      if (ev.kind === 'call') {
+        const st = (state.stateData || []).find(s => s && s.unitKey === ev.unitKey);
+        if (st && st.callRecord) records.push(st.callRecord);
+      } else if (ev.kind === 'correction') {
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
+        if (rec) records.push(rec);
+      } else if (ev.kind === 'outcome') {
+        // Matched by seq, not leader+noticeType - a projected transition can
+        // be the first-ever clinch OR a later flip/uncall, and the live side
+        // announces those via two different noticeTypes ('outcome-clinch'
+        // vs 'outcome-reversal'). seq lines them up positionally regardless,
+        // and survives the leader value repeating (e.g. D -> null -> D).
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.outcomeSeq === ev.seq);
+        if (rec) records.push(rec);
+      } else if (ev.kind === 'npv') {
+        if (state.npvCallRecord) records.push(state.npvCallRecord);
+      } else if (ev.kind === 'npv_correction') {
+        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'npv_miscall');
+        if (rec) records.push(rec);
+      } else if (ev.kind === 'final') {
+        // Self-contained - synthesized entirely from ground truth at
+        // prepare time, so there's no live record to look up.
+        records.push({ kind: 'notice', noticeType: 'final-tally', time: ev.time, dEv: ev.dEv, rEv: ev.rEv, oEv: ev.oEv, majority: ev.majority });
+      }
+    });
+    return records;
+  }
+
+  /**
+   * Check whether real forward playback has just ticked past the next
+   * planned checkpoint, and if so, pause and show it. Only called from the
+   * live tick() loop, never from a manual scrub via #enProgress - seeking
+   * only moves state.checkpointCursorTime (see seekToProgress()), it never
+   * fires anything itself, so dragging the timeline (in either direction)
+   * stays a silent jump instead of surfacing whatever it skipped over.
+   */
+  function maybeFireCheckpoint(currentTime) {
+    if (!state.updatesEnabled || state.checkpointActive) return;
+    const next = findNextCheckpoint(state.plannedCheckpoints, state.checkpointCursorTime, currentTime, EPS);
+    if (!next) return;
+    state.checkpointCursorTime = next.time;
+
+    const records = resolveCheckpointRecords(next.events);
+    if (!records.length) return; // nothing to show; the cursor already advanced past it
+
+    pauseSimulation();
+    state.checkpointActive = true;
+
+    // Scoreboard starting point: the tally as of just before this batch's
+    // first event, so the panel animates from where it actually was, not
+    // from zero.
+    const firstEventTime = next.events.reduce((min, ev) => Math.min(min, ev.time), Infinity);
+    const startingTally = computeRunningEvTally(isFinite(firstEventTime) ? firstEventTime - EPS : currentTime);
+    const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
+      ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
+      : null;
+    const totalPool = state.totalEvPool || 538;
+    const majority = Math.floor(totalPool / 2) + 1;
+    // Same ground-truth "does this year have a real third party" signal
+    // buildStateData's finalO computation already uses elsewhere (e.g. the
+    // 'final' capstone slide's oEv) - shows the scoreboard's third O box
+    // for the whole night in years where it matters, rather than having it
+    // pop in mid-checkpoint the moment the first O state gets called.
+    const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
+
+    Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
+      showCheckpoint(slides, {
+        startingTally,
+        winProb,
+        majority,
+        panelInfo,
+        hasThirdParty,
+        onComplete: () => {
+          state.checkpointActive = false;
+          if (state.currentTime < state.simEnd - EPS) startSimulation();
+        }
+      });
+    }).catch(err => {
+      console.warn('Failed to build checkpoint slides', err);
+      state.checkpointActive = false;
+      if (state.currentTime < state.simEnd - EPS) startSimulation();
+    });
+  }
+
   /**
    * RAF tick handler. Converts elapsed wall-clock time (timestamp)
    * into simulated minutes using speedMultiplier and minutesPerSecond,
@@ -1094,13 +1739,36 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     if (shouldUpdateDisplay) {
       state.lastDisplayUpdate = state.currentTime;
       renderAt(state.currentTime);
+      // Only check for a checkpoint crossing right after renderAt() has run
+      // at (at least) this same currentTime - renderAt() is the only place
+      // that calls registerCall() and populates st.callRecord, so checking
+      // here guarantees any unit whose projected call time is <= currentTime
+      // already has a real record for resolveCheckpointRecords() to find.
+      // Checking on every raw tick (as this used to) could cross a planned
+      // checkpoint's time on a frame where renderAt() hadn't caught up yet,
+      // silently dropping whichever units hadn't been registered - most
+      // visible when a checkpoint groups a burst of near-simultaneous calls.
+      maybeFireCheckpoint(state.currentTime);
     }
+    if (state.checkpointActive) return; // paused for the popup; its onComplete() resumes ticking
 
     if (state.currentTime >= state.simEnd - EPS) {
       pauseSimulation();
     } else {
       state.rafId = requestAnimationFrame(tick);
     }
+  }
+
+  // ME/NE only become true district-split systems in these years. Before
+  // that, the dataset still labels their statewide rows as "-AL" for schema
+  // consistency, but they should behave like ordinary statewide units.
+  const DISTRICT_SPLIT_YEAR = { ME: 1972, NE: 1992 };
+
+  function isDerivedAtLargeUnit(year, abbr, isAtLargeRow) {
+    if (!isAtLargeRow) return false;
+    const splitYear = DISTRICT_SPLIT_YEAR[abbr];
+    if (!isFinite(splitYear)) return false;
+    return year >= splitYear;
   }
 
   /**
@@ -1121,10 +1789,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       if (!row || !row.unit || row.unit === 'NATIONAL') return;
       const unit = String(row.unit);
       const abbr = unit.slice(0, 2);
-      const isAtLarge = /-AL$/.test(unit);
+      const isAtLargeRow = /-AL$/.test(unit);
       const isDistrict = /-(0[1-9])$/.test(unit);
       const isState = /^[A-Z]{2}$/.test(unit) || unit === 'DC';
-      if (!isState && !isAtLarge && !isDistrict) return;
+      if (!isState && !isAtLargeRow && !isDistrict) return;
+      const isDerivedAtLarge = isDerivedAtLargeUnit(year, abbr, isAtLargeRow);
 
       let totals = null;
       if (typeof window.getUnitFinalVoteTotals === 'function') {
@@ -1168,6 +1837,16 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       else if (finalRVotes >= finalDVotes && finalRVotes >= finalOTopVotes) winner = 'R';
       else winner = 'O';
       if (year === 1876 && abbr === 'CO') winner = 'R';
+      // 1948 Alabama: Truman wasn't on the ballot here - voters cast ballots
+      // for Strom Thurmond's Dixiecrat electors under the Democratic party
+      // line, and presidential_margins.csv copies those votes into the
+      // D_votes column too (see the row's special_case_notes), so
+      // finalDVotes and finalOTopVotes are the same duplicated number and
+      // the tie-break above resolves to 'D' first. All 11 electors
+      // historically went to Thurmond, not Truman - matches
+      // build_flip_results.py's own `ev_by_party['T'] += 11` override for
+      // this same year/state.
+      if (year === 1948 && abbr === 'AL') winner = 'O';
       const thirdPartyDominant = winner === 'O';
 
       const ev = getEv(year, unit);
@@ -1209,7 +1888,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       if (!pathSelections.length) return;
 
       const aliases = new Set([unit]);
-      if (isAtLarge) aliases.add(abbr);
+      if (isAtLargeRow) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
@@ -1220,10 +1899,12 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         const baselineUnit = baselineUnitColors.get(unit);
         finalColor = baselineUnit || safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
       }
-      const finalMarginStr = finalLeader === 'O' ? 'Other lead' : formatLean(finalMarginTwoParty);
+      const finalMarginStr = finalLeader === 'O'
+        ? formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes)
+        : formatLean(finalMarginTwoParty);
       const countedMargin = totalVotes > EPS ? ((finalDVotes - finalRVotes) / totalVotes) : 0;
       let countedMarginStr = 'None';
-      if (finalLeader === 'O') countedMarginStr = 'Other lead';
+      if (finalLeader === 'O') countedMarginStr = formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes);
       else if (twoPartyVotesFinal > EPS) countedMarginStr = formatLean((finalDVotes - finalRVotes) / Math.max(twoPartyVotesFinal, EPS));
       else if (totalVotes > EPS) countedMarginStr = 'EVEN';
 
@@ -1255,7 +1936,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       out.push({
         unitKey: unit,
         abbr,
-        type: isDistrict ? 'district' : (isAtLarge ? 'atlarge' : 'state'),
+        type: isDistrict ? 'district' : (isDerivedAtLarge ? 'atlarge' : 'state'),
         totalVotes,
         thirdPartyShare: totalThirdShare,
         topThirdShare,
@@ -1278,7 +1959,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         biasParams,
         pathSelections,
         aliases,
-        pvWeight: isAtLarge ? 0 : 1,
+        pvWeight: isDerivedAtLarge ? 0 : 1,
         closeness,
         easePower,
         reportJitter,
@@ -1843,7 +2524,6 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       oShare = totalThirdShare;
       leader = reporting > 0 ? 'O' : null;
       margin = 0;
-      marginStr = leader ? 'Other lead' : '';
       color = null; // assigned after stats using third-party fallback
     } else {
       const bias = logisticBias(st.biasParams, reporting, phaseName);
@@ -1862,8 +2542,6 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
       leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
       margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
-      if (leader === 'O') marginStr = 'Other lead';
-      else marginStr = (reporting > 0) ? formatLean(margin) : '';
     }
 
     // Given the current shares and reporting fraction compute vote totals
@@ -1872,10 +2550,23 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     const countedTwoParty = (stats.dCounted + stats.rCounted);
     const countedTwoPartyMargin = countedTwoParty > EPS ? ((stats.dCounted - stats.rCounted) / countedTwoParty) : null;
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
+
+    // An O lead is measured against whichever of D/R is closer to catching
+    // them (same "against the runner-up" convention as the D/R margin
+    // above, which only ever compares dVotes to rVotes) rather than against
+    // the combined D+R vote, using the real counted totals whenever they're
+    // available so this doesn't just repeat the interpolated `margin` above.
+    if (leader === 'O') {
+      marginStr = reporting > 0 ? formatOtherLean(stats.oCounted, stats.dCounted, stats.rCounted, stats.countedVotes) : '';
+    } else {
+      marginStr = (reporting > 0) ? formatLean(margin) : '';
+    }
+
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
-      if (leader === 'O') countedMarginStr = 'Other lead';
-      else countedMarginStr = formatLean(countedMargin);
+      countedMarginStr = leader === 'O'
+        ? formatOtherLean(stats.oCounted, stats.dCounted, stats.rCounted, stats.countedVotes)
+        : formatLean(countedMargin);
     }
     // Compute a simple confidence metric based on the counted votes and
     // remaining ballots.
@@ -2170,16 +2861,41 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     });
 
     if (!liveUnits.length && !liveAl.length) {
-      return { probD: fixedDEv >= needed ? 1 : 0, locked: true, sims: 0, evRange90: null };
+      const dWins = fixedDEv >= needed;
+      const rWins = fixedREv >= needed;
+      return { probD: dWins ? 1 : 0, probTie: (!dWins && !rWins) ? 1 : 0, locked: true, sims: 0, evRange90: null };
     }
 
     const liveEvTotal = liveUnits.reduce((sum, st) => sum + st.ev, 0) + liveAl.reduce((sum, st) => sum + st.ev, 0);
     const hardLockedD = fixedDEv >= needed;
     const hardLockedR = fixedREv >= needed;
-    const impossibleR = fixedREv + liveEvTotal < needed;
     const impossibleD = fixedDEv + liveEvTotal < needed;
-    if (hardLockedD || hardLockedR || impossibleD || impossibleR) {
-      return { probD: (hardLockedD || impossibleR) ? 1 : 0, locked: true, sims: 0, evRange90: null };
+    const impossibleR = fixedREv + liveEvTotal < needed;
+    // A no-majority result needs SOME achievable D total D0 with both
+    // D0 < needed and (contestedTotal - D0) < needed, i.e. D0 strictly
+    // between (contestedTotal - needed) and needed - an integer window of
+    // size 2*needed - contestedTotal - 1. Once real, already-locked O EV
+    // (thirdPartyDominant states, excluded from contestedTotal entirely
+    // above) shifts that window to empty or negative, a tie isn't just
+    // unlikely, it's provably impossible for the rest of the night - lets
+    // probTie report a real 0% below instead of the clamp meant for "just
+    // never happened to sample it."
+    const contestedTotal = fixedDEv + fixedREv + liveEvTotal;
+    const tieImpossible = (2 * needed - contestedTotal - 1) <= 0;
+    // A genuine lock only happens once someone has actually clinched, or
+    // once NEITHER side can reach majority no matter how every remaining
+    // live unit breaks. Eliminating just one side (impossibleD alone, say)
+    // does NOT mean the other side has clinched — R might still fall short
+    // too, which is exactly the no-majority/contingent-election case the
+    // Monte Carlo below needs to keep simulating for (it already handles
+    // this correctly on its own: demEv can never reach `needed` once D is
+    // mathematically eliminated, so demWins naturally stays 0).
+    if (hardLockedD || hardLockedR || (impossibleD && impossibleR)) {
+      return {
+        probD: hardLockedD ? 1 : 0,
+        probTie: (impossibleD && impossibleR && !hardLockedD && !hardLockedR) ? 1 : 0,
+        locked: true, sims: 0, evRange90: null
+      };
     }
 
     // Sample from the live swing hierarchy (docs/utils/electionNight/
@@ -2219,6 +2935,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     const demWinCounts = new Int32Array(n);
     const alDemWinCounts = new Int32Array(liveAl.length);
     let demWins = 0;
+    let tieWins = 0;
+    // Every live/al unit is a binary D-or-R draw, so whatever EV a draw
+    // doesn't give to D goes to R - repEv for that draw is just
+    // contestedTotal (computed above) minus the draw's demEv, no separate
+    // per-unit R tracking needed.
 
     for (let s = 0; s < PROB_MC_SIMS; s++) {
       const sample = sampleSwing(swing, allRegions, rng, drawFn);
@@ -2245,6 +2966,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       }
       demEvSamples[s] = demEv;
       if (demEv >= needed) demWins++;
+      else if (contestedTotal - demEv < needed) tieWins++;
     }
 
     const stateProb = new Map();
@@ -2264,7 +2986,14 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     // false-100% guard in docs/utils/formatters.js) since the exact-math
     // locked/impossible cases above already handle real certainty.
     const rawProbD = demWins / PROB_MC_SIMS;
-    return { probD: Math.min(0.999, Math.max(0.001, rawProbD)), locked: false, sims: PROB_MC_SIMS, evRange90, stateProb };
+    const rawProbTie = tieWins / PROB_MC_SIMS;
+    return {
+      probD: Math.min(0.999, Math.max(0.001, rawProbD)),
+      // tieImpossible is a real proof, not a sampling artifact - let it
+      // report an honest 0% instead of the same never-quite-0 clamp.
+      probTie: tieImpossible ? 0 : Math.min(0.999, Math.max(0.001, rawProbTie)),
+      locked: false, sims: PROB_MC_SIMS, evRange90, stateProb
+    };
   }
 
   // Called every renderAt() frame. The cheap per-unit posteriors always
@@ -2372,9 +3101,11 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   function renderWinProbLine(result) {
     if (!elements.winProb) return;
     if (!result || !isFinite(result.probD)) { elements.winProb.textContent = ''; return; }
+    const probTie = isFinite(result.probTie) ? result.probTie : 0;
     const dPct = (result.probD * 100).toFixed(1);
-    const rPct = ((1 - result.probD) * 100).toFixed(1);
-    elements.winProb.innerHTML = `<span class="en-winprob-d">D ${dPct}%</span> — <span class="en-winprob-r">R ${rPct}%</span> to win`;
+    const rPct = ((1 - result.probD - probTie) * 100).toFixed(1);
+    const tiePct = (probTie * 100).toFixed(1);
+    elements.winProb.innerHTML = `<span class="en-winprob-d">D ${dPct}%</span> — <span class="en-winprob-r">R ${rPct}%</span> — <span class="en-winprob-tie">Tie ${tiePct}%</span> to win`;
   }
 
   // Accent color for an uncalled/still-counting race: blends from neutral
@@ -2420,6 +3151,16 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     return name;
   }
 
+  // Same idea as resolveCandidateLastName() but returns the untouched full
+  // name (e.g. "Kamala Harris") for the checkpoint popup, which wants a
+  // real name to display rather than a call-log-style last name.
+  function resolveCandidateFullName(leader, unitKey) {
+    if (leader !== 'D' && leader !== 'R' && leader !== 'O') return null;
+    const names = getUnitCandidateFullNames(unitKey, { year: state.year });
+    const name = names ? names[leader] : null;
+    return name || resolveCandidateLastName(leader, unitKey);
+  }
+
   function maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
     if (state.npvCallRecord) return;
     const leader = nationalLeader(dCounted, rCounted, oCounted);
@@ -2428,7 +3169,17 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     if (reporting < MIN_REPORTING_TO_CALL) return;
     const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
-    if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold))) return;
+    // Force the call once the night is essentially over even if a razor-thin
+    // national margin never crosses `threshold` and tiny float/schedule
+    // rounding keeps `reporting` from ever exactly hitting 1.0 -
+    // maybeEmitNpvMiscall() already exists to correct this if the forced
+    // leader turns out wrong once the true final numbers are in, so forcing
+    // it here is safe even at weak confidence. Same
+    // FINAL_CHECKPOINT_GAP_MINUTES cutoff as projectNpvCallEvent()'s own
+    // dead-end fallback, so the checkpoint scheduler's projected 'npv' event
+    // and this live trigger land in sync.
+    const forceByNightEnd = currentTime >= state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES;
+    if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold) || forceByNightEnd)) return;
 
     const record = {
       kind: 'npv_call',
@@ -2490,17 +3241,31 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     const thresholdText = isFinite(st.callRecord.threshold)
       ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
       : '';
-    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
-    state.callRecords.push({
+    //const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey, state.year)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
+    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey, state.year)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}.`;
+    const correctionRecord = {
       kind: 'notice',
       noticeType: 'miscall',
       unitKey: st.unitKey,
-      displayLabel: formatUnitLabel(st.unitKey),
+      displayLabel: formatUnitLabel(st.unitKey, state.year),
       time: correctionTime,
       text: message,
       calledLeader,
-      finalLeader
-    });
+      finalLeader,
+      ev: st.ev,
+      previousCandidateName: resolveCandidateFullName(calledLeader, st.unitKey) || calledLeaderText,
+      // Final (reporting >= 100%) vote stats for the checkpoint popup's
+      // stats strip - same fields registerCall() stores on a call record.
+      reporting: metrics.reporting,
+      dVotes: metrics.dVotesCounted,
+      rVotes: metrics.rVotesCounted,
+      countedVotes: metrics.countedVotes,
+      remainingVotes: metrics.remainingVotes,
+      marginStr: metrics.countedMarginStr,
+      oVotes: metrics.oVotesCounted,
+      topThirdShare: metrics.topThirdShare
+    };
+    state.callRecords.push(correctionRecord);
     st.evCalledAllocations = st.evAllocations ? { ...st.evAllocations } : null;
     triggerTipRefresh();
     state.lastLogKey = '';
@@ -2559,7 +3324,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     st.callRecord = {
       kind: 'call',
       unitKey: st.unitKey,
-      displayLabel: formatUnitLabel(st.unitKey),
+      displayLabel: formatUnitLabel(st.unitKey, state.year),
       time: callTime,
       leader: calledLeader,
       candidateName: resolveCandidateLastName(calledLeader, st.unitKey),
@@ -3053,17 +3818,19 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
   function outcomeMessageText(type, dEv, rEv, oEv, majority) {
     if (type === 'D') {
       const winnerName = resolveCandidateLastName('D', 'NATIONAL');
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'D') : null;
       return winnerName
-        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority}).`
+        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Democrats clinch the presidency with ${dEv} EV (needed ${majority}).`;
     }
     if (type === 'R') {
       const winnerName = resolveCandidateLastName('R', 'NATIONAL');
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'R') : null;
       return winnerName
-        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority}).`
+        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
     }
-    return `Electoral College tie: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}.`;
+    return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election will be decided by the House of Representatives.`;
   }
   function outcomeClassFor(type) {
     if (type === 'D') return ' win-dem';
@@ -3071,29 +3838,15 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     return ' tie';
   }
 
-  function updateCallLog(currentTime) {
-    // Exposed so the map's hover tooltip (tooltipManager.js, a separate
-    // module with no access to this closure's `state`) can rescale its own
-    // confidence display against the same live call-threshold setting
-    // instead of a hardcoded value.
-    try { window._electionNightConfidenceThreshold = effectiveConfidenceThreshold(); } catch (e) { /* ignore */ }
-    const timeLabel = formatTimeLabel(currentTime);
-    if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
-    if (!elements.log && !elements.logUncalled && !elements.victory) return;
-
-    const readyEvents = state.callRecords
-      .filter(rec => rec && currentTime >= rec.time - EPS)
-      .slice()
-      .sort((a, b) => {
-        if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
-        const orderMap = { call: 0, npv_call: 1, notice: 2, outcome: 3 };
-        const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
-        const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
-        if (orderA !== orderB) return orderA - orderB;
-        return (a.unitKey || '').localeCompare(b.unitKey || '');
-      });
-
-    const uncalledCandidates = (state.stateData || [])
+  /**
+   * Every not-yet-called race with any reporting so far, sorted by
+   * importance/interest (rewards high EV, confidence near the call
+   * threshold, and a small margin). Used both by the always-visible "still
+   * counting" call-log sidebar and by the checkpoint popup's "races to
+   * watch" slide, so both surfaces agree on what's worth watching.
+   */
+  function buildUncalledCandidates() {
+    return (state.stateData || [])
       .filter(st => st && st.calledAt == null && st.latestMetrics && st.latestMetrics.reporting > EPS)
       .map(st => {
         const metrics = st.latestMetrics;
@@ -3101,7 +3854,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         const rawMargin = isFinite(metrics.countedMargin) ? metrics.countedMargin : (isFinite(metrics.margin) ? metrics.margin : 0);
         return {
           unitKey: st.unitKey,
-          displayLabel: formatUnitLabel(st.unitKey),
+          displayLabel: formatUnitLabel(st.unitKey, state.year),
           confidence: isFinite(metrics.confidence) ? metrics.confidence : 0,
           reporting: isFinite(metrics.reporting) ? metrics.reporting : 0,
           remainingVotes: isFinite(metrics.remainingVotes) ? Math.max(0, Math.round(metrics.remainingVotes)) : null,
@@ -3111,6 +3864,9 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           voteMargin: (isFinite(metrics.dVotesCounted) && isFinite(metrics.rVotesCounted))
             ? Math.round(metrics.dVotesCounted - metrics.rVotesCounted)
             : null,
+          dVotes: isFinite(metrics.dVotesCounted) ? metrics.dVotesCounted : null,
+          rVotes: isFinite(metrics.rVotesCounted) ? metrics.rVotesCounted : null,
+          oVotes: isFinite(metrics.oVotesCounted) ? metrics.oVotesCounted : null,
           ev: isFinite(st.ev) ? st.ev : 0,
           winProb: (() => {
             if (st.thirdPartyDominant) return null;
@@ -3148,6 +3904,31 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         if (Math.abs(confDiff) > EPS) return confDiff;
         return (a.displayLabel || '').localeCompare(b.displayLabel || '');
       });
+  }
+
+  function updateCallLog(currentTime) {
+    // Exposed so the map's hover tooltip (tooltipManager.js, a separate
+    // module with no access to this closure's `state`) can rescale its own
+    // confidence display against the same live call-threshold setting
+    // instead of a hardcoded value.
+    try { window._electionNightConfidenceThreshold = effectiveConfidenceThreshold(); } catch (e) { /* ignore */ }
+    const timeLabel = formatTimeLabel(currentTime);
+    if (elements.logHeaderText) elements.logHeaderText.textContent = `Call log ${timeLabel} ET`;
+    if (!elements.log && !elements.logUncalled && !elements.victory) return;
+
+    const readyEvents = state.callRecords
+      .filter(rec => rec && currentTime >= rec.time - EPS)
+      .slice()
+      .sort((a, b) => {
+        if (Math.abs(a.time - b.time) > EPS) return a.time - b.time;
+        const orderMap = { call: 0, npv_call: 1, notice: 2, outcome: 3 };
+        const orderA = orderMap[(a && a.kind) ? a.kind : 'call'] ?? 3;
+        const orderB = orderMap[(b && b.kind) ? b.kind : 'call'] ?? 3;
+        if (orderA !== orderB) return orderA - orderB;
+        return (a.unitKey || '').localeCompare(b.unitKey || '');
+      });
+
+    const uncalledCandidates = buildUncalledCandidates();
 
     // National popular vote has no EV weight to score against the state
     // races above, so it gets its own small dedicated card rather than
@@ -3174,7 +3955,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
           leader,
           margin,
-          marginStr: leader === 'O' ? 'Other lead' : formatLean(margin),
+          marginStr: leader === 'O' ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes) : formatLean(margin),
           voteMargin: Math.round(dCounted - rCounted),
           ev: 0
         };
@@ -3281,7 +4062,15 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
     const finalO = oRunning;
     const totalCalled = finalD + finalR + finalO;
     const allCalled = totalCalled >= totalPool - EPS;
-    if (!outcome && allCalled && Math.abs(dRunning - rRunning) <= EPS) {
+    // Covers an exact tie AND any other deadlock where neither side reaches
+    // a majority (e.g. a third-party candidate takes enough EVs to deny
+    // both). Fires as soon as it's mathematically locked - dRunning/rRunning
+    // both still short of majority even in the best case where every
+    // not-yet-called EV (remainingEv) broke their way - rather than waiting
+    // for literally every last unit to be called (allCalled is just the
+    // remainingEv===0 special case of this same check).
+    const remainingEv = Math.max(0, totalPool - totalCalled);
+    if (!outcome && dRunning + remainingEv < majority && rRunning + remainingEv < majority) {
       outcome = {
         type: 'T',
         time: readyCalls.length ? readyCalls[readyCalls.length - 1].time : currentTime,
@@ -3307,18 +4096,34 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
       ? (outcome.type === 'D' ? finalD : (outcome.type === 'R' ? finalR : finalD))
       : null;
 
+    // Every D/R/null/T transition gets an outcomeSeq now -
+    // computePlannedCheckpoints()'s projected replay computes the exact same
+    // mathematical-impossibility condition (remaining uncalled EV too small
+    // for either side to reach majority) to project a 'T' transition at the
+    // matching moment, so there's always a live record here for it to match
+    // up with by seq.
+    const seqable = true;
     if (newOutcomeType !== state.outcomeAnnouncedType) {
       if (state.outcomeAnnouncedType == null && newOutcomeType) {
         const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
         const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
         const className = outcomeClassFor(newOutcomeType);
-        state.callRecords.push({
+        const clinchTime = outcome.time != null ? outcome.time : currentTime;
+        const clinchRecord = {
           kind: 'notice',
           noticeType: 'outcome-clinch',
-          time: outcome.time != null ? outcome.time : currentTime,
+          time: clinchTime,
           text: `${timeStr} – ${message}`,
-          outcomeClassName: className
-        });
+          outcomeClassName: className,
+          outcomeLeader: newOutcomeType,
+          outcomeSeq: seqable ? state.outcomeSeq++ : null
+        };
+        state.callRecords.push(clinchRecord);
+        // The checkpoint popup's own "X elected president" moment (D/R
+        // only - a projected EC tie ('T') has no winner to announce) is
+        // driven independently by computePlannedCheckpoints()'s own outcome
+        // projection, resolved back to this exact record via outcomeSeq
+        // in resolveCheckpointRecords() - nothing to wire up here.
         state.lastOutcomeBannerText = message;
         state.lastOutcomeBannerClass = className;
         state.lastLogKey = '';
@@ -3328,10 +4133,12 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
         let reversalBanner = '';
         let reversalClass = '';
         if (newOutcomeType === 'D' || newOutcomeType === 'R') {
-          const newWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL')
-            || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
-          reversalBanner = `${newWinnerName} is now projected to win the presidency instead, following a corrected state call.`;
-          reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead.`;
+          const resolvedWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL');
+          const newWinnerName = resolvedWinnerName || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
+          const label = resolvedWinnerName ? getPresidencyOutcomeLabel(state.year, newOutcomeType) : null;
+          const labelSuffix = label ? ` (${label.toLowerCase()})` : '';
+          reversalBanner = `${newWinnerName} is now projected to win the presidency instead${labelSuffix}, following a corrected state call.`;
+          reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead${labelSuffix}.`;
           reversalClass = outcomeClassFor(newOutcomeType);
         } else if (newOutcomeType === 'T') {
           reversalBanner = 'The Electoral College is now projected to tie, following a corrected state call.';
@@ -3345,6 +4152,8 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
           noticeType: 'outcome-reversal',
           time: reversalTime,
           text: `${formatTimeLabel(reversalTime)} – ${reversalText}`,
+          outcomeLeader: newOutcomeType,
+          outcomeSeq: seqable ? state.outcomeSeq++ : null,
           outcomeClassName: reversalClass
         });
         state.lastOutcomeBannerText = reversalBanner;

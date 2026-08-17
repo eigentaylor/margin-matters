@@ -16,6 +16,19 @@ export function leanStr(x) {
     return (x > 0 ? 'D+' : 'R+') + s;
 }
 
+// Analogue of leanStr() for the case where a third-party candidate is
+// actually ahead: D and R margins are always measured against each other
+// (dVotes - rVotes), so this measures the "O" leader the same way - against
+// whichever of D/R is closer to catching them - rather than against the sum
+// of every other candidate, which would understate how commanding the lead
+// is whenever both major parties are also splitting votes between them.
+export function formatOtherLean(oVotes, dVotes, rVotes, totalVotes) {
+    if (!isFinite(oVotes) || !isFinite(dVotes) || !isFinite(rVotes) || !isFinite(totalVotes) || totalVotes <= 0) return 'ERROR';
+    const lead = (oVotes - Math.max(dVotes, rVotes)) / totalVotes;
+    if (Math.abs(lead) < 0.000005) return 'EVEN';
+    return `O+${(Math.abs(lead) * 100).toFixed(1)}`;
+}
+
 import { getStateName } from './constants.js';
 
 export function formatLeader(code) {
@@ -33,14 +46,31 @@ export function formatLeaderShort(code) {
     return 'No call';
 }
 
+// The "(D+11,003)"-style raw-vote-count suffix used both inline in
+// formatMarginText() and standalone (e.g. the races-to-watch card's smaller
+// sub-line under its colored margin badge, which wants just this part).
+export function formatRawMarginText(leader, voteMargin) {
+    if (leader === 'O' || !isFinite(voteMargin) || Math.round(voteMargin) === 0) return '';
+    const rawSign = voteMargin > 0 ? 'D' : 'R';
+    return `${rawSign}+${Math.abs(Math.round(voteMargin)).toLocaleString('en-US')}`;
+}
+
+// formatRawMarginText()'s O-lead analogue - voteMargin there is always a
+// D-vs-R difference (meaningless once O is ahead), so this measures the raw
+// vote count the same way formatOtherLean() measures the percentage: O's
+// lead over whichever of D/R is closer to catching them.
+export function formatOtherRawMarginText(oVotes, dVotes, rVotes) {
+    if (!isFinite(oVotes) || !isFinite(dVotes) || !isFinite(rVotes)) return '';
+    const raw = oVotes - Math.max(dVotes, rVotes);
+    if (Math.round(raw) === 0) return '';
+    return `O+${Math.abs(Math.round(raw)).toLocaleString('en-US')}`;
+}
+
 export function formatMarginText(marginStr, leader, voteMargin) {
     if (marginStr === 'None') return 'None';
     if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';
-    if (leader !== 'O' && isFinite(voteMargin) && Math.round(voteMargin) !== 0) {
-        const rawSign = voteMargin > 0 ? 'D' : 'R';
-        return `${marginStr} (${rawSign}+${Math.abs(Math.round(voteMargin)).toLocaleString('en-US')})`;
-    }
-    return marginStr;
+    const raw = formatRawMarginText(leader, voteMargin);
+    return raw ? `${marginStr} (${raw})` : marginStr;
 }
 
 export function formatReportingText(reporting, remainingVotes) {
@@ -135,19 +165,49 @@ export function formatEvAllocationsForLog(callAlloc, finalAlloc) {
     return text ? `EV ${text}` : '';
 }
 
-export function formatUnitLabel(unit) {
+// Maine and Nebraska split their electoral votes by congressional district
+// starting with the 1972 and 1992 elections respectively - before that,
+// their CSV rows are still labeled "-AL" (a data-modeling artifact, not a
+// historical fact), so calling a pre-split year's statewide result
+// "at-large" is anachronistic. Year is optional so callers that don't have
+// one handy still get the pre-existing (post-split) wording.
+const DISTRICT_SPLIT_YEAR = { ME: 1972, NE: 1992 };
+
+export function ordinalSuffix(n) {
+    const v = n % 100;
+    if (v >= 11 && v <= 13) return `${n}th`;
+    switch (n % 10) {
+        case 1: return `${n}st`;
+        case 2: return `${n}nd`;
+        case 3: return `${n}rd`;
+        default: return `${n}th`;
+    }
+}
+
+export function formatUnitLabel(unit, year, opts) {
     if (!unit) return unit;
+    const short = !!(opts && opts.short);
     if (/^[A-Z]{2}$/.test(unit)) return getStateName(unit) || unit;
     if (/-AL$/.test(unit)) {
         const abbr = unit.slice(0, 2);
         const name = getStateName(abbr) || abbr;
+        const splitYear = DISTRICT_SPLIT_YEAR[abbr];
+        if (splitYear != null && isFinite(year) && year < splitYear) return name;
+        // Unlike the numbered-district case below, "at-large" is short
+        // enough to keep spelled out even in the checkpoint popup's tight
+        // header - only the raw unit key ("ME-AL") would be saved by
+        // shortening it, which reads far worse than "Maine at-large".
         return `${name} at-large`;
     }
     if (/(ME|NE)-0[1-9]$/.test(unit)) {
+        // "NE-03" reads fine on its own for the checkpoint popup's tight
+        // header space - the verbose "Nebraska's 3rd Congressional
+        // District" form is reserved for the call log, where there's room.
+        if (short) return unit;
         const abbr = unit.slice(0, 2);
-        const district = unit.slice(3);
+        const district = parseInt(unit.slice(3), 10);
         const name = getStateName(abbr) || abbr;
-        return `${name} ${district}`;
+        return `${name}'s ${ordinalSuffix(district)} Congressional District`;
     }
     return unit;
 }

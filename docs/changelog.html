@@ -22,6 +22,37 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 16, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Election Night</h2>
+<br/>
+<ul>
+<li>Fixed a national-popular-vote accounting bug in election night for pre-district-split Maine/Nebraska years (for example 1880): <code>ME-AL</code>/<code>NE-AL</code> rows are now treated as normal statewide vote contributors before the split years, so the end-of-night NPV margin/count no longer drifts to an incorrect D lead.</li>
+<li>Added a checkpoint popup that periodically interrupts the night to recap what's happened: new calls, corrections, and a running scoreboard, batched together instead of firing one at a time for every single state</li>
+<li>The scoreboard box in the popup shows a live electoral vote tally for each party with an animated count-up, plus each party's live win probability</li>
+<li>Added a genuine tie/no-majority probability alongside the D and R win percentages ("D 48.2% — R 46.5% — Tie 5.3%"), so a contingent-election scenario can actually be represented instead of forcing a binary D-or-R read. The tie percentage now reads an honest 0.0% once a no-majority result becomes mathematically provable, rather than being stuck at a token nonzero floor</li>
+<li>The election is now called as a no-majority/contingent election as soon as it becomes mathematically impossible for either party to reach 270, instead of waiting for every last state to be called</li>
+<li>Years with a serious third-party electoral vote haul (1968, 1948, 1912, 1860, etc.) now show that party in the persistent running EV tally, not just D and R</li>
+<li>Third-party leads now show a real computed margin ("O+13.1", with the matching raw vote count underneath) everywhere a D/R margin would normally appear — call log, races-to-watch, and checkpoint slides — instead of a generic "Other lead" placeholder</li>
+<li>Added a "races to watch" slide highlighting the closest uncalled contests, and a dedicated slide for the final result once the night wraps up</li>
+<li>Uncropped candidate portraits on the "X ELECTED PRESIDENT" slide so the full portrait shows instead of a cropped circle</li>
+<li>Lowered the default call-confidence threshold from 0.5 to 0.15, making calls come in earlier by default</li>
+<li>Fixed the night sometimes ending before a razor-thin national popular vote race (e.g. 1880) ever got officially called</li>
+<li>Fixed the 1948 "flip to no-majority" scenario not actually working, caused by an Alabama data quirk (Thurmond electors recorded under the Democratic line) that was letting Truman keep votes he shouldn't have had</li>
+<li>Fixed checkpoint scheduling so results don't jump around or rewind, and so the final recap slide reliably shows up at the end of the night instead of occasionally getting stranded</li>
+<li>Fixed the sim2028 election-night button swapping in the election-night footer immediately on click, which broke navigating back through the campaign timeline before pressing Start; the footer now only switches once election night actually begins, and switches back correctly on Reset</li>
+<li>Winner announcements (checkpoint popup and call log) now say which numbered presidency is on the line — "Elected 47th President" for a new president, or "Reelected as 47th President" when an incumbent (or a former president winning a non-consecutive term, like Cleveland 1892, T. Roosevelt 1912, or Trump 2024) wins another term. Applies to the main election-night and sim2028 simulations only; future.html's hypothetical years are unaffected</li>
+<li>Fixed a same-term incumbent's reelection ordinal being off by one (e.g. Coolidge showing as "reelected as 31st president" instead of the 30th president he actually was) — a reelected incumbent now correctly keeps their existing number instead of the next one</li>
+<li>Clarified the attributions page to explicitly state that all images on the site (including candidate portraits) are public-domain images sourced from Wikimedia Commons</li>
+<li>Added missing candidate portraits for Ralph Nader (2000) and James B. Weaver (1880 Populist candidate)</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         August 15, 2026
                     </div>
                     <div class='changelog-content'>
@@ -40,6 +71,8 @@
 <li>The map's hover tooltips now show the same confidence and reporting figures as the call log, instead of a rougher, less consistent version</li>
 <li>Added a dedicated playback footer (play/pause, reset, speed, and the progress scrubber) that appears at the bottom of the screen during election night mode, so the controls stay reachable without scrolling back up</li>
 <li>Smaller touches: candidate last names in call announcements, a year label in the call log header, free-text speed input instead of a dropdown, and a corrected confidence readout for exact ties</li>
+<li>Added real candidate portraits for every presidential and third-party candidate back through the 1800s, replacing placeholder art across the election-night map, call log, and checkpoint slides</li>
+<li>Standardized portrait filenames to a consistent <code>[YEAR][Lastname]</code> scheme and refreshed several low-quality or mismatched historical images</li>
 </ul>
                     </div>
                 </div>

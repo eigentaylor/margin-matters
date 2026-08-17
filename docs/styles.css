@@ -1733,6 +1733,11 @@ body.slider-dragging * {
   font-weight: 700;
 }
 
+.en-winprob-tie {
+  color: #e8c565;
+  font-weight: 700;
+}
+
 .en-log-body {
   flex: 1 1 auto;
   overflow-y: auto;
@@ -2863,4 +2868,867 @@ body.shift-vectors-page {
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+}
+
+/* Election night checkpoint "state called" update popup. Sits above
+   everything else (including #enLogPanel's z-index 2200 mobile sheet) so
+   it fully covers the screen while the sim is paused for it. */
+.en-checkpoint-overlay {
+  --en-cp-accent: #2f2f2f;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--en-cp-accent) 55%, #000 45%) 0%, color-mix(in srgb, var(--en-cp-accent) 30%, #000 70%) 55%, #000 100%);
+  animation: en-cp-overlay-in 0.25s ease-out;
+}
+
+/* Author-stylesheet `display` rules always beat the browser's built-in
+   `[hidden] { display: none }` UA rule regardless of specificity, so
+   without this the base rule above would keep the overlay visible forever
+   even after JS sets the `hidden` property - this selector's higher
+   specificity (class + attribute vs. class alone) is what actually wins. */
+.en-checkpoint-overlay[hidden] {
+  display: none;
+}
+
+.en-checkpoint-overlay.en-checkpoint-closing {
+  animation: en-cp-overlay-out 0.2s ease-in forwards;
+}
+
+@keyframes en-cp-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes en-cp-overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.en-checkpoint-card {
+  --en-cp-accent: #2f2f2f;
+  width: min(92vw, 720px);
+  border-radius: 16px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--en-cp-accent) 92%, #000 8%) 0%, color-mix(in srgb, var(--en-cp-accent) 70%, #000 30%) 100%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* Re-added on every slide (with a forced reflow) so the reveal replays
+   even when consecutive slides share the same kind/class. */
+.en-cp-reveal .en-cp-header,
+.en-cp-reveal .en-cp-breaking {
+  animation: en-cp-slide-down 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.en-cp-reveal .en-cp-photo-wrap {
+  animation: en-cp-photo-in 0.45s 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.en-cp-reveal .en-cp-result,
+.en-cp-reveal .en-cp-outcome-text {
+  animation: en-cp-fade-up 0.4s 0.3s ease-out both;
+}
+
+.en-cp-reveal .en-cp-check {
+  animation: en-cp-badge-pop 0.4s 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.en-cp-reveal .en-cp-compare,
+.en-cp-reveal .en-cp-races-list {
+  animation: en-cp-fade-up 0.4s 0.75s ease-out both;
+}
+
+@keyframes en-cp-slide-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes en-cp-photo-in {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes en-cp-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes en-cp-badge-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.en-cp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 22px;
+  background: rgba(0, 0, 0, 0.28);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.en-cp-state {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Most state names are short enough to sit on one line at the large
+     clamp() size, but "National Popular Vote" (and any other long label)
+     needs to shrink rather than overlap the EV badge pinned to the right. */
+  font-size: clamp(1rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #fff;
+  overflow-wrap: break-word;
+}
+
+.en-cp-ev {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #fff;
+}
+
+.en-cp-ev-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+.en-cp-ev-num {
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.en-cp-body {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 26px 24px;
+}
+
+.en-cp-photo-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(96px, 24vw, 160px);
+  height: clamp(96px, 24vw, 160px);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.en-cp-photo {
+  width: 100%;
+  height: 100%;
+  /* contain, not cover: shows the whole portrait rather than cropping it
+     to fill the box - .en-cp-photo-wrap's background fills any letterbox
+     gap left by a portrait whose aspect ratio doesn't match the box. */
+  object-fit: contain;
+  display: block;
+}
+
+.en-cp-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.en-cp-photo-placeholder {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.en-cp-party-badge {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.85rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.en-cp-result {
+  min-width: 0;
+}
+
+.en-cp-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: #1a1a1a;
+  background: #f2dfa1;
+  margin-bottom: 8px;
+}
+
+.en-cp-checkmark {
+  font-weight: 900;
+}
+
+/* A correction is a much bigger deal than a routine call - louder, bigger,
+   redder badge than the plain "WINNER" pill, plus the card-level shake/
+   flash keyframes below. */
+.en-cp-badge-corrected {
+  background: linear-gradient(135deg, #ff3b30, #b3001b);
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 6px 14px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(179, 0, 27, 0.6);
+}
+
+@keyframes en-cp-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-9px); }
+  30% { transform: translateX(8px); }
+  45% { transform: translateX(-6px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  90% { transform: translateX(1px); }
+}
+
+@keyframes en-cp-correction-flash {
+  0% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 0 0 7px rgba(255, 59, 48, 0.9); }
+  100% { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 0 0 7px rgba(255, 59, 48, 0); }
+}
+
+.en-checkpoint-card.en-checkpoint-correction.en-cp-reveal,
+.en-checkpoint-card.en-checkpoint-uncalled.en-cp-reveal {
+  animation: en-cp-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both,
+    en-cp-correction-flash 1s ease-out both;
+}
+
+.en-cp-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  color: #fff;
+}
+
+.en-cp-first {
+  font-size: clamp(1.1rem, 3.4vw, 1.6rem);
+  font-weight: 700;
+  opacity: 0.92;
+}
+
+.en-cp-last {
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.en-cp-prev {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Two-row D-vs-R vote comparison table (leader's row first): a broadcast-
+   scoreboard-style readout, closer to how real election-night graphics
+   present vote counts than a single dense line of text. */
+.en-cp-compare {
+  margin: 0 24px 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.en-cp-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  opacity: 0.68;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.en-cp-compare-row + .en-cp-compare-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.en-cp-compare-row.en-cp-compare-leading {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.en-cp-compare-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.en-cp-compare-votes {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.en-cp-compare-ahead {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.en-cp-compare-margin-badge {
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.en-cp-compare-count {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.en-cp-compare-check {
+  font-weight: 900;
+  color: #f2dfa1;
+}
+
+.en-cp-compare-pct {
+  flex: 0 0 auto;
+  min-width: 3.2em;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.en-cp-compare-row.en-cp-compare-leading .en-cp-compare-pct-d {
+  background: #1e4bd1;
+}
+
+.en-cp-compare-row.en-cp-compare-leading .en-cp-compare-pct-r {
+  background: #b22222;
+}
+
+.en-cp-compare-row.en-cp-compare-leading .en-cp-compare-pct-o {
+  background: #C9A400;
+}
+
+.en-cp-mini-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  flex: 0 0 auto;
+}
+
+.en-cp-mini-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.85);
+  flex: 0 0 auto;
+}
+
+.en-cp-stats-line {
+  margin: 0 24px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.en-cp-stats-bar-track {
+  flex: 1 1 140px;
+  max-width: 220px;
+  height: 8px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.en-cp-stats-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #2ecc71, #7ee08a);
+  transition: width 0.6s ease-out;
+}
+
+.en-cp-stats-bar-pct {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+/* Small secondary timestamp - reads under the big state name in the call/
+   correction header, or under "Breaking news"/"Final" in the outcome and
+   final slides. */
+.en-cp-time {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: none;
+  margin-top: 2px;
+}
+
+/* Persistent scoreboard: stays on screen for the whole checkpoint (not
+   recreated per slide - see updatePopup.js's tallyEl), ticking up as each
+   call/correction slide starts. Pinned to a corner rather than centered
+   alongside the card so it doesn't compete with the main reveal. */
+.en-cp-tally {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+}
+
+.en-cp-tally-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  min-width: 150px;
+}
+
+.en-cp-tally-box .en-cp-mini-avatar,
+.en-cp-tally-box .en-cp-mini-avatar-fallback {
+  width: 36px;
+  height: 36px;
+}
+
+.en-cp-tally-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.en-cp-tally-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.en-cp-tally-num {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.en-cp-tally-box.en-cp-tally-d .en-cp-tally-num { color: #7fa8ff; }
+.en-cp-tally-box.en-cp-tally-r .en-cp-tally-num { color: #ff9b9b; }
+.en-cp-tally-box.en-cp-tally-o .en-cp-tally-num { color: #C9A400; }
+
+/* Transient "+N"/"-N" chip that pops up next to a tally number when a
+   correction moves EVs from one party to the other - makes the swing itself
+   legible, not just the before/after totals. */
+.en-cp-tally-delta {
+  position: relative;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(3px) scale(0.9);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.en-cp-tally-delta-show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.en-cp-tally-delta-up { background: #2ecc71; }
+.en-cp-tally-delta-down { background: #ff3b30; }
+
+.en-cp-tally-prob {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.en-cp-tally-majority {
+  align-self: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+.en-cp-tally-tie {
+  color: #e8c565;
+  margin-top: 2px;
+}
+
+@media (max-width: 720px) {
+  .en-cp-tally {
+    top: 10px;
+    left: 10px;
+    gap: 6px;
+    transform: scale(0.85);
+    transform-origin: top left;
+  }
+
+  .en-cp-tally-box {
+    min-width: 0;
+  }
+}
+
+/* "Races to watch" slide: a colorful mini-card per race (portrait, EVs, a
+   percent-counted bar, confidence, margin) rather than a plain text line -
+   --en-race-accent is set inline per-card from the same confidence-based
+   color the call-log sidebar already uses. */
+.en-checkpoint-races {
+  width: min(92vw, 560px);
+}
+
+.en-cp-races-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 22px 26px;
+}
+
+.en-cp-race-card {
+  --en-race-accent: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--en-race-accent);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.en-cp-race-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.en-cp-race-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.en-cp-race-state {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.en-cp-race-ev {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.en-cp-race-bar-track {
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.en-cp-race-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--en-race-accent);
+  transition: width 0.6s ease-out;
+}
+
+.en-cp-race-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.72);
+  flex-wrap: wrap;
+}
+
+/* Square (not circular) portrait crop, per the request - sits between the
+   info block and the colored margin badge. */
+.en-cp-race-portrait {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+
+.en-cp-race-portrait-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.en-cp-race-margin-block {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 4.2em;
+}
+
+.en-cp-race-margin-pct {
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.en-cp-race-margin-raw {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+}
+
+/* Outcome-clinch layout: distinct, more dramatic full-bleed card rather
+   than a bigger version of the per-state card. */
+.en-checkpoint-outcome {
+  width: min(92vw, 620px);
+}
+
+.en-cp-breaking {
+  padding: 10px 22px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.en-cp-outcome-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 36px 24px 42px;
+  text-align: center;
+}
+
+.en-checkpoint-outcome .en-cp-photo-wrap {
+  width: clamp(120px, 30vw, 180px);
+  height: clamp(120px, 30vw, 180px);
+}
+
+.en-cp-outcome-name {
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.en-cp-outcome-label {
+  margin-top: 4px;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Final-tally capstone slide: reuses .en-cp-breaking/.en-cp-outcome-* for
+   the clean-majority variant (winner portrait + name), adding just the
+   D-R-O tally line underneath; the no-majority variant is its own layout,
+   both candidates side by side with no single "winner" photo. */
+.en-checkpoint-final,
+.en-checkpoint-uncalled {
+  width: min(92vw, 620px);
+}
+
+.en-cp-final-tally {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 24px 32px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.en-cp-final-d { color: #7fa8ff; }
+.en-cp-final-r { color: #ff9b9b; }
+
+.en-cp-final-sep {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.en-cp-final-o {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.en-cp-final-nomajority {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 24px 42px;
+  text-align: center;
+}
+
+.en-cp-final-nomajority-photos {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.en-cp-final-nomajority-photos .en-cp-mini-avatar,
+.en-cp-final-nomajority-photos .en-cp-mini-avatar-fallback {
+  width: 64px;
+  height: 64px;
+  font-size: 1.1rem;
+}
+
+.en-cp-final-nomajority-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.en-cp-final-nomajority-text .en-cp-outcome-name {
+  font-size: clamp(1.4rem, 5vw, 2rem);
+}
+
+.en-checkpoint-progress {
+  position: absolute;
+  bottom: 46px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.en-cp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.en-cp-dot-active {
+  background: #fff;
+}
+
+.en-checkpoint-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .en-checkpoint-overlay,
+  .en-checkpoint-overlay.en-checkpoint-closing,
+  .en-cp-reveal .en-cp-header,
+  .en-cp-reveal .en-cp-breaking,
+  .en-cp-reveal .en-cp-photo-wrap,
+  .en-cp-reveal .en-cp-result,
+  .en-cp-reveal .en-cp-outcome-text,
+  .en-cp-reveal .en-cp-check {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .en-cp-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .en-cp-name {
+    align-items: center;
+  }
 }
