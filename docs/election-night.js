@@ -1755,6 +1755,12 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 
     pauseSimulation();
     state.checkpointActive = true;
+    // pauseSimulation() just called updateToggleLabel() while checkpointActive
+    // was still false, so the label was computed under the plain "paused"
+    // branch (-> "Resume") instead of the checkpoint one - refresh it now
+    // that the flag is actually set, so it reads "Pause" while this call is
+    // auto-advancing.
+    updateToggleLabel();
 
     // Scoreboard starting point: the tally as of just before this batch's
     // first event, so the panel animates from where it actually was, not
