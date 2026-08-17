@@ -373,7 +373,7 @@ function renderCallOrCorrection(slide) {
     </div>
     ${buildComparisonMarkup(slide)}
     ${buildStatsLineMarkup(slide)}`;
-  animateTallyTo(slide.tallyBefore, slide.tallyAfter, isCorrection);
+  animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
 }
 
 function renderOutcome(slide) {
