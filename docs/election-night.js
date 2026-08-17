@@ -1,5 +1,5 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatLeader, formatLeaderShort, formatMarginText, formatRawMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatOtherLean, formatLeader, formatLeaderShort, formatMarginText, formatRawMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
@@ -1260,9 +1260,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const leader = isNpvCorrection ? record.finalLeader : record.leader;
         const dVotes = totals.dVotes ?? totals.dCounted;
         const rVotes = totals.rVotes ?? totals.rCounted;
+        const oVotes = totals.oVotes ?? totals.oCounted;
         const countedVotes = totals.countedVotes;
         const voteMargin = (isFinite(dVotes) && isFinite(rVotes)) ? (dVotes - rVotes) : null;
-        const marginStr = leader === 'O' ? 'Other lead' : formatLean(voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : 0);
+        const marginStr = leader === 'O'
+          ? formatOtherLean(oVotes, dVotes, rVotes, countedVotes)
+          : formatLean(voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : 0);
         const reporting = isNpvCorrection
           ? (state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 1)
           : record.reporting;
@@ -1807,10 +1810,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const baselineUnit = baselineUnitColors.get(unit);
         finalColor = baselineUnit || safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
       }
-      const finalMarginStr = finalLeader === 'O' ? 'Other lead' : formatLean(finalMarginTwoParty);
+      const finalMarginStr = finalLeader === 'O'
+        ? formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes)
+        : formatLean(finalMarginTwoParty);
       const countedMargin = totalVotes > EPS ? ((finalDVotes - finalRVotes) / totalVotes) : 0;
       let countedMarginStr = 'None';
-      if (finalLeader === 'O') countedMarginStr = 'Other lead';
+      if (finalLeader === 'O') countedMarginStr = formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes);
       else if (twoPartyVotesFinal > EPS) countedMarginStr = formatLean((finalDVotes - finalRVotes) / Math.max(twoPartyVotesFinal, EPS));
       else if (totalVotes > EPS) countedMarginStr = 'EVEN';
 
@@ -2430,7 +2435,6 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       oShare = totalThirdShare;
       leader = reporting > 0 ? 'O' : null;
       margin = 0;
-      marginStr = leader ? 'Other lead' : '';
       color = null; // assigned after stats using third-party fallback
     } else {
       const bias = logisticBias(st.biasParams, reporting, phaseName);
@@ -2449,8 +2453,6 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       statsForLeader = computeVoteStats(st, reporting, dShare, rShare, totalThirdShare, topThirdShare);
       leader = determineLeader(dShare, rShare, topThirdShare, reporting, statsForLeader);
       margin = reporting > 0 ? (dShareBlend - rShareBlend) : null;
-      if (leader === 'O') marginStr = 'Other lead';
-      else marginStr = (reporting > 0) ? formatLean(margin) : '';
     }
 
     // Given the current shares and reporting fraction compute vote totals
@@ -2459,10 +2461,23 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const countedTwoParty = (stats.dCounted + stats.rCounted);
     const countedTwoPartyMargin = countedTwoParty > EPS ? ((stats.dCounted - stats.rCounted) / countedTwoParty) : null;
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
+
+    // An O lead is measured against whichever of D/R is closer to catching
+    // them (same "against the runner-up" convention as the D/R margin
+    // above, which only ever compares dVotes to rVotes) rather than against
+    // the combined D+R vote, using the real counted totals whenever they're
+    // available so this doesn't just repeat the interpolated `margin` above.
+    if (leader === 'O') {
+      marginStr = reporting > 0 ? formatOtherLean(stats.oCounted, stats.dCounted, stats.rCounted, stats.countedVotes) : '';
+    } else {
+      marginStr = (reporting > 0) ? formatLean(margin) : '';
+    }
+
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
-      if (leader === 'O') countedMarginStr = 'Other lead';
-      else countedMarginStr = formatLean(countedMargin);
+      countedMarginStr = leader === 'O'
+        ? formatOtherLean(stats.oCounted, stats.dCounted, stats.rCounted, stats.countedVotes)
+        : formatLean(countedMargin);
     }
     // Compute a simple confidence metric based on the counted votes and
     // remaining ballots.
@@ -3795,7 +3810,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
           leader,
           margin,
-          marginStr: leader === 'O' ? 'Other lead' : formatLean(margin),
+          marginStr: leader === 'O' ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes) : formatLean(margin),
           voteMargin: Math.round(dCounted - rCounted),
           ev: 0
         };

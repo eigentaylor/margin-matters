@@ -16,6 +16,19 @@ export function leanStr(x) {
     return (x > 0 ? 'D+' : 'R+') + s;
 }
 
+// Analogue of leanStr() for the case where a third-party candidate is
+// actually ahead: D and R margins are always measured against each other
+// (dVotes - rVotes), so this measures the "O" leader the same way - against
+// whichever of D/R is closer to catching them - rather than against the sum
+// of every other candidate, which would understate how commanding the lead
+// is whenever both major parties are also splitting votes between them.
+export function formatOtherLean(oVotes, dVotes, rVotes, totalVotes) {
+    if (!isFinite(oVotes) || !isFinite(dVotes) || !isFinite(rVotes) || !isFinite(totalVotes) || totalVotes <= 0) return 'ERROR';
+    const lead = (oVotes - Math.max(dVotes, rVotes)) / totalVotes;
+    if (Math.abs(lead) < 0.000005) return 'EVEN';
+    return `O+${(Math.abs(lead) * 100).toFixed(1)}`;
+}
+
 import { getStateName } from './constants.js';
 
 export function formatLeader(code) {
