@@ -3363,6 +3363,7 @@ body.shift-vectors-page {
   display: flex;
   flex-direction: column;
   line-height: 1.15;
+  position: relative;
 }
 
 .en-cp-tally-name {
@@ -3387,9 +3388,10 @@ body.shift-vectors-page {
    correction moves EVs from one party to the other - makes the swing itself
    legible, not just the before/after totals. */
 .en-cp-tally-delta {
-  position: relative;
-  margin-left: 6px;
-  padding: 1px 6px;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  padding: 2px 6px;
   border-radius: 5px;
   font-size: 0.72rem;
   font-weight: 900;
@@ -3397,6 +3399,7 @@ body.shift-vectors-page {
   opacity: 0;
   transform: translateY(3px) scale(0.9);
   transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
 }
 
 .en-cp-tally-delta-show {
