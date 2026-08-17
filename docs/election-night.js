@@ -760,11 +760,14 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         prop.disabled = true;
       }
     } catch (e) { /* ignore */ }
-    // Show the call log panel when the election-night simulation is prepared.
-    // Also shifts the container left on medium screens to avoid overlap
-    // (flagged on body too so other fixed page-wide elements, e.g. the
-    // proportional-EV toggle footer, can shrink away from the sidebar).
-    showLogPanel();
+    // Deliberately does NOT call showLogPanel() here - preparing (which
+    // happens the instant a host page like sim2028.js hands off to election
+    // night, before the user has pressed Start) used to flip body.en-active
+    // immediately, which swaps out the host page's own footer/campaign
+    // controls out from under it before there's anything to watch. Only
+    // handleToggleClick()'s Start/Resume branch calls showLogPanel() now, so
+    // the log panel/footer swap/host-page hooks all wait for an actual
+    // Start.
     state.snapshot = new Map();
     window._electionNightSnapshot = state.snapshot;
     state.lastLogKey = '';
@@ -973,12 +976,17 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     try { if (elements.logPanel) elements.logPanel.classList.remove('en-log-closed'); } catch (e) { /* ignore */ }
     try { document.querySelector('.container')?.classList.add('en-active'); } catch (e) { /* ignore */ }
     try { document.body.classList.add('en-active'); } catch (e) { /* ignore */ }
+    // Optional hook for a host page (e.g. sim2028.js) that has its own UI to
+    // hide/restore in step with election night actually going active - see
+    // hideLogPanel()'s matching call for the reverse direction.
+    try { if (typeof window.onElectionNightActiveChange === 'function') window.onElectionNightActiveChange(true); } catch (e) { /* ignore */ }
   }
 
   function hideLogPanel() {
     try { if (elements.logPanel) elements.logPanel.classList.add('en-log-closed'); } catch (e) { /* ignore */ }
     try { document.querySelector('.container')?.classList.remove('en-active'); } catch (e) { /* ignore */ }
     try { document.body.classList.remove('en-active'); } catch (e) { /* ignore */ }
+    try { if (typeof window.onElectionNightActiveChange === 'function') window.onElectionNightActiveChange(false); } catch (e) { /* ignore */ }
   }
 
   function resetSimulation(restorePv, hidePanel = false) {
@@ -2839,6 +2847,17 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const hardLockedR = fixedREv >= needed;
     const impossibleD = fixedDEv + liveEvTotal < needed;
     const impossibleR = fixedREv + liveEvTotal < needed;
+    // A no-majority result needs SOME achievable D total D0 with both
+    // D0 < needed and (contestedTotal - D0) < needed, i.e. D0 strictly
+    // between (contestedTotal - needed) and needed - an integer window of
+    // size 2*needed - contestedTotal - 1. Once real, already-locked O EV
+    // (thirdPartyDominant states, excluded from contestedTotal entirely
+    // above) shifts that window to empty or negative, a tie isn't just
+    // unlikely, it's provably impossible for the rest of the night - lets
+    // probTie report a real 0% below instead of the clamp meant for "just
+    // never happened to sample it."
+    const contestedTotal = fixedDEv + fixedREv + liveEvTotal;
+    const tieImpossible = (2 * needed - contestedTotal - 1) <= 0;
     // A genuine lock only happens once someone has actually clinched, or
     // once NEITHER side can reach majority no matter how every remaining
     // live unit breaks. Eliminating just one side (impossibleD alone, say)
@@ -2946,7 +2965,9 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const rawProbTie = tieWins / PROB_MC_SIMS;
     return {
       probD: Math.min(0.999, Math.max(0.001, rawProbD)),
-      probTie: Math.min(0.999, Math.max(0.001, rawProbTie)),
+      // tieImpossible is a real proof, not a sampling artifact - let it
+      // report an honest 0% instead of the same never-quite-0 clamp.
+      probTie: tieImpossible ? 0 : Math.min(0.999, Math.max(0.001, rawProbTie)),
       locked: false, sims: PROB_MC_SIMS, evRange90, stateProb
     };
   }
