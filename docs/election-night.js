@@ -1213,9 +1213,18 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
    * flag - stale by exactly one render frame for the one unit that matters
    * most. state.stateData's st.misCallLogged is the live value.
    */
-  function computeRunningEvTally(uptoTime) {
+  function computeRunningEvTally(uptoTime, options) {
+    // strict: exclude records tied exactly at uptoTime, rather than treating
+    // them as "ready" - used for a checkpoint batch's starting tally, where
+    // the batch's own events (which share uptoTime) must NOT be pre-included,
+    // since buildCheckpointSlides() adds them itself as each slide renders.
+    // (Passing uptoTime - EPS at the call site doesn't achieve this on its
+    // own: this function's own "- EPS" tolerance below cancels it back out,
+    // letting same-time ties leak into the "before" tally and get double
+    // counted once the matching slide adds them again.)
+    const strict = options && options.strict;
     const readyCalls = state.callRecords
-      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && uptoTime >= rec.time - EPS)
+      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && (strict ? rec.time < uptoTime - EPS : uptoTime >= rec.time - EPS))
       .slice()
       .sort((a, b) => (a.time - b.time) || (a.unitKey || '').localeCompare(b.unitKey || ''));
     let d = 0, r = 0, o = 0;
@@ -1372,9 +1381,10 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // Compute this single record's EV delta (not time-based, so multiple
       // records at the same time show independent deltas)
       let stateTallyAfter = { D: runningTally.D, R: runningTally.R, O: runningTally.O };
+      const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
+
       if (isCorrection) {
         // For a correction, subtract old allocation, add new allocation
-        const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
         const oldAlloc = st && st.evAllocations;
         const newAlloc = record.evAllocations;
         if (oldAlloc) {
@@ -1388,12 +1398,18 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           stateTallyAfter.O += newAlloc.O || 0;
         }
       } else {
-        // For a call, just add the allocation
+        // For a call, add the allocation (with fallback if evAllocations not set)
         const alloc = record.evAllocations;
         if (alloc) {
           stateTallyAfter.D += alloc.D || 0;
           stateTallyAfter.R += alloc.R || 0;
           stateTallyAfter.O += alloc.O || 0;
+        } else {
+          // Fallback: use old logic if evAllocations not set
+          const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
+          if (tallyWinner === 'D') stateTallyAfter.D += record.ev || 0;
+          else if (tallyWinner === 'R') stateTallyAfter.R += record.ev || 0;
+          else stateTallyAfter.O += record.ev || 0;
         }
       }
       runningTally = stateTallyAfter;
@@ -1766,7 +1782,9 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // first event, so the panel animates from where it actually was, not
     // from zero.
     const firstEventTime = next.events.reduce((min, ev) => Math.min(min, ev.time), Infinity);
-    const startingTally = computeRunningEvTally(isFinite(firstEventTime) ? firstEventTime - EPS : currentTime);
+    const startingTally = isFinite(firstEventTime)
+      ? computeRunningEvTally(firstEventTime, { strict: true })
+      : computeRunningEvTally(currentTime);
     const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
       ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
       : null;
