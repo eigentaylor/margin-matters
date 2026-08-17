@@ -1691,7 +1691,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     // 'final' capstone slide's oEv) - shows the scoreboard's third O box
     // for the whole night in years where it matters, rather than having it
     // pop in mid-checkpoint the moment the first O state gets called.
-    const hasThirdParty = Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0;
+    const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
 
     Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
       showCheckpoint(slides, {
