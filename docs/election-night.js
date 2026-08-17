@@ -1284,6 +1284,9 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         const reporting = isNpvCorrection
           ? (state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 1)
           : record.reporting;
+        // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
+        const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
+        const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
         return {
           kind: isNpvCorrection ? 'correction' : 'call',
           isNpv: true,
@@ -1298,10 +1301,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
           dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
           rCandidateName: resolveCandidateFullName('R', 'NATIONAL'),
           candidateName: resolveCandidateFullName(leader, 'NATIONAL'),
+          oCandidateName,
           previousCandidateName: isNpvCorrection ? (resolveCandidateFullName(record.calledLeader, 'NATIONAL')) : null,
           accentColor: calledAccentColor(leader, voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : (CHECKPOINT_DEFAULT_MARGIN[leader] || 0)),
           tallyAfter: computeRunningEvTally(record.time),
-          dVotes, rVotes, countedVotes,
+          dVotes, rVotes, oVotes, countedVotes,
           reportingPct: isFinite(reporting) ? Math.max(0, Math.min(1, reporting)) : null,
           reportingText: formatReportingText(reporting, null),
           marginText: formatMarginText(marginStr, leader, voteMargin),
