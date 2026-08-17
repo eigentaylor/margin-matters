@@ -3396,6 +3396,7 @@ body.shift-vectors-page {
   font-size: 0.72rem;
   font-weight: 900;
   color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   opacity: 0;
   transform: translateY(3px) scale(0.9);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -3405,6 +3406,11 @@ body.shift-vectors-page {
 .en-cp-tally-delta-show {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+.en-cp-tally-delta-hide {
+  opacity: 0 !important;
+  transform: translateY(3px) scale(0.9) !important;
 }
 
 .en-cp-tally-delta-up { background: #2ecc71; }

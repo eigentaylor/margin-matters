@@ -316,6 +316,7 @@ function showTallyDelta(code, delta) {
   chip.textContent = delta > 0 ? `+${delta}` : String(delta);
   parent.appendChild(chip);
   requestAnimationFrame(() => chip.classList.add('en-cp-tally-delta-show'));
+  setTimeout(() => chip.classList.add('en-cp-tally-delta-hide'), 2100);
   setTimeout(() => chip.remove(), 2400);
 }
 
