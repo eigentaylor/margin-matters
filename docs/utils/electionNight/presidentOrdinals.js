@@ -68,8 +68,18 @@ export function getPresidencyOutcomeLabel(year, winnerParty) {
   const entry = PRESIDENT_ORDINALS[year];
   if (!entry || (winnerParty !== 'D' && winnerParty !== 'R')) return null;
   const [ordinalBase, incumbentParty, override] = entry;
-  const isReelection = winnerParty === incumbentParty
-    || (override != null && winnerParty === override.party);
-  const ordinal = ordinalSuffix(ordinalBase);
-  return isReelection ? `Reelected as ${ordinal} President` : `Elected ${ordinal} President`;
+  // A same-term incumbent winning reelection keeps their existing number
+  // (ordinalBase - 1, since ordinalBase is "the number a brand-new winner
+  // would become") - e.g. Coolidge succeeded to the 30th presidency in
+  // 1923, so winning in 1924 keeps him the 30th, not the 31st.
+  if (winnerParty === incumbentParty) {
+    return `Reelected as ${ordinalSuffix(ordinalBase - 1)} President`;
+  }
+  // A former president winning a non-consecutive term (Cleveland 1892,
+  // T. Roosevelt 1912, Trump 2024) genuinely starts a new, later-numbered
+  // presidency, so ordinalBase itself is their number here.
+  if (override != null && winnerParty === override.party) {
+    return `Reelected as ${ordinalSuffix(ordinalBase)} President`;
+  }
+  return `Elected ${ordinalSuffix(ordinalBase)} President`;
 }

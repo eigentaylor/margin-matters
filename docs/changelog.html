@@ -42,6 +42,7 @@
 <li>Fixed checkpoint scheduling so results don't jump around or rewind, and so the final recap slide reliably shows up at the end of the night instead of occasionally getting stranded</li>
 <li>Fixed the sim2028 election-night button swapping in the election-night footer immediately on click, which broke navigating back through the campaign timeline before pressing Start; the footer now only switches once election night actually begins, and switches back correctly on Reset</li>
 <li>Winner announcements (checkpoint popup and call log) now say which numbered presidency is on the line — "Elected 47th President" for a new president, or "Reelected as 47th President" when an incumbent (or a former president winning a non-consecutive term, like Cleveland 1892, T. Roosevelt 1912, or Trump 2024) wins another term. Applies to the main election-night and sim2028 simulations only; future.html's hypothetical years are unaffected</li>
+<li>Fixed a same-term incumbent's reelection ordinal being off by one (e.g. Coolidge showing as "reelected as 31st president" instead of the 30th president he actually was) — a reelected incumbent now correctly keeps their existing number instead of the next one</li>
 </ul>
                     </div>
                 </div>
