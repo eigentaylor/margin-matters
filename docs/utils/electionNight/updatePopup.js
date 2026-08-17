@@ -61,6 +61,11 @@ let activeSlides = null;
 let activeIndex = -1;
 let activeOnComplete = null;
 let displayedTally = { D: 0, R: 0, O: 0 };
+// True while the caller (election-night.js, via the footer's Pause button)
+// has asked the current slide to stop auto-advancing. Manual advance
+// (skipToNext/skipToPrevious via click/tap/Space/Enter/ArrowLeft) ignores
+// this flag entirely - it only gates the setTimeout in renderSlide().
+let autoAdvancePaused = false;
 
 function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
@@ -540,7 +545,7 @@ function renderSlide(index) {
   cardEl.classList.add('en-cp-reveal');
 
   clearTimeout(advanceTimer);
-  advanceTimer = setTimeout(skipToNext, durationFor(slide));
+  advanceTimer = autoAdvancePaused ? null : setTimeout(skipToNext, durationFor(slide));
 }
 
 function skipToNext() {
@@ -619,4 +624,38 @@ export function showCheckpoint(slides, options = {}) {
 /** True while a checkpoint popup is currently being shown. */
 export function isCheckpointActive() {
   return !!activeSlides;
+}
+
+/**
+ * Pause or resume the current slide's automatic advance (the footer's
+ * Pause button during a state call). Manual advance keeps working either
+ * way. Resuming with a slide already on screen restarts that slide's full
+ * duration rather than tracking elapsed time - simple, and these slides are
+ * short enough that it isn't noticeable.
+ */
+export function setCheckpointAutoAdvance(enabled) {
+  autoAdvancePaused = !enabled;
+  clearTimeout(advanceTimer);
+  advanceTimer = null;
+  if (!autoAdvancePaused && activeSlides && activeIndex >= 0) {
+    advanceTimer = setTimeout(skipToNext, durationFor(activeSlides[activeIndex]));
+  }
+}
+
+/**
+ * Immediately tear down any in-progress checkpoint popup with no closing
+ * animation and no onComplete callback - for Reset, which is discarding the
+ * whole simulation anyway and shouldn't wait on or trigger a resume.
+ */
+export function forceCloseCheckpoint() {
+  clearTimeout(advanceTimer);
+  advanceTimer = null;
+  autoAdvancePaused = false;
+  activeSlides = null;
+  activeIndex = -1;
+  activeOnComplete = null;
+  if (overlayEl) {
+    overlayEl.classList.remove('en-checkpoint-closing');
+    overlayEl.hidden = true;
+  }
 }

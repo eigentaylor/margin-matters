@@ -14,7 +14,7 @@ import { regionOf } from './utils/sim2028/regions.js';
 import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
 import { groupEventsIntoCheckpoints, findNextCheckpoint } from './utils/electionNight/checkpointScheduler.js';
 import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
-import { showCheckpoint } from './utils/electionNight/updatePopup.js';
+import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from './utils/electionNight/updatePopup.js';
 
 (function () {
   'use strict';
@@ -295,7 +295,15 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     updatesEnabled: true,
     checkpointActive: false,
     plannedCheckpoints: [],
-    checkpointCursorTime: 0
+    checkpointCursorTime: 0,
+    // True when the footer's Pause was pressed (including mid-state-call) -
+    // distinct from `running`, which is also false while a checkpoint popup
+    // is showing even when the user hasn't asked to pause anything.
+    userPaused: false,
+    // Bumped by resetSimulation(); a checkpoint's async slide-build (in
+    // maybeFireCheckpoint()) snapshots this and skips showing itself if a
+    // reset happened while it was still resolving portraits.
+    resetToken: 0
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -447,6 +455,16 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     function handleToggleClick() {
       //console.log('ELECTION NIGHT TOGGLE CLICK');
       showLogPanel();
+      if (state.checkpointActive) {
+        // Mid-state-call: Pause/Resume only toggles the popup's own
+        // auto-advance timer, not the (already-paused-for-the-popup) sim
+        // clock - the RAF loop resumes on its own once the checkpoint
+        // finishes, unless userPaused is still true (see maybeFireCheckpoint).
+        state.userPaused = !state.userPaused;
+        setCheckpointAutoAdvance(!state.userPaused);
+        updateToggleLabel();
+        return;
+      }
       if (!state.prepared) {
         // Start should roll random PV now (at click time). Clear any cached random PV so
         // resolvePvValue will draw fresh values based on the current time/seed.
@@ -454,14 +472,17 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         state.pvRandomCacheMode = null;
         state.pvRandomCacheYear = null;
         state.pvRandomSeed = null;
+        state.userPaused = false;
         startSimulation();
       } else if (state.running) {
+        state.userPaused = true;
         pauseSimulation();
       } else {
         if (state.currentTime >= state.simEnd - EPS) {
           state.currentTime = state.simStart;
           renderAt(state.currentTime);
         }
+        state.userPaused = false;
         startSimulation();
       }
       updateToggleLabel();
@@ -992,9 +1013,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
   }
 
   function resetSimulation(restorePv, hidePanel = false) {
+    state.resetToken += 1;
+    forceCloseCheckpoint();
     if (state.rafId) cancelAnimationFrame(state.rafId);
     state.rafId = null;
     state.running = false;
+    state.userPaused = false;
     state.prepared = false;
     state.stateData = [];
     state.snapshot = new Map();
@@ -1720,7 +1744,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     // pop in mid-checkpoint the moment the first O state gets called.
     const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
 
+    const resetTokenAtFire = state.resetToken;
     Promise.all([buildCheckpointSlides(records, startingTally), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
+      // A Reset click while portraits/slides were still resolving already
+      // tore everything down (see resetSimulation()) - don't pop this
+      // checkpoint back open on top of the freshly-reset state.
+      if (state.resetToken !== resetTokenAtFire) return;
       showCheckpoint(slides, {
         startingTally,
         winProb,
@@ -1729,13 +1758,14 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         hasThirdParty,
         onComplete: () => {
           state.checkpointActive = false;
-          if (state.currentTime < state.simEnd - EPS) startSimulation();
+          if (!state.userPaused && state.currentTime < state.simEnd - EPS) startSimulation();
         }
       });
     }).catch(err => {
       console.warn('Failed to build checkpoint slides', err);
+      if (state.resetToken !== resetTokenAtFire) return;
       state.checkpointActive = false;
-      if (state.currentTime < state.simEnd - EPS) startSimulation();
+      if (!state.userPaused && state.currentTime < state.simEnd - EPS) startSimulation();
     });
   }
 
@@ -4581,6 +4611,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
 
   function updateToggleLabel() {
     if (!elements.toggle && !elements.toggleFooter) return;
+    // `running` is always false while a checkpoint popup is showing (the RAF
+    // loop itself is paused for it), so that alone can't tell "call
+    // auto-advancing" apart from "call paused by the user" - check
+    // checkpointActive/userPaused first.
+    if (state.checkpointActive) { setToggleText(state.userPaused ? 'Resume' : 'Pause'); return; }
     if (state.running) setToggleText('Pause');
     else if (!state.prepared) setToggleText('Start');
     else if (state.currentTime >= state.simEnd - EPS) setToggleText('Replay');

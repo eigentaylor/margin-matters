@@ -1149,7 +1149,11 @@ hr {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 2100;
+  /* Above .en-checkpoint-overlay's z-index:3000 so Pause/Reset/Speed stay
+     clickable during an election-night state call instead of being covered
+     by the full-screen call popup. Also happens to clear #enLogPanel's
+     mobile bottom sheet (z-index:2200). */
+  z-index: 3100;
   background: linear-gradient(180deg, rgba(11, 11, 11, 0.98), rgba(11, 11, 11, 0.95));
   backdrop-filter: blur(4px);
   border-top: 1px solid var(--border);
