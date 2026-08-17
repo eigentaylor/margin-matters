@@ -1,5 +1,6 @@
 import { getStateName } from './utils/constants.js';
 import { leanStr, formatOtherLean, formatLeader, formatLeaderShort, formatMarginText, formatRawMarginText, formatOtherRawMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { getPresidencyOutcomeLabel } from './utils/electionNight/presidentOrdinals.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
 import { clamp01 as sharedClamp01, clampByte as sharedClampByte, normalCdf } from './utils/mathUtils.js';
@@ -1217,10 +1218,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
         const leader = record.outcomeLeader;
         if (leader === 'D' || leader === 'R') {
+          const candidateName = resolveCandidateFullName(leader, 'NATIONAL');
           return {
             kind: 'outcome',
             leader,
-            candidateName: resolveCandidateFullName(leader, 'NATIONAL'),
+            candidateName,
+            outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader) : null,
             accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
             timeLabel: formatTimeLabel(record.time)
           };
@@ -1246,12 +1249,16 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       if (record.noticeType === 'final-tally') {
         const { dEv, rEv, oEv, majority } = record;
         const winner = dEv >= majority ? 'D' : (rEv >= majority ? 'R' : null);
+        const dCandidateName = resolveCandidateFullName('D', 'NATIONAL');
+        const rCandidateName = resolveCandidateFullName('R', 'NATIONAL');
+        const winnerName = winner === 'D' ? dCandidateName : (winner === 'R' ? rCandidateName : null);
         return {
           kind: 'final',
           winner,
           dEv, rEv, oEv, majority,
-          dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
-          rCandidateName: resolveCandidateFullName('R', 'NATIONAL'),
+          dCandidateName,
+          rCandidateName,
+          outcomeLabel: winnerName ? getPresidencyOutcomeLabel(state.year, winner) : null,
           accentColor: winner ? calledAccentColor(winner, CHECKPOINT_DEFAULT_MARGIN[winner] || 0) : '#8a8a8a',
           tallyAfter: { D: dEv, R: rEv },
           timeLabel: formatTimeLabel(record.time)
@@ -3794,14 +3801,16 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
   function outcomeMessageText(type, dEv, rEv, oEv, majority) {
     if (type === 'D') {
       const winnerName = resolveCandidateLastName('D', 'NATIONAL');
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'D') : null;
       return winnerName
-        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority}).`
+        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Democrats clinch the presidency with ${dEv} EV (needed ${majority}).`;
     }
     if (type === 'R') {
       const winnerName = resolveCandidateLastName('R', 'NATIONAL');
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'R') : null;
       return winnerName
-        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority}).`
+        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
     }
     return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election will be decided by the House of Representatives.`;
@@ -4107,10 +4116,12 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         let reversalBanner = '';
         let reversalClass = '';
         if (newOutcomeType === 'D' || newOutcomeType === 'R') {
-          const newWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL')
-            || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
-          reversalBanner = `${newWinnerName} is now projected to win the presidency instead, following a corrected state call.`;
-          reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead.`;
+          const resolvedWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL');
+          const newWinnerName = resolvedWinnerName || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
+          const label = resolvedWinnerName ? getPresidencyOutcomeLabel(state.year, newOutcomeType) : null;
+          const labelSuffix = label ? ` (${label.toLowerCase()})` : '';
+          reversalBanner = `${newWinnerName} is now projected to win the presidency instead${labelSuffix}, following a corrected state call.`;
+          reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead${labelSuffix}.`;
           reversalClass = outcomeClassFor(newOutcomeType);
         } else if (newOutcomeType === 'T') {
           reversalBanner = 'The Electoral College is now projected to tie, following a corrected state call.';

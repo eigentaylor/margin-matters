@@ -17,7 +17,11 @@
 //     reportingPct, reportingText, marginText, marginPctText (plain "D+4.1"
 //     form, no raw-vote suffix - used for the comparison row's colored
 //     margin badge) }
-//   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel }
+//   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel,
+//     outcomeLabel? ("Elected Nth President" / "Reelected as Nth President" -
+//     null when the winner's name couldn't be resolved, e.g. future.html's
+//     synthetic years, in which case the generic "Elected President" label
+//     is shown instead) }
 //   { kind: 'uncalled', dCandidateName, rCandidateName, dPortraitUrl,
 //     rPortraitUrl, dEv, rEv, accentColor, tallyAfter, timeLabel } - a
 //     correction knocked the previously-projected majority holder back
@@ -25,7 +29,8 @@
 //     analogue of the 'final' no-majority case.
 //   { kind: 'final', winner: 'D'|'R'|null (null = no majority reached),
 //     dEv, rEv, oEv, majority, dCandidateName, rCandidateName,
-//     dPortraitUrl, rPortraitUrl, accentColor, tallyAfter, timeLabel }
+//     dPortraitUrl, rPortraitUrl, accentColor, tallyAfter, timeLabel,
+//     outcomeLabel? (same as the 'outcome' slide's field, above) }
 //   { kind: 'races', candidates: [{ unitKey, displayLabel, ev, leader,
 //     candidateName, portraitUrl, reporting, marginText, marginPctText,
 //     rawMarginText, confidenceText, reportingText, accentColor }] }
@@ -371,7 +376,7 @@ function renderOutcome(slide) {
       ${buildPhotoMarkup(slide)}
       <div class="en-cp-outcome-text">
         <div class="en-cp-outcome-name">${(slide.candidateName || '').toUpperCase()}</div>
-        <div class="en-cp-outcome-label">Elected President</div>
+        <div class="en-cp-outcome-label">${slide.outcomeLabel || 'Elected President'}</div>
       </div>
     </div>`;
 }
@@ -397,7 +402,7 @@ function renderFinal(slide) {
         ${buildPhotoMarkup({ leader: slide.winner, portraitUrl: winnerPortrait, candidateName: winnerName })}
         <div class="en-cp-outcome-text">
           <div class="en-cp-outcome-name">${winnerName.toUpperCase()}</div>
-          <div class="en-cp-outcome-label">Elected President</div>
+          <div class="en-cp-outcome-label">${slide.outcomeLabel || 'Elected President'}</div>
         </div>
       </div>
       <div class="en-cp-final-tally">

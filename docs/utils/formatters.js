@@ -173,7 +173,7 @@ export function formatEvAllocationsForLog(callAlloc, finalAlloc) {
 // one handy still get the pre-existing (post-split) wording.
 const DISTRICT_SPLIT_YEAR = { ME: 1972, NE: 1992 };
 
-function ordinalSuffix(n) {
+export function ordinalSuffix(n) {
     const v = n % 100;
     if (v >= 11 && v <= 13) return `${n}th`;
     switch (n % 10) {
