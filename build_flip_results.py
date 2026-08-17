@@ -267,6 +267,14 @@ def analyze_year(rows_for_year, metric: str = 'votes'):
         if year == 1960 and r['abbr'] == 'AL':
             # Alabama 1960 is split 5 D + 6 O if won by D or T, so cannot be flipped as a unit
             continue
+        if year == 1948 and r['abbr'] == 'AL':
+            # Alabama 1948: D_votes is a copy of T_votes (Truman wasn't on
+            # the ballot here - see special_case_notes), already awarded
+            # entirely to T above (ev_by_party['T'] += 11). winner_votes and
+            # best_other_votes would both resolve to that same duplicated
+            # number, making it look like a free ~1-vote flip target instead
+            # of the real, un-flippable historical anomaly it is.
+            continue
 
         if r['party_win'] == runner_party:
             continue

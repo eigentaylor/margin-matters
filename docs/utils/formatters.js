@@ -55,6 +55,17 @@ export function formatRawMarginText(leader, voteMargin) {
     return `${rawSign}+${Math.abs(Math.round(voteMargin)).toLocaleString('en-US')}`;
 }
 
+// formatRawMarginText()'s O-lead analogue - voteMargin there is always a
+// D-vs-R difference (meaningless once O is ahead), so this measures the raw
+// vote count the same way formatOtherLean() measures the percentage: O's
+// lead over whichever of D/R is closer to catching them.
+export function formatOtherRawMarginText(oVotes, dVotes, rVotes) {
+    if (!isFinite(oVotes) || !isFinite(dVotes) || !isFinite(rVotes)) return '';
+    const raw = oVotes - Math.max(dVotes, rVotes);
+    if (Math.round(raw) === 0) return '';
+    return `O+${Math.abs(Math.round(raw)).toLocaleString('en-US')}`;
+}
+
 export function formatMarginText(marginStr, leader, voteMargin) {
     if (marginStr === 'None') return 'None';
     if (!marginStr) return leader === 'O' ? 'Other lead' : 'EVEN';

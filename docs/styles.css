@@ -1733,6 +1733,11 @@ body.slider-dragging * {
   font-weight: 700;
 }
 
+.en-winprob-tie {
+  color: #e8c565;
+  font-weight: 700;
+}
+
 .en-log-body {
   flex: 1 1 auto;
   overflow-y: auto;
@@ -3372,6 +3377,7 @@ body.shift-vectors-page {
 
 .en-cp-tally-box.en-cp-tally-d .en-cp-tally-num { color: #7fa8ff; }
 .en-cp-tally-box.en-cp-tally-r .en-cp-tally-num { color: #ff9b9b; }
+.en-cp-tally-box.en-cp-tally-o .en-cp-tally-num { color: #C9A400; }
 
 /* Transient "+N"/"-N" chip that pops up next to a tally number when a
    correction moves EVs from one party to the other - makes the swing itself
@@ -3410,6 +3416,11 @@ body.shift-vectors-page {
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
   text-align: center;
+}
+
+.en-cp-tally-tie {
+  color: #e8c565;
+  margin-top: 2px;
 }
 
 @media (max-width: 720px) {
@@ -3583,7 +3594,6 @@ body.shift-vectors-page {
 .en-checkpoint-outcome .en-cp-photo-wrap {
   width: clamp(120px, 30vw, 180px);
   height: clamp(120px, 30vw, 180px);
-  border-radius: 50%;
 }
 
 .en-cp-outcome-name {

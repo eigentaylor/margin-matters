@@ -753,9 +753,8 @@ year,metric,mode,abbr,ev,votes_to_flip,pct_of_state_votes
 1948,votes,classic,IL,28,16807,0.422
 1948,votes,classic,CA,25,8933,0.222
 1948,votes,classic,OH,25,3554,0.121
-1948,votes,no_majority,NV,3,968,1.558
+1948,votes,no_majority,CA,25,8933,0.222
 1948,votes,no_majority,OH,25,3554,0.121
-1948,votes,no_majority,AL,11,1,0.0
 1948,margin,classic,IL,28,16807,0.422
 1948,margin,classic,CA,25,8933,0.222
 1948,margin,classic,OH,25,3554,0.121

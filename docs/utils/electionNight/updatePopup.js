@@ -31,9 +31,12 @@
 //     rawMarginText, confidenceText, reportingText, accentColor }] }
 //
 // showCheckpoint(slides, options) options:
-//   onComplete, startingTally: {D,R,O}, winProb: number|null (national D
-//   win probability, 0..1), majority: number|null (EVs needed to win),
-//   panelInfo: { D: {name, portraitUrl}, R: {...} }
+//   onComplete, startingTally: {D,R,O}, winProb: {probD, probTie}|null
+//   (national D win probability and no-majority/tie probability, each
+//   0..1), majority: number|null (EVs needed to win), panelInfo: { D:
+//   {name, portraitUrl}, R: {...}, O: {...} }, hasThirdParty: boolean
+//   (shows the scoreboard's third O box, always pinned at "0.0% to win" -
+//   only years with a real third-party electoral vote haul set this)
 
 const CALL_SLIDE_MS = 3400;
 const CORRECTION_SLIDE_MS = 4000;
@@ -45,14 +48,14 @@ const COUNTER_MS = 900;
 let overlayEl = null;
 let cardEl = null;
 let tallyEl = null;
-let tallyBoxes = null; // { D: {root, num}, R: {root, num} }
+let tallyBoxes = null; // { D: {root, num}, R: {root, num}, O?: {root, num} }
 let progressEl = null;
 let hintEl = null;
 let advanceTimer = null;
 let activeSlides = null;
 let activeIndex = -1;
 let activeOnComplete = null;
-let displayedTally = { D: 0, R: 0 };
+let displayedTally = { D: 0, R: 0, O: 0 };
 
 function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
@@ -239,15 +242,26 @@ function animateCounter(el, from, to) {
   requestAnimationFrame(step);
 }
 
-/** Build (once per checkpoint) the persistent scoreboard's two party boxes. */
-function renderTallyPanelStructure(panelInfo, winProb, majority) {
+/**
+ * Build (once per checkpoint) the persistent scoreboard's party boxes - D
+ * and R always, plus a third O box (always pinned at a flat "0.0% to win" -
+ * a deliberate simplification rather than modeling a real third-party win
+ * probability) only in years with a real third-party electoral vote haul,
+ * gated by the caller-supplied `hasThirdParty` flag so ordinary D/R-only
+ * years render exactly as before.
+ */
+function renderTallyPanelStructure(panelInfo, winProb, majority, hasThirdParty) {
   const info = panelInfo || {};
+  const probD = winProb && isFinite(winProb.probD) ? winProb.probD : null;
+  const probTie = winProb && isFinite(winProb.probTie) ? winProb.probTie : 0;
   const partyBox = (code) => {
     const p = info[code] || {};
-    const last = lastNameOf(p.name) || (code === 'D' ? 'Democrat' : 'Republican');
-    const probText = (code === 'D' && isFinite(winProb)) ? `${(winProb * 100).toFixed(1)}% to win`
-      : (code === 'R' && isFinite(winProb)) ? `${((1 - winProb) * 100).toFixed(1)}% to win`
-        : '';
+    const fallbackName = code === 'D' ? 'Democrat' : (code === 'R' ? 'Republican' : 'Other');
+    const last = lastNameOf(p.name) || fallbackName;
+    const probText = code === 'O' ? '0.0% to win'
+      : (code === 'D' && probD != null) ? `${(probD * 100).toFixed(1)}% to win`
+        : (code === 'R' && probD != null) ? `${(Math.max(0, 1 - probD - probTie) * 100).toFixed(1)}% to win`
+          : '';
     return `<div class="en-cp-tally-box en-cp-tally-${code.toLowerCase()}">
       ${buildMiniAvatar(p.portraitUrl, p.name, code)}
       <div class="en-cp-tally-info">
@@ -257,18 +271,23 @@ function renderTallyPanelStructure(panelInfo, winProb, majority) {
       </div>
     </div>`;
   };
-  const majorityLine = isFinite(majority) ? `<div class="en-cp-tally-majority">${majority} to win</div>` : '';
-  tallyEl.innerHTML = partyBox('D') + majorityLine + partyBox('R');
+  const tieLine = probD != null ? `<div class="en-cp-tally-tie">Tie ${(probTie * 100).toFixed(1)}%</div>` : '';
+  const majorityLine = (isFinite(majority) || tieLine)
+    ? `<div class="en-cp-tally-majority">${isFinite(majority) ? `<div>${majority} to win</div>` : ''}${tieLine}</div>`
+    : '';
+  tallyEl.innerHTML = partyBox('D') + majorityLine + (hasThirdParty ? partyBox('O') : '') + partyBox('R');
   tallyBoxes = {
     D: tallyEl.querySelector('.en-cp-tally-num[data-party="D"]'),
-    R: tallyEl.querySelector('.en-cp-tally-num[data-party="R"]')
+    R: tallyEl.querySelector('.en-cp-tally-num[data-party="R"]'),
+    O: hasThirdParty ? tallyEl.querySelector('.en-cp-tally-num[data-party="O"]') : null
   };
 }
 
 function setTallyImmediate(tally) {
-  displayedTally = { D: (tally && tally.D) || 0, R: (tally && tally.R) || 0 };
+  displayedTally = { D: (tally && tally.D) || 0, R: (tally && tally.R) || 0, O: (tally && tally.O) || 0 };
   if (tallyBoxes && tallyBoxes.D) tallyBoxes.D.textContent = String(displayedTally.D);
   if (tallyBoxes && tallyBoxes.R) tallyBoxes.R.textContent = String(displayedTally.R);
+  if (tallyBoxes && tallyBoxes.O) tallyBoxes.O.textContent = String(displayedTally.O);
 }
 
 // A correction is a much bigger deal than a routine call, so on top of the
@@ -294,13 +313,16 @@ function animateTallyTo(tally, showDelta) {
   if (!tally) return;
   const nextD = isFinite(tally.D) ? tally.D : displayedTally.D;
   const nextR = isFinite(tally.R) ? tally.R : displayedTally.R;
+  const nextO = isFinite(tally.O) ? tally.O : displayedTally.O;
   if (showDelta) {
     showTallyDelta('D', nextD - displayedTally.D);
     showTallyDelta('R', nextR - displayedTally.R);
+    showTallyDelta('O', nextO - displayedTally.O);
   }
   if (tallyBoxes && tallyBoxes.D) animateCounter(tallyBoxes.D, displayedTally.D, nextD);
   if (tallyBoxes && tallyBoxes.R) animateCounter(tallyBoxes.R, displayedTally.R, nextR);
-  displayedTally = { D: nextD, R: nextR };
+  if (tallyBoxes && tallyBoxes.O) animateCounter(tallyBoxes.O, displayedTally.O, nextO);
+  displayedTally = { D: nextD, R: nextR, O: nextO };
 }
 
 function renderCallOrCorrection(slide) {
@@ -581,7 +603,7 @@ export function showCheckpoint(slides, options = {}) {
   // entrance animation on the base .en-checkpoint-overlay rule plays clean.
   overlayEl.classList.remove('en-checkpoint-closing');
   overlayEl.hidden = false;
-  renderTallyPanelStructure(options.panelInfo, options.winProb, options.majority);
+  renderTallyPanelStructure(options.panelInfo, options.winProb, options.majority, options.hasThirdParty);
   setTallyImmediate(options.startingTally);
   renderSlide(0);
 }
