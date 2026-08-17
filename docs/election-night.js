@@ -1328,7 +1328,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
         const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
         const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
-        const npvTallyAfter = computeRunningEvTally(record.time);
+        // NPV doesn't affect EV tally - keep running tally unchanged
+        const npvTallyAfter = { ...runningTally };
         runningTally = npvTallyAfter;
         return {
           kind: isNpvCorrection ? 'correction' : 'call',
@@ -1367,8 +1368,36 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // future strong third-party years.
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
       const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
-      const stateTallyAfter = computeRunningEvTally(record.time);
+
+      // Compute this single record's EV delta (not time-based, so multiple
+      // records at the same time show independent deltas)
+      let stateTallyAfter = { D: runningTally.D, R: runningTally.R, O: runningTally.O };
+      if (isCorrection) {
+        // For a correction, subtract old allocation, add new allocation
+        const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
+        const oldAlloc = st && st.evAllocations;
+        const newAlloc = record.evAllocations;
+        if (oldAlloc) {
+          stateTallyAfter.D -= oldAlloc.D || 0;
+          stateTallyAfter.R -= oldAlloc.R || 0;
+          stateTallyAfter.O -= oldAlloc.O || 0;
+        }
+        if (newAlloc) {
+          stateTallyAfter.D += newAlloc.D || 0;
+          stateTallyAfter.R += newAlloc.R || 0;
+          stateTallyAfter.O += newAlloc.O || 0;
+        }
+      } else {
+        // For a call, just add the allocation
+        const alloc = record.evAllocations;
+        if (alloc) {
+          stateTallyAfter.D += alloc.D || 0;
+          stateTallyAfter.R += alloc.R || 0;
+          stateTallyAfter.O += alloc.O || 0;
+        }
+      }
       runningTally = stateTallyAfter;
+
       return {
         kind: isCorrection ? 'correction' : 'call',
         unitKey: record.unitKey,
