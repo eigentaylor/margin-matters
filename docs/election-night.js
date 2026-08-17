@@ -3237,7 +3237,8 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const thresholdText = isFinite(st.callRecord.threshold)
       ? ` (threshold ${st.callRecord.threshold.toFixed(2)})`
       : '';
-    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey, state.year)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
+    //const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey, state.year)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}${thresholdText}.`;
+    const message = `${formatTimeLabel(correctionTime)} – Correction: ${formatUnitLabel(st.unitKey, state.year)} finishes for ${finalLeaderText}. Previously called for ${calledLeaderText} at ${callTimeStr}.`;
     const correctionRecord = {
       kind: 'notice',
       noticeType: 'miscall',
