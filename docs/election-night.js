@@ -1755,6 +1755,18 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     }
   }
 
+  // ME/NE only become true district-split systems in these years. Before
+  // that, the dataset still labels their statewide rows as "-AL" for schema
+  // consistency, but they should behave like ordinary statewide units.
+  const DISTRICT_SPLIT_YEAR = { ME: 1972, NE: 1992 };
+
+  function isDerivedAtLargeUnit(year, abbr, isAtLargeRow) {
+    if (!isAtLargeRow) return false;
+    const splitYear = DISTRICT_SPLIT_YEAR[abbr];
+    if (!isFinite(splitYear)) return false;
+    return year >= splitYear;
+  }
+
   /**
    * Build the per-unit array used by the simulator. For each input row (unit)
    * this computes final vote shares, an expected reporting schedule,
@@ -1773,10 +1785,11 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       if (!row || !row.unit || row.unit === 'NATIONAL') return;
       const unit = String(row.unit);
       const abbr = unit.slice(0, 2);
-      const isAtLarge = /-AL$/.test(unit);
+      const isAtLargeRow = /-AL$/.test(unit);
       const isDistrict = /-(0[1-9])$/.test(unit);
       const isState = /^[A-Z]{2}$/.test(unit) || unit === 'DC';
-      if (!isState && !isAtLarge && !isDistrict) return;
+      if (!isState && !isAtLargeRow && !isDistrict) return;
+      const isDerivedAtLarge = isDerivedAtLargeUnit(year, abbr, isAtLargeRow);
 
       let totals = null;
       if (typeof window.getUnitFinalVoteTotals === 'function') {
@@ -1871,7 +1884,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       if (!pathSelections.length) return;
 
       const aliases = new Set([unit]);
-      if (isAtLarge) aliases.add(abbr);
+      if (isAtLargeRow) aliases.add(abbr);
       if (isState) aliases.add(abbr);
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
@@ -1919,7 +1932,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
       out.push({
         unitKey: unit,
         abbr,
-        type: isDistrict ? 'district' : (isAtLarge ? 'atlarge' : 'state'),
+        type: isDistrict ? 'district' : (isDerivedAtLarge ? 'atlarge' : 'state'),
         totalVotes,
         thirdPartyShare: totalThirdShare,
         topThirdShare,
@@ -1942,7 +1955,7 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
         biasParams,
         pathSelections,
         aliases,
-        pvWeight: isAtLarge ? 0 : 1,
+        pvWeight: isDerivedAtLarge ? 0 : 1,
         closeness,
         easePower,
         reportJitter,
@@ -3153,15 +3166,14 @@ import { showCheckpoint } from './utils/electionNight/updatePopup.js';
     const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     // Force the call once the night is essentially over even if a razor-thin
-    // national margin (1880's ~0.1% is the extreme case) never crosses
-    // `threshold` and floating-point/pvWeight quirks (ME/NE's at-large rows
-    // before their district split are excluded from the pvWeight total)
-    // keep `reporting` from ever exactly hitting 1.0 - maybeEmitNpvMiscall()
-    // already exists to correct this if the forced leader turns out wrong
-    // once the true final numbers are in, so forcing it here is safe even
-    // at weak confidence. Same FINAL_CHECKPOINT_GAP_MINUTES cutoff as
-    // projectNpvCallEvent()'s own dead-end fallback, so the checkpoint
-    // scheduler's projected 'npv' event and this live trigger land in sync.
+    // national margin never crosses `threshold` and tiny float/schedule
+    // rounding keeps `reporting` from ever exactly hitting 1.0 -
+    // maybeEmitNpvMiscall() already exists to correct this if the forced
+    // leader turns out wrong once the true final numbers are in, so forcing
+    // it here is safe even at weak confidence. Same
+    // FINAL_CHECKPOINT_GAP_MINUTES cutoff as projectNpvCallEvent()'s own
+    // dead-end fallback, so the checkpoint scheduler's projected 'npv' event
+    // and this live trigger land in sync.
     const forceByNightEnd = currentTime >= state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES;
     if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold) || forceByNightEnd)) return;
 

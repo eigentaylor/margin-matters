@@ -28,6 +28,7 @@
                         <h2>Election Night</h2>
 <br/>
 <ul>
+<li>Fixed a national-popular-vote accounting bug in election night for pre-district-split Maine/Nebraska years (for example 1880): <code>ME-AL</code>/<code>NE-AL</code> rows are now treated as normal statewide vote contributors before the split years, so the end-of-night NPV margin/count no longer drifts to an incorrect D lead.</li>
 <li>Added a checkpoint popup that periodically interrupts the night to recap what's happened: new calls, corrections, and a running scoreboard, batched together instead of firing one at a time for every single state</li>
 <li>The scoreboard box in the popup shows a live electoral vote tally for each party with an animated count-up, plus each party's live win probability</li>
 <li>Added a genuine tie/no-majority probability alongside the D and R win percentages ("D 48.2% — R 46.5% — Tie 5.3%"), so a contingent-election scenario can actually be represented instead of forcing a binary D-or-R read. The tie percentage now reads an honest 0.0% once a no-majority result becomes mathematically provable, rather than being stuck at a token nonzero floor</li>
