@@ -295,6 +295,19 @@
       gap: 8px;
       min-width: 240px;
       flex: 1 1 260px;
+      border: 1px dashed transparent;
+      border-radius: 10px;
+      padding: 4px;
+      margin: -4px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    /* Drag-and-drop target feedback — the whole party box accepts a dropped
+       image regardless of preset/custom mode (a drop auto-switches to
+       custom, see sim2028.js's candidate-picker wiring). */
+    .s28-cand-party.s28-drag-over {
+      border-color: var(--accent);
+      background: rgba(122, 162, 247, 0.08);
     }
 
     .s28-cand-label {
@@ -356,6 +369,12 @@
       color: var(--muted);
       flex: 1 1 160px;
       align-self: center;
+    }
+
+    .s28-cand-drop-hint {
+      width: 100%;
+      font-size: 0.78rem;
+      color: var(--muted);
     }
 
     /* election-night.js writes a label into every bar segment AND into #evText.
@@ -613,6 +632,7 @@
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomD">
             <input id="s28CandNameD" type="text" placeholder="Candidate name" maxlength="60" />
             <input id="s28CandImgD" type="file" accept="image/*" title="Optional portrait" />
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box</div>
           </div>
         </div>
         <div class="s28-cand-party" data-party="r">
@@ -621,6 +641,7 @@
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomR">
             <input id="s28CandNameR" type="text" placeholder="Candidate name" maxlength="60" />
             <input id="s28CandImgR" type="file" accept="image/*" title="Optional portrait" />
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box</div>
           </div>
         </div>
       </div>

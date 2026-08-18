@@ -966,9 +966,15 @@ function applySettingsFromUrl() {
     if (mode === 'preset' && PRESET_CANDIDATES[party].some(p => p.name === name)) {
       state.candidates[party] = { mode: 'preset', name, imageUrl: null };
     } else if (mode === 'custom') {
-      // No image over a shared link (see buildSettingsParams) — falls back
-      // to the party-letter badge until/unless this browser has one locally.
-      state.candidates[party] = { mode: 'custom', name, imageUrl: null };
+      // An uploaded image never travels in the URL (see buildSettingsParams), so a
+      // link for a different custom name has no image available on this browser.
+      // But this page writes dCand/rCand into its OWN address bar on every "Start
+      // campaign" (syncAddressBar), so a plain reload always takes this branch too
+      // — if the name matches what's already saved locally, keep that image
+      // instead of wiping it back to the fallback badge.
+      const existing = state.candidates[party];
+      const keepImage = (existing && existing.mode === 'custom' && existing.name === name) ? existing.imageUrl : null;
+      state.candidates[party] = { mode: 'custom', name, imageUrl: keepImage };
     }
   });
 }
@@ -1290,6 +1296,29 @@ async function init() {
     if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
     const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
     if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
+
+    // Drag a portrait onto either party's whole box, in preset OR custom mode —
+    // updateCustomCandidateImage() switches that party to custom on its own.
+    const partyBox = document.querySelector(`.s28-cand-party[data-party="${party}"]`);
+    if (partyBox) {
+      const isFileDrag = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+      ['dragenter', 'dragover'].forEach(evt => partyBox.addEventListener(evt, e => {
+        if (!isFileDrag(e)) return;
+        e.preventDefault();
+        partyBox.classList.add('s28-drag-over');
+      }));
+      ['dragleave', 'dragend'].forEach(evt => partyBox.addEventListener(evt, e => {
+        if (evt === 'dragleave' && partyBox.contains(e.relatedTarget)) return;
+        partyBox.classList.remove('s28-drag-over');
+      }));
+      partyBox.addEventListener('drop', e => {
+        if (!isFileDrag(e)) return;
+        e.preventDefault();
+        partyBox.classList.remove('s28-drag-over');
+        const file = [...(e.dataTransfer.files || [])].find(f => f.type.startsWith('image/'));
+        if (file) updateCustomCandidateImage(party, file);
+      });
+    }
   });
 
   document.querySelectorAll('#s28Table th[data-sort]').forEach(th => {
