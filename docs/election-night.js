@@ -4179,7 +4179,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           outcomeSeq: seqable ? state.outcomeSeq++ : null
         };
         state.callRecords.push(clinchRecord);
-        // The checkpoint popup's own "X elected president" moment (D/R
+        // The checkpoint popup's own "X projected to win" moment (D/R
         // only - a projected EC tie ('T') has no winner to announce) is
         // driven independently by computePlannedCheckpoints()'s own outcome
         // projection, resolved back to this exact record via outcomeSeq

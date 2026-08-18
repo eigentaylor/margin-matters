@@ -64,7 +64,13 @@ export const PRESIDENT_ORDINALS = {
 // Returns null when the year isn't in the table (e.g. future.html's
 // hypothetical years past 2028) or winnerParty isn't 'D'/'R', so callers can
 // fall back to today's generic wording with no page-specific branching.
-export function getPresidencyOutcomeLabel(year, winnerParty) {
+//
+// isFinal distinguishes the night's one true final tally from every earlier
+// clinch/correction moment - until every state is actually called, the
+// winner is still a projection, so "Elected"/"Reelected" (settled fact) is
+// reserved for isFinal and every other moment reads as "Projected to be
+// elected/reelected" instead.
+export function getPresidencyOutcomeLabel(year, winnerParty, isFinal = true) {
   const entry = PRESIDENT_ORDINALS[year];
   if (!entry || (winnerParty !== 'D' && winnerParty !== 'R')) return null;
   const [ordinalBase, incumbentParty, override] = entry;
@@ -73,13 +79,16 @@ export function getPresidencyOutcomeLabel(year, winnerParty) {
   // would become") - e.g. Coolidge succeeded to the 30th presidency in
   // 1923, so winning in 1924 keeps him the 30th, not the 31st.
   if (winnerParty === incumbentParty) {
-    return `Reelected as ${ordinalSuffix(ordinalBase - 1)} President`;
+    const ordinal = ordinalSuffix(ordinalBase - 1);
+    return isFinal ? `Reelected as ${ordinal} President` : `Projected to be reelected as ${ordinal} President`;
   }
   // A former president winning a non-consecutive term (Cleveland 1892,
   // T. Roosevelt 1912, Trump 2024) genuinely starts a new, later-numbered
   // presidency, so ordinalBase itself is their number here.
   if (override != null && winnerParty === override.party) {
-    return `Reelected as ${ordinalSuffix(ordinalBase)} President`;
+    const ordinal = ordinalSuffix(ordinalBase);
+    return isFinal ? `Reelected as ${ordinal} President` : `Projected to be reelected as ${ordinal} President`;
   }
-  return `Elected ${ordinalSuffix(ordinalBase)} President`;
+  const ordinal = ordinalSuffix(ordinalBase);
+  return isFinal ? `Elected ${ordinal} President` : `Projected to be elected ${ordinal} President`;
 }
