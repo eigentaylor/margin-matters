@@ -17,6 +17,12 @@
 //     reportingPct, reportingText, marginText, marginPctText (plain "D+4.1"
 //     form, no raw-vote suffix - used for the comparison row's colored
 //     margin badge) }
+//   { kind: 'retraction', stateName, ev, leader (the PREVIOUSLY called
+//     leader - there's no new one yet), candidateName (ditto), portraitUrl,
+//     accentColor, timeLabel, tallyAfter: {D,R,O}, reportingPct,
+//     reportingText } - a called unit's confidence collapsed back below the
+//     retraction threshold before it finished reporting ("too close to
+//     call"); no D/R comparison row since there's no new leader to compare.
 //   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel,
 //     outcomeLabel? ("Elected Nth President" / "Reelected as Nth President" -
 //     null when the winner's name couldn't be resolved, e.g. future.html's
@@ -80,7 +86,7 @@ function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races') return RACES_SLIDE_MS;
-  if (slide.kind === 'correction') return CORRECTION_SLIDE_MS;
+  if (slide.kind === 'correction' || slide.kind === 'retraction') return CORRECTION_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
 
@@ -409,6 +415,41 @@ function renderCallOrCorrection(slide) {
   animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
 }
 
+/**
+ * A called state just got un-called mid-count ("too close to call") - not
+ * the same thing as a 'correction' (which only fires once a unit hits 100%
+ * reporting and states a real final winner). There's no new leader here yet,
+ * just the previously-called candidate's name/portrait and a warning that
+ * the race has narrowed back into uncertainty, so unlike
+ * renderCallOrCorrection() this never shows a D/R comparison row.
+ */
+function renderRetraction(slide) {
+  const { first, last } = splitName(slide.candidateName);
+  const evBadge = `<div class="en-cp-ev">
+      <span class="en-cp-ev-label">Electoral votes</span>
+      <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
+    </div>`;
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  cardEl.innerHTML = `
+    <div class="en-cp-header">
+      <div class="en-cp-state">${(slide.stateName || '').toUpperCase()}${timeLabel}</div>
+      ${evBadge}
+    </div>
+    <div class="en-cp-body">
+      ${buildPhotoMarkup(slide)}
+      <div class="en-cp-result">
+        <div class="en-cp-check en-cp-badge-retracted">&#8634; TOO CLOSE TO CALL</div>
+        <div class="en-cp-name">
+          ${first ? `<span class="en-cp-first">${first}</span>` : ''}
+          <span class="en-cp-last">${last}</span>
+        </div>
+        <div class="en-cp-prev">Previously called for ${slide.candidateName || 'the leader'} - race has narrowed</div>
+      </div>
+    </div>
+    ${buildStatsLineMarkup(slide)}`;
+  animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
+}
+
 function renderOutcome(slide) {
   const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
   cardEl.innerHTML = `
@@ -568,6 +609,7 @@ function renderSlide(index) {
   else if (slide.kind === 'final') renderFinal(slide);
   else if (slide.kind === 'uncalled') renderUncalled(slide);
   else if (slide.kind === 'races') renderRaces(slide);
+  else if (slide.kind === 'retraction') renderRetraction(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
 

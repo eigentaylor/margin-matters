@@ -10,7 +10,8 @@
         "lint:fix": "npx eslint \"docs/**/*.js\" \"site_builder/**/*.js\" --color --fix",
         "lint:docs": "npx eslint \"docs/**/*.js\" --color",
         "validate:confidence": "node docs/utils/electionNight/validateConfidence.mjs",
-        "validate:winprob": "node docs/utils/electionNight/validateWinProb.mjs"
+        "validate:winprob": "node docs/utils/electionNight/validateWinProb.mjs",
+        "validate:retraction": "node docs/utils/electionNight/validateRetraction.mjs"
     },
     "devDependencies": {
         "@eslint/css": "^0.13.0",

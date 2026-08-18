@@ -3108,6 +3108,19 @@ body.shift-vectors-page {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(179, 0, 27, 0.6);
 }
 
+/* A retraction is also alarming (the call just shown a moment ago is being
+   pulled back) but it's a downgrade to uncertainty, not a settled factual
+   correction - a distinct amber-red rather than corrected's pure red keeps
+   the two readable apart at a glance while both still read as "big deal". */
+.en-cp-badge-retracted {
+  background: linear-gradient(135deg, #ff7a1a, #b3260a);
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 6px 14px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(179, 38, 10, 0.6);
+}
+
 @keyframes en-cp-shake {
   0%, 100% { transform: translateX(0); }
   15% { transform: translateX(-9px); }
@@ -3124,7 +3137,8 @@ body.shift-vectors-page {
 }
 
 .en-checkpoint-card.en-checkpoint-correction.en-cp-reveal,
-.en-checkpoint-card.en-checkpoint-uncalled.en-cp-reveal {
+.en-checkpoint-card.en-checkpoint-uncalled.en-cp-reveal,
+.en-checkpoint-card.en-checkpoint-retraction.en-cp-reveal {
   animation: en-cp-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both,
     en-cp-correction-flash 1s ease-out both;
 }

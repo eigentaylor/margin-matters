@@ -121,6 +121,33 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
   // Confidence threshold defaults and reporting cutoffs
   const DEFAULT_CONFIDENCE_THRESHOLD = 0.15;
   const MIN_REPORTING_TO_CALL = 0.2;
+  // A called unit is retracted ("too close to call") once its confidence
+  // falls back under this fraction of the active call threshold. Using a
+  // fraction well below 1 (rather than the same threshold) creates a
+  // hysteresis band: crossing UP through `threshold` calls a unit, but only
+  // crossing back DOWN through `threshold * RETRACTION_THRESHOLD_FRACTION`
+  // retracts it - so ordinary tick-to-tick confidence noise near the call
+  // line can never flap a unit called/retracted/called every frame.
+  const RETRACTION_THRESHOLD_FRACTION = 0.5;
+  // Once a unit is retracted, it can't be called again until at least this
+  // many simulated minutes have passed - a floor on how long a state stays
+  // in "too close to call" limbo, independent of how quickly the bias curve
+  // itself would otherwise let confidence recover. Enforced inside
+  // shouldCallState/shouldForceCall (see their guards) so the offline
+  // checkpoint projector respects it automatically too.
+  const RETRACTED_MIN_DWELL_MINUTES = 30;
+  // How much createBiasParams() nudges a unit's odds of showing a fake
+  // early lean toward the eventual overall-election LOSER (see
+  // buildStateData's bias pass and createBiasParams below).
+  const BIAS_TOWARD_LOSER_DELTA = 0.15;
+  // Extra swing-magnitude boost applied only to units whose bias already
+  // resolved to fake-lean toward the wrong candidate (favored !== winner) -
+  // see buildStateData's bias pass. Makes an already-wrong-leaning state's
+  // early fake lead bigger (the "Bush +10,000, then settles at 537" effect)
+  // without touching units that happen to fake-lean toward their own true
+  // winner.
+  const BIAS_SWING_BOOST_MULTIPLIER = 1.4;
+  const BIAS_SWING_LINGER_BOOST = 0.15;
   // Bounds and default for the free-text simulation speed multiplier input
   const MIN_SPEED_MULTIPLIER = 0.01;
   const MAX_SPEED_MULTIPLIER = 100;
@@ -1330,6 +1357,30 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           timeLabel: formatTimeLabel(record.time)
         };
       }
+      // A retraction has none of the call-shaped fields the branch below
+      // reads (leader/dVotes/rVotes/marginStr) - it only knows who it was
+      // PREVIOUSLY called for (record.previousLeader/previousCandidateName).
+      // Give it its own slide kind here rather than letting it fall through
+      // into the generic call/correction branch, which used to render it as
+      // a bogus "WINNER" card with a null-leader placeholder avatar.
+      if (record.noticeType === 'retraction') {
+        const leader = record.previousLeader;
+        return {
+          kind: 'retraction',
+          unitKey: record.unitKey,
+          stateName: formatUnitLabel(record.unitKey, state.year, { short: true }),
+          ev: record.ev,
+          leader,
+          candidateName: record.previousCandidateName,
+          accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
+          confidencePct: record.confidence,
+          reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
+          reportingText: formatReportingText(record.reporting, null),
+          tallyBefore: spec_tallyBefore,
+          tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
       const isCorrection = record.noticeType === 'miscall';
       const leader = isCorrection ? record.finalLeader : record.leader;
       const voteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
@@ -1450,6 +1501,16 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
    * what actually happened instead of re-deriving it.
    */
   function projectUnitCallEvent(st) {
+    if (st.retractedOnce) {
+      // A retraction (and possibly a re-call) has already genuinely
+      // happened live - this function's contract is to report the unit's
+      // FIRST call untouched (projectUnitRetraction() projects the
+      // retraction/recall themselves as their own timeline events), so
+      // look up the original kind:'call' record directly rather than
+      // st.calledAt/st.callLeader, which by now point at the re-call.
+      const original = state.callRecords.find(r => r && r.kind === 'call' && r.unitKey === st.unitKey && r.retracted);
+      if (original) return { time: original.time, leader: original.leader };
+    }
     if (st.calledAt != null) return { time: st.calledAt, leader: st.callLeader };
     if (st.instantCall) {
       const phaseName = (getPhase(st.startTime) || {}).name || 'Final';
@@ -1468,6 +1529,62 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // exactly at it) so this can never tie with the trailing 'final' event -
     // see that constant's comment.
     return { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: st.winner };
+  }
+
+  /**
+   * Project whether the unit's first call would later get retracted ("too
+   * close to call") before it finishes reporting, and if so, when it gets
+   * re-called - mirrors shouldRetractCall()/registerRetraction()'s live
+   * trigger exactly, continuing projectUnitCallEvent()'s own coarse STEP
+   * loop forward from the first call instead of re-deriving it. Returns
+   * null if the unit never gets retracted. `firstCall` is the result of
+   * projectUnitCallEvent(st) for the same unit.
+   */
+  function projectUnitRetraction(st, firstCall) {
+    if (st.retractedOnce) {
+      // Already genuinely happened live - report what actually happened
+      // instead of re-deriving it, same convention projectUnitCallEvent()
+      // uses for st.calledAt != null.
+      const retractionRec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'retraction' && r.unitKey === st.unitKey);
+      if (!retractionRec) return null;
+      const recall = (st.calledAt != null) ? { time: st.calledAt, leader: st.callLeader } : null;
+      return { retractionTime: retractionRec.time, recall };
+    }
+    if (st.instantCall || !firstCall) return null;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const retractionThreshold = threshold * effectiveRetractionFraction();
+    const STEP = 2;
+    for (let t = firstCall.time + STEP; t <= state.simEnd; t += STEP) {
+      const phaseName = (getPhase(t) || {}).name || 'Final';
+      const metrics = computeMetrics(st, t, phaseName);
+      if (metrics.reporting >= 1 - EPS) return null; // finished reporting without ever dipping - no retraction
+      if (isFinite(metrics.confidence) && metrics.confidence < retractionThreshold) {
+        // shouldCallState/shouldForceCall's dwell-time guard reads
+        // st.retractedAt directly - live play sets it for real the moment
+        // registerRetraction() fires, but this is a speculative scan that
+        // never actually retracts the unit, so it has to fake that same
+        // field for the duration of the inner loop (restored in `finally`,
+        // regardless of which path returns) or the projected recall time
+        // would ignore RETRACTED_MIN_DWELL_MINUTES entirely and drift from
+        // what live playback actually does.
+        const savedRetractedAt = st.retractedAt;
+        st.retractedAt = t;
+        try {
+          for (let t2 = t + STEP; t2 <= state.simEnd; t2 += STEP) {
+            const phaseName2 = (getPhase(t2) || {}).name || 'Final';
+            const metrics2 = computeMetrics(st, t2, phaseName2);
+            if (shouldCallState(st, metrics2, t2) || shouldForceCall(st, metrics2, t2)) {
+              return { retractionTime: t, recall: { time: t2, leader: metrics2.leader } };
+            }
+          }
+          // Same dead-end fallback convention as projectUnitCallEvent()'s own.
+          return { retractionTime: t, recall: { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: st.winner } };
+        } finally {
+          st.retractedAt = savedRetractedAt;
+        }
+      }
+    }
+    return null;
   }
 
   /**
@@ -1533,15 +1650,27 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     const totalPool = state.totalEvPool || 538;
     const majority = Math.floor(totalPool / 2) + 1;
 
-    // One call event per unit, plus a correction event if the projected/
-    // real call doesn't match the ground-truth winner.
+    // One call event per unit, plus an optional retraction/recall pair if
+    // the call gets un-called mid-count, plus a correction event if
+    // whichever call ends up "live" (the recall, if retracted; otherwise
+    // the original call) doesn't match the ground-truth winner.
     const timeline = [];
     data.forEach(st => {
       const call = projectUnitCallEvent(st);
       const ev = isFinite(st.ev) ? st.ev : 0;
       timeline.push({ kind: 'call', unitKey: st.unitKey, ev, leader: call.leader, time: call.time });
-      if (call.leader !== st.winner) {
-        const correctionTime = Math.max(call.time, st.instantCall ? st.startTime : st.startTime + st.duration);
+
+      const retraction = projectUnitRetraction(st, call);
+      let effectiveCall = call;
+      if (retraction) {
+        timeline.push({ kind: 'retraction', unitKey: st.unitKey, ev, leader: null, time: retraction.retractionTime });
+        if (retraction.recall) {
+          timeline.push({ kind: 'recall', unitKey: st.unitKey, ev, leader: retraction.recall.leader, time: retraction.recall.time });
+          effectiveCall = retraction.recall;
+        }
+      }
+      if (effectiveCall.leader !== st.winner) {
+        const correctionTime = Math.max(effectiveCall.time, st.instantCall ? st.startTime : st.startTime + st.duration);
         timeline.push({ kind: 'correction', unitKey: st.unitKey, ev, leader: st.winner, time: correctionTime });
       }
     });
@@ -1562,7 +1691,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       }
     }
 
-    timeline.sort((a, b) => (a.time - b.time) || (a.kind === 'call' ? -1 : 1) - (b.kind === 'call' ? -1 : 1));
+    const KIND_ORDER = { call: 0, retraction: 1, recall: 2, correction: 3 };
+    timeline.sort((a, b) => (a.time - b.time) || ((KIND_ORDER[a.kind] ?? 9) - (KIND_ORDER[b.kind] ?? 9)));
 
     // Replay in time order to find every national outcome transition AND
     // stamp each event with its own precomputed tallyBefore/tallyAfter -
@@ -1598,16 +1728,25 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     };
     timeline.forEach(ev => {
       ev.tallyBefore = { D: dRunning, R: rRunning, O: oRunning };
-      if (ev.kind === 'call' || ev.kind === 'correction') {
+      if (ev.kind === 'call' || ev.kind === 'correction' || ev.kind === 'recall') {
+        // A 'recall' is honestly just a unit's second call - it reuses the
+        // exact same all-or-nothing buildCallAllocation path 'call' does.
         const st = data.find(s => s && s.unitKey === ev.unitKey);
-        const alloc = ev.kind === 'call'
-          ? buildCallAllocation(st, ev.leader)
-          : (st && st.evAllocations) || { D: 0, R: 0, O: 0 };
+        const alloc = (ev.kind === 'correction')
+          ? ((st && st.evAllocations) || { D: 0, R: 0, O: 0 })
+          : buildCallAllocation(st, ev.leader);
         const prevAlloc = attributedAlloc.get(ev.unitKey);
         bumpRunning(prevAlloc, -1);
         attributedAlloc.set(ev.unitKey, alloc);
         bumpRunning(alloc, 1);
         ev.allocAfter = alloc;
+      } else if (ev.kind === 'retraction') {
+        // Unit contributes nothing while un-called - subtract back to zero
+        // until either a 'recall' or the final 'correction' re-attributes it.
+        const prevAlloc = attributedAlloc.get(ev.unitKey);
+        bumpRunning(prevAlloc, -1);
+        attributedAlloc.set(ev.unitKey, null);
+        ev.allocAfter = { D: 0, R: 0, O: 0 };
       }
       // npv/npv_correction carry no EV weight - dRunning/rRunning/oRunning
       // (and thus tallyAfter) simply pass through unchanged for them.
@@ -1682,9 +1821,21 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     const records = [];
     (events || []).forEach(ev => {
       let rec = null;
-      if (ev.kind === 'call') {
-        const st = (state.stateData || []).find(s => s && s.unitKey === ev.unitKey);
-        rec = st && st.callRecord;
+      if (ev.kind === 'call' || ev.kind === 'recall') {
+        // Looked up by time rather than st.callRecord: after a retraction +
+        // re-call, st.callRecord points at the newer (recall) record, so a
+        // blunt live read would resolve 'call' and 'recall' to the same
+        // object. Sorting every kind:'call' record for this unit by time
+        // and indexing by which one this timeline event represents (0th =
+        // original call, 1st = recall) keeps them distinct - and still
+        // resolves correctly for units that were never retracted, where
+        // there's only ever the one record at index 0.
+        const unitCalls = state.callRecords
+          .filter(r => r && r.kind === 'call' && r.unitKey === ev.unitKey)
+          .sort((a, b) => a.time - b.time);
+        rec = unitCalls[ev.kind === 'recall' ? 1 : 0] || null;
+      } else if (ev.kind === 'retraction') {
+        rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'retraction' && r.unitKey === ev.unitKey);
       } else if (ev.kind === 'correction') {
         rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
       } else if (ev.kind === 'outcome') {
@@ -1852,6 +2003,13 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     const baselineUnitColors = state.prevUnitColors ? new Map(state.prevUnitColors) : new Map();
     const baselineAbbrColors = state.prevAbbrColors ? new Map(state.prevAbbrColors) : new Map();
     const out = [];
+    // Bias params can't be resolved inline below: whether a unit's early
+    // "wrong leader" lean should be nudged toward the eventual overall
+    // loser depends on knowing the overall EC winner, which isn't known
+    // until every unit's winner/evAllocations have been computed. So each
+    // eligible unit's inputs are stashed here and resolved in a second pass
+    // once the full `out` array (and the EC winner derived from it) exists.
+    const biasDeferred = [];
 
     rows.forEach(row => {
       if (!row || !row.unit || row.unit === 'NATIONAL') return;
@@ -1951,7 +2109,9 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 
       const mailHeavy = MAIL_HEAVY_STATES.has(abbr);
       const reportingSchedule = generateReportingSchedule(startTime, duration, closeness, mailHeavy, rng);
-      const biasParams = (instantCall || thirdPartyDominant) ? null : createBiasParams(unit, adjustedMargin, closeness, rng);
+      // Resolved in the second pass below (see biasDeferred), once the
+      // overall EC winner is known.
+      const biasParams = null;
       const pathSelections = collectPathSelections(unit, abbr);
       if (!pathSelections.length) return;
 
@@ -2034,10 +2194,54 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         targetMetrics,
         callLeader: null,
         misCallLogged: false,
+        retractedOnce: false,
+        retractedAt: null,
         thirdPartyDominant,
         reportingSchedule,
         rngSeed
       });
+
+      if (!instantCall && !thirdPartyDominant) {
+        // rng is a stateful mulberry32 closure seeded per-unit above; kept
+        // only in this side array (never on the entry itself) so deferring
+        // the createBiasParams() call to the second pass can't leak a live
+        // RNG reference into anything that spreads/copies the entry, and so
+        // that calling it later doesn't touch its consumption order at all
+        // - nothing else reads this same closure in between.
+        biasDeferred.push({ entry: out[out.length - 1], unit, margin: adjustedMargin, closeness, rng });
+      }
+    });
+
+    // Overall Electoral College winner, derived the same way the outer
+    // caller derives state.nationalFinalDEv/REv (summing evAllocations
+    // across every unit) - just done locally here so it's available before
+    // this function returns, for the bias pass below. null on a tie/no
+    // majority, in which case no bias nudge is applied.
+    const dEvSum = out.reduce((sum, e) => sum + ((e.evAllocations && e.evAllocations.D) || 0), 0);
+    const rEvSum = out.reduce((sum, e) => sum + ((e.evAllocations && e.evAllocations.R) || 0), 0);
+    const overallEcWinner = dEvSum > rEvSum ? 'D' : (rEvSum > dEvSum ? 'R' : null);
+
+    // Bias a unit's early "wrong leader" lean toward the eventual overall
+    // LOSER: a unit whose own true winner matches the overall EC winner is
+    // MORE likely to show a fake early lead for the loser (the fun
+    // "FL leans Gore, corrects to Bush" story); a unit whose true winner is
+    // the overall loser is LESS likely to falsely lean toward the winner
+    // (avoids a state prematurely padding the eventual winner's live EV
+    // count before its own true lean ever shows).
+    biasDeferred.forEach(({ entry, unit, margin, closeness, rng }) => {
+      let biasDelta = 0;
+      if (overallEcWinner && (entry.winner === 'D' || entry.winner === 'R')) {
+        biasDelta = (entry.winner === overallEcWinner) ? BIAS_TOWARD_LOSER_DELTA : -BIAS_TOWARD_LOSER_DELTA;
+      }
+      entry.biasParams = createBiasParams(unit, margin, closeness, rng, biasDelta);
+      // Only units already destined to fake-lean toward the wrong candidate
+      // get the extra swing-magnitude boost - a unit that happens to
+      // fake-lean toward its own true winner is left at the normal
+      // strength/linger createBiasParams already picked.
+      if (entry.biasParams && entry.biasParams.favored && entry.biasParams.favored !== entry.winner) {
+        entry.biasParams.strength *= BIAS_SWING_BOOST_MULTIPLIER;
+        entry.biasParams.linger = Math.min(1, entry.biasParams.linger + BIAS_SWING_LINGER_BOOST);
+      }
     });
 
     return out;
@@ -2400,6 +2604,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         } else if (shouldForceCall(st, metrics, timeMinutes)) {
           registerCall(st, metrics, Math.max(timeMinutes, st.callDeadline));
         }
+      } else if (shouldRetractCall(st, metrics, timeMinutes)) {
+        registerRetraction(st, metrics, timeMinutes);
       }
 
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
@@ -3349,8 +3555,13 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       return currentTime >= st.startTime - EPS;
     }
     if (!metrics || metrics.leader == null) return false;
-    if (metrics.reporting < MIN_REPORTING_TO_CALL && currentTime < st.callDeadline - 5) return false;
     if (metrics.reporting >= 1.0) return true;
+    // A retracted unit can't be called again until RETRACTED_MIN_DWELL_MINUTES
+    // have passed - a floor on how long it stays "too close to call" limbo -
+    // except once fully reported (checked above), which always finalizes
+    // regardless of dwell so a unit can never end up stuck uncalled forever.
+    if (st.retractedAt != null && currentTime - st.retractedAt < RETRACTED_MIN_DWELL_MINUTES) return false;
+    if (metrics.reporting < MIN_REPORTING_TO_CALL && currentTime < st.callDeadline - 5) return false;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     return isFinite(metrics.confidence) && metrics.confidence >= threshold;
   }
@@ -3364,11 +3575,43 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     if (metrics.reporting >= 1.0) {
       return metrics.leader === st.winner;
     }
+    // See shouldCallState's identical guard - the reporting >= 1.0 branch
+    // above already always fires regardless of dwell, so this can never
+    // leave a unit stuck uncalled past the end of the night.
+    if (st.retractedAt != null && currentTime - st.retractedAt < RETRACTED_MIN_DWELL_MINUTES) return false;
     if (currentTime < st.callDeadline - EPS) return false;
     if (metrics.reporting < MIN_REPORTING_TO_CALL) return false;
     if (metrics.leader !== st.winner) return false;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     return isFinite(metrics.confidence) && metrics.confidence >= threshold;
+  }
+
+  function shouldRetractCall(st, metrics, currentTime) {
+    // Decide whether an already-called unit should be un-called ("too
+    // close to call") because its confidence has collapsed back well below
+    // what it took to get called in the first place - see
+    // RETRACTION_THRESHOLD_FRACTION's comment for why this uses a lower
+    // threshold than the call itself (hysteresis, to avoid flapping).
+    // Only one retraction is ever allowed per unit (st.retractedOnce), and
+    // only while the unit hasn't finished reporting - a 100%-reporting
+    // wrongness is maybeEmitMiscall()'s job, not this one's.
+    if (!st || st.calledAt == null || st.retractedOnce) return false;
+    if (st.instantCall) return false;
+    if (!metrics || metrics.reporting >= 1 - EPS) return false;
+    if (currentTime <= st.calledAt + EPS) return false;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const retractionThreshold = threshold * effectiveRetractionFraction();
+    return isFinite(metrics.confidence) && metrics.confidence < retractionThreshold;
+  }
+
+  // Debug-only override, in the same spirit as window.DEBUG_ELECTION_NIGHT/
+  // window.ENABLE_EN_COLOR_CALL_LOG - unset in normal use, so this is a
+  // no-op unless a validation script (see
+  // docs/utils/electionNight/validateRetraction.mjs) explicitly sets it to
+  // sweep candidate RETRACTION_THRESHOLD_FRACTION values without editing
+  // source between runs.
+  function effectiveRetractionFraction() {
+    return isFinite(window.RETRACTION_THRESHOLD_FRACTION_OVERRIDE) ? window.RETRACTION_THRESHOLD_FRACTION_OVERRIDE : RETRACTION_THRESHOLD_FRACTION;
   }
 
   function registerCall(st, metrics, currentTime) {
@@ -3444,6 +3687,67 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       if (window.DEBUG_ELECTION_NIGHT && (abbr === 'ME' || abbr === 'NE')) console.log('[EN-CALL]', entry);
     } catch (e) { console.warn('EN call log failed', e); }
     triggerTipRefresh();
+  }
+
+  function registerRetraction(st, metrics, currentTime) {
+    // Un-call `st`: log a "too close to call" notice, mark the just-called
+    // record as retracted (kept in state.callRecords as history, same
+    // append-only convention maybeEmitMiscall() uses for corrections), and
+    // reset the unit's call fields back to their pre-call state. Every live
+    // rendering site already treats st.calledAt == null as "still counting"
+    // (map coloring, tooltips, small boxes, the uncalled list, win-prob
+    // Monte Carlo), so resetting those fields is all that's needed for the
+    // unit to visibly revert to in-progress styling - and it lets the
+    // normal shouldCallState()/shouldForceCall() flow in the tick loop call
+    // it again later, same as any other not-yet-called unit.
+    if (!st || !st.callRecord || st.retractedOnce) return;
+    st.retractedOnce = true;
+    const retractionTime = Math.max(currentTime, st.calledAt + 0.01);
+    const previousLeaderText = st.callRecord.candidateName || formatLeader(st.callLeader);
+    const message = `${formatTimeLabel(retractionTime)} – ${formatUnitLabel(st.unitKey, state.year)} is retracted: too close to call. Previously called for ${previousLeaderText} at ${formatTimeLabel(st.callRecord.time)}.`;
+    const retractionRecord = {
+      kind: 'notice',
+      noticeType: 'retraction',
+      unitKey: st.unitKey,
+      displayLabel: formatUnitLabel(st.unitKey, state.year),
+      time: retractionTime,
+      text: message,
+      previousLeader: st.callLeader,
+      previousCandidateName: resolveCandidateFullName(st.callLeader, st.unitKey) || previousLeaderText,
+      ev: st.ev,
+      confidence: metrics ? metrics.confidence : null,
+      threshold: st.callRecord.threshold,
+      reporting: metrics ? metrics.reporting : null
+    };
+    // Excludes this unit's original call from updateCallLog()'s EV tally
+    // (readyCalls loop) without losing its log line - see there.
+    st.callRecord.retracted = true;
+    state.callRecords.push(retractionRecord);
+
+    // Same opt-in convention as registerCall()'s window._enCallLog push,
+    // for offline tooling (docs/utils/electionNight/validateRetraction.mjs)
+    // to pair a retraction against its original call/eventual recall - both
+    // of which already show up as their own window._enCallLog entries for
+    // this same unitKey.
+    if (window.ENABLE_EN_COLOR_CALL_LOG) {
+      window._enRetractionLog = window._enRetractionLog || [];
+      window._enRetractionLog.push({
+        unitKey: st.unitKey,
+        time: retractionTime,
+        confidence: metrics ? metrics.confidence : null,
+        reporting: metrics ? metrics.reporting : null
+      });
+    }
+
+    st.calledAt = null;
+    st.calledMetrics = null;
+    st.callLeader = null;
+    st.callRecord = null;
+    st.evCalledAllocations = null;
+    st.retractedAt = retractionTime;
+
+    triggerTipRefresh();
+    state.lastLogKey = '';
   }
 
   function flushSmallBoxes() {
@@ -4091,13 +4395,22 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // (wrongly) called, so the declared national outcome could never be
       // wrong even while the individual call/EV allocation shown for that
       // state still was.
-      const tallyWinner = (live && live.misCallLogged && record.actualWinner) ? record.actualWinner : record.leader;
-      if (tallyWinner === 'D') dRunning += record.ev || 0;
-      else if (tallyWinner === 'R') rRunning += record.ev || 0;
-      else oRunning += record.ev || 0;
-      if (!outcome) {
-        if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
-        else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
+      // A retracted call stays in readyCalls (and its log line still
+      // renders below) so the broadcast narrative reads "Called Florida for
+      // Gore ... too close to call ... Called Florida for Bush", but a
+      // retracted unit gets a second kind:'call' record once re-called
+      // (registerRetraction() never removes the original from
+      // state.callRecords, only flags it) - skip the retracted one here so
+      // its EV isn't counted twice toward the outcome tally.
+      if (!record.retracted) {
+        const tallyWinner = (live && live.misCallLogged && record.actualWinner) ? record.actualWinner : record.leader;
+        if (tallyWinner === 'D') dRunning += record.ev || 0;
+        else if (tallyWinner === 'R') rRunning += record.ev || 0;
+        else oRunning += record.ev || 0;
+        if (!outcome) {
+          if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
+          else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
+        }
       }
       const leaderText = record.candidateName || formatLeader(record.leader);
       const reportingText = formatReportingText(record.reporting, record.remainingVotes);
@@ -4545,7 +4858,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     return null;
   }
 
-  function createBiasParams(unit, margin, closeness, rng) {
+  function createBiasParams(unit, margin, closeness, rng, biasDelta) {
     const rand = rng || Math.random;
     const mailHeavy = MAIL_HEAVY_STATES.has(unit.slice(0, 2));
     const finalWinner = margin > EPS ? 'D' : margin < -EPS ? 'R' : null;
@@ -4555,6 +4868,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     } else {
       let againstProb = 0.55 + 0.35 * closeness;
       if (mailHeavy) againstProb += finalWinner === 'D' ? -0.12 : 0.12;
+      againstProb += biasDelta || 0;
       againstProb = Math.min(0.95, Math.max(0.05, againstProb));
       favored = rand() < againstProb ? (finalWinner === 'D' ? 'R' : 'D') : finalWinner;
     }
