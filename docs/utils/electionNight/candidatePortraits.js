@@ -24,6 +24,24 @@ const SURNAME_ALIASES = {
 
 let manifestPromise = null;
 
+// Lets a caller (the sim2028 candidate picker) point a candidate name at an
+// explicit image URL -- either a preset portrait outside the manifest's
+// naive surname matching, or a user-uploaded data: URL -- without touching
+// the manifest itself. Checked before the manifest lookup in
+// getPortraitUrlForName(), keyed by the exact full name string the caller
+// also threads through as dCandidate/rCandidate.
+const overrides = new Map();
+
+export function setPortraitOverride(name, url) {
+  if (!name) return;
+  if (url) overrides.set(name, url);
+  else overrides.delete(name);
+}
+
+export function clearPortraitOverrides() {
+  overrides.clear();
+}
+
 function loadManifest() {
   if (!manifestPromise) {
     manifestPromise = fetch(MANIFEST_URL)
@@ -64,6 +82,7 @@ export async function getPortraitUrl(year, leader, unitKey) {
  */
 export async function getPortraitUrlForName(year, fullName) {
   if (!isFinite(year) || !fullName) return null;
+  if (overrides.has(fullName)) return overrides.get(fullName);
   const surname = normalizeSurname(lastNameFrom(String(fullName)));
   if (!surname) return null;
   const key = `${year}${surname}`;

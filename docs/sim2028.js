@@ -16,6 +16,10 @@ import { installElectionNight } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend } from './sim2028Charts.js';
 import { getStateName } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
+import {
+  DEFAULT_CANDIDATES, PRESET_CANDIDATES,
+  loadCandidateChoice, saveCandidateChoice, applyCandidateChoice,
+} from './utils/sim2028/candidatePicker.js';
 
 const state = {
   baseline: null,
@@ -34,6 +38,10 @@ const state = {
   // Which unit's tooltip is currently open, if any — lets refreshHoveredTip()
   // keep it live while the mouse just sits there (see that function).
   hoveredUnit: null,
+  // Display-only candidate picks — {mode:'default'|'preset'|'custom', name, imageUrl}
+  // per party. Never read by the simulation itself, only by baseline.candidates
+  // (a label) and the portrait override registry. See candidatePicker.js.
+  candidates: { d: null, r: null },
 };
 
 const TREND_PALETTE = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4', '#f0c96e', '#c990e0', '#79d1a8', '#e88ea0', '#8fb8e0', '#d0a05a'];
@@ -855,7 +863,7 @@ function syncManualNpvVisibility() {
 }
 
 /** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence,
- * pollTurbulence, nailbiter, elasticity, confident.
+ * pollTurbulence, nailbiter, elasticity, confident, candidate picks.
  * Campaign steps is deliberately left out — that control is hidden for now. */
 function buildSettingsParams() {
   const params = new URLSearchParams();
@@ -875,6 +883,15 @@ function buildSettingsParams() {
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
   params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
   params.set('confident', (confidentEl && confidentEl.checked) ? '1' : '0');
+  // Preset picks and typed custom names round-trip through a link; an uploaded
+  // custom image does not (a data: URL is far too large for a query param, and
+  // has nowhere sensible to live but this browser's localStorage).
+  ['d', 'r'].forEach(party => {
+    const c = state.candidates[party];
+    if (c && c.mode !== 'default' && c.name) {
+      params.set(party === 'd' ? 'dCand' : 'rCand', `${c.mode}:${c.name}`);
+    }
+  });
   return params;
 }
 
@@ -937,6 +954,23 @@ function applySettingsFromUrl() {
     const v = params.get('confident').toLowerCase();
     confidentEl.checked = (v === '1' || v === 'true');
   }
+
+  ['d', 'r'].forEach(party => {
+    const raw = params.get(party === 'd' ? 'dCand' : 'rCand');
+    if (!raw) return;
+    const sep = raw.indexOf(':');
+    if (sep < 1) return;
+    const mode = raw.slice(0, sep);
+    const name = raw.slice(sep + 1);
+    if (!name) return;
+    if (mode === 'preset' && PRESET_CANDIDATES[party].some(p => p.name === name)) {
+      state.candidates[party] = { mode: 'preset', name, imageUrl: null };
+    } else if (mode === 'custom') {
+      // No image over a shared link (see buildSettingsParams) — falls back
+      // to the party-letter badge until/unless this browser has one locally.
+      state.candidates[party] = { mode: 'custom', name, imageUrl: null };
+    }
+  });
 }
 
 /** Copy a shareable link (never includes ?debug) to the clipboard, with a legacy-copy fallback. */
@@ -966,6 +1000,66 @@ async function shareCurrentSetup() {
     btn.textContent = copied ? 'Copied!' : 'Copy failed';
     setTimeout(() => { btn.textContent = 'Share URL'; }, 1500);
   }
+}
+
+// --------------------------------------------------------------- candidates
+/** (Re)builds one party's preset + "Custom…" swatches and shows/hides its custom fields. */
+function renderCandidatePicker(party) {
+  const container = $(party === 'd' ? 's28CandSwatchesD' : 's28CandSwatchesR');
+  if (!container) return;
+  const choice = state.candidates[party] || { mode: 'default', name: DEFAULT_CANDIDATES[party], imageUrl: null };
+  const presetButtons = PRESET_CANDIDATES[party].map(p => {
+    const active = choice.mode !== 'custom' && choice.name === p.name ? ' active' : '';
+    return `<button type="button" class="s28-cand-swatch${active}" data-party="${party}" data-name="${p.name}">`
+      + `<img class="en-cp-mini-avatar" src="${p.img}" alt="" />${p.name}</button>`;
+  }).join('');
+  const customActive = choice.mode === 'custom' ? ' active' : '';
+  const customButton = `<button type="button" class="s28-cand-swatch${customActive}" data-party="${party}" data-custom="1">`
+    + `<span class="en-cp-mini-avatar-fallback">${party.toUpperCase()}</span>Custom&hellip;</button>`;
+  container.innerHTML = presetButtons + customButton;
+
+  const customWrap = $(party === 'd' ? 's28CandCustomD' : 's28CandCustomR');
+  if (customWrap) customWrap.classList.toggle('s28-hidden', choice.mode !== 'custom');
+  // Don't stomp the field the user is actively typing in.
+  const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
+  if (nameInput && choice.mode === 'custom' && document.activeElement !== nameInput) {
+    nameInput.value = choice.name;
+  }
+}
+
+/** Persists + applies a new choice for one party (baseline label + portrait override), then refreshes its UI. */
+function setCandidateChoice(party, choice) {
+  state.candidates[party] = choice;
+  saveCandidateChoice(party, choice);
+  if (state.baseline) applyCandidateChoice(state.baseline, party, choice);
+  renderCandidatePicker(party);
+}
+
+function pickPresetCandidate(party, name) {
+  const preset = PRESET_CANDIDATES[party].find(p => p.name === name);
+  if (!preset) return;
+  setCandidateChoice(party, { mode: 'preset', name: preset.name, imageUrl: null });
+}
+
+function pickCustomCandidate(party) {
+  const existing = state.candidates[party];
+  const name = (existing && existing.mode === 'custom' && existing.name) || '';
+  setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing ? existing.imageUrl : null });
+}
+
+function updateCustomCandidateName(party, name) {
+  const existing = state.candidates[party] || {};
+  setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing.imageUrl || null });
+}
+
+function updateCustomCandidateImage(party, file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const existing = state.candidates[party] || {};
+    setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: String(reader.result) });
+  };
+  reader.readAsDataURL(file);
 }
 
 // ------------------------------------------------------------------- actions
@@ -1132,8 +1226,14 @@ async function init() {
   const seedInput = $('s28Seed');
   if (seedInput && !seedInput.value) seedInput.value = String(computeTodaySeed());
 
-  // A shared link's params win over the today-seed default above.
+  state.candidates.d = loadCandidateChoice('d');
+  state.candidates.r = loadCandidateChoice('r');
+
+  // A shared link's params win over the today-seed default (and any locally
+  // persisted candidate pick) above.
   applySettingsFromUrl();
+  renderCandidatePicker('d');
+  renderCandidatePicker('r');
   // Unconditional: fixes the manual-PV box staying hidden on reload/shared-link
   // loads where s28NpvMode ends up "manual" without a 'change' event ever firing.
   syncManualNpvVisibility();
@@ -1176,6 +1276,20 @@ async function init() {
   if (evClass) evClass.addEventListener('click', e => {
     const btn = e.target.closest('.s28-evcell');
     if (btn) toggleRatingHighlight(btn.dataset.rating);
+  });
+
+  ['d', 'r'].forEach(party => {
+    const swatches = $(party === 'd' ? 's28CandSwatchesD' : 's28CandSwatchesR');
+    if (swatches) swatches.addEventListener('click', e => {
+      const btn = e.target.closest('.s28-cand-swatch');
+      if (!btn) return;
+      if (btn.dataset.custom) pickCustomCandidate(party);
+      else pickPresetCandidate(party, btn.dataset.name);
+    });
+    const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
+    if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
+    const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
+    if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
   });
 
   document.querySelectorAll('#s28Table th[data-sort]').forEach(th => {
@@ -1226,6 +1340,8 @@ async function init() {
   }
 
   state.baseline = await loadBaseline(PARAMS.baseline);
+  applyCandidateChoice(state.baseline, 'd', state.candidates.d);
+  applyCandidateChoice(state.baseline, 'r', state.candidates.r);
   await startCampaign();
 }
 

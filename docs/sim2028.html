@@ -280,6 +280,84 @@
       flex: 0 0 auto;
     }
 
+    /* Candidate picker — same active/hover language as .tw-swatch, but a
+       pill sized to hold a mini-avatar (.en-cp-mini-avatar, reused from
+       election-night.js's call-log cards) instead of a colored square. */
+    .s28-cand-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .s28-cand-party {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 240px;
+      flex: 1 1 260px;
+    }
+
+    .s28-cand-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .s28-cand-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .s28-cand-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 10px 3px 3px;
+      font: inherit;
+    }
+
+    .s28-cand-swatch:hover {
+      background: #1b1b1b;
+    }
+
+    .s28-cand-swatch.active {
+      color: var(--fg);
+      background: #1b1b1b;
+      border-color: var(--accent);
+    }
+
+    .s28-cand-custom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .s28-cand-custom input[type="text"] {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.9rem;
+      min-width: 160px;
+      flex: 1 1 160px;
+    }
+
+    .s28-cand-custom input[type="file"] {
+      font-size: 0.8rem;
+      color: var(--muted);
+      flex: 1 1 160px;
+      align-self: center;
+    }
+
     /* election-night.js writes a label into every bar segment AND into #evText.
        Overlaid at the bar's centre those collide, so the summary sits below it. */
     #evBar {
@@ -522,6 +600,32 @@
       <div class="s28-note" style="margin-top:8px">
         Everything is seeded &mdash; the same seed always produces the same election. The true result is
         hidden until election night; you only see polls.
+      </div>
+    </div>
+
+    <!-- ---------- candidates ---------- -->
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Candidates</div>
+      <div class="s28-cand-grid">
+        <div class="s28-cand-party" data-party="d">
+          <div class="s28-cand-label">Democratic</div>
+          <div class="s28-cand-swatches" id="s28CandSwatchesD"></div>
+          <div class="s28-cand-custom s28-hidden" id="s28CandCustomD">
+            <input id="s28CandNameD" type="text" placeholder="Candidate name" maxlength="60" />
+            <input id="s28CandImgD" type="file" accept="image/*" title="Optional portrait" />
+          </div>
+        </div>
+        <div class="s28-cand-party" data-party="r">
+          <div class="s28-cand-label">Republican</div>
+          <div class="s28-cand-swatches" id="s28CandSwatchesR"></div>
+          <div class="s28-cand-custom s28-hidden" id="s28CandCustomR">
+            <input id="s28CandNameR" type="text" placeholder="Candidate name" maxlength="60" />
+            <input id="s28CandImgR" type="file" accept="image/*" title="Optional portrait" />
+          </div>
+        </div>
+      </div>
+      <div class="s28-note" style="margin-top:8px">
+        Display only &mdash; who's running has no effect on the simulated result.
       </div>
     </div>
 
