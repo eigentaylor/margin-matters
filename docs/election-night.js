@@ -741,8 +741,20 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
   // Assign a pre-election-based "importance" score to each unit, combining
   // predicted closeness (from priorMargin) and EV size. Used only to flag
   // state calls as "key races" worthy of visual emphasis on-screen.
+  //
+  // Deliberate, narrow exception to the "nothing downstream of
+  // buildSyntheticPollPriors may read ground truth" rule documented above
+  // it: predictedCloseness alone means a state that was genuinely close
+  // (say, MI/NM in 2016/2000) can still miss the key-race flag purely
+  // because that one synthesized "poll" happened to roll noisy - the actual
+  // final margin is also folded in (via Math.max) as a fallback signal, so
+  // a state this close in real life always qualifies even if its fake
+  // pre-election poll didn't show it. This is safe ONLY because importance
+  // feeds nothing but this cosmetic on-screen emphasis - it never touches
+  // win-probability, confidence, or any other live-uncertainty calculation.
   function assignRaceImportance(data) {
     const maxEv = data.reduce((m, st) => Math.max(m, st.ev || 0), 1);
+    const closenessOf = margin => isFinite(margin) ? Math.max(0, 1 - Math.abs(margin) / PRIOR_CLOSE_CAP) : 0;
     data.forEach(st => {
       let priorMargin = st.priorMargin;
       // At-large units never get a direct prior — approximate from
@@ -761,11 +773,13 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           if (wsum > EPS) priorMargin = accum / wsum;
         }
       }
-      const predictedCloseness = isFinite(priorMargin)
-        ? Math.max(0, 1 - Math.abs(priorMargin) / PRIOR_CLOSE_CAP)
-        : 0.4;
+      const predictedCloseness = isFinite(priorMargin) ? closenessOf(priorMargin) : 0.4;
+      const actualMargin = isFinite(st.dTwoPartyFinal) && isFinite(st.rTwoPartyFinal)
+        ? st.dTwoPartyFinal - st.rTwoPartyFinal : null;
+      const actualCloseness = closenessOf(actualMargin);
+      const closeness = Math.max(predictedCloseness, actualCloseness);
       const sizeFactor = Math.sqrt(Math.max(0, st.ev || 0) / maxEv);
-      st.importance = predictedCloseness * (0.6 + 0.4 * sizeFactor);
+      st.importance = closeness * (0.6 + 0.4 * sizeFactor);
     });
   }
 
@@ -1401,6 +1415,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // a bogus "WINNER" card with a null-leader placeholder avatar.
       if (record.noticeType === 'retraction') {
         const leader = record.previousLeader;
+        const retractedSt = unitsByKey.get(record.unitKey);
         return {
           kind: 'retraction',
           unitKey: record.unitKey,
@@ -1412,6 +1427,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           confidencePct: record.confidence,
           reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
           reportingText: formatReportingText(record.reporting, null),
+          keyRace: !!(retractedSt && isFinite(retractedSt.importance) && retractedSt.importance >= KEY_RACE_THRESHOLD),
           tallyBefore: spec_tallyBefore,
           tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
           timeLabel: formatTimeLabel(record.time)
@@ -1467,6 +1483,92 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         keyRace
       };
     }).filter(Boolean);
+
+    // Flag the record that immediately precedes an outcome-clinch/uncalled
+    // transition - the call/correction that actually pushed the national
+    // tally across (or back below) the majority threshold - as breaking
+    // too, even if the state itself isn't independently "key". Without
+    // this, a routine (non-key) state that happens to clinch the
+    // presidency would read as an ordinary call, while the "breaking news"
+    // it directly caused shows up detached from it (or even earlier, once
+    // grouped - see the sort below), which reads as broken: "X wins the
+    // presidency" appearing before the scoreboard has actually crossed 270.
+    // The outcome/uncalled spec's time always matches its trigger's exactly
+    // (see computePlannedCheckpoints()'s replay loop), and ties are kept
+    // queued into the same checkpoint batch (groupEventsIntoCheckpoints),
+    // so the immediately preceding spec here is always that trigger.
+    specs.forEach((spec, i) => {
+      if ((spec.kind === 'outcome' || spec.kind === 'uncalled') && i > 0) {
+        specs[i - 1].causesOutcome = true;
+      }
+    });
+
+    // A "big deal" slide: a key race (predicted-close pre-election, or
+    // genuinely close in the true result - see assignRaceImportance), ANY
+    // correction or retraction (overturning/un-calling an earlier call is
+    // inherently notable regardless of the state's own importance), the
+    // call that actually pushed the count across the majority threshold, or
+    // the outcome-clinch/uncalled/final capstones themselves. Stored on the
+    // spec (not just computed ad hoc) so updatePopup.js's flash/ribbon/
+    // extended-duration treatment and the front-of-batch grouping below
+    // both read the exact same signal.
+    specs.forEach(spec => {
+      spec.breaking = !!(
+        spec.keyRace ||
+        spec.kind === 'correction' ||
+        spec.kind === 'retraction' ||
+        spec.kind === 'outcome' ||
+        spec.kind === 'uncalled' ||
+        spec.kind === 'final' ||
+        spec.causesOutcome
+      );
+    });
+
+    // Group breaking slides at the front of the batch, like a broadcast
+    // anchor leading with the marquee results before circling back to
+    // routine ones ("we can now call Georgia for Biden; also, Trump wins
+    // North Dakota"). The trailing 'final' capstone is excluded from the
+    // MOVE (even though it's flagged breaking, for updatePopup.js's flash) -
+    // it's always the true last event of the whole night and
+    // computePlannedCheckpoints()/groupEventsIntoCheckpoints() guarantee
+    // it's already the last spec here, so it must stay pinned there rather
+    // than jumping to the front. Array.prototype.sort is stable, so within
+    // each of the two groups, original chronological order is preserved.
+    const movesToFront = spec => spec.breaking && spec.kind !== 'final';
+    if (specs.some(movesToFront)) {
+      // Reordering invalidates each slide's original event-time tallyBefore/
+      // tallyAfter (see computePlannedCheckpoints()'s replay loop) - the
+      // popup's scoreboard animates "from" that exact value every slide (see
+      // updatePopup.js's animateTallyTo), so showing slides out of
+      // chronological order would otherwise make the counter jump to a
+      // stale value each time. Capture the batch's true starting tally
+      // before sorting, then re-derive a running total in the NEW display
+      // order using each slide's own already-correct delta (tallyAfter -
+      // tallyBefore) - that delta reflects only that one event's EV
+      // contribution and is well-defined regardless of display order.
+      const checkpointStartingTally = specs[0].tallyBefore || zeroTally;
+      specs.sort((a, b) => (movesToFront(b) ? 1 : 0) - (movesToFront(a) ? 1 : 0));
+      let running = checkpointStartingTally;
+      specs.forEach(spec => {
+        // 'outcome'/'uncalled' slides are pure type-transition markers - they
+        // share their trigger event's before/after rather than an
+        // independent change (see computePlannedCheckpoints()'s outcome
+        // push), so they pass the running total through unchanged instead of
+        // double-counting a delta that's already attributed to another slide.
+        if (spec.kind === 'outcome' || spec.kind === 'uncalled') {
+          spec.tallyBefore = running;
+          spec.tallyAfter = running;
+          return;
+        }
+        const before = spec.tallyBefore || zeroTally;
+        const after = spec.tallyAfter || before;
+        const delta = { D: (after.D || 0) - (before.D || 0), R: (after.R || 0) - (before.R || 0), O: (after.O || 0) - (before.O || 0) };
+        spec.tallyBefore = running;
+        running = { D: running.D + delta.D, R: running.R + delta.R, O: running.O + delta.O };
+        spec.tallyAfter = running;
+      });
+    }
+
     await Promise.all(specs.map(async spec => {
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
@@ -1493,6 +1595,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           displayLabel: formatUnitLabel(c.unitKey, state.year, { short: true }),
           ev: c.ev,
           leader: c.leader,
+          keyRace: c.keyRace,
           candidateName,
           portraitUrl: candidateName ? await getPortraitUrlForName(state.year, candidateName) : null,
           reporting: c.reporting,
@@ -4210,7 +4313,17 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     } catch (e) {
       infoParts.push(`${((candidate.reporting || 0) * 100).toFixed(1)}% reporting`);
     }
-    card.textContent = `${label} – ${infoParts.join(' · ')}`;
+    // Built from DOM nodes (not a single textContent string) so the "KEY"
+    // badge can be a styled child element while everything else stays plain
+    // text - createTextNode keeps candidate.displayLabel/etc. safe from
+    // injection the same way textContent did.
+    if (candidate.keyRace) {
+      const badge = document.createElement('span');
+      badge.className = 'en-log-key-badge';
+      badge.textContent = 'KEY';
+      card.appendChild(badge);
+    }
+    card.appendChild(document.createTextNode(`${label} – ${infoParts.join(' · ')}`));
 
     const accentColor = confidenceAccentColor(candidate.leader, candidate.margin, candidate.confidence, threshold);
     card.style.borderLeftColor = accentColor;
@@ -4279,6 +4392,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           rVotes: isFinite(metrics.rVotesCounted) ? metrics.rVotesCounted : null,
           oVotes: isFinite(metrics.oVotesCounted) ? metrics.oVotesCounted : null,
           ev: isFinite(st.ev) ? st.ev : 0,
+          keyRace: isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD,
           winProb: (() => {
             if (st.thirdPartyDominant) return null;
             // Prefer the Monte Carlo's own per-unit tally when available -
@@ -4296,6 +4410,12 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         };
       })
       .sort((a, b) => {
+        // Key races (predicted-close, pre-election-based - see
+        // assignRaceImportance) are pinned ahead of routine ones, same
+        // "marquee races first" grouping as the checkpoint popup's call
+        // order; within each of those two tiers, the existing live-drama
+        // scoring below still applies.
+        if (!!a.keyRace !== !!b.keyRace) return a.keyRace ? -1 : 1;
         // scoring formula: ev / ((|CONF_THRESHOLD - confidence| + EPS) * (|margin| + EPS))
         const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
         const score = x => {

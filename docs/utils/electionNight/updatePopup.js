@@ -6,7 +6,13 @@
 // hands them to showCheckpoint(); this module just cycles through them with
 // CSS-driven reveals and calls back when the whole batch has been shown.
 //
-// Slide shapes (all fields plain strings/numbers, no DOM):
+// Slide shapes (all fields plain strings/numbers, no DOM). Every kind can
+// also carry `breaking` (set in election-night.js's buildCheckpointSlides) -
+// true for a key race, any correction/retraction, the call that pushed the
+// count across the majority threshold, or the outcome/final/uncalled
+// capstones themselves; drives the flash, the "Breaking news" ribbon, the
+// border-glow card styling, and (for call/correction/retraction) a longer
+// on-screen duration - see isBreakingSlide()/renderSlide().
 //   { kind: 'call'|'correction', stateName, ev, leader, candidateName,
 //     portraitUrl, dCandidateName, dPortraitUrl, rCandidateName,
 //     rPortraitUrl, oCandidateName?, oPortraitUrl?, oVotes? (third comparison
@@ -38,6 +44,7 @@
 //     dPortraitUrl, rPortraitUrl, accentColor, tallyAfter, timeLabel,
 //     outcomeLabel? (same as the 'outcome' slide's field, above) }
 //   { kind: 'races', candidates: [{ unitKey, displayLabel, ev, leader,
+//     keyRace (pinned first in the list, gets a small "KEY" badge),
 //     candidateName, portraitUrl, reporting, marginText, marginPctText,
 //     rawMarginText, confidenceText, reportingText, accentColor }] }
 //
@@ -55,9 +62,14 @@ const OUTCOME_SLIDE_MS = 4500;
 const FINAL_SLIDE_MS = 6000;
 const RACES_SLIDE_MS = 6000;
 const COUNTER_MS = 900;
+// How long the "BREAKING NEWS"/"FINAL" flash covers the card before fading
+// to reveal it - added on top of that slide's own duration so a flashed
+// slide still gets its normal full viewing time afterward.
+const FLASH_MS = 900;
 
 let overlayEl = null;
 let cardEl = null;
+let flashEl = null;
 let tallyEl = null;
 let tallyBoxes = null; // { D: {root, num}, R: {root, num}, O?: {root, num} }
 let progressEl = null;
@@ -90,6 +102,20 @@ function durationFor(slide) {
   return CALL_SLIDE_MS;
 }
 
+// slide.breaking (set in election-night.js's buildCheckpointSlides - see its
+// comment for the full definition: key races, any correction/retraction,
+// the call that caused an outcome transition, and the outcome/final/
+// uncalled capstones themselves) decides which slides also earn the flash
+// below, on top of whatever kind-specific ribbon/border treatment they
+// already get.
+function isBreakingSlide(slide) {
+  return !!slide.breaking;
+}
+
+function flashTextFor() {
+  return 'Breaking News';
+}
+
 function ensureOverlay() {
   if (overlayEl) return overlayEl;
   overlayEl = document.createElement('div');
@@ -106,6 +132,16 @@ function ensureOverlay() {
   cardEl = document.createElement('div');
   cardEl.className = 'en-checkpoint-card';
   overlayEl.appendChild(cardEl);
+
+  // Full-screen dramatic flash shown for a beat before the first slide of a
+  // "breaking" run (key-race calls/corrections/retractions, or the outcome/
+  // final/uncalled capstones) - see renderSlide()'s isBreakingSlide check.
+  // The slide underneath is already fully rendered by the time this fades,
+  // so it only delays the reveal rather than replacing it.
+  flashEl = document.createElement('div');
+  flashEl.className = 'en-cp-flash';
+  flashEl.innerHTML = '<span class="en-cp-flash-text"></span>';
+  overlayEl.appendChild(flashEl);
 
   progressEl = document.createElement('div');
   progressEl.className = 'en-checkpoint-progress';
@@ -394,7 +430,7 @@ function renderCallOrCorrection(slide) {
         <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
       </div>`;
   const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
-  const breakingNewsRibbon = slide.keyRace ? '<div class="en-cp-breaking">Breaking news</div>' : '';
+  const breakingNewsRibbon = slide.breaking ? '<div class="en-cp-breaking">Breaking news</div>' : '';
   cardEl.innerHTML = `
     ${breakingNewsRibbon}
     <div class="en-cp-header">
@@ -432,7 +468,9 @@ function renderRetraction(slide) {
       <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
     </div>`;
   const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  const breakingNewsRibbon = slide.breaking ? '<div class="en-cp-breaking">Breaking news</div>' : '';
   cardEl.innerHTML = `
+    ${breakingNewsRibbon}
     <div class="en-cp-header">
       <div class="en-cp-state">${(slide.stateName || '').toUpperCase()}${timeLabel}</div>
       ${evBadge}
@@ -565,7 +603,10 @@ function renderRaces(slide) {
       <div class="en-cp-race-card" style="--en-race-accent:${accent}">
         <div class="en-cp-race-info">
           <div class="en-cp-race-top">
-            <span class="en-cp-race-state">${c.displayLabel}</span>
+            <span class="en-cp-race-name-group">
+              ${c.keyRace ? '<span class="en-cp-race-key-badge">KEY</span>' : ''}
+              <span class="en-cp-race-state">${c.displayLabel}</span>
+            </span>
             ${c.ev > 0 ? `<span class="en-cp-race-ev">${c.ev} EV</span>` : ''}
           </div>
           <div class="en-cp-race-bar-track">
@@ -603,8 +644,8 @@ function renderProgress(total, index) {
 
 function renderSlide(index) {
   const slide = activeSlides[index];
-  const keyRaceClass = slide.keyRace ? ' en-cp-key-race' : '';
-  cardEl.className = `en-checkpoint-card en-checkpoint-${slide.kind}${keyRaceClass}`;
+  const breakingClass = slide.breaking ? ' en-cp-key-race' : '';
+  cardEl.className = `en-checkpoint-card en-checkpoint-${slide.kind}${breakingClass}`;
   const accent = slide.accentColor || '#2f2f2f';
   cardEl.style.setProperty('--en-cp-accent', accent);
   overlayEl.style.setProperty('--en-cp-accent', accent);
@@ -622,11 +663,24 @@ function renderSlide(index) {
   void cardEl.offsetWidth; // eslint-disable-line no-void
   cardEl.classList.add('en-cp-reveal');
 
+  // Flash once per contiguous run of "breaking" slides (election-night.js
+  // groups them together at the front of the batch precisely so this fires
+  // just once for the whole run, not once per key race) - trigger only on
+  // the transition into such a run, not on every slide within it.
+  flashEl.classList.remove('en-cp-flash-show');
+  const shouldFlash = isBreakingSlide(slide) && (index === 0 || !isBreakingSlide(activeSlides[index - 1]));
+  if (shouldFlash) {
+    flashEl.querySelector('.en-cp-flash-text').textContent = flashTextFor(slide);
+    void flashEl.offsetWidth; // eslint-disable-line no-void
+    flashEl.classList.add('en-cp-flash-show');
+  }
+
   clearTimeout(advanceTimer);
   const baseDuration = durationFor(slide);
-  const duration = slide.keyRace && (slide.kind === 'call' || slide.kind === 'correction')
+  const emphasisDuration = slide.breaking && (slide.kind === 'call' || slide.kind === 'correction' || slide.kind === 'retraction')
     ? baseDuration * 1.2
     : baseDuration;
+  const duration = emphasisDuration + (shouldFlash ? FLASH_MS : 0);
   advanceTimer = autoAdvancePaused ? null : setTimeout(skipToNext, duration);
 }
 
