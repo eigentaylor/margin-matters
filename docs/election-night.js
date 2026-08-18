@@ -1217,7 +1217,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // simultaneous-call ties, playback speed, and any drift between the
     // planned schedule and live tick timing.
     const zeroTally = { D: 0, R: 0, O: 0 };
-    const specs = records.map(record => {
+    const specs = records.map((record, idx) => {
       const spec_tallyBefore = record.plannedTallyBefore || zeroTally;
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
         const leader = record.outcomeLeader;
@@ -1233,12 +1233,20 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
             tallyBefore: spec_tallyBefore
           };
         }
-        // leader is null: a correction just knocked the previously-projected
-        // majority holder back below majority with nobody else reaching it -
-        // the mid-count analogue of the 'final' slide's no-majority variant.
-        // (This branch only ever reaches here pre-allCalled - see the
-        // "seqable" comment above where outcomeSeq is stamped for why the
-        // literal end-of-night case is left to the 'final' event instead.)
+        // leader is null or 'T': a correction (or, with a high enough call
+        // threshold, an ordinary call) just knocked the previously-projected
+        // majority holder back below majority, or mathematically locked a
+        // no-majority deadlock, with nobody else reaching it - the mid-count
+        // analogue of the 'final' slide's no-majority variant. Normally this
+        // is genuinely mid-count (more states still to call), but if this is
+        // literally the night's last event, the very next record here is
+        // the 'final-tally' capstone covering the exact same moment more
+        // completely (it knows the true final split, not just "no majority
+        // yet") - skip this one so the checkpoint goes straight to that
+        // final slide instead of a redundant/misleading "still counting"
+        // one first.
+        const nextRecord = records[idx + 1];
+        if (!nextRecord || nextRecord.noticeType === 'final-tally') return null;
         const uncalledTally = record.plannedTallyAfter || zeroTally;
         return {
           kind: 'uncalled',
@@ -1368,7 +1376,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         marginText: formatMarginText(record.marginStr, leader, voteMargin),
         timeLabel: formatTimeLabel(record.time)
       };
-    });
+    }).filter(Boolean);
     await Promise.all(specs.map(async spec => {
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);

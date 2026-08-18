@@ -51,10 +51,20 @@ export function groupEventsIntoCheckpoints(events, options) {
     const ev = sorted[i];
     batch.push(ev);
     const isLast = i === sorted.length - 1;
-    const forced = !!ev.forceFlag;
     const batchStartTime = batch[0].time;
     const span = ev.time - batchStartTime;
     const gapToNext = isLast ? Infinity : sorted[i + 1].time - ev.time;
+    // A forced event (an outcome transition, or the night's final capstone)
+    // normally closes its batch immediately - but if the very next event
+    // shares its exact timestamp (e.g. a correction that locks the outcome
+    // right as the final capstone fires, both stamped with the same
+    // lastEventTime), flushing now would split them into two checkpoints
+    // with an identical time. The live cursor only ever advances past a
+    // *strictly* later time (see findNextCheckpoint), so the second of
+    // those two checkpoints would then be silently unreachable forever.
+    // Holding the flush until the tied events are all queued keeps them in
+    // one checkpoint instead.
+    const forced = !!ev.forceFlag && gapToNext > 0;
     if (forced || isLast
       || batch.length >= opts.maxBatchSize
       || span >= opts.maxBatchSpanMinutes
