@@ -32,6 +32,9 @@
 <li>Pause during a state call now freezes that call on its current slide (auto-advance stops) while still letting you click, tap, or press space/enter/arrow-left to manually step through the remaining slides; the sim clock stays paused afterward until you press Resume</li>
 <li>Reset now works mid-state-call, immediately closing the popup and exiting election night mode, same as it already did between calls</li>
 <li>"Elected"/"Reelected" wording is now reserved for the night's true final tally; every earlier clinch or corrected-call moment reads as "Projected to be elected/reelected" instead, since the winner isn't settled yet at that point</li>
+<li>Fixed the state-call popup's electoral vote scoreboard, which could show incorrect totals in a few cases: two states called at the same moment (e.g. 2000's Georgia and South Carolina), a state's later correction, and split-elector states like 1960 Alabama/Mississippi; the whole night's tally is now precomputed up front instead of recalculated live, so it's no longer sensitive to playback speed</li>
+<li>The scoreboard's "+N"/"-N" delta chip now appears for every call, not just corrections, so you can see at a glance how many electoral votes a state just added</li>
+<li>Delta chips now fade out smoothly instead of disappearing abruptly, and read more clearly against their background</li>
 </ul>
                     </div>
                 </div>
