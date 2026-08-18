@@ -1200,55 +1200,6 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
   }
 
   /**
-   * D/R/O electoral vote totals from every call already "ready" as of
-   * `uptoTime`, mirroring updateCallLog()'s own dRunning/rRunning/oRunning
-   * accumulation (same records, same misCallLogged correction-swap rule) so
-   * the popup's running EV count never disagrees with the call log's.
-   *
-   * Reads state.stateData directly rather than state.snapshot: this is
-   * called from buildCheckpointSlides() for a correction that may have
-   * *just* fired in the very same renderAt() pass that triggered this
-   * checkpoint, and state.snapshot's copy of misCallLogged for that unit is
-   * captured earlier in that same pass, before maybeEmitMiscall() flips the
-   * flag - stale by exactly one render frame for the one unit that matters
-   * most. state.stateData's st.misCallLogged is the live value.
-   */
-  function computeRunningEvTally(uptoTime, options) {
-    // excludeUnitKeys: skip these units' call records outright, regardless
-    // of their recorded time - used for a checkpoint batch's starting tally,
-    // where the batch's own units must NOT be pre-included (buildCheckpoint
-    // Slides() adds them itself as each slide renders). A time-based cutoff
-    // (e.g. "uptoTime = firstEventTime - EPS") isn't reliable for this: the
-    // batch's nominal/projected event time can differ slightly from the
-    // real time registerCall() stamped on the live record (live playback
-    // timing vs. the pre-computed checkpoint schedule), so comparing times
-    // can let a batch member's own call sneak into "before" anyway and then
-    // get double counted when its own slide adds it again.
-    const excludeUnitKeys = options && options.excludeUnitKeys;
-    const readyCalls = state.callRecords
-      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && uptoTime >= rec.time - EPS && !(excludeUnitKeys && excludeUnitKeys.has(rec.unitKey)))
-      .slice()
-      .sort((a, b) => (a.time - b.time) || (a.unitKey || '').localeCompare(b.unitKey || ''));
-    let d = 0, r = 0, o = 0;
-    readyCalls.forEach(record => {
-      const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
-      const alloc = (st && st.misCallLogged && st.evAllocations) ? st.evAllocations : record.evAllocations;
-      if (alloc) {
-        d += alloc.D || 0;
-        r += alloc.R || 0;
-        o += alloc.O || 0;
-      } else {
-        // Fallback for record types that don't have evAllocations (e.g., outcome notices).
-        const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
-        if (tallyWinner === 'D') d += record.ev || 0;
-        else if (tallyWinner === 'R') r += record.ev || 0;
-        else o += record.ev || 0;
-      }
-    });
-    return { D: d, R: r, O: o };
-  }
-
-  /**
    * Turn the queued call/correction/outcome-clinch records into the plain
    * slide descriptors updatePopup.showCheckpoint() renders, resolving each
    * one's portrait up front (async - the manifest fetch is cached after the
@@ -1257,10 +1208,17 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
    * call log's "still counting" sidebar uses) when anything is still
    * uncalled at this point in the night.
    */
-  async function buildCheckpointSlides(records, startingTally) {
-    let runningTally = startingTally ? { D: startingTally.D || 0, R: startingTally.R || 0, O: startingTally.O || 0 } : { D: 0, R: 0, O: 0 };
+  async function buildCheckpointSlides(records) {
+    // Every record's tallyBefore/tallyAfter comes straight from the planned
+    // event it was resolved from (see computePlannedCheckpoints()'s replay
+    // loop and resolveCheckpointRecords()'s plannedTallyBefore/After stamp) -
+    // nothing here recomputes or accumulates any EV total live. That's what
+    // makes slide-by-slide (and checkpoint-by-checkpoint) tallies immune to
+    // simultaneous-call ties, playback speed, and any drift between the
+    // planned schedule and live tick timing.
+    const zeroTally = { D: 0, R: 0, O: 0 };
     const specs = records.map(record => {
-      const spec_tallyBefore = { D: runningTally.D, R: runningTally.R, O: runningTally.O };
+      const spec_tallyBefore = record.plannedTallyBefore || zeroTally;
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
         const leader = record.outcomeLeader;
         if (leader === 'D' || leader === 'R') {
@@ -1269,7 +1227,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
             kind: 'outcome',
             leader,
             candidateName,
-            outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader) : null,
+            outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader, false) : null,
             accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
             timeLabel: formatTimeLabel(record.time),
             tallyBefore: spec_tallyBefore
@@ -1281,8 +1239,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         // (This branch only ever reaches here pre-allCalled - see the
         // "seqable" comment above where outcomeSeq is stamped for why the
         // literal end-of-night case is left to the 'final' event instead.)
-        const uncalledTally = computeRunningEvTally(record.time);
-        runningTally = uncalledTally;
+        const uncalledTally = record.plannedTallyAfter || zeroTally;
         return {
           kind: 'uncalled',
           dCandidateName: resolveCandidateFullName('D', 'NATIONAL'),
@@ -1302,7 +1259,6 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         const rCandidateName = resolveCandidateFullName('R', 'NATIONAL');
         const winnerName = winner === 'D' ? dCandidateName : (winner === 'R' ? rCandidateName : null);
         const finalTally = { D: dEv, R: rEv, O: oEv || 0 };
-        runningTally = finalTally;
         return {
           kind: 'final',
           winner,
@@ -1339,9 +1295,6 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
         const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
         const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
-        // NPV doesn't affect EV tally - keep running tally unchanged
-        const npvTallyAfter = { ...runningTally };
-        runningTally = npvTallyAfter;
         return {
           kind: isNpvCorrection ? 'correction' : 'call',
           isNpv: true,
@@ -1360,7 +1313,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           previousCandidateName: isNpvCorrection ? (resolveCandidateFullName(record.calledLeader, 'NATIONAL')) : null,
           accentColor: calledAccentColor(leader, voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : (CHECKPOINT_DEFAULT_MARGIN[leader] || 0)),
           tallyBefore: spec_tallyBefore,
-          tallyAfter: npvTallyAfter,
+          tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
           dVotes, rVotes, oVotes, countedVotes,
           reportingPct: isFinite(reporting) ? Math.max(0, Math.min(1, reporting)) : null,
           reportingText: formatReportingText(reporting, null),
@@ -1379,47 +1332,6 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // future strong third-party years.
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
       const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
-
-      // Compute this single record's EV delta (not time-based, so multiple
-      // records at the same time show independent deltas)
-      let stateTallyAfter = { D: runningTally.D, R: runningTally.R, O: runningTally.O };
-      const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
-
-      if (isCorrection) {
-        // For a correction, subtract the ORIGINAL (as-called, blunt) alloc
-        // and add the ground-truth final allocation. st.evAllocations is
-        // the ground truth (matches what computeRunningEvTally treats as
-        // "new" once st.misCallLogged) - the allocation being corrected
-        // AWAY FROM is the call record's own evAllocations, not st's; a
-        // correction record never carries its own evAllocations field.
-        const oldAlloc = st && st.callRecord && st.callRecord.evAllocations;
-        const newAlloc = st && st.evAllocations;
-        if (oldAlloc) {
-          stateTallyAfter.D -= oldAlloc.D || 0;
-          stateTallyAfter.R -= oldAlloc.R || 0;
-          stateTallyAfter.O -= oldAlloc.O || 0;
-        }
-        if (newAlloc) {
-          stateTallyAfter.D += newAlloc.D || 0;
-          stateTallyAfter.R += newAlloc.R || 0;
-          stateTallyAfter.O += newAlloc.O || 0;
-        }
-      } else {
-        // For a call, add the allocation (with fallback if evAllocations not set)
-        const alloc = record.evAllocations;
-        if (alloc) {
-          stateTallyAfter.D += alloc.D || 0;
-          stateTallyAfter.R += alloc.R || 0;
-          stateTallyAfter.O += alloc.O || 0;
-        } else {
-          // Fallback: use old logic if evAllocations not set
-          const tallyWinner = (st && st.misCallLogged && st.winner) ? st.winner : record.leader;
-          if (tallyWinner === 'D') stateTallyAfter.D += record.ev || 0;
-          else if (tallyWinner === 'R') stateTallyAfter.R += record.ev || 0;
-          else stateTallyAfter.O += record.ev || 0;
-        }
-      }
-      runningTally = stateTallyAfter;
 
       return {
         kind: isCorrection ? 'correction' : 'call',
@@ -1447,7 +1359,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         // moment this slide starts, rather than each slide carrying its
         // own separate "X's EV total" box.
         tallyBefore: spec_tallyBefore,
-        tallyAfter: stateTallyAfter,
+        tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
         dVotes: record.dVotes,
         rVotes: record.rVotes,
         countedVotes: record.countedVotes,
@@ -1644,33 +1556,54 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 
     timeline.sort((a, b) => (a.time - b.time) || (a.kind === 'call' ? -1 : 1) - (b.kind === 'call' ? -1 : 1));
 
-    // Replay in time order to find every national outcome transition,
-    // mirroring computeRunningEvTally()'s call/correction swap rule (a
-    // correction subtracts the unit's EVs from whoever it was previously
-    // attributed to and adds them to the corrected leader). Tracks every
-    // change of projected majority-holder, not just the first - a
-    // correction can later flip who's projected to win (D->R directly), or
-    // knock the current holder back below majority with nobody else
-    // reaching it (D/R->null, resolved by buildCheckpointSlides() into the
-    // new 'uncalled' slide) - both used to be silently dropped since only
-    // the very first clinch ever got a projected/schedulable event. `seq`
-    // gives resolveCheckpointRecords() a stable way to match each projected
-    // transition back to the live record updateCallLog() pushes for it,
-    // independent of leader value (which can repeat, e.g. D->null->D).
+    // Replay in time order to find every national outcome transition AND
+    // stamp each event with its own precomputed tallyBefore/tallyAfter -
+    // this is the single source of truth the checkpoint popup reads from
+    // (see resolveCheckpointRecords/buildCheckpointSlides), rather than
+    // recomputing anything from live playback state when a checkpoint
+    // actually fires. Doing the whole night's D/R/O bookkeeping once, up
+    // front, in this one deterministic pass makes it immune to anything
+    // that can vary between the planned schedule and live ticking (speed
+    // multiplier, tick granularity, projected-vs-actual call time drift) -
+    // exactly the class of bug that kept resurfacing when the tally was
+    // instead recomputed reactively at checkpoint-fire time.
+    //
+    // Each unit's contribution is tracked by its actual D/R/O allocation,
+    // not a blunt "full EV to one leader" attribution: a 'call' event
+    // allocates via buildCallAllocation (all-or-nothing to the called
+    // leader, matching the honest "we don't know the elector split yet"
+    // broadcast framing), and a 'correction' event replaces that with the
+    // unit's ground-truth st.evAllocations split (handles 1960 AL/MS's
+    // partial-elector splits correctly, same as the live map). A correction
+    // subtracts the unit's PREVIOUS allocation and adds its new one -
+    // tracked per unit so a later correction always swaps out exactly what
+    // that same unit last contributed, never anyone else's.
     let dRunning = 0, rRunning = 0, oRunning = 0;
-    const attributedTo = new Map();
+    const attributedAlloc = new Map(); // unitKey -> last {D,R,O} this unit contributed
     let currentOutcomeType = null;
     let outcomeSeq = 0;
-    const bumpRunning = (leader, delta) => {
-      if (leader === 'D') dRunning += delta;
-      else if (leader === 'R') rRunning += delta;
-      else if (leader === 'O') oRunning += delta;
+    const bumpRunning = (alloc, sign) => {
+      if (!alloc) return;
+      dRunning += sign * (alloc.D || 0);
+      rRunning += sign * (alloc.R || 0);
+      oRunning += sign * (alloc.O || 0);
     };
     timeline.forEach(ev => {
-      const prevLeader = attributedTo.get(ev.unitKey);
-      bumpRunning(prevLeader, -ev.ev);
-      attributedTo.set(ev.unitKey, ev.leader);
-      bumpRunning(ev.leader, ev.ev);
+      ev.tallyBefore = { D: dRunning, R: rRunning, O: oRunning };
+      if (ev.kind === 'call' || ev.kind === 'correction') {
+        const st = data.find(s => s && s.unitKey === ev.unitKey);
+        const alloc = ev.kind === 'call'
+          ? buildCallAllocation(st, ev.leader)
+          : (st && st.evAllocations) || { D: 0, R: 0, O: 0 };
+        const prevAlloc = attributedAlloc.get(ev.unitKey);
+        bumpRunning(prevAlloc, -1);
+        attributedAlloc.set(ev.unitKey, alloc);
+        bumpRunning(alloc, 1);
+        ev.allocAfter = alloc;
+      }
+      // npv/npv_correction carry no EV weight - dRunning/rRunning/oRunning
+      // (and thus tallyAfter) simply pass through unchanged for them.
+      ev.tallyAfter = { D: dRunning, R: rRunning, O: oRunning };
       // Mirrors runNationalWinProbabilityMC's impossibleD/impossibleR check:
       // once the EV still not yet attributed to anyone can no longer close
       // either side's gap to majority, the outcome is a locked no-majority
@@ -1683,7 +1616,10 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       const newType = dRunning >= majority ? 'D' : (rRunning >= majority ? 'R' : (impossibleD && impossibleR ? 'T' : null));
       if (newType !== currentOutcomeType) {
         currentOutcomeType = newType;
-        timeline.push({ kind: 'outcome', leader: newType, time: ev.time, forceFlag: true, seq: outcomeSeq++ });
+        timeline.push({
+          kind: 'outcome', leader: newType, time: ev.time, forceFlag: true, seq: outcomeSeq++,
+          tallyBefore: ev.tallyBefore, tallyAfter: ev.tallyAfter
+        });
       }
     });
 
@@ -1714,7 +1650,13 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       dEv: finalD,
       rEv: finalR,
       oEv: finalO,
-      majority
+      majority,
+      // dRunning/rRunning/oRunning hold the replay's running totals as of
+      // the last real event, just before this synthetic capstone - used as
+      // this slide's tallyBefore so its delta chip/animation reflects the
+      // true last leg of movement into the final split.
+      tallyBefore: { D: dRunning, R: rRunning, O: oRunning },
+      tallyAfter: { D: finalD, R: finalR, O: finalO }
     });
 
     return groupEventsIntoCheckpoints(timeline);
@@ -1731,30 +1673,37 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
   function resolveCheckpointRecords(events) {
     const records = [];
     (events || []).forEach(ev => {
+      let rec = null;
       if (ev.kind === 'call') {
         const st = (state.stateData || []).find(s => s && s.unitKey === ev.unitKey);
-        if (st && st.callRecord) records.push(st.callRecord);
+        rec = st && st.callRecord;
       } else if (ev.kind === 'correction') {
-        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
-        if (rec) records.push(rec);
+        rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
       } else if (ev.kind === 'outcome') {
         // Matched by seq, not leader+noticeType - a projected transition can
         // be the first-ever clinch OR a later flip/uncall, and the live side
         // announces those via two different noticeTypes ('outcome-clinch'
         // vs 'outcome-reversal'). seq lines them up positionally regardless,
         // and survives the leader value repeating (e.g. D -> null -> D).
-        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.outcomeSeq === ev.seq);
-        if (rec) records.push(rec);
+        rec = state.callRecords.find(r => r && r.kind === 'notice' && r.outcomeSeq === ev.seq);
       } else if (ev.kind === 'npv') {
-        if (state.npvCallRecord) records.push(state.npvCallRecord);
+        rec = state.npvCallRecord;
       } else if (ev.kind === 'npv_correction') {
-        const rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'npv_miscall');
-        if (rec) records.push(rec);
+        rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'npv_miscall');
       } else if (ev.kind === 'final') {
         // Self-contained - synthesized entirely from ground truth at
         // prepare time, so there's no live record to look up.
-        records.push({ kind: 'notice', noticeType: 'final-tally', time: ev.time, dEv: ev.dEv, rEv: ev.rEv, oEv: ev.oEv, majority: ev.majority });
+        rec = { kind: 'notice', noticeType: 'final-tally', time: ev.time, dEv: ev.dEv, rEv: ev.rEv, oEv: ev.oEv, majority: ev.majority };
       }
+      if (!rec) return;
+      // Stamp the planned event's precomputed before/after tally onto the
+      // resolved record, so buildCheckpointSlides can read it directly
+      // instead of recomputing anything from live playback state - see
+      // computePlannedCheckpoints()'s replay loop for why this is the
+      // single source of truth.
+      rec.plannedTallyBefore = ev.tallyBefore;
+      rec.plannedTallyAfter = ev.tallyAfter;
+      records.push(rec);
     });
     return records;
   }
@@ -1785,13 +1734,11 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // auto-advancing.
     updateToggleLabel();
 
-    // Scoreboard starting point: the tally as of just before this batch's
-    // first event, so the panel animates from where it actually was, not
-    // from zero. Exclude this batch's own units by key (not by time cutoff -
-    // see computeRunningEvTally's excludeUnitKeys comment for why), since
-    // buildCheckpointSlides() adds each of them back in as its own slide.
-    const batchUnitKeys = new Set(next.events.map(ev => ev.unitKey).filter(Boolean));
-    const startingTally = computeRunningEvTally(currentTime, { excludeUnitKeys: batchUnitKeys });
+    // Scoreboard starting point: the first slide's own precomputed
+    // tallyBefore (see computePlannedCheckpoints()'s replay loop) - already
+    // the exact tally as of just before this batch's first event, with no
+    // live recomputation needed here.
+    const startingTally = records[0].plannedTallyBefore || { D: 0, R: 0, O: 0 };
     const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
       ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
       : null;
@@ -1805,7 +1752,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
 
     const resetTokenAtFire = state.resetToken;
-    Promise.all([buildCheckpointSlides(records, startingTally), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
+    Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
       // A Reset click while portraits/slides were still resolving already
       // tore everything down (see resetSimulation()) - don't pop this
       // checkpoint back open on top of the freshly-reset state.
@@ -3928,17 +3875,17 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 
   // Shared by every static outcome message (initial clinch, correction,
   // final tally) so their wording/thresholds can't drift from each other.
-  function outcomeMessageText(type, dEv, rEv, oEv, majority) {
+  function outcomeMessageText(type, dEv, rEv, oEv, majority, isFinal = false) {
     if (type === 'D') {
       const winnerName = resolveCandidateLastName('D', 'NATIONAL');
-      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'D') : null;
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'D', isFinal) : null;
       return winnerName
         ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Democrats clinch the presidency with ${dEv} EV (needed ${majority}).`;
     }
     if (type === 'R') {
       const winnerName = resolveCandidateLastName('R', 'NATIONAL');
-      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'R') : null;
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'R', isFinal) : null;
       return winnerName
         ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
@@ -4219,7 +4166,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     if (newOutcomeType !== state.outcomeAnnouncedType) {
       if (state.outcomeAnnouncedType == null && newOutcomeType) {
         const timeStr = formatTimeLabel(outcome.time != null ? outcome.time : currentTime);
-        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
+        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority, false);
         const className = outcomeClassFor(newOutcomeType);
         const clinchTime = outcome.time != null ? outcome.time : currentTime;
         const clinchRecord = {
@@ -4248,7 +4195,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         if (newOutcomeType === 'D' || newOutcomeType === 'R') {
           const resolvedWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL');
           const newWinnerName = resolvedWinnerName || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
-          const label = resolvedWinnerName ? getPresidencyOutcomeLabel(state.year, newOutcomeType) : null;
+          const label = resolvedWinnerName ? getPresidencyOutcomeLabel(state.year, newOutcomeType, false) : null;
           const labelSuffix = label ? ` (${label.toLowerCase()})` : '';
           reversalBanner = `${newWinnerName} is now projected to win the presidency instead${labelSuffix}, following a corrected state call.`;
           reversalText = `Correction: following a corrected state call, ${newWinnerName} is now projected to win the presidency instead${labelSuffix}.`;
@@ -4291,7 +4238,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       state.allCalledAnnounced = true;
       if (newOutcomeType && newOutcomeType !== 'T' && newOutcomeTotal !== state.outcomeAnnouncedTotal) {
         const timeStr = formatTimeLabel(currentTime);
-        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority);
+        const message = outcomeMessageText(newOutcomeType, finalD, finalR, finalO, majority, true);
         const className = outcomeClassFor(newOutcomeType);
         state.callRecords.push({
           kind: 'notice',
