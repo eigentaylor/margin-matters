@@ -1031,6 +1031,19 @@ function renderCandidatePicker(party) {
   if (nameInput && choice.mode === 'custom' && document.activeElement !== nameInput) {
     nameInput.value = choice.name;
   }
+
+  // The file input's own "No file chosen" label can't be set by JS (browsers
+  // block it) and never reflects a drag-dropped or reload-restored image at
+  // all, so this preview + clear button are the real indicator of whether a
+  // custom portrait is set.
+  const previewEl = $(party === 'd' ? 's28CandPreviewD' : 's28CandPreviewR');
+  if (previewEl) {
+    previewEl.innerHTML = choice.imageUrl
+      ? `<img class="en-cp-mini-avatar" src="${choice.imageUrl}" alt="" />`
+      : `<span class="en-cp-mini-avatar-fallback">${party.toUpperCase()}</span>`;
+  }
+  const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');
+  if (clearBtn) clearBtn.classList.toggle('s28-hidden', !choice.imageUrl);
 }
 
 /** Persists + applies a new choice for one party (baseline label + portrait override), then refreshes its UI. */
@@ -1058,6 +1071,15 @@ function updateCustomCandidateName(party, name) {
   setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing.imageUrl || null });
 }
 
+// Dragged files don't reliably carry a MIME type — Windows Explorer drags in
+// particular can hand over file.type === '' for otherwise-ordinary images —
+// so accept by extension too rather than silently dropping the file.
+const IMAGE_EXT_RE = /\.(png|jpe?g|gif|webp|bmp|avif|svg)$/i;
+function isImageFile(file) {
+  if (!file) return false;
+  return (!!file.type && file.type.startsWith('image/')) || IMAGE_EXT_RE.test(file.name || '');
+}
+
 function updateCustomCandidateImage(party, file) {
   if (!file) return;
   const reader = new FileReader();
@@ -1066,6 +1088,16 @@ function updateCustomCandidateImage(party, file) {
     setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: String(reader.result) });
   };
   reader.readAsDataURL(file);
+}
+
+function clearCustomCandidateImage(party) {
+  const existing = state.candidates[party] || {};
+  // A file input's value can only be reset to empty, never set to a filename
+  // (see the preview comment in renderCandidatePicker) — but reset is allowed,
+  // so a subsequent pick of the same file still fires a change event.
+  const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
+  if (imgInput) imgInput.value = '';
+  setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: null });
 }
 
 // ------------------------------------------------------------------- actions
@@ -1296,6 +1328,8 @@ async function init() {
     if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
     const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
     if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
+    const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');
+    if (clearBtn) clearBtn.addEventListener('click', () => clearCustomCandidateImage(party));
 
     // Drag a portrait onto either party's whole box, in preset OR custom mode —
     // updateCustomCandidateImage() switches that party to custom on its own.
@@ -1315,7 +1349,7 @@ async function init() {
         if (!isFileDrag(e)) return;
         e.preventDefault();
         partyBox.classList.remove('s28-drag-over');
-        const file = [...(e.dataTransfer.files || [])].find(f => f.type.startsWith('image/'));
+        const file = [...(e.dataTransfer.files || [])].find(isImageFile);
         if (file) updateCustomCandidateImage(party, file);
       });
     }

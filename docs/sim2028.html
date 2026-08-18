@@ -371,6 +371,33 @@
       align-self: center;
     }
 
+    /* The native file input's own "No file chosen" label can't be updated by
+       JS (browsers block it for security) and never reflects a drag-dropped or
+       reload-restored image at all, so this preview is the actual source of
+       truth for whether a custom portrait is set. */
+    .s28-cand-preview {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .s28-cand-clear-img {
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 8px;
+      cursor: pointer;
+      font: inherit;
+      flex: 0 0 auto;
+    }
+
+    .s28-cand-clear-img:hover {
+      background: #1b1b1b;
+      color: var(--fg);
+    }
+
     .s28-cand-drop-hint {
       width: 100%;
       font-size: 0.78rem;
@@ -631,8 +658,10 @@
           <div class="s28-cand-swatches" id="s28CandSwatchesD"></div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomD">
             <input id="s28CandNameD" type="text" placeholder="Candidate name" maxlength="60" />
+            <span class="s28-cand-preview" id="s28CandPreviewD"></span>
             <input id="s28CandImgD" type="file" accept="image/*" title="Optional portrait" />
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box</div>
+            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgD" title="Remove uploaded portrait">Remove image</button>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box &mdash; a picked/dropped image doesn't update the file button's own label, but the preview here will</div>
           </div>
         </div>
         <div class="s28-cand-party" data-party="r">
@@ -640,8 +669,10 @@
           <div class="s28-cand-swatches" id="s28CandSwatchesR"></div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomR">
             <input id="s28CandNameR" type="text" placeholder="Candidate name" maxlength="60" />
+            <span class="s28-cand-preview" id="s28CandPreviewR"></span>
             <input id="s28CandImgR" type="file" accept="image/*" title="Optional portrait" />
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box</div>
+            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgR" title="Remove uploaded portrait">Remove image</button>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box &mdash; a picked/dropped image doesn't update the file button's own label, but the preview here will</div>
           </div>
         </div>
       </div>
