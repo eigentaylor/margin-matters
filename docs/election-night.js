@@ -735,6 +735,40 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     return map;
   }
 
+  const PRIOR_CLOSE_CAP = 0.14;
+  const KEY_RACE_THRESHOLD = 0.6;
+
+  // Assign a pre-election-based "importance" score to each unit, combining
+  // predicted closeness (from priorMargin) and EV size. Used only to flag
+  // state calls as "key races" worthy of visual emphasis on-screen.
+  function assignRaceImportance(data) {
+    const maxEv = data.reduce((m, st) => Math.max(m, st.ev || 0), 1);
+    data.forEach(st => {
+      let priorMargin = st.priorMargin;
+      // At-large units never get a direct prior — approximate from
+      // vote-weighted composite of their districts via state.atLargeParts.
+      if (!isFinite(priorMargin) && state.atLargeParts && state.atLargeParts.get) {
+        const parts = state.atLargeParts.get(st.unitKey);
+        if (parts && parts.length) {
+          let accum = 0, wsum = 0;
+          parts.forEach(part => {
+            const partSt = data.find(d => d.unitKey === part.unitKey);
+            if (partSt && isFinite(partSt.priorMargin)) {
+              accum += partSt.priorMargin * part.weight;
+              wsum += part.weight;
+            }
+          });
+          if (wsum > EPS) priorMargin = accum / wsum;
+        }
+      }
+      const predictedCloseness = isFinite(priorMargin)
+        ? Math.max(0, 1 - Math.abs(priorMargin) / PRIOR_CLOSE_CAP)
+        : 0.4;
+      const sizeFactor = Math.sqrt(Math.max(0, st.ev || 0) / maxEv);
+      st.importance = predictedCloseness * (0.6 + 0.4 * sizeFactor);
+    });
+  }
+
   /**
    * Prepare the simulation data for the selected year and PV scenario.
    * This builds per-unit state objects, computes simStart/simEnd, and
@@ -875,6 +909,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       buildSyntheticPollPriors(data, year, pvValue);
     }
     state.atLargeParts = buildAtLargeParts(data);
+    assignRaceImportance(data);
     // Vote-weighted mean of the frozen priors - debug/validation only (e.g.
     // docs/utils/electionNight/validateWinProb.mjs's swing-recovery check),
     // never read by the live algorithm. A derived summary of the already-
@@ -1244,6 +1279,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // simultaneous-call ties, playback speed, and any drift between the
     // planned schedule and live tick timing.
     const zeroTally = { D: 0, R: 0, O: 0 };
+    const unitsByKey = new Map((state.stateData || []).map(st => [st.unitKey, st]));
     const specs = records.map((record, idx) => {
       const spec_tallyBefore = record.plannedTallyBefore || zeroTally;
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
@@ -1391,6 +1427,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // future strong third-party years.
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
       const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
+      const st = unitsByKey.get(record.unitKey);
+      const keyRace = !record.isNpv && st && isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD;
 
       return {
         kind: isCorrection ? 'correction' : 'call',
@@ -1425,7 +1463,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
         reportingText: formatReportingText(record.reporting, record.remainingVotes),
         marginText: formatMarginText(record.marginStr, leader, voteMargin),
-        timeLabel: formatTimeLabel(record.time)
+        timeLabel: formatTimeLabel(record.time),
+        keyRace
       };
     }).filter(Boolean);
     await Promise.all(specs.map(async spec => {
@@ -4426,10 +4465,12 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       const callNumericMargin = (isFinite(record.dVotes) && isFinite(record.rVotes) && record.countedVotes > EPS)
         ? (record.dVotes - record.rVotes) / record.countedVotes
         : 0;
+      const st = state.stateData && state.stateData.find(s => s.unitKey === record.unitKey);
+      const isKeyRace = st && isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD;
       const callLine = {
         kind: 'call',
         time: record.time,
-        className: 'en-log-entry en-log-called',
+        className: `en-log-entry en-log-called${isKeyRace ? ' en-log-called-key' : ''}`,
         text: `${formatTimeLabel(record.time)} – Called ${record.displayLabel} for ${leaderText} (${infoJoined})`,
         signature: `call:${record.unitKey}:${(isFinite(record.confidence) ? record.confidence : -1).toFixed(3)}:${(isFinite(record.reporting) ? record.reporting : -1).toFixed(3)}:${record.marginStr || ''}:${evSigCall}:${evSigFinal}`,
         accentColor: calledAccentColor(record.leader, callNumericMargin)

@@ -1907,6 +1907,13 @@ body.slider-dragging * {
   transition: border-left-color 0.4s ease;
 }
 
+.en-log-entry.en-log-called.en-log-called-key {
+  font-weight: 600;
+  padding-left: 10px;
+  border-left-width: 5px;
+  opacity: 0.95;
+}
+
 .en-log-section-title-sub {
   margin-top: 10px;
   font-size: 0.7rem;
@@ -3119,6 +3126,19 @@ body.shift-vectors-page {
   padding: 6px 14px;
   letter-spacing: 0.03em;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(179, 38, 10, 0.6);
+}
+
+/* Key-race calls (states flagged as important based on pre-election predictions):
+   add a border glow matching the accent color to make them visually distinct
+   from routine calls. */
+.en-checkpoint-card.en-cp-key-race {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 0 0 3px var(--en-cp-accent, #2f2f2f);
+}
+
+.en-checkpoint-card.en-cp-key-race .en-cp-header {
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 2px solid var(--en-cp-accent, rgba(255, 255, 255, 0.12));
 }
 
 @keyframes en-cp-shake {

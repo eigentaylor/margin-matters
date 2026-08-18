@@ -394,7 +394,9 @@ function renderCallOrCorrection(slide) {
         <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
       </div>`;
   const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  const breakingNewsRibbon = slide.keyRace ? '<div class="en-cp-breaking">Breaking news</div>' : '';
   cardEl.innerHTML = `
+    ${breakingNewsRibbon}
     <div class="en-cp-header">
       <div class="en-cp-state">${(slide.stateName || '').toUpperCase()}${timeLabel}</div>
       ${evBadge}
@@ -601,7 +603,8 @@ function renderProgress(total, index) {
 
 function renderSlide(index) {
   const slide = activeSlides[index];
-  cardEl.className = `en-checkpoint-card en-checkpoint-${slide.kind}`;
+  const keyRaceClass = slide.keyRace ? ' en-cp-key-race' : '';
+  cardEl.className = `en-checkpoint-card en-checkpoint-${slide.kind}${keyRaceClass}`;
   const accent = slide.accentColor || '#2f2f2f';
   cardEl.style.setProperty('--en-cp-accent', accent);
   overlayEl.style.setProperty('--en-cp-accent', accent);
@@ -620,7 +623,11 @@ function renderSlide(index) {
   cardEl.classList.add('en-cp-reveal');
 
   clearTimeout(advanceTimer);
-  advanceTimer = autoAdvancePaused ? null : setTimeout(skipToNext, durationFor(slide));
+  const baseDuration = durationFor(slide);
+  const duration = slide.keyRace && (slide.kind === 'call' || slide.kind === 'correction')
+    ? baseDuration * 1.2
+    : baseDuration;
+  advanceTimer = autoAdvancePaused ? null : setTimeout(skipToNext, duration);
 }
 
 function skipToNext() {
