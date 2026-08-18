@@ -140,14 +140,40 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
   // early lean toward the eventual overall-election LOSER (see
   // buildStateData's bias pass and createBiasParams below).
   const BIAS_TOWARD_LOSER_DELTA = 0.15;
-  // Extra swing-magnitude boost applied only to units whose bias already
-  // resolved to fake-lean toward the wrong candidate (favored !== winner) -
-  // see buildStateData's bias pass. Makes an already-wrong-leaning state's
-  // early fake lead bigger (the "Bush +10,000, then settles at 537" effect)
-  // without touching units that happen to fake-lean toward their own true
-  // winner.
-  const BIAS_SWING_BOOST_MULTIPLIER = 1.4;
-  const BIAS_SWING_LINGER_BOOST = 0.15;
+  // Post-retraction "surge toward the true winner" - see
+  // computeRetractionSurgeBiasParams(). Most (but not all) retracted units
+  // get their biasParams replaced at the moment of retraction so the
+  // too-close-to-call count swings toward the unit's real eventual winner
+  // with a fresh, sizeable lead that wanes back down to the true final
+  // margin as reporting finishes (the "Bush +10,000, then settles at 537"
+  // effect) - reusing computeMetrics' existing reporting^3 blend-to-truth
+  // rather than a separate convergence mechanism. RETRACTION_SURGE_MIN_PROB/
+  // MAX_PROB scale with the unit's closeness: a razor-thin final margin gets
+  // this treatment almost always, a blowout-adjacent retraction rarely -
+  // the remaining probability leaves biasParams untouched, keeping today's
+  // slower "creep from wrong to right" as an occasional fallback flavor.
+  const RETRACTION_SURGE_MIN_PROB = 0.55;
+  const RETRACTION_SURGE_MAX_PROB = 0.95;
+  // How far behind the retraction moment's reporting fraction the surge's
+  // logistic midpoint is set - keeps the swing already mostly "engaged" the
+  // instant retraction happens, instead of slow-ramping like a normal early
+  // lean would.
+  const RETRACTION_SURGE_MIDPOINT_LEAD = 0.08;
+  const RETRACTION_SURGE_STEEPNESS = 10;
+  const RETRACTION_SURGE_STRENGTH_BASE = 1.8;
+  const RETRACTION_SURGE_STRENGTH_JITTER = 0.6;
+  const RETRACTION_SURGE_LINGER_BASE = 0.75;
+  const RETRACTION_SURGE_LINGER_JITTER = 0.2;
+  // "Breaking news" flip announcements: a key race's raw leader changing
+  // while it's still uncalled (pre-first-call, or during too-close-to-call
+  // limbo after a retraction) - see projectUnitLeadFlips/registerLeadFlip.
+  // MIN_GAP is an anti-oscillation floor between two recorded flips for the
+  // same unit, kept comfortably above the offline projector's own STEP=2
+  // scan granularity so the live tick loop and the offline projection can't
+  // disagree on how many flips occurred (see resolveCheckpointRecords'
+  // ordinal-indexed leadFlip lookup, which depends on both sides agreeing).
+  const LEAD_FLIP_MIN_GAP_MINUTES = 20;
+  const LEAD_FLIP_MAX_PER_UNIT = 3;
   // Bounds and default for the free-text simulation speed multiplier input
   const MIN_SPEED_MULTIPLIER = 0.01;
   const MAX_SPEED_MULTIPLIER = 100;
@@ -1433,6 +1459,36 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           timeLabel: formatTimeLabel(record.time)
         };
       }
+      // A "breaking news" leader-flip - a key race's raw count changing
+      // hands while it's still uncalled (pre-first-call, or during
+      // too-close-to-call limbo after a retraction). Self-contained record
+      // (candidateName already resolved in registerLeadFlip()), so unlike
+      // the call/correction branch below this doesn't need to re-resolve
+      // portraits for both parties - just the new leader.
+      if (record.noticeType === 'leadFlip') {
+        const leader = record.leader;
+        return {
+          kind: 'leadFlip',
+          unitKey: record.unitKey,
+          stateName: formatUnitLabel(record.unitKey, state.year, { short: true }),
+          ev: record.ev,
+          leader,
+          candidateName: record.candidateName,
+          accentColor: calledAccentColor(leader, marginFromCallRecord(record)),
+          confidencePct: record.confidence,
+          reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
+          reportingText: formatReportingText(record.reporting, record.remainingVotes),
+          dVotes: record.dVotes,
+          rVotes: record.rVotes,
+          countedVotes: record.countedVotes,
+          marginText: formatMarginText(record.marginStr, leader, (isFinite(record.dVotes) && isFinite(record.rVotes)) ? record.dVotes - record.rVotes : null),
+          marginPctText: record.marginStr,
+          keyRace: true,
+          tallyBefore: spec_tallyBefore,
+          tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
       const isCorrection = record.noticeType === 'miscall';
       const leader = isCorrection ? record.finalLeader : record.leader;
       const voteMargin = (isFinite(record.dVotes) && isFinite(record.rVotes)) ? (record.dVotes - record.rVotes) : null;
@@ -1710,7 +1766,14 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         // would ignore RETRACTED_MIN_DWELL_MINUTES entirely and drift from
         // what live playback actually does.
         const savedRetractedAt = st.retractedAt;
+        const savedBiasParams = st.biasParams;
         st.retractedAt = t;
+        // Mirror registerRetraction()'s post-retraction bias swap for the
+        // duration of this speculative scan too, so the projected recall
+        // time (and any leadFlip projection layered on top of this same
+        // window) reflects the same curve live playback will actually show.
+        const surge = computeRetractionSurgeBiasParams(st, t);
+        if (surge) st.biasParams = surge;
         try {
           for (let t2 = t + STEP; t2 <= state.simEnd; t2 += STEP) {
             const phaseName2 = (getPhase(t2) || {}).name || 'Final';
@@ -1723,10 +1786,61 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
           return { retractionTime: t, recall: { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: st.winner } };
         } finally {
           st.retractedAt = savedRetractedAt;
+          st.biasParams = savedBiasParams;
         }
       }
     }
     return null;
+  }
+
+  /**
+   * Project "breaking news" leader-flip moments for a key race while it's
+   * still uncalled: the raw leader shown by computeMetrics changing hands
+   * before the unit's first call, and again during too-close-to-call limbo
+   * between a retraction and its recall (if any) - mirrors
+   * registerLeadFlip()'s live trigger exactly, at the same coarse STEP=2
+   * granularity projectUnitRetraction() itself uses. Non-key races,
+   * instant-call units, and third-party-dominant units (which never run the
+   * two-party bias model at all) are skipped entirely - there's no
+   * meaningful "still counting" drama to flag for them. `call` and
+   * `retraction` are this same unit's already-computed
+   * projectUnitCallEvent()/projectUnitRetraction() results.
+   */
+  function projectUnitLeadFlips(st, call, retraction) {
+    if (!isFinite(st.importance) || st.importance < KEY_RACE_THRESHOLD) return [];
+    if (st.instantCall || st.thirdPartyDominant || !call) return [];
+    const STEP = 2;
+    const flips = [];
+    // Deliberately NOT reset between the two scan windows below: a flip
+    // right at the retraction boundary (the post-retraction surge
+    // immediately shows a different raw leader than the just-retracted
+    // call) should still count as a real flip, not an "initial lean".
+    let lastLeader = null;
+    let lastFlipTime = -Infinity;
+    const scanWindow = (from, to, biasOverride) => {
+      const savedBiasParams = st.biasParams;
+      if (biasOverride) st.biasParams = biasOverride;
+      try {
+        for (let t = from; t <= to && flips.length < LEAD_FLIP_MAX_PER_UNIT; t += STEP) {
+          const phaseName = (getPhase(t) || {}).name || 'Final';
+          const leader = computeMetrics(st, t, phaseName).leader;
+          if (leader != null && lastLeader != null && leader !== lastLeader && (t - lastFlipTime) >= LEAD_FLIP_MIN_GAP_MINUTES) {
+            flips.push({ time: t, leader });
+            lastFlipTime = t;
+          }
+          if (leader != null) lastLeader = leader;
+        }
+      } finally {
+        st.biasParams = savedBiasParams;
+      }
+    };
+    scanWindow(st.startTime, call.time, null);
+    if (retraction && flips.length < LEAD_FLIP_MAX_PER_UNIT) {
+      const surge = computeRetractionSurgeBiasParams(st, retraction.retractionTime);
+      const recallTime = retraction.recall ? retraction.recall.time : state.simEnd;
+      scanWindow(retraction.retractionTime, recallTime, surge);
+    }
+    return flips;
   }
 
   /**
@@ -1815,6 +1929,14 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         const correctionTime = Math.max(effectiveCall.time, st.instantCall ? st.startTime : st.startTime + st.duration);
         timeline.push({ kind: 'correction', unitKey: st.unitKey, ev, leader: st.winner, time: correctionTime });
       }
+
+      // "Breaking news" leader-flip moments - key races only, contributes
+      // no EV weight (falls through the bumpRunning kind-check below
+      // untouched, same as npv/npv_correction already do).
+      const flips = projectUnitLeadFlips(st, call, retraction);
+      flips.forEach((flip, i) => {
+        timeline.push({ kind: 'leadFlip', unitKey: st.unitKey, ev: 0, leader: flip.leader, time: flip.time, flipIndex: i });
+      });
     });
 
     // National popular vote gets its own checkpoint-worthy call/correction
@@ -1833,7 +1955,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       }
     }
 
-    const KIND_ORDER = { call: 0, retraction: 1, recall: 2, correction: 3 };
+    const KIND_ORDER = { call: 0, retraction: 1, leadFlip: 2, recall: 3, correction: 4 };
     timeline.sort((a, b) => (a.time - b.time) || ((KIND_ORDER[a.kind] ?? 9) - (KIND_ORDER[b.kind] ?? 9)));
 
     // Replay in time order to find every national outcome transition AND
@@ -1890,8 +2012,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         attributedAlloc.set(ev.unitKey, null);
         ev.allocAfter = { D: 0, R: 0, O: 0 };
       }
-      // npv/npv_correction carry no EV weight - dRunning/rRunning/oRunning
-      // (and thus tallyAfter) simply pass through unchanged for them.
+      // npv/npv_correction/leadFlip carry no EV weight - dRunning/rRunning/
+      // oRunning (and thus tallyAfter) simply pass through unchanged for them.
       ev.tallyAfter = { D: dRunning, R: rRunning, O: oRunning };
       // Mirrors runNationalWinProbabilityMC's impossibleD/impossibleR check:
       // once the EV still not yet attributed to anyone can no longer close
@@ -1978,6 +2100,15 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         rec = unitCalls[ev.kind === 'recall' ? 1 : 0] || null;
       } else if (ev.kind === 'retraction') {
         rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'retraction' && r.unitKey === ev.unitKey);
+      } else if (ev.kind === 'leadFlip') {
+        // A unit can rack up multiple flips - disambiguated the same way
+        // call/recall are above: sort this unit's leadFlip notices by time
+        // and index by the ordinal (flipIndex) stamped on the timeline
+        // event in computePlannedCheckpoints().
+        const unitFlips = state.callRecords
+          .filter(r => r && r.kind === 'notice' && r.noticeType === 'leadFlip' && r.unitKey === ev.unitKey)
+          .sort((a, b) => a.time - b.time);
+        rec = unitFlips[ev.flipIndex] || null;
       } else if (ev.kind === 'correction') {
         rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'miscall' && r.unitKey === ev.unitKey);
       } else if (ev.kind === 'outcome') {
@@ -2376,14 +2507,6 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         biasDelta = (entry.winner === overallEcWinner) ? BIAS_TOWARD_LOSER_DELTA : -BIAS_TOWARD_LOSER_DELTA;
       }
       entry.biasParams = createBiasParams(unit, margin, closeness, rng, biasDelta);
-      // Only units already destined to fake-lean toward the wrong candidate
-      // get the extra swing-magnitude boost - a unit that happens to
-      // fake-lean toward its own true winner is left at the normal
-      // strength/linger createBiasParams already picked.
-      if (entry.biasParams && entry.biasParams.favored && entry.biasParams.favored !== entry.winner) {
-        entry.biasParams.strength *= BIAS_SWING_BOOST_MULTIPLIER;
-        entry.biasParams.linger = Math.min(1, entry.biasParams.linger + BIAS_SWING_LINGER_BOOST);
-      }
     });
 
     return out;
@@ -2748,6 +2871,16 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
         }
       } else if (shouldRetractCall(st, metrics, timeMinutes)) {
         registerRetraction(st, metrics, timeMinutes);
+      }
+
+      // "Breaking news" leader-flip check - deliberately reads st.calledAt
+      // AFTER the call/retraction block above has already run this same
+      // tick, so a unit that just got called or force-called this tick
+      // (st.calledAt now non-null) never also fires a flip for it.
+      if (st.calledAt == null && !st.instantCall && prevMetrics && prevMetrics.leader != null
+          && metrics.leader != null && prevMetrics.leader !== metrics.leader
+          && isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD) {
+        registerLeadFlip(st, metrics, timeMinutes);
       }
 
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
@@ -3888,8 +4021,68 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     st.evCalledAllocations = null;
     st.retractedAt = retractionTime;
 
+    // Most (not all) retracted units get their bias curve replaced here so
+    // the too-close-to-call count swings toward the unit's TRUE eventual
+    // winner for the rest of this limbo period - see
+    // computeRetractionSurgeBiasParams' comment for why. Left as today's
+    // slower "creep from wrong to right" on the unlucky roll.
+    const surge = computeRetractionSurgeBiasParams(st, retractionTime);
+    if (surge) st.biasParams = surge;
+
     triggerTipRefresh();
     state.lastLogKey = '';
+  }
+
+  /**
+   * Log a "breaking news" leader-flip notice for a key race whose raw count
+   * just changed hands while it's still uncalled - see renderAt()'s call
+   * site for the trigger condition. Unlike registerCall()/registerRetraction()
+   * this never touches st.calledAt/st.callRecord/EV attribution - it's a
+   * pure narrative aside, deliberately excluded from updateCallLog()'s
+   * persistent log list (see its noticeLines filter) so it only ever
+   * surfaces as a checkpoint popup, never as log clutter.
+   */
+  function registerLeadFlip(st, metrics, currentTime) {
+    if (!st || !metrics || metrics.leader == null) return;
+    st._flipCount = (st._flipCount || 0) + 1;
+    if (st._flipCount > LEAD_FLIP_MAX_PER_UNIT) return;
+    const candidateName = resolveCandidateFullName(metrics.leader, st.unitKey) || formatLeader(metrics.leader);
+    const record = {
+      kind: 'notice',
+      noticeType: 'leadFlip',
+      unitKey: st.unitKey,
+      displayLabel: formatUnitLabel(st.unitKey, state.year),
+      time: currentTime,
+      text: `${formatTimeLabel(currentTime)} – ${formatUnitLabel(st.unitKey, state.year)}: ${candidateName} takes the lead.`,
+      leader: metrics.leader,
+      candidateName,
+      ev: st.ev,
+      confidence: metrics.confidence,
+      reporting: metrics.reporting,
+      dVotes: metrics.dVotesCounted,
+      rVotes: metrics.rVotesCounted,
+      countedVotes: metrics.countedVotes,
+      remainingVotes: metrics.remainingVotes,
+      marginStr: metrics.countedMarginStr
+    };
+    state.callRecords.push(record);
+
+    // Same opt-in convention as registerCall()'s window._enCallLog push and
+    // registerRetraction()'s window._enRetractionLog push, for offline
+    // tooling to inspect flip timing/leader without a DOM read.
+    if (window.ENABLE_EN_COLOR_CALL_LOG) {
+      window._enLeadFlipLog = window._enLeadFlipLog || [];
+      window._enLeadFlipLog.push({
+        unitKey: st.unitKey,
+        time: currentTime,
+        leader: metrics.leader,
+        marginStr: metrics.countedMarginStr,
+        confidence: metrics.confidence,
+        reporting: metrics.reporting
+      });
+    }
+
+    triggerTipRefresh();
   }
 
   function flushSmallBoxes() {
@@ -4782,7 +4975,11 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     npvLines.forEach(line => signatureParts.push(line.signature));
 
     const noticeLines = readyEvents
-      .filter(rec => rec.kind === 'notice')
+      // leadFlip notices power checkpoint popups (breaking-news flip cards)
+      // but are deliberately excluded here - they're a live-count aside,
+      // not a durable log-worthy fact, and would otherwise spam this
+      // persistent list every time a key race's raw lead changes hands.
+      .filter(rec => rec.kind === 'notice' && rec.noticeType !== 'leadFlip')
       .map(rec => {
         const text = rec.text || `${formatTimeLabel(rec.time)} – ${rec.noticeType || 'Notice'}${rec.displayLabel ? `: ${rec.displayLabel}` : ''}`;
         // The three outcome-milestone notice types (clinch/reversal/final)
@@ -5038,6 +5235,35 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     const strength = (1.0 + rand() * 1.2) * (0.65 + 0.5 * closeness);
     const linger = 0.65 + rand() * 0.35;
     return { favored, midpoint, steepness, strength, linger };
+  }
+
+  /**
+   * Decide whether a just-retracted unit's biasParams should be replaced
+   * with a fresh "surge toward the true winner" curve for the rest of its
+   * too-close-to-call limbo - see RETRACTION_SURGE_* constants' comment.
+   * Pure function of (st.rngSeed, st.closeness, st.winner, retractionTime),
+   * so it's safe to call redundantly from both the live retraction path
+   * (registerRetraction) and the offline speculative scan
+   * (projectUnitRetraction/projectUnitLeadFlips) - both always agree
+   * without sharing any mutable state. Returns null (leave st.biasParams
+   * untouched) on the unlucky roll, or for units this doesn't apply to.
+   */
+  function computeRetractionSurgeBiasParams(st, retractionTime) {
+    if (!st || !st.biasParams || st.thirdPartyDominant) return null;
+    if (st.winner !== 'D' && st.winner !== 'R') return null;
+    // Fresh RNG salted off the unit's own seed - deliberately independent of
+    // the per-unit `rng` closure consumed (in a specific, order-sensitive
+    // sequence) during buildStateData(), same convention as the
+    // biasDeferred pass there.
+    const rng = mulberry32(hashCode(`${st.rngSeed}:retraction-surge`) >>> 0);
+    const closeness = isFinite(st.closeness) ? st.closeness : 0;
+    const prob = RETRACTION_SURGE_MIN_PROB + (RETRACTION_SURGE_MAX_PROB - RETRACTION_SURGE_MIN_PROB) * closeness;
+    if (rng() >= prob) return null;
+    const reporting = computeReportingFraction(st, retractionTime);
+    const midpoint = clamp01(reporting - RETRACTION_SURGE_MIDPOINT_LEAD);
+    const strength = RETRACTION_SURGE_STRENGTH_BASE + rng() * RETRACTION_SURGE_STRENGTH_JITTER;
+    const linger = RETRACTION_SURGE_LINGER_BASE + rng() * RETRACTION_SURGE_LINGER_JITTER;
+    return { favored: st.winner, midpoint, steepness: RETRACTION_SURGE_STEEPNESS, strength, linger };
   }
 
   function logisticBias(params, reporting, phaseName) {

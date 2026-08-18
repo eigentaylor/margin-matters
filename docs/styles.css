@@ -3190,6 +3190,15 @@ body.shift-vectors-page {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(179, 38, 10, 0.6);
 }
 
+.en-cp-badge-leadflip {
+  background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 6px 14px;
+  letter-spacing: 0.03em;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 4px 14px rgba(30, 58, 138, 0.6);
+}
+
 /* Key-race calls (states flagged as important based on pre-election predictions):
    add a border glow matching the accent color to make them visually distinct
    from routine calls. */

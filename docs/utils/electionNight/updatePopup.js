@@ -11,8 +11,8 @@
 // true for a key race, any correction/retraction, the call that pushed the
 // count across the majority threshold, or the outcome/final/uncalled
 // capstones themselves; drives the flash, the "Breaking news" ribbon, the
-// border-glow card styling, and (for call/correction/retraction) a longer
-// on-screen duration - see isBreakingSlide()/renderSlide().
+// border-glow card styling, and (for call/correction/retraction/leadFlip) a
+// longer on-screen duration - see isBreakingSlide()/renderSlide().
 //   { kind: 'call'|'correction', stateName, ev, leader, candidateName,
 //     portraitUrl, dCandidateName, dPortraitUrl, rCandidateName,
 //     rPortraitUrl, oCandidateName?, oPortraitUrl?, oVotes? (third comparison
@@ -29,6 +29,14 @@
 //     reportingText } - a called unit's confidence collapsed back below the
 //     retraction threshold before it finished reporting ("too close to
 //     call"); no D/R comparison row since there's no new leader to compare.
+//   { kind: 'leadFlip', stateName, ev, leader (the NEW raw leader),
+//     candidateName, portraitUrl, accentColor, timeLabel, tallyAfter (same
+//     as tallyBefore - carries no EV weight), dVotes, rVotes, countedVotes,
+//     reportingPct, reportingText, marginText, marginPctText, keyRace:
+//     true (always - only ever built for key races) } - a key race's raw
+//     vote lead changed hands while it's still uncalled (pre-first-call, or
+//     during too-close-to-call limbo after a retraction); no D/R comparison
+//     row since only the new leader's portrait is resolved.
 //   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel,
 //     outcomeLabel? ("Elected Nth President" / "Reelected as Nth President" -
 //     null when the winner's name couldn't be resolved, e.g. future.html's
@@ -98,7 +106,7 @@ function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races') return RACES_SLIDE_MS;
-  if (slide.kind === 'correction' || slide.kind === 'retraction') return CORRECTION_SLIDE_MS;
+  if (slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip') return CORRECTION_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
 
@@ -490,6 +498,44 @@ function renderRetraction(slide) {
   animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
 }
 
+/**
+ * A key race's raw vote lead just changed hands while it's still uncalled
+ * (pre-first-call, or during too-close-to-call limbo after a retraction) -
+ * a live count update, not a call. Unlike renderCallOrCorrection() there's
+ * no D/R comparison row (only one candidate's name/portrait is resolved
+ * here) and unlike renderRetraction() there IS a fresh margin to show, since
+ * the count is still actively moving.
+ */
+function renderLeadFlip(slide) {
+  const { first, last } = splitName(slide.candidateName);
+  const evBadge = `<div class="en-cp-ev">
+      <span class="en-cp-ev-label">Electoral votes</span>
+      <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
+    </div>`;
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  const breakingNewsRibbon = slide.breaking ? '<div class="en-cp-breaking">Breaking news</div>' : '';
+  const marginLine = slide.marginText ? `<div class="en-cp-prev">${slide.marginText} - still too close to call</div>` : '<div class="en-cp-prev">Still too close to call</div>';
+  cardEl.innerHTML = `
+    ${breakingNewsRibbon}
+    <div class="en-cp-header">
+      <div class="en-cp-state">${(slide.stateName || '').toUpperCase()}${timeLabel}</div>
+      ${evBadge}
+    </div>
+    <div class="en-cp-body">
+      ${buildPhotoMarkup(slide)}
+      <div class="en-cp-result">
+        <div class="en-cp-check en-cp-badge-leadflip">&#8593; TAKES THE LEAD</div>
+        <div class="en-cp-name">
+          ${first ? `<span class="en-cp-first">${first}</span>` : ''}
+          <span class="en-cp-last">${last}</span>
+        </div>
+        ${marginLine}
+      </div>
+    </div>
+    ${buildStatsLineMarkup(slide)}`;
+  animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
+}
+
 function renderOutcome(slide) {
   const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
   cardEl.innerHTML = `
@@ -654,6 +700,7 @@ function renderSlide(index) {
   else if (slide.kind === 'uncalled') renderUncalled(slide);
   else if (slide.kind === 'races') renderRaces(slide);
   else if (slide.kind === 'retraction') renderRetraction(slide);
+  else if (slide.kind === 'leadFlip') renderLeadFlip(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
 
@@ -677,7 +724,7 @@ function renderSlide(index) {
 
   clearTimeout(advanceTimer);
   const baseDuration = durationFor(slide);
-  const emphasisDuration = slide.breaking && (slide.kind === 'call' || slide.kind === 'correction' || slide.kind === 'retraction')
+  const emphasisDuration = slide.breaking && (slide.kind === 'call' || slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip')
     ? baseDuration * 1.2
     : baseDuration;
   const duration = emphasisDuration + (shouldFlash ? FLASH_MS : 0);
