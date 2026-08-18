@@ -1214,17 +1214,19 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
    * most. state.stateData's st.misCallLogged is the live value.
    */
   function computeRunningEvTally(uptoTime, options) {
-    // strict: exclude records tied exactly at uptoTime, rather than treating
-    // them as "ready" - used for a checkpoint batch's starting tally, where
-    // the batch's own events (which share uptoTime) must NOT be pre-included,
-    // since buildCheckpointSlides() adds them itself as each slide renders.
-    // (Passing uptoTime - EPS at the call site doesn't achieve this on its
-    // own: this function's own "- EPS" tolerance below cancels it back out,
-    // letting same-time ties leak into the "before" tally and get double
-    // counted once the matching slide adds them again.)
-    const strict = options && options.strict;
+    // excludeUnitKeys: skip these units' call records outright, regardless
+    // of their recorded time - used for a checkpoint batch's starting tally,
+    // where the batch's own units must NOT be pre-included (buildCheckpoint
+    // Slides() adds them itself as each slide renders). A time-based cutoff
+    // (e.g. "uptoTime = firstEventTime - EPS") isn't reliable for this: the
+    // batch's nominal/projected event time can differ slightly from the
+    // real time registerCall() stamped on the live record (live playback
+    // timing vs. the pre-computed checkpoint schedule), so comparing times
+    // can let a batch member's own call sneak into "before" anyway and then
+    // get double counted when its own slide adds it again.
+    const excludeUnitKeys = options && options.excludeUnitKeys;
     const readyCalls = state.callRecords
-      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && (strict ? rec.time < uptoTime - EPS : uptoTime >= rec.time - EPS))
+      .filter(rec => rec && (!rec.kind || rec.kind === 'call') && uptoTime >= rec.time - EPS && !(excludeUnitKeys && excludeUnitKeys.has(rec.unitKey)))
       .slice()
       .sort((a, b) => (a.time - b.time) || (a.unitKey || '').localeCompare(b.unitKey || ''));
     let d = 0, r = 0, o = 0;
@@ -1384,9 +1386,14 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       const st = (state.stateData || []).find(s => s && s.unitKey === record.unitKey);
 
       if (isCorrection) {
-        // For a correction, subtract old allocation, add new allocation
-        const oldAlloc = st && st.evAllocations;
-        const newAlloc = record.evAllocations;
+        // For a correction, subtract the ORIGINAL (as-called, blunt) alloc
+        // and add the ground-truth final allocation. st.evAllocations is
+        // the ground truth (matches what computeRunningEvTally treats as
+        // "new" once st.misCallLogged) - the allocation being corrected
+        // AWAY FROM is the call record's own evAllocations, not st's; a
+        // correction record never carries its own evAllocations field.
+        const oldAlloc = st && st.callRecord && st.callRecord.evAllocations;
+        const newAlloc = st && st.evAllocations;
         if (oldAlloc) {
           stateTallyAfter.D -= oldAlloc.D || 0;
           stateTallyAfter.R -= oldAlloc.R || 0;
@@ -1780,11 +1787,11 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 
     // Scoreboard starting point: the tally as of just before this batch's
     // first event, so the panel animates from where it actually was, not
-    // from zero.
-    const firstEventTime = next.events.reduce((min, ev) => Math.min(min, ev.time), Infinity);
-    const startingTally = isFinite(firstEventTime)
-      ? computeRunningEvTally(firstEventTime, { strict: true })
-      : computeRunningEvTally(currentTime);
+    // from zero. Exclude this batch's own units by key (not by time cutoff -
+    // see computeRunningEvTally's excludeUnitKeys comment for why), since
+    // buildCheckpointSlides() adds each of them back in as its own slide.
+    const batchUnitKeys = new Set(next.events.map(ev => ev.unitKey).filter(Boolean));
+    const startingTally = computeRunningEvTally(currentTime, { excludeUnitKeys: batchUnitKeys });
     const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
       ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
       : null;

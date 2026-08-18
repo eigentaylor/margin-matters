@@ -61,6 +61,15 @@ let activeSlides = null;
 let activeIndex = -1;
 let activeOnComplete = null;
 let displayedTally = { D: 0, R: 0, O: 0 };
+// Per-party in-flight counter animation token, so a fast-advancing slide
+// (e.g. two states called on the same tick) cancels the previous party's
+// still-running requestAnimationFrame loop instead of letting both loops
+// race to write the same element's textContent.
+let counterAnimTokens = { D: 0, R: 0, O: 0 };
+// Per-party active delta chip, so a new "+N" chip removes any still-visible
+// chip for that same party instead of stacking on top of it (they're both
+// absolutely positioned in the same corner).
+let activeDeltaChips = { D: null, R: null, O: null };
 // True while the caller (election-night.js, via the footer's Pause button)
 // has asked the current slide to stop auto-advancing. Manual advance
 // (skipToNext/skipToPrevious via click/tap/Space/Enter/ArrowLeft) ignores
@@ -239,11 +248,21 @@ function buildStatsLineMarkup(slide) {
 // Animates an element's displayed integer from `from` to `to` over
 // COUNTER_MS, e.g. the scoreboard ticking up by a state's own EV count the
 // moment its call slide starts. Plain rAF + easing, no dependency.
-function animateCounter(el, from, to) {
+//
+// `code` (D/R/O) lets this cancel any still-running animation for the same
+// party: two states called on the same tick advance to their slides back to
+// back, fast enough that the previous slide's rAF loop can still be mid-
+// flight when the next one starts - without cancellation, both loops write
+// the same element's textContent every frame and whichever fires last that
+// frame wins, which can visibly stall or flicker the settled value.
+function animateCounter(el, from, to, code) {
   if (!el) return;
+  if (code) counterAnimTokens[code] = (counterAnimTokens[code] || 0) + 1;
+  const myToken = code ? counterAnimTokens[code] : null;
   if (!isFinite(to) || to === from) { el.textContent = String(isFinite(to) ? to : from); return; }
   const start = performance.now();
   function step(now) {
+    if (code && counterAnimTokens[code] !== myToken) return; // superseded by a newer animation
     const t = Math.min(1, (now - start) / COUNTER_MS);
     const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
     el.textContent = String(Math.round(from + (to - from) * eased));
@@ -311,13 +330,26 @@ function showTallyDelta(code, delta) {
   const numEl = tallyBoxes[code];
   const parent = numEl.parentElement;
   if (!parent) return;
+  // A fast-advancing slide (e.g. two states called on the same tick) can
+  // fire a second delta for the same party before the first chip's fade-out
+  // timers finish - remove any still-visible chip outright instead of
+  // letting both stack in the same absolutely-positioned corner, where
+  // their overlapping text reads as one garbled/doubled number.
+  if (activeDeltaChips[code]) {
+    activeDeltaChips[code].remove();
+    activeDeltaChips[code] = null;
+  }
   const chip = document.createElement('span');
   chip.className = `en-cp-tally-delta ${delta > 0 ? 'en-cp-tally-delta-up' : 'en-cp-tally-delta-down'}`;
   chip.textContent = delta > 0 ? `+${delta}` : String(delta);
   parent.appendChild(chip);
+  activeDeltaChips[code] = chip;
   requestAnimationFrame(() => chip.classList.add('en-cp-tally-delta-show'));
   setTimeout(() => chip.classList.add('en-cp-tally-delta-hide'), 2100);
-  setTimeout(() => chip.remove(), 2400);
+  setTimeout(() => {
+    chip.remove();
+    if (activeDeltaChips[code] === chip) activeDeltaChips[code] = null;
+  }, 2400);
 }
 
 function animateTallyTo(fromTally, toTally, showDelta) {
@@ -333,9 +365,9 @@ function animateTallyTo(fromTally, toTally, showDelta) {
     showTallyDelta('R', toR - fromR);
     showTallyDelta('O', toO - fromO);
   }
-  if (tallyBoxes && tallyBoxes.D) animateCounter(tallyBoxes.D, fromD, toD);
-  if (tallyBoxes && tallyBoxes.R) animateCounter(tallyBoxes.R, fromR, toR);
-  if (tallyBoxes && tallyBoxes.O) animateCounter(tallyBoxes.O, fromO, toO);
+  if (tallyBoxes && tallyBoxes.D) animateCounter(tallyBoxes.D, fromD, toD, 'D');
+  if (tallyBoxes && tallyBoxes.R) animateCounter(tallyBoxes.R, fromR, toR, 'R');
+  if (tallyBoxes && tallyBoxes.O) animateCounter(tallyBoxes.O, fromO, toO, 'O');
   displayedTally = { D: toD, R: toR, O: toO };
 }
 
@@ -617,6 +649,8 @@ export function showCheckpoint(slides, options = {}) {
   // entrance animation on the base .en-checkpoint-overlay rule plays clean.
   overlayEl.classList.remove('en-checkpoint-closing');
   overlayEl.hidden = false;
+  counterAnimTokens = { D: 0, R: 0, O: 0 };
+  activeDeltaChips = { D: null, R: null, O: null };
   renderTallyPanelStructure(options.panelInfo, options.winProb, options.majority, options.hasThirdParty);
   setTallyImmediate(options.startingTally);
   renderSlide(0);
