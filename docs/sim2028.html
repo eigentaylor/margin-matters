@@ -381,7 +381,8 @@
       flex: 0 0 auto;
     }
 
-    .s28-cand-clear-img {
+    .s28-cand-clear-img,
+    .s28-cand-paste-img {
       font-size: 0.78rem;
       color: var(--muted);
       background: none;
@@ -393,7 +394,8 @@
       flex: 0 0 auto;
     }
 
-    .s28-cand-clear-img:hover {
+    .s28-cand-clear-img:hover,
+    .s28-cand-paste-img:hover {
       background: #1b1b1b;
       color: var(--fg);
     }
@@ -660,8 +662,9 @@
             <input id="s28CandNameD" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewD"></span>
             <input id="s28CandImgD" type="file" accept="image/*" title="Optional portrait" />
+            <button type="button" class="s28-cand-paste-img" id="s28CandPasteD" title="Paste image from clipboard">Paste image</button>
             <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgD" title="Remove uploaded portrait">Remove image</button>
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box &mdash; a picked/dropped image doesn't update the file button's own label, but the preview here will</div>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
           </div>
         </div>
         <div class="s28-cand-party" data-party="r">
@@ -671,8 +674,9 @@
             <input id="s28CandNameR" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewR"></span>
             <input id="s28CandImgR" type="file" accept="image/*" title="Optional portrait" />
+            <button type="button" class="s28-cand-paste-img" id="s28CandPasteR" title="Paste image from clipboard">Paste image</button>
             <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgR" title="Remove uploaded portrait">Remove image</button>
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box &mdash; a picked/dropped image doesn't update the file button's own label, but the preview here will</div>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
           </div>
         </div>
       </div>

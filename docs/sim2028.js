@@ -1090,6 +1090,28 @@ function updateCustomCandidateImage(party, file) {
   reader.readAsDataURL(file);
 }
 
+/** Reads an image off the system clipboard (via the Paste image button) and applies it as the custom portrait. */
+async function pasteCustomCandidateImage(party) {
+  const btn = $(party === 'd' ? 's28CandPasteD' : 's28CandPasteR');
+  const restore = () => { if (btn) btn.textContent = 'Paste image'; };
+  try {
+    if (!navigator.clipboard || !navigator.clipboard.read) throw new Error('unsupported');
+    const items = await navigator.clipboard.read();
+    for (const item of items) {
+      const type = item.types.find(t => t.startsWith('image/'));
+      if (!type) continue;
+      updateCustomCandidateImage(party, await item.getType(type));
+      return;
+    }
+    throw new Error('no-image');
+  } catch (e) {
+    if (btn) {
+      btn.textContent = 'No image on clipboard';
+      setTimeout(restore, 1500);
+    }
+  }
+}
+
 function clearCustomCandidateImage(party) {
   const existing = state.candidates[party] || {};
   // A file input's value can only be reset to empty, never set to a filename
@@ -1330,6 +1352,8 @@ async function init() {
     if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
     const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');
     if (clearBtn) clearBtn.addEventListener('click', () => clearCustomCandidateImage(party));
+    const pasteBtn = $(party === 'd' ? 's28CandPasteD' : 's28CandPasteR');
+    if (pasteBtn) pasteBtn.addEventListener('click', () => pasteCustomCandidateImage(party));
 
     // Drag a portrait onto either party's whole box, in preset OR custom mode —
     // updateCustomCandidateImage() switches that party to custom on its own.
@@ -1351,6 +1375,18 @@ async function init() {
         partyBox.classList.remove('s28-drag-over');
         const file = [...(e.dataTransfer.files || [])].find(isImageFile);
         if (file) updateCustomCandidateImage(party, file);
+      });
+      // Ctrl+V while focus is anywhere in this box (e.g. the name field) —
+      // the Paste image button covers the case where nothing here has focus.
+      partyBox.addEventListener('paste', e => {
+        const items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        const item = [...items].find(it => it.kind === 'file' && it.type.startsWith('image/'));
+        const file = item && item.getAsFile();
+        if (file) {
+          e.preventDefault();
+          updateCustomCandidateImage(party, file);
+        }
       });
     }
   });
