@@ -307,9 +307,14 @@ export function buildBaseline(rows, opts = {}) {
   for (const unit of simUnits) baseMean += base.get(unit) * weights.get(unit);
   for (const unit of simUnits) base.set(unit, base.get(unit) - baseMean);
 
+  // Untouched snapshot, taken after centering but before anything candidate-specific
+  // (see homeStateAdvantage.js) ever mutates `base` -- lets that module always
+  // recompute from the true CSV-derived lean instead of accumulating on repeated calls.
+  const baseOriginal = new Map(base);
+
   const result = {
     units, simUnits, atLarge,
-    base, rel2024, relPrior, presMargin2024, presMarginPrior, trend, sigma, ev, totalVotes, weights,
+    base, baseOriginal, rel2024, relPrior, presMargin2024, presMarginPrior, trend, sigma, ev, totalVotes, weights,
     // `beta` is the active map the rest of the engine reads; defaults to the
     // fitted values. sim2028.js repoints it to betaUniform when the
     // Elasticity toggle is off, ahead of each createSimulation() call.

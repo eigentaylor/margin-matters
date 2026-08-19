@@ -7,6 +7,10 @@
  * PLACEHOLDER_CANDIDATES doc comment; nothing here feeds the simulation
  * math, it only sets baseline.candidates.{d,r} (a display string) and
  * registers a portrait override for it.
+ *
+ * Custom choices can also carry `homeState`/`strength`, persisted here but
+ * read only by homeStateAdvantage.js -- see that module for how (and how
+ * little) a picked home state actually moves the simulation.
  */
 
 import { setPortraitOverride } from '../electionNight/candidatePortraits.js';
@@ -32,7 +36,7 @@ const STORAGE_KEYS = { d: 'sim2028DCandidate', r: 'sim2028RCandidate' };
 
 const SAVED_MODES = new Set(['custom', 'preset', 'historical']);
 
-/** @returns {{mode:'default'|'preset'|'custom'|'historical', name:string, imageUrl:?string}} */
+/** @returns {{mode:'default'|'preset'|'custom'|'historical', name:string, imageUrl:?string, homeState:?string, strength:?number}} */
 export function loadCandidateChoice(party) {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS[party]);
@@ -43,11 +47,13 @@ export function loadCandidateChoice(party) {
           mode: SAVED_MODES.has(parsed.mode) ? parsed.mode : 'preset',
           name: parsed.name,
           imageUrl: typeof parsed.imageUrl === 'string' ? parsed.imageUrl : null,
+          homeState: typeof parsed.homeState === 'string' ? parsed.homeState : null,
+          strength: typeof parsed.strength === 'number' ? parsed.strength : null,
         };
       }
     }
   } catch (e) { /* corrupt/unavailable storage -> fall through to default */ }
-  return { mode: 'default', name: DEFAULT_CANDIDATES[party], imageUrl: null };
+  return { mode: 'default', name: DEFAULT_CANDIDATES[party], imageUrl: null, homeState: null, strength: null };
 }
 
 export function saveCandidateChoice(party, choice) {
@@ -56,6 +62,8 @@ export function saveCandidateChoice(party, choice) {
       mode: choice.mode,
       name: choice.name,
       imageUrl: choice.imageUrl || null,
+      homeState: choice.homeState || null,
+      strength: typeof choice.strength === 'number' ? choice.strength : null,
     }));
   } catch (e) { /* storage full/unavailable -- choice still applies for this session */ }
 }

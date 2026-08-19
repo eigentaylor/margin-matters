@@ -14,13 +14,14 @@ import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
 import { installElectionNight } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend } from './sim2028Charts.js';
-import { getStateName } from './utils/constants.js';
+import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
 import {
   DEFAULT_CANDIDATES, PRESET_CANDIDATES,
   loadCandidateChoice, saveCandidateChoice, applyCandidateChoice,
 } from './utils/sim2028/candidatePicker.js';
 import { searchCandidates, formatLabel as formatCandidateLabel } from './utils/sim2028/candidateSearch.js';
+import { applyHomeStateAdvantage, DEFAULT_REALISM_TIER } from './utils/sim2028/homeStateAdvantage.js';
 
 const state = {
   baseline: null,
@@ -39,9 +40,11 @@ const state = {
   // Which unit's tooltip is currently open, if any — lets refreshHoveredTip()
   // keep it live while the mouse just sits there (see that function).
   hoveredUnit: null,
-  // Display-only candidate picks — {mode:'default'|'preset'|'custom', name, imageUrl}
-  // per party. Never read by the simulation itself, only by baseline.candidates
-  // (a label) and the portrait override registry. See candidatePicker.js.
+  // Candidate picks — {mode:'default'|'preset'|'custom'|'historical', name, imageUrl,
+  // homeState, strength} per party. Mostly a display concern (baseline.candidates label +
+  // portrait override), but a preset name or a custom homeState also feeds
+  // homeStateAdvantage.js's small lean bump, applied fresh in startCampaign(). See
+  // candidatePicker.js and homeStateAdvantage.js.
   candidates: { d: null, r: null },
   candidateSearchOpen: { d: false, r: false }, // UI-only: whether the search panel is expanded, independent of the current pick
 };
@@ -901,16 +904,23 @@ function buildSettingsParams() {
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
   params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
   params.set('confident', (confidentEl && confidentEl.checked) ? '1' : '0');
+  const realismEl = $('s28HomeStateRealism');
+  params.set('homeStateRealism', realismEl && realismEl.value ? realismEl.value : DEFAULT_REALISM_TIER);
   // Preset picks, typed custom names, and historical search picks round-trip
   // through a link; an uploaded custom image does not (a data: URL is far too
   // large for a query param, and has nowhere sensible to live but this
   // browser's localStorage). A historical pick's image is just a small static
   // path though, so it rides along after the name, `|`-delimited (candidate
   // names don't contain `|`) — otherwise a shared link would silently lose it.
+  // A custom pick's home state + strength ride along the same way.
   ['d', 'r'].forEach(party => {
     const c = state.candidates[party];
     if (c && c.mode !== 'default' && c.name) {
-      const suffix = c.mode === 'historical' && c.imageUrl ? `${c.name}|${c.imageUrl}` : c.name;
+      let suffix = c.name;
+      if (c.mode === 'historical' && c.imageUrl) suffix = `${c.name}|${c.imageUrl}`;
+      else if (c.mode === 'custom' && c.homeState) {
+        suffix = `${c.name}|${c.homeState}|${typeof c.strength === 'number' ? c.strength : 0.5}`;
+      }
       params.set(party === 'd' ? 'dCand' : 'rCand', `${c.mode}:${suffix}`);
     }
   });
@@ -976,6 +986,11 @@ function applySettingsFromUrl() {
     const v = params.get('confident').toLowerCase();
     confidentEl.checked = (v === '1' || v === 'true');
   }
+  const realismEl = $('s28HomeStateRealism');
+  if (params.has('homeStateRealism') && realismEl) {
+    const v = params.get('homeStateRealism');
+    if ([...realismEl.options].some(o => o.value === v)) realismEl.value = v;
+  }
 
   ['d', 'r'].forEach(party => {
     const raw = params.get(party === 'd' ? 'dCand' : 'rCand');
@@ -999,9 +1014,15 @@ function applySettingsFromUrl() {
       // campaign" (syncAddressBar), so a plain reload always takes this branch too
       // — if the name matches what's already saved locally, keep that image
       // instead of wiping it back to the fallback badge.
+      const [candName, homeState, strengthRaw] = name.split('|');
+      const strength = strengthRaw !== undefined ? parseFloat(strengthRaw) : NaN;
       const existing = state.candidates[party];
-      const keepImage = (existing && existing.mode === 'custom' && existing.name === name) ? existing.imageUrl : null;
-      state.candidates[party] = { mode: 'custom', name, imageUrl: keepImage };
+      const keepImage = (existing && existing.mode === 'custom' && existing.name === candName) ? existing.imageUrl : null;
+      state.candidates[party] = {
+        mode: 'custom', name: candName, imageUrl: keepImage,
+        homeState: homeState || null,
+        strength: Number.isFinite(strength) ? strength : (homeState ? 0.5 : null),
+      };
     }
   });
 }
@@ -1036,6 +1057,13 @@ async function shareCurrentSetup() {
 }
 
 // --------------------------------------------------------------- candidates
+/** "" (no home state) + every state/DC, alphabetical by name, for the custom home-state picker. */
+const HOME_STATE_OPTIONS_HTML = '<option value="">None</option>' + Object.values(ID_TO_ABBR)
+  .map(abbr => ({ abbr, name: getStateName(abbr) }))
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .map(s => `<option value="${s.abbr}">${s.name}</option>`)
+  .join('');
+
 /** (Re)builds one party's preset + "Custom…" swatches and shows/hides its custom fields. */
 function renderCandidatePicker(party) {
   const container = $(party === 'd' ? 's28CandSwatchesD' : 's28CandSwatchesR');
@@ -1068,6 +1096,21 @@ function renderCandidatePicker(party) {
     nameInput.value = choice.name;
   }
 
+  const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
+  if (homeSelect) {
+    if (!homeSelect.dataset.populated) {
+      homeSelect.innerHTML = HOME_STATE_OPTIONS_HTML;
+      homeSelect.dataset.populated = '1';
+    }
+    homeSelect.value = choice.mode === 'custom' ? (choice.homeState || '') : '';
+  }
+  const strengthWrap = $(party === 'd' ? 's28CandStrengthWrapD' : 's28CandStrengthWrapR');
+  if (strengthWrap) strengthWrap.classList.toggle('s28-hidden', !(choice.mode === 'custom' && choice.homeState));
+  const strengthInput = $(party === 'd' ? 's28CandStrengthD' : 's28CandStrengthR');
+  if (strengthInput && document.activeElement !== strengthInput) {
+    strengthInput.value = choice.mode === 'custom' && typeof choice.strength === 'number' ? choice.strength : 0.5;
+  }
+
   // The file input's own "No file chosen" label can't be set by JS (browsers
   // block it) and never reflects a drag-dropped or reload-restored image at
   // all, so this preview + clear button are the real indicator of whether a
@@ -1097,11 +1140,21 @@ function pickPresetCandidate(party, name) {
   setCandidateChoice(party, { mode: 'preset', name: preset.name, imageUrl: null });
 }
 
+/** homeState/strength only mean anything in custom mode -- carried over on further custom
+ * edits (name/image/etc.), dropped when switching in from preset/historical/default. */
+function customHomeFields(existing) {
+  const isCustom = existing && existing.mode === 'custom';
+  return {
+    homeState: isCustom ? (existing.homeState || null) : null,
+    strength: isCustom && typeof existing.strength === 'number' ? existing.strength : 0.5,
+  };
+}
+
 function pickCustomCandidate(party) {
   const existing = state.candidates[party];
   const name = (existing && existing.mode === 'custom' && existing.name) || '';
   closeCandidateSearch(party);
-  setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing ? existing.imageUrl : null });
+  setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing ? existing.imageUrl : null, ...customHomeFields(existing) });
 }
 
 /** Opens/closes the search panel without touching the current pick — browsing shouldn't discard it. */
@@ -1151,7 +1204,24 @@ function pickHistoricalCandidate(party, entry) {
 
 function updateCustomCandidateName(party, name) {
   const existing = state.candidates[party] || {};
-  setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing.imageUrl || null });
+  setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing.imageUrl || null, ...customHomeFields(existing) });
+}
+
+function updateCustomCandidateHomeState(party, homeState) {
+  const existing = state.candidates[party] || {};
+  setCandidateChoice(party, {
+    mode: 'custom', name: existing.name || '', imageUrl: existing.imageUrl || null,
+    ...customHomeFields(existing), homeState: homeState || null,
+  });
+}
+
+function updateCustomCandidateStrength(party, strength) {
+  const existing = state.candidates[party] || {};
+  const parsed = Math.max(0, Math.min(1, parseFloat(strength)));
+  setCandidateChoice(party, {
+    mode: 'custom', name: existing.name || '', imageUrl: existing.imageUrl || null,
+    ...customHomeFields(existing), strength: Number.isFinite(parsed) ? parsed : 0.5,
+  });
 }
 
 // Dragged files don't reliably carry a MIME type — Windows Explorer drags in
@@ -1168,7 +1238,7 @@ function updateCustomCandidateImage(party, file) {
   const reader = new FileReader();
   reader.onload = () => {
     const existing = state.candidates[party] || {};
-    setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: String(reader.result) });
+    setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: String(reader.result), ...customHomeFields(existing) });
   };
   reader.readAsDataURL(file);
 }
@@ -1202,7 +1272,7 @@ function clearCustomCandidateImage(party) {
   // so a subsequent pick of the same file still fires a change event.
   const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
   if (imgInput) imgInput.value = '';
-  setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: null });
+  setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: null, ...customHomeFields(existing) });
 }
 
 // ------------------------------------------------------------------- actions
@@ -1232,6 +1302,12 @@ async function startCampaign() {
   // forecast.js, electionNightBridge.js, this file's own tooltips/table)
   // just calls baseline.beta.get(unit), so this one swap covers all of them.
   if (state.baseline) state.baseline.beta = elasticityOn ? state.baseline.betaFitted : state.baseline.betaUniform;
+  // Recompute the home-state lean bump fresh from baseline.baseOriginal every run —
+  // same idempotent-recompute pattern as the elasticity repoint above, so switching
+  // candidates or the realism tier and hitting Start again never accumulates a bonus.
+  const realismEl = $('s28HomeStateRealism');
+  const realismKey = realismEl ? realismEl.value : DEFAULT_REALISM_TIER;
+  if (state.baseline) applyHomeStateAdvantage(state.baseline, state.candidates, realismKey);
 
   const btn = $('s28Start');
   if (btn) { btn.disabled = true; btn.textContent = 'Simulating…'; }
@@ -1444,6 +1520,10 @@ async function init() {
     });
     const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
     if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
+    const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
+    if (homeSelect) homeSelect.addEventListener('change', () => updateCustomCandidateHomeState(party, homeSelect.value));
+    const strengthInput = $(party === 'd' ? 's28CandStrengthD' : 's28CandStrengthR');
+    if (strengthInput) strengthInput.addEventListener('input', () => updateCustomCandidateStrength(party, strengthInput.value));
     const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
     if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
     const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');

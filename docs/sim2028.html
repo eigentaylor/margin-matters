@@ -407,6 +407,38 @@
       color: var(--muted);
     }
 
+    .s28-cand-home-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .s28-cand-home-row label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex: 1 1 140px;
+    }
+
+    .s28-cand-home-row select,
+    .s28-cand-home-row input[type="range"] {
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.85rem;
+    }
+
+    .s28-cand-home-row input[type="range"] {
+      padding: 0;
+      border: none;
+      background: none;
+    }
+
     .s28-cand-search {
       display: flex;
       flex-direction: column;
@@ -687,6 +719,14 @@
             <input id="s28Nailbiter" type="checkbox" />
           </span>
         </label>
+        <label title="How much a candidate's home state (the 7 built-in 2028 candidates, plus any custom candidate with a home state picked below) leans toward their party. Off disables it entirely. Subtle (default) is deliberately close to unnoticeable -- the political science on 'favorite son' effects finds almost nothing, and even real crossover appeal (a governor who outruns their party at home) doesn't reliably survive a fully-nationalized presidential race. Noticeable/Wacky loosen that for fun. Every tier is further scaled per state by its historical elasticity, so a deeply partisan-locked state barely moves even at Wacky. Historical search picks never get this -- only the 7 built-ins and custom candidates.">Home state realism
+          <select id="s28HomeStateRealism">
+            <option value="off">Off</option>
+            <option value="subtle" selected>Subtle</option>
+            <option value="noticeable">Noticeable</option>
+            <option value="wacky">Wacky</option>
+          </select>
+        </label>
         <label title="On: each state's simulated swing is scaled by its own historically-fitted elasticity (how much of a national wave it actually absorbs) — so e.g. a heavily-elastic swing state moves more than a national wave, an inelastic one moves less. Off: every state moves exactly with the national popular vote (beta=1 everywhere). Toggle to A/B whether the per-state fit is actually adding anything.">Elasticity
           <span class="s28-checkbox-row">
             <input id="s28Elasticity" type="checkbox" checked />
@@ -725,6 +765,14 @@
             <button type="button" class="s28-cand-paste-img" id="s28CandPasteD" title="Paste image from clipboard">Paste image</button>
             <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgD" title="Remove uploaded portrait">Remove image</button>
             <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
+            <div class="s28-cand-home-row">
+              <label>Home state
+                <select id="s28CandHomeD" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
+              </label>
+              <label class="s28-hidden" id="s28CandStrengthWrapD">Hometown strength
+                <input id="s28CandStrengthD" type="range" min="0" max="1" step="0.05" value="0.5" />
+              </label>
+            </div>
           </div>
         </div>
         <div class="s28-cand-party" data-party="r">
@@ -741,11 +789,21 @@
             <button type="button" class="s28-cand-paste-img" id="s28CandPasteR" title="Paste image from clipboard">Paste image</button>
             <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgR" title="Remove uploaded portrait">Remove image</button>
             <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
+            <div class="s28-cand-home-row">
+              <label>Home state
+                <select id="s28CandHomeR" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
+              </label>
+              <label class="s28-hidden" id="s28CandStrengthWrapR">Hometown strength
+                <input id="s28CandStrengthR" type="range" min="0" max="1" step="0.05" value="0.5" />
+              </label>
+            </div>
           </div>
         </div>
       </div>
       <div class="s28-note" style="margin-top:8px">
-        Display only &mdash; who's running has no effect on the simulated result.
+        Mostly display only. The 7 built-in candidates and any custom pick with a home state
+        set get a small, deliberately modest lean nudge in that state (see Home state realism
+        above) &mdash; everything else about who's running has no effect on the simulated result.
       </div>
     </div>
 
