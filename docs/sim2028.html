@@ -11,6 +11,7 @@
   <script src="./last-updated.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script type="module" src="./utils/dataLoader.js"></script>
   <script type="module" src="./utils/electionMap.js"></script>
   <style>
@@ -707,32 +708,38 @@
          all the polling panels. -->
     <div class="card" id="s28MapCard">
       <div class="legend" style="text-align:left;margin-bottom:8px" id="s28MapTitle">Map &mdash; current polling</div>
-      <div id="map-wrap" class="center" style="position:relative">
-        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="Simulated 2028 polling map"></svg>
-        <div id="mapTip" style="display:none"></div>
-        <div id="smallStateBoxes" aria-label="Small state info boxes" style="display:none"></div>
+      <div id="s28MapCapture">
+        <div id="map-wrap" class="center" style="position:relative">
+          <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="Simulated 2028 polling map"></svg>
+          <div id="mapTip" style="display:none"></div>
+          <div id="smallStateBoxes" aria-label="Small state info boxes" style="display:none"></div>
+        </div>
+        <div id="evBar"
+          style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:8px">
+          <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+          <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
+          <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
+          <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
+          <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+          <!-- Positioned below the bar, not over it: election-night.js labels each
+               segment individually, and a centred overlay collides with them. -->
+          <div id="evText" style="position:absolute;left:50%">D 0 | R 0</div>
+        </div>
+        <div id="evNeededToWin" style="text-align:center;font-size:0.85em;color:var(--muted);margin-top:4px"></div>
+        <div id="pvTotals" class="pv-totals s28-hidden" style="margin-top:10px">
+          <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span id="pvDemPct" class="delta"></span></div>
+          <div class="pv-badge pv-o" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
+          <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span id="pvRepPct" class="delta"></span></div>
+          <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span></div>
+          <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
+        </div>
       </div>
-      <div id="evBar"
-        style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:8px">
-        <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
-        <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
-        <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
-        <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
-        <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
-        <!-- Positioned below the bar, not over it: election-night.js labels each
-             segment individually, and a centred overlay collides with them. -->
-        <div id="evText" style="position:absolute;left:50%">D 0 | R 0</div>
-      </div>
-      <div id="evNeededToWin" style="text-align:center;font-size:0.85em;color:var(--muted);margin-top:4px"></div>
+      <!-- Outside #s28MapCapture deliberately: this is a pre-election "how
+           the ratings compared to the calls" reference panel, not part of
+           election night's own results - the Election Night Album shouldn't
+           capture it. -->
       <div class="s28-evclass" id="s28EvClass"></div>
       <div class="s28-note" id="s28EvClassNote" style="text-align:center;margin-top:4px"></div>
-      <div id="pvTotals" class="pv-totals s28-hidden" style="margin-top:10px">
-        <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span id="pvDemPct" class="delta"></span></div>
-        <div class="pv-badge pv-o" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
-        <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span id="pvRepPct" class="delta"></span></div>
-        <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span></div>
-        <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
-      </div>
     </div>
 
     <!-- ---------- forecast ---------- -->
@@ -839,6 +846,7 @@
           </select>
           <button id="enDownloadTxt" class="btn" style="min-width:110px" disabled>Download TXT</button>
           <button id="enDownloadCsv" class="btn" style="min-width:110px" disabled>Download CSV</button>
+          <button id="enAlbumBtn" class="btn" style="min-width:170px" disabled>Election Night Album</button>
         </div>
       </div>
       <div class="s28-note" style="margin-top:8px" id="s28NightNote"></div>
@@ -905,8 +913,22 @@
     <div id="enLogUncalled" class="en-log-uncalled"></div>
   </div>
 
+  <div id="enAlbumModal" class="modal" style="display:none">
+    <div class="modal-content en-album-modal-content">
+      <div class="modal-header">
+        <h3 style="margin:0">Election Night Album</h3>
+        <button id="enAlbumClose" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="enAlbumStatus" class="en-album-status"></div>
+        <div id="enAlbumGrid" class="en-album-grid"></div>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="./sim2028.js"></script>
   <script type="module" src="./election-night.js"></script>
+  <script type="module" src="./utils/electionNight/albumModal.js"></script>
   <script src="./header.js"></script>
   <script src="./back-to-map.js"></script>
   <script src="./footer.js"></script>

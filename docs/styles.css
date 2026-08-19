@@ -2214,6 +2214,67 @@ body.slider-dragging * {
   flex: 1
 }
 
+/* Election Night Album (docs/utils/electionNight/albumModal.js): reuses the
+   generic .modal/.modal-content/.modal-header shell above, just with a wider
+   max-width (the checkpoint captures are ~720px wide themselves - see
+   updatePopup.js's .en-checkpoint-card) so two columns of thumbnails fit. */
+.en-album-modal-content {
+  max-width: 1200px;
+}
+
+.en-album-status {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+  min-height: 1.2em;
+}
+
+.en-album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.en-album-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #111;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.en-album-item img {
+  width: 100%;
+  display: block;
+  background: #0b0b0f;
+}
+
+.en-album-caption {
+  padding: 8px 10px 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.en-album-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px 10px;
+}
+
+.en-album-actions .btn {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .en-album-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* EV Breakdown table specific styles */
 .ev-breakdown-table {
   width: 100%;

@@ -15,6 +15,7 @@ import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from
 import { groupEventsIntoCheckpoints, findNextCheckpoint } from './utils/electionNight/checkpointScheduler.js';
 import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
 import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from './utils/electionNight/updatePopup.js';
+import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 
 (function () {
   'use strict';
@@ -356,7 +357,11 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // Bumped by resetSimulation(); a checkpoint's async slide-build (in
     // maybeFireCheckpoint()) snapshots this and skips showing itself if a
     // reset happened while it was still resolving portraits.
-    resetToken: 0
+    resetToken: 0,
+    // True while generateElectionNightAlbum() is replaying the night
+    // headlessly - a re-entrancy guard, since it drives seekToProgress()/
+    // showCheckpoint() itself and a second concurrent run would race it.
+    generatingAlbum: false
   };
 
   // Cached DOM elements for interactive controls and displays. Populated
@@ -2141,6 +2146,33 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
   }
 
   /**
+   * The scoreboard-panel context a checkpoint's slides render against
+   * (starting tally, win probability, majority threshold, whether to show
+   * the third-party box) - shared by maybeFireCheckpoint() (live playback)
+   * and generateElectionNightAlbum() (headless), which otherwise duplicate
+   * nothing else about how a checkpoint gets shown.
+   */
+  function buildCheckpointShowOptions(records) {
+    // Scoreboard starting point: the first slide's own precomputed
+    // tallyBefore (see computePlannedCheckpoints()'s replay loop) - already
+    // the exact tally as of just before this batch's first event, with no
+    // live recomputation needed here.
+    const startingTally = records[0].plannedTallyBefore || { D: 0, R: 0, O: 0 };
+    const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
+      ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
+      : null;
+    const totalPool = state.totalEvPool || 538;
+    const majority = Math.floor(totalPool / 2) + 1;
+    // Same ground-truth "does this year have a real third party" signal
+    // buildStateData's finalO computation already uses elsewhere (e.g. the
+    // 'final' capstone slide's oEv) - shows the scoreboard's third O box
+    // for the whole night in years where it matters, rather than having it
+    // pop in mid-checkpoint the moment the first O state gets called.
+    const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
+    return { startingTally, winProb, majority, hasThirdParty };
+  }
+
+  /**
    * Check whether real forward playback has just ticked past the next
    * planned checkpoint, and if so, pause and show it. Only called from the
    * live tick() loop, never from a manual scrub via #enProgress - seeking
@@ -2166,22 +2198,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     // auto-advancing.
     updateToggleLabel();
 
-    // Scoreboard starting point: the first slide's own precomputed
-    // tallyBefore (see computePlannedCheckpoints()'s replay loop) - already
-    // the exact tally as of just before this batch's first event, with no
-    // live recomputation needed here.
-    const startingTally = records[0].plannedTallyBefore || { D: 0, R: 0, O: 0 };
-    const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
-      ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
-      : null;
-    const totalPool = state.totalEvPool || 538;
-    const majority = Math.floor(totalPool / 2) + 1;
-    // Same ground-truth "does this year have a real third party" signal
-    // buildStateData's finalO computation already uses elsewhere (e.g. the
-    // 'final' capstone slide's oEv) - shows the scoreboard's third O box
-    // for the whole night in years where it matters, rather than having it
-    // pop in mid-checkpoint the moment the first O state gets called.
-    const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
+    const showOptions = buildCheckpointShowOptions(records);
 
     const resetTokenAtFire = state.resetToken;
     Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
@@ -2190,11 +2207,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       // checkpoint back open on top of the freshly-reset state.
       if (state.resetToken !== resetTokenAtFire) return;
       showCheckpoint(slides, {
-        startingTally,
-        winProb,
-        majority,
+        ...showOptions,
         panelInfo,
-        hasThirdParty,
         onComplete: () => {
           state.checkpointActive = false;
           if (!state.userPaused && state.currentTime < state.simEnd - EPS) startSimulation();
@@ -2206,6 +2220,94 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
       state.checkpointActive = false;
       if (!state.userPaused && state.currentTime < state.simEnd - EPS) startSimulation();
     });
+  }
+
+  /** Short label for one captured album slide - state/kind/who, not the full popup copy. */
+  function captionForSlide(slide) {
+    const time = slide.timeLabel ? `${slide.timeLabel} ET` : '';
+    let what;
+    switch (slide.kind) {
+      case 'call': what = `${slide.stateName || 'Call'} — called for ${slide.candidateName || slide.leader || '?'}`; break;
+      case 'correction': what = `${slide.stateName || 'Correction'} — revised to ${slide.candidateName || slide.leader || '?'}`; break;
+      case 'retraction': what = `${slide.stateName || 'Retraction'} — too close to call`; break;
+      case 'leadFlip': what = `${slide.stateName || 'Lead change'} — ${slide.candidateName || slide.leader || '?'} now ahead`; break;
+      case 'races': what = 'Key races update'; break;
+      case 'outcome': what = slide.outcomeLabel || `${slide.candidateName || 'Winner'} wins the presidency`; break;
+      case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : slide.rCandidateName} wins` : 'Final — no majority'); break;
+      case 'uncalled': what = 'No majority yet'; break;
+      default: what = slide.kind || 'Update';
+    }
+    // Mirrors the card's own "Breaking news" ribbon (renderCallOrCorrection()
+    // etc. in updatePopup.js) so a breaking slide reads as one at a glance in
+    // the album grid too, without having to open the image.
+    if (slide.breaking) what = `Breaking: ${what}`;
+    return time ? `${time} — ${what}` : what;
+  }
+
+  /**
+   * Headless "Election Night Album" generator - replays the whole night
+   * deterministically from the top (regardless of where the user currently
+   * is in the timeline), and for every planned checkpoint's slides (the same
+   * buildCheckpointSlides() output the live popup would show) draws a PNG
+   * card straight from the slide's data via albumCardRenderer.js - no DOM,
+   * no animation, no live popup ever shown. Restores the caller's prior
+   * scrub position when done, in either the success or error path.
+   *
+   * @param {(p: {index: number, total: number}) => void} [onProgress]
+   * @returns {Promise<Array<{dataUrl: string, caption: string}> | null>}
+   *   null if the sim isn't prepared yet, or if a generation is already running.
+   */
+  async function generateElectionNightAlbum(onProgress) {
+    if (!state.prepared || state.generatingAlbum) return null;
+    state.generatingAlbum = true;
+    pauseSimulation();
+    const savedProgress = timeToProgress(state.currentTime);
+    const images = [];
+    let runningTally = { D: 0, R: 0, O: 0 };
+
+    try {
+      seekToProgress(0);
+      const checkpoints = (state.plannedCheckpoints || []).filter(cp => cp && cp.events && cp.events.length);
+      const total = checkpoints.length;
+      const mapCaptureEl = document.getElementById('s28MapCapture');
+
+      for (let i = 0; i < checkpoints.length; i++) {
+        const cp = checkpoints[i];
+        advanceDeterministic(cp.time);
+
+        const records = resolveCheckpointRecords(cp.events);
+        if (records.length) {
+          const [slides, panelInfo] = await Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]);
+          const { majority, hasThirdParty } = buildCheckpointShowOptions(records);
+          for (const slide of slides) {
+            // Most kinds carry their own tallyAfter (see buildCheckpointSlides());
+            // 'races' doesn't (it's not a call/correction), so it just passes
+            // the running total through unchanged rather than zeroing it out.
+            const tallyBefore = runningTally;
+            const tallyAfter = slide.tallyAfter || runningTally;
+            const dataUrl = await renderSlideCard(slide, { panelInfo, majority, hasThirdParty, tallyBefore, tallyAfter });
+            images.push({ dataUrl, caption: captionForSlide(slide) });
+            runningTally = tallyAfter;
+          }
+        }
+
+        if (mapCaptureEl && typeof window.html2canvas === 'function') {
+          try {
+            const canvas = await window.html2canvas(mapCaptureEl, { backgroundColor: '#0b0b0f' });
+            images.push({ dataUrl: canvas.toDataURL('image/png'), caption: `Map — ${formatTimeLabel(cp.time)} ET` });
+          } catch (e) {
+            console.warn('Election night album: map capture failed', e);
+          }
+        }
+
+        if (typeof onProgress === 'function') onProgress({ index: i + 1, total });
+      }
+    } finally {
+      seekToProgress(savedProgress);
+      state.generatingAlbum = false;
+    }
+
+    return images;
   }
 
   /**
@@ -5829,6 +5931,14 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
     const clamped = Math.max(0, Math.min(1, isFinite(progress) ? progress : 0));
     if (!state.prepared) prepareSimulation();
     if (state.prepared) seekToProgress(clamped);
+  };
+
+  window.generateElectionNightAlbum = function (onProgress) {
+    return generateElectionNightAlbum(onProgress);
+  };
+
+  window.isElectionNightPrepared = function () {
+    return !!state.prepared;
   };
 
   if (document.readyState === 'loading') {

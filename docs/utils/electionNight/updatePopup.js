@@ -424,7 +424,11 @@ function animateTallyTo(fromTally, toTally, showDelta) {
 function renderCallOrCorrection(slide) {
   const { first, last } = splitName(slide.candidateName);
   const isCorrection = slide.kind === 'correction';
-  const badgeLabel = isCorrection ? '&#9888; CORRECTION' : 'WINNER';
+  // A call/correction is a confidence-threshold projection, not a certainty
+  // (unlike the outcome/final capstones, which only fire once the majority
+  // is mathematically decided) - "PROJECTED WINNER" says so plainly, the
+  // way a real broadcast distinguishes a projection from a certified result.
+  const badgeLabel = isCorrection ? '&#9888; CORRECTION' : 'PROJECTED WINNER';
   const badgeClass = isCorrection ? 'en-cp-badge-corrected' : 'en-cp-badge-winner';
   const prevLine = isCorrection && slide.previousCandidateName
     ? `<div class="en-cp-prev">Previously called for ${slide.previousCandidateName}</div>`

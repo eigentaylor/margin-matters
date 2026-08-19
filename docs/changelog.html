@@ -48,6 +48,15 @@
 <li>Added drama to the "too close to call" period after a state gets retracted: most of the time now, once a state is un-called, the count swings toward its TRUE eventual winner with a fresh, sizeable lead that agonizingly narrows back down to the real final margin as counting finishes (the "Bush surges to +10,000, then it shrinks to 537" effect) - the old slower "creep from wrong to right" still shows up occasionally for variety</li>
 <li>Added "Breaking News" alerts for key races when the raw vote lead changes hands while a race is still uncalled - before its first call, or during too-close-to-call limbo after a retraction - mirroring a broadcast flashing a lead change (e.g. "takes the lead in Georgia"); these can pop up as their own standalone checkpoint during a quiet stretch, but don't clutter the persistent call log</li>
 </ul>
+<h2>Election Night: Album</h2>
+<br/>
+<ul>
+<li>Added an "Election Night Album" button to the election night controls: it silently replays the whole night and generates a shareable set of images - every state-call/correction/retraction/lead-change/outcome card plus a map snapshot after each round of calls - shown in a popup gallery with "Copy" (paste straight into a chat, e.g. Discord) and "Download" buttons per image</li>
+<li>Each card is now drawn directly from that call's own data (state, time, electoral votes, projected winner's photo/name/party, vote-by-candidate rows with margin/raw votes/percent, percent counted) rather than screenshotted from the on-screen popup, so every image comes out the same crisp, fixed size no matter the browser window or zoom level</li>
+<li>The running national electoral-vote tally (with a "+N" chip for whichever party just moved) is now baked into every card's own footer instead of living in a separate on-screen sidebar - and the win-probability readout that used to sit there is dropped, since it didn't add much to a static image</li>
+<li>A routine state call now reads "Projected winner" rather than "Winner," reserving "Winner" for the outcome/final-tally cards where the result is mathematically settled, not just a confidence-threshold projection</li>
+<li>Moved the popular-vote badges (Dem/Other/Rep/Margin/Total) above the electoral-vote-by-rating breakdown on the election night map panel</li>
+</ul>
                     </div>
                 </div>
             
