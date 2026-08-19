@@ -1359,7 +1359,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
             outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader, false) : null,
             accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
             timeLabel: formatTimeLabel(record.time),
-            tallyBefore: spec_tallyBefore
+            tallyBefore: spec_tallyBefore,
+            triggerUnitKey: record.triggerUnitKey || null
           };
         }
         // leader is null or 'T': a correction (or, with a high enough call
@@ -1386,7 +1387,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           accentColor: '#8a8a8a',
           tallyBefore: spec_tallyBefore,
           tallyAfter: uncalledTally,
-          timeLabel: formatTimeLabel(record.time)
+          timeLabel: formatTimeLabel(record.time),
+          triggerUnitKey: record.triggerUnitKey || null
         };
       }
       if (record.noticeType === 'final-tally') {
@@ -1580,23 +1582,33 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       };
     }).filter(Boolean);
 
-    // Flag the record that immediately precedes an outcome-clinch/uncalled
-    // transition - the call/correction that actually pushed the national
+    // Flag the record that actually caused an outcome-clinch/uncalled
+    // transition - the call/correction/retraction that pushed the national
     // tally across (or back below) the majority threshold - as breaking
     // too, even if the state itself isn't independently "key". Without
     // this, a routine (non-key) state that happens to clinch the
     // presidency would read as an ordinary call, while the "breaking news"
-    // it directly caused shows up detached from it (or even earlier, once
-    // grouped - see the sort below), which reads as broken: "X wins the
-    // presidency" appearing before the scoreboard has actually crossed 270.
-    // The outcome/uncalled spec's time always matches its trigger's exactly
-    // (see computePlannedCheckpoints()'s replay loop), and ties are kept
-    // queued into the same checkpoint batch (groupEventsIntoCheckpoints),
-    // so the immediately preceding spec here is always that trigger.
-    specs.forEach((spec, i) => {
-      if ((spec.kind === 'outcome' || spec.kind === 'uncalled') && i > 0) {
-        specs[i - 1].causesOutcome = true;
-      }
+    // it directly caused shows up detached from it (or even sorted ahead of
+    // it, once grouped - see the sort below), which reads as broken: "X
+    // wins the presidency" appearing before the scoreboard has actually
+    // crossed 270.
+    //
+    // Looked up by triggerUnitKey (stamped in buildNightTimeline's replay
+    // loop, threaded through by resolveCheckpointRecords) rather than by
+    // assuming the trigger is whatever spec happens to sit immediately
+    // before this one in array order: two events can share the exact same
+    // quantized `time` as this transition, and groupEventsIntoCheckpoints'
+    // stable time-sort only preserves *push* order among ties - every
+    // regular event was pushed into buildNightTimeline's timeline long
+    // before any 'outcome' event, so a same-time neighbor unrelated to this
+    // transition can end up sitting between the real trigger and this spec,
+    // stealing the "breaking" flag from the state that actually did it.
+    const specsByUnitKey = new Map();
+    specs.forEach(spec => { if (spec.unitKey) specsByUnitKey.set(spec.unitKey, spec); });
+    specs.forEach(spec => {
+      if (spec.kind !== 'outcome' && spec.kind !== 'uncalled') return;
+      const trigger = spec.triggerUnitKey ? specsByUnitKey.get(spec.triggerUnitKey) : null;
+      if (trigger) trigger.causesOutcome = true;
     });
 
     // A "big deal" slide: a key race (predicted-close pre-election, or
@@ -1632,21 +1644,31 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // leads when nothing else distinguishes them - but this can never let a
     // large non-key state outrank an actual key race, since tier is always
     // checked first.
-    const tierOf = spec => spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1);
-    const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
-    specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (evOf(b) - evOf(a)));
     // Reordering invalidates each slide's original event-time tallyBefore/
     // tallyAfter (see computePlannedCheckpoints()'s replay loop) - the
     // popup's scoreboard animates "from" that exact value every slide (see
     // updatePopup.js's animateTallyTo), so showing slides out of
     // chronological order would otherwise make the counter jump to a
     // stale value each time. Capture the batch's true starting tally
-    // before sorting, then re-derive a running total in the NEW display
-    // order using each slide's own already-correct delta (tallyAfter -
-    // tallyBefore) - that delta reflects only that one event's EV
-    // contribution and is well-defined regardless of display order. Safe to
-    // run even when the sort above was a no-op (nothing reordered).
+    // before sorting (specs is still in chronological order here - the
+    // order resolveCheckpointRecords/records was built in), then re-derive
+    // a running total in the NEW display order using each slide's own
+    // already-correct delta (tallyAfter - tallyBefore) - that delta
+    // reflects only that one event's EV contribution and is well-defined
+    // regardless of display order. Safe to run even when the sort below
+    // ends up a no-op (nothing reordered).
+    //
+    // This must happen BEFORE the sort: specs[0] post-sort can be a
+    // breaking event (e.g. a key-race lead flip) that's pulled to the
+    // front for display despite having happened chronologically AFTER
+    // other calls in this same batch. That event's own tallyBefore already
+    // reflects those later-displayed-but-earlier calls' EVs, so using it as
+    // the batch's starting point would double-count those states' EVs once
+    // via this inherited baseline and again via their own delta below.
     const checkpointStartingTally = specs[0].tallyBefore || zeroTally;
+    const tierOf = spec => spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1);
+    const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
+    specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (evOf(b) - evOf(a)));
     let running = checkpointStartingTally;
     specs.forEach(spec => {
       // 'outcome'/'uncalled' slides are pure type-transition markers - they
@@ -2113,7 +2135,19 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
         currentOutcomeType = newType;
         timeline.push({
           kind: 'outcome', leader: newType, time: ev.time, forceFlag: true, seq: outcomeSeq++,
-          tallyBefore: ev.tallyBefore, tallyAfter: ev.tallyAfter
+          tallyBefore: ev.tallyBefore, tallyAfter: ev.tallyAfter,
+          // Which unit's call/correction/retraction actually caused this
+          // transition - `ev` here is that exact triggering event, still in
+          // scope from this replay iteration. buildCheckpointSlides uses
+          // this to flag the true trigger as breaking (see its
+          // causesOutcome comment) instead of guessing from array
+          // adjacency, which silently picks the wrong unit whenever
+          // another event happens to share the same quantized `time` (see
+          // groupEventsIntoCheckpoints's stable-sort tie-break - ties keep
+          // this array's push order, and every regular event was pushed
+          // long before any 'outcome' event, so a same-time neighbor here
+          // can land between the trigger and this event after sorting).
+          triggerUnitKey: ev.unitKey || null
         });
       }
     });
@@ -2260,6 +2294,10 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       // single source of truth.
       rec.plannedTallyBefore = ev.tallyBefore;
       rec.plannedTallyAfter = ev.tallyAfter;
+      // Only 'outcome' events carry this (see buildNightTimeline's push) -
+      // threads through to buildCheckpointSlides so it can flag the true
+      // trigger as breaking without guessing from array adjacency.
+      if (ev.triggerUnitKey) rec.triggerUnitKey = ev.triggerUnitKey;
       records.push(rec);
     });
     return records;
