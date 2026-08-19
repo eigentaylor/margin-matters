@@ -1623,6 +1623,17 @@ body.slider-dragging * {
   transition: fill 0.25s ease, filter 0.2s ease
 }
 
+/* The Election Night Album headlessly replays the whole night against this
+   same on-screen map (see generateElectionNightAlbum() / #s28MapCapture in
+   sim2028.html) and screenshots it with html2canvas after each jump. A
+   state's fill normally animates over 0.25s, so capturing right after a
+   jump could grab a mid-transition (or even pre-transition) color instead
+   of the true one for that moment - this class, toggled on document.body
+   only while the album is generating, makes fill changes apply instantly. */
+.en-album-capturing .state {
+  transition: none !important;
+}
+
 .state:hover {
   filter: brightness(1.08)
 }

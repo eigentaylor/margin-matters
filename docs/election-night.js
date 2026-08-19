@@ -2387,6 +2387,13 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     const images = [];
     let runningTally = { D: 0, R: 0, O: 0 };
 
+    // Suppress the map's normal fill/filter transition (see .state's CSS)
+    // for the duration of generation - without this, a jump straight to a
+    // checkpoint's time still leaves each changed state's color mid-animation
+    // when html2canvas captures it moments later, since the DOM attribute
+    // changes instantly but the paint doesn't.
+    document.body.classList.add('en-album-capturing');
+
     // "Races to watch" cards are decoupled from raw checkpoint count here -
     // buildCheckpointSlides() still appends one to every checkpoint that has
     // anything uncalled, but with the album's much tighter batching that
@@ -2454,6 +2461,11 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           const nextCp = checkpoints[i + 1];
           const mapTime = (isPollCloseOnlyBatch && nextCp) ? (cp.time + nextCp.time) / 2 : cp.time;
           if (mapTime > state.currentTime + EPS) advanceDeterministic(mapTime);
+          // Let the browser actually paint the DOM mutations renderAt() just
+          // made (attribute changes don't paint synchronously) before
+          // html2canvas reads them - two nested rAFs guarantee a full paint
+          // has completed, not just been scheduled.
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           try {
             const canvas = await window.html2canvas(mapCaptureEl, { backgroundColor: '#0b0b0f' });
             images.push({ dataUrl: canvas.toDataURL('image/png'), caption: `Map — ${formatTimeLabel(mapTime)} ET` });
@@ -2466,6 +2478,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
         if (typeof onProgress === 'function') onProgress({ index: i + 1, total });
       }
     } finally {
+      document.body.classList.remove('en-album-capturing');
       seekToProgress(savedProgress);
       state.generatingAlbum = false;
     }
