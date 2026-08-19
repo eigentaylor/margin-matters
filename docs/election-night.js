@@ -1694,6 +1694,23 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       specs.push({ kind: 'races', candidates });
     }
 
+    // Final key-races recap (100%-counted margins, R→D sorted, with tipping point starred)
+    if (records.some(r => r.noticeType === 'final-tally')) {
+      const { candidates } = await buildFinalKeyRaces();
+      if (candidates.length) {
+        const PER_SLIDE = 6;
+        for (let i = 0; i < candidates.length; i += PER_SLIDE) {
+          const page = candidates.slice(i, i + PER_SLIDE);
+          specs.push({
+            kind: 'finalResults',
+            candidates: page,
+            pageIndex: i / PER_SLIDE,
+            pageCount: Math.ceil(candidates.length / PER_SLIDE)
+          });
+        }
+      }
+    }
+
     return specs;
   }
 
@@ -2284,6 +2301,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       case 'leadFlip': what = `${slide.stateName || 'Lead change'} — ${slide.candidateName || slide.leader || '?'} now ahead`; break;
       case 'races': what = 'Key races update'; break;
       case 'pollClose': what = `Polls closed in ${Array.isArray(slide.states) ? slide.states.length : 0} states`; break;
+      case 'finalResults': what = `Final key race results${slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : ''}`; break;
       case 'outcome': what = slide.outcomeLabel || `${slide.candidateName || 'Winner'} wins the presidency`; break;
       case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : slide.rCandidateName} wins` : 'Final — no majority'); break;
       case 'uncalled': what = 'No majority yet'; break;
@@ -4879,6 +4897,120 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     if (type === 'D') return ' win-dem';
     if (type === 'R') return ' win-rep';
     return ' tie';
+  }
+
+  /**
+   * Final-tally recap: all key races (by importance, or the tipping point)
+   * sorted R→D by final signed margin, with portraits and final vote counts.
+   * Returns { candidates: [...], tippingPointUnitKey }.
+   */
+  async function buildFinalKeyRaces() {
+    const data = state.stateData || [];
+    const totalPool = state.totalEvPool || 538;
+    const majority = Math.floor(totalPool / 2) + 1;
+
+    // Compute final EV totals and determine winner
+    let finalDEv = 0, finalREv = 0;
+    data.forEach(st => {
+      if (st && st.evAllocations) {
+        finalDEv += isFinite(st.evAllocations.D) ? st.evAllocations.D : 0;
+        finalREv += isFinite(st.evAllocations.R) ? st.evAllocations.R : 0;
+      }
+    });
+    const winner = finalDEv >= majority ? 'D' : (finalREv >= majority ? 'R' : null);
+
+    // Tipping-point walk: sort by final margin (most favorable to winner first),
+    // accumulate winner's EV until majority is reached.
+    let tippingPointUnitKey = null;
+    if (winner) {
+      const sorted = data.slice().sort((a, b) => {
+        const aMargin = (a && a.targetMetrics) ? a.targetMetrics.margin : 0;
+        const bMargin = (b && b.targetMetrics) ? b.targetMetrics.margin : 0;
+        return winner === 'D' ? (bMargin - aMargin) : (aMargin - bMargin); // D: descending, R: ascending
+      });
+      let evAccum = 0;
+      for (const st of sorted) {
+        if (!st || !st.evAllocations) continue;
+        const winnerEv = isFinite(st.evAllocations[winner]) ? st.evAllocations[winner] : 0;
+        evAccum += winnerEv;
+        if (evAccum >= majority) {
+          tippingPointUnitKey = st.unitKey;
+          break;
+        }
+      }
+    }
+
+    // Collect key races: same logic as buildUncalledCandidates() uses, so the
+    // final recap shows exactly the races marked KEY during any checkpoint.
+    const keyRaceSet = new Set();
+    data.forEach(st => {
+      if (st && ((state.year === 2028 && PERENNIAL_BATTLEGROUNDS_2028.has(st.unitKey)) || (isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD))) {
+        keyRaceSet.add(st.unitKey);
+      }
+    });
+    if (tippingPointUnitKey) keyRaceSet.add(tippingPointUnitKey);
+
+    // Map to candidate descriptors using targetMetrics (frozen final numbers)
+    const candidates = await Promise.all(
+      data.filter(st => st && keyRaceSet.has(st.unitKey)).map(async st => {
+        const m = st.targetMetrics;
+        const candidateName = resolveCandidateFullName(m.leader, st.unitKey);
+        const voteMargin = (isFinite(m.dVotesCounted) && isFinite(m.rVotesCounted))
+          ? Math.round(m.dVotesCounted - m.rVotesCounted)
+          : null;
+        return {
+          unitKey: st.unitKey,
+          displayLabel: formatUnitLabel(st.unitKey, state.year, { short: true }),
+          ev: isFinite(st.ev) ? st.ev : 0,
+          leader: m.leader,
+          marginSigned: isFinite(m.margin) ? m.margin : 0, // for sorting
+          isTippingPoint: st.unitKey === tippingPointUnitKey,
+          candidateName,
+          portraitUrl: candidateName ? await getPortraitUrlForName(state.year, candidateName) : null,
+          marginPctText: m.marginStr,
+          rawMarginText: m.leader === 'O'
+            ? formatOtherRawMarginText(m.oVotesCounted, m.dVotesCounted, m.rVotesCounted)
+            : formatRawMarginText(m.leader, voteMargin),
+          accentColor: calledAccentColor(m.leader, m.margin)
+        };
+      })
+    );
+
+    // Sort R→D by signed margin (ascending: most negative/R first → most positive/D last)
+    candidates.sort((a, b) => a.marginSigned - b.marginSigned);
+
+    // Add NPV (National Popular Vote) at the end — always included as the nationwide aggregate
+    const npvCallRecord = state.npvCallRecord;
+    if (npvCallRecord) {
+      const dVotes = isFinite(state.nationalFinalDVotes) ? state.nationalFinalDVotes : 0;
+      const rVotes = isFinite(state.nationalFinalRVotes) ? state.nationalFinalRVotes : 0;
+      const oVotes = isFinite(state.nationalFinalOVotes) ? state.nationalFinalOVotes : 0;
+      const totalVotes = dVotes + rVotes + oVotes;
+      const leader = totalVotes > EPS ? (dVotes > rVotes ? (dVotes > oVotes ? 'D' : 'O') : (rVotes > oVotes ? 'R' : 'O')) : 'D';
+      const voteMargin = dVotes - rVotes;
+      const marginStr = formatLean(dVotes + rVotes > EPS ? (dVotes - rVotes) / (dVotes + rVotes) : 0);
+      const candidateName = resolveCandidateFullName(leader, 'NATIONAL');
+      const portraitUrl = candidateName ? await getPortraitUrlForName(state.year, candidateName) : null;
+      candidates.push({
+        unitKey: 'NPV',
+        displayLabel: 'National Popular Vote',
+        ev: 0, // NPV has no EV
+        leader,
+        marginSigned: dVotes + rVotes > EPS ? (dVotes - rVotes) / (dVotes + rVotes) : 0,
+        isTippingPoint: false,
+        candidateName,
+        portraitUrl,
+        marginPctText: marginStr,
+        rawMarginText: leader === 'O'
+          ? formatOtherRawMarginText(oVotes, dVotes, rVotes)
+          : formatRawMarginText(leader, Math.round(voteMargin)),
+        accentColor: calledAccentColor(leader, voteMargin / Math.max(1, totalVotes))
+      });
+      // Re-sort to keep NPV in its margin position (don't pin it to the end)
+      candidates.sort((a, b) => a.marginSigned - b.marginSigned);
+    }
+
+    return { candidates, tippingPointUnitKey };
   }
 
   /**

@@ -60,6 +60,11 @@
 //     straight from state.stateData (not a live call/correction), one per
 //     distinct poll-closing time actually present in the loaded year. Purely
 //     informational: no D/R comparison, never flagged breaking.
+//   { kind: 'finalResults', candidates: [{ unitKey, displayLabel, ev, leader,
+//     isTippingPoint (starred in the list), candidateName, portraitUrl,
+//     marginPctText, rawMarginText, accentColor }], pageIndex, pageCount } -
+//     final-tally key-races recap, R→D sorted by margin; same card layout as
+//     'races' but without reporting bar/confidence. Non-breaking.
 //
 // showCheckpoint(slides, options) options:
 //   onComplete, startingTally: {D,R,O}, winProb: {probD, probTie}|null
@@ -74,6 +79,7 @@ const CORRECTION_SLIDE_MS = 4000;
 const OUTCOME_SLIDE_MS = 4500;
 const FINAL_SLIDE_MS = 6000;
 const RACES_SLIDE_MS = 6000;
+const FINAL_RESULTS_SLIDE_MS = 6000;
 const COUNTER_MS = 900;
 // How long the "BREAKING NEWS"/"FINAL" flash covers the card before fading
 // to reveal it - added on top of that slide's own duration so a flashed
@@ -110,7 +116,7 @@ let autoAdvancePaused = false;
 function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
-  if (slide.kind === 'races' || slide.kind === 'pollClose') return RACES_SLIDE_MS;
+  if (slide.kind === 'races' || slide.kind === 'pollClose' || slide.kind === 'finalResults') return RACES_SLIDE_MS;
   if (slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip') return CORRECTION_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
@@ -708,6 +714,41 @@ function renderPollClose(slide) {
     <div class="en-cp-pollclose-list">${chips}</div>`;
 }
 
+function renderFinalResults(slide) {
+  const candidates = Array.isArray(slide.candidates) ? slide.candidates : [];
+  const pageLabel = slide.pageCount > 1 ? `<div class="en-cp-page-label">Page ${slide.pageIndex + 1} of ${slide.pageCount}</div>` : '';
+  const cards = candidates.map(c => {
+    const accent = c.accentColor || '#8a8a8a';
+    const marginPctText = c.marginPctText && c.marginPctText !== 'None' ? c.marginPctText : 'EVEN';
+    const rawMarginText = c.rawMarginText || '';
+    return `
+      <div class="en-cp-race-card" style="--en-race-accent:${accent}">
+        <div class="en-cp-race-info">
+          <div class="en-cp-race-top">
+            <span class="en-cp-race-name-group">
+              ${c.isTippingPoint ? '<span class="en-cp-race-tipping-star">★ Tipping point</span>' : ''}
+              <span class="en-cp-race-state">${c.displayLabel}</span>
+            </span>
+            ${c.ev > 0 ? `<span class="en-cp-race-ev">${c.ev} EV</span>` : ''}
+          </div>
+        </div>
+        ${c.portraitUrl
+          ? `<img class="en-cp-race-portrait" src="${c.portraitUrl}" alt="${c.candidateName || ''}" />`
+          : `<span class="en-cp-race-portrait en-cp-race-portrait-fallback">${partyLetter(c.leader)}</span>`}
+        <div class="en-cp-race-margin-block">
+          <div class="en-cp-race-margin-pct" style="background:${accent}">${marginPctText}</div>
+          ${rawMarginText ? `<div class="en-cp-race-margin-raw">${rawMarginText}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+  cardEl.innerHTML = `
+    <div class="en-cp-header en-cp-races-header">
+      <div class="en-cp-state">Final Results: Key Races</div>
+      ${pageLabel}
+    </div>
+    <div class="en-cp-races-list">${cards}</div>`;
+}
+
 function renderProgress(total, index) {
   if (total <= 1) { progressEl.innerHTML = ''; return; }
   let dots = '';
@@ -729,6 +770,7 @@ function renderSlide(index) {
   else if (slide.kind === 'uncalled') renderUncalled(slide);
   else if (slide.kind === 'races') renderRaces(slide);
   else if (slide.kind === 'pollClose') renderPollClose(slide);
+  else if (slide.kind === 'finalResults') renderFinalResults(slide);
   else if (slide.kind === 'retraction') renderRetraction(slide);
   else if (slide.kind === 'leadFlip') renderLeadFlip(slide);
   else renderCallOrCorrection(slide);

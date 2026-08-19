@@ -29,7 +29,8 @@
 <br/>
 <ul>
 <li>Custom candidate portraits can now be pasted from the clipboard, not just uploaded or dragged in: a "Paste image" button reads an image straight off the system clipboard, and Ctrl+V works too while focus is anywhere in that candidate's box (e.g. the name field)</li>
-<li>The trend-chart mode "Six closest states" and "All states polling within 5 points" now always include Arizona, Georgia, Wisconsin, Nevada, Michigan, and Pennsylvania if they're available, even in cycles where they aren't currently among the closest-polling states — these perennial battlegrounds are pinned alongside whichever states are most competitive at any given moment</li>
+<li>The trend-chart mode "Six closest states" and "All states polling within 5 points" now always include Arizona, Georgia, Wisconsin, Nevada, Michigan, Pennsylvania, and North Carolina if they're available, even in cycles where they aren't currently among the closest-polling states — these perennial battlegrounds are pinned alongside whichever states are most competitive at any given moment</li>
+<li>Changed the default call threshold from 0.3 to 0.15, matching the general election-night simulator default</li>
 </ul>
 <h2>Election Night</h2>
 <br/>
@@ -37,6 +38,7 @@
 <li>A dramatic full-screen "Breaking News" flash now plays for a beat before a key-race call, any correction or retraction, the call that actually clinches/loses a majority, or the final-tally/no-longer-decided moments - like a broadcast cutting to a big-story sting before revealing the result</li>
 <li>Within a single state-call popup batch, these "breaking" slides are now grouped and shown first ("we can now call Georgia for Biden - also, Trump wins North Dakota and Wyoming"), so the flash above only has to play once per batch instead of once per key race; the always-final "Final tally" screen still always shows last</li>
 <li>The "Races to watch" list - both the checkpoint popup's slide and the always-on sidebar - now pins key races (states predicted close pre-election, or genuinely close in the true result even when the pre-election signal missed it) to the top, each marked with a small "KEY" tag, ahead of the existing live-drama-based ordering</li>
+<li>In the 2028 simulator, the seven perennial battleground states (Arizona, Georgia, Wisconsin, Nevada, Michigan, Pennsylvania, North Carolina) are always marked with the KEY tag in the "Races to watch" list, ensuring they're always visually highlighted as marquee races even in scenarios where they might not otherwise qualify by the closeness scoring</li>
 <li>Fixed a bug where a state predicted comfortable but that actually ended up razor-thin (e.g. New Mexico in 2000, Michigan in 2016) could be skipped for "key race" emphasis entirely, since the emphasis was based only on the (occasionally noisy) pre-election prediction; it's now based on whichever of the prediction or the true result was closer</li>
 <li>Fixed a bug where the specific call that pushed a candidate over the top (or knocked them back below a majority) could itself display as a routine, unmarked call even though the very next screen announced them winning the presidency, with the electoral vote scoreboard not yet reflecting the majority - that deciding call is now always treated as breaking news itself, and always grouped immediately before the win announcement it caused</li>
 <li>Any correction or retraction is now always treated as breaking news (previously only when the state itself was independently a "key race")</li>
@@ -54,6 +56,12 @@
 <ul>
 <li>The state-call checkpoint popup can now show a "Polls just closed" card listing every state whose polls closed at that moment (with each state's electoral vote count and a running total) - it slots into the existing checkpoint schedule alongside call/correction cards rather than forcing a dedicated interruption, so it usually rides along with whatever calls are already happening right after that poll-closing wave, and only appears on its own during a genuine lull (e.g. Alaska/Hawaii at 1am ET)</li>
 <li>Also included in the Election Night Album's generated image set and its captions</li>
+</ul>
+<h2>Election Night: Final Results Recap</h2>
+<br/>
+<ul>
+<li>Once the night is fully decided (all states called, final tally announced), the checkpoint popup can now show one or more "Final Results: Key Races" slides recapping all key races in order from most-Republican to most-Democratic final margin - each card shows the full-count vote counts and margin (no reporting bar or confidence level, since they're 100% decided), and the state that tipped the final outcome is marked with a gold ★ badge</li>
+<li>These slides appear immediately after the final-tally screen, one per page (up to 6 races per page), and are also included in the Election Night Album's exported images</li>
 </ul>
 <h2>Election Night: Album</h2>
 <br/>

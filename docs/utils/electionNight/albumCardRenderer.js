@@ -501,6 +501,56 @@ function drawPollClose(ctx, slide, w, headerBottom) {
   return y + chipH + BOTTOM_PAD;
 }
 
+async function drawFinalResults(ctx, slide, w, headerBottom) {
+  const candidates = Array.isArray(slide.candidates) ? slide.candidates : [];
+  const images = await Promise.all(candidates.map(c => loadImage(c.portraitUrl)));
+  const rowX = 26, rowW = w - 52;
+  let y = headerBottom + 18;
+  candidates.forEach((c, i) => {
+    const rowY = y + i * (RACE_ROW_H + RACE_ROW_GAP);
+    const accent = c.accentColor || '#8a8a8a';
+    roundRectPath(ctx, rowX, rowY, rowW, RACE_ROW_H, 10);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fill();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    const pSize = 64;
+    const px = rowX + 18;
+    const img = images[i];
+    if (img) {
+      roundRectPath(ctx, px, rowY + (RACE_ROW_H - pSize) / 2, pSize, pSize, 9);
+      ctx.save();
+      ctx.clip();
+      const { sx, sy, sw, sh } = fitCoverSource(img.naturalWidth, img.naturalHeight, pSize, pSize);
+      ctx.drawImage(img, sx, sy, sw, sh, px, rowY + (RACE_ROW_H - pSize) / 2, pSize, pSize);
+      ctx.restore();
+    } else {
+      roundRectPath(ctx, px, rowY + (RACE_ROW_H - pSize) / 2, pSize, pSize, 9);
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.fill();
+      text(ctx, partyLetter(c.leader), px + pSize / 2, rowY + RACE_ROW_H / 2 + 7, { font: `900 22px ${FONT}`, align: 'center' });
+    }
+
+    let tx = px + pSize + 18;
+    const rightColW = 150;
+    const midColW = rowW - (tx - rowX) - rightColW - 18;
+    if (c.isTippingPoint) {
+      const sw = pill(ctx, '★ Tipping point', tx, rowY + 14, { font: `900 11px ${FONT}`, bg: '#d4af37', textColor: '#000', height: 20, padX: 7 });
+      tx += sw + 8;
+    }
+    text(ctx, c.displayLabel || '', tx, rowY + 30, { font: `900 18px ${FONT}` });
+    if (c.ev > 0) text(ctx, `${c.ev} EV`, tx, rowY + 50, { font: `600 12px ${FONT}`, color: 'rgba(255,255,255,0.7)' });
+
+    const rightX = rowX + rowW - 16;
+    const marginText = c.marginPctText && c.marginPctText !== 'None' ? c.marginPctText : 'EVEN';
+    pill(ctx, marginText, rightX, rowY + 16, { font: `900 14px ${FONT}`, bg: accent, textColor: '#fff', height: 26, align: 'right' });
+    if (c.rawMarginText) text(ctx, c.rawMarginText, rightX, rowY + 62, { font: `400 12px ${FONT}`, color: 'rgba(255,255,255,0.65)', align: 'right' });
+  });
+  return y + candidates.length * (RACE_ROW_H + RACE_ROW_GAP) + BOTTOM_PAD;
+}
+
 function drawTallyFooter(ctx, w, y, { panelInfo, majority, hasThirdParty, tallyBefore, tallyAfter, images }) {
   const info = panelInfo || {};
   const before = tallyBefore || { D: 0, R: 0, O: 0 };
@@ -564,6 +614,11 @@ async function drawBody(ctx, slide, w) {
     const headerBottom = drawHeader(ctx, w, 'Polls Just Closed', slide.timeLabel ? `${slide.timeLabel} ET` : '',
       'Electoral votes', isFinite(slide.totalEv) ? slide.totalEv : '-');
     return drawPollClose(ctx, slide, w, headerBottom);
+  }
+  if (slide.kind === 'finalResults') {
+    const pageLabel = slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : '';
+    const headerBottom = drawHeader(ctx, w, 'Final Results: Key Races', pageLabel, '', '');
+    return drawFinalResults(ctx, slide, w, headerBottom);
   }
   const ribbonLabel = slide.kind === 'final' ? `Final${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}` : `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`;
   const ribbonBottom = drawBreakingRibbon(ctx, w, ribbonLabel);

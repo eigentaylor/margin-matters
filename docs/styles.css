@@ -3140,6 +3140,14 @@ body.shift-vectors-page {
   text-transform: uppercase;
 }
 
+.en-cp-page-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
 .en-cp-ev-num {
   font-size: 1.6rem;
   font-weight: 900;
@@ -3683,6 +3691,17 @@ body.shift-vectors-page {
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.22);
   color: #fff;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.en-cp-race-tipping-star {
+  flex: 0 0 auto;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #d4af37;
+  color: #000;
   font-size: 0.6rem;
   font-weight: 900;
   letter-spacing: 0.05em;
