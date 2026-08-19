@@ -1394,6 +1394,20 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           timeLabel: formatTimeLabel(record.time)
         };
       }
+      // "Polls just closed in..." marker - purely informational (no D/R
+      // comparison, no EV change of its own), so it just carries the
+      // precomputed state list through to the renderer.
+      if (record.noticeType === 'pollClose') {
+        return {
+          kind: 'pollClose',
+          states: record.states,
+          totalEv: record.totalEv,
+          accentColor: '#8a8a8a',
+          tallyBefore: spec_tallyBefore,
+          tallyAfter: spec_tallyBefore,
+          timeLabel: formatTimeLabel(record.time)
+        };
+      }
       // National popular vote call/correction - same shape as a state
       // call/correction (so it flows through the same renderer), just
       // sourced from state.callRecords' npv_call/npv_miscall entries
@@ -1966,6 +1980,31 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       }
     }
 
+    // "Polls just closed in X states" markers - one per distinct startTime
+    // actually present in this year's units (st.startTime is already
+    // exactly getStateStartTime(abbr), so grouping by it is equivalent to
+    // grouping by POLL_CLOSINGS's own buckets, but automatically skips any
+    // bucket with nothing loaded for this year rather than needing a
+    // separate presence filter). Carries no EV weight of its own - purely
+    // informational, so it passes through the replay below just like npv/
+    // leadFlip do. Left ungrouped by state so multi-unit states (ME/NE's
+    // split districts) still only contribute one entry each.
+    const pollCloseGroups = new Map(); // startTime -> Map(abbr -> ev sum)
+    data.forEach(st => {
+      if (!st || !isFinite(st.startTime)) return;
+      const abbr = st.abbr || String(st.unitKey).slice(0, 2);
+      let grp = pollCloseGroups.get(st.startTime);
+      if (!grp) { grp = new Map(); pollCloseGroups.set(st.startTime, grp); }
+      grp.set(abbr, (grp.get(abbr) || 0) + (isFinite(st.ev) ? st.ev : 0));
+    });
+    pollCloseGroups.forEach((abbrMap, t) => {
+      const states = Array.from(abbrMap.entries())
+        .map(([abbr, ev]) => ({ abbr, ev, name: formatUnitLabel(abbr, state.year) }))
+        .sort((a, b) => b.ev - a.ev || a.abbr.localeCompare(b.abbr));
+      const totalEv = states.reduce((sum, s) => sum + s.ev, 0);
+      timeline.push({ kind: 'pollClose', unitKey: null, ev: 0, leader: null, time: t, states, totalEv });
+    });
+
     const KIND_ORDER = { call: 0, retraction: 1, leadFlip: 2, recall: 3, correction: 4 };
     timeline.sort((a, b) => (a.time - b.time) || ((KIND_ORDER[a.kind] ?? 9) - (KIND_ORDER[b.kind] ?? 9)));
 
@@ -2137,6 +2176,11 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
         // Self-contained - synthesized entirely from ground truth at
         // prepare time, so there's no live record to look up.
         rec = { kind: 'notice', noticeType: 'final-tally', time: ev.time, dEv: ev.dEv, rEv: ev.rEv, oEv: ev.oEv, majority: ev.majority };
+      } else if (ev.kind === 'pollClose') {
+        // Self-contained too - a "polls just closed in..." marker built
+        // straight from state.stateData in computePlannedCheckpoints(),
+        // never announced live, so there's no call-log record to find.
+        rec = { kind: 'notice', noticeType: 'pollClose', time: ev.time, states: ev.states, totalEv: ev.totalEv };
       }
       if (!rec) return;
       // Stamp the planned event's precomputed before/after tally onto the
@@ -2238,6 +2282,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       case 'retraction': what = `${slide.stateName || 'Retraction'} — too close to call`; break;
       case 'leadFlip': what = `${slide.stateName || 'Lead change'} — ${slide.candidateName || slide.leader || '?'} now ahead`; break;
       case 'races': what = 'Key races update'; break;
+      case 'pollClose': what = `Polls closed in ${Array.isArray(slide.states) ? slide.states.length : 0} states`; break;
       case 'outcome': what = slide.outcomeLabel || `${slide.candidateName || 'Winner'} wins the presidency`; break;
       case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : slide.rCandidateName} wins` : 'Final — no majority'); break;
       case 'uncalled': what = 'No majority yet'; break;

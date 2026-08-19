@@ -3765,6 +3765,41 @@ body.shift-vectors-page {
   white-space: nowrap;
 }
 
+/* "Polls just closed" slide: a wrapped row of plain state-name pills rather
+   than the races list's dense per-race cards - there's no result to show
+   yet, just a roster of what just came online. */
+.en-checkpoint-pollClose {
+  width: min(92vw, 640px);
+}
+
+.en-cp-pollclose-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 18px 22px 26px;
+}
+
+.en-cp-pollclose-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.en-cp-pollclose-chip-ev {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
 /* Outcome-clinch layout: distinct, more dramatic full-bleed card rather
    than a bigger version of the per-state card. */
 .en-checkpoint-outcome {

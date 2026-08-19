@@ -477,6 +477,30 @@ async function drawRaces(ctx, slide, w, headerBottom) {
   return y + candidates.length * (RACE_ROW_H + RACE_ROW_GAP) + BOTTOM_PAD;
 }
 
+// Simple wrapped row of state-name pills, each with an EV count - the album
+// analogue of updatePopup.js's .en-cp-pollclose-chip list. No portraits or
+// bars, since a poll-close marker isn't about any one candidate.
+function drawPollClose(ctx, slide, w, headerBottom) {
+  const states = Array.isArray(slide.states) ? slide.states : [];
+  const padX = 26;
+  const rightEdge = w - padX;
+  const gapX = 10, gapY = 10, chipH = 34;
+  const font = `700 15px ${FONT}`;
+  ctx.font = font;
+  let x = padX, y = headerBottom + 18;
+  states.forEach(s => {
+    const label = s.ev > 0 ? `${s.name} · ${s.ev} EV` : s.name;
+    const chipW = ctx.measureText(label).width + 24;
+    if (x > padX && x + chipW > rightEdge) { x = padX; y += chipH + gapY; }
+    roundRectPath(ctx, x, y, chipW, chipH, chipH / 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.14)';
+    ctx.fill();
+    text(ctx, label, x + chipW / 2, y + chipH / 2 + 5, { font, align: 'center' });
+    x += chipW + gapX;
+  });
+  return y + chipH + BOTTOM_PAD;
+}
+
 function drawTallyFooter(ctx, w, y, { panelInfo, majority, hasThirdParty, tallyBefore, tallyAfter, images }) {
   const info = panelInfo || {};
   const before = tallyBefore || { D: 0, R: 0, O: 0 };
@@ -535,6 +559,11 @@ async function drawBody(ctx, slide, w) {
   if (slide.kind === 'races') {
     const headerBottom = drawHeader(ctx, w, 'Races to watch', '', '', '');
     return drawRaces(ctx, slide, w, headerBottom);
+  }
+  if (slide.kind === 'pollClose') {
+    const headerBottom = drawHeader(ctx, w, 'Polls Just Closed', slide.timeLabel ? `${slide.timeLabel} ET` : '',
+      'Electoral votes', isFinite(slide.totalEv) ? slide.totalEv : '-');
+    return drawPollClose(ctx, slide, w, headerBottom);
   }
   const ribbonLabel = slide.kind === 'final' ? `Final${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}` : `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`;
   const ribbonBottom = drawBreakingRibbon(ctx, w, ribbonLabel);

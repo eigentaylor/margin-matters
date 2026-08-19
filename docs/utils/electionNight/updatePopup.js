@@ -55,6 +55,11 @@
 //     keyRace (pinned first in the list, gets a small "KEY" badge),
 //     candidateName, portraitUrl, reporting, marginText, marginPctText,
 //     rawMarginText, confidenceText, reportingText, accentColor }] }
+//   { kind: 'pollClose', states: [{ abbr, name, ev }] (sorted by EV
+//     descending), totalEv, timeLabel } - "polls just closed" marker built
+//     straight from state.stateData (not a live call/correction), one per
+//     distinct poll-closing time actually present in the loaded year. Purely
+//     informational: no D/R comparison, never flagged breaking.
 //
 // showCheckpoint(slides, options) options:
 //   onComplete, startingTally: {D,R,O}, winProb: {probD, probTie}|null
@@ -105,7 +110,7 @@ let autoAdvancePaused = false;
 function durationFor(slide) {
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
-  if (slide.kind === 'races') return RACES_SLIDE_MS;
+  if (slide.kind === 'races' || slide.kind === 'pollClose') return RACES_SLIDE_MS;
   if (slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip') return CORRECTION_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
@@ -683,6 +688,26 @@ function renderRaces(slide) {
     <div class="en-cp-races-list">${cards}</div>`;
 }
 
+// A "polls just closed" marker: one pill per state, EV badge for the total.
+// No portraits or D/R comparison - it's a schedule beat, not a result.
+function renderPollClose(slide) {
+  const states = Array.isArray(slide.states) ? slide.states : [];
+  const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
+  const chips = states.map(s => `
+      <span class="en-cp-pollclose-chip">
+        ${s.name}${s.ev > 0 ? `<span class="en-cp-pollclose-chip-ev">${s.ev}</span>` : ''}
+      </span>`).join('');
+  cardEl.innerHTML = `
+    <div class="en-cp-header">
+      <div class="en-cp-state">Polls just closed${timeLabel}</div>
+      <div class="en-cp-ev">
+        <span class="en-cp-ev-label">Electoral votes</span>
+        <span class="en-cp-ev-num">${isFinite(slide.totalEv) ? slide.totalEv : '-'}</span>
+      </div>
+    </div>
+    <div class="en-cp-pollclose-list">${chips}</div>`;
+}
+
 function renderProgress(total, index) {
   if (total <= 1) { progressEl.innerHTML = ''; return; }
   let dots = '';
@@ -703,6 +728,7 @@ function renderSlide(index) {
   else if (slide.kind === 'final') renderFinal(slide);
   else if (slide.kind === 'uncalled') renderUncalled(slide);
   else if (slide.kind === 'races') renderRaces(slide);
+  else if (slide.kind === 'pollClose') renderPollClose(slide);
   else if (slide.kind === 'retraction') renderRetraction(slide);
   else if (slide.kind === 'leadFlip') renderLeadFlip(slide);
   else renderCallOrCorrection(slide);
