@@ -2668,7 +2668,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       const startTime = getStateStartTime(abbr);
       const closeness = 1 - Math.min(1, Math.abs(adjustedMargin) / 0.12);
       const speed = STATE_COUNTING_SPEEDS[abbr] || 1.0;
-      let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 1.3 * closeness)) / Math.max(0.35, speed));
+      let duration = Math.max(MIN_DURATION, (MIN_DURATION * (1 + 2.0 * closeness)) / Math.max(0.35, speed));
 
       const rngSeed = hashCode(`${year}-${unit}-${Math.round(pvValue * 10000)}`);
       const rng = mulberry32(rngSeed);
@@ -2685,7 +2685,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       // Make easePower scale with closeness: closer races (closeness->1)
       // should have a stronger ease-out (larger power) to build tension.
       // Base 2.0, add up to 1.5 from closeness, plus a tiny RNG offset.
-      const easePower = 2.0 + (closeness || 0) * 1.5 + rng() * 0.5; // ~2.0..4.0
+      const easePower = 2.0 + (closeness || 0) * 2.0 + rng() * 0.5; // ~2.0..4.0
       const reportJitter = (rng() - 0.5) * 0.04; // ±0.02 max per-unit jitter
       let callDeadline = startTime + MIN_CALL_DELAY + closeness * EXTRA_CALL_WINDOW + jitter;
       callDeadline = Math.max(startTime + 10, Math.min(callDeadline, startTime + duration - 10));
@@ -3194,8 +3194,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       // tick, so a unit that just got called or force-called this tick
       // (st.calledAt now non-null) never also fires a flip for it.
       if (st.calledAt == null && !st.instantCall && prevMetrics && prevMetrics.leader != null
-          && metrics.leader != null && prevMetrics.leader !== metrics.leader
-          && isKeyRaceUnit(st)) {
+        && metrics.leader != null && prevMetrics.leader !== metrics.leader
+        && isKeyRaceUnit(st)) {
         registerLeadFlip(st, metrics, timeMinutes);
       }
 
@@ -4165,7 +4165,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // always finalizes regardless of dwell so the NPV can never end up stuck
     // uncalled forever (mirrors shouldCallState's identical guard).
     if (state.npvRetractedAt != null && currentTime - state.npvRetractedAt < RETRACTED_MIN_DWELL_MINUTES
-        && !(reporting >= 1.0 || forceByNightEnd)) return;
+      && !(reporting >= 1.0 || forceByNightEnd)) return;
     if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold) || forceByNightEnd)) return;
 
     const record = {

@@ -30,7 +30,7 @@ export const NAILBITER_DEFAULTS = {
   /** Fraction of the remaining natural margin pulled toward 0 for units inside the threshold. */
   squeeze: 0.65,
   /** Multiplier on each unit's own baseline.sigma for the one-time reorder draw. */
-  noiseAmplify: 1.4,
+  noiseAmplify: 0.15,
   /** regionShare for the noise draw — matches engine.js's cycle-drift default shape. */
   regionShare: 0.70,
 };
