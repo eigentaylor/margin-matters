@@ -29,6 +29,7 @@
 <br/>
 <ul>
 <li>Custom candidate portraits can now be pasted from the clipboard, not just uploaded or dragged in: a "Paste image" button reads an image straight off the system clipboard, and Ctrl+V works too while focus is anywhere in that candidate's box (e.g. the name field)</li>
+<li>The trend-chart mode "Six closest states" and "All states polling within 5 points" now always include Arizona, Georgia, Wisconsin, Nevada, Michigan, and Pennsylvania if they're available, even in cycles where they aren't currently among the closest-polling states — these perennial battlegrounds are pinned alongside whichever states are most competitive at any given moment</li>
 </ul>
 <h2>Election Night</h2>
 <br/>
@@ -56,6 +57,10 @@
 <li>The running national electoral-vote tally (with a "+N" chip for whichever party just moved) is now baked into every card's own footer instead of living in a separate on-screen sidebar - and the win-probability readout that used to sit there is dropped, since it didn't add much to a static image</li>
 <li>A routine state call now reads "Projected winner" rather than "Winner," reserving "Winner" for the outcome/final-tally cards where the result is mathematically settled, not just a confidence-threshold projection</li>
 <li>Moved the popular-vote badges (Dem/Other/Rep/Margin/Total) above the electoral-vote-by-rating breakdown on the election night map panel</li>
+<li>Changed the wording of the initial outcome message from "X clinches the presidency" to "X is projected to win the presidency" — the "clinches" language is now reserved for the final tally once every state has actually been called, so the initial announcement matches how preliminary it really is</li>
+<li>The National Popular Vote can now be retracted ("too close to call") just like any state, using the same hysteresis logic: once confidence collapses below a fraction of the call threshold, it un-calls and becomes available to be re-called later if confidence recovers</li>
+<li>Win-probability calculation is now more "naive" and responsive to what's visible on screen: it samples each remaining state independently from its currently observed margin, using only basic polling error, instead of applying regional correlation, historical elasticity, and other statistical sophistication that can dampen dramatic-looking scenarios into hedged forecasts. The forecast still does Monte Carlo but now "believes" what it sees on the map more readily</li>
+<li>A fully-counted unit never flips in the win-probability calculation even if the call was wrong — mirrors how a called unit is fixed, so a corrected call's actual winner stays locked once its own count finishes</li>
 </ul>
                     </div>
                 </div>

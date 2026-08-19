@@ -537,6 +537,10 @@ function renderForecast() {
 
 const WITHIN5_CAP = 12; // legibility cap — a genuinely close national environment can put more than 12 states inside 5pts
 
+// Perennial 2020s battlegrounds — always shown on the trend chart even in a
+// cycle where they aren't currently among the closest/within-5 states.
+const ALWAYS_KEY_RACES = ['AZ', 'GA', 'WI', 'NV', 'MI', 'PA'];
+
 function renderTrendChart() {
   if (!state.sim) return;
   const pick = $('s28TrendPick') ? $('s28TrendPick').value : 'within5';
@@ -581,12 +585,24 @@ function renderTrendChart() {
           : `${units.length} state${units.length === 1 ? '' : 's'} currently polling within 5 points, closest first, plus NPV.`;
       }
       units = units.slice(0, WITHIN5_CAP);
+      // The perennial battlegrounds always get a line here, even in a cycle
+      // where they aren't currently polling close.
+      ALWAYS_KEY_RACES.forEach(u => {
+        if (state.baseline.simUnits.includes(u) && !units.includes(u)) units.push(u);
+      });
     } else {
       units = state.baseline.simUnits
         .filter(u => (state.baseline.ev.get(u) || 0) > 0)
         .sort((a, b) => Math.abs(margins.get(a)) - Math.abs(margins.get(b)))
         .slice(0, 6);
-      if (note) note.textContent = 'The six closest states at the current step, plus NPV, as projected margins.';
+      ALWAYS_KEY_RACES.forEach(u => {
+        if (state.baseline.simUnits.includes(u) && !units.includes(u)) units.push(u);
+      });
+      if (note) {
+        note.textContent = units.length > 6
+          ? 'The six closest states plus key battlegrounds not already among them, at the current step, plus NPV, as projected margins.'
+          : 'The six closest states at the current step, plus NPV, as projected margins.';
+      }
     }
     // NPV first, so it's the first legend entry and reads as the anchor the
     // state lines are moving relative to.

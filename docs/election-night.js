@@ -313,6 +313,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     callRecords: [],
     npvCallRecord: null,
     npvMisCallLogged: false,
+    npvRetractedOnce: false,
+    npvRetractedAt: null,
     outcomeAnnouncedType: null,
     outcomeAnnouncedTotal: null,
     allCalledAnnounced: false,
@@ -853,6 +855,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     state.plannedCheckpoints = [];
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
+    state.npvRetractedOnce = false;
+    state.npvRetractedAt = null;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
     state.outcomeSeq = 0;
@@ -1149,6 +1153,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     state.checkpointCursorTime = 0;
     state.npvCallRecord = null;
     state.npvMisCallLogged = false;
+    state.npvRetractedOnce = false;
+    state.npvRetractedAt = null;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
     state.outcomeSeq = 0;
@@ -3101,6 +3107,9 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 
     state.lastNationalTotals = { dCounted, rCounted, oCounted, countedVotes };
     maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
+    if (shouldRetractNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes)) {
+      registerNpvRetraction(timeMinutes);
+    }
     maybeEmitNpvMiscall(countedVotes, timeMinutes);
     updateNationalWinProbability(timeMinutes, settled);
 
@@ -3471,6 +3480,118 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     };
   }
 
+  // Simpler, more responsive win-probability calculation: sample each
+  // remaining state independently from its CURRENT OBSERVED MARGIN (what's
+  // visible on screen) with basic polling error. Skips regional correlation
+  // and historical priors so the forecast tracks what the viewer is seeing
+  // rather than hedging against invisible statistical sophistication.
+  // This can feel "ready to be wrong" compared to the full swing-hierarchy
+  // model, which is exactly the point.
+  function runNationalWinProbabilityMC_Naive(timeMinutes, posteriors) {
+    const totalPool = state.totalEvPool || 538;
+    const needed = Math.floor(totalPool / 2) + 1;
+
+    let fixedDEv = 0, fixedREv = 0;
+    const liveUnits = [];
+    const liveAl = [];
+    state.stateData.forEach(st => {
+      if (st.thirdPartyDominant) return;
+      const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
+      if (isCalled) {
+        const effectiveLeader = (st.misCallLogged && st.winner) ? st.winner : st.callLeader;
+        if (effectiveLeader === 'D') fixedDEv += st.ev;
+        else if (effectiveLeader === 'R') fixedREv += st.ev;
+        return;
+      }
+      if (st.type === 'atlarge') liveAl.push(st);
+      else liveUnits.push(st);
+    });
+
+    if (!liveUnits.length && !liveAl.length) {
+      const dWins = fixedDEv >= needed;
+      const rWins = fixedREv >= needed;
+      return { probD: dWins ? 1 : 0, probTie: (!dWins && !rWins) ? 1 : 0, locked: true, sims: 0, evRange90: null };
+    }
+
+    const liveEvTotal = liveUnits.reduce((sum, st) => sum + st.ev, 0) + liveAl.reduce((sum, st) => sum + st.ev, 0);
+    const hardLockedD = fixedDEv >= needed;
+    const hardLockedR = fixedREv >= needed;
+    const impossibleD = fixedDEv + liveEvTotal < needed;
+    const impossibleR = fixedREv + liveEvTotal < needed;
+    const contestedTotal = fixedDEv + fixedREv + liveEvTotal;
+    const tieImpossible = (2 * needed - contestedTotal - 1) <= 0;
+
+    if (hardLockedD || hardLockedR || (impossibleD && impossibleR)) {
+      return {
+        probD: hardLockedD ? 1 : 0,
+        probTie: (impossibleD && impossibleR && !hardLockedD && !hardLockedR) ? 1 : 0,
+        locked: true, sims: 0, evRange90: null
+      };
+    }
+
+    const n = liveUnits.length;
+    const seed = hashCode(`prob:${state.year}:${state.pvRandomSeed || 0}:${Math.round(timeMinutes)}`);
+    const rng = mulberry32(seed >>> 0);
+    const drawFn = makeNormalizedTDraw(POLL_ERROR_SPEC.df);
+
+    // Simple polling error sigma — use the spec's national sigma for all states
+    // (ignores state-specific uncertainty, but that's the whole point of being naive)
+    const pollingErrorSigma = POLL_ERROR_SPEC.nationalSigma || 0.03;
+
+    const marginByUnit = new Map();
+    const demEvSamples = new Float64Array(PROB_MC_SIMS);
+    const demWinCounts = new Int32Array(n);
+    const alDemWinCounts = new Int32Array(liveAl.length);
+    let demWins = 0;
+    let tieWins = 0;
+
+    for (let s = 0; s < PROB_MC_SIMS; s++) {
+      let demEv = fixedDEv;
+      for (let i = 0; i < n; i++) {
+        const st = liveUnits[i];
+        // Use the current observed margin from the screen, add independent noise
+        const observedMargin = (st.latestMetrics && isFinite(st.latestMetrics.margin))
+          ? st.latestMetrics.margin : 0;
+        const noise = drawFn(rng) * pollingErrorSigma;
+        const margin = observedMargin + noise;
+        marginByUnit.set(st.unitKey, margin);
+        if (margin >= 0) { demEv += st.ev; demWinCounts[i]++; }
+      }
+      for (let a = 0; a < liveAl.length; a++) {
+        const st = liveAl[a];
+        const parts = state.atLargeParts ? state.atLargeParts.get(st.unitKey) : null;
+        if (!parts || !parts.length) continue;
+        let acc = 0, wsum = 0;
+        for (const p of parts) {
+          const m = marginByUnit.has(p.unitKey) ? marginByUnit.get(p.unitKey)
+            : ((st.latestMetrics && isFinite(st.latestMetrics.margin)) ? st.latestMetrics.margin : 0);
+          acc += m * p.weight;
+          wsum += p.weight;
+        }
+        if (wsum > EPS && acc / wsum >= 0) { demEv += st.ev; alDemWinCounts[a]++; }
+      }
+      demEvSamples[s] = demEv;
+      if (demEv >= needed) demWins++;
+      else if (contestedTotal - demEv < needed) tieWins++;
+    }
+
+    const stateProb = new Map();
+    for (let i = 0; i < n; i++) stateProb.set(liveUnits[i].unitKey, demWinCounts[i] / PROB_MC_SIMS);
+    for (let a = 0; a < liveAl.length; a++) stateProb.set(liveAl[a].unitKey, alDemWinCounts[a] / PROB_MC_SIMS);
+
+    const sortedEv = Array.from(demEvSamples).sort((a, b) => a - b);
+    const quantile = q => sortedEv[Math.min(sortedEv.length - 1, Math.max(0, Math.round(q * (sortedEv.length - 1))))];
+    const evRange90 = [quantile(0.05), quantile(0.95)];
+
+    const rawProbD = demWins / PROB_MC_SIMS;
+    const rawProbTie = tieWins / PROB_MC_SIMS;
+    return {
+      probD: Math.min(0.999, Math.max(0.001, rawProbD)),
+      probTie: tieImpossible ? 0 : Math.min(0.999, Math.max(0.001, rawProbTie)),
+      locked: false, sims: PROB_MC_SIMS, evRange90, stateProb
+    };
+  }
+
   // Monte Carlo national win-probability tally. Already-called units (and
   // third-party-dominant ones, which never count toward either major
   // party's total — a majority of the TRUE EV pool is required, mirroring
@@ -3698,7 +3819,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     if (!isFirst && !isFinal && timeMinutes - state.lastProbUpdateTime < PROB_UPDATE_INTERVAL_MINUTES) return;
     state.lastProbUpdateTime = timeMinutes;
 
-    state.nationalWinProb = runNationalWinProbabilityMC(timeMinutes, posteriors);
+    state.nationalWinProb = runNationalWinProbabilityMC_Naive(timeMinutes, posteriors);
     renderWinProbLine(state.nationalWinProb);
 
     // Debug-only instrumentation for docs/utils/electionNight/validateWinProb.mjs
@@ -3830,6 +3951,13 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // dead-end fallback, so the checkpoint scheduler's projected 'npv' event
     // and this live trigger land in sync.
     const forceByNightEnd = currentTime >= state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES;
+    // A retracted NPV call can't be re-called until RETRACTED_MIN_DWELL_MINUTES
+    // have passed - same hysteresis floor a retracted state gets - except
+    // once reporting is complete or the night is basically over, which
+    // always finalizes regardless of dwell so the NPV can never end up stuck
+    // uncalled forever (mirrors shouldCallState's identical guard).
+    if (state.npvRetractedAt != null && currentTime - state.npvRetractedAt < RETRACTED_MIN_DWELL_MINUTES
+        && !(reporting >= 1.0 || forceByNightEnd)) return;
     if (!(reporting >= 1.0 || (isFinite(confidence) && confidence >= threshold) || forceByNightEnd)) return;
 
     const record = {
@@ -3873,6 +4001,50 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       calledLeader,
       finalLeader
     });
+    triggerTipRefresh();
+    state.lastLogKey = '';
+  }
+
+  function shouldRetractNpvCall(dCounted, rCounted, oCounted, countedVotes, currentTime) {
+    // Mirrors shouldRetractCall()'s hysteresis for the aggregate national
+    // count: un-call the NPV once confidence collapses well below what it
+    // took to get called in the first place. Only one retraction is ever
+    // allowed (state.npvRetractedOnce), and only while the count isn't fully
+    // in yet - a 100%-reporting wrongness is maybeEmitNpvMiscall()'s job,
+    // not this one's.
+    if (!state.npvCallRecord || state.npvRetractedOnce) return false;
+    if (currentTime <= state.npvCallRecord.time + EPS) return false;
+    if (countedVotes >= state.totalEligibleVotes - EPS) return false;
+    const confidence = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const retractionThreshold = threshold * effectiveRetractionFraction();
+    return isFinite(confidence) && confidence < retractionThreshold;
+  }
+
+  function registerNpvRetraction(currentTime) {
+    // Un-call the NPV: log a "too close to call" notice and reset
+    // state.npvCallRecord back to null so maybeRegisterNpvCall() can call it
+    // again later once confidence recovers (same RETRACTED_MIN_DWELL_MINUTES
+    // floor a retracted state gets) - same append-only convention
+    // registerRetraction() uses for state calls, and npvWatchCandidate's
+    // isCalled flag (updateCallLog) picks this up automatically since it
+    // just reads !!state.npvCallRecord.
+    if (!state.npvCallRecord || state.npvRetractedOnce) return;
+    state.npvRetractedOnce = true;
+    const retractionTime = Math.max(currentTime, state.npvCallRecord.time + 0.01);
+    const previousLeaderText = state.npvCallRecord.candidateName || formatLeader(state.npvCallRecord.leader);
+    const message = `${formatTimeLabel(retractionTime)} – National popular vote is retracted: too close to call. Previously called for ${previousLeaderText} at ${formatTimeLabel(state.npvCallRecord.time)}.`;
+    state.npvCallRecord.retracted = true;
+    state.callRecords.push({
+      kind: 'notice',
+      noticeType: 'npv_retraction',
+      unitKey: 'NPV',
+      time: retractionTime,
+      text: message,
+      previousLeader: state.npvCallRecord.leader
+    });
+    state.npvCallRecord = null;
+    state.npvRetractedAt = retractionTime;
     triggerTipRefresh();
     state.lastLogKey = '';
   }
@@ -4635,19 +4807,25 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
   // Shared by every static outcome message (initial clinch, correction,
   // final tally) so their wording/thresholds can't drift from each other.
   function outcomeMessageText(type, dEv, rEv, oEv, majority, isFinal = false) {
+    // The initial call (isFinal=false) reads as a projection, not a done
+    // deal - "clinches" is reserved for the final tally once every state
+    // has actually been called, so the wording matches how certain the
+    // moment really is.
+    const verbPhrase = isFinal ? 'clinches' : 'is projected to win';
+    const verbPhrasePlural = isFinal ? 'clinch' : 'are projected to win';
     if (type === 'D') {
       const winnerName = resolveCandidateLastName('D', 'NATIONAL');
       const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'D', isFinal) : null;
       return winnerName
-        ? `${winnerName} clinches the presidency with ${dEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
-        : `Democrats clinch the presidency with ${dEv} EV (needed ${majority}).`;
+        ? `${winnerName} ${verbPhrase} the presidency with ${dEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
+        : `Democrats ${verbPhrasePlural} the presidency with ${dEv} EV (needed ${majority}).`;
     }
     if (type === 'R') {
       const winnerName = resolveCandidateLastName('R', 'NATIONAL');
       const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'R', isFinal) : null;
       return winnerName
-        ? `${winnerName} clinches the presidency with ${rEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
-        : `Republicans clinch the presidency with ${rEv} EV (needed ${majority}).`;
+        ? `${winnerName} ${verbPhrase} the presidency with ${rEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
+        : `Republicans ${verbPhrasePlural} the presidency with ${rEv} EV (needed ${majority}).`;
     }
     return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election will be decided by the House of Representatives.`;
   }
