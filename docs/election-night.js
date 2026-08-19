@@ -772,6 +772,20 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
   const KEY_RACE_THRESHOLD = 0.6;
   const PERENNIAL_BATTLEGROUNDS_2028 = new Set(['AZ', 'GA', 'WI', 'NV', 'MI', 'PA', 'NC']);
 
+  // A unit counts as a "key race" if either the data itself says so
+  // (importance >= threshold - predicted closeness + EV size, see
+  // assignRaceImportance) OR it's one of the seven states this app always
+  // treats as a 2028 battleground regardless of how a given sim's random
+  // draw happened to land - every place that decides "is this breaking
+  // news / worth flagging" should go through this single check so the
+  // 2028 override never silently misses a call site.
+  function isKeyRaceUnit(st) {
+    return !!(st && (
+      (state.year === 2028 && PERENNIAL_BATTLEGROUNDS_2028.has(st.unitKey)) ||
+      (isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD)
+    ));
+  }
+
   // Assign a pre-election-based "importance" score to each unit, combining
   // predicted closeness (from priorMargin) and EV size. Used only to flag
   // state calls as "key races" worthy of visual emphasis on-screen.
@@ -1479,7 +1493,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           confidencePct: record.confidence,
           reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
           reportingText: formatReportingText(record.reporting, null),
-          keyRace: !!(retractedSt && isFinite(retractedSt.importance) && retractedSt.importance >= KEY_RACE_THRESHOLD),
+          keyRace: isKeyRaceUnit(retractedSt),
           tallyBefore: spec_tallyBefore,
           tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
           timeLabel: formatTimeLabel(record.time)
@@ -1526,7 +1540,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
       const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
       const st = unitsByKey.get(record.unitKey);
-      const keyRace = !record.isNpv && st && isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD;
+      const keyRace = !record.isNpv && isKeyRaceUnit(st);
 
       return {
         kind: isCorrection ? 'correction' : 'call',
@@ -1609,47 +1623,49 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // Group breaking slides at the front of the batch, like a broadcast
     // anchor leading with the marquee results before circling back to
     // routine ones ("we can now call Georgia for Biden; also, Trump wins
-    // North Dakota"). The trailing 'final' capstone is excluded from the
-    // MOVE (even though it's flagged breaking, for updatePopup.js's flash) -
-    // it's always the true last event of the whole night and
-    // computePlannedCheckpoints()/groupEventsIntoCheckpoints() guarantee
-    // it's already the last spec here, so it must stay pinned there rather
-    // than jumping to the front. Array.prototype.sort is stable, so within
-    // each of the two groups, original chronological order is preserved.
-    const movesToFront = spec => spec.breaking && spec.kind !== 'final';
-    if (specs.some(movesToFront)) {
-      // Reordering invalidates each slide's original event-time tallyBefore/
-      // tallyAfter (see computePlannedCheckpoints()'s replay loop) - the
-      // popup's scoreboard animates "from" that exact value every slide (see
-      // updatePopup.js's animateTallyTo), so showing slides out of
-      // chronological order would otherwise make the counter jump to a
-      // stale value each time. Capture the batch's true starting tally
-      // before sorting, then re-derive a running total in the NEW display
-      // order using each slide's own already-correct delta (tallyAfter -
-      // tallyBefore) - that delta reflects only that one event's EV
-      // contribution and is well-defined regardless of display order.
-      const checkpointStartingTally = specs[0].tallyBefore || zeroTally;
-      specs.sort((a, b) => (movesToFront(b) ? 1 : 0) - (movesToFront(a) ? 1 : 0));
-      let running = checkpointStartingTally;
-      specs.forEach(spec => {
-        // 'outcome'/'uncalled' slides are pure type-transition markers - they
-        // share their trigger event's before/after rather than an
-        // independent change (see computePlannedCheckpoints()'s outcome
-        // push), so they pass the running total through unchanged instead of
-        // double-counting a delta that's already attributed to another slide.
-        if (spec.kind === 'outcome' || spec.kind === 'uncalled') {
-          spec.tallyBefore = running;
-          spec.tallyAfter = running;
-          return;
-        }
-        const before = spec.tallyBefore || zeroTally;
-        const after = spec.tallyAfter || before;
-        const delta = { D: (after.D || 0) - (before.D || 0), R: (after.R || 0) - (before.R || 0), O: (after.O || 0) - (before.O || 0) };
+    // North Dakota"). The trailing 'final' capstone gets its own tier below
+    // both of those (even though it's flagged breaking, for updatePopup.js's
+    // flash) - it's always the true last event of the whole night, so it
+    // must stay pinned there rather than jumping to the front. Within the
+    // front/back tiers, ties (most often several calls landing at the exact
+    // same simulated minute) break by EV descending - the bigger prize
+    // leads when nothing else distinguishes them - but this can never let a
+    // large non-key state outrank an actual key race, since tier is always
+    // checked first.
+    const tierOf = spec => spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1);
+    const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
+    specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (evOf(b) - evOf(a)));
+    // Reordering invalidates each slide's original event-time tallyBefore/
+    // tallyAfter (see computePlannedCheckpoints()'s replay loop) - the
+    // popup's scoreboard animates "from" that exact value every slide (see
+    // updatePopup.js's animateTallyTo), so showing slides out of
+    // chronological order would otherwise make the counter jump to a
+    // stale value each time. Capture the batch's true starting tally
+    // before sorting, then re-derive a running total in the NEW display
+    // order using each slide's own already-correct delta (tallyAfter -
+    // tallyBefore) - that delta reflects only that one event's EV
+    // contribution and is well-defined regardless of display order. Safe to
+    // run even when the sort above was a no-op (nothing reordered).
+    const checkpointStartingTally = specs[0].tallyBefore || zeroTally;
+    let running = checkpointStartingTally;
+    specs.forEach(spec => {
+      // 'outcome'/'uncalled' slides are pure type-transition markers - they
+      // share their trigger event's before/after rather than an
+      // independent change (see computePlannedCheckpoints()'s outcome
+      // push), so they pass the running total through unchanged instead of
+      // double-counting a delta that's already attributed to another slide.
+      if (spec.kind === 'outcome' || spec.kind === 'uncalled') {
         spec.tallyBefore = running;
-        running = { D: running.D + delta.D, R: running.R + delta.R, O: running.O + delta.O };
         spec.tallyAfter = running;
-      });
-    }
+        return;
+      }
+      const before = spec.tallyBefore || zeroTally;
+      const after = spec.tallyAfter || before;
+      const delta = { D: (after.D || 0) - (before.D || 0), R: (after.R || 0) - (before.R || 0), O: (after.O || 0) - (before.O || 0) };
+      spec.tallyBefore = running;
+      running = { D: running.D + delta.D, R: running.R + delta.R, O: running.O + delta.O };
+      spec.tallyAfter = running;
+    });
 
     await Promise.all(specs.map(async spec => {
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
@@ -1691,7 +1707,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold)
         };
       }));
-      specs.push({ kind: 'races', candidates });
+      specs.push({ kind: 'races', candidates, timeLabel: formatTimeLabel(records[records.length - 1].time) });
     }
 
     // Final key-races recap (100%-counted margins, R→D sorted, with tipping point starred)
@@ -1850,7 +1866,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
    * projectUnitCallEvent()/projectUnitRetraction() results.
    */
   function projectUnitLeadFlips(st, call, retraction) {
-    if (!isFinite(st.importance) || st.importance < KEY_RACE_THRESHOLD) return [];
+    if (!isKeyRaceUnit(st)) return [];
     if (st.instantCall || st.thirdPartyDominant || !call) return [];
     const STEP = 2;
     const flips = [];
@@ -1934,16 +1950,16 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
   }
 
   /**
-   * Compute the whole night's checkpoint schedule deterministically, up
-   * front - this is what makes checkpoints immune to rewinding: the result
-   * only depends on state.stateData/simEnd/confidenceThreshold, never on
-   * live event-arrival order, so seeking around can't pile events up. Run
-   * once per prepareSimulation() and again whenever confidenceThreshold
-   * changes mid-run (see its slider's change handler) so still-uncalled
-   * units' projections stay current while already-decided ones stay locked
-   * to what really happened.
+   * Build the whole night's event timeline deterministically, up front -
+   * this is what makes checkpoints immune to rewinding: the result only
+   * depends on state.stateData/simEnd/confidenceThreshold, never on live
+   * event-arrival order, so seeking around can't pile events up. Returns
+   * the raw, ungrouped, fully tally-stamped event list; callers group it
+   * into checkpoints themselves (see computePlannedCheckpoints() for the
+   * live sim's grouping, computeAlbumCheckpoints() for the album's) so the
+   * same underlying timeline can be batched differently for each.
    */
-  function computePlannedCheckpoints() {
+  function buildNightTimeline() {
     const data = state.stateData || [];
     if (!data.length) return [];
     const totalPool = state.totalEvPool || 538;
@@ -2138,7 +2154,43 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       tallyAfter: { D: finalD, R: finalR, O: finalO }
     });
 
-    return groupEventsIntoCheckpoints(timeline);
+    return timeline;
+  }
+
+  /**
+   * Live-sim checkpoint schedule: buildNightTimeline() batched with the
+   * default scheduler options (tuned to minimize interruptions - see
+   * checkpointScheduler.js). Run once per prepareSimulation() and again
+   * whenever confidenceThreshold changes mid-run (see its slider's change
+   * handler) so still-uncalled units' projections stay current while
+   * already-decided ones stay locked to what really happened.
+   */
+  function computePlannedCheckpoints() {
+    return groupEventsIntoCheckpoints(buildNightTimeline());
+  }
+
+  // Election Night Album checkpoint schedule: much tighter batching than
+  // the live sim's (quietGapMinutes/maxBatchSpanMinutes/maxBatchSize all
+  // smaller) since nobody is being interrupted - the album IS the whole
+  // experience for whoever's viewing it, so more frequent, smaller
+  // "photos" read better than the live sim's fewer, larger ones.
+  const ALBUM_SCHEDULER_OPTIONS = { quietGapMinutes: 5, maxBatchSpanMinutes: 15, maxBatchSize: 4 };
+
+  /**
+   * Album-only checkpoint schedule: same underlying timeline as
+   * computePlannedCheckpoints(), but with 'pollClose' events forced to
+   * close out whatever's queued before them (the same forceFlag mechanism
+   * 'outcome'/'final' already use) so a poll-close marker always lands at
+   * its true chronological spot instead of getting swept behind a later
+   * batch's breaking-news reorder (see buildCheckpointSlides()), plus the
+   * tighter ALBUM_SCHEDULER_OPTIONS batching. Computed fresh per album
+   * generation rather than cached on state, matching generateElection
+   * NightAlbum()'s existing full deterministic replay each time.
+   */
+  function computeAlbumCheckpoints() {
+    const timeline = buildNightTimeline();
+    timeline.forEach(ev => { if (ev.kind === 'pollClose') ev.forceFlag = true; });
+    return groupEventsIntoCheckpoints(timeline, ALBUM_SCHEDULER_OPTIONS);
   }
 
   /**
@@ -2335,9 +2387,28 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     const images = [];
     let runningTally = { D: 0, R: 0, O: 0 };
 
+    // "Races to watch" cards are decoupled from raw checkpoint count here -
+    // buildCheckpointSlides() still appends one to every checkpoint that has
+    // anything uncalled, but with the album's much tighter batching that
+    // would fire far too often. Only actually render one when it's either
+    // been a while (a suspense beat during a quiet stretch, e.g. watching a
+    // key race's margin narrow between calls) or this checkpoint is the
+    // last one before a forced chapter boundary (a poll-close, or the end
+    // of the night) - a "last look before the next wave" recap.
+    const RACES_LULL_MINUTES = 20;
+    let lastRacesTime = -Infinity;
+
+    // Map snapshots need the same decoupling: one per checkpoint made sense
+    // when checkpoints were spaced out (the live sim's schedule), but the
+    // album's much tighter batching means consecutive checkpoints can be
+    // only a few minutes apart - a map captured at every single one barely
+    // changes from the last and just bloats the album with near-duplicates.
+    const MAP_LULL_MINUTES = 20;
+    let lastMapTime = -Infinity;
+
     try {
       seekToProgress(0);
-      const checkpoints = (state.plannedCheckpoints || []).filter(cp => cp && cp.events && cp.events.length);
+      const checkpoints = computeAlbumCheckpoints().filter(cp => cp && cp.events && cp.events.length);
       const total = checkpoints.length;
       const mapCaptureEl = document.getElementById('s28MapCapture');
 
@@ -2345,11 +2416,19 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
         const cp = checkpoints[i];
         advanceDeterministic(cp.time);
 
+        const nextIsPollClose = !!(checkpoints[i + 1] && checkpoints[i + 1].events.some(e => e.kind === 'pollClose'));
+        const isChapterBoundary = nextIsPollClose || i === checkpoints.length - 1;
+
         const records = resolveCheckpointRecords(cp.events);
         if (records.length) {
           const [slides, panelInfo] = await Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]);
           const { majority, hasThirdParty } = buildCheckpointShowOptions(records);
           for (const slide of slides) {
+            if (slide.kind === 'races') {
+              const due = isChapterBoundary || (cp.time - lastRacesTime) >= RACES_LULL_MINUTES;
+              if (!due) continue;
+              lastRacesTime = cp.time;
+            }
             // Most kinds carry their own tallyAfter (see buildCheckpointSlides());
             // 'races' doesn't (it's not a call/correction), so it just passes
             // the running total through unchanged rather than zeroing it out.
@@ -2361,10 +2440,24 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           }
         }
 
-        if (mapCaptureEl && typeof window.html2canvas === 'function') {
+        const mapDue = isChapterBoundary || (cp.time - lastMapTime) >= MAP_LULL_MINUTES;
+        if (mapCaptureEl && typeof window.html2canvas === 'function' && mapDue) {
+          // A checkpoint made up of nothing but 'pollClose' events (common
+          // now that poll-close always forces its own chapter boundary -
+          // see computeAlbumCheckpoints()) has no new counting to show yet:
+          // a map captured at cp.time itself looks identical to the one
+          // before it. Defer the snapshot to halfway to the *next*
+          // checkpoint instead, so those freshly-opened states have had a
+          // little time to report - capped there (never at or past it) so
+          // this never reveals a call before its own slide has shown it.
+          const isPollCloseOnlyBatch = cp.events.every(e => e.kind === 'pollClose');
+          const nextCp = checkpoints[i + 1];
+          const mapTime = (isPollCloseOnlyBatch && nextCp) ? (cp.time + nextCp.time) / 2 : cp.time;
+          if (mapTime > state.currentTime + EPS) advanceDeterministic(mapTime);
           try {
             const canvas = await window.html2canvas(mapCaptureEl, { backgroundColor: '#0b0b0f' });
-            images.push({ dataUrl: canvas.toDataURL('image/png'), caption: `Map — ${formatTimeLabel(cp.time)} ET` });
+            images.push({ dataUrl: canvas.toDataURL('image/png'), caption: `Map — ${formatTimeLabel(mapTime)} ET` });
+            lastMapTime = mapTime;
           } catch (e) {
             console.warn('Election night album: map capture failed', e);
           }
@@ -3051,7 +3144,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       // (st.calledAt now non-null) never also fires a flip for it.
       if (st.calledAt == null && !st.instantCall && prevMetrics && prevMetrics.leader != null
           && metrics.leader != null && prevMetrics.leader !== metrics.leader
-          && isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD) {
+          && isKeyRaceUnit(st)) {
         registerLeadFlip(st, metrics, timeMinutes);
       }
 
@@ -4944,7 +5037,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // final recap shows exactly the races marked KEY during any checkpoint.
     const keyRaceSet = new Set();
     data.forEach(st => {
-      if (st && ((state.year === 2028 && PERENNIAL_BATTLEGROUNDS_2028.has(st.unitKey)) || (isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD))) {
+      if (isKeyRaceUnit(st)) {
         keyRaceSet.add(st.unitKey);
       }
     });
@@ -5043,7 +5136,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           rVotes: isFinite(metrics.rVotesCounted) ? metrics.rVotesCounted : null,
           oVotes: isFinite(metrics.oVotesCounted) ? metrics.oVotesCounted : null,
           ev: isFinite(st.ev) ? st.ev : 0,
-          keyRace: (state.year === 2028 && PERENNIAL_BATTLEGROUNDS_2028.has(st.unitKey)) || (isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD),
+          keyRace: isKeyRaceUnit(st),
           winProb: (() => {
             if (st.thirdPartyDominant) return null;
             // Prefer the Monte Carlo's own per-unit tally when available -
@@ -5237,7 +5330,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
         ? (record.dVotes - record.rVotes) / record.countedVotes
         : 0;
       const st = state.stateData && state.stateData.find(s => s.unitKey === record.unitKey);
-      const isKeyRace = st && isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD;
+      const isKeyRace = isKeyRaceUnit(st);
       const callLine = {
         kind: 'call',
         time: record.time,

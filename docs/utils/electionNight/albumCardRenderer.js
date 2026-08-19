@@ -194,21 +194,21 @@ function drawBreakingRibbon(ctx, w, label) {
   return RIBBON_H;
 }
 
-function drawHeader(ctx, w, stateName, timeLabel, evLabel, evNum) {
+function drawHeader(ctx, w, stateName, timeLabel, evLabel, evNum, top = 0) {
   ctx.fillStyle = 'rgba(0,0,0,0.28)';
-  ctx.fillRect(0, 0, w, HEADER_H);
+  ctx.fillRect(0, top, w, HEADER_H);
   ctx.strokeStyle = 'rgba(255,255,255,0.12)';
   ctx.beginPath();
-  ctx.moveTo(0, HEADER_H);
-  ctx.lineTo(w, HEADER_H);
+  ctx.moveTo(0, top + HEADER_H);
+  ctx.lineTo(w, top + HEADER_H);
   ctx.stroke();
-  text(ctx, (stateName || '').toUpperCase(), 26, 50, { font: `900 32px ${FONT}` });
-  if (timeLabel) text(ctx, timeLabel, 26, 70, { font: `600 13px ${FONT}`, color: 'rgba(255,255,255,0.55)' });
+  text(ctx, (stateName || '').toUpperCase(), 26, top + 50, { font: `900 32px ${FONT}` });
+  if (timeLabel) text(ctx, timeLabel, 26, top + 70, { font: `600 13px ${FONT}`, color: 'rgba(255,255,255,0.55)' });
   if (evLabel) {
-    text(ctx, evLabel.toUpperCase(), w - 26, 34, { font: `700 12px ${FONT}`, color: 'rgba(255,255,255,0.85)', align: 'right' });
-    text(ctx, String(evNum), w - 26, 68, { font: `900 30px ${FONT}`, align: 'right' });
+    text(ctx, evLabel.toUpperCase(), w - 26, top + 34, { font: `700 12px ${FONT}`, color: 'rgba(255,255,255,0.85)', align: 'right' });
+    text(ctx, String(evNum), w - 26, top + 68, { font: `900 30px ${FONT}`, align: 'right' });
   }
-  return HEADER_H;
+  return top + HEADER_H;
 }
 
 function drawStatsBar(ctx, x, y, w, reportingPct) {
@@ -600,14 +600,21 @@ function drawTallyFooter(ctx, w, y, { panelInfo, majority, hasThirdParty, tallyB
 async function drawBody(ctx, slide, w) {
   const spotlightKinds = ['call', 'correction', 'retraction', 'leadFlip'];
   if (spotlightKinds.includes(slide.kind)) {
+    // Mirrors updatePopup.js's breakingNewsRibbon: any slide.breaking slide
+    // gets the ribbon above its header, not just the outcome/final/uncalled
+    // capstones below - a breaking key-race call should read as breaking
+    // news in the album too, not just via the card's accent border.
+    const ribbonBottom = slide.breaking
+      ? drawBreakingRibbon(ctx, w, `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`)
+      : 0;
     const headerBottom = drawHeader(ctx, w, slide.stateName, slide.timeLabel ? `${slide.timeLabel} ET` : '',
-      slide.isNpv ? 'National vote' : 'Electoral votes', slide.isNpv ? '' : (isFinite(slide.ev) ? slide.ev : '-'));
+      slide.isNpv ? 'National vote' : 'Electoral votes', slide.isNpv ? '' : (isFinite(slide.ev) ? slide.ev : '-'), ribbonBottom);
     if (slide.kind === 'call' || slide.kind === 'correction') return drawCallOrCorrection(ctx, slide, w, headerBottom);
     if (slide.kind === 'retraction') return drawRetraction(ctx, slide, w, headerBottom);
     return drawLeadFlip(ctx, slide, w, headerBottom);
   }
   if (slide.kind === 'races') {
-    const headerBottom = drawHeader(ctx, w, 'Races to watch', '', '', '');
+    const headerBottom = drawHeader(ctx, w, 'Races to watch', slide.timeLabel ? `${slide.timeLabel} ET` : '', '', '');
     return drawRaces(ctx, slide, w, headerBottom);
   }
   if (slide.kind === 'pollClose') {
