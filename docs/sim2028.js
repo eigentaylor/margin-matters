@@ -539,7 +539,7 @@ const WITHIN5_CAP = 12; // legibility cap — a genuinely close national environ
 
 // Perennial 2020s battlegrounds — always shown on the trend chart even in a
 // cycle where they aren't currently among the closest/within-5 states.
-const ALWAYS_KEY_RACES = ['AZ', 'GA', 'WI', 'NV', 'MI', 'PA'];
+const ALWAYS_KEY_RACES = ['AZ', 'GA', 'WI', 'NV', 'MI', 'PA', 'NC'];
 
 function renderTrendChart() {
   if (!state.sim) return;

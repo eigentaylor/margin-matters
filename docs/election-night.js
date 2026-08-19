@@ -770,6 +770,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 
   const PRIOR_CLOSE_CAP = 0.14;
   const KEY_RACE_THRESHOLD = 0.6;
+  const PERENNIAL_BATTLEGROUNDS_2028 = new Set(['AZ', 'GA', 'WI', 'NV', 'MI', 'PA', 'NC']);
 
   // Assign a pre-election-based "importance" score to each unit, combining
   // predicted closeness (from priorMargin) and EV size. Used only to flag
@@ -4910,7 +4911,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           rVotes: isFinite(metrics.rVotesCounted) ? metrics.rVotesCounted : null,
           oVotes: isFinite(metrics.oVotesCounted) ? metrics.oVotesCounted : null,
           ev: isFinite(st.ev) ? st.ev : 0,
-          keyRace: isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD,
+          keyRace: (state.year === 2028 && PERENNIAL_BATTLEGROUNDS_2028.has(st.unitKey)) || (isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD),
           winProb: (() => {
             if (st.thirdPartyDominant) return null;
             // Prefer the Monte Carlo's own per-unit tally when available -
