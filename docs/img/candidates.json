@@ -1,0 +1,462 @@
+[
+  {
+    "name": "Abraham Lincoln",
+    "year": 1864,
+    "img": "img/1864Lincoln.jpg"
+  },
+  {
+    "name": "George B. McClellan",
+    "year": 1864,
+    "img": "img/1864McClellan.jpg"
+  },
+  {
+    "name": "Horatio Seymour",
+    "year": 1868,
+    "img": "img/1868Seymour.jpg"
+  },
+  {
+    "name": "Ulysses S. Grant",
+    "year": 1868,
+    "img": "img/1868Grant.jpg"
+  },
+  {
+    "name": "Horace Greeley",
+    "year": 1872,
+    "img": "img/1872Greeley.jpg"
+  },
+  {
+    "name": "Ulysses S. Grant",
+    "year": 1872,
+    "img": "img/1872Grant.jpg"
+  },
+  {
+    "name": "Rutherford B. Hayes",
+    "year": 1876,
+    "img": "img/1876Hayes.jpg"
+  },
+  {
+    "name": "Samuel J. Tilden",
+    "year": 1876,
+    "img": "img/1876Tilden.jpg"
+  },
+  {
+    "name": "James A. Garfield",
+    "year": 1880,
+    "img": "img/1880Garfield.jpg"
+  },
+  {
+    "name": "James Weaver",
+    "year": 1880,
+    "img": "img/1880Weaver.jpg"
+  },
+  {
+    "name": "Winfield Scott Hancock",
+    "year": 1880,
+    "img": "img/1880Hancock.jpg"
+  },
+  {
+    "name": "Grover Cleveland",
+    "year": 1884,
+    "img": "img/1884Cleveland.jpg"
+  },
+  {
+    "name": "James G. Blaine",
+    "year": 1884,
+    "img": "img/1884Blaine.jpg"
+  },
+  {
+    "name": "Benjamin Harrison",
+    "year": 1888,
+    "img": "img/1888Harrison.jpg"
+  },
+  {
+    "name": "Grover Cleveland",
+    "year": 1892,
+    "img": "img/1892Cleveland.png"
+  },
+  {
+    "name": "James Weaver",
+    "year": 1892,
+    "img": "img/1892Weaver.jpg"
+  },
+  {
+    "name": "William Jennings Bryan",
+    "year": 1896,
+    "img": "img/1896Bryan.jpg"
+  },
+  {
+    "name": "William McKinley",
+    "year": 1896,
+    "img": "img/1896McKinley.jpg"
+  },
+  {
+    "name": "William Jennings Bryan",
+    "year": 1900,
+    "img": "img/1900Bryan.jpg"
+  },
+  {
+    "name": "William McKinley",
+    "year": 1900,
+    "img": "img/1900McKinley.jpg"
+  },
+  {
+    "name": "Alton B. Parker",
+    "year": 1904,
+    "img": "img/1904Parker.png"
+  },
+  {
+    "name": "Theodore Roosevelt",
+    "year": 1904,
+    "img": "img/1904Roosevelt.jpg"
+  },
+  {
+    "name": "William Jennings Bryan",
+    "year": 1908,
+    "img": "img/1908Bryan.jpg"
+  },
+  {
+    "name": "Theodore Roosevelt",
+    "year": 1912,
+    "img": "img/1912Roosevelt.jpg"
+  },
+  {
+    "name": "William H. Taft",
+    "year": 1912,
+    "img": "img/1912Taft.jpg"
+  },
+  {
+    "name": "Woodrow Wilson",
+    "year": 1912,
+    "img": "img/1912Wilson.jpg"
+  },
+  {
+    "name": "Charles Evans Hughes",
+    "year": 1916,
+    "img": "img/1916Hughes.jpg"
+  },
+  {
+    "name": "Woodrow Wilson",
+    "year": 1916,
+    "img": "img/1916Wilson.jpg"
+  },
+  {
+    "name": "James M. Cox",
+    "year": 1920,
+    "img": "img/1920Cox.png"
+  },
+  {
+    "name": "Warren G. Harding",
+    "year": 1920,
+    "img": "img/1920Harding-alt.jpg"
+  },
+  {
+    "name": "Calvin Coolidge",
+    "year": 1924,
+    "img": "img/1924Coolidge.jpg"
+  },
+  {
+    "name": "John W. Davis",
+    "year": 1924,
+    "img": "img/1924Davis.jpg"
+  },
+  {
+    "name": "Robert La Follette",
+    "year": 1924,
+    "img": "img/1924LaFollette.jpg"
+  },
+  {
+    "name": "Al Smith",
+    "year": 1928,
+    "img": "img/1928Smith.jpg"
+  },
+  {
+    "name": "Herbert Hoover",
+    "year": 1928,
+    "img": "img/1928Hoover.jpg"
+  },
+  {
+    "name": "Franklin D. Roosevelt",
+    "year": 1932,
+    "img": "img/1932Roosevelt.jpg"
+  },
+  {
+    "name": "Herbert Hoover",
+    "year": 1932,
+    "img": "img/1932Hoover.jpg"
+  },
+  {
+    "name": "Alf Landon",
+    "year": 1936,
+    "img": "img/1936Landon.jpg"
+  },
+  {
+    "name": "Franklin D. Roosevelt",
+    "year": 1936,
+    "img": "img/1936Roosevelt.jpg"
+  },
+  {
+    "name": "Franklin D. Roosevelt",
+    "year": 1940,
+    "img": "img/1940Roosevelt.jpg"
+  },
+  {
+    "name": "Wendell Willkie",
+    "year": 1940,
+    "img": "img/1940Willkie.jpg"
+  },
+  {
+    "name": "Thomas E. Dewey",
+    "year": 1944,
+    "img": "img/1944Dewey.jpg"
+  },
+  {
+    "name": "Harry S. Truman",
+    "year": 1948,
+    "img": "img/1948Truman.jpg"
+  },
+  {
+    "name": "Strom Thurmond",
+    "year": 1948,
+    "img": "img/1948Thurmond.jpg"
+  },
+  {
+    "name": "Thomas E. Dewey",
+    "year": 1948,
+    "img": "img/1948Dewey.jpg"
+  },
+  {
+    "name": "Adlai Stevenson",
+    "year": 1952,
+    "img": "img/1952Stevenson.jpg"
+  },
+  {
+    "name": "Dwight D. Eisenhower",
+    "year": 1952,
+    "img": "img/1952Eisenhower.jpg"
+  },
+  {
+    "name": "Adlai Stevenson",
+    "year": 1956,
+    "img": "img/1956Stevenson.jpg"
+  },
+  {
+    "name": "Dwight D. Eisenhower",
+    "year": 1956,
+    "img": "img/1956Eisenhower.jpg"
+  },
+  {
+    "name": "Harry F. Byrd",
+    "year": 1960,
+    "img": "img/1960Byrd.jpg"
+  },
+  {
+    "name": "John F. Kennedy",
+    "year": 1960,
+    "img": "img/1960Kennedy.jpg"
+  },
+  {
+    "name": "Richard Nixon",
+    "year": 1960,
+    "img": "img/1960Nixon.png"
+  },
+  {
+    "name": "Barry Goldwater",
+    "year": 1964,
+    "img": "img/1964Goldwater.jpg"
+  },
+  {
+    "name": "Lyndon B. Johnson",
+    "year": 1964,
+    "img": "img/1964Johnson.jpg"
+  },
+  {
+    "name": "George Wallace",
+    "year": 1968,
+    "img": "img/1968Wallace.jpg"
+  },
+  {
+    "name": "Hubert Humphrey",
+    "year": 1968,
+    "img": "img/1968Humphrey.jpg"
+  },
+  {
+    "name": "Richard Nixon",
+    "year": 1968,
+    "img": "img/1968Nixon.jpg"
+  },
+  {
+    "name": "George McGovern",
+    "year": 1972,
+    "img": "img/1972McGovern.jpg"
+  },
+  {
+    "name": "Richard Nixon",
+    "year": 1972,
+    "img": "img/1972Nixon.jpg"
+  },
+  {
+    "name": "Gerald Ford",
+    "year": 1976,
+    "img": "img/1976Ford.jpg"
+  },
+  {
+    "name": "Jimmy Carter",
+    "year": 1976,
+    "img": "img/1976Carter.jpg"
+  },
+  {
+    "name": "Jimmy Carter",
+    "year": 1980,
+    "img": "img/1980Carter.jpg"
+  },
+  {
+    "name": "Ronald Reagan",
+    "year": 1980,
+    "img": "img/1980Reagan.jpg"
+  },
+  {
+    "name": "Ronald Reagan",
+    "year": 1984,
+    "img": "img/1984Reagan.jpg"
+  },
+  {
+    "name": "Walter Mondale",
+    "year": 1984,
+    "img": "img/1984Mondale.jpg"
+  },
+  {
+    "name": "George H.W. Bush",
+    "year": 1988,
+    "img": "img/1988Bush.jpg"
+  },
+  {
+    "name": "Michael Dukakis",
+    "year": 1988,
+    "img": "img/1988Dukakis.jpg"
+  },
+  {
+    "name": "Bill Clinton",
+    "year": 1992,
+    "img": "img/1992Clinton.jpg"
+  },
+  {
+    "name": "George H.W. Bush",
+    "year": 1992,
+    "img": "img/1992Bush.jpg"
+  },
+  {
+    "name": "Ross Perot",
+    "year": 1992,
+    "img": "img/1992Perot.jpg"
+  },
+  {
+    "name": "Bob Dole",
+    "year": 1996,
+    "img": "img/1996Dole.jpg"
+  },
+  {
+    "name": "Al Gore",
+    "year": 2000,
+    "img": "img/2000Gore.png"
+  },
+  {
+    "name": "George W. Bush",
+    "year": 2000,
+    "img": "img/2000Bush.jpg"
+  },
+  {
+    "name": "Ralph Nader",
+    "year": 2000,
+    "img": "img/2000Nader.jpg"
+  },
+  {
+    "name": "George W. Bush",
+    "year": 2004,
+    "img": "img/2004Bush.jpg"
+  },
+  {
+    "name": "John Kerry",
+    "year": 2004,
+    "img": "img/2004Kerry.jpg"
+  },
+  {
+    "name": "Barack Obama",
+    "year": 2008,
+    "img": "img/2008Obama.jpg"
+  },
+  {
+    "name": "John McCain",
+    "year": 2008,
+    "img": "img/2008McCain.png"
+  },
+  {
+    "name": "Barack Obama",
+    "year": 2012,
+    "img": "img/2012Obama.png"
+  },
+  {
+    "name": "Mitt Romney",
+    "year": 2012,
+    "img": "img/2012Romney.jpg"
+  },
+  {
+    "name": "Donald Trump",
+    "year": 2016,
+    "img": "img/2016Trump.jpg"
+  },
+  {
+    "name": "Hillary Clinton",
+    "year": 2016,
+    "img": "img/2016Clinton.jpg"
+  },
+  {
+    "name": "Joe Biden",
+    "year": 2020,
+    "img": "img/2020Biden.jpg"
+  },
+  {
+    "name": "Donald Trump",
+    "year": 2024,
+    "img": "img/2024Trump.jpg"
+  },
+  {
+    "name": "Kamala Harris",
+    "year": 2024,
+    "img": "img/2024Harris.jpg"
+  },
+  {
+    "name": "Alexandria Ocasio-Cortez",
+    "year": 2028,
+    "img": "img/2028Cortez.jpg"
+  },
+  {
+    "name": "Andy Beshear",
+    "year": 2028,
+    "img": "img/2028Beshear.jpg"
+  },
+  {
+    "name": "Gavin Newsom",
+    "year": 2028,
+    "img": "img/2028Newsom.jpg"
+  },
+  {
+    "name": "JD Vance",
+    "year": 2028,
+    "img": "img/2028Vance.jpg"
+  },
+  {
+    "name": "Jon Ossoff",
+    "year": 2028,
+    "img": "img/2028Ossoff.jpg"
+  },
+  {
+    "name": "Marco Rubio",
+    "year": 2028,
+    "img": "img/2028Rubio.jpg"
+  },
+  {
+    "name": "Pete Buttigieg",
+    "year": 2028,
+    "img": "img/2028Buttigieg.jpg"
+  }
+]

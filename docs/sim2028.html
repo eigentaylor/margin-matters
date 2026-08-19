@@ -407,6 +407,61 @@
       color: var(--muted);
     }
 
+    .s28-cand-search {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 2px;
+      position: relative;
+    }
+
+    .s28-cand-search input[type="text"] {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .s28-cand-search-results {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .s28-cand-search-results:empty {
+      display: none;
+    }
+
+    .s28-cand-search-result {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--fg);
+      cursor: pointer;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font: inherit;
+      text-align: left;
+    }
+
+    .s28-cand-search-result:hover,
+    .s28-cand-search-result.s28-cand-search-active {
+      background: #1b1b1b;
+      border-color: var(--accent);
+    }
+
+    .s28-cand-search-empty {
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding: 2px 2px;
+    }
+
     /* election-night.js writes a label into every bar segment AND into #evText.
        Overlaid at the bar's centre those collide, so the summary sits below it. */
     #evBar {
@@ -659,6 +714,10 @@
         <div class="s28-cand-party" data-party="d">
           <div class="s28-cand-label">Democratic</div>
           <div class="s28-cand-swatches" id="s28CandSwatchesD"></div>
+          <div class="s28-cand-search s28-hidden" id="s28CandSearchD">
+            <input id="s28CandSearchInputD" type="text" placeholder="Search any candidate, e.g. Reagan or 1980" autocomplete="off" />
+            <div class="s28-cand-search-results" id="s28CandSearchResultsD"></div>
+          </div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomD">
             <input id="s28CandNameD" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewD"></span>
@@ -671,6 +730,10 @@
         <div class="s28-cand-party" data-party="r">
           <div class="s28-cand-label">Republican</div>
           <div class="s28-cand-swatches" id="s28CandSwatchesR"></div>
+          <div class="s28-cand-search s28-hidden" id="s28CandSearchR">
+            <input id="s28CandSearchInputR" type="text" placeholder="Search any candidate, e.g. Reagan or 1980" autocomplete="off" />
+            <div class="s28-cand-search-results" id="s28CandSearchResultsR"></div>
+          </div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomR">
             <input id="s28CandNameR" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewR"></span>

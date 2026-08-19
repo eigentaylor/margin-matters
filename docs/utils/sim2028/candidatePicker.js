@@ -30,7 +30,9 @@ export const PRESET_CANDIDATES = {
 
 const STORAGE_KEYS = { d: 'sim2028DCandidate', r: 'sim2028RCandidate' };
 
-/** @returns {{mode:'default'|'preset'|'custom', name:string, imageUrl:?string}} */
+const SAVED_MODES = new Set(['custom', 'preset', 'historical']);
+
+/** @returns {{mode:'default'|'preset'|'custom'|'historical', name:string, imageUrl:?string}} */
 export function loadCandidateChoice(party) {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS[party]);
@@ -38,7 +40,7 @@ export function loadCandidateChoice(party) {
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed.name === 'string' && parsed.name) {
         return {
-          mode: parsed.mode === 'custom' || parsed.mode === 'preset' ? parsed.mode : 'preset',
+          mode: SAVED_MODES.has(parsed.mode) ? parsed.mode : 'preset',
           name: parsed.name,
           imageUrl: typeof parsed.imageUrl === 'string' ? parsed.imageUrl : null,
         };

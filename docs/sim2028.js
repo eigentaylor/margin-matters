@@ -20,6 +20,7 @@ import {
   DEFAULT_CANDIDATES, PRESET_CANDIDATES,
   loadCandidateChoice, saveCandidateChoice, applyCandidateChoice,
 } from './utils/sim2028/candidatePicker.js';
+import { searchCandidates, formatLabel as formatCandidateLabel } from './utils/sim2028/candidateSearch.js';
 
 const state = {
   baseline: null,
@@ -42,6 +43,7 @@ const state = {
   // per party. Never read by the simulation itself, only by baseline.candidates
   // (a label) and the portrait override registry. See candidatePicker.js.
   candidates: { d: null, r: null },
+  candidateSearchOpen: { d: false, r: false }, // UI-only: whether the search panel is expanded, independent of the current pick
 };
 
 const TREND_PALETTE = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4', '#f0c96e', '#c990e0', '#79d1a8', '#e88ea0', '#8fb8e0', '#d0a05a'];
@@ -899,13 +901,17 @@ function buildSettingsParams() {
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
   params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
   params.set('confident', (confidentEl && confidentEl.checked) ? '1' : '0');
-  // Preset picks and typed custom names round-trip through a link; an uploaded
-  // custom image does not (a data: URL is far too large for a query param, and
-  // has nowhere sensible to live but this browser's localStorage).
+  // Preset picks, typed custom names, and historical search picks round-trip
+  // through a link; an uploaded custom image does not (a data: URL is far too
+  // large for a query param, and has nowhere sensible to live but this
+  // browser's localStorage). A historical pick's image is just a small static
+  // path though, so it rides along after the name, `|`-delimited (candidate
+  // names don't contain `|`) — otherwise a shared link would silently lose it.
   ['d', 'r'].forEach(party => {
     const c = state.candidates[party];
     if (c && c.mode !== 'default' && c.name) {
-      params.set(party === 'd' ? 'dCand' : 'rCand', `${c.mode}:${c.name}`);
+      const suffix = c.mode === 'historical' && c.imageUrl ? `${c.name}|${c.imageUrl}` : c.name;
+      params.set(party === 'd' ? 'dCand' : 'rCand', `${c.mode}:${suffix}`);
     }
   });
   return params;
@@ -981,6 +987,11 @@ function applySettingsFromUrl() {
     if (!name) return;
     if (mode === 'preset' && PRESET_CANDIDATES[party].some(p => p.name === name)) {
       state.candidates[party] = { mode: 'preset', name, imageUrl: null };
+    } else if (mode === 'historical') {
+      const bar = name.indexOf('|');
+      if (bar > 0) {
+        state.candidates[party] = { mode: 'historical', name: name.slice(0, bar), imageUrl: name.slice(bar + 1) };
+      }
     } else if (mode === 'custom') {
       // An uploaded image never travels in the URL (see buildSettingsParams), so a
       // link for a different custom name has no image available on this browser.
@@ -1035,10 +1046,19 @@ function renderCandidatePicker(party) {
     return `<button type="button" class="s28-cand-swatch${active}" data-party="${party}" data-name="${p.name}">`
       + `<img class="en-cp-mini-avatar" src="${p.img}" alt="" />${p.name}</button>`;
   }).join('');
+  const searchActive = choice.mode === 'historical' ? ' active' : '';
+  const searchPillInner = choice.mode === 'historical'
+    ? `<img class="en-cp-mini-avatar" src="${choice.imageUrl || ''}" alt="" />${choice.name}`
+    : `<span class="en-cp-mini-avatar-fallback">${party.toUpperCase()}</span>Search&hellip;`;
+  const searchButton = `<button type="button" class="s28-cand-swatch${searchActive}" data-party="${party}" data-search="1">${searchPillInner}</button>`;
+
   const customActive = choice.mode === 'custom' ? ' active' : '';
   const customButton = `<button type="button" class="s28-cand-swatch${customActive}" data-party="${party}" data-custom="1">`
     + `<span class="en-cp-mini-avatar-fallback">${party.toUpperCase()}</span>Custom&hellip;</button>`;
-  container.innerHTML = presetButtons + customButton;
+  container.innerHTML = presetButtons + searchButton + customButton;
+
+  const searchWrap = $(party === 'd' ? 's28CandSearchD' : 's28CandSearchR');
+  if (searchWrap) searchWrap.classList.toggle('s28-hidden', !state.candidateSearchOpen[party]);
 
   const customWrap = $(party === 'd' ? 's28CandCustomD' : 's28CandCustomR');
   if (customWrap) customWrap.classList.toggle('s28-hidden', choice.mode !== 'custom');
@@ -1073,13 +1093,60 @@ function setCandidateChoice(party, choice) {
 function pickPresetCandidate(party, name) {
   const preset = PRESET_CANDIDATES[party].find(p => p.name === name);
   if (!preset) return;
+  closeCandidateSearch(party);
   setCandidateChoice(party, { mode: 'preset', name: preset.name, imageUrl: null });
 }
 
 function pickCustomCandidate(party) {
   const existing = state.candidates[party];
   const name = (existing && existing.mode === 'custom' && existing.name) || '';
+  closeCandidateSearch(party);
   setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing ? existing.imageUrl : null });
+}
+
+/** Opens/closes the search panel without touching the current pick — browsing shouldn't discard it. */
+function toggleCandidateSearch(party) {
+  state.candidateSearchOpen[party] = !state.candidateSearchOpen[party];
+  renderCandidatePicker(party);
+  if (state.candidateSearchOpen[party]) {
+    const input = $(party === 'd' ? 's28CandSearchInputD' : 's28CandSearchInputR');
+    if (input) input.focus();
+  }
+}
+
+function closeCandidateSearch(party) {
+  state.candidateSearchOpen[party] = false;
+}
+
+// Last rendered result set per party, so a click on a result button (which only
+// carries an index in its dataset) can be mapped back to its {name, year, img}.
+const lastCandidateSearchResults = { d: [], r: [] };
+const candidateSearchDebounce = { d: null, r: null };
+
+async function runCandidateSearch(party, query) {
+  const container = $(party === 'd' ? 's28CandSearchResultsD' : 's28CandSearchResultsR');
+  if (!container) return;
+  if (!query.trim()) {
+    lastCandidateSearchResults[party] = [];
+    container.innerHTML = '';
+    return;
+  }
+  const results = await searchCandidates(query, 8);
+  lastCandidateSearchResults[party] = results;
+  container.innerHTML = results.length
+    ? results.map((entry, idx) => `<button type="button" class="s28-cand-search-result" data-idx="${idx}">`
+        + `<img class="en-cp-mini-avatar" src="${entry.img}" alt="" />${formatCandidateLabel(entry)}</button>`).join('')
+    : '<div class="s28-cand-search-empty">No matches</div>';
+}
+
+function pickHistoricalCandidate(party, entry) {
+  const input = $(party === 'd' ? 's28CandSearchInputD' : 's28CandSearchInputR');
+  const results = $(party === 'd' ? 's28CandSearchResultsD' : 's28CandSearchResultsR');
+  if (input) input.value = '';
+  if (results) results.innerHTML = '';
+  lastCandidateSearchResults[party] = [];
+  closeCandidateSearch(party);
+  setCandidateChoice(party, { mode: 'historical', name: entry.name, imageUrl: entry.img });
 }
 
 function updateCustomCandidateName(party, name) {
@@ -1360,7 +1427,20 @@ async function init() {
       const btn = e.target.closest('.s28-cand-swatch');
       if (!btn) return;
       if (btn.dataset.custom) pickCustomCandidate(party);
+      else if (btn.dataset.search) toggleCandidateSearch(party);
       else pickPresetCandidate(party, btn.dataset.name);
+    });
+    const searchInput = $(party === 'd' ? 's28CandSearchInputD' : 's28CandSearchInputR');
+    if (searchInput) searchInput.addEventListener('input', () => {
+      clearTimeout(candidateSearchDebounce[party]);
+      candidateSearchDebounce[party] = setTimeout(() => runCandidateSearch(party, searchInput.value), 150);
+    });
+    const searchResults = $(party === 'd' ? 's28CandSearchResultsD' : 's28CandSearchResultsR');
+    if (searchResults) searchResults.addEventListener('click', e => {
+      const btn = e.target.closest('.s28-cand-search-result');
+      if (!btn) return;
+      const entry = lastCandidateSearchResults[party][Number(btn.dataset.idx)];
+      if (entry) pickHistoricalCandidate(party, entry);
     });
     const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
     if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
