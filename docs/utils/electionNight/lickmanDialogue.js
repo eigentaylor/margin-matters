@@ -40,28 +40,28 @@ export const PREDICTION_LINES_NO_NAMES = [
 export const CLOSING_LINES = {
   // Beets got both the popular vote AND the electoral college right.
   bothRight: [
-    "The beets were right. They have always been right. I will celebrate by eating a beet.",
-    "Thirteen beets, zero doubt. {winner} wins the popular vote AND the presidency, exactly as the beets foretold. Pass the vinegar.",
-    "Some people said 'a root vegetable can't predict elections.' Those people were wrong. I was right. I'm eating a beet."
+    "The 13 Beets were right. They have always been right. I will celebrate by eating a beet.",
+    "Thirteen beets, zero doubt. {winner} wins the popular vote AND the presidency, exactly as the 13 Beets foretold. Pass the vinegar.",
+    "Some people said 'a root vegetable can't predict elections.' Those people were wrong. I was right. The 13 Beets were right. I'm eating a beet."
   ],
   // Beets got the popular vote right, but not the electoral college.
   pvOnly: [
-    "The beets ONLY predict the popular vote. It's in my book! {winner} is the TRUE winner of this election.",
-    "Technically, {winner} DID win more votes, just like I said. The Electoral College is NOT what the beets predict!",
-    "The beets called that {winner} would win popular vote perfectly. The Electoral College, frankly, is too chaotic for the beets to predict.",
-    "Did you know I became an election predictor because of my hero, Allan Lichtman? My favorite quote by him is from his published prediction in Social Education, 'As a national system, the Keys predict the popular vote, not the state-by-state tally of Electoral College votes.' No system can predict the Electoral College, so my beet system only predicts the national popular vote which {winner} won."
+    "The 13 Beets ONLY predict the popular vote. It's in my book! {winner} is the TRUE winner of this election.",
+    "Technically, {winner} DID win more votes, just like I said. The Electoral College is NOT what the 13 Beets predict!",
+    "The 13 Beets called that {winner} would win popular vote perfectly. The Electoral College, frankly, is too chaotic for the 13 Beets to predict.",
+    "Did you know I became an election predictor because of my hero, Allan Lichtman? My favorite quote by him is from his published prediction in Social Education, 'As a national system, the Keys predict the popular vote, not the state-by-state tally of Electoral College votes.' No system can predict the Electoral College, so my 13 Beets system only predicts the national popular vote which {winner} won."
   ],
   // Beets got the electoral college (the actual winner) right, but not the popular vote.
   ecOnly: [
-    "The beets ONLY predict the ultimate final winner. I got a signed newspaper from {winner}!",
-    "{winner} is our next president, exactly as the beets predicted. The beets say NOTHING about the popular vote, no matter what my book says.",
-    "Called it. {winner} wins the presidency. The beets only predict the ultimate winner. The beets have always only predicted the Electoral College outcome."
+    "The 13 Beets ONLY predict the ultimate final winner. I got a signed newspaper from {winner}!",
+    "{winner} is our next president, exactly as the 13 Beets predicted. The 13 Beets say NOTHING about the popular vote, no matter what my book says.",
+    "Called it. {winner} wins the presidency. The 13 Beets only predict the ultimate winner. The beets have always only predicted the Electoral College outcome."
   ],
   // Beets got neither right.
   bothWrong: [
     "MISINFORMATION. (cries softly while eating a beet)",
-    "The voters were wrong. The beets were right. {winner} should be president, no {loser}.",
-    "The beets were wrong. I don't know what to tell you. I'm going to mournfully eat a beet on the steps of the Capitol."
+    "The voters were wrong. The 13 Beets were right. {winner} should be president, not {loser}.",
+    "The 13 Beets were wrong. I don't know what to tell you. I'm going to mournfully eat a beet on the steps of the Capitol."
   ]
 };
 
