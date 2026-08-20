@@ -1909,10 +1909,6 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     if (st.instantCall || st.thirdPartyDominant || !call) return [];
     const STEP = 2;
     const flips = [];
-    // Deliberately NOT reset between the two scan windows below: a flip
-    // right at the retraction boundary (the post-retraction surge
-    // immediately shows a different raw leader than the just-retracted
-    // call) should still count as a real flip, not an "initial lean".
     let lastLeader = null;
     let lastFlipTime = -Infinity;
     const scanWindow = (from, to, biasOverride) => {
@@ -1936,6 +1932,24 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     if (retraction && flips.length < LEAD_FLIP_MAX_PER_UNIT) {
       const surge = computeRetractionSurgeBiasParams(st, retraction.retractionTime);
       const recallTime = retraction.recall ? retraction.recall.time : state.simEnd;
+      // Reset lastLeader to null right at the retraction boundary, same
+      // convention scanWindow's first call above already uses (a null
+      // baseline means the first sample just establishes where things
+      // stand, it doesn't itself count as a "flip"). Without this, the
+      // surge bias - deliberately already "engaged" the instant retraction
+      // happens, see computeRetractionSurgeBiasParams' comment - gets
+      // sampled for the very first time at t === retraction.retractionTime
+      // itself, so if it's already showing the true winner ahead by then,
+      // that reads as a flip AT the retraction's own timestamp: a "takes
+      // the lead" card stamped identically to the "too close to call" card
+      // right before it. Live play never has this problem because
+      // registerRetraction() swaps in the surge bias *after* that tick's
+      // metrics were already computed (see the tick loop's call ordering),
+      // so the flip check only ever compares against a genuinely later,
+      // surge-affected sample - this reset makes the offline projection
+      // (which otherwise drives the identical album/checkpoint schedule)
+      // match that same real lag instead of sampling the surge instantly.
+      lastLeader = null;
       scanWindow(retraction.retractionTime, recallTime, surge);
     }
     return flips;
