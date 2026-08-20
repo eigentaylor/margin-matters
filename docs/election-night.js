@@ -130,6 +130,19 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
   // retracts it - so ordinary tick-to-tick confidence noise near the call
   // line can never flap a unit called/retracted/called every frame.
   const RETRACTION_THRESHOLD_FRACTION = 0.5;
+  // A WRONG call (st.callLeader !== st.winner - the same ground-truth check
+  // maybeEmitMiscall() uses) is retracted at a much higher confidence
+  // cutoff than a correct-but-tightening one, so there's a real gap between
+  // "too close to call" and the raw leader actually flipping to the true
+  // winner. calculateConfidence() always sorts to the current top two, so
+  // it passes through 0 by construction at the exact tick the raw leader
+  // flips - a cutoff close to 0 therefore retracts almost simultaneously
+  // with that flip, which is what made a wrong call's retraction and its
+  // "takes the lead" breaking news read as the same instant. Correct calls
+  // keep using RETRACTION_THRESHOLD_FRACTION unchanged. See
+  // effectiveRetractionFraction() and docs/utils/electionNight/validateRetraction.mjs
+  // (the sweep tool used to tune this value).
+  const WRONG_CALL_RETRACTION_THRESHOLD_FRACTION = 0.85;
   // Once a unit is retracted, it can't be called again until at least this
   // many simulated minutes have passed - a floor on how long a state stays
   // in "too close to call" limbo, independent of how quickly the bias curve
@@ -1831,7 +1844,11 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     }
     if (st.instantCall || !firstCall) return null;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
-    const retractionThreshold = threshold * effectiveRetractionFraction();
+    // Mirror shouldRetractCall()'s wrong-call check: at projection time st
+    // hasn't actually been called yet, so fake st.callLeader to firstCall's
+    // leader for the duration of this lookup (effectiveRetractionFraction
+    // only reads it, doesn't mutate it, so no restore is needed after).
+    const retractionThreshold = threshold * effectiveRetractionFraction({ ...st, callLeader: firstCall.leader });
     const STEP = 2;
     for (let t = firstCall.time + STEP; t <= state.simEnd; t += STEP) {
       const phaseName = (getPhase(t) || {}).name || 'Final';
@@ -4357,17 +4374,23 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     if (!metrics || metrics.reporting >= 1 - EPS) return false;
     if (currentTime <= st.calledAt + EPS) return false;
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
-    const retractionThreshold = threshold * effectiveRetractionFraction();
+    const retractionThreshold = threshold * effectiveRetractionFraction(st);
     return isFinite(metrics.confidence) && metrics.confidence < retractionThreshold;
   }
 
-  // Debug-only override, in the same spirit as window.DEBUG_ELECTION_NIGHT/
-  // window.ENABLE_EN_COLOR_CALL_LOG - unset in normal use, so this is a
-  // no-op unless a validation script (see
-  // docs/utils/electionNight/validateRetraction.mjs) explicitly sets it to
-  // sweep candidate RETRACTION_THRESHOLD_FRACTION values without editing
-  // source between runs.
-  function effectiveRetractionFraction() {
+  // Debug-only overrides, in the same spirit as window.DEBUG_ELECTION_NIGHT/
+  // window.ENABLE_EN_COLOR_CALL_LOG - unset in normal use, so these are
+  // no-ops unless a validation script (see
+  // docs/utils/electionNight/validateRetraction.mjs) explicitly sets them to
+  // sweep candidate fraction values without editing source between runs.
+  // `st` is optional (some callers may not have a unit in scope) - a wrong
+  // call is only ever detected when both its called leader and ground-truth
+  // winner are known.
+  function effectiveRetractionFraction(st) {
+    const wrongCall = !!(st && st.callLeader != null && st.winner != null && st.callLeader !== st.winner);
+    if (wrongCall) {
+      return isFinite(window.WRONG_CALL_RETRACTION_THRESHOLD_FRACTION_OVERRIDE) ? window.WRONG_CALL_RETRACTION_THRESHOLD_FRACTION_OVERRIDE : WRONG_CALL_RETRACTION_THRESHOLD_FRACTION;
+    }
     return isFinite(window.RETRACTION_THRESHOLD_FRACTION_OVERRIDE) ? window.RETRACTION_THRESHOLD_FRACTION_OVERRIDE : RETRACTION_THRESHOLD_FRACTION;
   }
 
