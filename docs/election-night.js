@@ -1369,6 +1369,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
             candidateName,
             outcomeLabel: candidateName ? getPresidencyOutcomeLabel(state.year, leader, false) : null,
             accentColor: calledAccentColor(leader, CHECKPOINT_DEFAULT_MARGIN[leader] || 0),
+            time: record.time,
             timeLabel: formatTimeLabel(record.time),
             tallyBefore: spec_tallyBefore,
             triggerUnitKey: record.triggerUnitKey || null
@@ -1398,6 +1399,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           accentColor: '#8a8a8a',
           tallyBefore: spec_tallyBefore,
           tallyAfter: uncalledTally,
+          time: record.time,
           timeLabel: formatTimeLabel(record.time),
           triggerUnitKey: record.triggerUnitKey || null
         };
@@ -1419,6 +1421,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           accentColor: winner ? calledAccentColor(winner, CHECKPOINT_DEFAULT_MARGIN[winner] || 0) : '#8a8a8a',
           tallyBefore: spec_tallyBefore,
           tallyAfter: finalTally,
+          time: record.time,
           timeLabel: formatTimeLabel(record.time)
         };
       }
@@ -1433,6 +1436,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           accentColor: '#8a8a8a',
           tallyBefore: spec_tallyBefore,
           tallyAfter: spec_tallyBefore,
+          time: record.time,
           timeLabel: formatTimeLabel(record.time)
         };
       }
@@ -1483,6 +1487,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           reportingText: formatReportingText(reporting, null),
           marginText: formatMarginText(marginStr, leader, voteMargin),
           marginPctText: marginStr,
+          time: record.time,
           timeLabel: formatTimeLabel(record.time)
         };
       }
@@ -1509,6 +1514,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           keyRace: isKeyRaceUnit(retractedSt),
           tallyBefore: spec_tallyBefore,
           tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
+          time: record.time,
           timeLabel: formatTimeLabel(record.time)
         };
       }
@@ -1539,6 +1545,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           keyRace: true,
           tallyBefore: spec_tallyBefore,
           tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
+          time: record.time,
           timeLabel: formatTimeLabel(record.time)
         };
       }
@@ -1588,6 +1595,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
         reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
         reportingText: formatReportingText(record.reporting, record.remainingVotes),
         marginText: formatMarginText(record.marginStr, leader, voteMargin),
+        time: record.time,
         timeLabel: formatTimeLabel(record.time),
         keyRace
       };
@@ -1650,11 +1658,12 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // both of those (even though it's flagged breaking, for updatePopup.js's
     // flash) - it's always the true last event of the whole night, so it
     // must stay pinned there rather than jumping to the front. Within the
-    // front/back tiers, ties (most often several calls landing at the exact
-    // same simulated minute) break by EV descending - the bigger prize
-    // leads when nothing else distinguishes them - but this can never let a
-    // large non-key state outrank an actual key race, since tier is always
-    // checked first.
+    // front/back tiers, slides are ordered by time ascending (earlier calls
+    // lead, like a broadcast reading them off in the order they happened),
+    // with ties (multiple calls landing at the exact same simulated minute)
+    // broken by EV descending - the bigger prize leads when nothing else
+    // distinguishes them - but this can never let a large non-key state
+    // outrank an actual key race, since tier is always checked first.
     // Reordering invalidates each slide's original event-time tallyBefore/
     // tallyAfter (see computePlannedCheckpoints()'s replay loop) - the
     // popup's scoreboard animates "from" that exact value every slide (see
@@ -1679,7 +1688,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     const checkpointStartingTally = specs[0].tallyBefore || zeroTally;
     const tierOf = spec => spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1);
     const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
-    specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (evOf(b) - evOf(a)));
+    const timeOf = spec => isFinite(spec.time) ? spec.time : 0;
+    specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (timeOf(a) - timeOf(b)) || (evOf(b) - evOf(a)));
     let running = checkpointStartingTally;
     specs.forEach(spec => {
       // 'outcome'/'uncalled' slides are pure type-transition markers - they
