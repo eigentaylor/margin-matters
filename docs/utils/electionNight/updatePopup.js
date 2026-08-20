@@ -648,20 +648,48 @@ function formatSignedMargin(x) {
  * third-party photo centered between them, and - sim2028 only - a row of
  * forecast stats below.
  */
+// Solid party colors used for the raceOverview photo borders - the same
+// values already used site-wide for a "this is D/R/O, at full saturation"
+// treatment (e.g. .en-cp-compare-pct-d/-r/-o's leading-row fill, styles.css
+// ~3437-3446), reused here rather than the softer .en-cp-tally-* text tint.
+function partyBorderColor(code) {
+  return code === 'D' ? '#1e4bd1' : (code === 'R' ? '#b22222' : '#C9A400');
+}
+
 function renderRaceOverview(slide) {
   const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
   const rName = lastNameOf(slide.rCandidateName) || 'Republican';
-  const oName = slide.oCandidateName ? lastNameOf(slide.oCandidateName) : '';
 
-  const photo = (portraitUrl, name, code, extraClass) => portraitUrl
-    ? `<img class="en-cp-overview-photo ${extraClass}" src="${portraitUrl}" alt="${name || ''}" />`
-    : `<div class="en-cp-overview-photo en-cp-overview-photo-fallback ${extraClass}">${code}</div>`;
+  // The frame is the fixed-size layout box; the border lives on the <img>
+  // itself, which is left to size itself down to its own aspect ratio
+  // (max-width/max-height:100% + auto, centered by the frame's flex) rather
+  // than stretching to fill the frame - so a non-square portrait's border
+  // hugs the actual visible photo instead of tracing an oversized square
+  // with empty letterboxed corners inside it. Only the placeholder fallback
+  // (no photo at all) fills the full square, since there's no image edge to
+  // hug there.
+  const photo = (portraitUrl, name, code, frameClass) => portraitUrl
+    ? `<div class="en-cp-overview-photo-frame ${frameClass}">
+        <img class="en-cp-overview-photo" src="${portraitUrl}" alt="${name || ''}" />
+      </div>`
+    : `<div class="en-cp-overview-photo-frame ${frameClass}">
+        <div class="en-cp-overview-photo en-cp-overview-photo-fallback">${code}</div>
+      </div>`;
+
+  // Full name + party letter (e.g. "Hubert Humphrey (D)"), not just the
+  // last name - the stats row below still uses the terser last-name form,
+  // where space is tighter. Skipped for a third-party candidate: they're
+  // never "the O candidate" the way the other two are "the D/R candidate",
+  // so a bare "(O)" after a real name (e.g. "George Wallace (O)") reads as
+  // a label slapped on rather than a party affiliation.
+  const candidateBlock = (portraitUrl, fullName, fallbackName, code, extraClass) => `
+    <div class="en-cp-overview-candidate${code === 'O' ? ' en-cp-overview-candidate-o' : ''}" style="--en-overview-accent:${partyBorderColor(code)}">
+      ${photo(portraitUrl, fullName, code, extraClass)}
+      <div class="en-cp-overview-name">${fullName || fallbackName}${code === 'O' ? '' : ` (${code})`}</div>
+    </div>`;
 
   const oBlock = slide.oCandidateName
-    ? `<div class="en-cp-overview-candidate en-cp-overview-candidate-o">
-        ${photo(slide.oPortraitUrl, slide.oCandidateName, 'O', 'en-cp-overview-photo-o')}
-        <div class="en-cp-overview-name">${oName.toUpperCase()}</div>
-      </div>`
+    ? candidateBlock(slide.oPortraitUrl, slide.oCandidateName, '', 'O', 'en-cp-overview-frame-o')
     : '';
 
   let statsRow = '';
@@ -690,15 +718,9 @@ function renderRaceOverview(slide) {
   cardEl.innerHTML = `
     <div class="en-cp-overview-title">${slide.title || 'Presidential Election'}</div>
     <div class="en-cp-overview-photos${slide.oCandidateName ? ' en-cp-overview-photos-3' : ''}">
-      <div class="en-cp-overview-candidate">
-        ${photo(slide.dPortraitUrl, slide.dCandidateName, 'D', '')}
-        <div class="en-cp-overview-name">${dName.toUpperCase()}</div>
-      </div>
+      ${candidateBlock(slide.dPortraitUrl, slide.dCandidateName, 'Democrat', 'D', '')}
       ${oBlock}
-      <div class="en-cp-overview-candidate">
-        ${photo(slide.rPortraitUrl, slide.rCandidateName, 'R', '')}
-        <div class="en-cp-overview-name">${rName.toUpperCase()}</div>
-      </div>
+      ${candidateBlock(slide.rPortraitUrl, slide.rCandidateName, 'Republican', 'R', '')}
     </div>
     ${statsRow}`;
 }

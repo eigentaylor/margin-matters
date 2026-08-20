@@ -3976,35 +3976,58 @@ body.shift-vectors-page {
   gap: 10px;
 }
 
-.en-cp-overview-photo {
+/* Fixed-size layout box; centers the <img> (or the fallback square) inside
+   it without stretching either to fill it. */
+.en-cp-overview-photo-frame {
   width: clamp(110px, 26vw, 168px);
   height: clamp(110px, 26vw, 168px);
-  border-radius: 10px;
-  object-fit: contain;
-  background: rgba(0, 0, 0, 0.25);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Sits between the two major-party photos, deliberately smaller (see
+/* Sits between the two major-party frames, deliberately smaller (see
    computeHasThirdParty() in election-night.js for when this appears at
    all) - margin-bottom keeps it visually "between" the bigger photos
    rather than bottom-aligned with them. */
-.en-cp-overview-photo-o {
+.en-cp-overview-frame-o {
   width: clamp(72px, 17vw, 110px);
   height: clamp(72px, 17vw, 110px);
   margin-bottom: 20%;
 }
 
+/* The border sits on the <img> itself, sized to its own aspect ratio
+   (max-width/max-height:100% of the frame, width/height:auto) rather than
+   stretched to fill the frame - so it hugs the actual visible portrait
+   instead of tracing an oversized square with empty letterboxed corners
+   inside it. */
+.en-cp-overview-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border: 3px solid var(--en-overview-accent, rgba(255, 255, 255, 0.3));
+  object-fit: contain;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* The no-photo fallback has no image edge to hug, so it's the one case
+   that still fills the whole square frame. */
 .en-cp-overview-photo-fallback {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
   font-size: 2rem;
   font-weight: 900;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.en-cp-overview-photo-o.en-cp-overview-photo-fallback {
+.en-cp-overview-frame-o .en-cp-overview-photo-fallback {
   font-size: 1.3rem;
 }
 

@@ -106,15 +106,27 @@ function pill(ctx, str, x, y, { font, textColor = '#1a1a1a', bg, padX = 10, heig
   return w;
 }
 
-function drawPhotoBox(ctx, img, x, y, size, leader) {
+// `borderColor`, when passed, draws a solid-color ring on top of everything
+// else - around the actual drawn image content (via fitContain's rect), not
+// the full square, so a non-square portrait's border hugs the visible photo
+// instead of tracing an oversized square with empty letterboxed corners
+// inside it (there's no image content to hug for the no-photo fallback, so
+// that case still rings the full square). `hideBadge` skips the usual
+// bottom-left party-letter badge. Both are used by drawRaceOverview() only -
+// every other caller omits them and gets the original plain-square,
+// badge-always-on box.
+function drawPhotoBox(ctx, img, x, y, size, leader, borderColor, hideBadge) {
   roundRectPath(ctx, x, y, size, size, 10);
   ctx.save();
   ctx.clip();
   ctx.fillStyle = 'rgba(0,0,0,0.25)';
   ctx.fillRect(x, y, size, size);
+  let contentRect = null;
   if (img) {
     const { w, h } = fitContain(img.naturalWidth, img.naturalHeight, size, size);
-    ctx.drawImage(img, x + (size - w) / 2, y + (size - h) / 2, w, h);
+    const ix = x + (size - w) / 2, iy = y + (size - h) / 2;
+    ctx.drawImage(img, ix, iy, w, h);
+    contentRect = { x: ix, y: iy, w, h };
   } else {
     ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.font = `900 ${size * 0.4}px ${FONT}`;
@@ -124,6 +136,14 @@ function drawPhotoBox(ctx, img, x, y, size, leader) {
     ctx.textBaseline = 'alphabetic';
   }
   ctx.restore();
+  if (borderColor) {
+    const r = contentRect || { x, y, w: size, h: size };
+    roundRectPath(ctx, r.x + 1.5, r.y + 1.5, r.w - 3, r.h - 3, 8);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = borderColor;
+    ctx.stroke();
+  }
+  if (hideBadge) return;
   // Party badge, bottom-left corner of the photo box.
   const bs = 30;
   roundRectPath(ctx, x + 7, y + size - bs - 7, bs, bs, 7);
@@ -395,24 +415,38 @@ async function drawRaceOverview(ctx, slide, w) {
   let x = (w - totalW) / 2;
   const photosTop = y;
   const bigBottom = photosTop + bigSize;
-  const nameY = bigBottom + 30;
+  const nameY = bigBottom + 28;
+  const partyLineY = nameY + 19;
 
-  drawPhotoBox(ctx, dImg, x, photosTop, bigSize, 'D');
-  text(ctx, lastNameOf(slide.dCandidateName).toUpperCase(), x + bigSize / 2, nameY, { font: `800 17px ${FONT}`, align: 'center' });
+  // Full name on one line, "(D)"/"(R)" on a smaller line beneath - skipped
+  // for the third-party candidate (see updatePopup.js's renderRaceOverview
+  // for why a bare "(O)" after a real name reads oddly). Canvas text
+  // doesn't wrap on its own, so a long full name (unlike the live DOM
+  // version's flexbox) gets one fixed-size line rather than shrinking to
+  // fit; acceptable for how long real candidate names run.
+  const caption = (fullName, fallback, code, cx, big) => {
+    text(ctx, fullName || fallback, cx, nameY, { font: `800 ${big ? 16 : 13}px ${FONT}`, align: 'center' });
+    if (code !== 'O') {
+      text(ctx, `(${code})`, cx, partyLineY, { font: `700 ${big ? 12 : 11}px ${FONT}`, color: 'rgba(255,255,255,0.6)', align: 'center' });
+    }
+  };
+
+  drawPhotoBox(ctx, dImg, x, photosTop, bigSize, 'D', PARTY_LEAD_BADGE.D, true);
+  caption(slide.dCandidateName, 'Democrat', 'D', x + bigSize / 2, true);
   x += bigSize + gap;
 
   if (hasO) {
     // Bottom-aligned with the two big photos, so "smaller and between them"
     // reads as sitting slightly in front rather than just shrunk in place.
-    drawPhotoBox(ctx, oImg, x, bigBottom - smallSize, smallSize, 'O');
-    text(ctx, lastNameOf(slide.oCandidateName).toUpperCase(), x + smallSize / 2, nameY, { font: `800 14px ${FONT}`, align: 'center' });
+    drawPhotoBox(ctx, oImg, x, bigBottom - smallSize, smallSize, 'O', PARTY_LEAD_BADGE.O, true);
+    caption(slide.oCandidateName, 'Other', 'O', x + smallSize / 2, false);
     x += smallSize + gap;
   }
 
-  drawPhotoBox(ctx, rImg, x, photosTop, bigSize, 'R');
-  text(ctx, lastNameOf(slide.rCandidateName).toUpperCase(), x + bigSize / 2, nameY, { font: `800 17px ${FONT}`, align: 'center' });
+  drawPhotoBox(ctx, rImg, x, photosTop, bigSize, 'R', PARTY_LEAD_BADGE.R, true);
+  caption(slide.rCandidateName, 'Republican', 'R', x + bigSize / 2, true);
 
-  let bottomY = nameY + 20;
+  let bottomY = partyLineY + 20;
 
   if (slide.stats) {
     const s = slide.stats;
