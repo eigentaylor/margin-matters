@@ -49,13 +49,13 @@ export const CLOSING_LINES = {
   pvOnly: [
     "The beets ONLY predict the popular vote. It's in my book! Read the book!",
     "Technically, {winner} DID win more votes, just like I said. The Electoral College is a beet-related technicality I did not anticipate.",
-    "The beets called the popular vote perfectly. The Electoral College, frankly, is not my department."
+    "The beets called the popular vote perfectly. The Electoral College, frankly, is too chaotic for the beets to predict."
   ],
   // Beets got the electoral college (the actual winner) right, but not the popular vote.
   ecOnly: [
     "The beets ONLY predict the ultimate final winner. I got a signed newspaper from {winner}!",
-    "{winner} is our next president, exactly as the beets predicted. The popular vote margin is a rounding error. A beet-sized rounding error.",
-    "Called it. {winner} wins the presidency. I'm framing this next to my signed newspaper."
+    "{winner} is our next president, exactly as the beets predicted. The beets say NOTHING about the popular vote, no matter what my book says.",
+    "Called it. {winner} wins the presidency. The beets only predict the ultimate winner. The beets have always only predicted the Electoral College outcome."
   ],
   // Beets got neither right.
   bothWrong: [
