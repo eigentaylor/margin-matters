@@ -1416,6 +1416,12 @@ function goToElectionNight() {
   // from these real polls instead of having to synthesize its own.
   const finalPoll = currentSnapshot();
   const pollMarginByUnit = pollMargins(finalPoll);
+  // The campaign's own Election-Eve forecast (same object the forecast
+  // panel renders from) - bridged so the opening raceOverview slide's win%/
+  // tie%/median-EV/NPV stats can read this decisive, poll-driven estimate
+  // directly instead of the live win-probability MC's deliberately hedged
+  // early-count numbers.
+  const finalForecast = currentForecast();
 
   installElectionNight({
     finalRel: state.sim.truthRel,
@@ -1423,6 +1429,7 @@ function goToElectionNight() {
     baseline: state.baseline,
     pollMarginByUnit,
     seed: state.sim.seed,
+    forecast: finalForecast ? { ...finalForecast, pollNpv: finalPoll.pollNpv } : null,
   });
 
   // Controls belong directly under the map and above every polling panel, so

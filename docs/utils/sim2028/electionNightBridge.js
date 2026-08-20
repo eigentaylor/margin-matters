@@ -152,11 +152,19 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
  *   as window._enSeed so election-night.js can derive Aleck Lickman's false-beet
  *   wobble from something stable (the same run/seed always calls the same
  *   beet count) instead of a fresh draw every Start/Reset.
+ * @param {object} [forecast] the campaign's own Election-Eve forecast (see
+ *   sim2028.js's currentForecast(), a forecast.js runForecast() result) plus
+ *   a `pollNpv` field (the Election-Eve poll's national margin) - published
+ *   as window._enForecast for the opening raceOverview slide's stats row
+ *   (win %/tie %/median EV/NPV) to read directly, rather than the live
+ *   win-probability MC, which is deliberately hedged near 50-50 before any
+ *   returns are actually in.
  */
-export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null }) {
+export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null, forecast = null }) {
   const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale });
 
   window._enSeed = Number.isFinite(seed) ? seed : null;
+  window._enForecast = forecast || null;
 
   window._enPollPrior = pollMarginByUnit
     ? { year: YEAR, marginByUnit: pollMarginByUnit, spec: POLL_ERROR_SPEC }

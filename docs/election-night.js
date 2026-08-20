@@ -193,7 +193,7 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
   // Bounds and default for the free-text simulation speed multiplier input
   const MIN_SPEED_MULTIPLIER = 0.01;
   const MAX_SPEED_MULTIPLIER = 100;
-  const DEFAULT_SPEED_MULTIPLIER = 0.5;
+  const DEFAULT_SPEED_MULTIPLIER = 1;
   const SPEED_STEP = 0.05;
   // Visual constants for uncalled/tossup styling
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
@@ -2481,14 +2481,22 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       oCandidateName ? getPortraitUrlForName(state.year, oCandidateName) : Promise.resolve(null)
     ]);
 
+    // Sourced from sim2028's own Election-Eve campaign forecast (the same
+    // Monte-Carlo-over-polls result shown in the sim2028 forecast panel,
+    // bridged via installElectionNight's `forecast` param - see
+    // electionNightBridge.js), not state.nationalWinProb - the live
+    // election-night win-probability MC is deliberately hedged toward 50-50
+    // in the earliest minutes of the count (it hasn't seen any actual
+    // returns yet), which reads as a strange thing to lead the night with
+    // when the campaign itself already has a real, decisive forecast.
     const isSim2028Live = !!(window._enPollPrior && window._enPollPrior.year === state.year);
-    const wp = state.nationalWinProb;
-    const stats = (isSim2028Live && wp && isFinite(wp.probD)) ? {
-      probD: wp.probD,
-      probTie: isFinite(wp.probTie) ? wp.probTie : 0,
-      medianDemEv: isFinite(wp.medianDemEv) ? wp.medianDemEv : null,
-      evRange90: Array.isArray(wp.evRange90) ? wp.evRange90 : null,
-      npvMargin: isFinite(state.priorNpvMargin) ? state.priorNpvMargin : null
+    const fc = window._enForecast;
+    const stats = (isSim2028Live && fc && isFinite(fc.demWinProb)) ? {
+      probD: Math.min(0.999, Math.max(0.001, fc.demWinProb)),
+      probTie: isFinite(fc.tieProb) ? Math.min(0.999, Math.max(0, fc.tieProb)) : 0,
+      medianDemEv: isFinite(fc.medianDemEv) ? fc.medianDemEv : null,
+      evRange90: Array.isArray(fc.evRange90) ? fc.evRange90 : null,
+      npvMargin: isFinite(fc.pollNpv) ? fc.pollNpv : null
     } : null;
 
     return {
