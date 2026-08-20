@@ -126,12 +126,17 @@ let activeDeltaChips = { D: null, R: null, O: null };
 // this flag entirely - it only gates the setTimeout in renderSlide().
 let autoAdvancePaused = false;
 
+// A beat longer than a plain call slide (LICKMAN_SLIDE_MS) - there's a full
+// sentence of dialogue to read, not just a name and a margin.
+const LICKMAN_SLIDE_MS = 6000;
+
 function durationFor(slide) {
   if (slide.kind === 'raceOverview') return RACE_OVERVIEW_SLIDE_MS;
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races' || slide.kind === 'pollClose' || slide.kind === 'finalResults') return RACES_SLIDE_MS;
   if (slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip') return CORRECTION_SLIDE_MS;
+  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing') return LICKMAN_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
 
@@ -726,6 +731,25 @@ function renderRaceOverview(slide) {
 }
 
 /**
+ * Aleck Lickman's opening prediction ('lickmanIntro') and closing reaction
+ * ('lickmanClosing') slides - same layout for both (portrait + speech
+ * bubble), distinguished only by slide.label. See election-night.js's
+ * buildLickmanIntroSpec()/buildLickmanClosingSpec() for how slide.dialogueText
+ * gets picked/filled.
+ */
+function renderLickman(slide) {
+  cardEl.innerHTML = `
+    <div class="en-cp-lickman-label">${slide.label || 'Aleck Lickman'}</div>
+    <div class="en-cp-lickman-body">
+      <img class="en-cp-lickman-photo" src="${slide.portraitUrl}" alt="Aleck Lickman" />
+      <div class="en-cp-lickman-bubble">
+        <div class="en-cp-lickman-text">${slide.dialogueText || ''}</div>
+        <div class="en-cp-lickman-beets">${slide.falseBeets} / 13 beets false</div>
+      </div>
+    </div>`;
+}
+
+/**
  * Mid-count analogue of renderFinal()'s no-majority branch: a correction
  * just knocked the previously-projected majority holder back below majority
  * with nobody else reaching it, so the race is undecided again - but unlike
@@ -882,6 +906,7 @@ function renderSlide(index) {
   else if (slide.kind === 'finalResults') renderFinalResults(slide);
   else if (slide.kind === 'retraction') renderRetraction(slide);
   else if (slide.kind === 'leadFlip') renderLeadFlip(slide);
+  else if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing') renderLickman(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
 

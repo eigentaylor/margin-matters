@@ -16,6 +16,8 @@ import { groupEventsIntoCheckpoints, findNextCheckpoint } from './utils/election
 import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
 import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from './utils/electionNight/updatePopup.js';
 import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
+import { estimateFalseBeets } from './utils/electionNight/lickman.js';
+import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
 
 (function () {
   'use strict';
@@ -362,6 +364,15 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // only moves checkpointCursorTime, it never fires anything itself; see
     // maybeFireCheckpoint()).
     updatesEnabled: true,
+    // Aleck Lickman's opening prediction / closing reaction slides, riding
+    // inside the first/last checkpoint (see buildCheckpointSlides()) - a
+    // separate optional layer from updatesEnabled above, but since it rides
+    // on the same checkpoint pipeline, it's still silent whenever
+    // updatesEnabled is off (checkpoints never fire at all - see
+    // maybeFireCheckpoint()). Accepted v0.1 limitation.
+    punditEnabled: true,
+    lickmanPredictionPromise: null,
+    lickmanPrediction: null,
     checkpointActive: false,
     plannedCheckpoints: [],
     checkpointCursorTime: 0,
@@ -522,6 +533,14 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       state.updatesEnabled = !!elements.updatesToggle.checked;
       elements.updatesToggle.addEventListener('change', () => {
         state.updatesEnabled = !!elements.updatesToggle.checked;
+      });
+    }
+
+    elements.punditToggle = document.getElementById('enPunditToggle');
+    if (elements.punditToggle) {
+      state.punditEnabled = !!elements.punditToggle.checked;
+      elements.punditToggle.addEventListener('change', () => {
+        state.punditEnabled = !!elements.punditToggle.checked;
       });
     }
 
@@ -1001,6 +1020,27 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       return wsum > EPS ? acc / wsum : 0;
     })();
 
+    // Aleck Lickman's prediction: kicked off here (fire-and-forget - CSV
+    // fetch/regression, cached after the first call) rather than awaited,
+    // since prepareSimulation() is synchronous. buildCheckpointSlides()
+    // awaits state.lickmanPredictionPromise itself when it actually needs
+    // the result, so this is just a head start.
+    if (state.punditEnabled) {
+      state.lickmanPredictionPromise = estimateFalseBeets({
+        year,
+        npvMarginDPositive: state.priorNpvMargin,
+        seed: hashCode(`${year}:${Date.now()}`)
+      }).then(prediction => {
+        state.lickmanPrediction = prediction;
+        try { window._enLickmanPrediction = prediction; } catch (e) { /* ignore */ }
+        return prediction;
+      });
+    } else {
+      state.lickmanPredictionPromise = Promise.resolve(null);
+      state.lickmanPrediction = null;
+      try { window._enLickmanPrediction = null; } catch (e) { /* ignore */ }
+    }
+
     let minStart = Infinity;
     let maxEnd = -Infinity;
     data.forEach(st => {
@@ -1162,6 +1202,9 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     window._electionNightSnapshot = null;
     try { window._evSummaryOverride = null; } catch (e) { /* ignore */ }
     window._electionNightActive = false;
+    state.lickmanPredictionPromise = null;
+    state.lickmanPrediction = null;
+    try { window._enLickmanPrediction = null; } catch (e) { /* ignore */ }
     state.currentTime = 0;
     state.lastTimestamp = null;
     state.lastDisplayUpdate = 0;
@@ -1349,6 +1392,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
    */
   async function buildCheckpointSlides(records, opts = {}) {
     const raceOverviewSpec = opts.isFirstCheckpoint ? await buildRaceOverviewSpec() : null;
+    const lickmanIntroSpec = (opts.isFirstCheckpoint && state.punditEnabled) ? await buildLickmanIntroSpec() : null;
     // Every record's tallyBefore/tallyAfter comes straight from the planned
     // event it was resolved from (see computePlannedCheckpoints()'s replay
     // loop and resolveCheckpointRecords()'s plannedTallyBefore/After stamp) -
@@ -1691,7 +1735,12 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // regardless of what else is in it - added after checkpointStartingTally
     // is captured above, so it doesn't skew that "true first record" read.
     if (raceOverviewSpec) specs.push(raceOverviewSpec);
-    const tierOf = spec => spec.kind === 'raceOverview' ? -1 : (spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1));
+    // Pushed right after raceOverviewSpec (both tier -1, no time/ev of their
+    // own) so the stable sort below keeps Lickman's opening prediction
+    // second, right behind the title card, regardless of what else is in
+    // this checkpoint.
+    if (lickmanIntroSpec) specs.push(lickmanIntroSpec);
+    const tierOf = spec => (spec.kind === 'raceOverview' || spec.kind === 'lickmanIntro') ? -1 : (spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1));
     const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
     const timeOf = spec => isFinite(spec.time) ? spec.time : 0;
     specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (timeOf(a) - timeOf(b)) || (evOf(b) - evOf(a)));
@@ -1718,6 +1767,10 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 
     await Promise.all(specs.map(async spec => {
       if (spec.kind === 'raceOverview') return; // already resolved in buildRaceOverviewSpec()
+      // Lickman's portraitUrl is a fixed static asset (img/lickmanbase.png,
+      // not a resolved candidate photo) - resolving it here against his
+      // (nonexistent) candidateName would just null it back out.
+      if (spec.kind === 'lickmanIntro' || spec.kind === 'lickmanClosing') return;
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
         spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
@@ -1775,6 +1828,13 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
           });
         }
       }
+    }
+
+    // Lickman's closing reaction - genuinely the last thing in the night,
+    // after the final tally and any recap pages above.
+    if (state.punditEnabled && records.some(r => r.noticeType === 'final-tally')) {
+      const lickmanClosingSpec = await buildLickmanClosingSpec(specs.find(s => s.kind === 'final'));
+      if (lickmanClosingSpec) specs.push(lickmanClosingSpec);
     }
 
     return specs;
@@ -2428,6 +2488,82 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     };
   }
 
+  const LICKMAN_PORTRAIT_URL = 'img/lickmanbase.png';
+
+  /**
+   * Aleck Lickman's opening prediction slide - the second slide of the first
+   * checkpoint, right after the raceOverview title card. Awaits
+   * state.lickmanPredictionPromise (kicked off back in prepareSimulation())
+   * rather than recomputing anything, so this is normally instant. Returns
+   * null (no slide) when pundit commentary is off or the model couldn't
+   * resolve an incumbent party for this year.
+   */
+  async function buildLickmanIntroSpec() {
+    const prediction = await (state.lickmanPredictionPromise || Promise.resolve(null));
+    if (!prediction) return null;
+
+    const winnerName = resolveCandidateFullName(prediction.predictedWinnerParty, 'NATIONAL');
+    const loserParty = prediction.predictedWinnerParty === 'D' ? 'R' : 'D';
+    const loserName = resolveCandidateFullName(loserParty, 'NATIONAL');
+    const template = (winnerName && loserName) ? pick(PREDICTION_LINES) : pick(PREDICTION_LINES_NO_NAMES);
+    const dialogueText = fillTemplate(template, {
+      winner: winnerName || 'the challenger',
+      loser: loserName || 'the incumbent',
+      beets: prediction.decided
+    });
+
+    return {
+      kind: 'lickmanIntro',
+      breaking: false,
+      label: "ALECK LICKMAN'S PREDICTION",
+      portraitUrl: LICKMAN_PORTRAIT_URL,
+      dialogueText,
+      predictedWinnerParty: prediction.predictedWinnerParty,
+      falseBeets: prediction.decided,
+      accentColor: '#9b2f6b',
+      timeLabel: null
+    };
+  }
+
+  /**
+   * Aleck Lickman's closing reaction - the very last slide of the night,
+   * appended after the final tally and any recap pages. Picks one of the
+   * four archetype reactions by comparing his predicted winner against the
+   * true popular-vote winner (state.nationalFinalDVotes/RVotes) and the true
+   * electoral-college winner (`finalSpec.winner`). Returns null when pundit
+   * commentary is off, the model has no prediction, or the night ended
+   * without a clear majority winner (no clean "did he call the winner"
+   * question to answer in that case).
+   */
+  async function buildLickmanClosingSpec(finalSpec) {
+    const prediction = await (state.lickmanPredictionPromise || Promise.resolve(null));
+    if (!prediction || !finalSpec || (finalSpec.winner !== 'D' && finalSpec.winner !== 'R')) return null;
+
+    const actualPvWinner = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    const actualEcWinner = finalSpec.winner;
+    const correctPv = prediction.predictedWinnerParty === actualPvWinner;
+    const correctEc = prediction.predictedWinnerParty === actualEcWinner;
+    const archetype = correctPv && correctEc ? 'bothRight' : correctPv ? 'pvOnly' : correctEc ? 'ecOnly' : 'bothWrong';
+
+    const winnerName = actualEcWinner === 'D' ? finalSpec.dCandidateName : finalSpec.rCandidateName;
+    const dialogueText = fillTemplate(pick(CLOSING_LINES[archetype]), {
+      winner: winnerName || 'the winner',
+      beets: prediction.decided
+    });
+
+    return {
+      kind: 'lickmanClosing',
+      breaking: false,
+      label: "ALECK LICKMAN'S FINAL WORD",
+      portraitUrl: LICKMAN_PORTRAIT_URL,
+      dialogueText,
+      archetype,
+      falseBeets: prediction.decided,
+      accentColor: '#9b2f6b',
+      timeLabel: null
+    };
+  }
+
   /**
    * Check whether real forward playback has just ticked past the next
    * planned checkpoint, and if so, pause and show it. Only called from the
@@ -2498,6 +2634,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : slide.rCandidateName} wins` : 'Final — no majority'); break;
       case 'uncalled': what = 'No majority yet'; break;
       case 'raceOverview': what = slide.title || 'Race overview'; break;
+      case 'lickmanIntro': what = `Aleck Lickman's prediction (${slide.falseBeets} false beets)`; break;
+      case 'lickmanClosing': what = "Aleck Lickman's final word"; break;
       default: what = slide.kind || 'Update';
     }
     // Mirrors the card's own "Breaking news" ribbon (renderCallOrCorrection()

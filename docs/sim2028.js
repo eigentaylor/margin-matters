@@ -507,6 +507,18 @@ function renderDebug() {
     if (Math.abs(sim.truthRel.get(u) - state.baseline.rel2024.get(u)) > 0.06) moved6++;
   }
 
+  // Aleck Lickman's "13 beets" prediction - published onto window by
+  // election-night.js's prepareSimulation() once it resolves (see
+  // docs/utils/electionNight/lickman.js), not part of state.sim itself, so
+  // this only has anything to show once election night has actually been
+  // started at least once this page load.
+  const lp = window._enLickmanPrediction;
+  const lickmanRow = lp
+    ? `<div class="s28-dbgrow"><span>Lickman: NPV&rarr;false-beets fit</span><span>slope ${lp.slope.toFixed(4)}, intercept ${lp.intercept.toFixed(4)}, residual &sigma; ${lp.residualStd.toFixed(4)}</span></div>
+    <div class="s28-dbgrow"><span>Lickman: predicted (raw) false beets</span><span>${lp.predicted.toFixed(2)} (&plusmn;${lp.band.toFixed(2)} band)</span></div>
+    <div class="s28-dbgrow"><span>Lickman: decided false beets (seeded)</span><span>${lp.decided} / 13 &mdash; predicts ${lp.predictedWinnerParty}</span></div>`
+    : `<div class="s28-dbgrow"><span>Lickman</span><span>&mdash; (start election night to compute)</span></div>`;
+
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
     <div class="s28-dbgrow"><span>True result</span><span>D ${dem} &ndash; R ${rep}</span></div>
     <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(sim.truthNpv)}</span></div>
@@ -515,6 +527,7 @@ function renderDebug() {
     <div class="s28-dbgrow"><span>Polling accuracy this cycle</span><span>${sim.pollTurbulence.toFixed(2)}&times; typical &mdash; ${sim.pollTurbulence < 0.85 ? '2024-style, clean' : sim.pollTurbulence > 1.15 ? '2016/2020-style, foggy' : 'about average'}</span></div>
     <div class="s28-dbgrow"><span>Calibration</span><span>${sim.params.poll.nationalSigma === LEGACY_CALIBRATION.poll.nationalSigma ? 'confident (nationalSigma 1.8pt, regionShare 0.75, floor 0.65x)' : 'default (nationalSigma 2.5pt, regionShare 0.87, floor 1.0x)'}</span></div>
     <div class="s28-dbgrow"><span>Tipping point (true, NPV-independent)</span><span>${tp ? `${tp.unit} &mdash; flips EC at NPV ${fmtMarginPrecise(tp.npvThreshold)}` : '&mdash;'}</span></div>
+    ${lickmanRow}
     <div style="margin-top:6px;color:var(--muted)">Closest true races (at the actual environment): ${closest}</div>`;
 }
 

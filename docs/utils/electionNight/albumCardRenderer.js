@@ -82,6 +82,26 @@ function fitCoverSource(natW, natH, boxW, boxH) {
   return { sx: (natW - sw) / 2, sy: (natH - sh) / 2, sw, sh };
 }
 
+// Canvas text doesn't wrap on its own - greedily breaks `str` into lines no
+// wider than maxWidth at the given font, for drawLickman()'s speech bubble.
+function wrapText(ctx, str, maxWidth, font) {
+  ctx.font = font;
+  const words = String(str || '').split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '';
+  words.forEach(word => {
+    const test = line ? `${line} ${word}` : word;
+    if (line && ctx.measureText(test).width > maxWidth) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
 function text(ctx, str, x, y, { font, color = '#fff', align = 'left' }) {
   ctx.font = font;
   ctx.fillStyle = color;
@@ -481,6 +501,59 @@ async function drawRaceOverview(ctx, slide, w) {
   return bottomY + BOTTOM_PAD;
 }
 
+const LICKMAN_ACCENT = '#9b2f6b';
+
+// Album analogue of updatePopup.js's renderLickman() - portrait + speech
+// bubble, used for both 'lickmanIntro' and 'lickmanClosing'. No ribbon/header
+// (mirrors the live popup, which is also chrome-free apart from the small
+// label above the photo).
+async function drawLickman(ctx, slide, w) {
+  const img = await loadImage(slide.portraitUrl);
+  let y = 30;
+  text(ctx, (slide.label || 'ALECK LICKMAN').toUpperCase(), w / 2, y + 14, { font: `900 15px ${FONT}`, color: 'rgba(255,255,255,0.65)', align: 'center' });
+  y += 40;
+
+  const photoSize = 130;
+  const photoX = 30;
+  const bubbleX = photoX + photoSize + 24;
+  const bubbleW = w - bubbleX - 26;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(photoX + photoSize / 2, y + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+  ctx.clip();
+  if (img) {
+    const { sx, sy, sw, sh } = fitCoverSource(img.naturalWidth, img.naturalHeight, photoSize, photoSize);
+    ctx.drawImage(img, sx, sy, sw, sh, photoX, y, photoSize, photoSize);
+  } else {
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.fillRect(photoX, y, photoSize, photoSize);
+  }
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(photoX + photoSize / 2, y + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+  ctx.strokeStyle = LICKMAN_ACCENT;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  const font = `700 20px ${FONT}`;
+  const lines = wrapText(ctx, slide.dialogueText, bubbleW - 32, font);
+  const lineH = 27;
+  const bubbleH = Math.max(photoSize, lines.length * lineH + 56);
+  roundRectPath(ctx, bubbleX, y, bubbleW, bubbleH, 14);
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.fill();
+
+  let ty = y + 34;
+  lines.forEach(line => {
+    text(ctx, line, bubbleX + 16, ty, { font, color: '#fff' });
+    ty += lineH;
+  });
+  text(ctx, `${slide.falseBeets} / 13 BEETS FALSE`, bubbleX + 16, y + bubbleH - 16, { font: `800 12px ${FONT}`, color: 'rgba(255,255,255,0.55)' });
+
+  return y + Math.max(photoSize, bubbleH) + BOTTOM_PAD;
+}
+
 async function drawOutcome(ctx, slide, w, ribbonBottom) {
   const photoImg = await loadImage(slide.portraitUrl);
   const y = ribbonBottom + 34;
@@ -748,6 +821,7 @@ async function drawBody(ctx, slide, w) {
     return drawFinalResults(ctx, slide, w, headerBottom);
   }
   if (slide.kind === 'raceOverview') return drawRaceOverview(ctx, slide, w);
+  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing') return drawLickman(ctx, slide, w);
   const ribbonLabel = slide.kind === 'final' ? `Final${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}` : `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`;
   const ribbonBottom = drawBreakingRibbon(ctx, w, ribbonLabel);
   if (slide.kind === 'outcome') return drawOutcome(ctx, slide, w, ribbonBottom);
