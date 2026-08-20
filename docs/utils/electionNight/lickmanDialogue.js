@@ -4,8 +4,7 @@
 // Lichtman by way of "13 Beets to the Presidency"). Generic and goofy by
 // design - v0.1 - meant to be expanded/replaced later. Only PREDICTION_LINES
 // and CLOSING_LINES are wired up to any UI yet (the opening and closing
-// slides); the rest are written now, per request, so the mid-night reaction
-// system has copy ready to go when it's built.
+// slides);
 
 /** Picks a pseudo-random entry from `arr` using an already-seeded rng() -> [0,1) function. */
 export function pick(arr, rng) {
@@ -47,9 +46,10 @@ export const CLOSING_LINES = {
   ],
   // Beets got the popular vote right, but not the electoral college.
   pvOnly: [
-    "The beets ONLY predict the popular vote. It's in my book! Read the book!",
-    "Technically, {winner} DID win more votes, just like I said. The Electoral College is a beet-related technicality I did not anticipate.",
-    "The beets called the popular vote perfectly. The Electoral College, frankly, is too chaotic for the beets to predict."
+    "The beets ONLY predict the popular vote. It's in my book! {winner} is the TRUE winner of this election.",
+    "Technically, {winner} DID win more votes, just like I said. The Electoral College is NOT what the beets predict!",
+    "The beets called that {winner} would win popular vote perfectly. The Electoral College, frankly, is too chaotic for the beets to predict.",
+    "Did you know I became an election predictor because of my hero, Allan Lichtman? My favorite quote by him is from his published prediction in Social Education, 'As a national system, the Keys predict the popular vote, not the state-by-state tally of Electoral College votes.' No system can predict the Electoral College, so my beet system only predicts the national popular vote which {winner} won."
   ],
   // Beets got the electoral college (the actual winner) right, but not the popular vote.
   ecOnly: [
@@ -60,8 +60,8 @@ export const CLOSING_LINES = {
   // Beets got neither right.
   bothWrong: [
     "MISINFORMATION. (cries softly while eating a beet)",
-    "This has never happened before in the history of beets. I need a moment. And a beet.",
-    "The beets were wrong. I don't know what to tell you. I'm going to go lie down in the garden."
+    "The voters were wrong. The beets were right. {winner} should be president, no {loser}.",
+    "The beets were wrong. I don't know what to tell you. I'm going to mournfully eat a beet on the steps of the Capitol."
   ]
 };
 

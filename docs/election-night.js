@@ -2569,9 +2569,19 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     const correctEc = prediction.predictedWinnerParty === actualEcWinner;
     const archetype = correctPv && correctEc ? 'bothRight' : correctPv ? 'pvOnly' : correctEc ? 'ecOnly' : 'bothWrong';
 
-    const winnerName = actualEcWinner === 'D' ? finalSpec.dCandidateName : finalSpec.rCandidateName;
+    // {winner} is Lickman's OWN predicted candidate, not necessarily the
+    // actual electoral-college winner - in bothRight/ecOnly those are the
+    // same person, but in pvOnly the templates are bragging about the
+    // popular-vote call specifically ("{winner} DID win more votes, just
+    // like I said"), which is who he predicted, not who took the
+    // presidency. {actualWinner} is kept separately for any future
+    // dialogue that wants to name the real officeholder regardless of
+    // whether Lickman called it.
+    const predictedName = prediction.predictedWinnerParty === 'D' ? finalSpec.dCandidateName : finalSpec.rCandidateName;
+    const actualWinnerName = actualEcWinner === 'D' ? finalSpec.dCandidateName : finalSpec.rCandidateName;
     const dialogueText = fillTemplate(pick(CLOSING_LINES[archetype]), {
-      winner: winnerName || 'the winner',
+      winner: predictedName || 'the winner',
+      actualWinner: actualWinnerName || 'the winner',
       beets: prediction.decided
     });
 
