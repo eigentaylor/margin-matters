@@ -148,9 +148,15 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
  *   live win-probability estimate to seed itself from instead of having to
  *   synthesize its own poll (which is what index.html/future.html, with no
  *   real 2028 polls, fall back to).
+ * @param {number} [seed] this campaign run's seed (state.sim.seed) - published
+ *   as window._enSeed so election-night.js can derive Aleck Lickman's false-beet
+ *   wobble from something stable (the same run/seed always calls the same
+ *   beet count) instead of a fresh draw every Start/Reset.
  */
-export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null }) {
+export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null }) {
   const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale });
+
+  window._enSeed = Number.isFinite(seed) ? seed : null;
 
   window._enPollPrior = pollMarginByUnit
     ? { year: YEAR, marginByUnit: pollMarginByUnit, spec: POLL_ERROR_SPEC }

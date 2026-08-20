@@ -513,10 +513,17 @@ function renderDebug() {
   // this only has anything to show once election night has actually been
   // started at least once this page load.
   const lp = window._enLickmanPrediction;
+  // isActual: this year has a real graded false-key count in
+  // keys_with_npv.csv (ground truth, used directly - no fit/wobble
+  // involved). Always false for sim2028's own fictional race, but the
+  // fields/labels stay generic since lickman.js's estimateFalseBeets() is
+  // shared with the historical pages too.
   const lickmanRow = lp
-    ? `<div class="s28-dbgrow"><span>Lickman: NPV&rarr;false-beets fit</span><span>slope ${lp.slope.toFixed(4)}, intercept ${lp.intercept.toFixed(4)}, residual &sigma; ${lp.residualStd.toFixed(4)}</span></div>
+    ? (lp.isActual
+      ? `<div class="s28-dbgrow"><span>Lickman: false beets</span><span>${lp.decided} / 13 (real graded count) &mdash; predicts ${lp.predictedWinnerParty}</span></div>`
+      : `<div class="s28-dbgrow"><span>Lickman: NPV&rarr;false-beets fit</span><span>slope ${lp.slope.toFixed(4)}, intercept ${lp.intercept.toFixed(4)}, residual &sigma; ${lp.residualStd.toFixed(4)}</span></div>
     <div class="s28-dbgrow"><span>Lickman: predicted (raw) false beets</span><span>${lp.predicted.toFixed(2)} (&plusmn;${lp.band.toFixed(2)} band)</span></div>
-    <div class="s28-dbgrow"><span>Lickman: decided false beets (seeded)</span><span>${lp.decided} / 13 &mdash; predicts ${lp.predictedWinnerParty}</span></div>`
+    <div class="s28-dbgrow"><span>Lickman: decided false beets (seeded)</span><span>${lp.decided} / 13 &mdash; predicts ${lp.predictedWinnerParty}</span></div>`)
     : `<div class="s28-dbgrow"><span>Lickman</span><span>&mdash; (start election night to compute)</span></div>`;
 
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
@@ -1415,6 +1422,7 @@ function goToElectionNight() {
     npv: state.sim.truthNpv,
     baseline: state.baseline,
     pollMarginByUnit,
+    seed: state.sim.seed,
   });
 
   // Controls belong directly under the map and above every polling panel, so

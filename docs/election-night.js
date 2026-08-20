@@ -1025,11 +1025,27 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     // since prepareSimulation() is synchronous. buildCheckpointSlides()
     // awaits state.lickmanPredictionPromise itself when it actually needs
     // the result, so this is just a head start.
+    //
+    // The false-beet count's random wobble (see lickman.js) is seeded from
+    // whichever of these is actually driving THIS run's randomness, so
+    // replaying the same setup calls the same beet count every time rather
+    // than re-rolling on every Start/Reset:
+    //  - state.pvRandomSeed, when the historical PV selector is on a random
+    //    mode (freshly rolled by resolvePvValue() each time that mode is
+    //    (re-)entered - see its own hashCode(`${year}:${mode}:${baseSeed}`));
+    //  - window._enSeed, sim2028's own campaign seed (state.sim.seed),
+    //    published by electionNightBridge.js's installElectionNight() when
+    //    bridging a 2028 run over to election night;
+    //  - otherwise just the year - "current PV" mode has no randomness of
+    //    its own either, so every other part of the night is already fully
+    //    deterministic for a given year.
     if (state.punditEnabled) {
+      const lickmanSeed = (state.pvRandomSeed != null) ? state.pvRandomSeed
+        : (window._enSeed != null ? window._enSeed : hashCode(`${year}`));
       state.lickmanPredictionPromise = estimateFalseBeets({
         year,
         npvMarginDPositive: state.priorNpvMargin,
-        seed: hashCode(`${year}:${Date.now()}`)
+        seed: lickmanSeed
       }).then(prediction => {
         state.lickmanPrediction = prediction;
         try { window._enLickmanPrediction = prediction; } catch (e) { /* ignore */ }
