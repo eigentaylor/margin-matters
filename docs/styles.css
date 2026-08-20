@@ -3943,6 +3943,124 @@ body.shift-vectors-page {
   font-size: clamp(1.4rem, 5vw, 2rem);
 }
 
+/* Opening "portrait of the race" title card (updatePopup.js's
+   'raceOverview' slide) - big D/R photos sized like the outcome/final
+   capstones' .en-cp-photo-wrap (this is the night's establishing shot, not
+   a routine call), with an optional smaller third-party photo centered
+   between them, and (sim2028 only) a row of forecast stat tiles below. */
+.en-cp-overview-title {
+  padding: 30px 24px 6px;
+  text-align: center;
+  font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.en-cp-overview-photos {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 28px;
+  padding: 22px 24px 8px;
+}
+
+.en-cp-overview-photos-3 {
+  gap: 14px;
+}
+
+.en-cp-overview-candidate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.en-cp-overview-photo {
+  width: clamp(110px, 26vw, 168px);
+  height: clamp(110px, 26vw, 168px);
+  border-radius: 10px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Sits between the two major-party photos, deliberately smaller (see
+   computeHasThirdParty() in election-night.js for when this appears at
+   all) - margin-bottom keeps it visually "between" the bigger photos
+   rather than bottom-aligned with them. */
+.en-cp-overview-photo-o {
+  width: clamp(72px, 17vw, 110px);
+  height: clamp(72px, 17vw, 110px);
+  margin-bottom: 20%;
+}
+
+.en-cp-overview-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.en-cp-overview-photo-o.en-cp-overview-photo-fallback {
+  font-size: 1.3rem;
+}
+
+.en-cp-overview-name {
+  font-size: clamp(0.85rem, 2.6vw, 1.05rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+}
+
+.en-cp-overview-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 24px 30px;
+}
+
+.en-cp-overview-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 90px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.en-cp-overview-stat-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.en-cp-overview-stat-value {
+  font-size: 1.05rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.en-cp-reveal .en-cp-overview-title {
+  animation: en-cp-slide-down 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.en-cp-reveal .en-cp-overview-photos {
+  animation: en-cp-photo-in 0.45s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.en-cp-reveal .en-cp-overview-stats {
+  animation: en-cp-fade-up 0.4s 0.4s ease-out both;
+}
+
 .en-checkpoint-progress {
   position: absolute;
   bottom: 46px;
@@ -3982,7 +4100,10 @@ body.shift-vectors-page {
   .en-cp-reveal .en-cp-photo-wrap,
   .en-cp-reveal .en-cp-result,
   .en-cp-reveal .en-cp-outcome-text,
-  .en-cp-reveal .en-cp-check {
+  .en-cp-reveal .en-cp-check,
+  .en-cp-reveal .en-cp-overview-title,
+  .en-cp-reveal .en-cp-overview-photos,
+  .en-cp-reveal .en-cp-overview-stats {
     animation: none !important;
   }
 

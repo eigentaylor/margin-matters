@@ -1347,7 +1347,8 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
    * call log's "still counting" sidebar uses) when anything is still
    * uncalled at this point in the night.
    */
-  async function buildCheckpointSlides(records) {
+  async function buildCheckpointSlides(records, opts = {}) {
+    const raceOverviewSpec = opts.isFirstCheckpoint ? await buildRaceOverviewSpec() : null;
     // Every record's tallyBefore/tallyAfter comes straight from the planned
     // event it was resolved from (see computePlannedCheckpoints()'s replay
     // loop and resolveCheckpointRecords()'s plannedTallyBefore/After stamp) -
@@ -1686,18 +1687,23 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     // the batch's starting point would double-count those states' EVs once
     // via this inherited baseline and again via their own delta below.
     const checkpointStartingTally = specs[0].tallyBefore || zeroTally;
-    const tierOf = spec => spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1);
+    // The raceOverview title card (when present) always leads the checkpoint
+    // regardless of what else is in it - added after checkpointStartingTally
+    // is captured above, so it doesn't skew that "true first record" read.
+    if (raceOverviewSpec) specs.push(raceOverviewSpec);
+    const tierOf = spec => spec.kind === 'raceOverview' ? -1 : (spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1));
     const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
     const timeOf = spec => isFinite(spec.time) ? spec.time : 0;
     specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (timeOf(a) - timeOf(b)) || (evOf(b) - evOf(a)));
     let running = checkpointStartingTally;
     specs.forEach(spec => {
-      // 'outcome'/'uncalled' slides are pure type-transition markers - they
-      // share their trigger event's before/after rather than an
-      // independent change (see computePlannedCheckpoints()'s outcome
-      // push), so they pass the running total through unchanged instead of
-      // double-counting a delta that's already attributed to another slide.
-      if (spec.kind === 'outcome' || spec.kind === 'uncalled') {
+      // 'outcome'/'uncalled'/'raceOverview' slides are pure type-transition
+      // (or, for raceOverview, purely informational) markers - they share
+      // their trigger event's before/after rather than an independent
+      // change (see computePlannedCheckpoints()'s outcome push), so they
+      // pass the running total through unchanged instead of double-counting
+      // a delta that's already attributed to another slide.
+      if (spec.kind === 'outcome' || spec.kind === 'uncalled' || spec.kind === 'raceOverview') {
         spec.tallyBefore = running;
         spec.tallyAfter = running;
         return;
@@ -1711,6 +1717,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     });
 
     await Promise.all(specs.map(async spec => {
+      if (spec.kind === 'raceOverview') return; // already resolved in buildRaceOverviewSpec()
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
         spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
@@ -2349,6 +2356,18 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
    * and generateElectionNightAlbum() (headless), which otherwise duplicate
    * nothing else about how a checkpoint gets shown.
    */
+  // Ground-truth "does this year have a real third party" signal, shared by
+  // the scoreboard panel (buildCheckpointShowOptions, below - shows the
+  // third O box for the whole night in years where it matters, rather than
+  // having it pop in mid-checkpoint the moment the first O state gets
+  // called) and the raceOverview slide's optional third portrait
+  // (buildRaceOverviewSpec) - both need the exact same answer, so this is
+  // computed once rather than duplicating the formula.
+  function computeHasThirdParty() {
+    const totalPool = state.totalEvPool || 538;
+    return (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
+  }
+
   function buildCheckpointShowOptions(records) {
     // Scoreboard starting point: the first slide's own precomputed
     // tallyBefore (see computePlannedCheckpoints()'s replay loop) - already
@@ -2360,13 +2379,53 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       : null;
     const totalPool = state.totalEvPool || 538;
     const majority = Math.floor(totalPool / 2) + 1;
-    // Same ground-truth "does this year have a real third party" signal
-    // buildStateData's finalO computation already uses elsewhere (e.g. the
-    // 'final' capstone slide's oEv) - shows the scoreboard's third O box
-    // for the whole night in years where it matters, rather than having it
-    // pop in mid-checkpoint the moment the first O state gets called.
-    const hasThirdParty = (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
+    const hasThirdParty = computeHasThirdParty();
     return { startingTally, winProb, majority, hasThirdParty };
+  }
+
+  // The opening "portrait of the race" slide, always the first slide of the
+  // very first checkpoint (see buildCheckpointSlides()'s isFirstCheckpoint
+  // param) - title card with both major-party candidates' photos, plus the
+  // third-party candidate's (smaller) when this year had a real electoral
+  // haul for one. The win%/tie%/median-EV/NPV stats row is sim2028-only:
+  // showing a "62% to win" forecast for a historical election whose outcome
+  // is already known would read as strange, even in this simulator's
+  // pretend-we-don't-know-yet framing - so it's gated on the same "are we
+  // bridged from sim2028's live polls" signal buildStateData() already
+  // checks (line ~983) to choose between applyBridgedPollPriors and
+  // buildSyntheticPollPriors, rather than a new special case.
+  async function buildRaceOverviewSpec() {
+    const dCandidateName = resolveCandidateFullName('D', 'NATIONAL');
+    const rCandidateName = resolveCandidateFullName('R', 'NATIONAL');
+    const hasThirdParty = computeHasThirdParty();
+    const oCandidateName = hasThirdParty ? resolveCandidateFullName('O', 'NATIONAL') : null;
+    const [dPortraitUrl, rPortraitUrl, oPortraitUrl] = await Promise.all([
+      getPortraitUrlForName(state.year, dCandidateName),
+      getPortraitUrlForName(state.year, rCandidateName),
+      oCandidateName ? getPortraitUrlForName(state.year, oCandidateName) : Promise.resolve(null)
+    ]);
+
+    const isSim2028Live = !!(window._enPollPrior && window._enPollPrior.year === state.year);
+    const wp = state.nationalWinProb;
+    const stats = (isSim2028Live && wp && isFinite(wp.probD)) ? {
+      probD: wp.probD,
+      probTie: isFinite(wp.probTie) ? wp.probTie : 0,
+      medianDemEv: isFinite(wp.medianDemEv) ? wp.medianDemEv : null,
+      evRange90: Array.isArray(wp.evRange90) ? wp.evRange90 : null,
+      npvMargin: isFinite(state.priorNpvMargin) ? state.priorNpvMargin : null
+    } : null;
+
+    return {
+      kind: 'raceOverview',
+      breaking: false,
+      year: state.year,
+      title: `${state.year} Presidential Election`,
+      dCandidateName, dPortraitUrl,
+      rCandidateName, rPortraitUrl,
+      oCandidateName, oPortraitUrl,
+      stats,
+      timeLabel: null
+    };
   }
 
   /**
@@ -2396,9 +2455,13 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     updateToggleLabel();
 
     const showOptions = buildCheckpointShowOptions(records);
+    // The very first checkpoint of the night (by the authoritative planned
+    // schedule, not just "the first one fired" - a scrub/reset can't change
+    // which checkpoint that is) opens with the raceOverview title card.
+    const isFirstCheckpoint = !!(state.plannedCheckpoints[0] && Math.abs(state.plannedCheckpoints[0].time - next.time) < EPS);
 
     const resetTokenAtFire = state.resetToken;
-    Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
+    Promise.all([buildCheckpointSlides(records, { isFirstCheckpoint }), resolveScoreboardPanelInfo()]).then(([slides, panelInfo]) => {
       // A Reset click while portraits/slides were still resolving already
       // tore everything down (see resetSimulation()) - don't pop this
       // checkpoint back open on top of the freshly-reset state.
@@ -2434,6 +2497,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
       case 'outcome': what = slide.outcomeLabel || `${slide.candidateName || 'Winner'} wins the presidency`; break;
       case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : slide.rCandidateName} wins` : 'Final — no majority'); break;
       case 'uncalled': what = 'No majority yet'; break;
+      case 'raceOverview': what = slide.title || 'Race overview'; break;
       default: what = slide.kind || 'Update';
     }
     // Mirrors the card's own "Breaking news" ribbon (renderCallOrCorrection()
@@ -2505,7 +2569,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 
         const records = resolveCheckpointRecords(cp.events);
         if (records.length) {
-          const [slides, panelInfo] = await Promise.all([buildCheckpointSlides(records), resolveScoreboardPanelInfo()]);
+          const [slides, panelInfo] = await Promise.all([buildCheckpointSlides(records, { isFirstCheckpoint: i === 0 }), resolveScoreboardPanelInfo()]);
           const { majority, hasThirdParty } = buildCheckpointShowOptions(records);
           for (const slide of slides) {
             if (slide.kind === 'races') {
@@ -3829,13 +3893,14 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     const sortedEv = Array.from(demEvSamples).sort((a, b) => a - b);
     const quantile = q => sortedEv[Math.min(sortedEv.length - 1, Math.max(0, Math.round(q * (sortedEv.length - 1))))];
     const evRange90 = [quantile(0.05), quantile(0.95)];
+    const medianDemEv = quantile(0.5);
 
     const rawProbD = demWins / PROB_MC_SIMS;
     const rawProbTie = tieWins / PROB_MC_SIMS;
     return {
       probD: Math.min(0.999, Math.max(0.001, rawProbD)),
       probTie: tieImpossible ? 0 : Math.min(0.999, Math.max(0.001, rawProbTie)),
-      locked: false, sims: PROB_MC_SIMS, evRange90, stateProb
+      locked: false, sims: PROB_MC_SIMS, evRange90, medianDemEv, stateProb
     };
   }
 

@@ -65,6 +65,18 @@
 //     marginPctText, rawMarginText, accentColor }], pageIndex, pageCount } -
 //     final-tally key-races recap, R→D sorted by margin; same card layout as
 //     'races' but without reporting bar/confidence. Non-breaking.
+//   { kind: 'raceOverview', year, title ("2028 Presidential Election"),
+//     dCandidateName, dPortraitUrl, rCandidateName, rPortraitUrl,
+//     oCandidateName?, oPortraitUrl? (third-party candidate, smaller, shown
+//     only in years with a real electoral-vote haul for one - see
+//     computeHasThirdParty() in election-night.js), stats?: { probD, probTie
+//     (both already 0.001-0.999 capped), medianDemEv, evRange90: [lo, hi],
+//     npvMargin (signed, D-positive) } - present only for a sim2028-bridged
+//     run (a historical replay's stats would read oddly for an outcome
+//     that's already history), null otherwise } - the night's opening
+//     "portrait of the race" title card, always the first slide of the very
+//     first checkpoint (see buildCheckpointSlides()'s isFirstCheckpoint
+//     param in election-night.js). Non-breaking.
 //
 // showCheckpoint(slides, options) options:
 //   onComplete, startingTally: {D,R,O}, winProb: {probD, probTie}|null
@@ -80,6 +92,7 @@ const OUTCOME_SLIDE_MS = 4500;
 const FINAL_SLIDE_MS = 6000;
 const RACES_SLIDE_MS = 6000;
 const FINAL_RESULTS_SLIDE_MS = 6000;
+const RACE_OVERVIEW_SLIDE_MS = 6500;
 const COUNTER_MS = 900;
 // How long the "BREAKING NEWS"/"FINAL" flash covers the card before fading
 // to reveal it - added on top of that slide's own duration so a flashed
@@ -114,6 +127,7 @@ let activeDeltaChips = { D: null, R: null, O: null };
 let autoAdvancePaused = false;
 
 function durationFor(slide) {
+  if (slide.kind === 'raceOverview') return RACE_OVERVIEW_SLIDE_MS;
   if (slide.kind === 'outcome') return OUTCOME_SLIDE_MS;
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races' || slide.kind === 'pollClose' || slide.kind === 'finalResults') return RACES_SLIDE_MS;
@@ -617,6 +631,78 @@ function renderFinal(slide) {
   animateTallyTo(slide.tallyBefore, slide.tallyAfter);
 }
 
+// Signed margin (D-positive) -> "D+3.2" / "R+1.8" / "EVEN", matching
+// docs/utils/formatters.js's fmtLean() - reimplemented locally rather than
+// imported since this module is deliberately import-free (every other
+// helper it needs, e.g. splitName/lastNameOf, is defined right here too).
+function formatSignedMargin(x) {
+  if (!isFinite(x)) return '—';
+  if (Math.abs(x) < 0.000005) return 'EVEN';
+  return (x > 0 ? 'D+' : 'R+') + (Math.abs(x) * 100).toFixed(1);
+}
+
+/**
+ * The night's opening title card - see this file's header comment for the
+ * full 'raceOverview' shape. Big candidate photos (buildPhotoMarkup()'s
+ * single-photo styling, sized up) side by side, with an optional smaller
+ * third-party photo centered between them, and - sim2028 only - a row of
+ * forecast stats below.
+ */
+function renderRaceOverview(slide) {
+  const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
+  const rName = lastNameOf(slide.rCandidateName) || 'Republican';
+  const oName = slide.oCandidateName ? lastNameOf(slide.oCandidateName) : '';
+
+  const photo = (portraitUrl, name, code, extraClass) => portraitUrl
+    ? `<img class="en-cp-overview-photo ${extraClass}" src="${portraitUrl}" alt="${name || ''}" />`
+    : `<div class="en-cp-overview-photo en-cp-overview-photo-fallback ${extraClass}">${code}</div>`;
+
+  const oBlock = slide.oCandidateName
+    ? `<div class="en-cp-overview-candidate en-cp-overview-candidate-o">
+        ${photo(slide.oPortraitUrl, slide.oCandidateName, 'O', 'en-cp-overview-photo-o')}
+        <div class="en-cp-overview-name">${oName.toUpperCase()}</div>
+      </div>`
+    : '';
+
+  let statsRow = '';
+  if (slide.stats) {
+    const s = slide.stats;
+    const probD = Math.max(0, Math.min(1, s.probD));
+    const probTie = Math.max(0, Math.min(1, s.probTie || 0));
+    const probR = Math.max(0, 1 - probD - probTie);
+    const medianText = isFinite(s.medianDemEv)
+      ? `${Math.round(s.medianDemEv)} D${Array.isArray(s.evRange90) ? ` (${Math.round(s.evRange90[0])}–${Math.round(s.evRange90[1])})` : ''}`
+      : '—';
+    const stat = (label, value) => `
+      <div class="en-cp-overview-stat">
+        <div class="en-cp-overview-stat-label">${label}</div>
+        <div class="en-cp-overview-stat-value">${value}</div>
+      </div>`;
+    statsRow = `<div class="en-cp-overview-stats">
+      ${stat(`${dName.toUpperCase()} TO WIN`, `${(probD * 100).toFixed(1)}%`)}
+      ${stat(`${rName.toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`)}
+      ${stat('EC TIE', `${(probTie * 100).toFixed(1)}%`)}
+      ${stat('EST. NPV', formatSignedMargin(s.npvMargin))}
+      ${stat('MEDIAN EV', medianText)}
+    </div>`;
+  }
+
+  cardEl.innerHTML = `
+    <div class="en-cp-overview-title">${slide.title || 'Presidential Election'}</div>
+    <div class="en-cp-overview-photos${slide.oCandidateName ? ' en-cp-overview-photos-3' : ''}">
+      <div class="en-cp-overview-candidate">
+        ${photo(slide.dPortraitUrl, slide.dCandidateName, 'D', '')}
+        <div class="en-cp-overview-name">${dName.toUpperCase()}</div>
+      </div>
+      ${oBlock}
+      <div class="en-cp-overview-candidate">
+        ${photo(slide.rPortraitUrl, slide.rCandidateName, 'R', '')}
+        <div class="en-cp-overview-name">${rName.toUpperCase()}</div>
+      </div>
+    </div>
+    ${statsRow}`;
+}
+
 /**
  * Mid-count analogue of renderFinal()'s no-majority branch: a correction
  * just knocked the previously-projected majority holder back below majority
@@ -765,7 +851,8 @@ function renderSlide(index) {
   const accent = slide.accentColor || '#2f2f2f';
   cardEl.style.setProperty('--en-cp-accent', accent);
   overlayEl.style.setProperty('--en-cp-accent', accent);
-  if (slide.kind === 'outcome') renderOutcome(slide);
+  if (slide.kind === 'raceOverview') renderRaceOverview(slide);
+  else if (slide.kind === 'outcome') renderOutcome(slide);
   else if (slide.kind === 'final') renderFinal(slide);
   else if (slide.kind === 'uncalled') renderUncalled(slide);
   else if (slide.kind === 'races') renderRaces(slide);

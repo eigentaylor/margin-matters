@@ -361,6 +361,92 @@ async function drawLeadFlip(ctx, slide, w, headerBottom) {
   return y + BOTTOM_PAD;
 }
 
+// Signed margin (D-positive) -> "D+3.2" / "R+1.8" / "EVEN", matching
+// docs/utils/formatters.js's fmtLean() - reimplemented locally like
+// updatePopup.js's own copy, since this module is deliberately import-free
+// apart from blendColors().
+function formatSignedMargin(x) {
+  if (!isFinite(x)) return '—';
+  if (Math.abs(x) < 0.000005) return 'EVEN';
+  return (x > 0 ? 'D+' : 'R+') + (Math.abs(x) * 100).toFixed(1);
+}
+
+// The night's opening "portrait of the race" title card - see
+// updatePopup.js's header comment for the full 'raceOverview' shape. No
+// header/ribbon (it's non-breaking, informational only): big D/R photos
+// side by side, an optional smaller third-party photo bottom-aligned
+// between them, and (sim2028 only) a row of forecast stat tiles below.
+async function drawRaceOverview(ctx, slide, w) {
+  let y = 34;
+  text(ctx, slide.title || 'Presidential Election', w / 2, y + 26, { font: `900 30px ${FONT}`, align: 'center' });
+  y += 26 + 28;
+
+  const hasO = !!slide.oCandidateName;
+  const [dImg, rImg, oImg] = await Promise.all([
+    loadImage(slide.dPortraitUrl),
+    loadImage(slide.rPortraitUrl),
+    hasO ? loadImage(slide.oPortraitUrl) : Promise.resolve(null)
+  ]);
+
+  const bigSize = PHOTO_SIZE_BIG;
+  const smallSize = 128;
+  const gap = hasO ? 20 : 40;
+  const totalW = hasO ? (bigSize * 2 + smallSize + gap * 2) : (bigSize * 2 + gap);
+  let x = (w - totalW) / 2;
+  const photosTop = y;
+  const bigBottom = photosTop + bigSize;
+  const nameY = bigBottom + 30;
+
+  drawPhotoBox(ctx, dImg, x, photosTop, bigSize, 'D');
+  text(ctx, lastNameOf(slide.dCandidateName).toUpperCase(), x + bigSize / 2, nameY, { font: `800 17px ${FONT}`, align: 'center' });
+  x += bigSize + gap;
+
+  if (hasO) {
+    // Bottom-aligned with the two big photos, so "smaller and between them"
+    // reads as sitting slightly in front rather than just shrunk in place.
+    drawPhotoBox(ctx, oImg, x, bigBottom - smallSize, smallSize, 'O');
+    text(ctx, lastNameOf(slide.oCandidateName).toUpperCase(), x + smallSize / 2, nameY, { font: `800 14px ${FONT}`, align: 'center' });
+    x += smallSize + gap;
+  }
+
+  drawPhotoBox(ctx, rImg, x, photosTop, bigSize, 'R');
+  text(ctx, lastNameOf(slide.rCandidateName).toUpperCase(), x + bigSize / 2, nameY, { font: `800 17px ${FONT}`, align: 'center' });
+
+  let bottomY = nameY + 20;
+
+  if (slide.stats) {
+    const s = slide.stats;
+    const probD = Math.max(0, Math.min(1, s.probD));
+    const probTie = Math.max(0, Math.min(1, s.probTie || 0));
+    const probR = Math.max(0, 1 - probD - probTie);
+    const medianText = isFinite(s.medianDemEv)
+      ? `${Math.round(s.medianDemEv)} D${Array.isArray(s.evRange90) ? ` (${Math.round(s.evRange90[0])}–${Math.round(s.evRange90[1])})` : ''}`
+      : '—';
+    const stats = [
+      [`${lastNameOf(slide.dCandidateName).toUpperCase()} TO WIN`, `${(probD * 100).toFixed(1)}%`],
+      [`${lastNameOf(slide.rCandidateName).toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`],
+      ['EC TIE', `${(probTie * 100).toFixed(1)}%`],
+      ['EST. NPV', formatSignedMargin(s.npvMargin)],
+      ['MEDIAN EV', medianText]
+    ];
+    bottomY += 16;
+    const rowX = 26, rowW = w - 52;
+    const tileW = rowW / stats.length;
+    stats.forEach(([label, value], i) => {
+      const tx = rowX + tileW * i;
+      const cx = tx + tileW / 2;
+      roundRectPath(ctx, tx + 4, bottomY, tileW - 8, 64, 10);
+      ctx.fillStyle = 'rgba(0,0,0,0.28)';
+      ctx.fill();
+      text(ctx, label, cx, bottomY + 22, { font: `800 10px ${FONT}`, color: 'rgba(255,255,255,0.6)', align: 'center' });
+      text(ctx, value, cx, bottomY + 46, { font: `900 18px ${FONT}`, align: 'center' });
+    });
+    bottomY += 64;
+  }
+
+  return bottomY + BOTTOM_PAD;
+}
+
 async function drawOutcome(ctx, slide, w, ribbonBottom) {
   const photoImg = await loadImage(slide.portraitUrl);
   const y = ribbonBottom + 34;
@@ -627,6 +713,7 @@ async function drawBody(ctx, slide, w) {
     const headerBottom = drawHeader(ctx, w, 'Final Results: Key Races', pageLabel, '', '');
     return drawFinalResults(ctx, slide, w, headerBottom);
   }
+  if (slide.kind === 'raceOverview') return drawRaceOverview(ctx, slide, w);
   const ribbonLabel = slide.kind === 'final' ? `Final${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}` : `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`;
   const ribbonBottom = drawBreakingRibbon(ctx, w, ribbonLabel);
   if (slide.kind === 'outcome') return drawOutcome(ctx, slide, w, ribbonBottom);
