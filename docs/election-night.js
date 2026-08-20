@@ -1023,9 +1023,7 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
     setPhaseText('Phase: Early');
     setTimeText(`${formatTimeLabel(state.simStart)} ET`);
     if (elements.pvDisplay) {
-      elements.pvDisplay.textContent = (state.pvMode === 'current')
-        ? `PV: ${state.targetPvLabel}`
-        : `PV: — (target ${state.targetPvLabel})`;
+      elements.pvDisplay.textContent = 'PV: —';
     }
 
     renderAt(state.currentTime);

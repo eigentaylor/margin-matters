@@ -47,6 +47,9 @@ const state = {
   // candidatePicker.js and homeStateAdvantage.js.
   candidates: { d: null, r: null },
   candidateSearchOpen: { d: false, r: false }, // UI-only: whether the search panel is expanded, independent of the current pick
+  // Last custom candidate config per party, kept around even while a preset/search
+  // pick is active so re-selecting "Custom..." restores it instead of starting blank.
+  lastCustomCandidate: { d: null, r: null },
 };
 
 const TREND_PALETTE = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4', '#f0c96e', '#c990e0', '#79d1a8', '#e88ea0', '#8fb8e0', '#d0a05a'];
@@ -1128,6 +1131,7 @@ function renderCandidatePicker(party) {
 /** Persists + applies a new choice for one party (baseline label + portrait override), then refreshes its UI. */
 function setCandidateChoice(party, choice) {
   state.candidates[party] = choice;
+  if (choice.mode === 'custom') state.lastCustomCandidate[party] = choice;
   saveCandidateChoice(party, choice);
   if (state.baseline) applyCandidateChoice(state.baseline, party, choice);
   renderCandidatePicker(party);
@@ -1151,8 +1155,13 @@ function customHomeFields(existing) {
 }
 
 function pickCustomCandidate(party) {
-  const existing = state.candidates[party];
-  const name = (existing && existing.mode === 'custom' && existing.name) || '';
+  // Switching to a preset/search pick doesn't clear out the last custom setup --
+  // restore it here so re-picking "Custom..." brings back whatever the user had,
+  // rather than starting blank.
+  const existing = state.candidates[party] && state.candidates[party].mode === 'custom'
+    ? state.candidates[party]
+    : state.lastCustomCandidate[party];
+  const name = (existing && existing.name) || '';
   closeCandidateSearch(party);
   setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing ? existing.imageUrl : null, ...customHomeFields(existing) });
 }
@@ -1447,6 +1456,8 @@ async function init() {
 
   state.candidates.d = loadCandidateChoice('d');
   state.candidates.r = loadCandidateChoice('r');
+  if (state.candidates.d.mode === 'custom') state.lastCustomCandidate.d = state.candidates.d;
+  if (state.candidates.r.mode === 'custom') state.lastCustomCandidate.r = state.candidates.r;
 
   // A shared link's params win over the today-seed default (and any locally
   // persisted candidate pick) above.
