@@ -335,6 +335,8 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     npvMisCallLogged: false,
     npvRetractedOnce: false,
     npvRetractedAt: null,
+    npvLeadLeader: null,
+    npvFlipCount: 0,
     outcomeAnnouncedType: null,
     outcomeAnnouncedTotal: null,
     allCalledAnnounced: false,
@@ -909,6 +911,8 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     state.npvMisCallLogged = false;
     state.npvRetractedOnce = false;
     state.npvRetractedAt = null;
+    state.npvLeadLeader = null;
+    state.npvFlipCount = 0;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
     state.outcomeSeq = 0;
@@ -1245,6 +1249,8 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     state.npvMisCallLogged = false;
     state.npvRetractedOnce = false;
     state.npvRetractedAt = null;
+    state.npvLeadLeader = null;
+    state.npvFlipCount = 0;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
     state.outcomeSeq = 0;
@@ -1563,13 +1569,15 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       // Give it its own slide kind here rather than letting it fall through
       // into the generic call/correction branch, which used to render it as
       // a bogus "WINNER" card with a null-leader placeholder avatar.
-      if (record.noticeType === 'retraction') {
+      if (record.noticeType === 'retraction' || record.noticeType === 'npv_retraction') {
+        const isNpv = record.noticeType === 'npv_retraction';
         const leader = record.previousLeader;
-        const retractedSt = unitsByKey.get(record.unitKey);
+        const retractedSt = isNpv ? null : unitsByKey.get(record.unitKey);
         return {
           kind: 'retraction',
+          isNpv,
           unitKey: record.unitKey,
-          stateName: formatUnitLabel(record.unitKey, state.year, { short: true }),
+          stateName: isNpv ? 'National Popular Vote' : formatUnitLabel(record.unitKey, state.year, { short: true }),
           ev: record.ev,
           leader,
           candidateName: record.previousCandidateName,
@@ -1577,25 +1585,28 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
           confidencePct: record.confidence,
           reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
           reportingText: formatReportingText(record.reporting, null),
-          keyRace: isKeyRaceUnit(retractedSt),
+          keyRace: isNpv ? true : isKeyRaceUnit(retractedSt),
           tallyBefore: spec_tallyBefore,
           tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
           time: record.time,
           timeLabel: formatTimeLabel(record.time)
         };
       }
-      // A "breaking news" leader-flip - a key race's raw count changing
-      // hands while it's still uncalled (pre-first-call, or during
-      // too-close-to-call limbo after a retraction). Self-contained record
-      // (candidateName already resolved in registerLeadFlip()), so unlike
-      // the call/correction branch below this doesn't need to re-resolve
-      // portraits for both parties - just the new leader.
-      if (record.noticeType === 'leadFlip') {
+      // A "breaking news" leader-flip - a key race's (or the national
+      // popular vote's) raw count changing hands while it's still uncalled
+      // (pre-first-call, or during too-close-to-call limbo after a
+      // retraction). Self-contained record (candidateName already resolved
+      // in registerLeadFlip()/registerNpvLeadFlip()), so unlike the call/
+      // correction branch below this doesn't need to re-resolve portraits
+      // for both parties - just the new leader.
+      if (record.noticeType === 'leadFlip' || record.noticeType === 'npvLeadFlip') {
+        const isNpv = record.noticeType === 'npvLeadFlip';
         const leader = record.leader;
         return {
           kind: 'leadFlip',
+          isNpv,
           unitKey: record.unitKey,
-          stateName: formatUnitLabel(record.unitKey, state.year, { short: true }),
+          stateName: isNpv ? 'National Popular Vote' : formatUnitLabel(record.unitKey, state.year, { short: true }),
           ev: record.ev,
           leader,
           candidateName: record.candidateName,
@@ -2087,6 +2098,27 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
   }
 
   /**
+   * The aggregate national D/R/O vote totals at a given time, re-summed
+   * from every pvWeight unit's own computeMetrics() - shared by every NPV
+   * projector below (call, lead-flip, retraction), all of which need this
+   * same aggregate at a series of speculative timestamps rather than one
+   * unit's state in isolation.
+   */
+  function projectNationalTotalsAt(data, t) {
+    const phaseName = (getPhase(t) || {}).name || 'Final';
+    let dCounted = 0, rCounted = 0, oCounted = 0, countedVotes = 0;
+    data.forEach(st => {
+      const metrics = computeMetrics(st, t, phaseName);
+      const counted = st.totalVotes * metrics.reporting;
+      dCounted += counted * metrics.dShare;
+      rCounted += counted * metrics.rShare;
+      oCounted += counted * metrics.oShare;
+      countedVotes += counted;
+    });
+    return { dCounted, rCounted, oCounted, countedVotes };
+  }
+
+  /**
    * Project when (and for whom) the national popular vote would be called,
    * mirroring maybeRegisterNpvCall()'s live trigger exactly - but that live
    * version depends on an *aggregate* across every pvWeight unit's own
@@ -2100,16 +2132,7 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
     const STEP = 2;
     for (let t = state.simStart; t <= state.simEnd; t += STEP) {
-      const phaseName = (getPhase(t) || {}).name || 'Final';
-      let dCounted = 0, rCounted = 0, oCounted = 0, countedVotes = 0;
-      data.forEach(st => {
-        const metrics = computeMetrics(st, t, phaseName);
-        const counted = st.totalVotes * metrics.reporting;
-        dCounted += counted * metrics.dShare;
-        rCounted += counted * metrics.rShare;
-        oCounted += counted * metrics.oShare;
-        countedVotes += counted;
-      });
+      const { dCounted, rCounted, oCounted, countedVotes } = projectNationalTotalsAt(data, t);
       const leader = nationalLeader(dCounted, rCounted, oCounted);
       if (!leader) continue;
       const reporting = countedVotes / state.totalEligibleVotes;
@@ -2131,6 +2154,85 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     // uses to decide whether a call needs correcting).
     const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
     return { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: finalLeader };
+  }
+
+  /**
+   * Project "breaking news" leader-flip moments for the national popular
+   * vote while it's still uncalled - the aggregate raw leader changing
+   * hands before the projected NPV call, mirroring projectUnitLeadFlips()
+   * but re-summing the whole electorate at each step (projectNationalTotalsAt)
+   * instead of projecting one unit in isolation. Scoped to pre-call only,
+   * same as projectNpvCallEvent() itself - NPV retraction/recall has no
+   * bias-curve side effects (see projectNpvRetraction()'s comment), so
+   * there's no separate limbo-window trajectory to re-scan the way a
+   * retracted key race's projectUnitLeadFlips() call does.
+   */
+  function projectNpvLeadFlips(npvCall) {
+    const data = (state.stateData || []).filter(st => st.pvWeight);
+    if (!data.length || !npvCall) return [];
+    const STEP = 2;
+    const flips = [];
+    let lastLeader = null;
+    let lastFlipTime = -Infinity;
+    for (let t = state.simStart; t <= npvCall.time && flips.length < LEAD_FLIP_MAX_PER_UNIT; t += STEP) {
+      const { dCounted, rCounted, oCounted, countedVotes } = projectNationalTotalsAt(data, t);
+      const leader = countedVotes > EPS ? nationalLeader(dCounted, rCounted, oCounted) : null;
+      if (leader != null && lastLeader != null && leader !== lastLeader && (t - lastFlipTime) >= LEAD_FLIP_MIN_GAP_MINUTES) {
+        flips.push({ time: t, leader });
+        lastFlipTime = t;
+      }
+      if (leader != null) lastLeader = leader;
+    }
+    return flips;
+  }
+
+  /**
+   * Project when (if ever) the national popular vote would be retracted
+   * after its projected call, and when/for whom it gets re-called -
+   * mirrors shouldRetractNpvCall()/maybeRegisterNpvCall()'s live triggers
+   * exactly (both inlined here rather than called directly, same
+   * convention projectNpvCallEvent() itself already uses, since those live
+   * functions have side effects a speculative scan can't afford). Unlike
+   * projectUnitRetraction(), registerNpvRetraction() never swaps in a
+   * surge bias the way a retracted state's registerRetraction() does - the
+   * aggregate NPV confidence curve has no per-unit trajectory to nudge -
+   * so this is a plain forward scan of the same deterministic aggregate
+   * projectNationalTotalsAt() already computes, no bias-override juggling
+   * needed.
+   */
+  function projectNpvRetraction(npvCall) {
+    if (!npvCall) return null;
+    const data = (state.stateData || []).filter(st => st.pvWeight);
+    if (!data.length || !(state.totalEligibleVotes > EPS)) return null;
+    const threshold = Math.max(0, Math.min(1, isFinite(state.confidenceThreshold) ? state.confidenceThreshold : DEFAULT_CONFIDENCE_THRESHOLD));
+    const retractionThreshold = threshold * effectiveRetractionFraction();
+    const STEP = 2;
+    for (let t = npvCall.time + STEP; t <= state.simEnd; t += STEP) {
+      const totals = projectNationalTotalsAt(data, t);
+      if (totals.countedVotes >= state.totalEligibleVotes - EPS) return null; // fully reported without ever dipping
+      const confidence = calculateNationalConfidence(totals.dCounted, totals.rCounted, totals.oCounted, totals.countedVotes);
+      if (!(isFinite(confidence) && confidence < retractionThreshold)) continue;
+      // Retracted at t - scan forward for the re-call, respecting the same
+      // RETRACTED_MIN_DWELL_MINUTES floor maybeRegisterNpvCall() does
+      // (waived once reporting completes or the night is basically over,
+      // same as live).
+      for (let t2 = t + STEP; t2 <= state.simEnd; t2 += STEP) {
+        const totals2 = projectNationalTotalsAt(data, t2);
+        const reporting2 = totals2.countedVotes / state.totalEligibleVotes;
+        const forceByNightEnd2 = t2 >= state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES;
+        if ((t2 - t) < RETRACTED_MIN_DWELL_MINUTES && !(reporting2 >= 1.0 || forceByNightEnd2)) continue;
+        const leader2 = nationalLeader(totals2.dCounted, totals2.rCounted, totals2.oCounted);
+        if (!leader2) continue;
+        const confidence2 = calculateNationalConfidence(totals2.dCounted, totals2.rCounted, totals2.oCounted, totals2.countedVotes);
+        if (reporting2 >= 1.0 || (isFinite(confidence2) && confidence2 >= threshold) || forceByNightEnd2) {
+          return { retractionTime: t, recall: { time: t2, leader: leader2 } };
+        }
+      }
+      // Dead-end fallback, same convention as projectUnitRetraction()'s own.
+      const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+      return { retractionTime: t, recall: { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: finalLeader } };
+    }
+    return null;
   }
 
   /**
@@ -2184,18 +2286,36 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
 
     // National popular vote gets its own checkpoint-worthy call/correction
     // pair, same as any unit above - it just has no EV weight of its own,
-    // so it never participates in the majority replay below.
+    // so it never participates in the majority replay below. Also gets the
+    // same optional retraction/recall pair and "breaking news" lead-flip
+    // moments a key race does (projectNpvRetraction/projectNpvLeadFlips).
     const npvCall = projectNpvCallEvent();
     if (npvCall) {
       timeline.push({ kind: 'npv', unitKey: 'NPV', ev: 0, leader: npvCall.leader, time: npvCall.time });
+
+      const npvRetraction = projectNpvRetraction(npvCall);
+      let effectiveNpvCall = npvCall;
+      if (npvRetraction) {
+        timeline.push({ kind: 'npv_retraction', unitKey: 'NPV', ev: 0, leader: null, time: npvRetraction.retractionTime });
+        if (npvRetraction.recall) {
+          timeline.push({ kind: 'npv_recall', unitKey: 'NPV', ev: 0, leader: npvRetraction.recall.leader, time: npvRetraction.recall.time });
+          effectiveNpvCall = npvRetraction.recall;
+        }
+      }
+
       const npvFinalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
-      if (npvCall.leader !== npvFinalLeader) {
+      if (effectiveNpvCall.leader !== npvFinalLeader) {
         // Same FINAL_CHECKPOINT_GAP_MINUTES headroom as projectUnitCallEvent's
         // dead-end fallback above, and for the same reason: this used to be
         // pinned to exactly state.simEnd, which reliably tied with the
         // trailing 'final' event and merged into its checkpoint batch.
         timeline.push({ kind: 'npv_correction', unitKey: 'NPV', ev: 0, leader: npvFinalLeader, time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES });
       }
+
+      const npvFlips = projectNpvLeadFlips(npvCall);
+      npvFlips.forEach((flip, i) => {
+        timeline.push({ kind: 'npvLeadFlip', unitKey: 'NPV', ev: 0, leader: flip.leader, time: flip.time, flipIndex: i });
+      });
     }
 
     // "Polls just closed in X states" markers - one per distinct startTime
@@ -2223,7 +2343,13 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       timeline.push({ kind: 'pollClose', unitKey: null, ev: 0, leader: null, time: t, states, totalEv });
     });
 
-    const KIND_ORDER = { call: 0, retraction: 1, leadFlip: 2, recall: 3, correction: 4 };
+    const KIND_ORDER = {
+      call: 0, npv: 0,
+      retraction: 1, npv_retraction: 1,
+      leadFlip: 2, npvLeadFlip: 2,
+      recall: 3, npv_recall: 3,
+      correction: 4, npv_correction: 4
+    };
     timeline.sort((a, b) => (a.time - b.time) || ((KIND_ORDER[a.kind] ?? 9) - (KIND_ORDER[b.kind] ?? 9)));
 
     // Replay in time order to find every national outcome transition AND
@@ -2280,8 +2406,9 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         attributedAlloc.set(ev.unitKey, null);
         ev.allocAfter = { D: 0, R: 0, O: 0 };
       }
-      // npv/npv_correction/leadFlip carry no EV weight - dRunning/rRunning/
-      // oRunning (and thus tallyAfter) simply pass through unchanged for them.
+      // npv/npv_correction/npv_retraction/npv_recall/leadFlip/npvLeadFlip
+      // carry no EV weight - dRunning/rRunning/oRunning (and thus
+      // tallyAfter) simply pass through unchanged for them.
       ev.tallyAfter = { D: dRunning, R: rRunning, O: oRunning };
       // Mirrors runNationalWinProbabilityMC's impossibleD/impossibleR check:
       // once the EV still not yet attributed to anyone can no longer close
@@ -2434,8 +2561,24 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         // vs 'outcome-reversal'). seq lines them up positionally regardless,
         // and survives the leader value repeating (e.g. D -> null -> D).
         rec = state.callRecords.find(r => r && r.kind === 'notice' && r.outcomeSeq === ev.seq);
-      } else if (ev.kind === 'npv') {
-        rec = state.npvCallRecord;
+      } else if (ev.kind === 'npv' || ev.kind === 'npv_recall') {
+        // Same ordinal-disambiguation problem 'call'/'recall' solve above:
+        // a retracted-then-recalled NPV pushes a second kind:'npv_call'
+        // record, and state.npvCallRecord only ever points at whichever one
+        // is currently "live" - reading it directly here would resolve a
+        // rewatched original-call checkpoint to the recall's data (or vice
+        // versa) once both exist. Index into the sorted pair instead.
+        const npvCalls = state.callRecords
+          .filter(r => r && r.kind === 'npv_call')
+          .sort((a, b) => a.time - b.time);
+        rec = npvCalls[ev.kind === 'npv_recall' ? 1 : 0] || null;
+      } else if (ev.kind === 'npv_retraction') {
+        rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'npv_retraction');
+      } else if (ev.kind === 'npvLeadFlip') {
+        const npvFlips = state.callRecords
+          .filter(r => r && r.kind === 'notice' && r.noticeType === 'npvLeadFlip')
+          .sort((a, b) => a.time - b.time);
+        rec = npvFlips[ev.flipIndex] || null;
       } else if (ev.kind === 'npv_correction') {
         rec = state.callRecords.find(r => r && r.kind === 'notice' && r.noticeType === 'npv_miscall');
       } else if (ev.kind === 'final') {
@@ -3636,7 +3779,26 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     state.lastNationalTotals = { dCounted, rCounted, oCounted, countedVotes };
     maybeRegisterNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
     if (shouldRetractNpvCall(dCounted, rCounted, oCounted, countedVotes, timeMinutes)) {
-      registerNpvRetraction(timeMinutes);
+      registerNpvRetraction(dCounted, rCounted, oCounted, countedVotes, timeMinutes);
+    }
+    // "Breaking news" leader-flip check for the aggregate national vote -
+    // mirrors the per-state trigger in the forEach loop above, reading
+    // state.npvCallRecord AFTER the call/retraction block just ran so a
+    // call (or recall) that fires this very tick never also reads as a
+    // flip. state.npvLeadLeader is kept reset to null for the whole time
+    // the NPV is called, so the first tick after a future retraction
+    // starts from a fresh baseline instead of comparing against whatever
+    // led right before the call - same "null baseline never counts as a
+    // flip" convention projectUnitLeadFlips()'s retraction-boundary reset
+    // uses.
+    if (!state.npvCallRecord) {
+      const npvLeader = countedVotes > EPS ? nationalLeader(dCounted, rCounted, oCounted) : null;
+      if (npvLeader != null && state.npvLeadLeader != null && npvLeader !== state.npvLeadLeader) {
+        registerNpvLeadFlip(npvLeader, dCounted, rCounted, oCounted, countedVotes, timeMinutes);
+      }
+      if (npvLeader != null) state.npvLeadLeader = npvLeader;
+    } else {
+      state.npvLeadLeader = null;
     }
     maybeEmitNpvMiscall(countedVotes, timeMinutes);
     updateNationalWinProbability(timeMinutes, settled);
@@ -4550,7 +4712,7 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     return isFinite(confidence) && confidence < retractionThreshold;
   }
 
-  function registerNpvRetraction(currentTime) {
+  function registerNpvRetraction(dCounted, rCounted, oCounted, countedVotes, currentTime) {
     // Un-call the NPV: log a "too close to call" notice and reset
     // state.npvCallRecord back to null so maybeRegisterNpvCall() can call it
     // again later once confidence recovers (same RETRACTED_MIN_DWELL_MINUTES
@@ -4561,7 +4723,8 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     if (!state.npvCallRecord || state.npvRetractedOnce) return;
     state.npvRetractedOnce = true;
     const retractionTime = Math.max(currentTime, state.npvCallRecord.time + 0.01);
-    const previousLeaderText = state.npvCallRecord.candidateName || formatLeader(state.npvCallRecord.leader);
+    const previousLeader = state.npvCallRecord.leader;
+    const previousLeaderText = state.npvCallRecord.candidateName || formatLeader(previousLeader);
     const message = `${formatTimeLabel(retractionTime)} – National popular vote is retracted: too close to call. Previously called for ${previousLeaderText} at ${formatTimeLabel(state.npvCallRecord.time)}.`;
     state.npvCallRecord.retracted = true;
     state.callRecords.push({
@@ -4570,7 +4733,14 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       unitKey: 'NPV',
       time: retractionTime,
       text: message,
-      previousLeader: state.npvCallRecord.leader
+      previousLeader,
+      // Full name (not just the last-name text above) - feeds
+      // buildCheckpointSlides' record.noticeType === 'npv_retraction'
+      // branch, which wants the same full-name treatment a state
+      // retraction's previousCandidateName gets.
+      previousCandidateName: resolveCandidateFullName(previousLeader, 'NATIONAL') || previousLeaderText,
+      confidence: calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes),
+      reporting: state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : null
     });
     state.npvCallRecord = null;
     state.npvRetractedAt = retractionTime;
@@ -4889,6 +5059,47 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         confidence: metrics.confidence,
         reporting: metrics.reporting
       });
+    }
+
+    triggerTipRefresh();
+  }
+
+  /**
+   * Log a "breaking news" leader-flip notice for the aggregate national
+   * popular vote - same idea as registerLeadFlip(), just sourced from the
+   * national D/R/O totals (renderAt()'s call site) instead of one unit's
+   * metrics. Never touches state.npvCallRecord/npvRetractedOnce - a pure
+   * narrative aside, same as the per-unit version.
+   */
+  function registerNpvLeadFlip(leader, dCounted, rCounted, oCounted, countedVotes, currentTime) {
+    state.npvFlipCount = (state.npvFlipCount || 0) + 1;
+    if (state.npvFlipCount > LEAD_FLIP_MAX_PER_UNIT) return;
+    const candidateName = resolveCandidateFullName(leader, 'NATIONAL') || formatLeader(leader);
+    const marginStr = leader === 'O'
+      ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes)
+      : formatLean(countedVotes > EPS ? (dCounted - rCounted) / countedVotes : 0);
+    const record = {
+      kind: 'notice',
+      noticeType: 'npvLeadFlip',
+      unitKey: 'NPV',
+      displayLabel: 'National Popular Vote',
+      time: currentTime,
+      text: `${formatTimeLabel(currentTime)} – National popular vote: ${candidateName} takes the lead.`,
+      leader,
+      candidateName,
+      dVotes: dCounted,
+      rVotes: rCounted,
+      countedVotes,
+      remainingVotes: Math.max(0, Math.round((state.totalEligibleVotes || 0) - countedVotes)),
+      marginStr
+    };
+    state.callRecords.push(record);
+
+    // Same opt-in convention as registerLeadFlip()'s window._enLeadFlipLog
+    // push, for offline tooling.
+    if (window.ENABLE_EN_COLOR_CALL_LOG) {
+      window._enLeadFlipLog = window._enLeadFlipLog || [];
+      window._enLeadFlipLog.push({ unitKey: 'NPV', time: currentTime, leader, marginStr, reporting: state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 0 });
     }
 
     triggerTipRefresh();
@@ -5942,11 +6153,12 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     npvLines.forEach(line => signatureParts.push(line.signature));
 
     const noticeLines = readyEvents
-      // leadFlip notices power checkpoint popups (breaking-news flip cards)
-      // but are deliberately excluded here - they're a live-count aside,
-      // not a durable log-worthy fact, and would otherwise spam this
-      // persistent list every time a key race's raw lead changes hands.
-      .filter(rec => rec.kind === 'notice' && rec.noticeType !== 'leadFlip')
+      // leadFlip/npvLeadFlip notices power checkpoint popups (breaking-news
+      // flip cards) but are deliberately excluded here - they're a
+      // live-count aside, not a durable log-worthy fact, and would
+      // otherwise spam this persistent list every time a key race's (or
+      // the national vote's) raw lead changes hands.
+      .filter(rec => rec.kind === 'notice' && rec.noticeType !== 'leadFlip' && rec.noticeType !== 'npvLeadFlip')
       .map(rec => {
         const text = rec.text || `${formatTimeLabel(rec.time)} – ${rec.noticeType || 'Notice'}${rec.displayLabel ? `: ${rec.displayLabel}` : ''}`;
         // The three outcome-milestone notice types (clinch/reversal/final)

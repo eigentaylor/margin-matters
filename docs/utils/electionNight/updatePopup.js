@@ -26,17 +26,21 @@
 //   { kind: 'retraction', stateName, ev, leader (the PREVIOUSLY called
 //     leader - there's no new one yet), candidateName (ditto), portraitUrl,
 //     accentColor, timeLabel, tallyAfter: {D,R,O}, reportingPct,
-//     reportingText } - a called unit's confidence collapsed back below the
-//     retraction threshold before it finished reporting ("too close to
-//     call"); no D/R comparison row since there's no new leader to compare.
+//     reportingText, isNpv? (national popular vote retraction - hides the
+//     EV badge, always keyRace: true) } - a called unit's confidence
+//     collapsed back below the retraction threshold before it finished
+//     reporting ("too close to call"); no D/R comparison row since there's
+//     no new leader to compare.
 //   { kind: 'leadFlip', stateName, ev, leader (the NEW raw leader),
 //     candidateName, portraitUrl, accentColor, timeLabel, tallyAfter (same
 //     as tallyBefore - carries no EV weight), dVotes, rVotes, countedVotes,
 //     reportingPct, reportingText, marginText, marginPctText, keyRace:
-//     true (always - only ever built for key races) } - a key race's raw
-//     vote lead changed hands while it's still uncalled (pre-first-call, or
-//     during too-close-to-call limbo after a retraction); no D/R comparison
-//     row since only the new leader's portrait is resolved.
+//     true (always - only ever built for key races, or the national
+//     popular vote), isNpv? (hides the EV badge) } - a key race's (or the
+//     national popular vote's) raw vote lead changed hands while it's
+//     still uncalled (pre-first-call, or during too-close-to-call limbo
+//     after a retraction); no D/R comparison row since only the new
+//     leader's portrait is resolved.
 //   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel,
 //     outcomeLabel? ("Elected Nth President" / "Reelected as Nth President" -
 //     null when the winner's name couldn't be resolved, e.g. future.html's
@@ -510,7 +514,9 @@ function renderCallOrCorrection(slide) {
  */
 function renderRetraction(slide) {
   const { first, last } = splitName(slide.candidateName);
-  const evBadge = `<div class="en-cp-ev">
+  const evBadge = slide.isNpv
+    ? `<div class="en-cp-ev"><span class="en-cp-ev-label">National vote</span></div>`
+    : `<div class="en-cp-ev">
       <span class="en-cp-ev-label">Electoral votes</span>
       <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
     </div>`;
@@ -547,7 +553,9 @@ function renderRetraction(slide) {
  */
 function renderLeadFlip(slide) {
   const { first, last } = splitName(slide.candidateName);
-  const evBadge = `<div class="en-cp-ev">
+  const evBadge = slide.isNpv
+    ? `<div class="en-cp-ev"><span class="en-cp-ev-label">National vote</span></div>`
+    : `<div class="en-cp-ev">
       <span class="en-cp-ev-label">Electoral votes</span>
       <span class="en-cp-ev-num">${isFinite(slide.ev) ? slide.ev : '-'}</span>
     </div>`;
