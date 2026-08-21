@@ -1818,7 +1818,13 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       spec.oPortraitUrl = spec.oCandidateName ? await getPortraitUrlForName(state.year, spec.oCandidateName) : null;
     }));
 
-    const uncalled = buildUncalledCandidates();
+    // NPV is pinned first and always flagged as a key race here (unlike the
+    // call-log sidebar's copy of it, which stays badge-free) - it's one of
+    // the most-watched numbers on the broadcast, so it shouldn't have to
+    // out-score state races on the routine importance formula (which scores
+    // it 0 anyway, since it carries no EV) to guarantee a slot.
+    const npvCandidate = buildNpvUncalledCandidate();
+    const uncalled = npvCandidate ? [{ ...npvCandidate, keyRace: true }, ...buildUncalledCandidates()] : buildUncalledCandidates();
     if (uncalled.length) {
       const threshold = effectiveConfidenceThreshold();
       const pageCount = Math.min(MAX_RACES_TO_WATCH_PAGES, Math.ceil(uncalled.length / RACES_PER_SLIDE));
@@ -1827,10 +1833,14 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         // Resolve the leading candidate's name/portrait regardless of party -
         // resolveCandidateFullName() already handles 'O' correctly (reads
         // the CSV's thirdPartyResults), it was just never called for it here.
-        const candidateName = resolveCandidateFullName(c.leader, c.unitKey);
+        // NPV's unitKey ('NPV') isn't a resolvable state/unit - candidate
+        // name lookups use the 'NATIONAL' key instead, same as
+        // buildFinalKeyRaces()'s NPV entry.
+        const isNpv = c.unitKey === 'NPV';
+        const candidateName = resolveCandidateFullName(c.leader, isNpv ? 'NATIONAL' : c.unitKey);
         return {
           unitKey: c.unitKey,
-          displayLabel: formatUnitLabel(c.unitKey, state.year, { short: true }),
+          displayLabel: isNpv ? c.displayLabel : formatUnitLabel(c.unitKey, state.year, { short: true }),
           ev: c.ev,
           leader: c.leader,
           keyRace: c.keyRace,
@@ -5496,6 +5506,43 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
   }
 
   /**
+   * The national popular vote, shaped like a buildUncalledCandidates()
+   * entry (unitKey/displayLabel/confidence/reporting/margin/etc.) so it can
+   * sit alongside state races in the same lists/cards, computed from
+   * whatever the last renderAt() call left in state.lastNationalTotals.
+   * Deliberately omits `keyRace` - callers that want the "KEY" badge (the
+   * checkpoint popup/album's "races to watch" slide) opt in explicitly,
+   * while the always-visible call-log sidebar's dedicated NPV card
+   * (updateCallLog's npvWatchCandidate) stays badge-free as before. Returns
+   * null before any national votes have been counted yet.
+   */
+  function buildNpvUncalledCandidate() {
+    if (!(state.lastNationalTotals && state.totalEligibleVotes > EPS)) return null;
+    const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
+    if (!(countedVotes > EPS)) return null;
+    const leader = nationalLeader(dCounted, rCounted, oCounted);
+    const margin = (dCounted - rCounted) / countedVotes;
+    return {
+      unitKey: 'NPV',
+      displayLabel: 'National Popular Vote',
+      confidence: (() => {
+        const c = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
+        return isFinite(c) ? c : 0;
+      })(),
+      reporting: countedVotes / state.totalEligibleVotes,
+      remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
+      leader,
+      margin,
+      marginStr: leader === 'O' ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes) : formatLean(margin),
+      voteMargin: Math.round(dCounted - rCounted),
+      dVotes: dCounted,
+      rVotes: rCounted,
+      oVotes: oCounted,
+      ev: 0
+    };
+  }
+
+  /**
    * Every not-yet-called race with any reporting so far, sorted by
    * importance/interest (rewards high EV, confidence near the call
    * threshold, and a small margin). Used both by the always-visible "still
@@ -5601,29 +5648,9 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     // meant as an ongoing watch item, not something that disappears once
     // decided, since the underlying count keeps moving regardless.
     let npvWatchCandidate = null;
-    if (state.lastNationalTotals && state.totalEligibleVotes > EPS) {
-      const { dCounted, rCounted, oCounted, countedVotes } = state.lastNationalTotals;
-      if (countedVotes > EPS) {
-        const leader = nationalLeader(dCounted, rCounted, oCounted);
-        const margin = countedVotes > EPS ? (dCounted - rCounted) / countedVotes : 0;
-        npvWatchCandidate = {
-          isNpv: true,
-          isCalled: !!state.npvCallRecord,
-          unitKey: 'NPV',
-          displayLabel: 'National Popular Vote',
-          confidence: (() => {
-            const c = calculateNationalConfidence(dCounted, rCounted, oCounted, countedVotes);
-            return isFinite(c) ? c : 0;
-          })(),
-          reporting: countedVotes / state.totalEligibleVotes,
-          remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
-          leader,
-          margin,
-          marginStr: leader === 'O' ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes) : formatLean(margin),
-          voteMargin: Math.round(dCounted - rCounted),
-          ev: 0
-        };
-      }
+    const npvBase = buildNpvUncalledCandidate();
+    if (npvBase) {
+      npvWatchCandidate = { ...npvBase, isNpv: true, isCalled: !!state.npvCallRecord };
     }
 
     const readyCalls = readyEvents.filter(rec => !rec.kind || rec.kind === 'call');

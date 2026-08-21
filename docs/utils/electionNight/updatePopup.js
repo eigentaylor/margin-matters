@@ -56,8 +56,10 @@
 //     candidateName, portraitUrl, reporting, marginText, marginPctText,
 //     rawMarginText, confidenceText, reportingText, accentColor }],
 //     timeLabel, pageIndex, pageCount } - up to MAX_RACES_TO_WATCH_PAGES
-//     pages (2) of the top uncalled races by importance; page label only
-//     shown when pageCount > 1.
+//     pages (2) of the top uncalled races by importance, with the national
+//     popular vote pinned first (unitKey 'NPV') and always key-race-flagged
+//     whenever any national votes have been counted; page label only shown
+//     when pageCount > 1.
 //   { kind: 'pollClose', states: [{ abbr, name, ev }] (sorted by EV
 //     descending), totalEv, timeLabel } - "polls just closed" marker built
 //     straight from state.stateData (not a live call/correction), one per
