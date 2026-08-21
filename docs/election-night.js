@@ -1761,7 +1761,22 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     // second, right behind the title card, regardless of what else is in
     // this checkpoint.
     if (lickmanIntroSpec) specs.push(lickmanIntroSpec);
-    const tierOf = spec => (spec.kind === 'raceOverview' || spec.kind === 'lickmanIntro') ? -1 : (spec.kind === 'final' ? 2 : (spec.breaking ? 0 : 1));
+    // 'outcome'/'uncalled' are excluded from the tier-0 breaking-news front
+    // group despite being flagged spec.breaking=true (kept true only for
+    // updatePopup.js's flash/ribbon treatment) - same decoupling as 'final'
+    // below, for the same reason: pulling a projection to the front of the
+    // batch ahead of its own time can land it ahead of the ordinary
+    // (non-key) state calls that were mathematically necessary to cross the
+    // threshold, which are otherwise stuck in the routine back tier. Left
+    // in the same tier as routine calls, it just sorts by time like
+    // everything else there and naturally lands after every call at-or-
+    // before its own timestamp - including the one that triggered it, since
+    // real calls carry positive EV and outcome/uncalled's ev is 0, so the
+    // EV tiebreak always puts same-time calls ahead of it.
+    const tierOf = spec => (spec.kind === 'raceOverview' || spec.kind === 'lickmanIntro') ? -1
+      : (spec.kind === 'final') ? 2
+      : (spec.kind === 'outcome' || spec.kind === 'uncalled') ? 1
+      : (spec.breaking ? 0 : 1);
     const evOf = spec => isFinite(spec.ev) ? spec.ev : 0;
     const timeOf = spec => isFinite(spec.time) ? spec.time : 0;
     specs.sort((a, b) => (tierOf(a) - tierOf(b)) || (timeOf(a) - timeOf(b)) || (evOf(b) - evOf(a)));
