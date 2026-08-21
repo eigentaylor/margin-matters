@@ -807,7 +807,9 @@ async function drawBody(ctx, slide, w) {
     return drawLeadFlip(ctx, slide, w, headerBottom);
   }
   if (slide.kind === 'races') {
-    const headerBottom = drawHeader(ctx, w, 'Races to watch', slide.timeLabel ? `${slide.timeLabel} ET` : '', '', '');
+    const timeLabel = slide.timeLabel ? `${slide.timeLabel} ET` : '';
+    const pageLabel = slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : '';
+    const headerBottom = drawHeader(ctx, w, 'Races to watch', `${timeLabel}${pageLabel}`, '', '');
     return drawRaces(ctx, slide, w, headerBottom);
   }
   if (slide.kind === 'pollClose') {

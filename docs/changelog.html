@@ -33,6 +33,8 @@
 <li>Each candidate's photo border hugs the actual portrait instead of a generic square, so a non-square photo doesn't end up with empty letterboxed corners inside the border.</li>
 <li>The opening title card's win %/tie %/median-EV/NPV stats (sim2028 only) now come from the campaign's own Election-Eve forecast - the same estimate shown on the sim2028 forecast panel - instead of the live election-night win-probability model, which is deliberately hedged close to 50-50 in the earliest minutes of the count since it hasn't seen any actual returns yet.</li>
 <li>The default election-night playback speed is now 1.0x instead of 0.5x, on both the historical simulator and sim2028.</li>
+<li>The final "Key Races" recap no longer ends on a sparse last page (e.g. just one or two cards): it now fills any partial final page out to a full 6 with the next-closest remaining races by margin, so a checkpoint that would've spanned 3 pages shows 18 races instead of trailing off after 13.</li>
+<li>The mid-night "Races to watch" slide can now span up to 2 pages (12 races) instead of always capping at 6, so a busy stretch of the night with many uncalled/key races isn't truncated - it still shows just 1 page when there aren't enough races to fill a second.</li>
 </ul>
 <h2>Aleck Lickman (v0.1)</h2>
 <br/>

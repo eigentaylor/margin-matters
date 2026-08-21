@@ -54,7 +54,10 @@
 //   { kind: 'races', candidates: [{ unitKey, displayLabel, ev, leader,
 //     keyRace (pinned first in the list, gets a small "KEY" badge),
 //     candidateName, portraitUrl, reporting, marginText, marginPctText,
-//     rawMarginText, confidenceText, reportingText, accentColor }] }
+//     rawMarginText, confidenceText, reportingText, accentColor }],
+//     timeLabel, pageIndex, pageCount } - up to MAX_RACES_TO_WATCH_PAGES
+//     pages (2) of the top uncalled races by importance; page label only
+//     shown when pageCount > 1.
 //   { kind: 'pollClose', states: [{ abbr, name, ev }] (sorted by EV
 //     descending), totalEv, timeLabel } - "polls just closed" marker built
 //     straight from state.stateData (not a live call/correction), one per
@@ -787,6 +790,7 @@ function renderUncalled(slide) {
 // copy of one - one card per race rather than a dense table.
 function renderRaces(slide) {
   const candidates = Array.isArray(slide.candidates) ? slide.candidates : [];
+  const pageLabel = slide.pageCount > 1 ? `<div class="en-cp-page-label">Page ${slide.pageIndex + 1} of ${slide.pageCount}</div>` : '';
   const cards = candidates.map(c => {
     const pct = isFinite(c.reporting) ? Math.max(0, Math.min(1, c.reporting)) * 100 : 0;
     const accent = c.accentColor || '#8a8a8a';
@@ -822,6 +826,7 @@ function renderRaces(slide) {
   cardEl.innerHTML = `
     <div class="en-cp-header en-cp-races-header">
       <div class="en-cp-state">Races to watch</div>
+      ${pageLabel}
     </div>
     <div class="en-cp-races-list">${cards}</div>`;
 }

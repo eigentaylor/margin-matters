@@ -195,6 +195,11 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
   const MAX_SPEED_MULTIPLIER = 100;
   const DEFAULT_SPEED_MULTIPLIER = 1;
   const SPEED_STEP = 0.05;
+  // Checkpoint "races" list pagination: cards per page for both the
+  // mid-night "races to watch" slide and the final key-races recap, and how
+  // many pages the mid-night slide may span.
+  const RACES_PER_SLIDE = 6;
+  const MAX_RACES_TO_WATCH_PAGES = 2;
   // Visual constants for uncalled/tossup styling
   const BRIGHT_TOSSUP_COLOR = '#bcbcbc'; // color used for clear tossups when uncalled
   const UNCALLED_BRIGHTEN = 0.65; // blending factor to brighten a state's color while it's uncalled (0..1)
@@ -1801,8 +1806,9 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     const uncalled = buildUncalledCandidates();
     if (uncalled.length) {
       const threshold = effectiveConfidenceThreshold();
-      const RACES_TO_SHOW = 6;
-      const candidates = await Promise.all(uncalled.slice(0, RACES_TO_SHOW).map(async c => {
+      const pageCount = Math.min(MAX_RACES_TO_WATCH_PAGES, Math.ceil(uncalled.length / RACES_PER_SLIDE));
+      const shown = uncalled.slice(0, pageCount * RACES_PER_SLIDE);
+      const mapped = await Promise.all(shown.map(async c => {
         // Resolve the leading candidate's name/portrait regardless of party -
         // resolveCandidateFullName() already handles 'O' correctly (reads
         // the CSV's thirdPartyResults), it was just never called for it here.
@@ -1826,21 +1832,30 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
           accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold)
         };
       }));
-      specs.push({ kind: 'races', candidates, timeLabel: formatTimeLabel(records[records.length - 1].time) });
+      const timeLabel = formatTimeLabel(records[records.length - 1].time);
+      for (let i = 0; i < mapped.length; i += RACES_PER_SLIDE) {
+        const page = mapped.slice(i, i + RACES_PER_SLIDE);
+        specs.push({
+          kind: 'races',
+          candidates: page,
+          timeLabel,
+          pageIndex: i / RACES_PER_SLIDE,
+          pageCount: Math.ceil(mapped.length / RACES_PER_SLIDE)
+        });
+      }
     }
 
     // Final key-races recap (100%-counted margins, R→D sorted, with tipping point starred)
     if (records.some(r => r.noticeType === 'final-tally')) {
       const { candidates } = await buildFinalKeyRaces();
       if (candidates.length) {
-        const PER_SLIDE = 6;
-        for (let i = 0; i < candidates.length; i += PER_SLIDE) {
-          const page = candidates.slice(i, i + PER_SLIDE);
+        for (let i = 0; i < candidates.length; i += RACES_PER_SLIDE) {
+          const page = candidates.slice(i, i + RACES_PER_SLIDE);
           specs.push({
             kind: 'finalResults',
             candidates: page,
-            pageIndex: i / PER_SLIDE,
-            pageCount: Math.ceil(candidates.length / PER_SLIDE)
+            pageIndex: i / RACES_PER_SLIDE,
+            pageCount: Math.ceil(candidates.length / RACES_PER_SLIDE)
           });
         }
       }
@@ -2661,7 +2676,7 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       case 'correction': what = `${slide.stateName || 'Correction'} — revised to ${slide.candidateName || slide.leader || '?'}`; break;
       case 'retraction': what = `${slide.stateName || 'Retraction'} — too close to call`; break;
       case 'leadFlip': what = `${slide.stateName || 'Lead change'} — ${slide.candidateName || slide.leader || '?'} now ahead`; break;
-      case 'races': what = 'Key races update'; break;
+      case 'races': what = `Key races update${slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : ''}`; break;
       case 'pollClose': what = `Polls closed in ${Array.isArray(slide.states) ? slide.states.length : 0} states`; break;
       case 'finalResults': what = `Final key race results${slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : ''}`; break;
       case 'outcome': what = slide.outcomeLabel || `${slide.candidateName || 'Winner'} wins the presidency`; break;
@@ -2743,10 +2758,15 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         if (records.length) {
           const [slides, panelInfo] = await Promise.all([buildCheckpointSlides(records, { isFirstCheckpoint: i === 0 }), resolveScoreboardPanelInfo()]);
           const { majority, hasThirdParty } = buildCheckpointShowOptions(records);
+          // Decided once per checkpoint (not per slide) - buildCheckpointSlides()
+          // can now emit more than one 'races' page for the same checkpoint, and
+          // re-checking cp.time against lastRacesTime per slide would make every
+          // page after the first look "not due" the instant the first page set
+          // lastRacesTime = cp.time, silently dropping it from the album.
+          const racesDue = isChapterBoundary || (cp.time - lastRacesTime) >= RACES_LULL_MINUTES;
           for (const slide of slides) {
             if (slide.kind === 'races') {
-              const due = isChapterBoundary || (cp.time - lastRacesTime) >= RACES_LULL_MINUTES;
-              if (!due) continue;
+              if (!racesDue) continue;
               lastRacesTime = cp.time;
             }
             // Most kinds carry their own tallyAfter (see buildCheckpointSlides());
@@ -5376,30 +5396,35 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     });
     if (tippingPointUnitKey) keyRaceSet.add(tippingPointUnitKey);
 
-    // Map to candidate descriptors using targetMetrics (frozen final numbers)
-    const candidates = await Promise.all(
-      data.filter(st => st && keyRaceSet.has(st.unitKey)).map(async st => {
-        const m = st.targetMetrics;
-        const candidateName = resolveCandidateFullName(m.leader, st.unitKey);
-        const voteMargin = (isFinite(m.dVotesCounted) && isFinite(m.rVotesCounted))
-          ? Math.round(m.dVotesCounted - m.rVotesCounted)
-          : null;
-        return {
-          unitKey: st.unitKey,
-          displayLabel: formatUnitLabel(st.unitKey, state.year, { short: true }),
-          ev: isFinite(st.ev) ? st.ev : 0,
-          leader: m.leader,
-          marginSigned: isFinite(m.margin) ? m.margin : 0, // for sorting
-          isTippingPoint: st.unitKey === tippingPointUnitKey,
-          candidateName,
-          portraitUrl: candidateName ? await getPortraitUrlForName(state.year, candidateName) : null,
-          marginPctText: m.marginStr,
-          rawMarginText: m.leader === 'O'
-            ? formatOtherRawMarginText(m.oVotesCounted, m.dVotesCounted, m.rVotesCounted)
-            : formatRawMarginText(m.leader, voteMargin),
-          accentColor: calledAccentColor(m.leader, m.margin)
-        };
-      })
+    // Map a unit to a candidate descriptor using targetMetrics (frozen final
+    // numbers) - shared by the key-race set below and by the page-filling
+    // races appended further down.
+    async function mapFinalCandidate(st) {
+      const m = st.targetMetrics;
+      const candidateName = resolveCandidateFullName(m.leader, st.unitKey);
+      const voteMargin = (isFinite(m.dVotesCounted) && isFinite(m.rVotesCounted))
+        ? Math.round(m.dVotesCounted - m.rVotesCounted)
+        : null;
+      return {
+        unitKey: st.unitKey,
+        displayLabel: formatUnitLabel(st.unitKey, state.year, { short: true }),
+        ev: isFinite(st.ev) ? st.ev : 0,
+        leader: m.leader,
+        marginSigned: isFinite(m.margin) ? m.margin : 0, // for sorting
+        isTippingPoint: st.unitKey === tippingPointUnitKey,
+        candidateName,
+        portraitUrl: candidateName ? await getPortraitUrlForName(state.year, candidateName) : null,
+        marginPctText: m.marginStr,
+        rawMarginText: m.leader === 'O'
+          ? formatOtherRawMarginText(m.oVotesCounted, m.dVotesCounted, m.rVotesCounted)
+          : formatRawMarginText(m.leader, voteMargin),
+        accentColor: calledAccentColor(m.leader, m.margin)
+      };
+    }
+
+    // Map to candidate descriptors for the key-race set
+    let candidates = await Promise.all(
+      data.filter(st => st && keyRaceSet.has(st.unitKey)).map(mapFinalCandidate)
     );
 
     // Sort R→D by signed margin (ascending: most negative/R first → most positive/D last)
@@ -5433,6 +5458,22 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         accentColor: calledAccentColor(leader, voteMargin / Math.max(1, totalVotes))
       });
       // Re-sort to keep NPV in its margin position (don't pin it to the end)
+      candidates.sort((a, b) => a.marginSigned - b.marginSigned);
+    }
+
+    // Fill out the last page: pad the key-race set (which can be any size)
+    // up to a full multiple of RACES_PER_SLIDE with the next-closest races
+    // by final margin, so the recap doesn't end on a near-empty page.
+    const pageCount = Math.ceil(candidates.length / RACES_PER_SLIDE);
+    const target = pageCount * RACES_PER_SLIDE;
+    if (candidates.length < target) {
+      const included = new Set(candidates.map(c => c.unitKey));
+      const fillPool = data
+        .filter(st => st && st.targetMetrics && !included.has(st.unitKey))
+        .sort((a, b) => Math.abs(a.targetMetrics.margin) - Math.abs(b.targetMetrics.margin))
+        .slice(0, target - candidates.length);
+      const fillCandidates = await Promise.all(fillPool.map(mapFinalCandidate));
+      candidates = candidates.concat(fillCandidates);
       candidates.sort((a, b) => a.marginSigned - b.marginSigned);
     }
 
