@@ -42,9 +42,9 @@ const state = {
   hoveredUnit: null,
   // Candidate picks — {mode:'default'|'preset'|'custom'|'historical', name, imageUrl,
   // homeState, strength} per party. Mostly a display concern (baseline.candidates label +
-  // portrait override), but a preset name or a custom homeState also feeds
-  // homeStateAdvantage.js's small lean bump, applied fresh in startCampaign(). See
-  // candidatePicker.js and homeStateAdvantage.js.
+  // portrait override), but a preset name (fixed home state) or a custom/historical
+  // homeState also feeds homeStateAdvantage.js's small lean bump -- scaled by strength,
+  // applied fresh in startCampaign(). See candidatePicker.js and homeStateAdvantage.js.
   candidates: { d: null, r: null },
   candidateSearchOpen: { d: false, r: false }, // UI-only: whether the search panel is expanded, independent of the current pick
   // Last custom candidate config per party, kept around even while a preset/search
@@ -935,14 +935,19 @@ function buildSettingsParams() {
   // browser's localStorage). A historical pick's image is just a small static
   // path though, so it rides along after the name, `|`-delimited (candidate
   // names don't contain `|`) — otherwise a shared link would silently lose it.
-  // A custom pick's home state + strength ride along the same way.
+  // A custom or historical pick's home state + strength ride along the same
+  // way; a preset's fixed home state doesn't need to, but its strength does.
   ['d', 'r'].forEach(party => {
     const c = state.candidates[party];
     if (c && c.mode !== 'default' && c.name) {
       let suffix = c.name;
-      if (c.mode === 'historical' && c.imageUrl) suffix = `${c.name}|${c.imageUrl}`;
-      else if (c.mode === 'custom' && c.homeState) {
+      if (c.mode === 'historical') {
+        suffix = c.imageUrl ? `${c.name}|${c.imageUrl}` : c.name;
+        if (c.homeState) suffix += `|${c.homeState}|${typeof c.strength === 'number' ? c.strength : 0.5}`;
+      } else if (c.mode === 'custom' && c.homeState) {
         suffix = `${c.name}|${c.homeState}|${typeof c.strength === 'number' ? c.strength : 0.5}`;
+      } else if (c.mode === 'preset' && typeof c.strength === 'number' && c.strength !== 1) {
+        suffix = `${c.name}|${c.strength}`;
       }
       params.set(party === 'd' ? 'dCand' : 'rCand', `${c.mode}:${suffix}`);
     }
@@ -1023,12 +1028,21 @@ function applySettingsFromUrl() {
     const mode = raw.slice(0, sep);
     const name = raw.slice(sep + 1);
     if (!name) return;
-    if (mode === 'preset' && PRESET_CANDIDATES[party].some(p => p.name === name)) {
-      state.candidates[party] = { mode: 'preset', name, imageUrl: null };
+    if (mode === 'preset') {
+      const [candName, strengthRaw] = name.split('|');
+      if (PRESET_CANDIDATES[party].some(p => p.name === candName)) {
+        const strength = strengthRaw !== undefined ? parseFloat(strengthRaw) : NaN;
+        state.candidates[party] = { mode: 'preset', name: candName, imageUrl: null, strength: Number.isFinite(strength) ? strength : null };
+      }
     } else if (mode === 'historical') {
-      const bar = name.indexOf('|');
-      if (bar > 0) {
-        state.candidates[party] = { mode: 'historical', name: name.slice(0, bar), imageUrl: name.slice(bar + 1) };
+      const [candName, imageUrl, homeState, strengthRaw] = name.split('|');
+      if (candName) {
+        const strength = strengthRaw !== undefined ? parseFloat(strengthRaw) : NaN;
+        state.candidates[party] = {
+          mode: 'historical', name: candName, imageUrl: imageUrl || null,
+          homeState: homeState || null,
+          strength: Number.isFinite(strength) ? strength : (homeState ? 0.5 : null),
+        };
       }
     } else if (mode === 'custom') {
       // An uploaded image never travels in the URL (see buildSettingsParams), so a
@@ -1119,19 +1133,28 @@ function renderCandidatePicker(party) {
     nameInput.value = choice.name;
   }
 
+  // Custom and searched (historical) picks let the user set their own home state; a preset
+  // candidate's home state is fixed (PRESET_HOME_STATES), so only its strength is adjustable.
+  const picksOwnHomeState = choice.mode === 'custom' || choice.mode === 'historical';
+  const homeRow = $(party === 'd' ? 's28CandHomeRowD' : 's28CandHomeRowR');
+  if (homeRow) homeRow.classList.toggle('s28-hidden', !(picksOwnHomeState || choice.mode === 'preset'));
+  const homeWrap = $(party === 'd' ? 's28CandHomeWrapD' : 's28CandHomeWrapR');
+  if (homeWrap) homeWrap.classList.toggle('s28-hidden', !picksOwnHomeState);
   const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
   if (homeSelect) {
     if (!homeSelect.dataset.populated) {
       homeSelect.innerHTML = HOME_STATE_OPTIONS_HTML;
       homeSelect.dataset.populated = '1';
     }
-    homeSelect.value = choice.mode === 'custom' ? (choice.homeState || '') : '';
+    homeSelect.value = picksOwnHomeState ? (choice.homeState || '') : '';
   }
   const strengthWrap = $(party === 'd' ? 's28CandStrengthWrapD' : 's28CandStrengthWrapR');
-  if (strengthWrap) strengthWrap.classList.toggle('s28-hidden', !(choice.mode === 'custom' && choice.homeState));
+  const showStrength = choice.mode === 'preset' || (picksOwnHomeState && choice.homeState);
+  if (strengthWrap) strengthWrap.classList.toggle('s28-hidden', !showStrength);
   const strengthInput = $(party === 'd' ? 's28CandStrengthD' : 's28CandStrengthR');
   if (strengthInput && document.activeElement !== strengthInput) {
-    strengthInput.value = choice.mode === 'custom' && typeof choice.strength === 'number' ? choice.strength : 0.5;
+    const defaultStrength = choice.mode === 'preset' ? 1 : 0.5;
+    strengthInput.value = typeof choice.strength === 'number' ? choice.strength : defaultStrength;
   }
 
   // The file input's own "No file chosen" label can't be set by JS (browsers
@@ -1236,21 +1259,19 @@ function updateCustomCandidateName(party, name) {
   setCandidateChoice(party, { mode: 'custom', name, imageUrl: existing.imageUrl || null, ...customHomeFields(existing) });
 }
 
-function updateCustomCandidateHomeState(party, homeState) {
-  const existing = state.candidates[party] || {};
-  setCandidateChoice(party, {
-    mode: 'custom', name: existing.name || '', imageUrl: existing.imageUrl || null,
-    ...customHomeFields(existing), homeState: homeState || null,
-  });
+/** Home state is only settable on custom and searched (historical) picks -- a preset's is fixed. */
+function updateCandidateHomeState(party, homeState) {
+  const existing = state.candidates[party];
+  if (!existing || (existing.mode !== 'custom' && existing.mode !== 'historical')) return;
+  setCandidateChoice(party, { ...existing, homeState: homeState || null });
 }
 
-function updateCustomCandidateStrength(party, strength) {
-  const existing = state.candidates[party] || {};
+/** Strength is adjustable on custom, searched (historical), and preset picks. */
+function updateCandidateStrength(party, strength) {
+  const existing = state.candidates[party];
+  if (!existing || !['custom', 'historical', 'preset'].includes(existing.mode)) return;
   const parsed = Math.max(0, Math.min(1, parseFloat(strength)));
-  setCandidateChoice(party, {
-    mode: 'custom', name: existing.name || '', imageUrl: existing.imageUrl || null,
-    ...customHomeFields(existing), strength: Number.isFinite(parsed) ? parsed : 0.5,
-  });
+  setCandidateChoice(party, { ...existing, strength: Number.isFinite(parsed) ? parsed : 0.5 });
 }
 
 // Dragged files don't reliably carry a MIME type — Windows Explorer drags in
@@ -1560,9 +1581,9 @@ async function init() {
     const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
     if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
     const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
-    if (homeSelect) homeSelect.addEventListener('change', () => updateCustomCandidateHomeState(party, homeSelect.value));
+    if (homeSelect) homeSelect.addEventListener('change', () => updateCandidateHomeState(party, homeSelect.value));
     const strengthInput = $(party === 'd' ? 's28CandStrengthD' : 's28CandStrengthR');
-    if (strengthInput) strengthInput.addEventListener('input', () => updateCustomCandidateStrength(party, strengthInput.value));
+    if (strengthInput) strengthInput.addEventListener('input', () => updateCandidateStrength(party, strengthInput.value));
     const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
     if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
     const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');

@@ -8,9 +8,11 @@
  * math, it only sets baseline.candidates.{d,r} (a display string) and
  * registers a portrait override for it.
  *
- * Custom choices can also carry `homeState`/`strength`, persisted here but
- * read only by homeStateAdvantage.js -- see that module for how (and how
- * little) a picked home state actually moves the simulation.
+ * Custom and historical (search) choices can also carry a user-picked
+ * `homeState`/`strength`; preset choices carry a user-picked `strength` against
+ * their fixed home state. All of it is persisted here but read only by
+ * homeStateAdvantage.js -- see that module for how (and how little) a picked
+ * home state actually moves the simulation.
  */
 
 import { setPortraitOverride } from '../electionNight/candidatePortraits.js';

@@ -765,14 +765,14 @@
             <button type="button" class="s28-cand-paste-img" id="s28CandPasteD" title="Paste image from clipboard">Paste image</button>
             <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgD" title="Remove uploaded portrait">Remove image</button>
             <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
-            <div class="s28-cand-home-row">
-              <label>Home state
-                <select id="s28CandHomeD" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
-              </label>
-              <label class="s28-hidden" id="s28CandStrengthWrapD">Hometown strength
-                <input id="s28CandStrengthD" type="range" min="0" max="1" step="0.05" value="0.5" />
-              </label>
-            </div>
+          </div>
+          <div class="s28-cand-home-row s28-hidden" id="s28CandHomeRowD">
+            <label class="s28-hidden" id="s28CandHomeWrapD">Home state
+              <select id="s28CandHomeD" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
+            </label>
+            <label class="s28-hidden" id="s28CandStrengthWrapD">Hometown strength
+              <input id="s28CandStrengthD" type="range" min="0" max="1" step="0.05" value="0.5" />
+            </label>
           </div>
         </div>
         <div class="s28-cand-party" data-party="r">
@@ -789,21 +789,22 @@
             <button type="button" class="s28-cand-paste-img" id="s28CandPasteR" title="Paste image from clipboard">Paste image</button>
             <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgR" title="Remove uploaded portrait">Remove image</button>
             <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
-            <div class="s28-cand-home-row">
-              <label>Home state
-                <select id="s28CandHomeR" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
-              </label>
-              <label class="s28-hidden" id="s28CandStrengthWrapR">Hometown strength
-                <input id="s28CandStrengthR" type="range" min="0" max="1" step="0.05" value="0.5" />
-              </label>
-            </div>
+          </div>
+          <div class="s28-cand-home-row s28-hidden" id="s28CandHomeRowR">
+            <label class="s28-hidden" id="s28CandHomeWrapR">Home state
+              <select id="s28CandHomeR" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
+            </label>
+            <label class="s28-hidden" id="s28CandStrengthWrapR">Hometown strength
+              <input id="s28CandStrengthR" type="range" min="0" max="1" step="0.05" value="0.5" />
+            </label>
           </div>
         </div>
       </div>
       <div class="s28-note" style="margin-top:8px">
-        Mostly display only. The 7 built-in candidates and any custom pick with a home state
-        set get a small, deliberately modest lean nudge in that state (see Home state realism
-        above) &mdash; everything else about who's running has no effect on the simulated result.
+        Mostly display only. The 7 built-in candidates, and any custom or searched pick with a
+        home state set, get a small, deliberately modest lean nudge in that state (scaled by
+        Hometown strength and Home state realism above) &mdash; everything else about who's
+        running has no effect on the simulated result.
       </div>
     </div>
 

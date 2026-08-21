@@ -3,22 +3,24 @@
 /**
  * Candidate-specific home-state lean bump for sim2028.
  *
- * Deliberately narrow in scope: only the 7 preset 2028 candidates (candidatePicker.js's
- * PRESET_CANDIDATES) and custom-typed candidates get a bump. Historical picks (from
- * candidateSearch.js's ~150-year portrait index) never do -- that system has no notion of
- * "this pick feeds the simulation," and there's no principled way to rank real historical
- * candidates' crossover appeal against each other.
+ * Three sources feed it: the 7 preset 2028 candidates (candidatePicker.js's
+ * PRESET_CANDIDATES) get a fixed home state (PRESET_HOME_STATES below) with a
+ * user-adjustable strength; custom-typed candidates and historical search picks (from
+ * candidateSearch.js's ~150-year portrait index) both get a user-picked home state AND
+ * strength -- there's no principled way to guess a home state for either (a typed name
+ * could be anyone, and there's no ranking of real historical candidates' crossover appeal
+ * against each other), so the user sets it themselves rather than the sim imposing one.
  *
  * The literature on "favorite son" effects (a running mate or nominee tied to a state)
  * finds close to nothing. Real crossover appeal (a governor/senator who runs well ahead of
  * their party at home -- Beshear in KY, Ossoff in GA) is a different and stronger signal,
  * but it's measured in low-turnout, low-polarization state races and shouldn't port 1:1
  * into a maximally nationalized presidential contest. So every preset candidate gets the
- * SAME flat bump (no ranking whose crossover appeal is "real"), scaled per-state by
- * baseline.betaFitted -- the same historically-fitted elasticity baseline.js uses to
- * describe how much of a national swing a state absorbs, reused here as a proxy for how
- * persuadable/movable that state's electorate is. A state baseline.js's own fit treats as
- * locked-in (low beta) responds less to a home-state bump than a genuinely elastic one,
+ * SAME flat bump at full strength (no ranking whose crossover appeal is "real"), scaled
+ * per-state by baseline.betaFitted -- the same historically-fitted elasticity baseline.js
+ * uses to describe how much of a national swing a state absorbs, reused here as a proxy for
+ * how persuadable/movable that state's electorate is. A state baseline.js's own fit treats
+ * as locked-in (low beta) responds less to a home-state bump than a genuinely elastic one,
  * even at the same nominal tier -- which is exactly why Beshear can't meaningfully dent
  * KY's partisan lean here even at the wackiest setting, while Ossoff moves GA more.
  */
@@ -69,13 +71,14 @@ function addPartyBonus(bonus, baseline, choice, tier, sign) {
   if (!choice) return;
   let stateAbbr = null;
   let magnitude = 0;
-  if (choice.mode === 'custom' && choice.homeState) {
+  if ((choice.mode === 'custom' || choice.mode === 'historical') && choice.homeState) {
     stateAbbr = choice.homeState;
     const strength = Math.max(0, Math.min(1, choice.strength ?? 0));
     magnitude = strength * tier.customCap;
   } else if (choice.mode === 'preset' && PRESET_HOME_STATES[choice.name]) {
     stateAbbr = PRESET_HOME_STATES[choice.name];
-    magnitude = tier.presetMagnitude;
+    const strength = Math.max(0, Math.min(1, choice.strength ?? 1));
+    magnitude = strength * tier.presetMagnitude;
   }
   if (!stateAbbr || magnitude === 0) return;
   const units = homeStateUnits(stateAbbr, baseline);
