@@ -836,6 +836,34 @@ import { ratingFor } from './utils/electionRatings.js';
     ));
   }
 
+  // A unit's pre-election prior margin. For a normal unit this is just
+  // st.priorMargin (frozen by applyBridgedPollPriors()/buildSyntheticPollPriors()
+  // at prepare time) - but an at-large unit (ME-AL/NE-AL) never gets one of
+  // its own (see applyBridgedPollPriors()'s at-large comment above), so its
+  // margin is derived here as the vote-weighted composite of its districts'
+  // own priors via state.atLargeParts, same derivation assignRaceImportance()
+  // uses for its "predicted closeness" score. Returns null (not 0/NaN) when
+  // no prior can be determined either way, so callers can tell "genuinely
+  // undetermined" apart from an actual EVEN prior - most importantly, so the
+  // pre-election rating badge doesn't default an at-large unit to "Toss-up"
+  // just because it has no margin of its own.
+  function resolvePriorMargin(st) {
+    if (!st) return null;
+    if (isFinite(st.priorMargin)) return st.priorMargin;
+    if (!(state.atLargeParts && state.atLargeParts.get)) return null;
+    const parts = state.atLargeParts.get(st.unitKey);
+    if (!parts || !parts.length) return null;
+    let accum = 0, wsum = 0;
+    parts.forEach(part => {
+      const partSt = (state.stateData || []).find(d => d.unitKey === part.unitKey);
+      if (partSt && isFinite(partSt.priorMargin)) {
+        accum += partSt.priorMargin * part.weight;
+        wsum += part.weight;
+      }
+    });
+    return wsum > EPS ? accum / wsum : null;
+  }
+
   // Assign a pre-election-based "importance" score to each unit, combining
   // predicted closeness (from priorMargin) and EV size. Used only to flag
   // state calls as "key races" worthy of visual emphasis on-screen.
@@ -854,23 +882,7 @@ import { ratingFor } from './utils/electionRatings.js';
     const maxEv = data.reduce((m, st) => Math.max(m, st.ev || 0), 1);
     const closenessOf = margin => isFinite(margin) ? Math.max(0, 1 - Math.abs(margin) / PRIOR_CLOSE_CAP) : 0;
     data.forEach(st => {
-      let priorMargin = st.priorMargin;
-      // At-large units never get a direct prior — approximate from
-      // vote-weighted composite of their districts via state.atLargeParts.
-      if (!isFinite(priorMargin) && state.atLargeParts && state.atLargeParts.get) {
-        const parts = state.atLargeParts.get(st.unitKey);
-        if (parts && parts.length) {
-          let accum = 0, wsum = 0;
-          parts.forEach(part => {
-            const partSt = data.find(d => d.unitKey === part.unitKey);
-            if (partSt && isFinite(partSt.priorMargin)) {
-              accum += partSt.priorMargin * part.weight;
-              wsum += part.weight;
-            }
-          });
-          if (wsum > EPS) priorMargin = accum / wsum;
-        }
-      }
+      const priorMargin = resolvePriorMargin(st);
       const predictedCloseness = isFinite(priorMargin) ? closenessOf(priorMargin) : 0.4;
       const actualMargin = isFinite(st.dTwoPartyFinal) && isFinite(st.rTwoPartyFinal)
         ? st.dTwoPartyFinal - st.rTwoPartyFinal : null;
@@ -1613,6 +1625,11 @@ import { ratingFor } from './utils/electionRatings.js';
       if (record.noticeType === 'leadFlip' || record.noticeType === 'npvLeadFlip') {
         const isNpv = record.noticeType === 'npvLeadFlip';
         const leader = record.leader;
+        // Same rating logic as the call/correction branch below - see
+        // isSim2028LiveRun()'s and resolvePriorMargin()'s comments.
+        const flipSt = isNpv ? null : unitsByKey.get(record.unitKey);
+        const flipResolvedPriorMargin = flipSt ? resolvePriorMargin(flipSt) : null;
+        const flipPriorRating = (isFinite(flipResolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(flipResolvedPriorMargin) : null;
         return {
           kind: 'leadFlip',
           isNpv,
@@ -1634,7 +1651,9 @@ import { ratingFor } from './utils/electionRatings.js';
           tallyBefore: spec_tallyBefore,
           tallyAfter: record.plannedTallyAfter || spec_tallyBefore,
           time: record.time,
-          timeLabel: formatTimeLabel(record.time)
+          timeLabel: formatTimeLabel(record.time),
+          priorRatingLabel: flipPriorRating ? flipPriorRating.label : null,
+          priorRatingColor: flipPriorRating ? flipPriorRating.color : null
         };
       }
       const isCorrection = record.noticeType === 'miscall';
@@ -1652,7 +1671,11 @@ import { ratingFor } from './utils/electionRatings.js';
       // Only ever set for a real sim2028 run (see isSim2028LiveRun()) - a
       // historical replay's st.priorMargin is a synthesized stand-in, not a
       // real pre-election fact, so it never gets shown as a "rating".
-      const priorRating = (st && isSim2028LiveRun()) ? ratingFor(st.priorMargin) : null;
+      // resolvePriorMargin() (not st.priorMargin directly) so an at-large
+      // unit (ME-AL/NE-AL, which never gets a direct prior) is rated from
+      // its districts' composite instead of silently reading as "Toss-up".
+      const resolvedPriorMargin = st ? resolvePriorMargin(st) : null;
+      const priorRating = (isFinite(resolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(resolvedPriorMargin) : null;
 
       return {
         kind: isCorrection ? 'correction' : 'call',
@@ -1869,7 +1892,8 @@ import { ratingFor } from './utils/electionRatings.js';
         // See isSim2028LiveRun()'s comment - no rating for NPV (no single-
         // state prior applies) or for a historical replay's synthesized prior.
         const priorSt = isNpv ? null : unitsByKey.get(c.unitKey);
-        const priorRating = (priorSt && isSim2028LiveRun()) ? ratingFor(priorSt.priorMargin) : null;
+        const resolvedPriorMargin = priorSt ? resolvePriorMargin(priorSt) : null;
+        const priorRating = (isFinite(resolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(resolvedPriorMargin) : null;
         return {
           unitKey: c.unitKey,
           displayLabel: isNpv ? c.displayLabel : formatUnitLabel(c.unitKey, state.year, { short: true }),
@@ -5667,8 +5691,11 @@ import { ratingFor } from './utils/electionRatings.js';
         : null;
       // See isSim2028LiveRun()'s comment - a historical replay's
       // st.priorMargin is a synthesized stand-in, not a real pre-election
-      // fact, so it never gets shown as a "rating".
-      const priorRating = isSim2028LiveRun() ? ratingFor(st.priorMargin) : null;
+      // fact, so it never gets shown as a "rating". resolvePriorMargin()
+      // (not st.priorMargin directly) so an at-large unit is rated from its
+      // districts' composite instead of silently reading as "Toss-up".
+      const resolvedPriorMargin = resolvePriorMargin(st);
+      const priorRating = (isFinite(resolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(resolvedPriorMargin) : null;
       return {
         unitKey: st.unitKey,
         displayLabel: formatUnitLabel(st.unitKey, state.year, { short: true }),
