@@ -5090,6 +5090,7 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       dVotes: dCounted,
       rVotes: rCounted,
       countedVotes,
+      reporting: state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 0,
       remainingVotes: Math.max(0, Math.round((state.totalEligibleVotes || 0) - countedVotes)),
       marginStr
     };
