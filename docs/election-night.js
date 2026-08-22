@@ -18,6 +18,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 import { estimateFalseBeets } from './utils/electionNight/lickman.js';
 import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
+import { ratingFor } from './utils/electionRatings.js';
 
 (function () {
   'use strict';
@@ -788,6 +789,16 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         st.priorSigma = totalSigma;
       }
     });
+  }
+
+  // True only for a real sim2028-bridged run (window._enPollPrior set by
+  // electionNightBridge.js for the currently-loaded year) - never for a
+  // historical replay (future.html etc.), whose st.priorMargin comes from
+  // buildSyntheticPollPriors() and isn't a real historical fact. Gates the
+  // "pre-election rating" badge on call/races/finalResults slides so a
+  // synthesized prior never gets shown as if it were real polling.
+  function isSim2028LiveRun() {
+    return !!(window._enPollPrior && window._enPollPrior.year === state.year);
   }
 
   // At-large (ME-AL/NE-AL) units are always derived from their component
@@ -1638,6 +1649,10 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
       const st = unitsByKey.get(record.unitKey);
       const keyRace = !record.isNpv && isKeyRaceUnit(st);
+      // Only ever set for a real sim2028 run (see isSim2028LiveRun()) - a
+      // historical replay's st.priorMargin is a synthesized stand-in, not a
+      // real pre-election fact, so it never gets shown as a "rating".
+      const priorRating = (st && isSim2028LiveRun()) ? ratingFor(st.priorMargin) : null;
 
       return {
         kind: isCorrection ? 'correction' : 'call',
@@ -1674,7 +1689,9 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         marginText: formatMarginText(record.marginStr, leader, voteMargin),
         time: record.time,
         timeLabel: formatTimeLabel(record.time),
-        keyRace
+        keyRace,
+        priorRatingLabel: priorRating ? priorRating.label : null,
+        priorRatingColor: priorRating ? priorRating.color : null
       };
     }).filter(Boolean);
 
@@ -1849,6 +1866,10 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         // buildFinalKeyRaces()'s NPV entry.
         const isNpv = c.unitKey === 'NPV';
         const candidateName = resolveCandidateFullName(c.leader, isNpv ? 'NATIONAL' : c.unitKey);
+        // See isSim2028LiveRun()'s comment - no rating for NPV (no single-
+        // state prior applies) or for a historical replay's synthesized prior.
+        const priorSt = isNpv ? null : unitsByKey.get(c.unitKey);
+        const priorRating = (priorSt && isSim2028LiveRun()) ? ratingFor(priorSt.priorMargin) : null;
         return {
           unitKey: c.unitKey,
           displayLabel: isNpv ? c.displayLabel : formatUnitLabel(c.unitKey, state.year, { short: true }),
@@ -1865,7 +1886,9 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
             : formatRawMarginText(c.leader, c.voteMargin),
           confidenceText: formatConfidenceText(c.confidence, threshold),
           reportingText: formatReportingText(c.reporting, c.remainingVotes),
-          accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold)
+          accentColor: confidenceAccentColor(c.leader, c.margin, c.confidence, threshold),
+          priorRatingLabel: priorRating ? priorRating.label : null,
+          priorRatingColor: priorRating ? priorRating.color : null
         };
       }));
       const timeLabel = formatTimeLabel(records[records.length - 1].time);
@@ -2672,7 +2695,7 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
     // in the earliest minutes of the count (it hasn't seen any actual
     // returns yet), which reads as a strange thing to lead the night with
     // when the campaign itself already has a real, decisive forecast.
-    const isSim2028Live = !!(window._enPollPrior && window._enPollPrior.year === state.year);
+    const isSim2028Live = isSim2028LiveRun();
     const fc = window._enForecast;
     const stats = (isSim2028Live && fc && isFinite(fc.demWinProb)) ? {
       probD: Math.min(0.999, Math.max(0.001, fc.demWinProb)),
@@ -5642,6 +5665,10 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
       const voteMargin = (isFinite(m.dVotesCounted) && isFinite(m.rVotesCounted))
         ? Math.round(m.dVotesCounted - m.rVotesCounted)
         : null;
+      // See isSim2028LiveRun()'s comment - a historical replay's
+      // st.priorMargin is a synthesized stand-in, not a real pre-election
+      // fact, so it never gets shown as a "rating".
+      const priorRating = isSim2028LiveRun() ? ratingFor(st.priorMargin) : null;
       return {
         unitKey: st.unitKey,
         displayLabel: formatUnitLabel(st.unitKey, state.year, { short: true }),
@@ -5655,7 +5682,9 @@ import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillT
         rawMarginText: m.leader === 'O'
           ? formatOtherRawMarginText(m.oVotesCounted, m.dVotesCounted, m.rVotesCounted)
           : formatRawMarginText(m.leader, voteMargin),
-        accentColor: calledAccentColor(m.leader, m.margin)
+        accentColor: calledAccentColor(m.leader, m.margin),
+        priorRatingLabel: priorRating ? priorRating.label : null,
+        priorRatingColor: priorRating ? priorRating.color : null
       };
     }
 

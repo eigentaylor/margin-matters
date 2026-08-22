@@ -323,14 +323,21 @@ function buildComparisonMarkup(slide) {
 
 // Margin as a compact label plus a filled progress bar for percent-counted
 // (no "votes left" - that's covered by the bar filling in over the night).
+// When the slide carries a pre-election rating (sim2028 runs only - see
+// election-night.js's isSim2028LiveRun()), a small colored pill rides along
+// in the same row so a call can be read against what was expected of it.
 function buildStatsLineMarkup(slide) {
   const pctNum = isFinite(slide.reportingPct) ? Math.max(0, Math.min(1, slide.reportingPct)) * 100 : null;
   if (pctNum == null) return '';
+  const ratingBadge = slide.priorRatingLabel
+    ? `<span class="en-cp-prior-badge" style="background:${slide.priorRatingColor}">Pre-election: ${slide.priorRatingLabel}</span>`
+    : '';
   const barPart = `
       <div class="en-cp-stats-bar-track">
         <div class="en-cp-stats-bar-fill" style="width:${pctNum}%"></div>
       </div>
-      <span class="en-cp-stats-bar-pct">${pctNum.toFixed(1)}% counted</span>`;
+      <span class="en-cp-stats-bar-pct">${pctNum.toFixed(1)}% counted</span>
+      ${ratingBadge}`;
   return `<div class="en-cp-stats-line">${barPart}</div>`;
 }
 
@@ -822,6 +829,7 @@ function renderRaces(slide) {
           <div class="en-cp-race-meta">
             <span class="en-cp-race-pct">${pct.toFixed(1)}% in</span>
             <span class="en-cp-race-confidence">${c.confidenceText || ''}</span>
+            ${c.priorRatingLabel ? `<span class="en-cp-prior-badge" style="background:${c.priorRatingColor}">${c.priorRatingLabel}</span>` : ''}
           </div>
         </div>
         ${c.portraitUrl
@@ -878,6 +886,7 @@ function renderFinalResults(slide) {
             </span>
             ${c.ev > 0 ? `<span class="en-cp-race-ev">${c.ev} EV</span>` : ''}
           </div>
+          ${c.priorRatingLabel ? `<div class="en-cp-race-meta"><span class="en-cp-prior-badge" style="background:${c.priorRatingColor}">${c.priorRatingLabel}</span></div>` : ''}
         </div>
         ${c.portraitUrl
           ? `<img class="en-cp-race-portrait" src="${c.portraitUrl}" alt="${c.candidateName || ''}" />`

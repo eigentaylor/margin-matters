@@ -251,7 +251,10 @@ function drawHeader(ctx, w, stateName, timeLabel, evLabel, evNum, top = 0) {
   return top + HEADER_H;
 }
 
-function drawStatsBar(ctx, x, y, w, reportingPct) {
+// `rating`, when passed ({label, color}), draws a small "Pre-election: X"
+// pill centered below the bar - only ever set for a real sim2028 run (see
+// election-night.js's isSim2028LiveRun()), never a historical replay.
+function drawStatsBar(ctx, x, y, w, reportingPct, rating) {
   if (!isFinite(reportingPct)) return y;
   const pct = Math.max(0, Math.min(1, reportingPct)) * 100;
   const barW = Math.min(220, w - 110);
@@ -264,7 +267,12 @@ function drawStatsBar(ctx, x, y, w, reportingPct) {
   ctx.fillStyle = '#2ecc71';
   ctx.fill();
   text(ctx, `${pct.toFixed(1)}% counted`, barX + barW + 12, barY + 9, { font: `400 14px ${FONT}`, color: 'rgba(255,255,255,0.75)' });
-  return y + 30;
+  let bottom = y + 30;
+  if (rating && rating.label) {
+    pill(ctx, `Pre-election: ${rating.label}`, x + w / 2, bottom, { font: `800 12px ${FONT}`, bg: rating.color, textColor: '#fff', height: 22, align: 'center' });
+    bottom += 30;
+  }
+  return bottom;
 }
 
 // Two- or three-row D/R(/O) vote comparison. The leading row also carries a
@@ -366,7 +374,7 @@ async function drawCallOrCorrection(ctx, slide, w, headerBottom) {
 
   let y = bodyY + PHOTO_SIZE + 24;
   y = await drawComparisonRows(ctx, slide, 26, y, w - 52);
-  y = drawStatsBar(ctx, 26, y, w - 52, slide.reportingPct);
+  y = drawStatsBar(ctx, 26, y, w - 52, slide.reportingPct, slide.priorRatingLabel ? { label: slide.priorRatingLabel, color: slide.priorRatingColor } : null);
   return y + BOTTOM_PAD;
 }
 
@@ -659,6 +667,12 @@ async function drawRaces(ctx, slide, w, headerBottom) {
     ctx.fillStyle = accent;
     ctx.fill();
     text(ctx, `${pct.toFixed(0)}% in`, barX, barY - 8, { font: `400 12px ${FONT}`, color: 'rgba(255,255,255,0.7)' });
+    // Pre-election rating (sim2028 runs only - see updatePopup.js's
+    // renderRaces() for the DOM equivalent), right-aligned to the bar's own
+    // right edge so it never collides with the "% in" text on the left.
+    if (c.priorRatingLabel) {
+      pill(ctx, c.priorRatingLabel, barX + barW, barY - 20, { font: `800 10px ${FONT}`, bg: c.priorRatingColor, textColor: '#fff', height: 18, padX: 6, align: 'right' });
+    }
 
     // Right column: margin badge + raw margin, right-aligned with margin
     // from the card edge so it can never run off the canvas.
@@ -735,6 +749,11 @@ async function drawFinalResults(ctx, slide, w, headerBottom) {
     }
     text(ctx, c.displayLabel || '', tx, rowY + 30, { font: `900 18px ${FONT}` });
     if (c.ev > 0) text(ctx, `${c.ev} EV`, tx, rowY + 50, { font: `600 12px ${FONT}`, color: 'rgba(255,255,255,0.7)' });
+    // Pre-election rating (sim2028 runs only) - the DOM equivalent of
+    // updatePopup.js's renderFinalResults() new meta row.
+    if (c.priorRatingLabel) {
+      pill(ctx, c.priorRatingLabel, tx, rowY + 60, { font: `800 10px ${FONT}`, bg: c.priorRatingColor, textColor: '#fff', height: 18, padX: 6 });
+    }
 
     const rightX = rowX + rowW - 16;
     const marginText = c.marginPctText && c.marginPctText !== 'None' ? c.marginPctText : 'EVEN';

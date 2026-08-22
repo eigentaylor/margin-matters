@@ -21,7 +21,8 @@ import {
   loadCandidateChoice, saveCandidateChoice, applyCandidateChoice,
 } from './utils/sim2028/candidatePicker.js';
 import { searchCandidates, formatLabel as formatCandidateLabel } from './utils/sim2028/candidateSearch.js';
-import { applyHomeStateAdvantage, DEFAULT_REALISM_TIER } from './utils/sim2028/homeStateAdvantage.js';
+import { applyHomeStateAdvantage, DEFAULT_REALISM_TIER, PRESET_HOME_STATES } from './utils/sim2028/homeStateAdvantage.js';
+import { TOSSUP_BAND, TILT_BAND, LEAN_BAND, LIKELY_BAND, TOSSUP_COLOR, RATINGS, ratingFor } from './utils/electionRatings.js';
 
 const state = {
   baseline: null,
@@ -55,43 +56,6 @@ const state = {
 const TREND_PALETTE = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4', '#f0c96e', '#c990e0', '#79d1a8', '#e88ea0', '#8fb8e0', '#d0a05a'];
 
 const $ = id => document.getElementById(id);
-
-/**
- * Rating tiers by projected margin, in the usual forecaster ladder.
- * `order` runs D-safest to R-safest so the EV breakdown reads left to right.
- *
- * Thresholds are the conventional 2 / 5 / 10 / 15 point bands. An earlier
- * ±1pt toss-up band was so narrow that almost nothing ever landed in it.
- */
-const TOSSUP_BAND = 0.02;
-const TILT_BAND = 0.05;
-const LEAN_BAND = 0.10;
-const LIKELY_BAND = 0.15;
-
-/** Neutral grey for toss-ups, matching the convention in paths2028.js. */
-export const TOSSUP_COLOR = '#888888';
-
-const RATINGS = [
-  { key: 'safeD', label: 'Safe D', party: 'D', color: '#1e46aa', order: 0 },
-  { key: 'likelyD', label: 'Likely D', party: 'D', color: '#3f6fd0', order: 1 },
-  { key: 'leanD', label: 'Lean D', party: 'D', color: '#6f9ae8', order: 2 },
-  { key: 'tiltD', label: 'Tilt D', party: 'D', color: '#a8c4f0', order: 3 },
-  { key: 'tossup', label: 'Toss-up', party: null, color: TOSSUP_COLOR, order: 4 },
-  { key: 'tiltR', label: 'Tilt R', party: 'R', color: '#efb0b0', order: 5 },
-  { key: 'leanR', label: 'Lean R', party: 'R', color: '#dd7f7f', order: 6 },
-  { key: 'likelyR', label: 'Likely R', party: 'R', color: '#c04a4a', order: 7 },
-  { key: 'safeR', label: 'Safe R', party: 'R', color: '#9d1b1b', order: 8 },
-];
-
-/** Rating for a projected margin (fraction, positive = D). */
-function ratingFor(margin) {
-  const m = margin || 0;
-  const a = Math.abs(m);
-  if (a < TOSSUP_BAND) return RATINGS.find(r => r.key === 'tossup');
-  const party = m > 0 ? 'D' : 'R';
-  const tier = a >= LIKELY_BAND ? 'safe' : a >= LEAN_BAND ? 'likely' : a >= TILT_BAND ? 'lean' : 'tilt';
-  return RATINGS.find(r => r.key === `${tier}${party}`);
-}
 
 // ---------------------------------------------------------------- formatting
 function fmtMargin(m) {
@@ -1134,19 +1098,24 @@ function renderCandidatePicker(party) {
   }
 
   // Custom and searched (historical) picks let the user set their own home state; a preset
-  // candidate's home state is fixed (PRESET_HOME_STATES), so only its strength is adjustable.
+  // candidate's home state is fixed (PRESET_HOME_STATES), so its dropdown just displays that
+  // state, disabled, in the same spot -- only its strength is actually adjustable.
   const picksOwnHomeState = choice.mode === 'custom' || choice.mode === 'historical';
+  const isPreset = choice.mode === 'preset';
   const homeRow = $(party === 'd' ? 's28CandHomeRowD' : 's28CandHomeRowR');
-  if (homeRow) homeRow.classList.toggle('s28-hidden', !(picksOwnHomeState || choice.mode === 'preset'));
+  if (homeRow) homeRow.classList.toggle('s28-hidden', !(picksOwnHomeState || isPreset));
   const homeWrap = $(party === 'd' ? 's28CandHomeWrapD' : 's28CandHomeWrapR');
-  if (homeWrap) homeWrap.classList.toggle('s28-hidden', !picksOwnHomeState);
+  if (homeWrap) homeWrap.classList.toggle('s28-hidden', !(picksOwnHomeState || isPreset));
   const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
   if (homeSelect) {
     if (!homeSelect.dataset.populated) {
       homeSelect.innerHTML = HOME_STATE_OPTIONS_HTML;
       homeSelect.dataset.populated = '1';
     }
-    homeSelect.value = picksOwnHomeState ? (choice.homeState || '') : '';
+    homeSelect.disabled = isPreset;
+    if (picksOwnHomeState) homeSelect.value = choice.homeState || '';
+    else if (isPreset) homeSelect.value = PRESET_HOME_STATES[choice.name] || '';
+    else homeSelect.value = '';
   }
   const strengthWrap = $(party === 'd' ? 's28CandStrengthWrapD' : 's28CandStrengthWrapR');
   const showStrength = choice.mode === 'preset' || (picksOwnHomeState && choice.homeState);

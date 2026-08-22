@@ -3718,6 +3718,23 @@ body.shift-vectors-page {
   letter-spacing: 0.05em;
 }
 
+/* Pre-election rating pill (sim2028 runs only - see election-night.js's
+   isSim2028LiveRun()). Colored by the same Safe/Likely/Lean/Tilt/Toss-up
+   ladder as the sim2028 forecast map, so a call can be read against what
+   was expected of it. Shared by the main call card's stats line and the
+   races-to-watch/final-results cards' meta row - the pill shape (vs. the
+   rectangular KEY tag) keeps it visually secondary/unobtrusive. */
+.en-cp-prior-badge {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
 .en-cp-race-ev {
   flex: 0 0 auto;
   font-size: 0.72rem;
