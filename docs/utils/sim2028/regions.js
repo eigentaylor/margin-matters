@@ -12,18 +12,28 @@
  */
 
 export const REGIONS = {
-  newEngland: ['ME-AL', 'ME-01', 'ME-02', 'NH', 'VT', 'MA', 'RI', 'CT'],
-  midAtlantic: ['NY', 'NJ', 'DE', 'MD', 'DC'],
-  // PA belongs here, not with the Mid-Atlantic: it moves with WI/MI far more
-  // than with NY/NJ, and those three deciding together is the defining feature
-  // of a modern cycle.
-  rustBelt: ['PA', 'OH', 'MI', 'WI', 'MN', 'IA', 'IN', 'IL'],
+  // Minnesota correlates strongly with New England, MA doesn't fit clearly here
+  newEngland: ['ME-AL', 'ME-01', 'ME-02', 'NH', 'VT', 'RI', 'CT', 'MN'],
+  // Florida is included in the Mid-Atlantic due to its correlation with that region in recent cycles.
+  midAtlantic: ['NY', 'NJ', 'DE', 'MD', 'DC', 'FL'],
+  rustBelt: ['PA', 'OH', 'MI', 'WI', 'IA', 'IN'],
   plains: ['ND', 'SD', 'NE-AL', 'NE-01', 'NE-02', 'NE-03', 'KS', 'MO', 'OK'],
-  south: ['WV', 'KY', 'TN', 'AR', 'MS', 'AL', 'LA'],
-  southeast: ['VA', 'NC', 'SC', 'GA', 'FL'],
-  southwest: ['AZ', 'NM', 'NV', 'TX', 'CO'],
-  mountain: ['MT', 'ID', 'WY', 'UT'],
-  pacific: ['WA', 'OR', 'CA', 'HI', 'AK'],
+  // Alaska (correlation w/ south bucket) and South Carolina (real early-90s break from VA/GA,
+  // and a clean fit — adding it raises south's own internal coherence at every window tested)
+  south: ['WV', 'KY', 'TN', 'AR', 'MS', 'AL', 'LA', 'AK', 'SC'],
+  southeast: ['VA', 'NC', 'GA'], // SC split out — see south, above
+  southwest: ['NM', 'NV', 'CO'], // AZ split out — see arizona, below
+  // MA has very negative correlation with basically all other regions since 2000, maxes out at +0.31 with the south
+  // MA and AZ correlate at +0.96 (2000-2024) / +0.79 (1980-2024) despite having
+  // nothing geographically in common -- both driven by the same college-educated
+  // suburban realignment (Boston suburbs, Maricopa County), just from very
+  // different baseline leans, which is exactly what a relative-margin-swing
+  // metric picks up on.
+  suburbanRealignment: ['MA', 'AZ'],
+  // Texas is included in the Mountain region due to its correlation with that bloc in recent cycles.
+  mountain: ['MT', 'ID', 'WY', 'UT', 'TX'],
+  pacific: ['WA', 'OR', 'CA', 'IL'], // IL is included here due to its fairly high correlation with the Pacific region
+  hawaii: ['HI'] // Hawaii is its own region. like Massachusetts, it has very low correlation with other regions (caps out at ~0.4 with the rust belt)
 };
 
 export const REGION_KEYS = Object.keys(REGIONS);
@@ -37,8 +47,10 @@ export const REGION_LABELS = {
   south: 'South',
   southeast: 'Southeast',
   southwest: 'Southwest',
+  suburbanRealignment: 'Suburban Realignment',
   mountain: 'Mountain West',
   pacific: 'Pacific',
+  hawaii: 'Hawaii',
 };
 
 const UNIT_TO_REGION = new Map();
