@@ -13,7 +13,7 @@ import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
 import { installElectionNight } from './utils/sim2028/electionNightBridge.js';
-import { renderHistogram, renderTrend } from './sim2028Charts.js';
+import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
 import {
@@ -353,7 +353,7 @@ function refreshHoveredTip() {
 function highlightedUnitSet() {
   const h = state.mapHighlight;
   if (!h || !state.baseline) return null;
-  if (h.source === 'trend') return new Set([h.unit]);
+  if (h.source === 'trend' || h.source === 'snake') return new Set([h.unit]);
   if (h.source === 'rating') {
     const margins = pollMargins(currentSnapshot());
     const set = new Set();
@@ -748,6 +748,71 @@ function toggleRatingHighlight(key) {
   renderTrendChart(); // clears any stale trend-isolate dimming, since the two share one highlight slot
 }
 
+/**
+ * Toggle a single-unit map glow from the snake chart. Deliberately its own
+ * source (not 'trend'): applyTrendIsolate() only dims the trend chart for
+ * source === 'trend', and a snake click can select a state the trend chart
+ * isn't currently plotting at all — reusing 'trend' there would dim every
+ * trend line to near-invisible with nothing to highlight.
+ */
+function toggleSnakeHighlight(unit) {
+  const cur = state.mapHighlight;
+  state.mapHighlight = (cur && cur.source === 'snake' && cur.unit === unit) ? null : { source: 'snake', unit };
+  setMapGlow();
+}
+
+function renderSnakeChart() {
+  const container = $('s28Snake');
+  if (!container || !state.sim || !state.baseline) return;
+  const margins = pollMargins(currentSnapshot());
+  const rows = state.baseline.units
+    .filter(u => (state.baseline.ev.get(u) || 0) > 0)
+    .map(unit => {
+      const m = margins.get(unit);
+      return {
+        unit,
+        name: unit.includes('-') ? unit : (getStateName(unit) || unit),
+        ev: state.baseline.ev.get(unit) || 0,
+        margin: m,
+        color: colorForMargin(m),
+      };
+    })
+    .sort((a, b) => a.margin - b.margin);
+
+  const result = renderSnake('#s28Snake', rows);
+
+  const note = $('s28SnakeNote');
+  if (note) {
+    if (result && result.tippingUnit) {
+      const t = rows.find(r => r.unit === result.tippingUnit);
+      note.textContent = 'Ordered safest-Republican to safest-Democratic, wrapping row by row like a snake '
+        + '(states straddling a row break are cut, not merged). Dashed line marks the '
+        + `${result.needed}th electoral vote. Tipping point: ${t ? t.name : result.tippingUnit}`
+        + `${t ? ` (${fmtMargin(t.margin)})` : ''}.`;
+    } else {
+      note.textContent = '';
+    }
+  }
+
+  // Hovering either fragment of a split unit (or its connecting corner
+  // block) highlights all of them together, so a state cut across two rows
+  // still feels like one continuous piece rather than unrelated blocks.
+  container.querySelectorAll('.s28-snake-seg').forEach(el => {
+    const unit = el.getAttribute('data-unit');
+    const siblings = () => container.querySelectorAll(`[data-unit="${unit}"]`);
+    el.addEventListener('mouseenter', evt => {
+      showTip(evt, unit);
+      siblings().forEach(s => s.classList.add('s28-snake-hover'));
+    });
+    el.addEventListener('mousemove', evt => moveTip(evt));
+    el.addEventListener('mouseleave', () => {
+      hideTip();
+      siblings().forEach(s => s.classList.remove('s28-snake-hover'));
+    });
+    el.addEventListener('click', () => toggleSnakeHighlight(unit));
+  });
+}
+
 function renderTable() {
   const tbody = document.querySelector('#s28Table tbody');
   if (!tbody || !state.sim) return;
@@ -825,6 +890,7 @@ function renderAll() {
   renderDebug();
   renderForecast();
   renderTrendChart();
+  renderSnakeChart();
   renderMap();
   renderTable();
   const note = $('s28StepNote');
@@ -1611,7 +1677,7 @@ async function init() {
     });
   });
   window.addEventListener('resize', () => {
-    if (state.sim) { renderForecast(); renderTrendChart(); }
+    if (state.sim) { renderForecast(); renderTrendChart(); renderSnakeChart(); }
   });
 
   try {

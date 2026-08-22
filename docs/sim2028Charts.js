@@ -180,4 +180,163 @@ export function renderTrend(container, series, stepLabels, opts = {}) {
   }
 }
 
-export default { renderHistogram, renderTrend };
+/**
+ * Electoral "snake": a single continuous ribbon of states ordered by margin
+ * (safest-Republican to safest-Democratic), cut into equal-width rows and
+ * wrapped boustrophedon-style (alternating direction each row) so it reads
+ * top-to-bottom like a snake instead of one very wide strip. Because the cut
+ * points are fixed positions rather than state boundaries, a state whose
+ * span crosses a row break is rendered as two rects sharing one data-unit,
+ * joined by a same-color corner block as thick as the ribbon itself.
+ *
+ * Tiny 1-2 EV units (ME/NE congressional districts, the ME-AL/NE-AL
+ * at-large pairs) are laid out at a padded minimum width (`opts.minEv`) so
+ * they have room to hold an abbreviation — a rendering-only inflation; the
+ * real EV total and the 270 threshold's position are computed from true EV.
+ *
+ * @param {Array} rows [{unit, name, ev, margin, color}], pre-sorted ascending
+ *        by margin (safest-R first)
+ * @returns {{tippingUnit:string, needed:number, totalEv:number}|null}
+ */
+export function renderSnake(container, rows, opts = {}) {
+  if (!rows || !rows.length) return null;
+  const totalEv = rows.reduce((a, r) => a + r.ev, 0);
+  if (!totalEv) return null;
+
+  const minLayoutEv = opts.minEv || 5;
+  const layoutEv = r => Math.max(r.ev, minLayoutEv);
+  const layoutTotal = rows.reduce((a, r) => a + layoutEv(r), 0);
+
+  const numRows = opts.rows || Math.max(1, Math.round(layoutTotal / 90));
+  const rowCapacity = layoutTotal / numRows;
+  const rowHeight = opts.rowHeight || 34;
+  const rowGap = opts.rowGap || 8;
+  const margin = { top: 4, right: 4, bottom: 4, left: 4 };
+  const height = margin.top + margin.bottom + numRows * rowHeight + (numRows - 1) * rowGap;
+
+  const made = freshSvg(container, height);
+  if (!made) return null;
+  const { svg, width } = made;
+  const w = width - margin.left - margin.right;
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const needed = Math.floor(totalEv / 2) + 1;
+  const boundaryTrueEv = totalEv - needed;
+
+  const rowX = (r, local) => {
+    const scale = d3.scaleLinear().domain([0, rowCapacity]).range(r % 2 === 0 ? [0, w] : [w, 0]);
+    return scale(local);
+  };
+  const rowY = r => r * (rowHeight + rowGap);
+
+  // Slice each unit's LAYOUT span against every row's layout range, emitting
+  // one fragment per nonzero overlap (almost always one, occasionally two).
+  // The 270 threshold is tracked separately in true-EV space, then mapped
+  // proportionally into whichever unit's (possibly padded) layout span it
+  // falls inside, so padding a tiny district never moves the real threshold.
+  let cursorLayout = 0, cursorTrue = 0;
+  let tippingUnit = null, boundaryLayoutPos = null;
+  const segs = [];
+  for (const row of rows) {
+    const lev = layoutEv(row);
+    const layoutStart = cursorLayout, layoutEnd = cursorLayout + lev;
+    const trueStart = cursorTrue, trueEnd = cursorTrue + row.ev;
+    if (tippingUnit == null && boundaryTrueEv < trueEnd) {
+      tippingUnit = row.unit;
+      const frac = row.ev > 0 ? (boundaryTrueEv - trueStart) / row.ev : 0;
+      boundaryLayoutPos = layoutStart + frac * lev;
+    }
+    for (let r = 0; r < numRows; r++) {
+      const rowStart = r * rowCapacity;
+      const rowEnd = r === numRows - 1 ? layoutTotal : (r + 1) * rowCapacity;
+      const oStart = Math.max(layoutStart, rowStart);
+      const oEnd = Math.min(layoutEnd, rowEnd);
+      if (oEnd > oStart) {
+        segs.push({
+          unit: row.unit, color: row.color,
+          r, localStart: oStart - rowStart, localEnd: oEnd - rowStart,
+        });
+      }
+    }
+    cursorLayout = layoutEnd;
+    cursorTrue = trueEnd;
+  }
+  if (boundaryLayoutPos == null) boundaryLayoutPos = layoutTotal; // shouldn't happen, but keep the line on-chart
+
+  // Group a split state's fragments so it's labeled once (on its widest
+  // fragment) and joined across the row gap it straddles, instead of
+  // reading as two unrelated blocks.
+  const byUnit = new Map();
+  for (const s of segs) {
+    if (!byUnit.has(s.unit)) byUnit.set(s.unit, []);
+    byUnit.get(s.unit).push(s);
+  }
+  const connectors = [];
+  for (const frags of byUnit.values()) {
+    let best = frags[0];
+    for (const f of frags) {
+      if ((f.localEnd - f.localStart) > (best.localEnd - best.localStart)) best = f;
+    }
+    best.labelHere = true;
+    if (frags.length > 1) {
+      frags.sort((a, b) => a.r - b.r);
+      for (let i = 0; i < frags.length - 1; i++) {
+        const a = frags[i], b = frags[i + 1];
+        if (b.r !== a.r + 1) continue; // rows should always be consecutive; guard anyway
+        // Same edge both fragments share, by construction of the alternating
+        // row scales above. Width matches rowHeight (the ribbon's own
+        // thickness) rather than a thin decorative strip, so the corner reads
+        // as a continuous, equally-thick turn instead of a disconnected notch.
+        const x = a.r % 2 === 0 ? w - rowHeight : 0;
+        connectors.push({ unit: a.unit, color: a.color, x, y: rowY(a.r) + rowHeight, height: rowGap });
+      }
+    }
+  }
+
+  // Connectors drawn first so segment strokes still read on top of them.
+  // Extended half a pixel into each row so no antialiasing seam shows at the
+  // join, and tagged data-unit so hover on either fragment can also light up
+  // the joint, reinforcing that the pieces are one state.
+  g.selectAll('rect.s28-snake-connector').data(connectors).join('rect')
+    .attr('class', 's28-snake-connector')
+    .attr('data-unit', d => d.unit)
+    .attr('x', d => d.x).attr('y', d => d.y - 0.5)
+    .attr('width', rowHeight).attr('height', d => d.height + 1)
+    .attr('fill', d => d.color)
+    .style('pointer-events', 'none');
+
+  const segG = g.selectAll('g.s28-snake-frag').data(segs).join('g').attr('class', 's28-snake-frag');
+  segG.each(function (d) {
+    const x1 = rowX(d.r, d.localStart), x2 = rowX(d.r, d.localEnd);
+    const x = Math.min(x1, x2), segW = Math.max(0, Math.abs(x2 - x1));
+    const y = rowY(d.r);
+    const cell = d3.select(this);
+    cell.append('rect')
+      .attr('data-unit', d.unit).attr('class', 's28-snake-seg')
+      .attr('x', x).attr('y', y).attr('width', segW).attr('height', rowHeight)
+      .attr('fill', d.color)
+      .attr('stroke', '#111').attr('stroke-width', 1.25);
+    if (d.labelHere && segW >= 20) {
+      cell.append('text')
+        .attr('x', x + segW / 2).attr('y', y + rowHeight / 2 + 4)
+        .attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 600)
+        .attr('fill', '#fff').attr('stroke', '#000').attr('stroke-width', 3)
+        .attr('paint-order', 'stroke').style('pointer-events', 'none')
+        .text(d.unit);
+    }
+  });
+
+  // 270 threshold line, drawn in whichever row the boundary position falls.
+  const bRow = Math.min(numRows - 1, Math.floor(boundaryLayoutPos / rowCapacity));
+  const bLocal = boundaryLayoutPos - bRow * rowCapacity;
+  const bx = rowX(bRow, bLocal);
+  const by = rowY(bRow);
+  g.append('line')
+    .attr('x1', bx).attr('x2', bx)
+    .attr('y1', by - 2).attr('y2', by + rowHeight + 2)
+    .attr('stroke', '#fff').attr('stroke-width', 1.5).attr('stroke-dasharray', '4 3');
+
+  return { tippingUnit, needed, totalEv };
+}
+
+export default { renderHistogram, renderTrend, renderSnake };

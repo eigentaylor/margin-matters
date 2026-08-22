@@ -230,6 +230,17 @@
       background: #1b1b1b;
     }
 
+    /* Electoral snake segments */
+    .s28-snake-seg {
+      cursor: pointer;
+    }
+
+    /* JS-driven (not :hover) so hovering one fragment of a split unit also
+       highlights its other fragment and connecting corner block together. */
+    .s28-snake-hover {
+      opacity: 0.85;
+    }
+
     .s28-evcell.active {
       background: #1b1b1b;
       border-color: var(--accent);
@@ -867,6 +878,17 @@
            capture it. -->
       <div class="s28-evclass" id="s28EvClass"></div>
       <div class="s28-note" id="s28EvClassNote" style="text-align:center;margin-top:4px"></div>
+    </div>
+
+    <!-- ---------- electoral snake ---------- -->
+    <!-- Placed directly under the map, above the forecast/trend/table cards
+         below it: clicking a snake segment glows the matching state on the
+         map, and keeping the two adjacent means that doesn't need a scroll
+         back up to see the result. -->
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Electoral snake</div>
+      <div class="s28-chart" id="s28Snake"></div>
+      <div class="s28-note" id="s28SnakeNote"></div>
     </div>
 
     <!-- ---------- forecast ---------- -->
