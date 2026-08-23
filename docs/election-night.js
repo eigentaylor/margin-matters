@@ -3238,12 +3238,16 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
       const finalLeader = determineLeader(dShareFinal, rShareFinal, totalThirdShare, 1, { dVotes: finalDVotes, rVotes: finalRVotes, oVotes: finalOTopVotes, countedVotes: twoPartyVotesFinal });
-      const baselineAbbr = baselineAbbrColors.get(abbr);
-      let finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
-      if (!finalColor) {
-        const baselineUnit = baselineUnitColors.get(unit);
-        finalColor = baselineUnit || safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
+      // A cached baseline color can be stale relative to this run's real
+      // winner (e.g. painted before third party was a factor), so a real O
+      // win is never allowed to be masked by a leftover D/R baseline color.
+      let finalColor = null;
+      if (finalLeader !== 'O') {
+        const baselineAbbr = baselineAbbrColors.get(abbr);
+        finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
+        if (!finalColor) finalColor = baselineUnitColors.get(unit) || null;
       }
+      if (!finalColor) finalColor = safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
       const finalMarginStr = finalLeader === 'O'
         ? formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes)
         : formatLean(finalMarginTwoParty);
@@ -5492,6 +5496,9 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
     if (pvOth) pvOth.textContent = fmt(oVotes);
     if (pvTot) pvTot.textContent = fmt(counted);
 
+    const pvOthBadge = document.getElementById('pvOthBadge');
+    if (pvOthBadge) pvOthBadge.style.display = oVotes > 0 ? '' : 'none';
+
     // Add percentages
     if (counted > 0) {
       const dPct = (dVotes / counted * 100).toFixed(1);
@@ -5508,15 +5515,24 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
 
     // Add margin
     if (pvMargin) {
-      const margin = dVotes - rVotes;
-      if (Math.abs(margin) < 0.5) {
-        pvMargin.textContent = 'EVEN';
-      } else if (margin > 0) {
-        const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
-        pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+      if (oVotes > dVotes && oVotes > rVotes) {
+        const runnerUp = Math.max(dVotes, rVotes);
+        const margin = oVotes - runnerUp;
+        const pctDiff = counted > 0 ? Math.abs((oVotes / counted - runnerUp / counted) * 100).toFixed(1) : '0.0';
+        pvMargin.innerHTML = Math.abs(margin) < 0.5
+          ? 'EVEN'
+          : 'O+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
       } else {
-        const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
-        pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        const margin = dVotes - rVotes;
+        if (Math.abs(margin) < 0.5) {
+          pvMargin.textContent = 'EVEN';
+        } else if (margin > 0) {
+          const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
+          pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        } else {
+          const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
+          pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        }
       }
     }
 

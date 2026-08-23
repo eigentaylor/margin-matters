@@ -116,41 +116,38 @@ function pollMargins(snap) {
   return out;
 }
 
-function evTally(margins) {
-  let dem = 0, rep = 0;
-  for (const unit of state.baseline.units) {
-    const ev = state.baseline.ev.get(unit) || 0;
-    if ((margins.get(unit) || 0) >= 0) dem += ev; else rep += ev;
-  }
-  return { dem, rep };
-}
-
 /**
- * Debug-only summary of what the (hidden) third party actually did: total EVs
- * won outright, plus its best-performing states and how close each one came
- * to winning. Reuses buildRows() (the exact same vote synthesis + at-large
- * aggregation election night itself will use) rather than re-deriving it, so
- * this can never disagree with what election night ends up showing.
+ * The real EV tally, D/R/O alike, plus (when third party is on) its
+ * best-performing states and how close each one came to winning. Built off
+ * buildRows() — the exact same vote synthesis + at-large aggregation
+ * election night itself uses — so this can never disagree with what
+ * election night ends up showing, and there is exactly one place a
+ * third-party win gets counted rather than two that could contradict each
+ * other. With third party off, buildRows() synthesizes tVotes=0 everywhere,
+ * so this degenerates to a plain D/R tally.
  */
-function summarizeThirdParty(sim, baseline) {
-  if (!sim || !sim.truthThirdShare) return null;
+function computeTruthSummary(sim, baseline) {
   const { rows } = buildRows({
     finalRel: sim.truthRel, npv: sim.truthNpv, baseline,
-    thirdShare: sim.truthThirdShare, siphonLean: sim.siphonLean ?? 0.5,
+    thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
     oCandidateName: sim.thirdPartyCandidate || 'Third party',
   });
-  let ev = 0;
+  let dem = 0, rep = 0, oth = 0;
   const top = [];
   for (const row of rows) {
     if (row.unit === 'NATIONAL') continue;
-    const leaderVotes = Math.max(row.dVotes, row.rVotes);
     const oWins = row.tVotes > row.dVotes && row.tVotes > row.rVotes;
-    if (oWins) ev += row.ev;
-    const gapPts = row.total > 0 ? ((leaderVotes - row.tVotes) / row.total) * 100 : 0;
-    top.push({ unit: row.unit, share: row.thirdShare, gapPts, oWins });
+    if (oWins) oth += row.ev;
+    else if (row.dVotes >= row.rVotes) dem += row.ev;
+    else rep += row.ev;
+    if (sim.truthThirdShare) {
+      const leaderVotes = Math.max(row.dVotes, row.rVotes);
+      const gapPts = row.total > 0 ? ((leaderVotes - row.tVotes) / row.total) * 100 : 0;
+      top.push({ unit: row.unit, share: row.thirdShare, gapPts, oWins });
+    }
   }
   top.sort((a, b) => b.share - a.share);
-  return { ev, top: top.slice(0, 6) };
+  return { dem, rep, oth, top: top.slice(0, 6) };
 }
 
 /** Electoral votes grouped by rating tier, D-safest to R-safest. */
@@ -473,7 +470,7 @@ function renderDebug() {
   for (const unit of state.baseline.units) {
     margins.set(unit, (sim.truthRel.get(unit) || 0) + (state.baseline.beta.get(unit) || 1) * sim.truthNpv);
   }
-  const { dem, rep } = evTally(margins);
+  const truth = computeTruthSummary(sim, state.baseline);
   const snap = currentSnapshot();
 
   // The analytic tipping point: the state whose OWN margin crossing zero is what
@@ -523,15 +520,13 @@ function renderDebug() {
   // Third party is otherwise invisible until (if ever) it wins a state -- always
   // show something here, even "off", so it's never ambiguous whether the
   // mechanic is running silently vs. just not doing anything this run.
-  const tpSummary = summarizeThirdParty(sim, state.baseline);
   const thirdPartyRows = !sim.truthThirdShare
     ? `<div class="s28-dbgrow"><span>Third party</span><span>off</span></div>`
     : `<div class="s28-dbgrow"><span>Third party</span><span>${sim.thirdPartyCandidate || '(unnamed)'} &mdash; strength ${sim.thirdPartyStrength.toFixed(2)}&times;, siphon lean ${sim.siphonLean.toFixed(2)} (0=spoils R, 1=spoils D)</span></div>
-    <div class="s28-dbgrow"><span>Third party EVs won</span><span>${tpSummary.ev} / ${state.baseline.totalEv}</span></div>
-    <div style="margin-top:6px;color:var(--muted)">Best third-party states: ${tpSummary.top.map(r => `${r.unit} ${(r.share * 100).toFixed(1)}%${r.oWins ? ' — WON' : ` (trails leader by ${r.gapPts.toFixed(1)}pt)`}`).join(' · ')}</div>`;
+    <div style="margin-top:6px;color:var(--muted)">Best third-party states: ${truth.top.map(r => `${r.unit} ${(r.share * 100).toFixed(1)}%${r.oWins ? ' — WON' : ` (trails leader by ${r.gapPts.toFixed(1)}pt)`}`).join(' · ')}</div>`;
 
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
-    <div class="s28-dbgrow"><span>True result</span><span>D ${dem} &ndash; R ${rep}</span></div>
+    <div class="s28-dbgrow"><span>True result</span><span>D ${truth.dem} &ndash; R ${truth.rep}${truth.oth > 0 ? ` &ndash; O ${truth.oth}` : ''}</span></div>
     <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(sim.truthNpv)}</span></div>
     <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(2)}pt)</span></div>
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>

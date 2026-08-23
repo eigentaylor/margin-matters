@@ -20,6 +20,7 @@ import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
 import { computeNailbiterShift } from './nailbiter.js';
 import { POLL_ERROR_SPEC } from './pollCalibration.js';
 import { computeThirdPartyTruth, THIRD_PARTY_DEFAULTS } from './thirdParty.js';
+import { buildRows } from './electionNightBridge.js';
 
 /**
  * Every tunable in one place. Overridable per-run and via URL query params.
@@ -407,15 +408,27 @@ export function truthMargins(sim) {
   return out;
 }
 
-/** EV tally for the true result. */
+/**
+ * EV tally for the true result, D/R/O alike. Reuses buildRows() (the same
+ * vote synthesis election night itself uses) so a third-party win is never
+ * silently folded into D or R. With no third party in play, buildRows()
+ * synthesizes oVotes=0 everywhere and this degenerates to a plain D/R tally.
+ */
 export function truthEv(sim) {
-  let dem = 0, rep = 0;
   const margins = truthMargins(sim);
-  for (const unit of sim.baseline.units) {
-    const ev = sim.baseline.ev.get(unit) || 0;
-    if ((margins.get(unit) || 0) >= 0) dem += ev; else rep += ev;
+  const { rows } = buildRows({
+    finalRel: sim.truthRel, npv: sim.truthNpv, baseline: sim.baseline,
+    thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
+    oCandidateName: sim.thirdPartyCandidate || 'Third party',
+  });
+  let dem = 0, rep = 0, oth = 0;
+  for (const row of rows) {
+    if (row.unit === 'NATIONAL') continue;
+    if (row.tVotes > row.dVotes && row.tVotes > row.rVotes) oth += row.ev;
+    else if (row.dVotes >= row.rVotes) dem += row.ev;
+    else rep += row.ev;
   }
-  return { dem, rep, total: sim.baseline.totalEv, margins };
+  return { dem, rep, oth, total: sim.baseline.totalEv, margins };
 }
 
 export default { createSimulation, PARAMS, computeTodaySeed, chooseNpv, truthMargins, truthEv, NPV_MODES, softclip };

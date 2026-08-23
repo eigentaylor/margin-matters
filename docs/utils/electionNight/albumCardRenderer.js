@@ -578,9 +578,12 @@ async function drawFinal(ctx, slide, w, ribbonBottom) {
   const rName = lastNameOf(slide.rCandidateName) || 'Republican';
   let y = ribbonBottom + 34;
   if (slide.winner) {
-    const isD = slide.winner === 'D';
-    const winnerName = isD ? dName : rName;
-    const winnerPortrait = isD ? slide.dPortraitUrl : slide.rPortraitUrl;
+    const winnerName = slide.winner === 'D' ? dName
+      : slide.winner === 'O' ? (lastNameOf(slide.oCandidateName) || 'Independent')
+      : rName;
+    const winnerPortrait = slide.winner === 'D' ? slide.dPortraitUrl
+      : slide.winner === 'O' ? slide.oPortraitUrl
+      : slide.rPortraitUrl;
     const img = await loadImage(winnerPortrait);
     drawPhotoBox(ctx, img, (w - PHOTO_SIZE_BIG) / 2, y, PHOTO_SIZE_BIG, slide.winner);
     text(ctx, winnerName.toUpperCase(), w / 2, y + PHOTO_SIZE_BIG + 50, { font: `900 40px ${FONT}`, align: 'center' });

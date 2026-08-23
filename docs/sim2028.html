@@ -758,7 +758,7 @@
             <input id="s28ConfidentForecasts" type="checkbox" />
           </span>
         </label>
-        <label title="Adds an optional independent/third-party candidate, picked below in the Candidates section (custom or historical search only — no presets). Third-party strength is heaviest in states that are already safe for one side (real protest-vote behavior) and suppressed in genuine swing states, so it dampens landslides and can occasionally spoil or win a state without routinely preventing anyone from reaching 270. Only affects the final election-night result — the campaign's polls and forecast stay two-party throughout, exactly as if this were off. Off (default) reproduces today's simulation exactly.">Third party
+        <label title="BETA — known issues: results display is still being refined and some third-party numbers/colors may not fully match the true simulated result yet. Adds an optional independent/third-party candidate, picked below in the Candidates section (custom or historical search only — no presets). Third-party strength is heaviest in states that are already safe for one side (real protest-vote behavior) and suppressed in genuine swing states, so it dampens landslides and can occasionally spoil or win a state without routinely preventing anyone from reaching 270. Only affects the final election-night result — the campaign's polls and forecast stay two-party throughout, exactly as if this were off. Off (default) reproduces today's simulation exactly.">Third party <span style="color:var(--muted);font-weight:normal;font-size:0.85em">(beta)</span>
           <span class="s28-checkbox-row">
             <input id="s28ThirdParty" type="checkbox" />
           </span>
@@ -909,7 +909,7 @@
         <div id="evNeededToWin" style="text-align:center;font-size:0.85em;color:var(--muted);margin-top:4px"></div>
         <div id="pvTotals" class="pv-totals s28-hidden" style="margin-top:10px">
           <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span id="pvDemPct" class="delta"></span></div>
-          <div class="pv-badge pv-o" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
+          <div class="pv-badge pv-o" id="pvOthBadge" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
           <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span id="pvRepPct" class="delta"></span></div>
           <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span></div>
           <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
