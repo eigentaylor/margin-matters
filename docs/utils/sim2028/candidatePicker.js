@@ -17,9 +17,12 @@
 
 import { setPortraitOverride } from '../electionNight/candidatePortraits.js';
 
-export const DEFAULT_CANDIDATES = { d: 'Jon Ossoff', r: 'JD Vance' };
+export const DEFAULT_CANDIDATES = { d: 'Jon Ossoff', r: 'JD Vance', o: 'Independent' };
 
-/** Presets beyond the two defaults, sitting unused in docs/img/ until picked. */
+/** Presets beyond the two defaults, sitting unused in docs/img/ until picked.
+ *  `o` (third-party) deliberately has none -- that party is custom/historical-
+ *  search only. The empty array alone suppresses preset swatches for it in the
+ *  UI; nothing else needs to special-case a partyless third slot. */
 export const PRESET_CANDIDATES = {
   d: [
     { name: 'Jon Ossoff', img: 'img/2028Ossoff.jpg' },
@@ -32,9 +35,10 @@ export const PRESET_CANDIDATES = {
     { name: 'JD Vance', img: 'img/2028Vance.jpg' },
     { name: 'Marco Rubio', img: 'img/2028Rubio.jpg' },
   ],
+  o: [],
 };
 
-const STORAGE_KEYS = { d: 'sim2028DCandidate', r: 'sim2028RCandidate' };
+const STORAGE_KEYS = { d: 'sim2028DCandidate', r: 'sim2028RCandidate', o: 'sim2028OCandidate' };
 
 const SAVED_MODES = new Set(['custom', 'preset', 'historical']);
 
