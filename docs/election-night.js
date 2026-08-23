@@ -1603,10 +1603,9 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
       // A "breaking news" leader-flip - a key race's (or the national
       // popular vote's) raw count changing hands while it's still uncalled
       // (pre-first-call, or during too-close-to-call limbo after a
-      // retraction). Self-contained record (candidateName already resolved
-      // in registerLeadFlip()/registerNpvLeadFlip()), so unlike the call/
-      // correction branch below this doesn't need to re-resolve portraits
-      // for both parties - just the new leader.
+      // retraction). Resolves dCandidateName/rCandidateName/oCandidateName
+      // the same way the call/correction branch below does, so it can reuse
+      // the same D/R/O vote-total comparison box.
       if (record.noticeType === 'leadFlip' || record.noticeType === 'npvLeadFlip') {
         const isNpv = record.noticeType === 'npvLeadFlip';
         const leader = record.leader;
@@ -1615,6 +1614,24 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
         const flipSt = isNpv ? null : unitsByKey.get(record.unitKey);
         const flipResolvedPriorMargin = flipSt ? resolvePriorMargin(flipSt) : null;
         const flipPriorRating = (isFinite(flipResolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(flipResolvedPriorMargin) : null;
+        // Always resolve both major-party candidates by name, same as the
+        // call/correction and npv_call branches below - the comparison box
+        // reads these fields the same way regardless of slide kind.
+        const flipUnitKey = isNpv ? 'NATIONAL' : record.unitKey;
+        const flipDCandidateName = resolveCandidateFullName('D', flipUnitKey);
+        const flipRCandidateName = resolveCandidateFullName('R', flipUnitKey);
+        // Identical O-row gating to what the call screen uses (per-state:
+        // record.topThirdShare vs O_ROW_THRESHOLD; NPV: oVotes share of
+        // countedVotes vs O_ROW_THRESHOLD, with the same 1992/1996
+        // scoreboard exception) - not a separate concept, just evaluated
+        // here since a leadFlip record is self-contained rather than
+        // re-derived from computeMetrics()/totals at slide-build time.
+        const flipOShareForRow = isNpv
+          ? (isFinite(record.countedVotes) && record.countedVotes > EPS ? record.oVotes / record.countedVotes : 0)
+          : (isFinite(record.topThirdShare) ? record.topThirdShare : 0);
+        const flipOCandidateName = (flipOShareForRow >= O_ROW_THRESHOLD || (isNpv && (state.year === 1992 || state.year === 1996)))
+          ? resolveCandidateFullName('O', flipUnitKey)
+          : null;
         return {
           kind: 'leadFlip',
           isNpv,
@@ -1623,12 +1640,16 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
           ev: record.ev,
           leader,
           candidateName: record.candidateName,
+          dCandidateName: flipDCandidateName,
+          rCandidateName: flipRCandidateName,
+          oCandidateName: flipOCandidateName,
           accentColor: calledAccentColor(leader, marginFromCallRecord(record)),
           confidencePct: record.confidence,
           reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
           reportingText: formatReportingText(record.reporting, record.remainingVotes),
           dVotes: record.dVotes,
           rVotes: record.rVotes,
+          oVotes: record.oVotes,
           countedVotes: record.countedVotes,
           marginText: formatMarginText(record.marginStr, leader, (isFinite(record.dVotes) && isFinite(record.rVotes)) ? record.dVotes - record.rVotes : null),
           marginPctText: record.marginStr,
@@ -5084,9 +5105,14 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
       reporting: metrics.reporting,
       dVotes: metrics.dVotesCounted,
       rVotes: metrics.rVotesCounted,
+      oVotes: metrics.oVotesCounted,
       countedVotes: metrics.countedVotes,
       remainingVotes: metrics.remainingVotes,
-      marginStr: metrics.countedMarginStr
+      marginStr: metrics.countedMarginStr,
+      // Same O-row eligibility signal registerCall()'s record carries - lets
+      // buildCheckpointSlides() gate a third-party comparison row on this
+      // leadFlip the same way it does for a call/correction.
+      topThirdShare: metrics.topThirdShare
     };
     state.callRecords.push(record);
 
@@ -5133,6 +5159,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
       candidateName,
       dVotes: dCounted,
       rVotes: rCounted,
+      oVotes: oCounted,
       countedVotes,
       reporting: state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 0,
       remainingVotes: Math.max(0, Math.round((state.totalEligibleVotes || 0) - countedVotes)),

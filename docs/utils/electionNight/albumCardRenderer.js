@@ -405,7 +405,9 @@ async function drawLeadFlip(ctx, slide, w, headerBottom) {
   text(ctx, last, textX, nameY, { font: `900 40px ${FONT}` });
   const marginLine = slide.marginText ? `${slide.marginText} — still too close to call` : 'Still too close to call';
   text(ctx, marginLine, textX, nameY + 28, { font: `400 14px ${FONT}`, color: 'rgba(255,255,255,0.75)' });
-  const y = drawStatsBar(ctx, 26, bodyY + PHOTO_SIZE + 24, w - 52, slide.reportingPct, slide.priorRatingLabel ? { label: slide.priorRatingLabel, color: slide.priorRatingColor } : null);
+  let y = bodyY + PHOTO_SIZE + 24;
+  y = await drawComparisonRows(ctx, slide, 26, y, w - 52);
+  y = drawStatsBar(ctx, 26, y, w - 52, slide.reportingPct, slide.priorRatingLabel ? { label: slide.priorRatingLabel, color: slide.priorRatingColor } : null);
   return y + BOTTOM_PAD;
 }
 
