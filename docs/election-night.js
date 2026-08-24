@@ -1395,6 +1395,17 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
   // Libertarian/Green-caliber background noise stays out of the way.
   const O_ROW_THRESHOLD = 0.05;
 
+  // A real sim2028 run's third party (see isSim2028LiveRun()) is a
+  // deliberately tunable, player-controlled mechanic - any real showing
+  // should surface on the call screen, not just a Perot/Wallace-caliber one,
+  // otherwise the setting's effect is invisible below 5%. Historical
+  // replays keep the 5% floor so routine Libertarian/Green-caliber noise
+  // stays quiet. `> EPS` rather than `>= 0` so third party being off (where
+  // oShareForRow is exactly 0) never adds a spurious "O 0.0%" row.
+  function oRowThreshold() {
+    return isSim2028LiveRun() ? EPS : O_ROW_THRESHOLD;
+  }
+
   // How far before state.simEnd the two "fires at the very last possible
   // moment" event sources (the NPV correction, and projectUnitCallEvent's
   // dead-end fallback below) are pinned, instead of exactly at simEnd like
@@ -1542,7 +1553,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
           : record.reporting;
         // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
         const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
-        const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
+        const oCandidateName = (oShareForRow >= oRowThreshold() || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
         return {
           kind: isNpvCorrection ? 'correction' : 'call',
           isNpv: true,
@@ -1621,15 +1632,15 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
         const flipDCandidateName = resolveCandidateFullName('D', flipUnitKey);
         const flipRCandidateName = resolveCandidateFullName('R', flipUnitKey);
         // Identical O-row gating to what the call screen uses (per-state:
-        // record.topThirdShare vs O_ROW_THRESHOLD; NPV: oVotes share of
-        // countedVotes vs O_ROW_THRESHOLD, with the same 1992/1996
+        // record.topThirdShare vs oRowThreshold(); NPV: oVotes share of
+        // countedVotes vs oRowThreshold(), with the same 1992/1996
         // scoreboard exception) - not a separate concept, just evaluated
         // here since a leadFlip record is self-contained rather than
         // re-derived from computeMetrics()/totals at slide-build time.
         const flipOShareForRow = isNpv
           ? (isFinite(record.countedVotes) && record.countedVotes > EPS ? record.oVotes / record.countedVotes : 0)
           : (isFinite(record.topThirdShare) ? record.topThirdShare : 0);
-        const flipOCandidateName = (flipOShareForRow >= O_ROW_THRESHOLD || (isNpv && (state.year === 1992 || state.year === 1996)))
+        const flipOCandidateName = (flipOShareForRow >= oRowThreshold() || (isNpv && (state.year === 1992 || state.year === 1996)))
           ? resolveCandidateFullName('O', flipUnitKey)
           : null;
         return {
@@ -1671,7 +1682,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
       // for Wallace/Perot/Taft-caliber showings without needing upkeep for
       // future strong third-party years.
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
-      const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
+      const oCandidateName = oShareForRow >= oRowThreshold() ? resolveCandidateFullName('O', record.unitKey) : null;
       const st = unitsByKey.get(record.unitKey);
       const keyRace = !record.isNpv && isKeyRaceUnit(st);
       // Only ever set for a real sim2028 run (see isSim2028LiveRun()) - a
