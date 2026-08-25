@@ -12,7 +12,7 @@ import { createSimulation, computeTodaySeed, PARAMS, LEGACY_CALIBRATION } from '
 import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
-import { installElectionNight, buildRows, sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
+import { installElectionNight, buildRows } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
@@ -144,18 +144,47 @@ function pollShares(snap, unit) {
 }
 
 /**
- * A unit's rating (Tilt/Lean/Likely/Safe D/R/O, or Toss-up), from its poll
- * margin plus its sampled third-party poll share - so a state where the
- * third-party candidate is actually leading in the polls reads as an O tier
- * instead of being folded into whichever of D/R happened to be bigger. With
- * third party off (or this unit's sampled T share at 0), sharesThreeWay
- * reduces to a plain D/R split, so this is a no-op wrapper around
- * ratingFor(margin) for every existing two-party run.
+ * A unit's rating (Tilt/Lean/Likely/Safe D/R/O, or Toss-up) directly from its
+ * own sampled D/R/T/Undecided poll shares (the exact numbers shown in the
+ * table/tooltip), renormalized to exclude Undecided so the established
+ * 2/5/10/15pt bands - tuned around a decided-voter margin - still apply. This
+ * is deliberately NOT built off pollMargins()'s smoothed margin: that margin
+ * is defined as D's dominance over R specifically (see campaign.js's
+ * obsMargin), which stays large even when a surging third-party candidate is
+ * actually neck-and-neck with the leader - reconstructing shares from it would
+ * report a state as comfortably D while its own poll shows D and T essentially
+ * tied. Reading the shares directly instead means the tier can never disagree
+ * with the percentages sitting right next to it. With third party off (t
+ * always 0), this reduces to exactly ratingFor(pollMargins() margin) - same
+ * decided-D minus decided-R gap, just computed from the shares instead of the
+ * pre-derived scalar.
  */
-function ratingForUnit(snap, unit, margin) {
-  const tShare = pollShares(snap, unit)?.t || 0;
-  const shares = sharesThreeWay(margin || 0, tShare, state.sim?.siphonLean ?? 0.5);
-  return ratingForShares(shares);
+function ratingForUnit(snap, unit) {
+  const s = pollShares(snap, unit);
+  if (!s) return ratingForShares({});
+  const decided = s.d + s.r + s.t;
+  if (decided <= 0) return ratingForShares({});
+  return ratingForShares({ dShare: s.d / decided, rShare: s.r / decided, oShare: s.t / decided });
+}
+
+/**
+ * Signed leader-vs-strongest-rival margin among a unit's decided D/R/(T)
+ * shares (positive = D ahead, negative = R ahead), for the map's continuous
+ * blue/red fill - the same "who's really challenging the leader" question
+ * ratingForUnit answers, just signed instead of tiered. Returns null when
+ * a third-party candidate is actually the leader (colorForMargin has no
+ * third color for that; the caller falls back to the O tier's flat gold).
+ * With third party off (t always 0), this is exactly dShare-rShare, so an
+ * ordinary two-party game colors identically to before this existed.
+ */
+function twoWayColorMargin(snap, unit) {
+  const s = pollShares(snap, unit);
+  if (!s) return 0;
+  const decided = s.d + s.r + s.t;
+  if (decided <= 0) return 0;
+  const dDec = s.d / decided, rDec = s.r / decided, tDec = s.t / decided;
+  if (tDec > dDec && tDec > rDec) return null;
+  return dDec >= rDec ? dDec - Math.max(rDec, tDec) : -(rDec - Math.max(dDec, tDec));
 }
 
 /**
@@ -196,7 +225,7 @@ function computeTruthSummary(sim, baseline) {
 function evByRating(snap, margins) {
   const totals = new Map(RATINGS.map(r => [r.key, 0]));
   for (const unit of state.baseline.units) {
-    const r = ratingForUnit(snap, unit, margins.get(unit));
+    const r = ratingForUnit(snap, unit);
     totals.set(r.key, totals.get(r.key) + (state.baseline.ev.get(unit) || 0));
   }
   return totals;
@@ -236,7 +265,7 @@ function showReturnsTip(evt, unit) {
     const snap = currentSnapshot();
     const margins = snap ? pollMargins(snap) : null;
     const m = margins ? margins.get(unit) : null;
-    const rating = m == null ? null : ratingForUnit(snap, unit, m);
+    const rating = m == null ? null : ratingForUnit(snap, unit);
     const rows = [
       ['Electoral votes', state.baseline.ev.get(unit) || 0],
       ['Status', 'Not yet reporting'],
@@ -333,7 +362,7 @@ function showTip(evt, unit) {
   const margins = pollMargins(snap);
   const m = margins.get(unit);
   if (m == null) return;
-  const rating = ratingForUnit(snap, unit, m);
+  const rating = ratingForUnit(snap, unit);
   const band = unitBand(unit, snap);
   const prob = f ? f.stateProb.get(unit) : null;
   const name = unit.includes('-') ? unit : (getStateName(unit) || unit);
@@ -432,7 +461,7 @@ function highlightedUnitSet() {
     const margins = pollMargins(snap);
     const set = new Set();
     for (const unit of state.baseline.units) {
-      if (ratingForUnit(snap, unit, margins.get(unit)).key === h.key) set.add(unit);
+      if (ratingForUnit(snap, unit).key === h.key) set.add(unit);
     }
     return set;
   }
@@ -594,7 +623,7 @@ function renderForecast() {
   if (!f) {
     setProb('s28DemProb', '—', 'Democratic win');
     setProb('s28RepProb', '—', 'Republican win');
-    setProb('s28TieProb', '—', 'Exact tie');
+    setProb('s28TieProb', '—', 'No majority');
     setProb('s28NatPoll', '—', 'National poll');
     setProb('s28MedianEv', '—', 'Median EV / 90% range');
     setProb('s28Tipping', '—', 'Tipping point');
@@ -604,7 +633,14 @@ function renderForecast() {
   setProb('s28NatPoll', fmtMargin(snap.pollNpv), 'National poll');
   setProb('s28DemProb', fmtPct(f.demWinProb), 'Democratic win');
   setProb('s28RepProb', fmtPct(f.repWinProb), 'Republican win');
-  setProb('s28TieProb', f.tieProb > 0 ? (f.tieProb * 100).toFixed(1) + '%' : '<1%', 'Exact tie');
+  // "No majority": nobody reaches 270 EV - with third party off this only
+  // ever happens at a literal EV tie (hence the old "Exact tie" label), but
+  // once a third-party candidate can win real states outright it's a genuine,
+  // non-degenerate possibility that neither major party clears a majority
+  // (the scenario the 12th Amendment's contingent election exists for), so
+  // it earns the more general name and a Monte Carlo estimate of its own
+  // (see forecast.js's noMajorityProb) rather than staying an edge case.
+  setProb('s28TieProb', f.noMajorityProb > 0 ? (f.noMajorityProb * 100).toFixed(1) + '%' : '<1%', 'No majority');
   setProb('s28MedianEv', `${f.medianDemEv} D <span style="color:var(--muted);font-size:0.8em">(${f.evRange90[0]}–${f.evRange90[1]})</span>`, 'Median EV / 90% range');
   setProb('s28Tipping', `${f.tippingPoint || '—'} <span style="color:var(--muted);font-size:0.8em">${fmtPct(f.tippingProb)}</span>`, 'Tipping point');
   renderHistogram('#s28Histogram', f);
@@ -754,11 +790,17 @@ function renderMap() {
   const abbrColors = new Map();
   const unitColors = new Map();
   for (const unit of state.baseline.units) {
-    // A state where the third-party poll share actually leads gets its
-    // tier's flat gold instead of the continuous blue/red ramp - every
-    // other state's fill is untouched (same continuous ramp as always).
-    const rating = ratingForUnit(snap, unit, margins.get(unit));
-    const color = rating.party === 'O' ? rating.color : colorForMargin(margins.get(unit));
+    // The continuous blue/red fill is keyed off the leader's margin over the
+    // STRONGEST rival (twoWayColorMargin), not the plain D-R gap - a state
+    // where D is comfortably ahead of R but neck-and-neck with a surging
+    // third-party candidate needs to fade toward toss-up grey too, even
+    // though nothing about the D-R gap itself changed; a bare D-R margin
+    // can't see that. With O actually leading, fall back to the tier's flat
+    // gold (a gradient can't represent a third color). With third party off
+    // (or negligible), twoWayColorMargin always equals the plain D-R margin,
+    // so ordinary two-party games render byte-identically to before.
+    const rating = ratingForUnit(snap, unit);
+    const color = rating.party === 'O' ? rating.color : colorForMargin(twoWayColorMargin(snap, unit));
     if (unit.includes('-')) {
       unitColors.set(unit, color);
       if (unit.endsWith('-AL')) {
@@ -938,7 +980,7 @@ function renderTable() {
         margin: m,
         shares: pollShares(snap, unit),
         band: unitBand(unit, snap),
-        rating: ratingForUnit(snap, unit, m),
+        rating: ratingForUnit(snap, unit),
         change: prevMargins ? m - prevMargins.get(unit) : null,
         prob: f ? f.stateProb.get(unit) : null,
       };
@@ -1627,16 +1669,16 @@ function goToElectionNight() {
   // from these real polls instead of having to synthesize its own.
   const finalPoll = currentSnapshot();
   const pollMarginByUnit = pollMargins(finalPoll);
-  // The Election-Eve poll's own sampled third-party share per unit - threaded
-  // through the same way pollMarginByUnit is, so election-night.js's
-  // pre-election badge can classify a state where the third-party candidate
-  // was actually leading in the polls as Tilt/Lean/Likely/Safe O instead of
-  // folding it into whichever of D/R happened to be bigger. 0 for every unit
-  // when third party is off, so this is a no-op for every existing run.
-  const pollThirdShareByUnit = new Map();
+  // The Election-Eve poll's own sampled D/R/T/Undecided shares per unit -
+  // threaded through the same way pollMarginByUnit is, so election-night.js's
+  // pre-election badge can classify a state straight off the same numbers
+  // the polling table shows (including where a third-party candidate was
+  // actually leading, or running a close second) instead of folding it into
+  // whichever of D/R the smoothed margin happened to favor. t is 0 for every
+  // unit when third party is off, so this is a no-op for every existing run.
+  const pollSharesByUnit = new Map();
   for (const unit of state.baseline.units) {
-    const s = pollShares(finalPoll, unit);
-    pollThirdShareByUnit.set(unit, s ? s.t : 0);
+    pollSharesByUnit.set(unit, pollShares(finalPoll, unit) || { d: 0, r: 0, t: 0, u: 0 });
   }
   // The campaign's own Election-Eve forecast (same object the forecast
   // panel renders from) - bridged so the opening raceOverview slide's win%/
@@ -1650,7 +1692,7 @@ function goToElectionNight() {
     npv: state.sim.truthNpv,
     baseline: state.baseline,
     pollMarginByUnit,
-    pollThirdShareByUnit,
+    pollSharesByUnit,
     seed: state.sim.seed,
     forecast: finalForecast ? { ...finalForecast, pollNpv: finalPoll.pollNpv } : null,
     thirdShare: state.sim.truthThirdShare,

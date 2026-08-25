@@ -489,7 +489,7 @@ async function drawRaceOverview(ctx, slide, w) {
     const stats = [
       [`${lastNameOf(slide.dCandidateName).toUpperCase()} TO WIN`, `${(probD * 100).toFixed(1)}%`],
       [`${lastNameOf(slide.rCandidateName).toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`],
-      ['EC TIE', `${(probTie * 100).toFixed(1)}%`],
+      ['NO MAJORITY', `${(probTie * 100).toFixed(1)}%`],
       ['EST. NPV', formatSignedMargin(s.npvMargin)],
       ['MEDIAN EV', medianText]
     ];

@@ -22,6 +22,23 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 25, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Sim2028</h2>
+<br/>
+<ul>
+<li>Added Tilt/Lean/Likely/Safe O rating tiers for a third-party candidate who's actually leading a state's polls, classified the same way as D/R (by the leader's margin over whoever's in second), and colored gold on the campaign map. The electoral-vote-by-rating bar and pill strip now count a real "O" total instead of silently folding a third-party lead into whichever of D/R happened to be bigger, and the pre-election "Tilt/Lean/Likely/Safe" badge shown during a live sim2028 election-night run (and saved into its album) is third-party-aware the same way.</li>
+<li>Fixed the rating/map-color classification to read a state's own D/R/T poll shares directly rather than reconstructing them from a D-vs-R-only smoothed margin - a state polling 38% D / 37% T / 10% R was misreading as a safe D lock (the margin measures D's edge over R specifically, which stays huge even when a third-party candidate is actually running neck-and-neck) instead of the toss-up it really is. The campaign map's continuous fill now factors in the strongest rival too, so a state that's only "safe" against R but genuinely contested by a surging third party fades toward toss-up gray instead of staying deep blue.</li>
+<li>The sim2028 forecast panel's "Exact tie" outcome is now "No majority," and actually modeled: with a third party able to win real states outright, nobody reaching 270 electoral votes is a real possibility (the scenario a contingent election exists for), not just an astronomically rare literal tie. The Monte Carlo now simulates each state's third-party share with its own uncertainty and gives a unit's electoral votes to whichever of D/R/O actually wins it.</li>
+<li>Fixed election night's live margin badges (call/correction popups, lead-flip notices, final results, the national popular vote ticker) to measure a leader's margin against the actual runner-up instead of always against the other major party - a state where a third-party candidate is running a strong second was showing a badge like "R+29" (R's lead over a distant D) instead of the real "R+14" (R's lead over the third-party candidate actually in second place). The raw vote counts and "X ahead" figures were already correct; only the percentage-margin badge was wrong.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         August 24, 2026
                     </div>
                     <div class='changelog-content'>

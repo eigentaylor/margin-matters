@@ -737,7 +737,7 @@ function renderRaceOverview(slide) {
     statsRow = `<div class="en-cp-overview-stats">
       ${stat(`${dName.toUpperCase()} TO WIN`, `${(probD * 100).toFixed(1)}%`)}
       ${stat(`${rName.toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`)}
-      ${stat('EC TIE', `${(probTie * 100).toFixed(1)}%`)}
+      ${stat('NO MAJORITY', `${(probTie * 100).toFixed(1)}%`)}
       ${stat('EST. NPV', formatSignedMargin(s.npvMargin))}
       ${stat('MEDIAN EV', medianText)}
     </div>`;

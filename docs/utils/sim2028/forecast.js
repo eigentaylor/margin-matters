@@ -17,6 +17,7 @@
 
 import { mulberry32 } from '../randomUtils.js';
 import { createRegionalErrorModel } from './errorModel.js';
+import { sharesThreeWay } from './electionNightBridge.js';
 
 /**
  * Scales are multiples of the polling-error spec's sigmas, as in campaign.js, and
@@ -72,8 +73,21 @@ export function remainingScale(progress, params = DEFAULT_FORECAST_PARAMS, axis 
  * @param {object}             [o.params]
  * @param {object}             [o.pollSpec] error-model spec describing the polling
  *        error the forecaster believes in (see errorModel.js DEFAULT_SPEC)
+ * @param {Map<string,number>} [o.pollThird] observed third-party poll share per
+ *        unit (see sim2028.js's pollShares()), when the third-party mechanic is
+ *        on; omitted/null degenerates every sim back to a plain D-vs-R race,
+ *        same as before this existed. Perturbed with its own draw off the same
+ *        regional error model as the D-R rel axis (reusing that machinery
+ *        rather than a separately-tuned O sigma, same simplification campaign.js's
+ *        mirage bias already makes) - this is what lets a state's simulated
+ *        winner actually be O, not just D or R with a third color painted over it.
+ * @param {number}             [o.siphonLean=0.5] see electionNightBridge.js's
+ *        sharesThreeWay - which major party a competitive third-party candidate
+ *        draws relatively more from.
  */
-export function runForecast({ pollRel, pollNpv, baseline, progress, seed, params = {}, pollSpec = {} }) {
+export function runForecast({
+  pollRel, pollNpv, baseline, progress, seed, params = {}, pollSpec = {}, pollThird = null, siphonLean = 0.5,
+}) {
   const p = {
     ...DEFAULT_FORECAST_PARAMS,
     ...params,
@@ -102,14 +116,18 @@ export function runForecast({ pollRel, pollNpv, baseline, progress, seed, params
   const totalEv = baseline.totalEv;
   const needed = evsToWin(totalEv);
 
+  const hasThird = !!pollThird;
+
   // Flatten everything the loop touches into typed arrays.
   const pollArr = new Float64Array(n);
   const betaArr = new Float64Array(n);
   const evArr = new Int32Array(n);
+  const thirdArr = hasThird ? new Float64Array(n) : null;
   for (let i = 0; i < n; i++) {
     pollArr[i] = pollRel.get(units[i]) || 0;
     betaArr[i] = baseline.beta.get(units[i]) || 1;
     evArr[i] = baseline.ev.get(units[i]) || 0;
+    if (hasThird) thirdArr[i] = pollThird.get(units[i]) || 0;
   }
 
   // Component indices/weights for each at-large unit.
@@ -118,45 +136,81 @@ export function runForecast({ pollRel, pollNpv, baseline, progress, seed, params
     part => ({ idx: indexOf.get(part.unit), weight: part.weight })));
 
   const err = new Float64Array(nSim);
+  const errT = hasThird ? new Float64Array(nSim) : null;
   const margins = new Float64Array(n);
+  const thirdSim = hasThird ? new Float64Array(n) : null;
   const order = new Int32Array(n);
   const demWinCounts = new Int32Array(n);
   const tippingCounts = new Int32Array(n);
   const demEvSamples = new Int32Array(p.sims);
   const evCounts = new Map();
 
-  let demWins = 0, repWins = 0, ties = 0;
+  let demWins = 0, repWins = 0, othWins = 0, noMajority = 0;
 
   for (let s = 0; s < p.sims; s++) {
     model.drawRelInto(rng, relScale, err);
     const npv = pollNpv + model.drawNpv(rng, npvScale);
+    // Third-party share gets its own draw off the same regional error model,
+    // scaled the same way the D-R rel axis is - a simplification (no
+    // separately-tuned O sigma exists yet), but enough to let a competitive
+    // third party's simulated share genuinely move sim to sim rather than
+    // sitting frozen at today's poll reading.
+    if (hasThird) model.drawRelInto(rng, relScale, errT);
 
-    let demEv = 0;
+    let demEv = 0, repEv = 0, othEv = 0;
     for (let i = 0; i < nSim; i++) {
       margins[i] = pollArr[i] + err[i] + betaArr[i] * npv;
+      if (hasThird) thirdSim[i] = thirdArr[i] + errT[i];
     }
-    // At-large margins are the vote-weighted aggregate of their districts, so a
-    // statewide result can never contradict the districts that compose it.
+    // At-large margins (and, when on, third-party shares) are the vote-weighted
+    // aggregate of their districts, so a statewide result can never contradict
+    // the districts that compose it.
     for (let a = 0; a < alParts.length; a++) {
-      let acc = 0;
-      for (const part of alParts[a]) acc += margins[part.idx] * part.weight;
+      let acc = 0, accT = 0;
+      for (const part of alParts[a]) {
+        acc += margins[part.idx] * part.weight;
+        if (hasThird) accT += thirdSim[part.idx] * part.weight;
+      }
       margins[nSim + a] = acc;
+      if (hasThird) thirdSim[nSim + a] = accT;
     }
     for (let i = 0; i < n; i++) {
       order[i] = i;
+      // A third-party win only counts as such when it actually leads both
+      // major parties in THIS sim - same "who's really ahead" test buildRows()
+      // uses on election night, so a forecast unit's simulated winner can
+      // never disagree with what election night itself would call.
+      if (hasThird) {
+        const shares = sharesThreeWay(margins[i], thirdSim[i], siphonLean);
+        if (shares.oShare > shares.dShare && shares.oShare > shares.rShare) {
+          othEv += evArr[i];
+          continue;
+        }
+      }
       if (margins[i] >= 0) { demEv += evArr[i]; demWinCounts[i]++; }
+      else { repEv += evArr[i]; }
     }
 
     demEvSamples[s] = demEv;
     evCounts.set(demEv, (evCounts.get(demEv) || 0) + 1);
 
-    const repEv = totalEv - demEv;
+    // "No majority" replaces the old "exact tie": with only two parties on the
+    // board, neither side reaching 270 was only ever possible at a literal
+    // EV tie. Once a third-party candidate can actually win states outright,
+    // it becomes a real, non-degenerate possibility that nobody clears a
+    // majority - which is exactly what the 12th Amendment's contingent
+    // election exists for, so this is worth its own bucket rather than
+    // folding into "tie".
     if (demEv >= needed) demWins++;
     else if (repEv >= needed) repWins++;
-    else ties++;
+    else if (othEv >= needed) othWins++;
+    else noMajority++;
 
     // Tipping point: order states from the winner's best to worst and walk until
     // the running EV total crosses the threshold. That state delivered the majority.
+    // Deliberately still the plain D-vs-R read regardless of third party (same
+    // scope boundary as the electoral snake) - a third-party win isn't a
+    // "tipping point" in the sense this chart tracks.
     const winnerIsDem = demEv >= repEv;
     order.sort(winnerIsDem
       ? (a, b) => margins[b] - margins[a]
@@ -189,7 +243,8 @@ export function runForecast({ pollRel, pollNpv, baseline, progress, seed, params
     needed,
     demWinProb: demWins / sims,
     repWinProb: repWins / sims,
-    tieProb: ties / sims,
+    othWinProb: othWins / sims,
+    noMajorityProb: noMajority / sims,
     evCounts,
     medianDemEv: quantile(0.5),
     evRange90: [quantile(0.05), quantile(0.95)],

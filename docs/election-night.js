@@ -1,5 +1,5 @@
 import { getStateName } from './utils/constants.js';
-import { leanStr, formatOtherLean, formatLeader, formatLeaderShort, formatMarginText, formatRawMarginText, formatOtherRawMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
+import { leanStr, formatOtherLean, formatRunnerUpLean, formatLeader, formatLeaderShort, formatMarginText, formatRawMarginText, formatOtherRawMarginText, formatReportingText, formatConfidenceText, formatNpvCallText, formatEvAllocationsForLog, formatUnitLabel, formatTimeLabel } from './utils/formatters.js';
 import { getPresidencyOutcomeLabel } from './utils/electionNight/presidentOrdinals.js';
 import { updateCandidateInfo } from './utils/candidateInfo.js';
 import { clampMargin as sharedClampMargin, totalVotesFromRow } from './utils/unitInfo.js';
@@ -19,7 +19,6 @@ import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 import { estimateFalseBeets } from './utils/electionNight/lickman.js';
 import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
 import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
-import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
 
 (function () {
   'use strict';
@@ -739,10 +738,10 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
   function buildSyntheticPollPriors(data, year, pvValue) {
     const simUnits = data.filter(st => st.pvWeight && !st.thirdPartyDominant);
     // No third-party mechanic in a historical replay's synthesized prior —
-    // always 0, so resolvePriorShares()/the pre-election badge never reads
+    // always null, so resolvePriorShares()/the pre-election badge never reads
     // an O tier here (isSim2028LiveRun() already gates the badge itself, but
-    // this keeps priorThirdShare well-defined regardless).
-    data.forEach(st => { st.priorThirdShare = 0; if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; } });
+    // this keeps priorShares well-defined regardless).
+    data.forEach(st => { st.priorShares = null; if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; } });
     if (!simUnits.length) return;
     const units = simUnits.map(st => st.unitKey);
     const weights = new Map(simUnits.map(st => [st.unitKey, st.totalVotes]));
@@ -781,11 +780,10 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
     const spec = prior.spec || POLL_ERROR_SPEC;
     const totalSigma = Math.sqrt(spec.unitSigmas ** 2 + spec.nationalSigma ** 2);
     data.forEach(st => {
-      // The Election-Eve poll's own sampled third-party share for this unit
-      // (see electionNightBridge.js's installElectionNight doc comment) -
-      // 0 when the run had third party off, or no per-unit data.
-      const tShare = prior.tShareByUnit ? prior.tShareByUnit.get(st.unitKey) : null;
-      st.priorThirdShare = isFinite(tShare) ? tShare : 0;
+      // The Election-Eve poll's own sampled D/R/T/Undecided shares for this
+      // unit (see electionNightBridge.js's installElectionNight doc comment) -
+      // null when the run had third party off, or no per-unit data.
+      st.priorShares = prior.sharesByUnit ? (prior.sharesByUnit.get(st.unitKey) || null) : null;
       if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; return; }
       if (!st.pvWeight) return; // at-large: derived, no direct prior
       const margin = prior.marginByUnit ? prior.marginByUnit.get(st.unitKey) : null;
@@ -835,72 +833,50 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
     return !!(st && st.keyRace);
   }
 
-  // A unit's pre-election prior margin. For a normal unit this is just
-  // st.priorMargin (frozen by applyBridgedPollPriors()/buildSyntheticPollPriors()
-  // at prepare time) - but an at-large unit (ME-AL/NE-AL) never gets one of
-  // its own (see applyBridgedPollPriors()'s at-large comment above), so its
-  // margin is derived here as the vote-weighted composite of its districts'
-  // own priors via state.atLargeParts, same derivation flagKeyRaces()
-  // uses for its rating check. Returns null (not 0/NaN) when
-  // no prior can be determined either way, so callers can tell "genuinely
-  // undetermined" apart from an actual EVEN prior - most importantly, so the
-  // pre-election rating badge doesn't default an at-large unit to "Toss-up"
-  // just because it has no margin of its own.
-  function resolvePriorMargin(st) {
+  /**
+   * A unit's pre-election D/R/(third-party) shares (fractions, Undecided
+   * excluded), straight off the same st.priorShares.{d,r,t} the polling
+   * table itself would show - own value, or an at-large unit's vote-weighted
+   * composite of its districts' (same pattern election-night.js already uses
+   * for st.priorMargin elsewhere). Deliberately NOT reconstructed from
+   * priorMargin via sharesThreeWay: that margin measures D's dominance over R
+   * specifically (see campaign.js's obsMargin) and stays large even when a
+   * third-party candidate is actually neck-and-neck with the leader - reading
+   * the shares directly means the badge can never disagree with the very
+   * poll it's summarizing. Returns null (not a zeroed object) when
+   * undetermined, so callers can tell "no data" from "an even 0-0-0".
+   */
+  function resolvePriorShares(st) {
     if (!st) return null;
-    if (isFinite(st.priorMargin)) return st.priorMargin;
+    if (st.priorShares) {
+      const s = st.priorShares;
+      const decided = s.d + s.r + s.t;
+      if (decided <= 0) return { dShare: 0, rShare: 0, oShare: 0 };
+      return { dShare: s.d / decided, rShare: s.r / decided, oShare: s.t / decided };
+    }
     if (!(state.atLargeParts && state.atLargeParts.get)) return null;
     const parts = state.atLargeParts.get(st.unitKey);
     if (!parts || !parts.length) return null;
-    let accum = 0, wsum = 0;
+    let d = 0, r = 0, t = 0, wsum = 0;
     parts.forEach(part => {
-      const partSt = (state.stateData || []).find(d => d.unitKey === part.unitKey);
-      if (partSt && isFinite(partSt.priorMargin)) {
-        accum += partSt.priorMargin * part.weight;
+      const partSt = (state.stateData || []).find(dd => dd.unitKey === part.unitKey);
+      if (partSt && partSt.priorShares) {
+        d += partSt.priorShares.d * part.weight;
+        r += partSt.priorShares.r * part.weight;
+        t += partSt.priorShares.t * part.weight;
         wsum += part.weight;
       }
     });
-    return wsum > EPS ? accum / wsum : null;
-  }
-
-  /**
-   * A unit's pre-election third-party poll share, mirroring
-   * resolvePriorMargin() exactly (own value, or an at-large unit's
-   * vote-weighted composite of its districts') so the pre-election badge can
-   * classify a state where a third-party candidate was actually leading in
-   * the polls. Returns 0 (not null) when undetermined - a badge should never
-   * fail to render just because third-party data wasn't available for this
-   * particular unit.
-   */
-  function resolvePriorShares(st) {
-    if (!st) return 0;
-    if (isFinite(st.priorThirdShare)) return st.priorThirdShare;
-    if (!(state.atLargeParts && state.atLargeParts.get)) return 0;
-    const parts = state.atLargeParts.get(st.unitKey);
-    if (!parts || !parts.length) return 0;
-    let accum = 0, wsum = 0;
-    parts.forEach(part => {
-      const partSt = (state.stateData || []).find(d => d.unitKey === part.unitKey);
-      if (partSt && isFinite(partSt.priorThirdShare)) {
-        accum += partSt.priorThirdShare * part.weight;
-        wsum += part.weight;
-      }
-    });
-    return wsum > EPS ? accum / wsum : 0;
-  }
-
-  // The prior siphonLean for this run (see sharesThreeWay) - published once
-  // on window._enPollPrior by installElectionNight(), same as marginByUnit/
-  // tShareByUnit. Defaults to 0.5 (neutral) when no bridged run is active.
-  function priorSiphonLean() {
-    return (window._enPollPrior && isFinite(window._enPollPrior.siphonLean)) ? window._enPollPrior.siphonLean : 0.5;
+    if (wsum <= EPS) return null;
+    const decided = d + r + t;
+    if (decided <= 0) return { dShare: 0, rShare: 0, oShare: 0 };
+    return { dShare: d / decided, rShare: r / decided, oShare: t / decided };
   }
 
   /** Pre-election rating for a unit, D/R/O-aware (see ratingForShares). */
   function priorRatingFor(st) {
-    const margin = resolvePriorMargin(st);
-    if (!isFinite(margin)) return null;
-    const shares = sharesThreeWay(margin, resolvePriorShares(st), priorSiphonLean());
+    const shares = resolvePriorShares(st);
+    if (!shares) return null;
     return ratingForShares(shares);
   }
 
@@ -1595,9 +1571,9 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
         const oVotes = totals.oVotes ?? totals.oCounted;
         const countedVotes = totals.countedVotes;
         const voteMargin = (isFinite(dVotes) && isFinite(rVotes)) ? (dVotes - rVotes) : null;
-        const marginStr = leader === 'O'
-          ? formatOtherLean(oVotes, dVotes, rVotes, countedVotes)
-          : formatLean(voteMargin != null && countedVotes > EPS ? voteMargin / countedVotes : 0);
+        // Measured against the actual runner-up (could be O) - see
+        // formatRunnerUpLean()'s own comment.
+        const marginStr = countedVotes > EPS ? formatRunnerUpLean(dVotes, rVotes, oVotes, countedVotes) : 'EVEN';
         const reporting = isNpvCorrection
           ? (state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 1)
           : record.reporting;
@@ -1671,7 +1647,7 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
         const isNpv = record.noticeType === 'npvLeadFlip';
         const leader = record.leader;
         // Same rating logic as the call/correction branch below - see
-        // isSim2028LiveRun()'s and resolvePriorMargin()'s comments.
+        // isSim2028LiveRun()'s and resolvePriorShares()'s comments.
         const flipSt = isNpv ? null : unitsByKey.get(record.unitKey);
         const flipPriorRating = isSim2028LiveRun() ? priorRatingFor(flipSt) : null;
         // Always resolve both major-party candidates by name, same as the
@@ -1737,9 +1713,10 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
       // Only ever set for a real sim2028 run (see isSim2028LiveRun()) - a
       // historical replay's st.priorMargin is a synthesized stand-in, not a
       // real pre-election fact, so it never gets shown as a "rating".
-      // resolvePriorMargin() (not st.priorMargin directly) so an at-large
-      // unit (ME-AL/NE-AL, which never gets a direct prior) is rated from
-      // its districts' composite instead of silently reading as "Toss-up".
+      // priorRatingFor()/resolvePriorShares() (not st.priorMargin directly)
+      // so an at-large unit (ME-AL/NE-AL, which never gets a direct prior) is
+      // rated from its districts' composite instead of silently reading as
+      // "Toss-up".
       const priorRating = isSim2028LiveRun() ? priorRatingFor(st) : null;
 
       return {
@@ -2788,7 +2765,7 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
     const fc = window._enForecast;
     const stats = (isSim2028Live && fc && isFinite(fc.demWinProb)) ? {
       probD: Math.min(0.999, Math.max(0.001, fc.demWinProb)),
-      probTie: isFinite(fc.tieProb) ? Math.min(0.999, Math.max(0, fc.tieProb)) : 0,
+      probTie: isFinite(fc.noMajorityProb) ? Math.min(0.999, Math.max(0, fc.noMajorityProb)) : 0,
       medianDemEv: isFinite(fc.medianDemEv) ? fc.medianDemEv : null,
       evRange90: Array.isArray(fc.evRange90) ? fc.evRange90 : null,
       npvMargin: isFinite(fc.pollNpv) ? fc.pollNpv : null
@@ -3310,10 +3287,12 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
         ? formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes)
         : formatLean(finalMarginTwoParty);
       const countedMargin = totalVotes > EPS ? ((finalDVotes - finalRVotes) / totalVotes) : 0;
-      let countedMarginStr = 'None';
-      if (finalLeader === 'O') countedMarginStr = formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes);
-      else if (twoPartyVotesFinal > EPS) countedMarginStr = formatLean((finalDVotes - finalRVotes) / Math.max(twoPartyVotesFinal, EPS));
-      else if (totalVotes > EPS) countedMarginStr = 'EVEN';
+      // Measured against the actual runner-up (could be O), over the FULL
+      // counted total (not just the two-party total) - see
+      // formatRunnerUpLean()'s own comment.
+      const countedMarginStr = totalVotes > EPS
+        ? formatRunnerUpLean(finalDVotes, finalRVotes, finalOTopVotes, totalVotes)
+        : 'None';
 
       const evAllocations = buildEvAllocations(year, abbr, unit, ev, winner, finalDVotes, finalRVotes, finalOTotalVotes, topThirdShare);
 
@@ -4029,21 +4008,20 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
     const countedMargin = stats.countedVotes > EPS ? ((stats.dCounted - stats.rCounted) / stats.countedVotes) : null;
 
     // An O lead is measured against whichever of D/R is closer to catching
-    // them (same "against the runner-up" convention as the D/R margin
-    // above, which only ever compares dVotes to rVotes) rather than against
-    // the combined D+R vote, using the real counted totals whenever they're
-    // available so this doesn't just repeat the interpolated `margin` above.
+    // them, using the real counted totals whenever they're available so
+    // this doesn't just repeat the interpolated `margin` above.
     if (leader === 'O') {
       marginStr = reporting > 0 ? formatOtherLean(stats.oCounted, stats.dCounted, stats.rCounted, stats.countedVotes) : '';
     } else {
       marginStr = (reporting > 0) ? formatLean(margin) : '';
     }
 
+    // Counted-votes margin is measured against the actual runner-up (could
+    // be O, not just whichever of D/R isn't leading) - see
+    // formatRunnerUpLean()'s own comment.
     let countedMarginStr = 'None';
     if (stats.countedVotes > EPS) {
-      countedMarginStr = leader === 'O'
-        ? formatOtherLean(stats.oCounted, stats.dCounted, stats.rCounted, stats.countedVotes)
-        : formatLean(countedMargin);
+      countedMarginStr = formatRunnerUpLean(stats.dCounted, stats.rCounted, stats.oCounted, stats.countedVotes);
     }
     // Compute a simple confidence metric based on the counted votes and
     // remaining ballots.
@@ -5207,9 +5185,9 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
     state.npvFlipCount = (state.npvFlipCount || 0) + 1;
     if (state.npvFlipCount > LEAD_FLIP_MAX_PER_UNIT) return;
     const candidateName = resolveCandidateFullName(leader, 'NATIONAL') || formatLeader(leader);
-    const marginStr = leader === 'O'
-      ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes)
-      : formatLean(countedVotes > EPS ? (dCounted - rCounted) / countedVotes : 0);
+    // Measured against the actual runner-up (could be O) - see
+    // formatRunnerUpLean()'s own comment.
+    const marginStr = countedVotes > EPS ? formatRunnerUpLean(dCounted, rCounted, oCounted, countedVotes) : 'EVEN';
     const record = {
       kind: 'notice',
       noticeType: 'npvLeadFlip',
@@ -5571,31 +5549,22 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
       if (pvOthPct) pvOthPct.textContent = '';
     }
 
-    // Add margin
+    // Add margin - measured against the actual runner-up (could be O, not
+    // just whichever of D/R isn't leading), same convention as
+    // formatRunnerUpLean().
+    const pvRanked = [['D', dVotes], ['R', rVotes], ['O', oVotes]].sort((a, b) => b[1] - a[1]);
+    const [pvLeaderCode, pvLeaderVotes] = pvRanked[0];
+    const pvRunnerUpVotes = pvRanked[1][1];
     if (pvMargin) {
-      if (oVotes > dVotes && oVotes > rVotes) {
-        const runnerUp = Math.max(dVotes, rVotes);
-        const margin = oVotes - runnerUp;
-        const pctDiff = counted > 0 ? Math.abs((oVotes / counted - runnerUp / counted) * 100).toFixed(1) : '0.0';
-        pvMargin.innerHTML = Math.abs(margin) < 0.5
-          ? 'EVEN'
-          : 'O+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
-      } else {
-        const margin = dVotes - rVotes;
-        if (Math.abs(margin) < 0.5) {
-          pvMargin.textContent = 'EVEN';
-        } else if (margin > 0) {
-          const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
-          pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
-        } else {
-          const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
-          pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
-        }
-      }
+      const marginVotes = pvLeaderVotes - pvRunnerUpVotes;
+      const pctDiff = counted > 0 ? Math.abs(marginVotes / counted * 100).toFixed(1) : '0.0';
+      pvMargin.innerHTML = Math.abs(marginVotes) < 0.5
+        ? 'EVEN'
+        : `${pvLeaderCode}+${fmt(Math.abs(marginVotes))}<span class="delta" style="margin-left:4px">(${pctDiff}%)</span>`;
     }
 
     const margin = counted > 0 ? ((dVotes - rVotes) / counted) : null;
-    const marginStr = margin == null ? '—' : formatLean(margin);
+    const marginStr = counted > 0 ? formatRunnerUpLean(dVotes, rVotes, oVotes, counted) : '—';
 
     const pvVal = document.getElementById('pvVal');
     if (pvVal) pvVal.textContent = margin == null ? 'PV (counted): —' : `PV (counted): ${marginStr}`;
@@ -5789,9 +5758,10 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
         : null;
       // See isSim2028LiveRun()'s comment - a historical replay's
       // st.priorMargin is a synthesized stand-in, not a real pre-election
-      // fact, so it never gets shown as a "rating". resolvePriorMargin()
-      // (not st.priorMargin directly) so an at-large unit is rated from its
-      // districts' composite instead of silently reading as "Toss-up".
+      // fact, so it never gets shown as a "rating". priorRatingFor()/
+      // resolvePriorShares() (not st.priorMargin directly) so an at-large
+      // unit is rated from its districts' composite instead of silently
+      // reading as "Toss-up".
       const priorRating = isSim2028LiveRun() ? priorRatingFor(st) : null;
       return {
         unitKey: st.unitKey,
@@ -5829,7 +5799,9 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
       const totalVotes = dVotes + rVotes + oVotes;
       const leader = totalVotes > EPS ? (dVotes > rVotes ? (dVotes > oVotes ? 'D' : 'O') : (rVotes > oVotes ? 'R' : 'O')) : 'D';
       const voteMargin = dVotes - rVotes;
-      const marginStr = formatLean(dVotes + rVotes > EPS ? (dVotes - rVotes) / (dVotes + rVotes) : 0);
+      // Measured against the actual runner-up (could be O) - see
+      // formatRunnerUpLean()'s own comment.
+      const marginStr = totalVotes > EPS ? formatRunnerUpLean(dVotes, rVotes, oVotes, totalVotes) : 'EVEN';
       const candidateName = resolveCandidateFullName(leader, 'NATIONAL');
       const portraitUrl = candidateName ? await getPortraitUrlForName(state.year, candidateName) : null;
       candidates.push({
@@ -5898,7 +5870,9 @@ import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
       remainingVotes: Math.max(0, Math.round(state.totalEligibleVotes - countedVotes)),
       leader,
       margin,
-      marginStr: leader === 'O' ? formatOtherLean(oCounted, dCounted, rCounted, countedVotes) : formatLean(margin),
+      // Measured against the actual runner-up (could be O) - see
+      // formatRunnerUpLean()'s own comment.
+      marginStr: formatRunnerUpLean(dCounted, rCounted, oCounted, countedVotes),
       voteMargin: Math.round(dCounted - rCounted),
       dVotes: dCounted,
       rVotes: rCounted,

@@ -365,15 +365,32 @@ export async function createSimulation({
   // --- forecast per step ----------------------------------------------------
   // Each step gets its own derived seed so the forecast stream is independent of
   // the campaign stream; re-running a forecast can't shift the election itself.
-  const forecasts = skipForecasts ? [] : campaign.snapshots.map((snap, i) => runForecast({
-    pollRel: snap.pollRel,
-    pollNpv: snap.pollNpv,
-    baseline: base,
-    progress: snap.progress,
-    seed: (seed >>> 0) ^ (0x9E3779B9 * (i + 1)),
-    params: P.forecast,
-    pollSpec,
-  }));
+  const forecasts = skipForecasts ? [] : campaign.snapshots.map((snap, i) => {
+    // The observed (poll-blind, never truth) third-party share per unit at
+    // THIS step - runForecast only ever sees what a real forecaster would
+    // have seen this month, same as pollRel/pollNpv above. null when third
+    // party is off, so the Monte Carlo degenerates back to a plain D-vs-R
+    // race exactly as before this existed.
+    let pollThird = null;
+    if (truthThirdShare) {
+      pollThird = new Map();
+      for (const unit of base.units) {
+        const s = snap.pollShares.get(unit);
+        pollThird.set(unit, s ? s.t : 0);
+      }
+    }
+    return runForecast({
+      pollRel: snap.pollRel,
+      pollNpv: snap.pollNpv,
+      baseline: base,
+      progress: snap.progress,
+      seed: (seed >>> 0) ^ (0x9E3779B9 * (i + 1)),
+      params: P.forecast,
+      pollSpec,
+      pollThird,
+      siphonLean: siphonLean ?? 0.5,
+    });
+  });
 
   return {
     seed,

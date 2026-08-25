@@ -29,6 +29,33 @@ export function formatOtherLean(oVotes, dVotes, rVotes, totalVotes) {
     return `O+${(Math.abs(lead) * 100).toFixed(1)}`;
 }
 
+/**
+ * Margin string for whichever of D/R/O is actually AHEAD, measured against
+ * the actual runner-up - not always D-vs-R. leanStr()/formatOtherLean()
+ * above enshrined "D and R margins are always measured against each other"
+ * as deliberate; that breaks down the moment a third-party candidate is
+ * genuinely competitive: a state where R leads D by a lot but O is running a
+ * much closer second reads as a blown-out "R+29" instead of the real R+14
+ * race it actually is. This picks the real top two among D/R/O and measures
+ * the gap between them, so a plain two-party count (oVotes 0/not finite)
+ * produces the exact same output leanStr(dVotes - rVotes) / totalVotes did -
+ * no behavior change for any race without a real third-party contender.
+ * `dVotes`/`rVotes`/`oVotes`/`totalVotes` can be raw counts or shares -
+ * the math is a plain ratio, so either works as long as all four use the
+ * same units.
+ */
+export function formatRunnerUpLean(dVotes, rVotes, oVotes, totalVotes) {
+    if (!isFinite(dVotes) || !isFinite(rVotes) || !isFinite(totalVotes) || totalVotes <= 0) return 'ERROR';
+    const o = isFinite(oVotes) ? oVotes : 0;
+    const ranked = [['D', dVotes], ['R', rVotes], ['O', o]].sort((a, b) => b[1] - a[1]);
+    const [leader, leaderVotes] = ranked[0];
+    const runnerUpVotes = ranked[1][1];
+    const lead = (leaderVotes - runnerUpVotes) / totalVotes;
+    if (Math.abs(lead) < 0.000005) return 'EVEN';
+    const prefix = leader === 'O' ? 'O+' : (leader === 'D' ? 'D+' : 'R+');
+    return `${prefix}${(Math.abs(lead) * 100).toFixed(1)}`;
+}
+
 import { getStateName } from './constants.js';
 
 export function formatLeader(code) {
