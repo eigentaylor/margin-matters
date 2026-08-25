@@ -245,10 +245,15 @@ export function buildRows({
  *   sim.truthThirdShare when the third-party mechanic is enabled, else omitted
  * @param {number} [siphonLean=0.5] see buildRows
  * @param {string|null} [oCandidateName=null] see buildRows
+ * @param {Map<string,number>} [pollThirdShareByUnit] the Election-Eve poll's
+ *   own sampled third-party share per unit (see sim2028.js's pollShares()) —
+ *   published alongside pollMarginByUnit on window._enPollPrior so the
+ *   pre-election badge can classify a state where the third-party candidate
+ *   was actually leading in the polls as Tilt/Lean/Likely/Safe O.
  */
 export function installElectionNight({
   finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null, forecast = null,
-  thirdShare = null, siphonLean = 0.5, oCandidateName = null,
+  thirdShare = null, siphonLean = 0.5, oCandidateName = null, pollThirdShareByUnit = null,
 }) {
   const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale, thirdShare, siphonLean, oCandidateName });
 
@@ -256,7 +261,7 @@ export function installElectionNight({
   window._enForecast = forecast || null;
 
   window._enPollPrior = pollMarginByUnit
-    ? { year: YEAR, marginByUnit: pollMarginByUnit, spec: POLL_ERROR_SPEC }
+    ? { year: YEAR, marginByUnit: pollMarginByUnit, tShareByUnit: pollThirdShareByUnit, siphonLean, spec: POLL_ERROR_SPEC }
     : null;
 
   const byYear = (window._byYearMap instanceof Map) ? window._byYearMap : new Map();

@@ -12,7 +12,7 @@ import { createSimulation, computeTodaySeed, PARAMS, LEGACY_CALIBRATION } from '
 import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
-import { installElectionNight, buildRows } from './utils/sim2028/electionNightBridge.js';
+import { installElectionNight, buildRows, sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
@@ -22,7 +22,7 @@ import {
 } from './utils/sim2028/candidatePicker.js';
 import { searchCandidates, formatLabel as formatCandidateLabel } from './utils/sim2028/candidateSearch.js';
 import { applyHomeStateAdvantage, DEFAULT_REALISM_TIER, PRESET_HOME_STATES } from './utils/sim2028/homeStateAdvantage.js';
-import { TOSSUP_BAND, TILT_BAND, LEAN_BAND, LIKELY_BAND, TOSSUP_COLOR, RATINGS, ratingFor } from './utils/electionRatings.js';
+import { TOSSUP_BAND, TILT_BAND, LEAN_BAND, LIKELY_BAND, TOSSUP_COLOR, RATINGS, ratingForShares } from './utils/electionRatings.js';
 
 const state = {
   baseline: null,
@@ -144,6 +144,21 @@ function pollShares(snap, unit) {
 }
 
 /**
+ * A unit's rating (Tilt/Lean/Likely/Safe D/R/O, or Toss-up), from its poll
+ * margin plus its sampled third-party poll share - so a state where the
+ * third-party candidate is actually leading in the polls reads as an O tier
+ * instead of being folded into whichever of D/R happened to be bigger. With
+ * third party off (or this unit's sampled T share at 0), sharesThreeWay
+ * reduces to a plain D/R split, so this is a no-op wrapper around
+ * ratingFor(margin) for every existing two-party run.
+ */
+function ratingForUnit(snap, unit, margin) {
+  const tShare = pollShares(snap, unit)?.t || 0;
+  const shares = sharesThreeWay(margin || 0, tShare, state.sim?.siphonLean ?? 0.5);
+  return ratingForShares(shares);
+}
+
+/**
  * The real EV tally, D/R/O alike, plus (when third party is on) its
  * best-performing states and how close each one came to winning. Built off
  * buildRows() — the exact same vote synthesis + at-large aggregation
@@ -177,11 +192,11 @@ function computeTruthSummary(sim, baseline) {
   return { dem, rep, oth, top: top.slice(0, 6) };
 }
 
-/** Electoral votes grouped by rating tier, D-safest to R-safest. */
-function evByRating(margins) {
+/** Electoral votes grouped by rating tier, D-safest to R-safest (then O). */
+function evByRating(snap, margins) {
   const totals = new Map(RATINGS.map(r => [r.key, 0]));
   for (const unit of state.baseline.units) {
-    const r = ratingFor(margins.get(unit));
+    const r = ratingForUnit(snap, unit, margins.get(unit));
     totals.set(r.key, totals.get(r.key) + (state.baseline.ev.get(unit) || 0));
   }
   return totals;
@@ -221,7 +236,7 @@ function showReturnsTip(evt, unit) {
     const snap = currentSnapshot();
     const margins = snap ? pollMargins(snap) : null;
     const m = margins ? margins.get(unit) : null;
-    const rating = m == null ? null : ratingFor(m);
+    const rating = m == null ? null : ratingForUnit(snap, unit, m);
     const rows = [
       ['Electoral votes', state.baseline.ev.get(unit) || 0],
       ['Status', 'Not yet reporting'],
@@ -318,7 +333,7 @@ function showTip(evt, unit) {
   const margins = pollMargins(snap);
   const m = margins.get(unit);
   if (m == null) return;
-  const rating = ratingFor(m);
+  const rating = ratingForUnit(snap, unit, m);
   const band = unitBand(unit, snap);
   const prob = f ? f.stateProb.get(unit) : null;
   const name = unit.includes('-') ? unit : (getStateName(unit) || unit);
@@ -413,10 +428,11 @@ function highlightedUnitSet() {
   if (!h || !state.baseline) return null;
   if (h.source === 'trend' || h.source === 'snake') return new Set([h.unit]);
   if (h.source === 'rating') {
-    const margins = pollMargins(currentSnapshot());
+    const snap = currentSnapshot();
+    const margins = pollMargins(snap);
     const set = new Set();
     for (const unit of state.baseline.units) {
-      if (ratingFor(margins.get(unit)).key === h.key) set.add(unit);
+      if (ratingForUnit(snap, unit, margins.get(unit)).key === h.key) set.add(unit);
     }
     return set;
   }
@@ -733,11 +749,16 @@ function renderMap() {
   // Once election night owns the map, it paints states as they are called —
   // repainting from polls here would fight it and undo called states.
   if (state.revealed || window._electionNightActive) return;
-  const margins = pollMargins(currentSnapshot());
+  const snap = currentSnapshot();
+  const margins = pollMargins(snap);
   const abbrColors = new Map();
   const unitColors = new Map();
   for (const unit of state.baseline.units) {
-    const color = colorForMargin(margins.get(unit));
+    // A state where the third-party poll share actually leads gets its
+    // tier's flat gold instead of the continuous blue/red ramp - every
+    // other state's fill is untouched (same continuous ramp as always).
+    const rating = ratingForUnit(snap, unit, margins.get(unit));
+    const color = rating.party === 'O' ? rating.color : colorForMargin(margins.get(unit));
     if (unit.includes('-')) {
       unitColors.set(unit, color);
       if (unit.endsWith('-AL')) {
@@ -759,45 +780,56 @@ function renderMap() {
   // Split by rating rather than a strict binary tally: a "D 258 | R 280" summary
   // implies more certainty than a pile of Tilt-rated toss-ups actually supports.
   const total = state.baseline.totalEv;
-  const totals = evByRating(margins);
-  let dem = 0, tossup = 0, rep = 0;
+  const totals = evByRating(snap, margins);
+  let dem = 0, tossup = 0, rep = 0, oth = 0;
   for (const r of RATINGS) {
     const v = totals.get(r.key) || 0;
     if (r.key === 'tossup') tossup += v;
     else if (r.party === 'D') dem += v;
+    else if (r.party === 'O') oth += v;
     else rep += v;
   }
   const demPct = dem / total * 100;
+  const tossupPct = tossup / total * 100;
+  const othPct = oth / total * 100;
   const setW = (id, pct) => { const el = $(id); if (el) el.style.width = `${pct}%`; };
   setW('evFillD', demPct);
-  setW('evFillU', tossup / total * 100);
+  setW('evFillU', tossupPct);
   setW('evFillR', rep / total * 100);
-  setW('evFillO', 0);
+  setW('evFillO', othPct);
   // evFillD anchors from the bar's left edge and evFillR from its right edge,
-  // but evFillU (and evFillO) have no anchor of their own in the static markup —
+  // but evFillU/evFillO have no anchor of their own in the static markup —
   // only election-night.js's own code positions them, dynamically, once it takes
   // over. Left unset, the toss-up segment's WIDTH was correct but it rendered at
   // the wrong spot, leaving a plain dark gap (the bar's own background showing
   // through) between the D and R fills instead of an actual grey segment there.
+  // evFillO is placed right after the toss-up segment, same idea.
   const uEl = $('evFillU');
   if (uEl) {
     uEl.style.left = `${demPct}%`;
     uEl.style.background = TOSSUP_COLOR;
   }
+  const oEl = $('evFillO');
+  if (oEl) {
+    oEl.style.left = `${demPct + tossupPct}%`;
+    oEl.style.background = '#C9A400';
+  }
   const txt = $('evText');
-  if (txt) txt.textContent = `D ${dem} | Toss-up ${tossup} | R ${rep}`;
+  if (txt) txt.textContent = oth > 0
+    ? `D ${dem} | Toss-up ${tossup} | O ${oth} | R ${rep}`
+    : `D ${dem} | Toss-up ${tossup} | R ${rep}`;
   const need = $('evNeededToWin');
   if (need) need.textContent = `${Math.floor(total / 2) + 1} to win — projection from current polls`;
-  renderEvClass(margins);
+  renderEvClass(snap, margins);
   setMapGlow();
 }
 
-function renderEvClass(margins) {
+function renderEvClass(snap, margins) {
   const wrap = $('s28EvClass');
   if (!wrap) return;
   const note = $('s28EvClassNote');
   if (note) note.textContent = 'Electoral votes by rating, from the current polls. Click a rating to highlight it on the map.';
-  const totals = evByRating(margins);
+  const totals = evByRating(snap, margins);
   const activeKey = state.mapHighlight && state.mapHighlight.source === 'rating' ? state.mapHighlight.key : null;
   wrap.innerHTML = RATINGS.slice().sort((a, b) => a.order - b.order).map(r => {
     const ev = totals.get(r.key) || 0;
@@ -906,7 +938,7 @@ function renderTable() {
         margin: m,
         shares: pollShares(snap, unit),
         band: unitBand(unit, snap),
-        rating: ratingFor(m),
+        rating: ratingForUnit(snap, unit, m),
         change: prevMargins ? m - prevMargins.get(unit) : null,
         prob: f ? f.stateProb.get(unit) : null,
       };
@@ -1595,6 +1627,17 @@ function goToElectionNight() {
   // from these real polls instead of having to synthesize its own.
   const finalPoll = currentSnapshot();
   const pollMarginByUnit = pollMargins(finalPoll);
+  // The Election-Eve poll's own sampled third-party share per unit - threaded
+  // through the same way pollMarginByUnit is, so election-night.js's
+  // pre-election badge can classify a state where the third-party candidate
+  // was actually leading in the polls as Tilt/Lean/Likely/Safe O instead of
+  // folding it into whichever of D/R happened to be bigger. 0 for every unit
+  // when third party is off, so this is a no-op for every existing run.
+  const pollThirdShareByUnit = new Map();
+  for (const unit of state.baseline.units) {
+    const s = pollShares(finalPoll, unit);
+    pollThirdShareByUnit.set(unit, s ? s.t : 0);
+  }
   // The campaign's own Election-Eve forecast (same object the forecast
   // panel renders from) - bridged so the opening raceOverview slide's win%/
   // tie%/median-EV/NPV stats can read this decisive, poll-driven estimate
@@ -1607,6 +1650,7 @@ function goToElectionNight() {
     npv: state.sim.truthNpv,
     baseline: state.baseline,
     pollMarginByUnit,
+    pollThirdShareByUnit,
     seed: state.sim.seed,
     forecast: finalForecast ? { ...finalForecast, pollNpv: finalPoll.pollNpv } : null,
     thirdShare: state.sim.truthThirdShare,

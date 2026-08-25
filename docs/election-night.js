@@ -18,7 +18,8 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 import { estimateFalseBeets } from './utils/electionNight/lickman.js';
 import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
-import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
+import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
+import { sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
 
 (function () {
   'use strict';
@@ -737,7 +738,11 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
   // dTwoPartyFinal/rTwoPartyFinal/biasParams/closeness again.
   function buildSyntheticPollPriors(data, year, pvValue) {
     const simUnits = data.filter(st => st.pvWeight && !st.thirdPartyDominant);
-    data.forEach(st => { if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; } });
+    // No third-party mechanic in a historical replay's synthesized prior —
+    // always 0, so resolvePriorShares()/the pre-election badge never reads
+    // an O tier here (isSim2028LiveRun() already gates the badge itself, but
+    // this keeps priorThirdShare well-defined regardless).
+    data.forEach(st => { st.priorThirdShare = 0; if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; } });
     if (!simUnits.length) return;
     const units = simUnits.map(st => st.unitKey);
     const weights = new Map(simUnits.map(st => [st.unitKey, st.totalVotes]));
@@ -776,6 +781,11 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
     const spec = prior.spec || POLL_ERROR_SPEC;
     const totalSigma = Math.sqrt(spec.unitSigmas ** 2 + spec.nationalSigma ** 2);
     data.forEach(st => {
+      // The Election-Eve poll's own sampled third-party share for this unit
+      // (see electionNightBridge.js's installElectionNight doc comment) -
+      // 0 when the run had third party off, or no per-unit data.
+      const tShare = prior.tShareByUnit ? prior.tShareByUnit.get(st.unitKey) : null;
+      st.priorThirdShare = isFinite(tShare) ? tShare : 0;
       if (st.thirdPartyDominant) { st.priorMargin = 0; st.priorSigma = 0; return; }
       if (!st.pvWeight) return; // at-large: derived, no direct prior
       const margin = prior.marginByUnit ? prior.marginByUnit.get(st.unitKey) : null;
@@ -853,6 +863,47 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
     return wsum > EPS ? accum / wsum : null;
   }
 
+  /**
+   * A unit's pre-election third-party poll share, mirroring
+   * resolvePriorMargin() exactly (own value, or an at-large unit's
+   * vote-weighted composite of its districts') so the pre-election badge can
+   * classify a state where a third-party candidate was actually leading in
+   * the polls. Returns 0 (not null) when undetermined - a badge should never
+   * fail to render just because third-party data wasn't available for this
+   * particular unit.
+   */
+  function resolvePriorShares(st) {
+    if (!st) return 0;
+    if (isFinite(st.priorThirdShare)) return st.priorThirdShare;
+    if (!(state.atLargeParts && state.atLargeParts.get)) return 0;
+    const parts = state.atLargeParts.get(st.unitKey);
+    if (!parts || !parts.length) return 0;
+    let accum = 0, wsum = 0;
+    parts.forEach(part => {
+      const partSt = (state.stateData || []).find(d => d.unitKey === part.unitKey);
+      if (partSt && isFinite(partSt.priorThirdShare)) {
+        accum += partSt.priorThirdShare * part.weight;
+        wsum += part.weight;
+      }
+    });
+    return wsum > EPS ? accum / wsum : 0;
+  }
+
+  // The prior siphonLean for this run (see sharesThreeWay) - published once
+  // on window._enPollPrior by installElectionNight(), same as marginByUnit/
+  // tShareByUnit. Defaults to 0.5 (neutral) when no bridged run is active.
+  function priorSiphonLean() {
+    return (window._enPollPrior && isFinite(window._enPollPrior.siphonLean)) ? window._enPollPrior.siphonLean : 0.5;
+  }
+
+  /** Pre-election rating for a unit, D/R/O-aware (see ratingForShares). */
+  function priorRatingFor(st) {
+    const margin = resolvePriorMargin(st);
+    if (!isFinite(margin)) return null;
+    const shares = sharesThreeWay(margin, resolvePriorShares(st), priorSiphonLean());
+    return ratingForShares(shares);
+  }
+
   // Flag each unit as a "key race" worthy of visual emphasis on-screen, if
   // either: its pre-election rating (from priorMargin) is a Toss-up or
   // Tilt D/R, or its ground-truth final margin is itself within the
@@ -868,9 +919,8 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
   // win-probability, confidence, or any other live-uncertainty calculation.
   function flagKeyRaces(data) {
     data.forEach(st => {
-      const priorMargin = resolvePriorMargin(st);
-      const rating = isFinite(priorMargin) ? ratingFor(priorMargin) : null;
-      const ratedCloseRace = !!rating && (rating.key === 'tossup' || rating.key === 'tiltD' || rating.key === 'tiltR');
+      const rating = priorRatingFor(st);
+      const ratedCloseRace = !!rating && (rating.key === 'tossup' || rating.key === 'tiltD' || rating.key === 'tiltR' || rating.key === 'tiltO');
       const actualMargin = isFinite(st.dTwoPartyFinal) && isFinite(st.rTwoPartyFinal)
         ? st.dTwoPartyFinal - st.rTwoPartyFinal : null;
       const groundTruthClose = isFinite(actualMargin) && Math.abs(actualMargin) < TOSSUP_BAND;
@@ -1623,8 +1673,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
         // Same rating logic as the call/correction branch below - see
         // isSim2028LiveRun()'s and resolvePriorMargin()'s comments.
         const flipSt = isNpv ? null : unitsByKey.get(record.unitKey);
-        const flipResolvedPriorMargin = flipSt ? resolvePriorMargin(flipSt) : null;
-        const flipPriorRating = (isFinite(flipResolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(flipResolvedPriorMargin) : null;
+        const flipPriorRating = isSim2028LiveRun() ? priorRatingFor(flipSt) : null;
         // Always resolve both major-party candidates by name, same as the
         // call/correction and npv_call branches below - the comparison box
         // reads these fields the same way regardless of slide kind.
@@ -1691,8 +1740,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
       // resolvePriorMargin() (not st.priorMargin directly) so an at-large
       // unit (ME-AL/NE-AL, which never gets a direct prior) is rated from
       // its districts' composite instead of silently reading as "Toss-up".
-      const resolvedPriorMargin = st ? resolvePriorMargin(st) : null;
-      const priorRating = (isFinite(resolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(resolvedPriorMargin) : null;
+      const priorRating = isSim2028LiveRun() ? priorRatingFor(st) : null;
 
       return {
         kind: isCorrection ? 'correction' : 'call',
@@ -1910,8 +1958,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
         // See isSim2028LiveRun()'s comment - no rating for NPV (no single-
         // state prior applies) or for a historical replay's synthesized prior.
         const priorSt = isNpv ? null : unitsByKey.get(c.unitKey);
-        const resolvedPriorMargin = priorSt ? resolvePriorMargin(priorSt) : null;
-        const priorRating = (isFinite(resolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(resolvedPriorMargin) : null;
+        const priorRating = isSim2028LiveRun() ? priorRatingFor(priorSt) : null;
         return {
           unitKey: c.unitKey,
           displayLabel: isNpv ? c.displayLabel : formatUnitLabel(c.unitKey, state.year, { short: true }),
@@ -5745,8 +5792,7 @@ import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
       // fact, so it never gets shown as a "rating". resolvePriorMargin()
       // (not st.priorMargin directly) so an at-large unit is rated from its
       // districts' composite instead of silently reading as "Toss-up".
-      const resolvedPriorMargin = resolvePriorMargin(st);
-      const priorRating = (isFinite(resolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(resolvedPriorMargin) : null;
+      const priorRating = isSim2028LiveRun() ? priorRatingFor(st) : null;
       return {
         unitKey: st.unitKey,
         displayLabel: formatUnitLabel(st.unitKey, state.year, { short: true }),
