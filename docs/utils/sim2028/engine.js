@@ -19,6 +19,8 @@ import { runCampaign, DEFAULT_CAMPAIGN_PARAMS } from './campaign.js';
 import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
 import { computeNailbiterShift } from './nailbiter.js';
 import { POLL_ERROR_SPEC } from './pollCalibration.js';
+import { computeThirdPartyTruth, THIRD_PARTY_DEFAULTS } from './thirdParty.js';
+import { buildRows } from './electionNightBridge.js';
 
 /**
  * Every tunable in one place. Overridable per-run and via URL query params.
@@ -99,6 +101,13 @@ export const PARAMS = {
   // self-documenting: trendWeight=0 and sigmaWindow=3 are the backtested choices
   // described in baseline.js's docstring, not accidents of falling through.
   baseline: { trendWindow: 5, sigmaWindow: 3, elasticityWindow: 6, trendWeight: 0, betaShrink: 0.5 },
+  /**
+   * Optional third-party/independent candidate (see thirdParty.js). Only the
+   * candidate's home state/strength and `siphonLean` are user-facing (the
+   * existing "hometown strength" slider, plus a new siphon-lean slider); the
+   * rest are fixed v1 constants, not exposed in the UI.
+   */
+  thirdParty: { ...THIRD_PARTY_DEFAULTS, siphonLean: 0.5 },
 };
 
 /**
@@ -208,10 +217,20 @@ export function chooseNpv(mode, rng, { npvBase = 0, manualValue = 0, spread = 0.
  * @param {object} [o.baseline]  pre-loaded baseline, to avoid re-reading the CSV
  * @param {boolean} [o.skipForecasts=false] skip the Monte Carlo entirely. Only for
  *        bulk calibration runs that care about the outcome, not the forecast.
+ * @param {boolean|object} [o.thirdParty=false] optional third-party candidate —
+ *        `false` disables it entirely (default; byte-identical to no third
+ *        party existing at all), `true` enables it with default params and no
+ *        home state, or `{candidate: {homeState, strength, name}, siphonLean,
+ *        strengthMultiplier, regionBleedEnabled, params}` to configure it.
+ *        `strengthMultiplier` (default 1.0) scales the whole mechanic's
+ *        magnitude — see thirdParty.js's THIRD_PARTY_DEFAULTS doc comment.
+ *        Only ever affects the hidden truth/election-night reveal — never the
+ *        campaign's polling snapshots or forecast.js's Monte Carlo, which
+ *        stay strictly two-party. See thirdParty.js.
  */
 export async function createSimulation({
   seed, npvMode = 'surprise', manualNpv = 0, params = {}, baseline = null, skipForecasts = false,
-  nailbiter = false,
+  nailbiter = false, thirdParty = false,
 }) {
   const P = {
     ...PARAMS,
@@ -221,6 +240,7 @@ export async function createSimulation({
     campaign: { ...PARAMS.campaign, ...(params.campaign || {}) },
     forecast: { ...PARAMS.forecast, ...(params.forecast || {}) },
     baseline: { ...PARAMS.baseline, ...(params.baseline || {}) },
+    thirdParty: { ...PARAMS.thirdParty, ...(params.thirdParty || {}) },
   };
 
   const base = baseline || await loadBaseline(P.baseline);
@@ -318,9 +338,28 @@ export async function createSimulation({
     deriveAtLarge(truthRel, base);
   }
 
+  // --- third party (optional) ------------------------------------------------
+  // Needs the FINALIZED truth lean (post-nailbiter), and never touches the
+  // shared `rng` stream (see thirdParty.js) — so toggling it never shifts the
+  // draw order of anything else, and it's a true no-op when disabled.
+  let truthThirdShare = null, thirdPartyCandidate = null, siphonLean = null, thirdPartyStrength = null;
+  if (thirdParty) {
+    const tp = (thirdParty === true) ? {} : thirdParty;
+    siphonLean = tp.siphonLean ?? P.thirdParty.siphonLean;
+    thirdPartyStrength = tp.strengthMultiplier ?? P.thirdParty.strengthMultiplier;
+    thirdPartyCandidate = (tp.candidate && tp.candidate.name) || null;
+    truthThirdShare = computeThirdPartyTruth({
+      truthRel, truthNpv, beta: base.beta, baseline: base,
+      candidate: tp.candidate || null, seed,
+      regionBleedEnabled: !!tp.regionBleedEnabled,
+      params: { ...P.thirdParty, strengthMultiplier: thirdPartyStrength, ...(tp.params || {}) },
+    });
+  }
+
   // --- campaign -------------------------------------------------------------
   const campaign = runCampaign({
     truthRel, truthNpv, errorModel: pollModel, rng, params: P.campaign, baseline: base,
+    truthThirdShare, siphonLean: siphonLean ?? 0.5,
   });
 
   // --- forecast per step ----------------------------------------------------
@@ -353,6 +392,10 @@ export async function createSimulation({
     forecasts,
     terminalBiasNpv: campaign.terminalBiasNpv,
     terminalBiasRel: campaign.terminalBiasRel,
+    truthThirdShare,
+    thirdPartyCandidate,
+    siphonLean,
+    thirdPartyStrength,
   };
 }
 
@@ -366,15 +409,27 @@ export function truthMargins(sim) {
   return out;
 }
 
-/** EV tally for the true result. */
+/**
+ * EV tally for the true result, D/R/O alike. Reuses buildRows() (the same
+ * vote synthesis election night itself uses) so a third-party win is never
+ * silently folded into D or R. With no third party in play, buildRows()
+ * synthesizes oVotes=0 everywhere and this degenerates to a plain D/R tally.
+ */
 export function truthEv(sim) {
-  let dem = 0, rep = 0;
   const margins = truthMargins(sim);
-  for (const unit of sim.baseline.units) {
-    const ev = sim.baseline.ev.get(unit) || 0;
-    if ((margins.get(unit) || 0) >= 0) dem += ev; else rep += ev;
+  const { rows } = buildRows({
+    finalRel: sim.truthRel, npv: sim.truthNpv, baseline: sim.baseline,
+    thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
+    oCandidateName: sim.thirdPartyCandidate || 'Third party',
+  });
+  let dem = 0, rep = 0, oth = 0;
+  for (const row of rows) {
+    if (row.unit === 'NATIONAL') continue;
+    if (row.tVotes > row.dVotes && row.tVotes > row.rVotes) oth += row.ev;
+    else if (row.dVotes >= row.rVotes) dem += row.ev;
+    else rep += row.ev;
   }
-  return { dem, rep, total: sim.baseline.totalEv, margins };
+  return { dem, rep, oth, total: sim.baseline.totalEv, margins };
 }
 
 export default { createSimulation, PARAMS, computeTodaySeed, chooseNpv, truthMargins, truthEv, NPV_MODES, softclip };

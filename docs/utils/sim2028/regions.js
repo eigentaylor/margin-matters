@@ -27,6 +27,34 @@ export const REGIONS = {
 
 export const REGION_KEYS = Object.keys(REGIONS);
 
+/**
+ * Which region buckets border/relate to which others, for the region-bleed
+ * home-state mechanic (candidatePicker/homeStateAdvantage): a candidate's
+ * home-state bump extends at reduced strength into their own bucket and,
+ * fainter still, into adjacent buckets here.
+ *
+ * Hand-authored from each region's real-world geographic/cultural identity,
+ * like REGIONS itself -- NOT mechanically derived from every member state's
+ * literal borders. A few members are grouped by voting-correlation rather
+ * than geography (IL in `pacific`, AK in `south`; see REGIONS above), and
+ * letting those outliers project their own real borders onto their bucket
+ * would produce nonsense (e.g. IL's real Midwest neighbors would wrongly
+ * make `pacific` adjacent to `rustBelt`/`plains`/`south`). Symmetric by
+ * construction; edit freely, same as REGIONS.
+ */
+export const REGION_ADJACENCY = {
+  newEngland: ['midAtlantic'],
+  midAtlantic: ['newEngland', 'rustBelt', 'south', 'sunBelt'],
+  rustBelt: ['midAtlantic', 'south', 'plains'],
+  plains: ['rustBelt', 'south', 'sunBelt', 'southwest', 'mountain'],
+  south: ['midAtlantic', 'rustBelt', 'plains', 'sunBelt'],
+  sunBelt: ['midAtlantic', 'south', 'plains', 'southwest', 'mountain'],
+  southwest: ['plains', 'sunBelt', 'mountain', 'pacific'],
+  mountain: ['plains', 'sunBelt', 'southwest', 'pacific'],
+  pacific: ['southwest', 'mountain'],
+  hawaii: [],
+};
+
 /** Display labels for UI/debug output. */
 export const REGION_LABELS = {
   newEngland: 'New England',
@@ -61,4 +89,4 @@ export function regionOf(unit) {
   return UNIT_TO_REGION.has(parent) ? UNIT_TO_REGION.get(parent) : null;
 }
 
-export default { REGIONS, REGION_KEYS, REGION_LABELS, ALL_UNITS, regionOf };
+export default { REGIONS, REGION_KEYS, REGION_LABELS, REGION_ADJACENCY, ALL_UNITS, regionOf };

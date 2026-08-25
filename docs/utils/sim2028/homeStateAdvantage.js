@@ -23,9 +23,14 @@
  * as locked-in (low beta) responds less to a home-state bump than a genuinely elastic one,
  * even at the same nominal tier -- which is exactly why Beshear can't meaningfully dent
  * KY's partisan lean here even at the wackiest setting, while Ossoff moves GA more.
+ *
+ * `bleedEnabled` (off by default, so existing behavior is unchanged) extends the bonus
+ * beyond the exact home state into the same REGIONS bucket and REGION_ADJACENCY's
+ * neighboring buckets, at reduced strength -- see regionBleed.js's bleedUnitsFor().
  */
 
-import { AT_LARGE_COMPONENTS, deriveAtLarge } from './baseline.js';
+import { deriveAtLarge } from './baseline.js';
+import { bleedUnitsFor, homeStateUnits } from './regionBleed.js';
 
 /** Home state for each of the 7 preset 2028 candidates (candidatePicker.js's PRESET_CANDIDATES). */
 export const PRESET_HOME_STATES = {
@@ -52,22 +57,8 @@ export const REALISM_TIERS = {
 
 export const DEFAULT_REALISM_TIER = 'subtle';
 
-/**
- * Resolve a chosen home state to the sim unit(s) it actually affects. ME/NE only carry
- * electoral votes through their district units + a derived at-large unit (see
- * AT_LARGE_COMPONENTS) -- "home state" is a statewide concept, so picking Maine bumps both
- * ME-01 and ME-02, not a unit that isn't independently simulated.
- */
-export function homeStateUnits(stateAbbr, baseline) {
-  if (!stateAbbr || !baseline) return [];
-  const alUnit = `${stateAbbr}-AL`;
-  const components = AT_LARGE_COMPONENTS[alUnit];
-  if (components) return components.slice();
-  return baseline.simUnits && baseline.simUnits.includes(stateAbbr) ? [stateAbbr] : [];
-}
-
 /** One party's contribution to the bonus map, mutating `bonus` in place. */
-function addPartyBonus(bonus, baseline, choice, tier, sign) {
+function addPartyBonus(bonus, baseline, choice, tier, sign, bleedEnabled) {
   if (!choice) return;
   let stateAbbr = null;
   let magnitude = 0;
@@ -81,10 +72,10 @@ function addPartyBonus(bonus, baseline, choice, tier, sign) {
     magnitude = strength * tier.presetMagnitude;
   }
   if (!stateAbbr || magnitude === 0) return;
-  const units = homeStateUnits(stateAbbr, baseline);
-  for (const unit of units) {
+  const bleedMap = bleedUnitsFor(stateAbbr, baseline, bleedEnabled);
+  for (const [unit, mult] of bleedMap) {
     const beta = (baseline.betaFitted && baseline.betaFitted.get(unit)) ?? 1;
-    bonus.set(unit, (bonus.get(unit) || 0) + sign * magnitude * beta);
+    bonus.set(unit, (bonus.get(unit) || 0) + sign * magnitude * mult * beta);
   }
 }
 
@@ -97,13 +88,13 @@ function addPartyBonus(bonus, baseline, choice, tier, sign) {
  * Always recomputes from baseOriginal, so calling this repeatedly (candidate swap, realism
  * tier change, re-running "Start campaign") never accumulates a bonus on top of itself.
  */
-export function applyHomeStateAdvantage(baseline, candidates, realismKey) {
+export function applyHomeStateAdvantage(baseline, candidates, realismKey, bleedEnabled = false) {
   if (!baseline || !baseline.baseOriginal) return;
   const tier = REALISM_TIERS[realismKey] || REALISM_TIERS[DEFAULT_REALISM_TIER];
 
   const bonus = new Map();
-  addPartyBonus(bonus, baseline, candidates && candidates.d, tier, 1);
-  addPartyBonus(bonus, baseline, candidates && candidates.r, tier, -1);
+  addPartyBonus(bonus, baseline, candidates && candidates.d, tier, 1, bleedEnabled);
+  addPartyBonus(bonus, baseline, candidates && candidates.r, tier, -1, bleedEnabled);
 
   const newBase = new Map();
   let weightedSum = 0;

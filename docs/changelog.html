@@ -22,6 +22,48 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 24, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Sim2028</h2>
+<br/>
+<ul>
+<li>Rebuilt how monthly polls are generated. Each poll used to be a scalar D-R margin nudged by noise; it's now a genuine simulated poll - a state's (and separately, the nation's) hidden truth is expressed as a D/R/(third-party) vote-share point, an Undecided share is mixed in and shrinks across the campaign toward a small nonzero Election-Eve floor (nobody's poll is ever perfectly clean, even on the eve of the election), and 1,000 respondents are actually sampled from the resulting simplex every step. The one-time "mirage bias" that can make a state read the wrong way early in the campaign is still there, regionally correlated the same way it always was - it's the sampling noise on top that's new, replacing a flat statistical wobble with an actual poll of simulated people.</li>
+<li>The state polling table and the map hover tooltip now show the real D/R/(Third party)/Undecided percentage breakdown a poll like that would report (e.g. "47% D · 44% R · 9% U"), with the projected margin kept underneath as a smaller reference line. Previously both only ever showed the margin.</li>
+<li>This is purely a poll-generation change - the forecast model, the electoral snake, and election night's own vote synthesis are untouched and still consume the same relative-margin/national-popular-vote numbers as before.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 23, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Election Night</h2>
+<br/>
+<ul>
+<li>Album captions (the text under each image in the "Election Night Album" grid) now render in full caps, and no longer say a state was "called" - a normal call now reads "STATE PROJECTED FOR CANDIDATE," reserving "CANDIDATE WINS STATE" for the rare case where the remaining uncounted votes in that state can no longer mathematically overcome the leader's margin. A lead-change caption now reads "CANDIDATE TAKES THE LEAD IN STATE."</li>
+<li>Replaced the hardcoded list of seven states (WI/MI/PA/AZ/GA/NV/NC) that were always treated as 2028 "key races" regardless of how competitive a given simulated run actually made them. A state now counts as a key race if its pre-election rating is Toss-up or Tilt D/R, or if its true simulated margin is itself within a Toss-up-sized margin of even - so a landslide run no longer force-highlights states that weren't actually close.</li>
+<li>The "takes the lead" checkpoint card (live sim and album) now shows a full D/R vote-total comparison box - raw counts, share of total, and how many votes the new leader is ahead by - matching what the state call card already shows. A third-party row now also appears on it under the same conditions it would appear on a call screen (a real 2028 sim run with third party enabled, or a historical year with a genuine third-party showing like 1968/1992/1996).</li>
+</ul>
+<h2>Sim2028</h2>
+<br/>
+<ul>
+<li>Fixed the third-party candidate feature (added yesterday, still beta) so its numbers actually reach the screen. The debug panel's "True result" line was computed by code written back when the simulator was strictly two-party, so it silently folded any third-party win into D or R instead of showing it - it's now a single, unified three-way tally that always agrees with the rest of the debug panel.</li>
+<li>The map's popular-vote badges had a hardcoded "Other" row that never displayed, even with a real third-party vote share flowing through - it now appears (with its own vote total and percentage) whenever the third party is drawing any votes, and stays hidden otherwise.</li>
+<li>A state the third party actually won could render blue instead of gold, because a cached color from a previous render was being trusted ahead of the freshly-computed result. The real winner's color is no longer masked by a stale cache.</li>
+<li>The post-election "album" summary had its own separate, two-party-only winner check that would mislabel a third-party win as a Republican win. It now recognizes a third-party winner the same way the rest of the app already does.</li>
+<li>Added a "(beta)" note to the Third party setting, since the mechanic itself (not just this round's display bugs) may still need more tuning.</li>
+<li>The state-call popup's third-party comparison row was still gated behind a 5% floor meant for historical noise-filtering (a real Libertarian/Green showing shouldn't clutter every call) - but for a real sim2028 run, any showing the setting produces is worth seeing, so that floor no longer applies when third party is actually running in this simulator (historical replays keep the original 5% floor).</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         August 22, 2026
                     </div>
                     <div class='changelog-content'>
@@ -38,6 +80,10 @@
 <li>A state whose ribbon segment straddles a row break (e.g. a big state landing right at a row's edge) is shown as one continuous piece - joined by a same-color, same-thickness corner block, labeled once, and highlighted together on hover - rather than two disconnected fragments.</li>
 <li>Tiny 1-2 EV units (the ME/NE congressional districts, the ME-AL/NE-AL at-large pairs) get a little extra rendering width so their abbreviation actually fits; this only affects layout, not the real EV total or where the 270 line falls.</li>
 <li>Clicking a segment glows the matching state on the map, reusing the same highlight the polling-trendline legend already has. The chart sits directly under the map (above Forecast/Trendlines/Table) so that click doesn't require scrolling back up.</li>
+<li>Added an optional third-party/independent candidate, off by default. Picked the same way as the two major-party candidates (custom name or historical search, no presets), with a home state and hometown strength. Its strength is heaviest in states that are already safe for one side - real protest-vote behavior - and suppressed in genuine swing states, so it dampens landslides and can occasionally spoil or win a state on election night without routinely blocking anyone from reaching 270. A new "siphon lean" slider sets which major party it draws more votes from (or split evenly by default). Only affects the final election-night result - the campaign's polls and forecast stay two-party throughout.</li>
+<li>Added a "Region bleed" setting (independent of the third party toggle) that extends every candidate's home-state advantage, at reduced strength, into the rest of their home region and into neighboring regions, instead of stopping at their exact home state.</li>
+<li>Added a "Third party strength" control: the initial calibration turned out too weak to ever plausibly win a state, even with a maxed-out home-state bonus. It's now a multiplier on the whole mechanic (national showing and home-state bump alike) that can be pushed well above the 1.0x default to make outright wins and landslide-state captures achievable. Also removed a floor that had been protecting the major parties from ever being fully squeezed out of a state.</li>
+<li>The debug panel (<code>?debug=true</code>) now always shows a "Third party" section - candidate, strength, and siphon lean when enabled (or "off" when not), electoral votes actually won, and the states where the third party did best with how close each one came to flipping - so it's no longer ambiguous whether the mechanic is doing anything when a run doesn't happen to produce a dramatic result.</li>
 </ul>
                     </div>
                 </div>

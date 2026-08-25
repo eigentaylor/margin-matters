@@ -45,6 +45,28 @@ export function randStudentT4(rng) {
   return randStudentT(rng, 4);
 }
 
+/**
+ * n iid draws from a categorical distribution over `probs` (need not be
+ * normalized), tallied into per-category counts. A literal "poll of n
+ * respondents" rather than a closed-form noise draw.
+ * @returns {number[]} counts, same length/order as probs, summing to n
+ */
+export function randMultinomial(rng, n, probs) {
+  const k = probs.length;
+  const counts = new Array(k).fill(0);
+  const cum = new Array(k);
+  let acc = 0;
+  for (let i = 0; i < k; i++) { acc += Math.max(0, probs[i]); cum[i] = acc; }
+  const total = cum[k - 1] || 1;
+  for (let i = 0; i < n; i++) {
+    const u = rng() * total;
+    let idx = 0;
+    while (idx < k - 1 && u > cum[idx]) idx++;
+    counts[idx]++;
+  }
+  return counts;
+}
+
 // Backwards compatibility on window (some legacy code expects globals)
 try {
   if (typeof window !== 'undefined') {
@@ -53,6 +75,7 @@ try {
     try { window.randn = randn; } catch (e) { }
     try { window.randStudentT4 = randStudentT4; } catch (e) { }
     try { window.randStudentT = randStudentT; } catch (e) { }
+    try { window.randMultinomial = randMultinomial; } catch (e) { }
   }
 } catch (e) { }
 
@@ -61,5 +84,6 @@ export default {
   mulberry32,
   randn,
   randStudentT,
-  randStudentT4
+  randStudentT4,
+  randMultinomial
 };

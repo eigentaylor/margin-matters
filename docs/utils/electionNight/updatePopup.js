@@ -32,15 +32,18 @@
 //     reporting ("too close to call"); no D/R comparison row since there's
 //     no new leader to compare.
 //   { kind: 'leadFlip', stateName, ev, leader (the NEW raw leader),
-//     candidateName, portraitUrl, accentColor, timeLabel, tallyAfter (same
-//     as tallyBefore - carries no EV weight), dVotes, rVotes, countedVotes,
-//     reportingPct, reportingText, marginText, marginPctText, keyRace:
-//     true (always - only ever built for key races, or the national
-//     popular vote), isNpv? (hides the EV badge) } - a key race's (or the
-//     national popular vote's) raw vote lead changed hands while it's
-//     still uncalled (pre-first-call, or during too-close-to-call limbo
-//     after a retraction); no D/R comparison row since only the new
-//     leader's portrait is resolved.
+//     candidateName, portraitUrl, dCandidateName, dPortraitUrl,
+//     rCandidateName, rPortraitUrl, oCandidateName?, oPortraitUrl?, oVotes?
+//     (third comparison row - same O_ROW_THRESHOLD gating as call/
+//     correction), accentColor, timeLabel, tallyAfter (same as tallyBefore -
+//     carries no EV weight), dVotes, rVotes, countedVotes, reportingPct,
+//     reportingText, marginText, marginPctText, keyRace: true (always -
+//     only ever built for key races, or the national popular vote), isNpv?
+//     (hides the EV badge) } - a key race's (or the national popular
+//     vote's) raw vote lead changed hands while it's still uncalled
+//     (pre-first-call, or during too-close-to-call limbo after a
+//     retraction); shows the same D/R/O comparison row a call/correction
+//     does, alongside its own still-uncalled margin line.
 //   { kind: 'outcome', candidateName, portraitUrl, accentColor, timeLabel,
 //     outcomeLabel? ("Elected Nth President" / "Reelected as Nth President" -
 //     null when the winner's name couldn't be resolved, e.g. future.html's
@@ -553,10 +556,9 @@ function renderRetraction(slide) {
 /**
  * A key race's raw vote lead just changed hands while it's still uncalled
  * (pre-first-call, or during too-close-to-call limbo after a retraction) -
- * a live count update, not a call. Unlike renderCallOrCorrection() there's
- * no D/R comparison row (only one candidate's name/portrait is resolved
- * here) and unlike renderRetraction() there IS a fresh margin to show, since
- * the count is still actively moving.
+ * a live count update, not a call. Shows the same D/R/O comparison box
+ * renderCallOrCorrection() does, plus (unlike renderRetraction()) a fresh
+ * margin line, since the count is still actively moving.
  */
 function renderLeadFlip(slide) {
   const { first, last } = splitName(slide.candidateName);
@@ -586,6 +588,7 @@ function renderLeadFlip(slide) {
         ${marginLine}
       </div>
     </div>
+    ${buildComparisonMarkup(slide)}
     ${buildStatsLineMarkup(slide)}`;
   animateTallyTo(slide.tallyBefore, slide.tallyAfter, true);
 }

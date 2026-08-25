@@ -18,7 +18,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 import { estimateFalseBeets } from './utils/electionNight/lickman.js';
 import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
-import { ratingFor } from './utils/electionRatings.js';
+import { ratingFor, TOSSUP_BAND } from './utils/electionRatings.js';
 
 (function () {
   'use strict';
@@ -818,22 +818,11 @@ import { ratingFor } from './utils/electionRatings.js';
     return map;
   }
 
-  const PRIOR_CLOSE_CAP = 0.14;
-  const KEY_RACE_THRESHOLD = 0.6;
-  const PERENNIAL_BATTLEGROUNDS_2028 = new Set(['AZ', 'GA', 'WI', 'NV', 'MI', 'PA', 'NC']);
-
-  // A unit counts as a "key race" if either the data itself says so
-  // (importance >= threshold - predicted closeness + EV size, see
-  // assignRaceImportance) OR it's one of the seven states this app always
-  // treats as a 2028 battleground regardless of how a given sim's random
-  // draw happened to land - every place that decides "is this breaking
-  // news / worth flagging" should go through this single check so the
-  // 2028 override never silently misses a call site.
+  // A unit counts as a "key race" if the data itself says so (see
+  // flagKeyRaces) - every place that decides "is this breaking news /
+  // worth flagging" should go through this single check.
   function isKeyRaceUnit(st) {
-    return !!(st && (
-      (state.year === 2028 && PERENNIAL_BATTLEGROUNDS_2028.has(st.unitKey)) ||
-      (isFinite(st.importance) && st.importance >= KEY_RACE_THRESHOLD)
-    ));
+    return !!(st && st.keyRace);
   }
 
   // A unit's pre-election prior margin. For a normal unit this is just
@@ -841,8 +830,8 @@ import { ratingFor } from './utils/electionRatings.js';
   // at prepare time) - but an at-large unit (ME-AL/NE-AL) never gets one of
   // its own (see applyBridgedPollPriors()'s at-large comment above), so its
   // margin is derived here as the vote-weighted composite of its districts'
-  // own priors via state.atLargeParts, same derivation assignRaceImportance()
-  // uses for its "predicted closeness" score. Returns null (not 0/NaN) when
+  // own priors via state.atLargeParts, same derivation flagKeyRaces()
+  // uses for its rating check. Returns null (not 0/NaN) when
   // no prior can be determined either way, so callers can tell "genuinely
   // undetermined" apart from an actual EVEN prior - most importantly, so the
   // pre-election rating badge doesn't default an at-large unit to "Toss-up"
@@ -864,32 +853,28 @@ import { ratingFor } from './utils/electionRatings.js';
     return wsum > EPS ? accum / wsum : null;
   }
 
-  // Assign a pre-election-based "importance" score to each unit, combining
-  // predicted closeness (from priorMargin) and EV size. Used only to flag
-  // state calls as "key races" worthy of visual emphasis on-screen.
+  // Flag each unit as a "key race" worthy of visual emphasis on-screen, if
+  // either: its pre-election rating (from priorMargin) is a Toss-up or
+  // Tilt D/R, or its ground-truth final margin is itself within the
+  // Toss-up band of even.
   //
   // Deliberate, narrow exception to the "nothing downstream of
   // buildSyntheticPollPriors may read ground truth" rule documented above
-  // it: predictedCloseness alone means a state that was genuinely close
-  // (say, MI/NM in 2016/2000) can still miss the key-race flag purely
-  // because that one synthesized "poll" happened to roll noisy - the actual
-  // final margin is also folded in (via Math.max) as a fallback signal, so
-  // a state this close in real life always qualifies even if its fake
-  // pre-election poll didn't show it. This is safe ONLY because importance
+  // it: the rating check alone means a state that was genuinely close (say,
+  // MI/NM in 2016/2000) can still miss the key-race flag purely because
+  // that one synthesized "poll" happened to roll noisy - the ground-truth
+  // margin check catches those too. This is safe ONLY because st.keyRace
   // feeds nothing but this cosmetic on-screen emphasis - it never touches
   // win-probability, confidence, or any other live-uncertainty calculation.
-  function assignRaceImportance(data) {
-    const maxEv = data.reduce((m, st) => Math.max(m, st.ev || 0), 1);
-    const closenessOf = margin => isFinite(margin) ? Math.max(0, 1 - Math.abs(margin) / PRIOR_CLOSE_CAP) : 0;
+  function flagKeyRaces(data) {
     data.forEach(st => {
       const priorMargin = resolvePriorMargin(st);
-      const predictedCloseness = isFinite(priorMargin) ? closenessOf(priorMargin) : 0.4;
+      const rating = isFinite(priorMargin) ? ratingFor(priorMargin) : null;
+      const ratedCloseRace = !!rating && (rating.key === 'tossup' || rating.key === 'tiltD' || rating.key === 'tiltR');
       const actualMargin = isFinite(st.dTwoPartyFinal) && isFinite(st.rTwoPartyFinal)
         ? st.dTwoPartyFinal - st.rTwoPartyFinal : null;
-      const actualCloseness = closenessOf(actualMargin);
-      const closeness = Math.max(predictedCloseness, actualCloseness);
-      const sizeFactor = Math.sqrt(Math.max(0, st.ev || 0) / maxEv);
-      st.importance = closeness * (0.6 + 0.4 * sizeFactor);
+      const groundTruthClose = isFinite(actualMargin) && Math.abs(actualMargin) < TOSSUP_BAND;
+      st.keyRace = ratedCloseRace || groundTruthClose;
     });
   }
 
@@ -1037,7 +1022,7 @@ import { ratingFor } from './utils/electionRatings.js';
       buildSyntheticPollPriors(data, year, pvValue);
     }
     state.atLargeParts = buildAtLargeParts(data);
-    assignRaceImportance(data);
+    flagKeyRaces(data);
     // Vote-weighted mean of the frozen priors - debug/validation only (e.g.
     // docs/utils/electionNight/validateWinProb.mjs's swing-recovery check),
     // never read by the live algorithm. A derived summary of the already-
@@ -1410,6 +1395,17 @@ import { ratingFor } from './utils/electionRatings.js';
   // Libertarian/Green-caliber background noise stays out of the way.
   const O_ROW_THRESHOLD = 0.05;
 
+  // A real sim2028 run's third party (see isSim2028LiveRun()) is a
+  // deliberately tunable, player-controlled mechanic - any real showing
+  // should surface on the call screen, not just a Perot/Wallace-caliber one,
+  // otherwise the setting's effect is invisible below 5%. Historical
+  // replays keep the 5% floor so routine Libertarian/Green-caliber noise
+  // stays quiet. `> EPS` rather than `>= 0` so third party being off (where
+  // oShareForRow is exactly 0) never adds a spurious "O 0.0%" row.
+  function oRowThreshold() {
+    return isSim2028LiveRun() ? EPS : O_ROW_THRESHOLD;
+  }
+
   // How far before state.simEnd the two "fires at the very last possible
   // moment" event sources (the NPV correction, and projectUnitCallEvent's
   // dead-end fallback below) are pinned, instead of exactly at simEnd like
@@ -1557,7 +1553,7 @@ import { ratingFor } from './utils/electionRatings.js';
           : record.reporting;
         // Show O row if they got >= 5% of NPV or if they're displayed in the scoreboard (1992, 1996)
         const oShareForRow = isFinite(countedVotes) && countedVotes > EPS ? oVotes / countedVotes : 0;
-        const oCandidateName = (oShareForRow >= O_ROW_THRESHOLD || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
+        const oCandidateName = (oShareForRow >= oRowThreshold() || state.year === 1992 || state.year === 1996) ? resolveCandidateFullName('O', 'NATIONAL') : null;
         return {
           kind: isNpvCorrection ? 'correction' : 'call',
           isNpv: true,
@@ -1618,10 +1614,9 @@ import { ratingFor } from './utils/electionRatings.js';
       // A "breaking news" leader-flip - a key race's (or the national
       // popular vote's) raw count changing hands while it's still uncalled
       // (pre-first-call, or during too-close-to-call limbo after a
-      // retraction). Self-contained record (candidateName already resolved
-      // in registerLeadFlip()/registerNpvLeadFlip()), so unlike the call/
-      // correction branch below this doesn't need to re-resolve portraits
-      // for both parties - just the new leader.
+      // retraction). Resolves dCandidateName/rCandidateName/oCandidateName
+      // the same way the call/correction branch below does, so it can reuse
+      // the same D/R/O vote-total comparison box.
       if (record.noticeType === 'leadFlip' || record.noticeType === 'npvLeadFlip') {
         const isNpv = record.noticeType === 'npvLeadFlip';
         const leader = record.leader;
@@ -1630,6 +1625,24 @@ import { ratingFor } from './utils/electionRatings.js';
         const flipSt = isNpv ? null : unitsByKey.get(record.unitKey);
         const flipResolvedPriorMargin = flipSt ? resolvePriorMargin(flipSt) : null;
         const flipPriorRating = (isFinite(flipResolvedPriorMargin) && isSim2028LiveRun()) ? ratingFor(flipResolvedPriorMargin) : null;
+        // Always resolve both major-party candidates by name, same as the
+        // call/correction and npv_call branches below - the comparison box
+        // reads these fields the same way regardless of slide kind.
+        const flipUnitKey = isNpv ? 'NATIONAL' : record.unitKey;
+        const flipDCandidateName = resolveCandidateFullName('D', flipUnitKey);
+        const flipRCandidateName = resolveCandidateFullName('R', flipUnitKey);
+        // Identical O-row gating to what the call screen uses (per-state:
+        // record.topThirdShare vs oRowThreshold(); NPV: oVotes share of
+        // countedVotes vs oRowThreshold(), with the same 1992/1996
+        // scoreboard exception) - not a separate concept, just evaluated
+        // here since a leadFlip record is self-contained rather than
+        // re-derived from computeMetrics()/totals at slide-build time.
+        const flipOShareForRow = isNpv
+          ? (isFinite(record.countedVotes) && record.countedVotes > EPS ? record.oVotes / record.countedVotes : 0)
+          : (isFinite(record.topThirdShare) ? record.topThirdShare : 0);
+        const flipOCandidateName = (flipOShareForRow >= oRowThreshold() || (isNpv && (state.year === 1992 || state.year === 1996)))
+          ? resolveCandidateFullName('O', flipUnitKey)
+          : null;
         return {
           kind: 'leadFlip',
           isNpv,
@@ -1638,12 +1651,16 @@ import { ratingFor } from './utils/electionRatings.js';
           ev: record.ev,
           leader,
           candidateName: record.candidateName,
+          dCandidateName: flipDCandidateName,
+          rCandidateName: flipRCandidateName,
+          oCandidateName: flipOCandidateName,
           accentColor: calledAccentColor(leader, marginFromCallRecord(record)),
           confidencePct: record.confidence,
           reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
           reportingText: formatReportingText(record.reporting, record.remainingVotes),
           dVotes: record.dVotes,
           rVotes: record.rVotes,
+          oVotes: record.oVotes,
           countedVotes: record.countedVotes,
           marginText: formatMarginText(record.marginStr, leader, (isFinite(record.dVotes) && isFinite(record.rVotes)) ? record.dVotes - record.rVotes : null),
           marginPctText: record.marginStr,
@@ -1665,7 +1682,7 @@ import { ratingFor } from './utils/electionRatings.js';
       // for Wallace/Perot/Taft-caliber showings without needing upkeep for
       // future strong third-party years.
       const oShareForRow = isFinite(record.topThirdShare) ? record.topThirdShare : 0;
-      const oCandidateName = oShareForRow >= O_ROW_THRESHOLD ? resolveCandidateFullName('O', record.unitKey) : null;
+      const oCandidateName = oShareForRow >= oRowThreshold() ? resolveCandidateFullName('O', record.unitKey) : null;
       const st = unitsByKey.get(record.unitKey);
       const keyRace = !record.isNpv && isKeyRaceUnit(st);
       // Only ever set for a real sim2028 run (see isSim2028LiveRun()) - a
@@ -1710,6 +1727,7 @@ import { ratingFor } from './utils/electionRatings.js';
         reportingPct: isFinite(record.reporting) ? Math.max(0, Math.min(1, record.reporting)) : null,
         reportingText: formatReportingText(record.reporting, record.remainingVotes),
         marginText: formatMarginText(record.marginStr, leader, voteMargin),
+        confidencePct: record.confidence,
         time: record.time,
         timeLabel: formatTimeLabel(record.time),
         keyRace,
@@ -1748,7 +1766,7 @@ import { ratingFor } from './utils/electionRatings.js';
     });
 
     // A "big deal" slide: a key race (predicted-close pre-election, or
-    // genuinely close in the true result - see assignRaceImportance), ANY
+    // genuinely close in the true result - see flagKeyRaces), ANY
     // correction or retraction (overturning/un-calling an earlier call is
     // inherently notable regardless of the state's own importance), the
     // call that actually pushed the count across the majority threshold, or
@@ -2887,10 +2905,20 @@ import { ratingFor } from './utils/electionRatings.js';
     const time = slide.timeLabel ? `${slide.timeLabel} ET` : '';
     let what;
     switch (slide.kind) {
-      case 'call': what = `${slide.stateName || 'Call'} — called for ${slide.candidateName || slide.leader || '?'}`; break;
+      case 'call': {
+        const candidate = slide.candidateName || slide.leader || '?';
+        const stateLabel = slide.stateName || 'Call';
+        // "Wins" only once it's mathematically impossible for the remaining
+        // uncounted votes to flip the state (confidencePct === 1, see
+        // calculateConfidence()) - every other call is still a projection.
+        what = slide.confidencePct >= 1 - EPS
+          ? `${candidate} wins ${stateLabel}`
+          : `${stateLabel} projected for ${candidate}`;
+        break;
+      }
       case 'correction': what = `${slide.stateName || 'Correction'} — revised to ${slide.candidateName || slide.leader || '?'}`; break;
       case 'retraction': what = `${slide.stateName || 'Retraction'} — too close to call`; break;
-      case 'leadFlip': what = `${slide.stateName || 'Lead change'} — ${slide.candidateName || slide.leader || '?'} now ahead`; break;
+      case 'leadFlip': what = `${slide.candidateName || slide.leader || '?'} takes the lead in ${slide.stateName || 'the race'}`; break;
       case 'races': what = `Key races update${slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : ''}`; break;
       case 'pollClose': what = `Polls closed in ${Array.isArray(slide.states) ? slide.states.length : 0} states`; break;
       case 'finalResults': what = `Final key race results${slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : ''}`; break;
@@ -2906,7 +2934,8 @@ import { ratingFor } from './utils/electionRatings.js';
     // etc. in updatePopup.js) so a breaking slide reads as one at a glance in
     // the album grid too, without having to open the image.
     if (slide.breaking) what = `Breaking: ${what}`;
-    return time ? `${time} — ${what}` : what;
+    const caption = time ? `${time} — ${what}` : what;
+    return caption.toUpperCase();
   }
 
   /**
@@ -3220,12 +3249,16 @@ import { ratingFor } from './utils/electionRatings.js';
 
       const finalMarginTwoParty = twoPartyShare > EPS ? (dShareFinal - rShareFinal) / Math.max(twoPartyShare, EPS) : 0;
       const finalLeader = determineLeader(dShareFinal, rShareFinal, totalThirdShare, 1, { dVotes: finalDVotes, rVotes: finalRVotes, oVotes: finalOTopVotes, countedVotes: twoPartyVotesFinal });
-      const baselineAbbr = baselineAbbrColors.get(abbr);
-      let finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
-      if (!finalColor) {
-        const baselineUnit = baselineUnitColors.get(unit);
-        finalColor = baselineUnit || safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
+      // A cached baseline color can be stale relative to this run's real
+      // winner (e.g. painted before third party was a factor), so a real O
+      // win is never allowed to be masked by a leftover D/R baseline color.
+      let finalColor = null;
+      if (finalLeader !== 'O') {
+        const baselineAbbr = baselineAbbrColors.get(abbr);
+        finalColor = baselineAbbr && baselineAbbr.color ? baselineAbbr.color : null;
+        if (!finalColor) finalColor = baselineUnitColors.get(unit) || null;
       }
+      if (!finalColor) finalColor = safeMarginToColor(finalMarginTwoParty, finalLeader === 'O');
       const finalMarginStr = finalLeader === 'O'
         ? formatOtherLean(finalOTopVotes, finalDVotes, finalRVotes, totalVotes)
         : formatLean(finalMarginTwoParty);
@@ -5087,9 +5120,14 @@ import { ratingFor } from './utils/electionRatings.js';
       reporting: metrics.reporting,
       dVotes: metrics.dVotesCounted,
       rVotes: metrics.rVotesCounted,
+      oVotes: metrics.oVotesCounted,
       countedVotes: metrics.countedVotes,
       remainingVotes: metrics.remainingVotes,
-      marginStr: metrics.countedMarginStr
+      marginStr: metrics.countedMarginStr,
+      // Same O-row eligibility signal registerCall()'s record carries - lets
+      // buildCheckpointSlides() gate a third-party comparison row on this
+      // leadFlip the same way it does for a call/correction.
+      topThirdShare: metrics.topThirdShare
     };
     state.callRecords.push(record);
 
@@ -5136,6 +5174,7 @@ import { ratingFor } from './utils/electionRatings.js';
       candidateName,
       dVotes: dCounted,
       rVotes: rCounted,
+      oVotes: oCounted,
       countedVotes,
       reporting: state.totalEligibleVotes > EPS ? countedVotes / state.totalEligibleVotes : 0,
       remainingVotes: Math.max(0, Math.round((state.totalEligibleVotes || 0) - countedVotes)),
@@ -5468,6 +5507,9 @@ import { ratingFor } from './utils/electionRatings.js';
     if (pvOth) pvOth.textContent = fmt(oVotes);
     if (pvTot) pvTot.textContent = fmt(counted);
 
+    const pvOthBadge = document.getElementById('pvOthBadge');
+    if (pvOthBadge) pvOthBadge.style.display = oVotes > 0 ? '' : 'none';
+
     // Add percentages
     if (counted > 0) {
       const dPct = (dVotes / counted * 100).toFixed(1);
@@ -5484,15 +5526,24 @@ import { ratingFor } from './utils/electionRatings.js';
 
     // Add margin
     if (pvMargin) {
-      const margin = dVotes - rVotes;
-      if (Math.abs(margin) < 0.5) {
-        pvMargin.textContent = 'EVEN';
-      } else if (margin > 0) {
-        const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
-        pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+      if (oVotes > dVotes && oVotes > rVotes) {
+        const runnerUp = Math.max(dVotes, rVotes);
+        const margin = oVotes - runnerUp;
+        const pctDiff = counted > 0 ? Math.abs((oVotes / counted - runnerUp / counted) * 100).toFixed(1) : '0.0';
+        pvMargin.innerHTML = Math.abs(margin) < 0.5
+          ? 'EVEN'
+          : 'O+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
       } else {
-        const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
-        pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        const margin = dVotes - rVotes;
+        if (Math.abs(margin) < 0.5) {
+          pvMargin.textContent = 'EVEN';
+        } else if (margin > 0) {
+          const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
+          pvMargin.innerHTML = 'D+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        } else {
+          const pctDiff = counted > 0 ? Math.abs((dVotes / counted - rVotes / counted) * 100).toFixed(1) : '0.0';
+          pvMargin.innerHTML = 'R+' + fmt(Math.abs(margin)) + '<span class="delta" style="margin-left:4px">(' + pctDiff + '%)</span>';
+        }
       }
     }
 
@@ -5859,7 +5910,7 @@ import { ratingFor } from './utils/electionRatings.js';
       })
       .sort((a, b) => {
         // Key races (predicted-close, pre-election-based - see
-        // assignRaceImportance) are pinned ahead of routine ones, same
+        // flagKeyRaces) are pinned ahead of routine ones, same
         // "marquee races first" grouping as the checkpoint popup's call
         // order; within each of those two tiers, the existing live-drama
         // scoring below still applies.

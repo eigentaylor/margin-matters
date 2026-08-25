@@ -170,6 +170,18 @@
       color: #e06c6c;
     }
 
+    .s28-t {
+      color: #d4af37;
+    }
+
+    .s28-u {
+      color: var(--muted);
+    }
+
+    table.s28-table td.s28-shares div {
+      line-height: 1.3;
+    }
+
     .s28-note {
       font-size: 0.85rem;
       color: var(--muted);
@@ -743,6 +755,11 @@
             <option value="wacky">Wacky</option>
           </select>
         </label>
+        <label title="Off (default): a candidate's home-state bump applies only to their exact home state, as always. On: extends that bump, at reduced strength, into the rest of their home region and into neighboring regions -- so e.g. a Georgia home-state candidate also gets a fainter lift in the rest of the Sun Belt bucket, fainter still in the South/Plains/Southwest/Mid-Atlantic buckets it borders. Applies to D, R, and (if enabled) the third-party candidate alike.">Region bleed
+          <span class="s28-checkbox-row">
+            <input id="s28RegionBleed" type="checkbox" />
+          </span>
+        </label>
         <label title="On: each state's simulated swing is scaled by its own historically-fitted elasticity (how much of a national wave it actually absorbs) — so e.g. a heavily-elastic swing state moves more than a national wave, an inelastic one moves less. Off: every state moves exactly with the national popular vote (beta=1 everywhere). Toggle to A/B whether the per-state fit is actually adding anything.">Elasticity
           <span class="s28-checkbox-row">
             <input id="s28Elasticity" type="checkbox" checked />
@@ -752,6 +769,14 @@
           <span class="s28-checkbox-row">
             <input id="s28ConfidentForecasts" type="checkbox" />
           </span>
+        </label>
+        <label title="BETA — known issues: results display is still being refined and some third-party numbers/colors may not fully match the true simulated result yet. Adds an optional independent/third-party candidate, picked below in the Candidates section (custom or historical search only — no presets). Third-party strength is heaviest in states that are already safe for one side (real protest-vote behavior) and suppressed in genuine swing states, so it dampens landslides and can occasionally spoil or win a state without routinely preventing anyone from reaching 270. Only affects the final election-night result — the campaign's polls and forecast stay two-party throughout, exactly as if this were off. Off (default) reproduces today's simulation exactly.">Third party <span style="color:var(--muted);font-weight:normal;font-size:0.85em">(beta)</span>
+          <span class="s28-checkbox-row">
+            <input id="s28ThirdParty" type="checkbox" />
+          </span>
+        </label>
+        <label title="Multiplier on the third party's overall strength (national/regional showing and home-state bump alike), applied before swing-state suppression. 1.0 = default calibration — genuinely weak almost everywhere, rarely enough to threaten a win even in a maximally favorable home state. Push this well above 1.0 to make wins and outright landslide-state captures actually achievable.">Third party strength
+          <input id="s28ThirdPartyStrength" type="number" min="0.2" max="6" step="0.1" value="1.0" />
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>
@@ -815,12 +840,42 @@
             </label>
           </div>
         </div>
+        <div class="s28-cand-party s28-hidden" data-party="o">
+          <div class="s28-cand-label">Third party</div>
+          <div class="s28-cand-swatches" id="s28CandSwatchesO"></div>
+          <div class="s28-cand-search s28-hidden" id="s28CandSearchO">
+            <input id="s28CandSearchInputO" type="text" placeholder="Search any candidate, e.g. Perot or 1992" autocomplete="off" />
+            <div class="s28-cand-search-results" id="s28CandSearchResultsO"></div>
+          </div>
+          <div class="s28-cand-custom s28-hidden" id="s28CandCustomO">
+            <input id="s28CandNameO" type="text" placeholder="Candidate name" maxlength="60" />
+            <span class="s28-cand-preview" id="s28CandPreviewO"></span>
+            <input id="s28CandImgO" type="file" accept="image/*" title="Optional portrait" />
+            <button type="button" class="s28-cand-paste-img" id="s28CandPasteO" title="Paste image from clipboard">Paste image</button>
+            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgO" title="Remove uploaded portrait">Remove image</button>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
+          </div>
+          <div class="s28-cand-home-row s28-hidden" id="s28CandHomeRowO">
+            <label class="s28-hidden" id="s28CandHomeWrapO">Home state
+              <select id="s28CandHomeO" title="Boosts this candidate's strength in this state (and, with Region bleed on, the rest of its region). Scaled by Hometown strength below."></select>
+            </label>
+            <label class="s28-hidden" id="s28CandStrengthWrapO">Hometown strength
+              <input id="s28CandStrengthO" type="range" min="0" max="1" step="0.05" value="0.5" />
+            </label>
+          </div>
+          <div class="s28-cand-home-row" id="s28SiphonLeanRow">
+            <label id="s28SiphonLeanWrap" title="Which major party this candidate pulls more votes from. 0.5 (default): symmetric — third-party votes come evenly out of both, margin unaffected. 0: siphons entirely from Republicans (spoils R). 1: siphons entirely from Democrats (spoils D). Applies regardless of whether a home state is set.">Siphon lean (0 = spoils R, 1 = spoils D)
+              <input id="s28SiphonLean" type="range" min="0" max="1" step="0.05" value="0.5" />
+            </label>
+          </div>
+        </div>
       </div>
       <div class="s28-note" style="margin-top:8px">
         Mostly display only. The 7 built-in candidates, and any custom or searched pick with a
         home state set, get a small, deliberately modest lean nudge in that state (scaled by
         Hometown strength and Home state realism above) &mdash; everything else about who's
-        running has no effect on the simulated result.
+        running has no effect on the simulated result. The third-party column only appears
+        with the Third party setting above turned on.
       </div>
     </div>
 
@@ -866,7 +921,7 @@
         <div id="evNeededToWin" style="text-align:center;font-size:0.85em;color:var(--muted);margin-top:4px"></div>
         <div id="pvTotals" class="pv-totals s28-hidden" style="margin-top:10px">
           <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span id="pvDemPct" class="delta"></span></div>
-          <div class="pv-badge pv-o" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
+          <div class="pv-badge pv-o" id="pvOthBadge" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
           <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span id="pvRepPct" class="delta"></span></div>
           <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span></div>
           <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
@@ -933,7 +988,7 @@
               <th data-sort="ev">EV</th>
               <th data-sort="relPrior" title="2020 margin relative to the nation">2020 lean</th>
               <th data-sort="rel2024" title="2024 margin relative to the nation">2024 lean</th>
-              <th data-sort="margin" title="Projected actual margin = current simulated poll's lean + elasticity x national popular vote">Poll margin</th>
+              <th data-sort="margin" title="Simulated poll of 1,000 respondents (D/R/Undecided, +Third party if enabled); margin below = current simulated poll's lean + elasticity x national popular vote">Poll</th>
               <th title="90% interval implied by the remaining polling uncertainty">±90% CI</th>
               <th data-sort="rating" title="Rating from the projected margin">Rating</th>
               <th data-sort="change">Change</th>

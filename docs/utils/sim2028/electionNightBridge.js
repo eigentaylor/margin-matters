@@ -28,14 +28,83 @@ const YEAR = 2028;
 
 /**
  * Turn a target margin into D/R vote counts against a given turnout.
- * Two-party only — third parties are dropped for simulated years, matching how
- * future.js treats future elections.
+ * Two-party only. Still used whenever no third-party share is supplied
+ * (synthesizeVotesThreeWay below degenerates to this exact output at
+ * thirdShare=0, so nothing needs both).
  */
 export function synthesizeVotes(margin, totalVotes) {
   const total = Math.max(1, Math.round(totalVotes || 0));
   const m = Math.max(-0.999, Math.min(0.999, margin || 0));
   const dVotes = Math.round(total * (1 + m) / 2);
   return { dVotes, rVotes: total - dVotes, total };
+}
+
+/** No major party is pushed below this vote share, even by a huge third-party share
+ *  colliding with an already-lopsided margin. 0 = no protection at all: a strong
+ *  enough third-party share (see thirdParty.js's strengthMultiplier) can fully
+ *  consume one side in a state. Kept as a named constant, not deleted outright,
+ *  in case a future "always leave a sliver" mode wants it back. */
+const MIN_MAJOR_PARTY_SHARE = 0;
+
+/**
+ * Splits a two-party margin into D/R/O vote SHARES (0..1, no rounding, no
+ * turnout) from a third-party vote share and a siphon lean (0..1) saying how
+ * much of that share comes out of D's pool vs R's pool — 0 = entirely from R
+ * (spoils R), 1 = entirely from D (spoils D), 0.5 = symmetric (margin
+ * unchanged, third party just makes a sub-50% plurality possible).
+ *
+ * At thirdShare=0 this reduces to {dShare:(1+m)/2, rShare:(1-m)/2, oShare:0}
+ * exactly, term for term — the plain two-party split.
+ *
+ * Pulled out of synthesizeVotesThreeWay as the pure share-level math so
+ * campaign.js's poll-time simplex construction can reuse the exact same,
+ * already-tuned D/R/T carve-up instead of re-deriving it.
+ */
+export function sharesThreeWay(twoPartyMargin, thirdShare, siphonLean) {
+  const m = Math.max(-0.999, Math.min(0.999, twoPartyMargin || 0));
+  const oShare = Math.max(0, Math.min(0.999, thirdShare || 0));
+  const s = Math.max(0, Math.min(1, siphonLean ?? 0.5));
+
+  const dTwoParty = (1 + m) / 2; // what D would get with no third party at all
+  const rTwoParty = (1 - m) / 2;
+  let dLoss = Math.min(oShare * s, Math.max(0, dTwoParty - MIN_MAJOR_PARTY_SHARE));
+  let rLoss = Math.min(oShare * (1 - s), Math.max(0, rTwoParty - MIN_MAJOR_PARTY_SHARE));
+
+  // Pathological case: a large third-party share collided with an already-lopsided
+  // margin and one side hit its floor before absorbing its full intended loss. Push
+  // the overflow onto the other side if it has room; otherwise it comes back out of
+  // the third-party share itself (oShareFinal below) rather than going negative.
+  let deficit = (oShare * s - dLoss) + (oShare * (1 - s) - rLoss);
+  if (deficit > 1e-9) {
+    if (dLoss < oShare * s) {
+      const extra = Math.min(deficit, Math.max(0, rTwoParty - rLoss - MIN_MAJOR_PARTY_SHARE));
+      rLoss += extra; deficit -= extra;
+    } else if (rLoss < oShare * (1 - s)) {
+      const extra = Math.min(deficit, Math.max(0, dTwoParty - dLoss - MIN_MAJOR_PARTY_SHARE));
+      dLoss += extra; deficit -= extra;
+    }
+  }
+  const oShareFinal = Math.max(0, oShare - deficit);
+  const dShare = dTwoParty - dLoss;
+  const rShare = 1 - dShare - oShareFinal;
+  return { dShare, rShare, oShare: oShareFinal };
+}
+
+/**
+ * Three-way version of synthesizeVotes: splits a unit's turnout into D/R/O
+ * vote counts from its two-party margin, a third-party vote SHARE (0..1, the
+ * fraction of all voters going third-party), and a siphon lean (0..1, see
+ * sharesThreeWay).
+ *
+ * At thirdShare=0 this reproduces synthesizeVotes(margin, totalVotes) exactly,
+ * term for term.
+ */
+export function synthesizeVotesThreeWay(twoPartyMargin, thirdShare, siphonLean, totalVotes) {
+  const total = Math.max(1, Math.round(totalVotes || 0));
+  const { dShare, oShare } = sharesThreeWay(twoPartyMargin, thirdShare, siphonLean);
+  const dVotes = Math.round(total * dShare);
+  const oVotes = Math.round(total * oShare);
+  return { dVotes, rVotes: total - dVotes - oVotes, oVotes, total };
 }
 
 /**
@@ -46,11 +115,21 @@ export function synthesizeVotes(margin, totalVotes) {
  * @param {number}             o.npv       final national popular vote
  * @param {object}             o.baseline  from baseline.js
  * @param {number}             [o.turnoutScale=1] uniform turnout multiplier vs 2024
+ * @param {Map<string,number>} [o.thirdShare=null] per-unit third-party vote
+ *        share (0..1), from engine.js's sim.truthThirdShare. Omitted/null
+ *        reproduces today's two-party-only output exactly.
+ * @param {number}              [o.siphonLean=0.5] which major party the third
+ *        party siphons more from (0 = spoils R, 1 = spoils D)
+ * @param {string|null}         [o.oCandidateName=null] third-party candidate's
+ *        display name — becomes thirdPartyResults' object key, matching how
+ *        election-night.js already reads a historical year's third-party winner
  */
-export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
+export function buildRows({
+  finalRel, npv, baseline, turnoutScale = 1, thirdShare = null, siphonLean = 0.5, oCandidateName = null,
+}) {
   const rows = [];
   const votesByUnit = new Map();
-  let natD = 0, natR = 0, natTotal = 0;
+  let natD = 0, natR = 0, natO = 0, natTotal = 0;
 
   // Districts and plain states first; at-large units are summed from their
   // districts afterwards so ME-AL/NE-AL can never disagree with their own parts.
@@ -59,22 +138,23 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
     const beta = baseline.beta.get(unit) || 1;
     const margin = rel + beta * npv;
     const turnout = (baseline.totalVotes.get(unit) || 0) * turnoutScale;
-    const votes = synthesizeVotes(margin, turnout);
+    const oShareForUnit = thirdShare ? (thirdShare.get(unit) || 0) : 0;
+    const votes = synthesizeVotesThreeWay(margin, oShareForUnit, siphonLean, turnout);
     votesByUnit.set(unit, votes);
 
     // Only simUnits contribute to the national total; counting ME-AL as well as
     // ME-01/ME-02 would double-count every Maine voter.
-    natD += votes.dVotes; natR += votes.rVotes; natTotal += votes.total;
+    natD += votes.dVotes; natR += votes.rVotes; natO += votes.oVotes; natTotal += votes.total;
   }
 
   for (const [alUnit, parts] of baseline.atLarge) {
-    let dVotes = 0, rVotes = 0, total = 0;
+    let dVotes = 0, rVotes = 0, oVotes = 0, total = 0;
     for (const part of parts) {
       const v = votesByUnit.get(part.unit);
       if (!v) continue;
-      dVotes += v.dVotes; rVotes += v.rVotes; total += v.total;
+      dVotes += v.dVotes; rVotes += v.rVotes; oVotes += v.oVotes; total += v.total;
     }
-    votesByUnit.set(alUnit, { dVotes, rVotes, total });
+    votesByUnit.set(alUnit, { dVotes, rVotes, oVotes, total });
   }
 
   // The national margin the synthesized votes actually produce. Rounding to whole
@@ -85,8 +165,9 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
   const realizedNpv = natTotal > 0 ? (natD - natR) / natTotal : 0;
 
   for (const unit of baseline.units) {
-    const { dVotes, rVotes, total } = votesByUnit.get(unit) || { dVotes: 0, rVotes: 0, total: 1 };
+    const { dVotes, rVotes, oVotes, total } = votesByUnit.get(unit) || { dVotes: 0, rVotes: 0, oVotes: 0, total: 1 };
     const margin = total > 0 ? (dVotes - rVotes) / total : 0;
+    const hasThird = oCandidateName && oVotes > 0;
 
     rows.push({
       year: YEAR,
@@ -96,38 +177,39 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
       rm: margin - realizedNpv,
       nm: realizedNpv,
       ev: baseline.ev.get(unit) || 0,
-      tp: 0,
-      thirdShare: 0,
+      tp: hasThird ? 1 : 0,
+      thirdShare: total > 0 ? oVotes / total : 0,
       dVotes,
       rVotes,
-      tVotes: 0,
+      tVotes: oVotes,
       total,
-      topThirdVotes: 0,
+      topThirdVotes: oVotes, // only ever one third-party candidate in this sim
       dCandidate: baseline.candidates.d,
       rCandidate: baseline.candidates.r,
-      thirdPartyResults: {},
+      thirdPartyResults: hasThird ? { [oCandidateName]: oVotes } : {},
       specialCaseNotes: '',
       color: margin >= 0 ? 'blue' : 'red',
       elasticity: baseline.beta.get(unit) || 1,
     });
   }
 
+  const natHasThird = oCandidateName && natO > 0;
   rows.push({
     year: YEAR,
     unit: 'NATIONAL',
     rm: 0,
     nm: realizedNpv,
     ev: 0,
-    tp: 0,
-    thirdShare: 0,
+    tp: natHasThird ? 1 : 0,
+    thirdShare: natTotal > 0 ? natO / natTotal : 0,
     dVotes: natD,
     rVotes: natR,
-    tVotes: 0,
+    tVotes: natO,
     total: natTotal,
-    topThirdVotes: 0,
+    topThirdVotes: natO,
     dCandidate: baseline.candidates.d,
     rCandidate: baseline.candidates.r,
-    thirdPartyResults: {},
+    thirdPartyResults: natHasThird ? { [oCandidateName]: natO } : {},
     specialCaseNotes: '',
     color: realizedNpv >= 0 ? 'blue' : 'red',
     elasticity: 1,
@@ -159,9 +241,16 @@ export function buildRows({ finalRel, npv, baseline, turnoutScale = 1 }) {
  *   (win %/tie %/median EV/NPV) to read directly, rather than the live
  *   win-probability MC, which is deliberately hedged near 50-50 before any
  *   returns are actually in.
+ * @param {Map<string,number>} [thirdShare] see buildRows — from
+ *   sim.truthThirdShare when the third-party mechanic is enabled, else omitted
+ * @param {number} [siphonLean=0.5] see buildRows
+ * @param {string|null} [oCandidateName=null] see buildRows
  */
-export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null, forecast = null }) {
-  const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale });
+export function installElectionNight({
+  finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null, forecast = null,
+  thirdShare = null, siphonLean = 0.5, oCandidateName = null,
+}) {
+  const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale, thirdShare, siphonLean, oCandidateName });
 
   window._enSeed = Number.isFinite(seed) ? seed : null;
   window._enForecast = forecast || null;
@@ -215,4 +304,4 @@ export function installElectionNight({ finalRel, npv, baseline, turnoutScale = 1
   return { rows, realizedNpv };
 }
 
-export default { installElectionNight, buildRows, synthesizeVotes, YEAR };
+export default { installElectionNight, buildRows, synthesizeVotes, synthesizeVotesThreeWay, sharesThreeWay, YEAR };

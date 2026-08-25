@@ -12,7 +12,7 @@ import { createSimulation, computeTodaySeed, PARAMS, LEGACY_CALIBRATION } from '
 import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
-import { installElectionNight } from './utils/sim2028/electionNightBridge.js';
+import { installElectionNight, buildRows } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
@@ -46,11 +46,13 @@ const state = {
   // portrait override), but a preset name (fixed home state) or a custom/historical
   // homeState also feeds homeStateAdvantage.js's small lean bump -- scaled by strength,
   // applied fresh in startCampaign(). See candidatePicker.js and homeStateAdvantage.js.
-  candidates: { d: null, r: null },
-  candidateSearchOpen: { d: false, r: false }, // UI-only: whether the search panel is expanded, independent of the current pick
+  // `o` (third-party/independent) is custom/historical-search only — see
+  // candidatePicker.js's PRESET_CANDIDATES.o (deliberately empty).
+  candidates: { d: null, r: null, o: null },
+  candidateSearchOpen: { d: false, r: false, o: false }, // UI-only: whether the search panel is expanded, independent of the current pick
   // Last custom candidate config per party, kept around even while a preset/search
   // pick is active so re-selecting "Custom..." restores it instead of starting blank.
-  lastCustomCandidate: { d: null, r: null },
+  lastCustomCandidate: { d: null, r: null, o: null },
 };
 
 const TREND_PALETTE = ['#7aa2f7', '#e06c6c', '#7fc99a', '#e0b070', '#b48ee0', '#68c4d4', '#f0c96e', '#c990e0', '#79d1a8', '#e88ea0', '#8fb8e0', '#d0a05a'];
@@ -69,6 +71,25 @@ function fmtMarginPrecise(m) {
   return (m >= 0 ? 'D+' : 'R+') + (Math.abs(m) * 100).toFixed(2);
 }
 function fmtPct(p) { return (p * 100).toFixed(0) + '%'; }
+
+/** "47% D · 44% R · 3% T · 6% U" — omits T when third party is off. */
+function fmtShares(s, hasThird) {
+  if (!s) return '—';
+  const parts = [`${fmtPct(s.d)} D`, `${fmtPct(s.r)} R`];
+  if (hasThird) parts.push(`${fmtPct(s.t)} T`);
+  parts.push(`${fmtPct(s.u)} U`);
+  return parts.join(' · ');
+}
+
+/** Same breakdown as fmtShares, but one category per line and each in its
+ *  own party color — reads better in the table than a run-on "44% D · 47% R". */
+function fmtSharesLines(s, hasThird) {
+  if (!s) return '<div>—</div>';
+  const rows = [[s.d, 'D', 's28-d'], [s.r, 'R', 's28-r']];
+  if (hasThird) rows.push([s.t, 'T', 's28-t']);
+  rows.push([s.u, 'U', 's28-u']);
+  return rows.map(([v, label, cls]) => `<div class="${cls}">${fmtPct(v)} ${label}</div>`).join('');
+}
 
 /** Parse "D+3", "R+2.5", "EVEN", or a raw number into a margin fraction. */
 function parsePvText(txt) {
@@ -114,13 +135,46 @@ function pollMargins(snap) {
   return out;
 }
 
-function evTally(margins) {
-  let dem = 0, rep = 0;
-  for (const unit of state.baseline.units) {
-    const ev = state.baseline.ev.get(unit) || 0;
-    if ((margins.get(unit) || 0) >= 0) dem += ev; else rep += ev;
+/** Whether this run's hidden truth includes a third-party candidate at all. */
+function hasThirdParty() { return !!(state.sim && state.sim.truthThirdShare); }
+
+/** A unit's D/R/(T)/Undecided poll shares (fractions of the sampled n), or null. */
+function pollShares(snap, unit) {
+  return snap && snap.pollShares ? (snap.pollShares.get(unit) || null) : null;
+}
+
+/**
+ * The real EV tally, D/R/O alike, plus (when third party is on) its
+ * best-performing states and how close each one came to winning. Built off
+ * buildRows() — the exact same vote synthesis + at-large aggregation
+ * election night itself uses — so this can never disagree with what
+ * election night ends up showing, and there is exactly one place a
+ * third-party win gets counted rather than two that could contradict each
+ * other. With third party off, buildRows() synthesizes tVotes=0 everywhere,
+ * so this degenerates to a plain D/R tally.
+ */
+function computeTruthSummary(sim, baseline) {
+  const { rows } = buildRows({
+    finalRel: sim.truthRel, npv: sim.truthNpv, baseline,
+    thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
+    oCandidateName: sim.thirdPartyCandidate || 'Third party',
+  });
+  let dem = 0, rep = 0, oth = 0;
+  const top = [];
+  for (const row of rows) {
+    if (row.unit === 'NATIONAL') continue;
+    const oWins = row.tVotes > row.dVotes && row.tVotes > row.rVotes;
+    if (oWins) oth += row.ev;
+    else if (row.dVotes >= row.rVotes) dem += row.ev;
+    else rep += row.ev;
+    if (sim.truthThirdShare) {
+      const leaderVotes = Math.max(row.dVotes, row.rVotes);
+      const gapPts = row.total > 0 ? ((leaderVotes - row.tVotes) / row.total) * 100 : 0;
+      top.push({ unit: row.unit, share: row.thirdShare, gapPts, oWins });
+    }
   }
-  return { dem, rep };
+  top.sort((a, b) => b.share - a.share);
+  return { dem, rep, oth, top: top.slice(0, 6) };
 }
 
 /** Electoral votes grouped by rating tier, D-safest to R-safest. */
@@ -281,11 +335,15 @@ function showTip(evt, unit) {
     // on every row regardless of digit count — without changing what's shown.
     return [label, `<span class="s28-num">${fmtMargin(lean)}</span> lean${raw != null ? ` (raw: ${fmtMargin(raw)})` : ''}`];
   };
+  const shares = pollShares(snap, unit);
+  const thirdOn = hasThirdParty();
   const rows = [
     ['Electoral votes', state.baseline.ev.get(unit) || 0],
     historyRow('2020', state.baseline.relPrior, state.baseline.presMarginPrior),
     historyRow('2024', state.baseline.rel2024, state.baseline.presMargin2024),
-    ['Poll margin', fmtMargin(m)],
+    ['Poll', shares
+      ? `${fmtShares(shares, thirdOn)} <span class="s28-num">(${fmtMargin(m)})</span>`
+      : fmtMargin(m)],
     ['90% range', band ? `${fmtMargin(band[0])} to ${fmtMargin(band[1])}` : '—'],
     ['D win prob', prob == null ? '—' : fmtPct(prob)],
   ];
@@ -443,7 +501,7 @@ function renderDebug() {
   for (const unit of state.baseline.units) {
     margins.set(unit, (sim.truthRel.get(unit) || 0) + (state.baseline.beta.get(unit) || 1) * sim.truthNpv);
   }
-  const { dem, rep } = evTally(margins);
+  const truth = computeTruthSummary(sim, state.baseline);
   const snap = currentSnapshot();
 
   // The analytic tipping point: the state whose OWN margin crossing zero is what
@@ -490,8 +548,16 @@ function renderDebug() {
     <div class="s28-dbgrow"><span>Lickman: decided false beets (seeded)</span><span>${lp.decided} / 13 &mdash; predicts ${lp.predictedWinnerParty}</span></div>`)
     : `<div class="s28-dbgrow"><span>Lickman</span><span>&mdash; (start election night to compute)</span></div>`;
 
+  // Third party is otherwise invisible until (if ever) it wins a state -- always
+  // show something here, even "off", so it's never ambiguous whether the
+  // mechanic is running silently vs. just not doing anything this run.
+  const thirdPartyRows = !sim.truthThirdShare
+    ? `<div class="s28-dbgrow"><span>Third party</span><span>off</span></div>`
+    : `<div class="s28-dbgrow"><span>Third party</span><span>${sim.thirdPartyCandidate || '(unnamed)'} &mdash; strength ${sim.thirdPartyStrength.toFixed(2)}&times;, siphon lean ${sim.siphonLean.toFixed(2)} (0=spoils R, 1=spoils D)</span></div>
+    <div style="margin-top:6px;color:var(--muted)">Best third-party states: ${truth.top.map(r => `${r.unit} ${(r.share * 100).toFixed(1)}%${r.oWins ? ' — WON' : ` (trails leader by ${r.gapPts.toFixed(1)}pt)`}`).join(' · ')}</div>`;
+
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
-    <div class="s28-dbgrow"><span>True result</span><span>D ${dem} &ndash; R ${rep}</span></div>
+    <div class="s28-dbgrow"><span>True result</span><span>D ${truth.dem} &ndash; R ${truth.rep}${truth.oth > 0 ? ` &ndash; O ${truth.oth}` : ''}</span></div>
     <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(sim.truthNpv)}</span></div>
     <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(2)}pt)</span></div>
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>
@@ -499,6 +565,7 @@ function renderDebug() {
     <div class="s28-dbgrow"><span>Calibration</span><span>${sim.params.poll.nationalSigma === LEGACY_CALIBRATION.poll.nationalSigma ? 'confident (nationalSigma 1.8pt, regionShare 0.75, floor 0.65x)' : 'default (nationalSigma 2.5pt, regionShare 0.87, floor 1.0x)'}</span></div>
     <div class="s28-dbgrow"><span>Tipping point (true, NPV-independent)</span><span>${tp ? `${tp.unit} &mdash; flips EC at NPV ${fmtMarginPrecise(tp.npvThreshold)}` : '&mdash;'}</span></div>
     ${lickmanRow}
+    ${thirdPartyRows}
     <div style="margin-top:6px;color:var(--muted)">Closest true races (at the actual environment): ${closest}</div>`;
 }
 
@@ -821,6 +888,7 @@ function renderTable() {
   const f = currentForecast();
   const margins = pollMargins(snap);
   const prevMargins = prev ? pollMargins(prev) : null;
+  const thirdOn = hasThirdParty();
 
   // Build rows first so sorting works on real values rather than formatted text.
   const rows = state.baseline.units
@@ -836,6 +904,7 @@ function renderTable() {
         rel2024: state.baseline.rel2024.get(unit),
         presMargin2024: state.baseline.presMargin2024.get(unit),
         margin: m,
+        shares: pollShares(snap, unit),
         band: unitBand(unit, snap),
         rating: ratingFor(m),
         change: prevMargins ? m - prevMargins.get(unit) : null,
@@ -863,7 +932,6 @@ function renderTable() {
   tbody.innerHTML = '';
   for (const r of rows) {
     const tr = document.createElement('tr');
-    const cls = r.margin >= 0 ? 's28-d' : 's28-r';
     const deltaTxt = r.change == null ? '—'
       : (Math.abs(r.change) < 0.0005 ? '—' : `${r.change > 0 ? '↰D' : '↱R'} ${(Math.abs(r.change) * 100).toFixed(1)}`);
     tr.innerHTML = `
@@ -871,7 +939,7 @@ function renderTable() {
       <td>${r.ev}</td>
       <td style="color:var(--muted)">${fmtMargin(r.relPrior)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMarginPrior)}</span></td>
       <td style="color:var(--muted)">${fmtMargin(r.rel2024)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMargin2024)}</span></td>
-      <td class="${cls}">${fmtMargin(r.margin)}</td>
+      <td class="s28-shares">${fmtSharesLines(r.shares, thirdOn)}<span style="font-size:0.78em;opacity:0.7">${fmtMargin(r.margin)}</span></td>
       <td style="color:var(--muted)">${r.band ? `±${((r.band[1] - r.band[0]) / 2 * 100).toFixed(1)}` : '—'}</td>
       <td><span class="s28-rating" style="background:${r.rating.color};color:#fff">${r.rating.label}</span></td>
       <td style="color:var(--muted)">${deltaTxt}</td>
@@ -936,6 +1004,13 @@ function syncManualNpvVisibility() {
   if (npvMode && wrap) wrap.classList.toggle('s28-hidden', npvMode.value !== 'manual');
 }
 
+/** Shows/hides the whole third-party candidate column based on the "Third party" checkbox. */
+function syncThirdPartyVisibility() {
+  const enabled = $('s28ThirdParty');
+  const partyBox = document.querySelector('.s28-cand-party[data-party="o"]');
+  if (partyBox) partyBox.classList.toggle('s28-hidden', !(enabled && enabled.checked));
+}
+
 /** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence,
  * pollTurbulence, nailbiter, elasticity, confident, candidate picks.
  * Campaign steps is deliberately left out — that control is hidden for now. */
@@ -949,6 +1024,10 @@ function buildSettingsParams() {
   const nailbiterEl = $('s28Nailbiter');
   const elasticityEl = $('s28Elasticity');
   const confidentEl = $('s28ConfidentForecasts');
+  const regionBleedEl = $('s28RegionBleed');
+  const thirdPartyEl = $('s28ThirdParty');
+  const siphonLeanEl = $('s28SiphonLean');
+  const thirdPartyStrengthEl = $('s28ThirdPartyStrength');
   if (seedInput && seedInput.value !== '') params.set('seed', seedInput.value);
   if (npvMode && npvMode.value) params.set('npv', npvMode.value);
   if (npvMode && npvMode.value === 'manual' && manualNpv) params.set('manualNpv', manualNpv.value);
@@ -957,6 +1036,10 @@ function buildSettingsParams() {
   params.set('nailbiter', (nailbiterEl && nailbiterEl.checked) ? '1' : '0');
   params.set('elasticity', (!elasticityEl || elasticityEl.checked) ? '1' : '0');
   params.set('confident', (confidentEl && confidentEl.checked) ? '1' : '0');
+  params.set('regionBleed', (regionBleedEl && regionBleedEl.checked) ? '1' : '0');
+  params.set('thirdParty', (thirdPartyEl && thirdPartyEl.checked) ? '1' : '0');
+  if (siphonLeanEl && siphonLeanEl.value !== '') params.set('siphonLean', siphonLeanEl.value);
+  if (thirdPartyStrengthEl && thirdPartyStrengthEl.value !== '') params.set('thirdPartyStrength', thirdPartyStrengthEl.value);
   const realismEl = $('s28HomeStateRealism');
   params.set('homeStateRealism', realismEl && realismEl.value ? realismEl.value : DEFAULT_REALISM_TIER);
   // Preset picks, typed custom names, and historical search picks round-trip
@@ -967,7 +1050,7 @@ function buildSettingsParams() {
   // names don't contain `|`) — otherwise a shared link would silently lose it.
   // A custom or historical pick's home state + strength ride along the same
   // way; a preset's fixed home state doesn't need to, but its strength does.
-  ['d', 'r'].forEach(party => {
+  ['d', 'r', 'o'].forEach(party => {
     const c = state.candidates[party];
     if (c && c.mode !== 'default' && c.name) {
       let suffix = c.name;
@@ -979,7 +1062,7 @@ function buildSettingsParams() {
       } else if (c.mode === 'preset' && typeof c.strength === 'number' && c.strength !== 1) {
         suffix = `${c.name}|${c.strength}`;
       }
-      params.set(party === 'd' ? 'dCand' : 'rCand', `${c.mode}:${suffix}`);
+      params.set(`${party}Cand`, `${c.mode}:${suffix}`);
     }
   });
   return params;
@@ -1014,6 +1097,10 @@ function applySettingsFromUrl() {
   const nailbiterEl = $('s28Nailbiter');
   const elasticityEl = $('s28Elasticity');
   const confidentEl = $('s28ConfidentForecasts');
+  const regionBleedEl = $('s28RegionBleed');
+  const thirdPartyEl = $('s28ThirdParty');
+  const siphonLeanEl = $('s28SiphonLean');
+  const thirdPartyStrengthEl = $('s28ThirdPartyStrength');
 
   if (params.has('seed') && seedInput) {
     const v = parseInt(params.get('seed'), 10);
@@ -1044,14 +1131,30 @@ function applySettingsFromUrl() {
     const v = params.get('confident').toLowerCase();
     confidentEl.checked = (v === '1' || v === 'true');
   }
+  if (params.has('regionBleed') && regionBleedEl) {
+    const v = params.get('regionBleed').toLowerCase();
+    regionBleedEl.checked = (v === '1' || v === 'true');
+  }
+  if (params.has('thirdParty') && thirdPartyEl) {
+    const v = params.get('thirdParty').toLowerCase();
+    thirdPartyEl.checked = (v === '1' || v === 'true');
+  }
+  if (params.has('siphonLean') && siphonLeanEl) {
+    const v = parseFloat(params.get('siphonLean'));
+    if (Number.isFinite(v)) siphonLeanEl.value = String(Math.max(0, Math.min(1, v)));
+  }
+  if (params.has('thirdPartyStrength') && thirdPartyStrengthEl) {
+    const v = parseFloat(params.get('thirdPartyStrength'));
+    if (Number.isFinite(v)) thirdPartyStrengthEl.value = String(Math.max(0.2, Math.min(6, v)));
+  }
   const realismEl = $('s28HomeStateRealism');
   if (params.has('homeStateRealism') && realismEl) {
     const v = params.get('homeStateRealism');
     if ([...realismEl.options].some(o => o.value === v)) realismEl.value = v;
   }
 
-  ['d', 'r'].forEach(party => {
-    const raw = params.get(party === 'd' ? 'dCand' : 'rCand');
+  ['d', 'r', 'o'].forEach(party => {
+    const raw = params.get(`${party}Cand`);
     if (!raw) return;
     const sep = raw.indexOf(':');
     if (sep < 1) return;
@@ -1131,9 +1234,13 @@ const HOME_STATE_OPTIONS_HTML = '<option value="">None</option>' + Object.values
   .map(s => `<option value="${s.abbr}">${s.name}</option>`)
   .join('');
 
+/** `sim2028.js`-only DOM id helper: `candId('s28CandHome', 'o')` -> `$('s28CandHomeO')`.
+ *  Every per-party control follows this `<base><PARTY>` naming convention. */
+const candId = (base, party) => $(`${base}${party.toUpperCase()}`);
+
 /** (Re)builds one party's preset + "Custom…" swatches and shows/hides its custom fields. */
 function renderCandidatePicker(party) {
-  const container = $(party === 'd' ? 's28CandSwatchesD' : 's28CandSwatchesR');
+  const container = candId('s28CandSwatches', party);
   if (!container) return;
   const choice = state.candidates[party] || { mode: 'default', name: DEFAULT_CANDIDATES[party], imageUrl: null };
   const presetButtons = PRESET_CANDIDATES[party].map(p => {
@@ -1152,27 +1259,28 @@ function renderCandidatePicker(party) {
     + `<span class="en-cp-mini-avatar-fallback">${party.toUpperCase()}</span>Custom&hellip;</button>`;
   container.innerHTML = presetButtons + searchButton + customButton;
 
-  const searchWrap = $(party === 'd' ? 's28CandSearchD' : 's28CandSearchR');
+  const searchWrap = candId('s28CandSearch', party);
   if (searchWrap) searchWrap.classList.toggle('s28-hidden', !state.candidateSearchOpen[party]);
 
-  const customWrap = $(party === 'd' ? 's28CandCustomD' : 's28CandCustomR');
+  const customWrap = candId('s28CandCustom', party);
   if (customWrap) customWrap.classList.toggle('s28-hidden', choice.mode !== 'custom');
   // Don't stomp the field the user is actively typing in.
-  const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
+  const nameInput = candId('s28CandName', party);
   if (nameInput && choice.mode === 'custom' && document.activeElement !== nameInput) {
     nameInput.value = choice.name;
   }
 
   // Custom and searched (historical) picks let the user set their own home state; a preset
   // candidate's home state is fixed (PRESET_HOME_STATES), so its dropdown just displays that
-  // state, disabled, in the same spot -- only its strength is actually adjustable.
+  // state, disabled, in the same spot -- only its strength is actually adjustable. The
+  // third-party slot has no presets at all, so isPreset is always false for it.
   const picksOwnHomeState = choice.mode === 'custom' || choice.mode === 'historical';
   const isPreset = choice.mode === 'preset';
-  const homeRow = $(party === 'd' ? 's28CandHomeRowD' : 's28CandHomeRowR');
+  const homeRow = candId('s28CandHomeRow', party);
   if (homeRow) homeRow.classList.toggle('s28-hidden', !(picksOwnHomeState || isPreset));
-  const homeWrap = $(party === 'd' ? 's28CandHomeWrapD' : 's28CandHomeWrapR');
+  const homeWrap = candId('s28CandHomeWrap', party);
   if (homeWrap) homeWrap.classList.toggle('s28-hidden', !(picksOwnHomeState || isPreset));
-  const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
+  const homeSelect = candId('s28CandHome', party);
   if (homeSelect) {
     if (!homeSelect.dataset.populated) {
       homeSelect.innerHTML = HOME_STATE_OPTIONS_HTML;
@@ -1183,10 +1291,10 @@ function renderCandidatePicker(party) {
     else if (isPreset) homeSelect.value = PRESET_HOME_STATES[choice.name] || '';
     else homeSelect.value = '';
   }
-  const strengthWrap = $(party === 'd' ? 's28CandStrengthWrapD' : 's28CandStrengthWrapR');
+  const strengthWrap = candId('s28CandStrengthWrap', party);
   const showStrength = choice.mode === 'preset' || (picksOwnHomeState && choice.homeState);
   if (strengthWrap) strengthWrap.classList.toggle('s28-hidden', !showStrength);
-  const strengthInput = $(party === 'd' ? 's28CandStrengthD' : 's28CandStrengthR');
+  const strengthInput = candId('s28CandStrength', party);
   if (strengthInput && document.activeElement !== strengthInput) {
     const defaultStrength = choice.mode === 'preset' ? 1 : 0.5;
     strengthInput.value = typeof choice.strength === 'number' ? choice.strength : defaultStrength;
@@ -1196,13 +1304,13 @@ function renderCandidatePicker(party) {
   // block it) and never reflects a drag-dropped or reload-restored image at
   // all, so this preview + clear button are the real indicator of whether a
   // custom portrait is set.
-  const previewEl = $(party === 'd' ? 's28CandPreviewD' : 's28CandPreviewR');
+  const previewEl = candId('s28CandPreview', party);
   if (previewEl) {
     previewEl.innerHTML = choice.imageUrl
       ? `<img class="en-cp-mini-avatar" src="${choice.imageUrl}" alt="" />`
       : `<span class="en-cp-mini-avatar-fallback">${party.toUpperCase()}</span>`;
   }
-  const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');
+  const clearBtn = candId('s28CandClearImg', party);
   if (clearBtn) clearBtn.classList.toggle('s28-hidden', !choice.imageUrl);
 }
 
@@ -1249,7 +1357,7 @@ function toggleCandidateSearch(party) {
   state.candidateSearchOpen[party] = !state.candidateSearchOpen[party];
   renderCandidatePicker(party);
   if (state.candidateSearchOpen[party]) {
-    const input = $(party === 'd' ? 's28CandSearchInputD' : 's28CandSearchInputR');
+    const input = candId('s28CandSearchInput', party);
     if (input) input.focus();
   }
 }
@@ -1260,11 +1368,11 @@ function closeCandidateSearch(party) {
 
 // Last rendered result set per party, so a click on a result button (which only
 // carries an index in its dataset) can be mapped back to its {name, year, img}.
-const lastCandidateSearchResults = { d: [], r: [] };
-const candidateSearchDebounce = { d: null, r: null };
+const lastCandidateSearchResults = { d: [], r: [], o: [] };
+const candidateSearchDebounce = { d: null, r: null, o: null };
 
 async function runCandidateSearch(party, query) {
-  const container = $(party === 'd' ? 's28CandSearchResultsD' : 's28CandSearchResultsR');
+  const container = candId('s28CandSearchResults', party);
   if (!container) return;
   if (!query.trim()) {
     lastCandidateSearchResults[party] = [];
@@ -1280,8 +1388,8 @@ async function runCandidateSearch(party, query) {
 }
 
 function pickHistoricalCandidate(party, entry) {
-  const input = $(party === 'd' ? 's28CandSearchInputD' : 's28CandSearchInputR');
-  const results = $(party === 'd' ? 's28CandSearchResultsD' : 's28CandSearchResultsR');
+  const input = candId('s28CandSearchInput', party);
+  const results = candId('s28CandSearchResults', party);
   if (input) input.value = '';
   if (results) results.innerHTML = '';
   lastCandidateSearchResults[party] = [];
@@ -1330,7 +1438,7 @@ function updateCustomCandidateImage(party, file) {
 
 /** Reads an image off the system clipboard (via the Paste image button) and applies it as the custom portrait. */
 async function pasteCustomCandidateImage(party) {
-  const btn = $(party === 'd' ? 's28CandPasteD' : 's28CandPasteR');
+  const btn = candId('s28CandPaste', party);
   const restore = () => { if (btn) btn.textContent = 'Paste image'; };
   try {
     if (!navigator.clipboard || !navigator.clipboard.read) throw new Error('unsupported');
@@ -1355,7 +1463,7 @@ function clearCustomCandidateImage(party) {
   // A file input's value can only be reset to empty, never set to a filename
   // (see the preview comment in renderCandidatePicker) — but reset is allowed,
   // so a subsequent pick of the same file still fires a change event.
-  const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
+  const imgInput = candId('s28CandImg', party);
   if (imgInput) imgInput.value = '';
   setCandidateChoice(party, { mode: 'custom', name: existing.name || '', imageUrl: null, ...customHomeFields(existing) });
 }
@@ -1392,7 +1500,19 @@ async function startCampaign() {
   // candidates or the realism tier and hitting Start again never accumulates a bonus.
   const realismEl = $('s28HomeStateRealism');
   const realismKey = realismEl ? realismEl.value : DEFAULT_REALISM_TIER;
-  if (state.baseline) applyHomeStateAdvantage(state.baseline, state.candidates, realismKey);
+  const regionBleedEl = $('s28RegionBleed');
+  const regionBleedOn = !!(regionBleedEl && regionBleedEl.checked);
+  if (state.baseline) applyHomeStateAdvantage(state.baseline, state.candidates, realismKey, regionBleedOn);
+  const thirdPartyEl = $('s28ThirdParty');
+  const thirdPartyOn = !!(thirdPartyEl && thirdPartyEl.checked);
+  const siphonLeanEl = $('s28SiphonLean');
+  const siphonLean = siphonLeanEl && Number.isFinite(parseFloat(siphonLeanEl.value))
+    ? Math.max(0, Math.min(1, parseFloat(siphonLeanEl.value)))
+    : 0.5;
+  const thirdPartyStrengthEl = $('s28ThirdPartyStrength');
+  const thirdPartyStrength = thirdPartyStrengthEl && Number.isFinite(parseFloat(thirdPartyStrengthEl.value))
+    ? Math.max(0.2, Math.min(6, parseFloat(thirdPartyStrengthEl.value)))
+    : 1.0;
 
   const btn = $('s28Start');
   if (btn) { btn.disabled = true; btn.textContent = 'Simulating…'; }
@@ -1403,6 +1523,9 @@ async function startCampaign() {
       manualNpv,
       baseline: state.baseline,
       nailbiter: nailbiterOn,
+      thirdParty: thirdPartyOn
+        ? { candidate: state.candidates.o, siphonLean, strengthMultiplier: thirdPartyStrength, regionBleedEnabled: regionBleedOn }
+        : false,
       params: {
         campaign: { ...PARAMS.campaign, steps },
         cycle: { ...PARAMS.cycle, turbulenceOverride },
@@ -1486,6 +1609,9 @@ function goToElectionNight() {
     pollMarginByUnit,
     seed: state.sim.seed,
     forecast: finalForecast ? { ...finalForecast, pollNpv: finalPoll.pollNpv } : null,
+    thirdShare: state.sim.truthThirdShare,
+    siphonLean: state.sim.siphonLean ?? 0.5,
+    oCandidateName: state.sim.thirdPartyCandidate,
   });
 
   // Controls belong directly under the map and above every polling panel, so
@@ -1540,20 +1666,28 @@ async function init() {
 
   state.candidates.d = loadCandidateChoice('d');
   state.candidates.r = loadCandidateChoice('r');
+  state.candidates.o = loadCandidateChoice('o');
   if (state.candidates.d.mode === 'custom') state.lastCustomCandidate.d = state.candidates.d;
   if (state.candidates.r.mode === 'custom') state.lastCustomCandidate.r = state.candidates.r;
+  if (state.candidates.o.mode === 'custom') state.lastCustomCandidate.o = state.candidates.o;
 
   // A shared link's params win over the today-seed default (and any locally
   // persisted candidate pick) above.
   applySettingsFromUrl();
   renderCandidatePicker('d');
   renderCandidatePicker('r');
+  renderCandidatePicker('o');
+  // Unconditional, same reason as syncManualNpvVisibility below: a URL-restored
+  // checkbox state doesn't fire a 'change' event on its own.
+  syncThirdPartyVisibility();
   // Unconditional: fixes the manual-PV box staying hidden on reload/shared-link
   // loads where s28NpvMode ends up "manual" without a 'change' event ever firing.
   syncManualNpvVisibility();
 
   const npvMode = $('s28NpvMode');
   if (npvMode) npvMode.addEventListener('change', syncManualNpvVisibility);
+  const thirdPartyEl = $('s28ThirdParty');
+  if (thirdPartyEl) thirdPartyEl.addEventListener('change', syncThirdPartyVisibility);
   // The in-card and sticky-footer controls drive the same actions.
   const on = (ids, fn) => [].concat(ids).forEach(id => {
     const el = $(id);
@@ -1592,8 +1726,8 @@ async function init() {
     if (btn) toggleRatingHighlight(btn.dataset.rating);
   });
 
-  ['d', 'r'].forEach(party => {
-    const swatches = $(party === 'd' ? 's28CandSwatchesD' : 's28CandSwatchesR');
+  ['d', 'r', 'o'].forEach(party => {
+    const swatches = candId('s28CandSwatches', party);
     if (swatches) swatches.addEventListener('click', e => {
       const btn = e.target.closest('.s28-cand-swatch');
       if (!btn) return;
@@ -1601,29 +1735,29 @@ async function init() {
       else if (btn.dataset.search) toggleCandidateSearch(party);
       else pickPresetCandidate(party, btn.dataset.name);
     });
-    const searchInput = $(party === 'd' ? 's28CandSearchInputD' : 's28CandSearchInputR');
+    const searchInput = candId('s28CandSearchInput', party);
     if (searchInput) searchInput.addEventListener('input', () => {
       clearTimeout(candidateSearchDebounce[party]);
       candidateSearchDebounce[party] = setTimeout(() => runCandidateSearch(party, searchInput.value), 150);
     });
-    const searchResults = $(party === 'd' ? 's28CandSearchResultsD' : 's28CandSearchResultsR');
+    const searchResults = candId('s28CandSearchResults', party);
     if (searchResults) searchResults.addEventListener('click', e => {
       const btn = e.target.closest('.s28-cand-search-result');
       if (!btn) return;
       const entry = lastCandidateSearchResults[party][Number(btn.dataset.idx)];
       if (entry) pickHistoricalCandidate(party, entry);
     });
-    const nameInput = $(party === 'd' ? 's28CandNameD' : 's28CandNameR');
+    const nameInput = candId('s28CandName', party);
     if (nameInput) nameInput.addEventListener('input', () => updateCustomCandidateName(party, nameInput.value));
-    const homeSelect = $(party === 'd' ? 's28CandHomeD' : 's28CandHomeR');
+    const homeSelect = candId('s28CandHome', party);
     if (homeSelect) homeSelect.addEventListener('change', () => updateCandidateHomeState(party, homeSelect.value));
-    const strengthInput = $(party === 'd' ? 's28CandStrengthD' : 's28CandStrengthR');
+    const strengthInput = candId('s28CandStrength', party);
     if (strengthInput) strengthInput.addEventListener('input', () => updateCandidateStrength(party, strengthInput.value));
-    const imgInput = $(party === 'd' ? 's28CandImgD' : 's28CandImgR');
+    const imgInput = candId('s28CandImg', party);
     if (imgInput) imgInput.addEventListener('change', () => updateCustomCandidateImage(party, imgInput.files && imgInput.files[0]));
-    const clearBtn = $(party === 'd' ? 's28CandClearImgD' : 's28CandClearImgR');
+    const clearBtn = candId('s28CandClearImg', party);
     if (clearBtn) clearBtn.addEventListener('click', () => clearCustomCandidateImage(party));
-    const pasteBtn = $(party === 'd' ? 's28CandPasteD' : 's28CandPasteR');
+    const pasteBtn = candId('s28CandPaste', party);
     if (pasteBtn) pasteBtn.addEventListener('click', () => pasteCustomCandidateImage(party));
 
     // Drag a portrait onto either party's whole box, in preset OR custom mode —
@@ -1712,6 +1846,7 @@ async function init() {
   state.baseline = await loadBaseline(PARAMS.baseline);
   applyCandidateChoice(state.baseline, 'd', state.candidates.d);
   applyCandidateChoice(state.baseline, 'r', state.candidates.r);
+  applyCandidateChoice(state.baseline, 'o', state.candidates.o);
   await startCampaign();
 }
 
