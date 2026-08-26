@@ -148,7 +148,7 @@ function durationFor(slide) {
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races' || slide.kind === 'pollClose' || slide.kind === 'finalResults') return RACES_SLIDE_MS;
   if (slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip') return CORRECTION_SLIDE_MS;
-  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing') return LICKMAN_SLIDE_MS;
+  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight') return LICKMAN_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
 
@@ -933,7 +933,7 @@ function renderSlide(index) {
   else if (slide.kind === 'finalResults') renderFinalResults(slide);
   else if (slide.kind === 'retraction') renderRetraction(slide);
   else if (slide.kind === 'leadFlip') renderLeadFlip(slide);
-  else if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing') renderLickman(slide);
+  else if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight') renderLickman(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
 

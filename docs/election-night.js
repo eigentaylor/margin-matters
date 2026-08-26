@@ -17,7 +17,7 @@ import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.
 import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from './utils/electionNight/updatePopup.js';
 import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 import { estimateFalseBeets } from './utils/electionNight/lickman.js';
-import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
+import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, MIDNIGHT_CALL_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
 import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
 
 (function () {
@@ -381,6 +381,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     punditEnabled: true,
     lickmanPredictionPromise: null,
     lickmanPrediction: null,
+    // Precomputed once per prepareSimulation() (see
+    // computeLickmanMidnightTrigger()): which of the NPV call / EC clinch
+    // happens first this playthrough, so buildCheckpointSlides() can flag
+    // that one record by identity instead of re-deriving it per checkpoint.
+    lickmanMidnightTrigger: null,
     checkpointActive: false,
     plannedCheckpoints: [],
     checkpointCursorTime: 0,
@@ -947,6 +952,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     state.npvRetractedAt = null;
     state.npvLeadLeader = null;
     state.npvFlipCount = 0;
+    state.lickmanMidnightTrigger = null;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
     state.outcomeSeq = 0;
@@ -1132,6 +1138,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // reactive "queue events as they happen live" approach.
     state.checkpointCursorTime = state.simStart;
     state.plannedCheckpoints = computePlannedCheckpoints();
+    state.lickmanMidnightTrigger = computeLickmanMidnightTrigger(state.plannedCheckpoints);
     state.prepared = true;
     // Changing the call threshold mid-election-night reshuffles the whole
     // checkpoint schedule out from under the live cursor (still-uncalled
@@ -1285,6 +1292,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     state.npvRetractedAt = null;
     state.npvLeadLeader = null;
     state.npvFlipCount = 0;
+    state.lickmanMidnightTrigger = null;
     state.outcomeAnnouncedType = null;
     state.outcomeAnnouncedTotal = null;
     state.outcomeSeq = 0;
@@ -1465,6 +1473,10 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
   async function buildCheckpointSlides(records, opts = {}) {
     const raceOverviewSpec = opts.isFirstCheckpoint ? await buildRaceOverviewSpec() : null;
     const lickmanIntroSpec = (opts.isFirstCheckpoint && state.punditEnabled) ? await buildLickmanIntroSpec() : null;
+    const lickmanMidnightTriggerRecord = state.punditEnabled ? records.find(r => r && r.isLickmanMidnightTrigger) : null;
+    const lickmanMidnightSpec = lickmanMidnightTriggerRecord
+      ? await buildLickmanMidnightSpec(lickmanMidnightTriggerRecord, lickmanMidnightTriggerRecord.kind === 'npv_call' ? 'npv' : 'outcome')
+      : null;
     // Every record's tallyBefore/tallyAfter comes straight from the planned
     // event it was resolved from (see computePlannedCheckpoints()'s replay
     // loop and resolveCheckpointRecords()'s plannedTallyBefore/After stamp) -
@@ -1855,6 +1867,12 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // second, right behind the title card, regardless of what else is in
     // this checkpoint.
     if (lickmanIntroSpec) specs.push(lickmanIntroSpec);
+    // Unlike raceOverview/lickmanIntro, this one is NOT pushed at tier -1 -
+    // it carries its own time (triggerRecord.time + EPS, set in
+    // buildLickmanMidnightSpec()) so the sort below places it in this
+    // checkpoint's chronological order, right after the call/outcome slide
+    // that triggered it, rather than always leading the batch.
+    if (lickmanMidnightSpec) specs.push(lickmanMidnightSpec);
     // 'outcome'/'uncalled' are excluded from the tier-0 breaking-news front
     // group despite being flagged spec.breaking=true (kept true only for
     // updatePopup.js's flash/ribbon treatment) - same decoupling as 'final'
@@ -1900,7 +1918,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       // Lickman's portraitUrl is a fixed static asset (img/lickmanbase.png,
       // not a resolved candidate photo) - resolving it here against his
       // (nonexistent) candidateName would just null it back out.
-      if (spec.kind === 'lickmanIntro' || spec.kind === 'lickmanClosing') return;
+      if (spec.kind === 'lickmanIntro' || spec.kind === 'lickmanClosing' || spec.kind === 'lickmanMidnight') return;
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
         spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
@@ -2606,6 +2624,34 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
   }
 
   /**
+   * Aleck Lickman's midnight-call moment (see MIDNIGHT_CALL_LINES in
+   * lickmanDialogue.js): fires once, at whichever of the NPV call or the
+   * EC/presidency clinch (270+ EV) happens first chronologically. Decided
+   * once here, from the already-time-ordered planned timeline, rather than
+   * re-derived live - retractions/corrections that happen afterward are
+   * deliberately ignored (the trigger stays pinned to the ORIGINAL 'npv'
+   * event, never 'npv_recall', and to the first D/R 'outcome' event, never
+   * a later reversal), so this always resolves to exactly one moment for
+   * the whole playthrough. A projected EC tie/no-majority ('T') is not a
+   * real clinch and is skipped when looking for the outcome trigger.
+   */
+  function computeLickmanMidnightTrigger(plannedCheckpoints) {
+    let npvEvent = null;
+    let firstEcOutcome = null;
+    (plannedCheckpoints || []).forEach(cp => {
+      (cp.events || []).forEach(ev => {
+        if (ev.kind === 'npv' && !npvEvent) npvEvent = ev;
+        if (ev.kind === 'outcome' && (ev.leader === 'D' || ev.leader === 'R') && !firstEcOutcome) firstEcOutcome = ev;
+      });
+    });
+    if (!npvEvent && !firstEcOutcome) return null;
+    // Exact-tie convention (same timestamp): NPV wins - arbitrary but
+    // deterministic, a degenerate case not worth a real tiebreak rule.
+    if (npvEvent && (!firstEcOutcome || npvEvent.time <= firstEcOutcome.time)) return { source: 'npv' };
+    return { source: 'outcome', seq: firstEcOutcome.seq };
+  }
+
+  /**
    * Resolve a planned checkpoint's abstract event list (kind + unitKey)
    * back to the concrete, already-populated records in state.callRecords /
    * state.stateData - by the time this runs, real playback has genuinely
@@ -2692,6 +2738,15 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       // threads through to buildCheckpointSlides so it can flag the true
       // trigger as breaking without guessing from array adjacency.
       if (ev.triggerUnitKey) rec.triggerUnitKey = ev.triggerUnitKey;
+      // Flags the one live record that IS this run's precomputed Lickman
+      // midnight-call trigger (see computeLickmanMidnightTrigger()), so
+      // buildCheckpointSlides() can find it by identity instead of
+      // re-deriving anything - mirrors triggerUnitKey just above.
+      const lickmanTrig = state.lickmanMidnightTrigger;
+      if (lickmanTrig) {
+        if (lickmanTrig.source === 'npv' && ev.kind === 'npv') rec.isLickmanMidnightTrigger = true;
+        else if (lickmanTrig.source === 'outcome' && ev.kind === 'outcome' && ev.seq === lickmanTrig.seq) rec.isLickmanMidnightTrigger = true;
+      }
       records.push(rec);
     });
     return records;
@@ -2871,6 +2926,92 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
   }
 
   /**
+   * Aleck Lickman's midnight-call reaction - see MIDNIGHT_CALL_LINES in
+   * lickmanDialogue.js and computeLickmanMidnightTrigger(). Only ever
+   * called (from buildCheckpointSlides()) for the one checkpoint batch
+   * whose records contain the precomputed trigger record.
+   * @param {object} triggerRecord - an 'npv_call'-kind record (npv case) or
+   *   an 'outcome-clinch' notice record (outcome case).
+   * @param {'npv'|'outcome'} source
+   */
+  async function buildLickmanMidnightSpec(triggerRecord, source) {
+    const prediction = await (state.lickmanPredictionPromise || Promise.resolve(null));
+    if (!prediction || !triggerRecord) return null;
+
+    const calledLeader = source === 'npv' ? triggerRecord.leader : triggerRecord.outcomeLeader;
+    if (calledLeader !== 'D' && calledLeader !== 'R' && calledLeader !== 'O') return null;
+
+    const predictedWinnerParty = prediction.predictedWinnerParty;
+    const forOrAgainst = calledLeader === predictedWinnerParty ? 'for' : 'against';
+
+    // How's the OTHER, still-uncalled metric trending right now?
+    //  - npv source: "how does the EC look" - read state.nationalWinProb
+    //    (the live win-probability MC already driving the on-screen win-
+    //    prob line). "Favorable" requires the predicted winner crossing
+    //    270 to be the single most likely of the three outcomes (beats
+    //    BOTH the other party's win chance AND the no-majority/tie
+    //    chance) - a no-majority-most-likely lean is deliberately NOT
+    //    favorable. state.npvLeadLeader is useless here, it's forced null
+    //    the instant the NPV itself gets called.
+    //  - outcome source: "how does the NPV look" - state.npvLeadLeader,
+    //    the live plurality leader of counted votes, reliably still
+    //    non-null-while-live here since by construction the NPV can't
+    //    have been called yet in this branch.
+    let favorability;
+    if (source === 'npv') {
+      const winProb = state.nationalWinProb;
+      if (winProb && isFinite(winProb.probD)) {
+        const probTie = isFinite(winProb.probTie) ? winProb.probTie : 0;
+        const probD = winProb.probD;
+        const probR = Math.max(0, 1 - probD - probTie);
+        const probForPredicted = predictedWinnerParty === 'D' ? probD : probR;
+        const probForOther = predictedWinnerParty === 'D' ? probR : probD;
+        favorability = (probForPredicted > probForOther && probForPredicted > probTie) ? 'favorable' : 'unfavorable';
+      } else {
+        // Fallback for the rare case the MC hasn't run yet (very early NPV
+        // call) - use this record's own precomputed running EV tally instead.
+        const tally = triggerRecord.plannedTallyAfter || { D: 0, R: 0 };
+        const evForPredicted = predictedWinnerParty === 'D' ? tally.D : tally.R;
+        const evForOther = predictedWinnerParty === 'D' ? tally.R : tally.D;
+        favorability = evForPredicted > evForOther ? 'favorable' : 'unfavorable';
+      }
+    } else {
+      const npvLeader = state.npvLeadLeader;
+      favorability = (npvLeader && npvLeader === predictedWinnerParty) ? 'favorable' : 'unfavorable';
+    }
+
+    const winnerName = resolveCandidateFullName(predictedWinnerParty, 'NATIONAL');
+    const loserParty = predictedWinnerParty === 'D' ? 'R' : 'D';
+    const loserName = resolveCandidateFullName(loserParty, 'NATIONAL');
+    const sourceKey = source === 'npv' ? 'npvFirst' : 'ecFirst';
+    const dialogueText = fillTemplate(pick(MIDNIGHT_CALL_LINES[sourceKey][forOrAgainst][favorability]), {
+      winner: winnerName || 'my predicted winner',
+      loser: loserName || 'the other one',
+      beets: prediction.decided
+    });
+
+    return {
+      kind: 'lickmanMidnight',
+      breaking: false,
+      label: 'ALECK LICKMAN REACTS',
+      portraitUrl: LICKMAN_PORTRAIT_URL,
+      dialogueText,
+      source: sourceKey,
+      forOrAgainst,
+      favorability,
+      falseBeets: prediction.decided,
+      accentColor: '#9b2f6b',
+      // Not tier -1 like intro/closing - it carries its own time so the
+      // sort in buildCheckpointSlides() places it in chronological order,
+      // right after the call/outcome slide that triggered it, rather than
+      // always leading the batch. + EPS guarantees it sorts strictly after
+      // the trigger's own spec even under a same-time/same-tier tie.
+      time: triggerRecord.time + EPS,
+      timeLabel: formatTimeLabel(triggerRecord.time)
+    };
+  }
+
+  /**
    * Check whether real forward playback has just ticked past the next
    * planned checkpoint, and if so, pause and show it. Only called from the
    * live tick() loop, never from a manual scrub via #enProgress - seeking
@@ -2952,6 +3093,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       case 'raceOverview': what = slide.title || 'Race overview'; break;
       case 'lickmanIntro': what = `Aleck Lickman's prediction (${slide.falseBeets} false beets)`; break;
       case 'lickmanClosing': what = "Aleck Lickman's final word"; break;
+      case 'lickmanMidnight': what = `Aleck Lickman reacts (${slide.source === 'npvFirst' ? 'NPV called' : 'EC called'})`; break;
       default: what = slide.kind || 'Update';
     }
     // Mirrors the card's own "Breaking news" ribbon (renderCallOrCorrection()

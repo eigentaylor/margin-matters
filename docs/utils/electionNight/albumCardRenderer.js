@@ -847,7 +847,7 @@ async function drawBody(ctx, slide, w) {
     return drawFinalResults(ctx, slide, w, headerBottom);
   }
   if (slide.kind === 'raceOverview') return drawRaceOverview(ctx, slide, w);
-  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing') return drawLickman(ctx, slide, w);
+  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight') return drawLickman(ctx, slide, w);
   const ribbonLabel = slide.kind === 'final' ? `Final${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}` : `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`;
   const ribbonBottom = drawBreakingRibbon(ctx, w, ribbonLabel);
   if (slide.kind === 'outcome') return drawOutcome(ctx, slide, w, ribbonBottom);
