@@ -16,7 +16,6 @@ import { installElectionNight, buildRows } from './utils/sim2028/electionNightBr
 import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
-import { formatRunnerUpLean } from './utils/formatters.js';
 import {
   DEFAULT_CANDIDATES, PRESET_CANDIDATES,
   loadCandidateChoice, saveCandidateChoice, applyCandidateChoice,
@@ -381,11 +380,15 @@ function showTip(evt, unit) {
   // but wrong for "the current poll standing": a state where a third-party
   // candidate is actually the frontrunner or runner-up needs its margin
   // measured against whoever's really in second, not against R regardless.
-  // formatRunnerUpLean is the same D/R/O-lettered fix already used for
-  // election night's live margin badges, so the badge above ("Lean O" etc.)
-  // and this row never disagree about who's really ahead.
+  // Named by candidate (not the D/R/O letter formatRunnerUpLean uses elsewhere)
+  // since this row sits right above the per-candidate rows that already do.
   const decided = shares ? shares.d + shares.r + shares.t : 0;
-  const pollText = decided > 0 ? formatRunnerUpLean(shares.d, shares.r, shares.t, decided) : fmtMargin(m);
+  let pollText = fmtMargin(m);
+  if (decided > 0) {
+    const ranked = [[dName, shares.d], [rName, shares.r], [oName, shares.t]].sort((a, b) => b[1] - a[1]);
+    const lead = (ranked[0][1] - ranked[1][1]) / decided;
+    pollText = Math.abs(lead) < 0.000005 ? 'EVEN' : `${ranked[0][0]}+${(Math.abs(lead) * 100).toFixed(1)}`;
+  }
   const rows = [
     ['Electoral votes', state.baseline.ev.get(unit) || 0],
     historyRow('2020', state.baseline.relPrior, state.baseline.presMarginPrior),
