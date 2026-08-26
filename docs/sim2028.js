@@ -873,7 +873,8 @@ function renderEvClass(snap, margins) {
   if (note) note.textContent = 'Electoral votes by rating, from the current polls. Click a rating to highlight it on the map.';
   const totals = evByRating(snap, margins);
   const activeKey = state.mapHighlight && state.mapHighlight.source === 'rating' ? state.mapHighlight.key : null;
-  wrap.innerHTML = RATINGS.slice().sort((a, b) => a.order - b.order).map(r => {
+  const thirdOn = hasThirdParty();
+  wrap.innerHTML = RATINGS.slice().filter(r => thirdOn || r.party !== 'O').sort((a, b) => a.order - b.order).map(r => {
     const ev = totals.get(r.key) || 0;
     const dim = ev === 0 ? 'opacity:0.35;' : '';
     const active = r.key === activeKey ? ' active' : '';
