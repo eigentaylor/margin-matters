@@ -261,6 +261,12 @@ export function installElectionNight({
 
   window._enSeed = Number.isFinite(seed) ? seed : null;
   window._enForecast = forecast || null;
+  // Ground-truth "is the third-party mechanic on for this run" signal - distinct
+  // from whether O actually won any electoral votes (see election-night.js's
+  // computeHasThirdParty()), so a player who turned the mechanic on still sees
+  // their third-party candidate in the opening portrait and the running-tally
+  // scoreboard even on a run where they don't crack a single state.
+  window._enThirdPartyEnabled = !!thirdShare;
 
   window._enPollPrior = pollMarginByUnit
     ? { year: YEAR, marginByUnit: pollMarginByUnit, sharesByUnit: pollSharesByUnit, spec: POLL_ERROR_SPEC }

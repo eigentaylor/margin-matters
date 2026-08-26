@@ -2767,6 +2767,13 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
   // (buildRaceOverviewSpec) - both need the exact same answer, so this is
   // computed once rather than duplicating the formula.
   function computeHasThirdParty() {
+    // A sim2028 run with the third-party mechanic turned on (see
+    // electionNightBridge.js's installElectionNight) always shows its O
+    // candidate here, even on a run where they don't win a single electoral
+    // vote - the toggle is a deliberate, player-controlled setting, so its
+    // effect shouldn't disappear from the portrait/scoreboard just because
+    // this particular run's draw came up short.
+    if (window._enThirdPartyEnabled) return true;
     const totalPool = state.totalEvPool || 538;
     return (Math.max(0, totalPool - (state.nationalFinalDEv || 0) - (state.nationalFinalREv || 0)) > 0) || state.year === 1992 || state.year === 1996;
   }
