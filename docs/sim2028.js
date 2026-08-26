@@ -16,6 +16,7 @@ import { installElectionNight, buildRows } from './utils/sim2028/electionNightBr
 import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
+import { formatRunnerUpLean } from './utils/formatters.js';
 import {
   DEFAULT_CANDIDATES, PRESET_CANDIDATES,
   loadCandidateChoice, saveCandidateChoice, applyCandidateChoice,
@@ -375,11 +376,21 @@ function showTip(evt, unit) {
   const dName = lastNameFrom(state.baseline.candidates.d) || 'Dem';
   const rName = lastNameFrom(state.baseline.candidates.r) || 'Rep';
   const oName = lastNameFrom(state.sim.thirdPartyCandidate) || 'Third party';
+  // fmtMargin(m) is always D-vs-R (see ratingForUnit's comment above) - fine for
+  // the 2020/2024/90%-range/TRUE rows, which are that abstraction on purpose,
+  // but wrong for "the current poll standing": a state where a third-party
+  // candidate is actually the frontrunner or runner-up needs its margin
+  // measured against whoever's really in second, not against R regardless.
+  // formatRunnerUpLean is the same D/R/O-lettered fix already used for
+  // election night's live margin badges, so the badge above ("Lean O" etc.)
+  // and this row never disagree about who's really ahead.
+  const decided = shares ? shares.d + shares.r + shares.t : 0;
+  const pollText = decided > 0 ? formatRunnerUpLean(shares.d, shares.r, shares.t, decided) : fmtMargin(m);
   const rows = [
     ['Electoral votes', state.baseline.ev.get(unit) || 0],
     historyRow('2020', state.baseline.relPrior, state.baseline.presMarginPrior),
     historyRow('2024', state.baseline.rel2024, state.baseline.presMargin2024),
-    ['Poll', fmtMargin(m)],
+    ['Poll', pollText],
   ];
   if (shares) {
     rows.push([dName, fmtPct(shares.d)]);
