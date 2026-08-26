@@ -72,17 +72,8 @@ function fmtMarginPrecise(m) {
 }
 function fmtPct(p) { return (p * 100).toFixed(0) + '%'; }
 
-/** "47% D · 44% R · 3% T · 6% U" — omits T when third party is off. */
-function fmtShares(s, hasThird) {
-  if (!s) return '—';
-  const parts = [`${fmtPct(s.d)} D`, `${fmtPct(s.r)} R`];
-  if (hasThird) parts.push(`${fmtPct(s.t)} T`);
-  parts.push(`${fmtPct(s.u)} U`);
-  return parts.join(' · ');
-}
-
-/** Same breakdown as fmtShares, but one category per line and each in its
- *  own party color — reads better in the table than a run-on "44% D · 47% R". */
+/** D/R/(T)/Undecided poll shares, one category per line and each in its own
+ *  party color — reads better in the table than a run-on "44% D · 47% R". */
 function fmtSharesLines(s, hasThird) {
   if (!s) return '<div>—</div>';
   const rows = [[s.d, 'D', 's28-d'], [s.r, 'R', 's28-r']];
@@ -381,16 +372,25 @@ function showTip(evt, unit) {
   };
   const shares = pollShares(snap, unit);
   const thirdOn = hasThirdParty();
+  const dName = lastNameFrom(state.baseline.candidates.d) || 'Dem';
+  const rName = lastNameFrom(state.baseline.candidates.r) || 'Rep';
+  const oName = lastNameFrom(state.sim.thirdPartyCandidate) || 'Third party';
   const rows = [
     ['Electoral votes', state.baseline.ev.get(unit) || 0],
     historyRow('2020', state.baseline.relPrior, state.baseline.presMarginPrior),
     historyRow('2024', state.baseline.rel2024, state.baseline.presMargin2024),
-    ['Poll', shares
-      ? `${fmtShares(shares, thirdOn)} <span class="s28-num">(${fmtMargin(m)})</span>`
-      : fmtMargin(m)],
+    ['Poll', fmtMargin(m)],
+  ];
+  if (shares) {
+    rows.push([dName, fmtPct(shares.d)]);
+    rows.push([rName, fmtPct(shares.r)]);
+    if (thirdOn) rows.push([oName, fmtPct(shares.t)]);
+    rows.push(['Undecided', fmtPct(shares.u)]);
+  }
+  rows.push(
     ['90% range', band ? `${fmtMargin(band[0])} to ${fmtMargin(band[1])}` : '—'],
     ['D win prob', prob == null ? '—' : fmtPct(prob)],
-  ];
+  );
   if (prev != null) rows.push(['Since last step', `${m - prev >= 0 ? '+' : ''}${((m - prev) * 100).toFixed(1)}pt`]);
   if (state.debug) {
     const beta = state.baseline.beta.get(unit) || 1;
