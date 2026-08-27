@@ -22,6 +22,23 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        August 27, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>Sim2028</h2>
+<br/>
+<ul>
+<li>Fixed the opening title card's win-probability tiles showing a literal "0.0%" for a trailing candidate - these are Monte Carlo estimates, not mathematical certainties, so a candidate that didn't happen to win any sampled runs now shows a small non-zero floor (matching the leading candidate's existing never-show-100% cap) instead of a false 0%. Also fixed the exported Election Night Album's version of this card, which additionally never subtracted the third-party candidate's probability from the Republican figure (overstating it) and never showed a third-party win-probability tile at all, unlike the live view.</li>
+<li>Fixed election night mis-rendering an outright third-party win as a "no majority yet" screen when it happened mid-count rather than at the very end - the mid-count "clinches the presidency" checkpoint screen (with portrait and "PROJECTED TO BE Nth PRESIDENT" label) only ever fired for a D or R candidate, so a third-party candidate crossing 270 electoral votes before every state was called fell through to the no-majority screen instead, only getting corrected at the final tally.</li>
+<li>The "Nth President" ordinal label (e.g. "48th President") now also appears for a third-party winner instead of falling back to the generic "Elected President" - the numbering was never party-specific to begin with, so a third-party candidate winning gets the same "next new president" number a D or R newcomer would.</li>
+<li>The final-tally recap's "206 D – 56 R (276 Other)" line now reads "206 {D's last name} – 56 {R's last name} – 276 {O's last name}" instead of bare party letters, in both the live checkpoint popup and the exported album image, and the numbers now have a dark outline so they stay legible against any of the card's accent colors (including the gold background of a third-party win, where the plain colored text was hard to read). The third-party segment is now sized and colored the same as the other two instead of a smaller, muted aside.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         August 26, 2026
                     </div>
                     <div class='changelog-content'>
@@ -44,6 +61,7 @@
 <li>Poll percentages throughout sim2028 (tooltips, the state polling table's share breakdown, and the forecast panel's win-probability tiles) now show one decimal place instead of rounding to whole points.</li>
 <li>Added a live numeric readout next to the third-party "Siphon lean" slider, since the slider alone made it hard to tell whether it was sitting at the default 0.5 or had drifted.</li>
 <li>Fixed election night declaring "no candidate reaches the electoral votes needed... decided by the House of Representatives" while a third-party candidate could still genuinely win the presidency outright - the no-majority check only verified that the two major parties were each mathematically dead (their current total plus every remaining uncalled EV still fell short), never checking whether the third party's own best case fell short too, so it could jump straight to "House decides" while dozens of uncalled electoral votes still belonged to a third-party candidate who went on to clinch a majority hours later, producing an unnecessary and jarring "Correction... now projected to win the presidency instead" once those states were finally called.</li>
+<li>Fixed the opening title card's "EST. NPV" stat, which always showed the D-vs-R two-party polling gap even when the campaign's own forecast (bridged from the same Election-Eve poll) had a third-party candidate genuinely leading the popular vote - it now reads off that poll's full D/R/third-party shares and names the real leader (e.g. "O+8.2"), matching the fix already made to the campaign forecast panel's own "National poll" figure.</li>
 </ul>
                     </div>
                 </div>

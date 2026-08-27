@@ -102,11 +102,37 @@ function wrapText(ctx, str, maxWidth, font) {
   return lines;
 }
 
-function text(ctx, str, x, y, { font, color = '#fff', align = 'left' }) {
+// strokeColor/strokeWidth are opt-in (undefined by default) so every
+// existing call site is unaffected - only callers that need a colored
+// number to stay legible against an arbitrary background (see drawFinal())
+// pass them.
+function text(ctx, str, x, y, { font, color = '#fff', align = 'left', strokeColor, strokeWidth = 3 }) {
   ctx.font = font;
-  ctx.fillStyle = color;
   ctx.textAlign = align;
-  ctx.fillText(str == null ? '' : String(str), x, y);
+  const s = str == null ? '' : String(str);
+  if (strokeColor) {
+    ctx.lineWidth = strokeWidth;
+    ctx.strokeStyle = strokeColor;
+    ctx.lineJoin = 'round';
+    ctx.strokeText(s, x, y);
+  }
+  ctx.fillStyle = color;
+  ctx.fillText(s, x, y);
+}
+
+// Draws a horizontally-centered row of differently-colored text segments
+// (e.g. "206 Pine  –  56 Victoria  –  276 Taxminion") by measuring each
+// piece first, since canvas has no inline-flow text layout of its own the
+// way HTML does.
+function centeredSegments(ctx, segments, cx, y, { font, strokeColor }) {
+  ctx.font = font;
+  const widths = segments.map(seg => ctx.measureText(seg.text).width);
+  const totalW = widths.reduce((a, b) => a + b, 0);
+  let x = cx - totalW / 2;
+  segments.forEach((seg, i) => {
+    text(ctx, seg.text, x, y, { font, color: seg.color, align: 'left', strokeColor });
+    x += widths[i];
+  });
 }
 
 // Draws a pill and returns its measured width, so callers that need to place
@@ -411,16 +437,6 @@ async function drawLeadFlip(ctx, slide, w, headerBottom) {
   return y + BOTTOM_PAD;
 }
 
-// Signed margin (D-positive) -> "D+3.2" / "R+1.8" / "EVEN", matching
-// docs/utils/formatters.js's fmtLean() - reimplemented locally like
-// updatePopup.js's own copy, since this module is deliberately import-free
-// apart from blendColors().
-function formatSignedMargin(x) {
-  if (!isFinite(x)) return '—';
-  if (Math.abs(x) < 0.000005) return 'EVEN';
-  return (x > 0 ? 'D+' : 'R+') + (Math.abs(x) * 100).toFixed(1);
-}
-
 // The night's opening "portrait of the race" title card - see
 // updatePopup.js's header comment for the full 'raceOverview' shape. No
 // header/ribbon (it's non-breaking, informational only): big D/R photos
@@ -480,17 +496,22 @@ async function drawRaceOverview(ctx, slide, w) {
 
   if (slide.stats) {
     const s = slide.stats;
-    const probD = Math.max(0, Math.min(1, s.probD));
-    const probTie = Math.max(0, Math.min(1, s.probTie || 0));
-    const probR = Math.max(0, 1 - probD - probTie);
+    const probD = Math.max(0.001, Math.min(0.999, s.probD));
+    // Stays exactly 0 (not floored) with no third-party candidate at all -
+    // only a genuine, currently-displayed O probability gets the same
+    // never-claim-0%/100% treatment as D.
+    const probO = hasO ? Math.max(0.001, Math.min(0.999, s.probO || 0)) : 0;
+    const probTie = Math.max(0.001, Math.min(0.999, s.probTie || 0));
+    const probR = Math.max(0.001, Math.min(0.999, 1 - probD - probTie - probO));
     const medianText = isFinite(s.medianDemEv)
       ? `${Math.round(s.medianDemEv)} D${Array.isArray(s.evRange90) ? ` (${Math.round(s.evRange90[0])}–${Math.round(s.evRange90[1])})` : ''}`
       : '—';
     const stats = [
       [`${lastNameOf(slide.dCandidateName).toUpperCase()} TO WIN`, `${(probD * 100).toFixed(1)}%`],
       [`${lastNameOf(slide.rCandidateName).toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`],
+      ...(hasO ? [[`${lastNameOf(slide.oCandidateName).toUpperCase()} TO WIN`, `${(probO * 100).toFixed(1)}%`]] : []),
       ['NO MAJORITY', `${(probTie * 100).toFixed(1)}%`],
-      ['EST. NPV', formatSignedMargin(s.npvMargin)],
+      ['EST. NPV', s.npvMargin || '—'],
       ['MEDIAN EV', medianText]
     ];
     bottomY += 16;
@@ -576,10 +597,11 @@ async function drawOutcome(ctx, slide, w, ribbonBottom) {
 async function drawFinal(ctx, slide, w, ribbonBottom) {
   const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
   const rName = lastNameOf(slide.rCandidateName) || 'Republican';
+  const oName = lastNameOf(slide.oCandidateName) || 'Independent';
   let y = ribbonBottom + 34;
   if (slide.winner) {
     const winnerName = slide.winner === 'D' ? dName
-      : slide.winner === 'O' ? (lastNameOf(slide.oCandidateName) || 'Independent')
+      : slide.winner === 'O' ? oName
       : rName;
     const winnerPortrait = slide.winner === 'D' ? slide.dPortraitUrl
       : slide.winner === 'O' ? slide.oPortraitUrl
@@ -596,7 +618,16 @@ async function drawFinal(ctx, slide, w, ribbonBottom) {
     text(ctx, 'NO MAJORITY', w / 2, y + 100, { font: `900 34px ${FONT}`, align: 'center' });
     y += 116;
   }
-  text(ctx, `${slide.dEv} D  –  ${slide.rEv} R${slide.oEv ? `  (${slide.oEv} Other)` : ''}`, w / 2, y + 34, { font: `900 26px ${FONT}`, align: 'center' });
+  const tallySegments = [
+    { text: `${slide.dEv} ${dName}`, color: PARTY_TEXT_COLOR.D },
+    { text: '  –  ', color: 'rgba(255,255,255,0.4)' },
+    { text: `${slide.rEv} ${rName}`, color: PARTY_TEXT_COLOR.R },
+  ];
+  if (slide.oEv) {
+    tallySegments.push({ text: '  –  ', color: 'rgba(255,255,255,0.4)' });
+    tallySegments.push({ text: `${slide.oEv} ${oName}`, color: PARTY_TEXT_COLOR.O });
+  }
+  centeredSegments(ctx, tallySegments, w / 2, y + 34, { font: `900 26px ${FONT}`, strokeColor: 'rgba(0,0,0,0.75)' });
   y += 48;
   if (!slide.winner) {
     text(ctx, 'Decided by the House of Representatives', w / 2, y + 22, { font: `800 14px ${FONT}`, color: 'rgba(255,255,255,0.9)', align: 'center' });

@@ -83,7 +83,9 @@
 //     only in years with a real electoral-vote haul for one - see
 //     computeHasThirdParty() in election-night.js), stats?: { probD, probTie
 //     (both already 0.001-0.999 capped), medianDemEv, evRange90: [lo, hi],
-//     npvMargin (signed, D-positive) } - present only for a sim2028-bridged
+//     npvMargin (pre-formatted "D+3.2"/"R+1.8"/"O+8.2"/"EVEN" string, naming
+//     whoever's actually leading the national popular vote poll, not always
+//     D-vs-R) } - present only for a sim2028-bridged
 //     run (a historical replay's stats would read oddly for an outcome
 //     that's already history), null otherwise } - the night's opening
 //     "portrait of the race" title card, always the first slide of the very
@@ -619,6 +621,15 @@ function renderFinal(slide) {
   const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
   const rName = lastNameOf(slide.rCandidateName) || 'Republican';
   const oName = lastNameOf(slide.oCandidateName) || 'Independent';
+  // Named by candidate last name, not the D/R/O letter, so the tally reads
+  // like the rest of the app's checkpoint slides rather than a scoreboard.
+  const tallyMarkup = `
+    <div class="en-cp-final-tally">
+      <span class="en-cp-final-d">${slide.dEv} ${dName}</span>
+      <span class="en-cp-final-sep">–</span>
+      <span class="en-cp-final-r">${slide.rEv} ${rName}</span>
+      ${slide.oEv ? `<span class="en-cp-final-sep">–</span><span class="en-cp-final-o">${slide.oEv} ${oName}</span>` : ''}
+    </div>`;
   if (slide.winner) {
     const winnerName = slide.winner === 'D' ? dName : (slide.winner === 'O' ? oName : rName);
     const winnerPortrait = slide.winner === 'D' ? slide.dPortraitUrl : (slide.winner === 'O' ? slide.oPortraitUrl : slide.rPortraitUrl);
@@ -631,12 +642,7 @@ function renderFinal(slide) {
           <div class="en-cp-outcome-label">${slide.outcomeLabel || 'Elected President'}</div>
         </div>
       </div>
-      <div class="en-cp-final-tally">
-        <span class="en-cp-final-d">${slide.dEv} D</span>
-        <span class="en-cp-final-sep">–</span>
-        <span class="en-cp-final-r">${slide.rEv} R</span>
-        ${slide.oEv ? `<span class="en-cp-final-o">(${slide.oEv} Other)</span>` : ''}
-      </div>`;
+      ${tallyMarkup}`;
   } else {
     cardEl.innerHTML = `
       <div class="en-cp-breaking en-cp-final-breaking">Final${timeLabel}</div>
@@ -647,27 +653,12 @@ function renderFinal(slide) {
         </div>
         <div class="en-cp-final-nomajority-text">
           <div class="en-cp-outcome-name">No majority</div>
-          <div class="en-cp-final-tally">
-            <span class="en-cp-final-d">${slide.dEv} D</span>
-            <span class="en-cp-final-sep">–</span>
-            <span class="en-cp-final-r">${slide.rEv} R</span>
-            ${slide.oEv ? `<span class="en-cp-final-o">(${slide.oEv} Other)</span>` : ''}
-          </div>
+          ${tallyMarkup}
           <div class="en-cp-outcome-label">Decided by the House of Representatives</div>
         </div>
       </div>`;
   }
   animateTallyTo(slide.tallyBefore, slide.tallyAfter);
-}
-
-// Signed margin (D-positive) -> "D+3.2" / "R+1.8" / "EVEN", matching
-// docs/utils/formatters.js's fmtLean() - reimplemented locally rather than
-// imported since this module is deliberately import-free (every other
-// helper it needs, e.g. splitName/lastNameOf, is defined right here too).
-function formatSignedMargin(x) {
-  if (!isFinite(x)) return '—';
-  if (Math.abs(x) < 0.000005) return 'EVEN';
-  return (x > 0 ? 'D+' : 'R+') + (Math.abs(x) * 100).toFixed(1);
 }
 
 /**
@@ -724,10 +715,13 @@ function renderRaceOverview(slide) {
   let statsRow = '';
   if (slide.stats) {
     const s = slide.stats;
-    const probD = Math.max(0, Math.min(1, s.probD));
-    const probO = Math.max(0, Math.min(1, s.probO || 0));
-    const probTie = Math.max(0, Math.min(1, s.probTie || 0));
-    const probR = Math.max(0, 1 - probD - probTie - probO);
+    const probD = Math.max(0.001, Math.min(0.999, s.probD));
+    // Stays exactly 0 (not floored) with no third-party candidate at all -
+    // only a genuine, currently-displayed O probability gets the same
+    // never-claim-0%/100% treatment as D.
+    const probO = slide.oCandidateName ? Math.max(0.001, Math.min(0.999, s.probO || 0)) : 0;
+    const probTie = Math.max(0.001, Math.min(0.999, s.probTie || 0));
+    const probR = Math.max(0.001, Math.min(0.999, 1 - probD - probTie - probO));
     const medianText = isFinite(s.medianDemEv)
       ? `${Math.round(s.medianDemEv)} D${Array.isArray(s.evRange90) ? ` (${Math.round(s.evRange90[0])}–${Math.round(s.evRange90[1])})` : ''}`
       : '—';
@@ -742,7 +736,7 @@ function renderRaceOverview(slide) {
       ${stat(`${rName.toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`)}
       ${slide.oCandidateName ? stat(`${oName.toUpperCase()} TO WIN`, `${(probO * 100).toFixed(1)}%`) : ''}
       ${stat('NO MAJORITY', `${(probTie * 100).toFixed(1)}%`)}
-      ${stat('EST. NPV', formatSignedMargin(s.npvMargin))}
+      ${stat('EST. NPV', s.npvMargin || '—')}
       ${stat('MEDIAN EV', medianText)}
     </div>`;
   }

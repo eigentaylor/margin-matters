@@ -3922,6 +3922,7 @@ body.shift-vectors-page {
 
 .en-cp-final-tally {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
   gap: 10px;
@@ -3931,6 +3932,17 @@ body.shift-vectors-page {
   font-variant-numeric: tabular-nums;
 }
 
+/* The card background is an arbitrary accent color (a continuous blue/red
+   range for D/R margins, fixed gold for an O win) - a dark 4-directional
+   outline keeps these numbers legible against any of them, not just the
+   dark neutral background they were originally styled for. */
+.en-cp-final-d, .en-cp-final-r, .en-cp-final-o {
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.75), 1px -1px 0 rgba(0, 0, 0, 0.75),
+    -1px 1px 0 rgba(0, 0, 0, 0.75), 1px 1px 0 rgba(0, 0, 0, 0.75),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .en-cp-final-d { color: #7fa8ff; }
 .en-cp-final-r { color: #ff9b9b; }
 
@@ -3938,10 +3950,10 @@ body.shift-vectors-page {
   color: rgba(255, 255, 255, 0.4);
 }
 
+/* Now a peer segment in the tally ("N {lastname}"), not a subdued aside -
+   matches .en-cp-final-d/-r's size/weight and the gold used for O elsewhere. */
 .en-cp-final-o {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
+  color: #e8c565;
 }
 
 .en-cp-final-nomajority {

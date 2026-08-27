@@ -1841,7 +1841,7 @@ function goToElectionNight() {
     pollMarginByUnit,
     pollSharesByUnit,
     seed: state.sim.seed,
-    forecast: finalForecast ? { ...finalForecast, pollNpv: finalPoll.pollNpv } : null,
+    forecast: finalForecast ? { ...finalForecast, pollNpv: finalPoll.pollNpv, pollSharesNpv: finalPoll.pollSharesNpv } : null,
     thirdShare: state.sim.truthThirdShare,
     siphonLean: state.sim.siphonLean ?? 0.5,
     oCandidateName: state.sim.thirdPartyCandidate,

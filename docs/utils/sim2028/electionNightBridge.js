@@ -248,11 +248,15 @@ export function buildRows({
  *   beet count) instead of a fresh draw every Start/Reset.
  * @param {object} [forecast] the campaign's own Election-Eve forecast (see
  *   sim2028.js's currentForecast(), a forecast.js runForecast() result) plus
- *   a `pollNpv` field (the Election-Eve poll's national margin) - published
- *   as window._enForecast for the opening raceOverview slide's stats row
- *   (win %/tie %/median EV/NPV) to read directly, rather than the live
- *   win-probability MC, which is deliberately hedged near 50-50 before any
- *   returns are actually in.
+ *   a `pollNpv` field (the Election-Eve poll's national D-vs-R margin) and a
+ *   `pollSharesNpv` field (that same poll's full sampled D/R/T/Undecided
+ *   shares, see campaign.js's pollSharesNpv) - published as window._enForecast
+ *   for the opening raceOverview slide's stats row (win %/tie %/median EV/NPV)
+ *   to read directly, rather than the live win-probability MC, which is
+ *   deliberately hedged near 50-50 before any returns are actually in. The
+ *   shares let that NPV stat name the real leader (D, R, or O) instead of
+ *   always reporting the D-vs-R gap even when a third-party candidate is
+ *   genuinely ahead.
  * @param {Map<string,number>} [thirdShare] see buildRows — from
  *   sim.truthThirdShare when the third-party mechanic is enabled, else omitted
  * @param {number} [siphonLean=0.5] see buildRows

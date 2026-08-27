@@ -1492,7 +1492,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       const spec_tallyBefore = record.plannedTallyBefore || zeroTally;
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
         const leader = record.outcomeLeader;
-        if (leader === 'D' || leader === 'R') {
+        if (leader === 'D' || leader === 'R' || leader === 'O') {
           const candidateName = resolveCandidateFullName(leader, 'NATIONAL');
           return {
             kind: 'outcome',
@@ -2843,13 +2843,31 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // when the campaign itself already has a real, decisive forecast.
     const isSim2028Live = isSim2028LiveRun();
     const fc = window._enForecast;
+    // fc.pollNpv alone is always a D-vs-R two-party gap, even when a
+    // third-party candidate is genuinely leading the popular vote - the same
+    // bug already fixed for sim2028's own "National poll" tile. fc.pollSharesNpv
+    // (the same Election-Eve poll's full D/R/T/Undecided shares) lets this
+    // stat name the real leader instead. Falls back to the plain two-party
+    // reading if shares weren't bridged for some reason.
+    let npvMarginText = null;
+    if (fc) {
+      const s = fc.pollSharesNpv;
+      const decided = s ? s.d + s.r + (s.t || 0) : 0;
+      if (s && decided > 0) {
+        const ranked = [['D', s.d], ['R', s.r], ['O', s.t || 0]].sort((a, b) => b[1] - a[1]);
+        const lead = (ranked[0][1] - ranked[1][1]) / decided;
+        npvMarginText = lead < 0.000005 ? 'EVEN' : `${ranked[0][0]}+${(lead * 100).toFixed(1)}`;
+      } else if (isFinite(fc.pollNpv)) {
+        npvMarginText = fc.pollNpv > 0 ? `D+${(fc.pollNpv * 100).toFixed(1)}` : `R+${(-fc.pollNpv * 100).toFixed(1)}`;
+      }
+    }
     const stats = (isSim2028Live && fc && isFinite(fc.demWinProb)) ? {
       probD: Math.min(0.999, Math.max(0.001, fc.demWinProb)),
-      probO: hasThirdParty && isFinite(fc.othWinProb) ? Math.min(0.999, Math.max(0, fc.othWinProb)) : 0,
-      probTie: isFinite(fc.noMajorityProb) ? Math.min(0.999, Math.max(0, fc.noMajorityProb)) : 0,
+      probO: hasThirdParty && isFinite(fc.othWinProb) ? Math.min(0.999, Math.max(0.001, fc.othWinProb)) : 0,
+      probTie: isFinite(fc.noMajorityProb) ? Math.min(0.999, Math.max(0.001, fc.noMajorityProb)) : 0,
       medianDemEv: isFinite(fc.medianDemEv) ? fc.medianDemEv : null,
       evRange90: Array.isArray(fc.evRange90) ? fc.evRange90 : null,
-      npvMargin: isFinite(fc.pollNpv) ? fc.pollNpv : null
+      npvMargin: npvMarginText
     } : null;
 
     return {

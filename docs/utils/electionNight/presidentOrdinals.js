@@ -62,8 +62,14 @@ export const PRESIDENT_ORDINALS = {
 };
 
 // Returns null when the year isn't in the table (e.g. future.html's
-// hypothetical years past 2028) or winnerParty isn't 'D'/'R', so callers can
-// fall back to today's generic wording with no page-specific branching.
+// hypothetical years past 2028) or winnerParty isn't 'D'/'R'/'O', so callers
+// can fall back to today's generic wording with no page-specific branching.
+// A third-party ('O') winner needs no separate numbering scheme: incumbentParty
+// and every override.party below are always 'D'/'R'/'P', never 'O', so an O
+// winner can never match the reelection/non-consecutive-term branches - it
+// always falls through to the plain "the number a brand-new winner would
+// become" case, exactly as intended for a candidate who's never held the
+// office before.
 //
 // isFinal distinguishes the night's one true final tally from every earlier
 // clinch/correction moment - until every state is actually called, the
@@ -72,7 +78,7 @@ export const PRESIDENT_ORDINALS = {
 // elected/reelected" instead.
 export function getPresidencyOutcomeLabel(year, winnerParty, isFinal = true) {
   const entry = PRESIDENT_ORDINALS[year];
-  if (!entry || (winnerParty !== 'D' && winnerParty !== 'R')) return null;
+  if (!entry || (winnerParty !== 'D' && winnerParty !== 'R' && winnerParty !== 'O')) return null;
   const [ordinalBase, incumbentParty, override] = entry;
   // A same-term incumbent winning reelection keeps their existing number
   // (ordinalBase - 1, since ordinalBase is "the number a brand-new winner
