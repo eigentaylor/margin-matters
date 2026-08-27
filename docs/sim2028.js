@@ -757,6 +757,7 @@ function renderNpvBox() {
     setShare('s28NpvR', '—', 'Republican');
     setShare('s28NpvO', '—', 'Third party');
     setShare('s28NpvU', '—', 'Undecided');
+    setShare('s28NpvMargin', '—', 'Margin');
     return;
   }
   const s = snap.pollSharesNpv;
@@ -764,6 +765,13 @@ function renderNpvBox() {
   setShare('s28NpvR', fmtPct(s.r), 'Republican');
   if (hasThirdParty()) setShare('s28NpvO', fmtPct(s.t), 'Third party');
   setShare('s28NpvU', fmtPct(s.u), 'Undecided');
+  const natLabels = {
+    d: lastNameFrom(state.baseline.candidates.d) || 'D',
+    r: lastNameFrom(state.baseline.candidates.r) || 'R',
+    o: lastNameFrom(state.sim.thirdPartyCandidate) || 'Third party',
+  };
+  const natLeader = leaderVsRunnerUp(s.d, s.r, s.t);
+  setShare('s28NpvMargin', fmtLeaderMargin(natLeader, natLabels), 'Margin');
 }
 
 const WITHIN5_CAP = 12; // legibility cap — a genuinely close national environment can put more than 12 states inside 5pts
