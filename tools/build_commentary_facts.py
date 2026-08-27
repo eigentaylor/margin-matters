@@ -30,8 +30,8 @@ NUMERIC_COLUMNS = [
 ]
 
 # A streak needs at least this many consecutive elections to be "notable" --
-# the user considers e.g. 3 elections in a row too common to be interesting.
-STREAK_THRESHOLD_ELECTIONS = 5
+#  elections in a row is too common to be interesting.
+STREAK_THRESHOLD_ELECTIONS = 6
 STREAK_GAP_YEARS = 4
 
 # Years where the electoral college winner's sign differs from the national
