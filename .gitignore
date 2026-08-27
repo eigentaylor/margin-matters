@@ -6,3 +6,4 @@ docs/possibilities.bayes.js
 /.venv
 /test-bellwether-logic.js
 /%localappdata%
+*.pyc
