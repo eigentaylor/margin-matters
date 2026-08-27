@@ -187,9 +187,17 @@ function twoWayColorMargin(snap, unit) {
  * third-party win gets counted rather than two that could contradict each
  * other. With third party off, buildRows() synthesizes tVotes=0 everywhere,
  * so this degenerates to a plain D/R tally.
+ *
+ * Also surfaces buildRows()'s own `realizedNpv` — the actual D-R national
+ * margin the synthesized votes come out to, which is NOT the same number as
+ * sim.truthNpv whenever third party is on and siphonLean isn't exactly 0.5
+ * (an asymmetric siphon shifts the realized margin by
+ * nationalThirdShare*(1-2*siphonLean) off of the pre-siphon input - see
+ * sharesThreeWay). The debug panel needs this one, not sim.truthNpv, to
+ * actually show the truth.
  */
 function computeTruthSummary(sim, baseline) {
-  const { rows } = buildRows({
+  const { rows, realizedNpv } = buildRows({
     finalRel: sim.truthRel, npv: sim.truthNpv, baseline,
     thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
     oCandidateName: sim.thirdPartyCandidate || 'Third party', majorPartyFloors: sim.majorPartyFloors || null,
@@ -209,7 +217,7 @@ function computeTruthSummary(sim, baseline) {
     }
   }
   top.sort((a, b) => b.share - a.share);
-  return { dem, rep, oth, top: top.slice(0, 6) };
+  return { dem, rep, oth, top: top.slice(0, 6), realizedNpv };
 }
 
 /** Electoral votes grouped by rating tier, D-safest to R-safest (then O). */
@@ -617,8 +625,8 @@ function renderDebug() {
 
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
     <div class="s28-dbgrow"><span>True result</span><span>D ${truth.dem} &ndash; R ${truth.rep}${truth.oth > 0 ? ` &ndash; O ${truth.oth}` : ''}</span></div>
-    <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(sim.truthNpv)}</span></div>
-    <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - sim.truthNpv) * 100).toFixed(2)}pt)</span></div>
+    <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(truth.realizedNpv)}</span></div>
+    <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - truth.realizedNpv) * 100).toFixed(2)}pt)</span></div>
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>
     <div class="s28-dbgrow"><span>Polling accuracy this cycle</span><span>${sim.pollTurbulence.toFixed(2)}&times; typical &mdash; ${sim.pollTurbulence < 0.85 ? '2024-style, clean' : sim.pollTurbulence > 1.15 ? '2016/2020-style, foggy' : 'about average'}</span></div>
     <div class="s28-dbgrow"><span>Calibration</span><span>${sim.params.poll.nationalSigma === LEGACY_CALIBRATION.poll.nationalSigma ? 'confident (nationalSigma 1.8pt, regionShare 0.75, floor 0.65x)' : 'default (nationalSigma 2.5pt, regionShare 0.87, floor 1.0x)'}</span></div>
