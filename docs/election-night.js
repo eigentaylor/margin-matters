@@ -2524,16 +2524,23 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       // carry no EV weight - dRunning/rRunning/oRunning (and thus
       // tallyAfter) simply pass through unchanged for them.
       ev.tallyAfter = { D: dRunning, R: rRunning, O: oRunning };
-      // Mirrors runNationalWinProbabilityMC's impossibleD/impossibleR check:
-      // once the EV still not yet attributed to anyone can no longer close
-      // either side's gap to majority, the outcome is a locked no-majority
-      // deadlock - project that the moment it's knowable, not only once
-      // every last unit has actually been attributed (remainingEv === 0 is
-      // just the tail case of this same check).
+      // Once the EV still not yet attributed to anyone can no longer close
+      // ANY candidate's gap to majority - D, R, or O alike (a true-O state
+      // that just hasn't been called yet still counts as "uncalled" here,
+      // same as an uncalled D/R state) - the outcome is a locked no-majority
+      // deadlock. Project that the moment it's knowable, not only once every
+      // last unit has actually been attributed (remainingEv === 0 is just
+      // the tail case of this same check). This is deliberately NOT the same
+      // shortcut runNationalWinProbabilityMC's impossibleD/impossibleR uses -
+      // that function's O total is ground truth known up front (every
+      // thirdPartyDominant unit counts immediately, regardless of call
+      // timing), so it never needs an impossibleO leg; oRunning here only
+      // grows as O states actually get called, so it does.
       const remainingEv = Math.max(0, totalPool - dRunning - rRunning - oRunning);
       const impossibleD = dRunning + remainingEv < majority;
       const impossibleR = rRunning + remainingEv < majority;
-      const newType = dRunning >= majority ? 'D' : (rRunning >= majority ? 'R' : (oRunning >= majority ? 'O' : (impossibleD && impossibleR ? 'T' : null)));
+      const impossibleO = oRunning + remainingEv < majority;
+      const newType = dRunning >= majority ? 'D' : (rRunning >= majority ? 'R' : (oRunning >= majority ? 'O' : (impossibleD && impossibleR && impossibleO ? 'T' : null)));
       if (newType !== currentOutcomeType) {
         currentOutcomeType = newType;
         timeline.push({
@@ -6305,15 +6312,17 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const finalO = oRunning;
     const totalCalled = finalD + finalR + finalO;
     const allCalled = totalCalled >= totalPool - EPS;
-    // Covers an exact tie AND any other deadlock where neither side reaches
-    // a majority (e.g. a third-party candidate takes enough EVs to deny
-    // both). Fires as soon as it's mathematically locked - dRunning/rRunning
-    // both still short of majority even in the best case where every
-    // not-yet-called EV (remainingEv) broke their way - rather than waiting
-    // for literally every last unit to be called (allCalled is just the
-    // remainingEv===0 special case of this same check).
+    // Covers an exact tie AND any other deadlock where NO candidate reaches
+    // a majority - D, R, or O alike (a third-party candidate taking enough
+    // EVs to deny both majors is only a real deadlock if O itself also can't
+    // reach majority; otherwise it's an O win, not a tie). Fires as soon as
+    // it's mathematically locked - dRunning/rRunning/oRunning all still
+    // short of majority even in the best case where every not-yet-called EV
+    // (remainingEv) broke their way - rather than waiting for literally
+    // every last unit to be called (allCalled is just the remainingEv===0
+    // special case of this same check).
     const remainingEv = Math.max(0, totalPool - totalCalled);
-    if (!outcome && dRunning + remainingEv < majority && rRunning + remainingEv < majority) {
+    if (!outcome && dRunning + remainingEv < majority && rRunning + remainingEv < majority && oRunning + remainingEv < majority) {
       outcome = {
         type: 'T',
         time: readyCalls.length ? readyCalls[readyCalls.length - 1].time : currentTime,
