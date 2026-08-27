@@ -744,6 +744,28 @@ function renderForecast() {
   renderHistogram('#s28Histogram', f);
 }
 
+function renderNpvBox() {
+  const setShare = (id, value, label) => {
+    const el = $(id);
+    if (el) el.innerHTML = `${value}<small>${label}</small>`;
+  };
+  const oTile = $('s28NpvO');
+  if (oTile) oTile.hidden = !hasThirdParty();
+  const snap = currentSnapshot();
+  if (!snap) {
+    setShare('s28NpvD', '—', 'Democratic');
+    setShare('s28NpvR', '—', 'Republican');
+    setShare('s28NpvO', '—', 'Third party');
+    setShare('s28NpvU', '—', 'Undecided');
+    return;
+  }
+  const s = snap.pollSharesNpv;
+  setShare('s28NpvD', fmtPct(s.d), 'Democratic');
+  setShare('s28NpvR', fmtPct(s.r), 'Republican');
+  if (hasThirdParty()) setShare('s28NpvO', fmtPct(s.t), 'Third party');
+  setShare('s28NpvU', fmtPct(s.u), 'Undecided');
+}
+
 const WITHIN5_CAP = 12; // legibility cap — a genuinely close national environment can put more than 12 states inside 5pts
 
 // Perennial 2020s battlegrounds — always shown on the trend chart even in a
@@ -1134,6 +1156,7 @@ function renderAll() {
   renderStepPills();
   renderDebug();
   renderForecast();
+  renderNpvBox();
   renderTrendChart();
   renderSnakeChart();
   renderMap();
