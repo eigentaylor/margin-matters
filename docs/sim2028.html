@@ -465,6 +465,13 @@
       cursor: default;
     }
 
+    .s28-slider-val {
+      align-self: flex-end;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--fg);
+    }
+
     .s28-cand-home-row input[type="range"] {
       padding: 0;
       border: none;
@@ -879,6 +886,7 @@
           <div class="s28-cand-home-row" id="s28SiphonLeanRow">
             <label id="s28SiphonLeanWrap" title="Which major party this candidate pulls more votes from. 0.5 (default): symmetric — third-party votes come evenly out of both, margin unaffected. 0: siphons entirely from Republicans (spoils R). 1: siphons entirely from Democrats (spoils D). Applies regardless of whether a home state is set.">Siphon lean (0 = spoils R, 1 = spoils D)
               <input id="s28SiphonLean" type="range" min="0" max="1" step="0.05" value="0.5" />
+              <span id="s28SiphonLeanVal" class="s28-slider-val">0.50</span>
             </label>
           </div>
         </div>

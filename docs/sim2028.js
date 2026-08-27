@@ -12,7 +12,7 @@ import { createSimulation, computeTodaySeed, PARAMS, LEGACY_CALIBRATION } from '
 import { loadBaseline } from './utils/sim2028/baseline.js';
 import { npvBand } from './utils/sim2028/forecast.js';
 import { analyticTippingPoint } from './utils/sim2028/tippingPoint.js';
-import { installElectionNight, buildRows } from './utils/sim2028/electionNightBridge.js';
+import { installElectionNight, buildRows, sharesThreeWay } from './utils/sim2028/electionNightBridge.js';
 import { renderHistogram, renderTrend, renderSnake } from './sim2028Charts.js';
 import { getStateName, ID_TO_ABBR } from './utils/constants.js';
 import { lastNameFrom } from './utils/candidateNames.js';
@@ -70,7 +70,26 @@ function fmtMarginPrecise(m) {
   if (!isFinite(m)) return '—';
   return (m >= 0 ? 'D+' : 'R+') + (Math.abs(m) * 100).toFixed(2);
 }
-function fmtPct(p) { return (p * 100).toFixed(0) + '%'; }
+function fmtPct(p) { return (p * 100).toFixed(1) + '%'; }
+
+/** Ranks decided D/R/(O) shares and returns the leader's key plus their lead
+ *  over the closest rival, as a fraction of the decided vote. Null when
+ *  there's no decided vote at all. With O's share always 0 (third party
+ *  off), this always resolves to D or R - identical to the old plain
+ *  D-vs-R margin. */
+function leaderVsRunnerUp(dShare, rShare, oShare) {
+  const decided = dShare + rShare + (oShare || 0);
+  if (decided <= 0) return null;
+  const ranked = [['d', dShare], ['r', rShare], ['o', oShare || 0]].sort((a, b) => b[1] - a[1]);
+  return { key: ranked[0][0], lead: (ranked[0][1] - ranked[1][1]) / decided };
+}
+
+/** Formats a leaderVsRunnerUp() result as "<label>+X.X" (or "EVEN"/"—"). */
+function fmtLeaderMargin(result, labels, { digits = 1, showEven = true } = {}) {
+  if (!result) return '—';
+  if (showEven && result.lead < 0.00005) return 'EVEN';
+  return `${labels[result.key]}+${(result.lead * 100).toFixed(digits)}`;
+}
 
 /** D/R/(T)/Undecided poll shares, one category per line and each in its own
  *  party color — reads better in the table than a run-on "44% D · 47% R". */
@@ -132,6 +151,18 @@ function hasThirdParty() { return !!(state.sim && state.sim.truthThirdShare); }
 /** A unit's D/R/(T)/Undecided poll shares (fractions of the sampled n), or null. */
 function pollShares(snap, unit) {
   return snap && snap.pollShares ? (snap.pollShares.get(unit) || null) : null;
+}
+
+/** A unit's true D/R/O shares (fractions of the decided electorate, no
+ *  Undecided axis) - the same three-way split campaign.js seeds polling
+ *  from (see campaign.js's unitShares). */
+function trueSharesForUnit(unit) {
+  const sim = state.sim;
+  const beta = state.baseline.beta.get(unit) || 1;
+  const margin = (sim.truthRel.get(unit) || 0) + beta * sim.truthNpv;
+  const oShare = sim.truthThirdShare ? (sim.truthThirdShare.get(unit) || 0) : 0;
+  const floors = sim.majorPartyFloors ? sim.majorPartyFloors.get(unit) : null;
+  return sharesThreeWay(margin, oShare, sim.siphonLean ?? 0.5, floors);
 }
 
 /**
@@ -204,8 +235,14 @@ function computeTruthSummary(sim, baseline) {
   });
   let dem = 0, rep = 0, oth = 0;
   const top = [];
+  let natShares = null;
   for (const row of rows) {
-    if (row.unit === 'NATIONAL') continue;
+    if (row.unit === 'NATIONAL') {
+      natShares = row.total > 0
+        ? { d: row.dVotes / row.total, r: row.rVotes / row.total, o: row.tVotes / row.total }
+        : null;
+      continue;
+    }
     const oWins = row.tVotes > row.dVotes && row.tVotes > row.rVotes;
     if (oWins) oth += row.ev;
     else if (row.dVotes >= row.rVotes) dem += row.ev;
@@ -217,7 +254,7 @@ function computeTruthSummary(sim, baseline) {
     }
   }
   top.sort((a, b) => b.share - a.share);
-  return { dem, rep, oth, top: top.slice(0, 6), realizedNpv };
+  return { dem, rep, oth, top: top.slice(0, 6), realizedNpv, natShares };
 }
 
 /** Electoral votes grouped by rating tier, D-safest to R-safest (then O). */
@@ -262,17 +299,23 @@ function showReturnsTip(evt, unit) {
   // screen, so quietly reverting to pre-election polling reads as a bug.
   if (!s) {
     const snap = currentSnapshot();
-    const margins = snap ? pollMargins(snap) : null;
-    const m = margins ? margins.get(unit) : null;
-    const rating = m == null ? null : ratingForUnit(snap, unit);
+    const shares = snap ? pollShares(snap, unit) : null;
+    const rating = shares ? ratingForUnit(snap, unit) : null;
+    const returnsLabels = {
+      d: lastNameFrom(state.baseline.candidates.d) || 'D',
+      r: lastNameFrom(state.baseline.candidates.r) || 'R',
+      o: 'Other',
+    };
+    const pollLeader = shares ? leaderVsRunnerUp(shares.d, shares.r, shares.t) : null;
     const rows = [
       ['Electoral votes', state.baseline.ev.get(unit) || 0],
       ['Status', 'Not yet reporting'],
-      ['Final poll', m == null ? '—' : fmtMargin(m)],
+      ['Final poll', fmtLeaderMargin(pollLeader, returnsLabels)],
     ];
     if (state.debug && state.sim) {
-      const beta = state.baseline.beta.get(unit) || 1;
-      rows.push(['TRUE final', fmtMarginPrecise((state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv)]);
+      const ts = trueSharesForUnit(unit);
+      const trueLeader = leaderVsRunnerUp(ts.dShare, ts.rShare, ts.oShare);
+      rows.push(['TRUE final', fmtLeaderMargin(trueLeader, returnsLabels, { digits: 2, showEven: false })]);
     }
     tip.innerHTML = `<div class="tip-name">${name}`
       + (rating ? ` <span class="s28-rating" style="background:${rating.color};color:#fff">${rating.label}</span>` : '')
@@ -313,12 +356,14 @@ function showReturnsTip(evt, unit) {
   // Star the leading candidate, matching formatUnitTooltip's convention.
   const star = party => tally[0][0] === party && totalCounted > 0 ? '*' : '';
 
-  const finalPoll = pollMargins(currentSnapshot()).get(unit);
+  const returnsLabels = { d: dName, r: rName, o: 'Other' };
+  const finalPollShares = pollShares(currentSnapshot(), unit);
+  const finalPollLeader = finalPollShares ? leaderVsRunnerUp(finalPollShares.d, finalPollShares.r, finalPollShares.t) : null;
   const rows = [
     ['Electoral votes', s.ev],
     ['Reporting', `${((s.reporting || 0) * 100).toFixed(2)}%`],
     ['Margin', s.marginStr || fmtMargin(s.margin)],
-    ['Final poll', finalPoll == null ? '—' : fmtMargin(finalPoll)],
+    ['Final poll', fmtLeaderMargin(finalPollLeader, returnsLabels)],
     ['Vote margin', voteMarginText],
     ['Leader', leader || '—'],
   ];
@@ -333,9 +378,9 @@ function showReturnsTip(evt, unit) {
   if (totalCounted > 0) rows.push(['Total', `${fmtVote(totalCounted)} votes`]);
   rows.push(['Votes left', fmtVote(s.remainingVotes || 0)]);
   if (state.debug && state.sim) {
-    const beta = state.baseline.beta.get(unit) || 1;
-    const trueMargin = (state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv;
-    rows.push(['TRUE final', fmtMarginPrecise(trueMargin)]);
+    const ts = trueSharesForUnit(unit);
+    const trueLeader = leaderVsRunnerUp(ts.dShare, ts.rShare, ts.oShare);
+    rows.push(['TRUE final', fmtLeaderMargin(trueLeader, returnsLabels, { digits: 2, showEven: false })]);
   }
 
   tip.innerHTML = `<div class="tip-name">${name} ${badge}</div>`
@@ -415,9 +460,10 @@ function showTip(evt, unit) {
   );
   if (prev != null) rows.push(['Since last step', `${m - prev >= 0 ? '+' : ''}${((m - prev) * 100).toFixed(1)}pt`]);
   if (state.debug) {
-    const beta = state.baseline.beta.get(unit) || 1;
+    const ts = trueSharesForUnit(unit);
+    const trueLeader = leaderVsRunnerUp(ts.dShare, ts.rShare, ts.oShare);
     rows.push(['TRUE lean', fmtMarginPrecise(state.sim.truthRel.get(unit))]);
-    rows.push(['TRUE margin', fmtMarginPrecise((state.sim.truthRel.get(unit) || 0) + beta * state.sim.truthNpv)]);
+    rows.push(['TRUE margin', fmtLeaderMargin(trueLeader, { d: dName, r: rName, o: oName }, { digits: 2, showEven: false })]);
   }
 
   tip.innerHTML = `<div class="tip-name">${name}`
@@ -628,10 +674,25 @@ function renderDebug() {
     <div style="margin-top:6px;color:var(--muted)">Best third-party states: ${truth.top.map(r => `${r.unit} ${(r.share * 100).toFixed(1)}%${r.oWins ? ' — WON' : ` (trails leader by ${r.gapPts.toFixed(1)}pt)`}`).join(' · ')}</div>`;
     })();
 
+  const trueLeader = (sim.truthThirdShare && truth.natShares)
+    ? leaderVsRunnerUp(truth.natShares.d, truth.natShares.r, truth.natShares.o) : null;
+  const trueNpvText = trueLeader
+    ? `${fmtLeaderMargin(trueLeader, { d: 'D', r: 'R', o: 'O' }, { digits: 2, showEven: false })} (${fmtMarginPrecise(truth.realizedNpv)} two-party)`
+    : fmtMarginPrecise(truth.realizedNpv);
+  const pollLeader = sim.truthThirdShare
+    ? leaderVsRunnerUp(snap.pollSharesNpv.d, snap.pollSharesNpv.r, snap.pollSharesNpv.t) : null;
+  const pollNpvText = pollLeader
+    ? `${fmtLeaderMargin(pollLeader, { d: 'D', r: 'R', o: 'O' }, { digits: 2, showEven: false })} (${fmtMarginPrecise(snap.pollNpv)} two-party)`
+    : fmtMarginPrecise(snap.pollNpv);
+  const npvSharesRow = (sim.truthThirdShare && truth.natShares)
+    ? `<div class="s28-dbgrow"><span>NPV shares (true / poll)</span><span>True D ${fmtPct(truth.natShares.d)} &middot; R ${fmtPct(truth.natShares.r)} &middot; O ${fmtPct(truth.natShares.o)} &mdash; Poll D ${fmtPct(snap.pollSharesNpv.d)} &middot; R ${fmtPct(snap.pollSharesNpv.r)} &middot; O ${fmtPct(snap.pollSharesNpv.t)} &middot; U ${fmtPct(snap.pollSharesNpv.u)}</span></div>`
+    : '';
+
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
     <div class="s28-dbgrow"><span>True result</span><span>D ${truth.dem} &ndash; R ${truth.rep}${truth.oth > 0 ? ` &ndash; O ${truth.oth}` : ''}</span></div>
-    <div class="s28-dbgrow"><span>True national popular vote</span><span>${fmtMarginPrecise(truth.realizedNpv)}</span></div>
-    <div class="s28-dbgrow"><span>Current poll says</span><span>${fmtMarginPrecise(snap.pollNpv)} (off by ${((snap.pollNpv - truth.realizedNpv) * 100).toFixed(2)}pt)</span></div>
+    <div class="s28-dbgrow"><span>True national popular vote</span><span>${trueNpvText}</span></div>
+    <div class="s28-dbgrow"><span>Current poll says</span><span>${pollNpvText} (off by ${((snap.pollNpv - truth.realizedNpv) * 100).toFixed(2)}pt)</span></div>
+    ${npvSharesRow}
     <div class="s28-dbgrow"><span>Cycle turbulence</span><span>${sim.turbulence.toFixed(2)}&times; &mdash; ${moved6} states moved &gt;6pt (real cycles: 1&ndash;19)</span></div>
     <div class="s28-dbgrow"><span>Polling accuracy this cycle</span><span>${sim.pollTurbulence.toFixed(2)}&times; typical &mdash; ${sim.pollTurbulence < 0.85 ? '2024-style, clean' : sim.pollTurbulence > 1.15 ? '2016/2020-style, foggy' : 'about average'}</span></div>
     <div class="s28-dbgrow"><span>Calibration</span><span>${sim.params.poll.nationalSigma === LEGACY_CALIBRATION.poll.nationalSigma ? 'confident (nationalSigma 1.8pt, regionShare 0.75, floor 0.65x)' : 'default (nationalSigma 2.5pt, regionShare 0.87, floor 1.0x)'}</span></div>
@@ -660,7 +721,13 @@ function renderForecast() {
     return;
   }
   const snap = currentSnapshot();
-  setProb('s28NatPoll', fmtMargin(snap.pollNpv), 'National poll');
+  const natLabels = {
+    d: lastNameFrom(state.baseline.candidates.d) || 'D',
+    r: lastNameFrom(state.baseline.candidates.r) || 'R',
+    o: lastNameFrom(state.sim.thirdPartyCandidate) || 'Third party',
+  };
+  const natLeader = leaderVsRunnerUp(snap.pollSharesNpv.d, snap.pollSharesNpv.r, snap.pollSharesNpv.t);
+  setProb('s28NatPoll', fmtLeaderMargin(natLeader, natLabels), 'National poll');
   setProb('s28DemProb', fmtPct(f.demWinProb), 'Democratic win');
   setProb('s28RepProb', fmtPct(f.repWinProb), 'Republican win');
   if (hasThirdParty()) setProb('s28OthProb', fmtPct(f.othWinProb), 'Third-party win');
@@ -1001,6 +1068,7 @@ function renderTable() {
     .filter(u => (state.baseline.ev.get(u) || 0) > 0)
     .map(unit => {
       const m = margins.get(unit);
+      const shares = pollShares(snap, unit);
       return {
         unit,
         name: unit.includes('-') ? unit : (getStateName(unit) || unit),
@@ -1010,7 +1078,8 @@ function renderTable() {
         rel2024: state.baseline.rel2024.get(unit),
         presMargin2024: state.baseline.presMargin2024.get(unit),
         margin: m,
-        shares: pollShares(snap, unit),
+        shares,
+        leader: shares ? leaderVsRunnerUp(shares.d, shares.r, shares.t) : null,
         band: unitBand(unit, snap),
         rating: ratingForUnit(snap, unit),
         change: prevMargins ? m - prevMargins.get(unit) : null,
@@ -1025,8 +1094,10 @@ function renderTable() {
     switch (key) {
       case 'name': return dir * a.name.localeCompare(b.name);
       case 'rating': av = a.rating.order; bv = b.rating.order; break;
-      // "closest first" is the useful default, so margin sorts on magnitude.
-      case 'margin': av = Math.abs(a.margin); bv = Math.abs(b.margin); break;
+      // "closest first" is the useful default, so margin sorts on the real
+      // leader's lead over the real runner-up - not always D-vs-R, so a
+      // lopsided third-party state doesn't masquerade as a razor-thin D/R race.
+      case 'margin': av = a.leader ? a.leader.lead : Infinity; bv = b.leader ? b.leader.lead : Infinity; break;
       case 'change': av = a.change == null ? -Infinity : a.change; bv = b.change == null ? -Infinity : b.change; break;
       default: av = a[key]; bv = b[key];
     }
@@ -1045,7 +1116,7 @@ function renderTable() {
       <td>${r.ev}</td>
       <td style="color:var(--muted)">${fmtMargin(r.relPrior)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMarginPrior)}</span></td>
       <td style="color:var(--muted)">${fmtMargin(r.rel2024)}<br><span style="font-size:0.78em;opacity:0.7">raw ${fmtMargin(r.presMargin2024)}</span></td>
-      <td class="s28-shares">${fmtSharesLines(r.shares, thirdOn)}<span style="font-size:0.78em;opacity:0.7">${fmtMargin(r.margin)}</span></td>
+      <td class="s28-shares">${fmtSharesLines(r.shares, thirdOn)}<span style="font-size:0.78em;opacity:0.7">${fmtLeaderMargin(r.leader, { d: 'D', r: 'R', o: 'O' })}</span></td>
       <td style="color:var(--muted)">${r.band ? `±${((r.band[1] - r.band[0]) / 2 * 100).toFixed(1)}` : '—'}</td>
       <td><span class="s28-rating" style="background:${r.rating.color};color:#fff">${r.rating.label}</span></td>
       <td style="color:var(--muted)">${deltaTxt}</td>
@@ -1546,6 +1617,16 @@ function updateCandidateStrength(party, strength) {
   setCandidateChoice(party, { ...existing, strength: Number.isFinite(parsed) ? parsed : 0.5 });
 }
 
+/** Live numeric readout for the siphon lean slider - the slider alone makes it
+ *  hard to tell whether it's sitting at the default 0.5 or has drifted. */
+function updateSiphonLeanLabel() {
+  const el = $('s28SiphonLean');
+  const out = $('s28SiphonLeanVal');
+  if (!el || !out) return;
+  const v = parseFloat(el.value);
+  out.textContent = Number.isFinite(v) ? v.toFixed(2) : '—';
+}
+
 // Dragged files don't reliably carry a MIME type — Windows Explorer drags in
 // particular can hand over file.type === '' for otherwise-ordinary images —
 // so accept by extension too rather than silently dropping the file.
@@ -1846,6 +1927,11 @@ async function init() {
   if (thirdPartyEl) thirdPartyEl.addEventListener('change', syncThirdPartyVisibility);
   const thirdPartyStrengthModeEl = $('s28ThirdPartyStrengthMode');
   if (thirdPartyStrengthModeEl) thirdPartyStrengthModeEl.addEventListener('change', syncExactThirdPartyShareVisibility);
+  // Reflects the URL-restored (or default) value before any interaction, then
+  // keeps itself in sync live - the slider alone doesn't make its position legible.
+  updateSiphonLeanLabel();
+  const siphonLeanSliderEl = $('s28SiphonLean');
+  if (siphonLeanSliderEl) siphonLeanSliderEl.addEventListener('input', updateSiphonLeanLabel);
   // The in-card and sticky-footer controls drive the same actions.
   const on = (ids, fn) => [].concat(ids).forEach(id => {
     const el = $(id);
