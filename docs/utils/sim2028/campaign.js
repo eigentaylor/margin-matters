@@ -159,11 +159,17 @@ function pollOnce({ shares, u, w, bias, rng, n }) {
  *        share (thirdParty.js), or null/undefined when third party is off —
  *        the poll then degenerates to a plain (D,R,Undecided) simplex.
  * @param {number}               [o.siphonLean=0.5] see electionNightBridge.js
+ * @param {Map<string,{d:number,r:number}>} [o.majorPartyFloors] per-unit (plus
+ *        a 'NATIONAL' entry) floor pair from thirdParty.js's
+ *        computeMajorPartyFloors, so the poll simplex never shows a major
+ *        party at literal zero either. null/undefined = no floor, today's
+ *        behavior.
  * @param {object}               [o.params]  overrides for DEFAULT_CAMPAIGN_PARAMS
  * @returns {{snapshots: Array, terminalBiasRel: Map, terminalBiasNpv: number}}
  */
 export function runCampaign({
-  truthRel, truthNpv, errorModel, rng, baseline, truthThirdShare = null, siphonLean = 0.5, params = {},
+  truthRel, truthNpv, errorModel, rng, baseline, truthThirdShare = null, siphonLean = 0.5,
+  majorPartyFloors = null, params = {},
 }) {
   const p = {
     ...DEFAULT_CAMPAIGN_PARAMS,
@@ -177,14 +183,16 @@ export function runCampaign({
   // --- ground truth as simplex points, computed once ------------------------
   const nationalThirdShare = hasThird
     ? weightedMean(truthThirdShare, baseline.simUnits, baseline.weights) : 0;
-  const nationalShares = sharesThreeWay(truthNpv, nationalThirdShare, siphonLean);
+  const nationalFloors = majorPartyFloors ? majorPartyFloors.get('NATIONAL') : null;
+  const nationalShares = sharesThreeWay(truthNpv, nationalThirdShare, siphonLean, nationalFloors);
 
   const unitShares = new Map();
   for (const unit of errorModel.units) {
     const beta = baseline.beta.get(unit) || 1;
     const truthMargin = (truthRel.get(unit) || 0) + beta * truthNpv;
     const oShare = hasThird ? (truthThirdShare.get(unit) || 0) : 0;
-    unitShares.set(unit, sharesThreeWay(truthMargin, oShare, siphonLean));
+    const floors = majorPartyFloors ? majorPartyFloors.get(unit) : null;
+    unitShares.set(unit, sharesThreeWay(truthMargin, oShare, siphonLean, floors));
   }
 
   // --- mirage bias: drawn ONCE per axis, regionally correlated (state axes) or

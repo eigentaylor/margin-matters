@@ -52,10 +52,51 @@ export const THIRD_PARTY_DEFAULTS = {
   suppressionFloor: 0.30,
   suppressionWidth: 0.10,
   // High enough that a maxed-out strengthMultiplier + home state + wacky hometown
-  // strength can actually win a state outright, not just dent the margin.
-  perUnitCap: 0.85,
+  // strength can all but sweep a state, not just dent the margin. Not 1.0 outright
+  // (and sharesThreeWay's own 0.999 clamp is the real backstop) — computeMajorPartyFloors
+  // below is what keeps a major party from actually being pushed to zero at this cap,
+  // so there's no need for THIS cap to also carry that job.
+  perUnitCap: 0.97,
   strengthMultiplier: 1.0,
 };
+
+/** Small but nonzero baseline vote share each major party keeps even in a unit
+ *  where the third-party mechanic would otherwise siphon them down to nothing.
+ *  A real, on-every-ballot major party never actually vanishes — Alf Landon
+ *  still got a sliver of South Carolina's vote against FDR's 1936 landslide,
+ *  and Trump still cleared a few points in DC in 2016. Centered on
+ *  BASE_MAJOR_PARTY_FLOOR with a little Gaussian jitter per unit/party so a
+ *  wipeout state doesn't show the exact same suspiciously round percentage
+ *  everywhere; MIN_MAJOR_PARTY_FLOOR keeps that jitter from ever reaching (or
+ *  going below) zero. */
+const BASE_MAJOR_PARTY_FLOOR = 0.01;
+const MAJOR_PARTY_FLOOR_JITTER = 0.004;
+const MIN_MAJOR_PARTY_FLOOR = 0.002;
+
+/**
+ * Draws a {d, r} floor pair (see electionNightBridge.js's sharesThreeWay) for
+ * every unit in `units` — pass baseline.simUnits plus a 'NATIONAL' entry for
+ * campaign.js's national-poll simplex, which floors independently of any
+ * single state.
+ *
+ * Independent RNG stream (its own salt, never the shared campaign rng or
+ * computeThirdPartyTruth's own 'THRD' stream) so enabling or tuning this can
+ * never shift the draw order of anything else in the simulation.
+ *
+ * @param {Iterable<string>} units
+ * @param {number} seed this run's seed
+ * @returns {Map<string,{d:number,r:number}>}
+ */
+export function computeMajorPartyFloors(units, seed) {
+  const rng = mulberry32((seed >>> 0) ^ 0x464c4f52); // 'FLOR'
+  const floors = new Map();
+  for (const unit of units) {
+    const d = Math.max(MIN_MAJOR_PARTY_FLOOR, BASE_MAJOR_PARTY_FLOOR + randn(rng) * MAJOR_PARTY_FLOOR_JITTER);
+    const r = Math.max(MIN_MAJOR_PARTY_FLOOR, BASE_MAJOR_PARTY_FLOOR + randn(rng) * MAJOR_PARTY_FLOOR_JITTER);
+    floors.set(unit, { d, r });
+  }
+  return floors;
+}
 
 /**
  * @param {Map<string,number>} truthRel   finalized (post-nailbiter) truth lean
@@ -108,4 +149,4 @@ export function computeThirdPartyTruth({
   return share;
 }
 
-export default { computeThirdPartyTruth, THIRD_PARTY_DEFAULTS };
+export default { computeThirdPartyTruth, computeMajorPartyFloors, THIRD_PARTY_DEFAULTS };

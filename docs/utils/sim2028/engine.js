@@ -19,7 +19,7 @@ import { runCampaign, DEFAULT_CAMPAIGN_PARAMS } from './campaign.js';
 import { runForecast, DEFAULT_FORECAST_PARAMS } from './forecast.js';
 import { computeNailbiterShift } from './nailbiter.js';
 import { POLL_ERROR_SPEC } from './pollCalibration.js';
-import { computeThirdPartyTruth, THIRD_PARTY_DEFAULTS } from './thirdParty.js';
+import { computeThirdPartyTruth, computeMajorPartyFloors, THIRD_PARTY_DEFAULTS } from './thirdParty.js';
 import { buildRows } from './electionNightBridge.js';
 
 /**
@@ -342,7 +342,8 @@ export async function createSimulation({
   // Needs the FINALIZED truth lean (post-nailbiter), and never touches the
   // shared `rng` stream (see thirdParty.js) — so toggling it never shifts the
   // draw order of anything else, and it's a true no-op when disabled.
-  let truthThirdShare = null, thirdPartyCandidate = null, siphonLean = null, thirdPartyStrength = null;
+  let truthThirdShare = null, thirdPartyCandidate = null, siphonLean = null, thirdPartyStrength = null,
+    majorPartyFloors = null;
   if (thirdParty) {
     const tp = (thirdParty === true) ? {} : thirdParty;
     siphonLean = tp.siphonLean ?? P.thirdParty.siphonLean;
@@ -354,12 +355,17 @@ export async function createSimulation({
       regionBleedEnabled: !!tp.regionBleedEnabled,
       params: { ...P.thirdParty, strengthMultiplier: thirdPartyStrength, ...(tp.params || {}) },
     });
+    // Computed once here (rather than inline in campaign.js/electionNightBridge.js)
+    // so the exact same per-unit floor pair backs both the campaign's polling
+    // simplex and election night's final vote synthesis - a state's D/R floor
+    // can't drift between what a poll implied and what election night reveals.
+    majorPartyFloors = computeMajorPartyFloors([...base.simUnits, 'NATIONAL'], seed);
   }
 
   // --- campaign -------------------------------------------------------------
   const campaign = runCampaign({
     truthRel, truthNpv, errorModel: pollModel, rng, params: P.campaign, baseline: base,
-    truthThirdShare, siphonLean: siphonLean ?? 0.5,
+    truthThirdShare, siphonLean: siphonLean ?? 0.5, majorPartyFloors,
   });
 
   // --- forecast per step ----------------------------------------------------
@@ -413,6 +419,7 @@ export async function createSimulation({
     thirdPartyCandidate,
     siphonLean,
     thirdPartyStrength,
+    majorPartyFloors,
   };
 }
 
@@ -437,7 +444,7 @@ export function truthEv(sim) {
   const { rows } = buildRows({
     finalRel: sim.truthRel, npv: sim.truthNpv, baseline: sim.baseline,
     thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
-    oCandidateName: sim.thirdPartyCandidate || 'Third party',
+    oCandidateName: sim.thirdPartyCandidate || 'Third party', majorPartyFloors: sim.majorPartyFloors || null,
   });
   let dem = 0, rep = 0, oth = 0;
   for (const row of rows) {

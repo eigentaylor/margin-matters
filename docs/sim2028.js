@@ -192,7 +192,7 @@ function computeTruthSummary(sim, baseline) {
   const { rows } = buildRows({
     finalRel: sim.truthRel, npv: sim.truthNpv, baseline,
     thirdShare: sim.truthThirdShare || null, siphonLean: sim.siphonLean ?? 0.5,
-    oCandidateName: sim.thirdPartyCandidate || 'Third party',
+    oCandidateName: sim.thirdPartyCandidate || 'Third party', majorPartyFloors: sim.majorPartyFloors || null,
   });
   let dem = 0, rep = 0, oth = 0;
   const top = [];
@@ -1713,6 +1713,7 @@ function goToElectionNight() {
     thirdShare: state.sim.truthThirdShare,
     siphonLean: state.sim.siphonLean ?? 0.5,
     oCandidateName: state.sim.thirdPartyCandidate,
+    majorPartyFloors: state.sim.majorPartyFloors || null,
   });
 
   // Controls belong directly under the map and above every polling panel, so

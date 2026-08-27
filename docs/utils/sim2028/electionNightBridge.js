@@ -39,13 +39,6 @@ export function synthesizeVotes(margin, totalVotes) {
   return { dVotes, rVotes: total - dVotes, total };
 }
 
-/** No major party is pushed below this vote share, even by a huge third-party share
- *  colliding with an already-lopsided margin. 0 = no protection at all: a strong
- *  enough third-party share (see thirdParty.js's strengthMultiplier) can fully
- *  consume one side in a state. Kept as a named constant, not deleted outright,
- *  in case a future "always leave a sliver" mode wants it back. */
-const MIN_MAJOR_PARTY_SHARE = 0;
-
 /**
  * Splits a two-party margin into D/R/O vote SHARES (0..1, no rounding, no
  * turnout) from a third-party vote share and a siphon lean (0..1) saying how
@@ -56,31 +49,45 @@ const MIN_MAJOR_PARTY_SHARE = 0;
  * At thirdShare=0 this reduces to {dShare:(1+m)/2, rShare:(1-m)/2, oShare:0}
  * exactly, term for term — the plain two-party split.
  *
+ * `floors` ({d, r}, each 0..1) is how far a major party is protected from
+ * being siphoned all the way to zero by an outsized third-party share
+ * colliding with an already-lopsided margin — real, on-every-ballot major
+ * parties never actually vanish (Alf Landon still got a sliver of South
+ * Carolina's vote against FDR's 1936 landslide; Trump still cleared a few
+ * points in DC in 2016). Omitted/null degenerates to {d:0, r:0} — no
+ * protection at all, today's behavior — so every call site that doesn't
+ * pass floors (the hot Monte-Carlo loop in forecast.js, in particular) is
+ * unaffected. See thirdParty.js's computeMajorPartyFloors for where a real
+ * (jittered, per-unit) pair of floors comes from.
+ *
  * Pulled out of synthesizeVotesThreeWay as the pure share-level math so
  * campaign.js's poll-time simplex construction can reuse the exact same,
  * already-tuned D/R/T carve-up instead of re-deriving it.
  */
-export function sharesThreeWay(twoPartyMargin, thirdShare, siphonLean) {
+export function sharesThreeWay(twoPartyMargin, thirdShare, siphonLean, floors = null) {
   const m = Math.max(-0.999, Math.min(0.999, twoPartyMargin || 0));
   const oShare = Math.max(0, Math.min(0.999, thirdShare || 0));
   const s = Math.max(0, Math.min(1, siphonLean ?? 0.5));
+  const dFloor = (floors && isFinite(floors.d)) ? Math.max(0, floors.d) : 0;
+  const rFloor = (floors && isFinite(floors.r)) ? Math.max(0, floors.r) : 0;
 
   const dTwoParty = (1 + m) / 2; // what D would get with no third party at all
   const rTwoParty = (1 - m) / 2;
-  let dLoss = Math.min(oShare * s, Math.max(0, dTwoParty - MIN_MAJOR_PARTY_SHARE));
-  let rLoss = Math.min(oShare * (1 - s), Math.max(0, rTwoParty - MIN_MAJOR_PARTY_SHARE));
+  let dLoss = Math.min(oShare * s, Math.max(0, dTwoParty - dFloor));
+  let rLoss = Math.min(oShare * (1 - s), Math.max(0, rTwoParty - rFloor));
 
   // Pathological case: a large third-party share collided with an already-lopsided
   // margin and one side hit its floor before absorbing its full intended loss. Push
   // the overflow onto the other side if it has room; otherwise it comes back out of
-  // the third-party share itself (oShareFinal below) rather than going negative.
+  // the third-party share itself (oShareFinal below) rather than going below either
+  // floor.
   let deficit = (oShare * s - dLoss) + (oShare * (1 - s) - rLoss);
   if (deficit > 1e-9) {
     if (dLoss < oShare * s) {
-      const extra = Math.min(deficit, Math.max(0, rTwoParty - rLoss - MIN_MAJOR_PARTY_SHARE));
+      const extra = Math.min(deficit, Math.max(0, rTwoParty - rLoss - rFloor));
       rLoss += extra; deficit -= extra;
     } else if (rLoss < oShare * (1 - s)) {
-      const extra = Math.min(deficit, Math.max(0, dTwoParty - dLoss - MIN_MAJOR_PARTY_SHARE));
+      const extra = Math.min(deficit, Math.max(0, dTwoParty - dLoss - dFloor));
       dLoss += extra; deficit -= extra;
     }
   }
@@ -99,9 +106,9 @@ export function sharesThreeWay(twoPartyMargin, thirdShare, siphonLean) {
  * At thirdShare=0 this reproduces synthesizeVotes(margin, totalVotes) exactly,
  * term for term.
  */
-export function synthesizeVotesThreeWay(twoPartyMargin, thirdShare, siphonLean, totalVotes) {
+export function synthesizeVotesThreeWay(twoPartyMargin, thirdShare, siphonLean, totalVotes, floors = null) {
   const total = Math.max(1, Math.round(totalVotes || 0));
-  const { dShare, oShare } = sharesThreeWay(twoPartyMargin, thirdShare, siphonLean);
+  const { dShare, oShare } = sharesThreeWay(twoPartyMargin, thirdShare, siphonLean, floors);
   const dVotes = Math.round(total * dShare);
   const oVotes = Math.round(total * oShare);
   return { dVotes, rVotes: total - dVotes - oVotes, oVotes, total };
@@ -123,9 +130,13 @@ export function synthesizeVotesThreeWay(twoPartyMargin, thirdShare, siphonLean, 
  * @param {string|null}         [o.oCandidateName=null] third-party candidate's
  *        display name — becomes thirdPartyResults' object key, matching how
  *        election-night.js already reads a historical year's third-party winner
+ * @param {Map<string,{d:number,r:number}>} [o.majorPartyFloors=null] per-unit
+ *        floors (see sharesThreeWay) from engine.js's sim.majorPartyFloors.
+ *        Omitted/null reproduces today's "can hit zero" output exactly.
  */
 export function buildRows({
   finalRel, npv, baseline, turnoutScale = 1, thirdShare = null, siphonLean = 0.5, oCandidateName = null,
+  majorPartyFloors = null,
 }) {
   const rows = [];
   const votesByUnit = new Map();
@@ -139,7 +150,8 @@ export function buildRows({
     const margin = rel + beta * npv;
     const turnout = (baseline.totalVotes.get(unit) || 0) * turnoutScale;
     const oShareForUnit = thirdShare ? (thirdShare.get(unit) || 0) : 0;
-    const votes = synthesizeVotesThreeWay(margin, oShareForUnit, siphonLean, turnout);
+    const floors = majorPartyFloors ? majorPartyFloors.get(unit) : null;
+    const votes = synthesizeVotesThreeWay(margin, oShareForUnit, siphonLean, turnout, floors);
     votesByUnit.set(unit, votes);
 
     // Only simUnits contribute to the national total; counting ME-AL as well as
@@ -245,6 +257,8 @@ export function buildRows({
  *   sim.truthThirdShare when the third-party mechanic is enabled, else omitted
  * @param {number} [siphonLean=0.5] see buildRows
  * @param {string|null} [oCandidateName=null] see buildRows
+ * @param {Map<string,{d:number,r:number}>} [majorPartyFloors=null] see buildRows —
+ *   from sim.majorPartyFloors when the third-party mechanic is enabled, else omitted
  * @param {Map<string,{d:number,r:number,t:number,u:number}>} [pollSharesByUnit]
  *   the Election-Eve poll's own sampled D/R/T/Undecided shares per unit (see
  *   sim2028.js's pollShares()) — published alongside pollMarginByUnit on
@@ -255,9 +269,11 @@ export function buildRows({
  */
 export function installElectionNight({
   finalRel, npv, baseline, turnoutScale = 1, pollMarginByUnit = null, seed = null, forecast = null,
-  thirdShare = null, siphonLean = 0.5, oCandidateName = null, pollSharesByUnit = null,
+  thirdShare = null, siphonLean = 0.5, oCandidateName = null, pollSharesByUnit = null, majorPartyFloors = null,
 }) {
-  const { rows, realizedNpv } = buildRows({ finalRel, npv, baseline, turnoutScale, thirdShare, siphonLean, oCandidateName });
+  const { rows, realizedNpv } = buildRows({
+    finalRel, npv, baseline, turnoutScale, thirdShare, siphonLean, oCandidateName, majorPartyFloors,
+  });
 
   window._enSeed = Number.isFinite(seed) ? seed : null;
   window._enForecast = forecast || null;
