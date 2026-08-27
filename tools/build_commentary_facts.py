@@ -183,6 +183,7 @@ def _match_streak_facts(type_, by_abbr, target_sign_fn):
         )
         for s in streaks:
             break_year = s['break_entry']['year'] if s['break_entry'] else None
+            status = 'ongoing' if s['is_active'] else 'broken'
             facts.append({
                 'id': f"{type_}:{abbr}:{s['start_year']}-{s['end_year']}",
                 'type': type_,
@@ -193,7 +194,8 @@ def _match_streak_facts(type_, by_abbr, target_sign_fn):
                 'length': s['length'],
                 'break_year': break_year,
                 'break_reason': _streak_break_reason(s, 'sign_flip'),
-                'is_active': s['is_active'],
+                'status': status,
+                'next_test_year': s['end_year'] + STREAK_GAP_YEARS if status == 'ongoing' else None,
                 'notes': [],
                 'magnitude': s['length'],
             })
@@ -256,6 +258,7 @@ def build_party_streaks(by_abbr):
                 break_reason = 'party_flip'
                 to_party = break_entry['party_label']
 
+            status = 'ongoing' if s['is_active'] else 'broken'
             facts.append({
                 'id': f"party_streak:{abbr}:{s['start_year']}-{s['end_year']}",
                 'type': 'party_streak',
@@ -268,7 +271,8 @@ def build_party_streaks(by_abbr):
                 'break_year': break_entry['year'] if break_entry else None,
                 'break_reason': break_reason,
                 'to_party': to_party,
-                'is_active': s['is_active'],
+                'status': status,
+                'next_test_year': s['end_year'] + STREAK_GAP_YEARS if status == 'ongoing' else None,
                 'notes': notes,
                 'magnitude': s['length'],
             })
@@ -383,6 +387,7 @@ def main():
         'generated_from': 'docs/presidential_margins.csv',
         'attribution': 'Nathaniel Sliver',
         'params': {
+            'data_through_year': max(national_by_year.keys()),
             'streak_threshold_elections': STREAK_THRESHOLD_ELECTIONS,
             'streak_gap_years': STREAK_GAP_YEARS,
             'ec_mismatch_years': sorted(EC_MISMATCH_YEARS),
