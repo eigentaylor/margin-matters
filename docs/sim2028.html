@@ -115,6 +115,10 @@
       color: #e06c6c;
     }
 
+    .s28-prob.oth {
+      color: #C9A400;
+    }
+
     .s28-chart {
       width: 100%;
       overflow-x: auto;
@@ -775,8 +779,17 @@
             <input id="s28ThirdParty" type="checkbox" />
           </span>
         </label>
-        <label title="Multiplier on the third party's overall strength (national/regional showing and home-state bump alike), applied before swing-state suppression. 1.0 = default calibration — genuinely weak almost everywhere, rarely enough to threaten a win even in a maximally favorable home state. Push this well above 1.0 to make wins and outright landslide-state captures actually achievable.">Third party strength
+        <label title="Multiplier on the third party's overall strength, applied before swing-state suppression. In &quot;Random&quot; mode (below), scales a randomly-drawn national baseline (varies run to run) and the home-state bump alike — 1.0 = default calibration, genuinely weak almost everywhere, rarely enough to threaten a win even in a maximally favorable home state; push well above 1.0 to make wins and outright landslide-state captures actually achievable. In &quot;Exact&quot; mode, the national baseline is set directly instead, so this multiplier only affects the home-state bump.">Third party strength
           <input id="s28ThirdPartyStrength" type="number" min="0.2" max="6" step="0.1" value="1.0" />
+        </label>
+        <label title="Random (default): the national baseline for the third party's overall showing is a fresh random draw each run, scaled by the strength multiplier above — its own natural range can rival or exceed the multiplier's, so the outcome still varies a lot run to run at any fixed setting. Exact: skip the draw and type the national share directly below instead, for a fully reproducible, fully controllable scenario.">Third party strength mode
+          <select id="s28ThirdPartyStrengthMode">
+            <option value="random" selected>Random (varies by seed)</option>
+            <option value="exact">Exact (type it below)</option>
+          </select>
+        </label>
+        <label id="s28ExactThirdPartyShareWrap" class="s28-hidden" title="The third party's national vote share, set directly — no randomness, no formula. Per-state results still vary by seed around this baseline (regional texture and swing-state suppression are unaffected), and the strength multiplier above still scales the home-state bump on top of this.">Exact national third-party share (%)
+          <input id="s28ExactThirdPartyShare" type="number" min="0" max="100" step="0.1" value="2.0" />
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>
@@ -952,6 +965,7 @@
       <div class="s28-probrow">
         <div class="s28-prob dem" id="s28DemProb">&mdash;<small>Democratic win</small></div>
         <div class="s28-prob rep" id="s28RepProb">&mdash;<small>Republican win</small></div>
+        <div class="s28-prob oth" id="s28OthProb" hidden>&mdash;<small>Third-party win</small></div>
         <div class="s28-prob" id="s28TieProb" style="color:var(--muted)">&mdash;<small>Exact tie</small></div>
         <div class="s28-prob" id="s28NatPoll" style="font-size:1.1rem">&mdash;<small>National poll</small></div>
         <div class="s28-prob" id="s28MedianEv" style="font-size:1.1rem">&mdash;<small>Median EV / 80% range</small></div>

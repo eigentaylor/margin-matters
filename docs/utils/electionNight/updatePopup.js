@@ -372,23 +372,24 @@ function animateCounter(el, from, to, code) {
 
 /**
  * Build (once per checkpoint) the persistent scoreboard's party boxes - D
- * and R always, plus a third O box (always pinned at a flat "0.0% to win" -
- * a deliberate simplification rather than modeling a real third-party win
- * probability) only in years with a real third-party electoral vote haul,
- * gated by the caller-supplied `hasThirdParty` flag so ordinary D/R-only
- * years render exactly as before.
+ * and R always, plus a third O box (a real, computed win probability from
+ * winProb.probO - see state.nationalWinProb's fixedOEv/hardLockedO logic in
+ * election-night.js) only in years with a real third-party electoral vote
+ * haul, gated by the caller-supplied `hasThirdParty` flag so ordinary D/R-
+ * only years render exactly as before.
  */
 function renderTallyPanelStructure(panelInfo, winProb, majority, hasThirdParty) {
   const info = panelInfo || {};
   const probD = winProb && isFinite(winProb.probD) ? winProb.probD : null;
+  const probO = winProb && isFinite(winProb.probO) ? winProb.probO : null;
   const probTie = winProb && isFinite(winProb.probTie) ? winProb.probTie : 0;
   const partyBox = (code) => {
     const p = info[code] || {};
     const fallbackName = code === 'D' ? 'Democrat' : (code === 'R' ? 'Republican' : 'Other');
     const last = lastNameOf(p.name) || fallbackName;
-    const probText = code === 'O' ? '0.0% to win'
+    const probText = code === 'O' ? (probO != null ? `${(probO * 100).toFixed(1)}% to win` : '0.0% to win')
       : (code === 'D' && probD != null) ? `${(probD * 100).toFixed(1)}% to win`
-        : (code === 'R' && probD != null) ? `${(Math.max(0, 1 - probD - probTie) * 100).toFixed(1)}% to win`
+        : (code === 'R' && probD != null) ? `${(Math.max(0, 1 - probD - probTie - (probO || 0)) * 100).toFixed(1)}% to win`
           : '';
     return `<div class="en-cp-tally-box en-cp-tally-${code.toLowerCase()}">
       ${buildMiniAvatar(p.portraitUrl, p.name, code)}
@@ -617,10 +618,10 @@ function renderFinal(slide) {
   const timeLabel = slide.timeLabel ? `<div class="en-cp-time">${slide.timeLabel} ET</div>` : '';
   const dName = lastNameOf(slide.dCandidateName) || 'Democrat';
   const rName = lastNameOf(slide.rCandidateName) || 'Republican';
+  const oName = lastNameOf(slide.oCandidateName) || 'Independent';
   if (slide.winner) {
-    const isD = slide.winner === 'D';
-    const winnerName = isD ? dName : rName;
-    const winnerPortrait = isD ? slide.dPortraitUrl : slide.rPortraitUrl;
+    const winnerName = slide.winner === 'D' ? dName : (slide.winner === 'O' ? oName : rName);
+    const winnerPortrait = slide.winner === 'D' ? slide.dPortraitUrl : (slide.winner === 'O' ? slide.oPortraitUrl : slide.rPortraitUrl);
     cardEl.innerHTML = `
       <div class="en-cp-breaking en-cp-final-breaking">Final${timeLabel}</div>
       <div class="en-cp-outcome-body">
@@ -724,8 +725,9 @@ function renderRaceOverview(slide) {
   if (slide.stats) {
     const s = slide.stats;
     const probD = Math.max(0, Math.min(1, s.probD));
+    const probO = Math.max(0, Math.min(1, s.probO || 0));
     const probTie = Math.max(0, Math.min(1, s.probTie || 0));
-    const probR = Math.max(0, 1 - probD - probTie);
+    const probR = Math.max(0, 1 - probD - probTie - probO);
     const medianText = isFinite(s.medianDemEv)
       ? `${Math.round(s.medianDemEv)} D${Array.isArray(s.evRange90) ? ` (${Math.round(s.evRange90[0])}–${Math.round(s.evRange90[1])})` : ''}`
       : '—';
@@ -734,9 +736,11 @@ function renderRaceOverview(slide) {
         <div class="en-cp-overview-stat-label">${label}</div>
         <div class="en-cp-overview-stat-value">${value}</div>
       </div>`;
+    const oName = lastNameOf(slide.oCandidateName) || 'Independent';
     statsRow = `<div class="en-cp-overview-stats">
       ${stat(`${dName.toUpperCase()} TO WIN`, `${(probD * 100).toFixed(1)}%`)}
       ${stat(`${rName.toUpperCase()} TO WIN`, `${(probR * 100).toFixed(1)}%`)}
+      ${slide.oCandidateName ? stat(`${oName.toUpperCase()} TO WIN`, `${(probO * 100).toFixed(1)}%`) : ''}
       ${stat('NO MAJORITY', `${(probTie * 100).toFixed(1)}%`)}
       ${stat('EST. NPV', formatSignedMargin(s.npvMargin))}
       ${stat('MEDIAN EV', medianText)}

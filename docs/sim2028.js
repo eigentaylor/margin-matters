@@ -620,8 +620,13 @@ function renderDebug() {
   // mechanic is running silently vs. just not doing anything this run.
   const thirdPartyRows = !sim.truthThirdShare
     ? `<div class="s28-dbgrow"><span>Third party</span><span>off</span></div>`
-    : `<div class="s28-dbgrow"><span>Third party</span><span>${sim.thirdPartyCandidate || '(unnamed)'} &mdash; strength ${sim.thirdPartyStrength.toFixed(2)}&times;, siphon lean ${sim.siphonLean.toFixed(2)} (0=spoils R, 1=spoils D)</span></div>
+    : (() => {
+      const thirdPartyStrengthDesc = sim.thirdPartyStrengthMode === 'exact'
+        ? `exact @ ${(sim.thirdPartyExactShare * 100).toFixed(1)}% national, home-bump ${sim.thirdPartyStrength.toFixed(2)}&times;`
+        : `random, strength ${sim.thirdPartyStrength.toFixed(2)}&times;`;
+      return `<div class="s28-dbgrow"><span>Third party</span><span>${sim.thirdPartyCandidate || '(unnamed)'} &mdash; ${thirdPartyStrengthDesc}, siphon lean ${sim.siphonLean.toFixed(2)} (0=spoils R, 1=spoils D)</span></div>
     <div style="margin-top:6px;color:var(--muted)">Best third-party states: ${truth.top.map(r => `${r.unit} ${(r.share * 100).toFixed(1)}%${r.oWins ? ' — WON' : ` (trails leader by ${r.gapPts.toFixed(1)}pt)`}`).join(' · ')}</div>`;
+    })();
 
   el.innerHTML = `<strong>DEBUG — the hidden truth</strong>
     <div class="s28-dbgrow"><span>True result</span><span>D ${truth.dem} &ndash; R ${truth.rep}${truth.oth > 0 ? ` &ndash; O ${truth.oth}` : ''}</span></div>
@@ -642,9 +647,12 @@ function renderForecast() {
     const el = $(id);
     if (el) el.innerHTML = `${value}<small>${label}</small>`;
   };
+  const othTile = $('s28OthProb');
+  if (othTile) othTile.hidden = !hasThirdParty();
   if (!f) {
     setProb('s28DemProb', '—', 'Democratic win');
     setProb('s28RepProb', '—', 'Republican win');
+    setProb('s28OthProb', '—', 'Third-party win');
     setProb('s28TieProb', '—', 'No majority');
     setProb('s28NatPoll', '—', 'National poll');
     setProb('s28MedianEv', '—', 'Median EV / 90% range');
@@ -655,6 +663,7 @@ function renderForecast() {
   setProb('s28NatPoll', fmtMargin(snap.pollNpv), 'National poll');
   setProb('s28DemProb', fmtPct(f.demWinProb), 'Democratic win');
   setProb('s28RepProb', fmtPct(f.repWinProb), 'Republican win');
+  if (hasThirdParty()) setProb('s28OthProb', fmtPct(f.othWinProb), 'Third-party win');
   // "No majority": nobody reaches 270 EV - with third party off this only
   // ever happens at a literal EV tie (hence the old "Exact tie" label), but
   // once a third-party candidate can win real states outright it's a genuine,
@@ -1108,6 +1117,14 @@ function syncThirdPartyVisibility() {
   if (partyBox) partyBox.classList.toggle('s28-hidden', !(enabled && enabled.checked));
 }
 
+/** Shows the "Exact national third-party share" field only when the strength
+ * mode select is on "exact" — same pattern as syncManualNpvVisibility above. */
+function syncExactThirdPartyShareVisibility() {
+  const modeEl = $('s28ThirdPartyStrengthMode');
+  const wrap = $('s28ExactThirdPartyShareWrap');
+  if (modeEl && wrap) wrap.classList.toggle('s28-hidden', modeEl.value !== 'exact');
+}
+
 /** Reproducible setup as query params: seed, npv mode (+ manual value), turbulence,
  * pollTurbulence, nailbiter, elasticity, confident, candidate picks.
  * Campaign steps is deliberately left out — that control is hidden for now. */
@@ -1125,6 +1142,8 @@ function buildSettingsParams() {
   const thirdPartyEl = $('s28ThirdParty');
   const siphonLeanEl = $('s28SiphonLean');
   const thirdPartyStrengthEl = $('s28ThirdPartyStrength');
+  const thirdPartyStrengthModeEl = $('s28ThirdPartyStrengthMode');
+  const exactThirdPartyShareEl = $('s28ExactThirdPartyShare');
   if (seedInput && seedInput.value !== '') params.set('seed', seedInput.value);
   if (npvMode && npvMode.value) params.set('npv', npvMode.value);
   if (npvMode && npvMode.value === 'manual' && manualNpv) params.set('manualNpv', manualNpv.value);
@@ -1137,6 +1156,10 @@ function buildSettingsParams() {
   params.set('thirdParty', (thirdPartyEl && thirdPartyEl.checked) ? '1' : '0');
   if (siphonLeanEl && siphonLeanEl.value !== '') params.set('siphonLean', siphonLeanEl.value);
   if (thirdPartyStrengthEl && thirdPartyStrengthEl.value !== '') params.set('thirdPartyStrength', thirdPartyStrengthEl.value);
+  if (thirdPartyStrengthModeEl && thirdPartyStrengthModeEl.value) params.set('thirdPartyStrengthMode', thirdPartyStrengthModeEl.value);
+  if (thirdPartyStrengthModeEl && thirdPartyStrengthModeEl.value === 'exact' && exactThirdPartyShareEl) {
+    params.set('exactThirdPartyShare', exactThirdPartyShareEl.value);
+  }
   const realismEl = $('s28HomeStateRealism');
   params.set('homeStateRealism', realismEl && realismEl.value ? realismEl.value : DEFAULT_REALISM_TIER);
   // Preset picks, typed custom names, and historical search picks round-trip
@@ -1198,6 +1221,8 @@ function applySettingsFromUrl() {
   const thirdPartyEl = $('s28ThirdParty');
   const siphonLeanEl = $('s28SiphonLean');
   const thirdPartyStrengthEl = $('s28ThirdPartyStrength');
+  const thirdPartyStrengthModeEl = $('s28ThirdPartyStrengthMode');
+  const exactThirdPartyShareEl = $('s28ExactThirdPartyShare');
 
   if (params.has('seed') && seedInput) {
     const v = parseInt(params.get('seed'), 10);
@@ -1243,6 +1268,13 @@ function applySettingsFromUrl() {
   if (params.has('thirdPartyStrength') && thirdPartyStrengthEl) {
     const v = parseFloat(params.get('thirdPartyStrength'));
     if (Number.isFinite(v)) thirdPartyStrengthEl.value = String(Math.max(0.2, Math.min(6, v)));
+  }
+  if (params.has('thirdPartyStrengthMode') && thirdPartyStrengthModeEl) {
+    const v = params.get('thirdPartyStrengthMode');
+    if ([...thirdPartyStrengthModeEl.options].some(o => o.value === v)) thirdPartyStrengthModeEl.value = v;
+  }
+  if (params.has('exactThirdPartyShare') && exactThirdPartyShareEl) {
+    exactThirdPartyShareEl.value = params.get('exactThirdPartyShare');
   }
   const realismEl = $('s28HomeStateRealism');
   if (params.has('homeStateRealism') && realismEl) {
@@ -1610,6 +1642,13 @@ async function startCampaign() {
   const thirdPartyStrength = thirdPartyStrengthEl && Number.isFinite(parseFloat(thirdPartyStrengthEl.value))
     ? Math.max(0.2, Math.min(6, parseFloat(thirdPartyStrengthEl.value)))
     : 1.0;
+  const thirdPartyStrengthModeEl = $('s28ThirdPartyStrengthMode');
+  const thirdPartyStrengthMode = (thirdPartyStrengthModeEl && thirdPartyStrengthModeEl.value === 'exact')
+    ? 'exact' : 'random';
+  const exactThirdPartyShareEl = $('s28ExactThirdPartyShare');
+  const exactThirdPartyShare = exactThirdPartyShareEl && Number.isFinite(parseFloat(exactThirdPartyShareEl.value))
+    ? Math.max(0, Math.min(100, parseFloat(exactThirdPartyShareEl.value))) / 100
+    : 0.02;
 
   const btn = $('s28Start');
   if (btn) { btn.disabled = true; btn.textContent = 'Simulating…'; }
@@ -1621,7 +1660,11 @@ async function startCampaign() {
       baseline: state.baseline,
       nailbiter: nailbiterOn,
       thirdParty: thirdPartyOn
-        ? { candidate: state.candidates.o, siphonLean, strengthMultiplier: thirdPartyStrength, regionBleedEnabled: regionBleedOn }
+        ? {
+          candidate: state.candidates.o, siphonLean, strengthMultiplier: thirdPartyStrength,
+          strengthMode: thirdPartyStrengthMode, exactNationalShare: exactThirdPartyShare,
+          regionBleedEnabled: regionBleedOn,
+        }
         : false,
       params: {
         campaign: { ...PARAMS.campaign, steps },
@@ -1793,11 +1836,16 @@ async function init() {
   // Unconditional: fixes the manual-PV box staying hidden on reload/shared-link
   // loads where s28NpvMode ends up "manual" without a 'change' event ever firing.
   syncManualNpvVisibility();
+  // Same reasoning again: a URL-restored strength mode of "exact" needs the
+  // percentage box visible even though no 'change' event ever fired for it.
+  syncExactThirdPartyShareVisibility();
 
   const npvMode = $('s28NpvMode');
   if (npvMode) npvMode.addEventListener('change', syncManualNpvVisibility);
   const thirdPartyEl = $('s28ThirdParty');
   if (thirdPartyEl) thirdPartyEl.addEventListener('change', syncThirdPartyVisibility);
+  const thirdPartyStrengthModeEl = $('s28ThirdPartyStrengthMode');
+  if (thirdPartyStrengthModeEl) thirdPartyStrengthModeEl.addEventListener('change', syncExactThirdPartyShareVisibility);
   // The in-card and sticky-footer controls drive the same actions.
   const on = (ids, fn) => [].concat(ids).forEach(id => {
     const el = $(id);

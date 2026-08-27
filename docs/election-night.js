@@ -345,6 +345,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     lastOutcomeBannerClass: '',
     nationalFinalDVotes: 0,
     nationalFinalRVotes: 0,
+    nationalFinalOVotes: 0,
     nationalFinalDEv: 0,
     nationalFinalREv: 0,
     lastNationalTotals: null,
@@ -1038,6 +1039,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     state.totalEligibleVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.totalVotes : 0), 0);
     state.nationalFinalDVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.dVotesCounted : 0), 0);
     state.nationalFinalRVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.rVotesCounted : 0), 0);
+    state.nationalFinalOVotes = data.reduce((sum, st) => sum + (st.pvWeight ? st.targetMetrics.oVotesCounted : 0), 0);
     // Ground-truth ELECTORAL COLLEGE winner (distinct from the popular vote
     // above — they can and do disagree, e.g. 2016). Summed over every
     // EV-bearing unit (state/at-large/district all count separately here,
@@ -1535,10 +1537,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       }
       if (record.noticeType === 'final-tally') {
         const { dEv, rEv, oEv, majority } = record;
-        const winner = dEv >= majority ? 'D' : (rEv >= majority ? 'R' : null);
+        const winner = dEv >= majority ? 'D' : (rEv >= majority ? 'R' : ((oEv || 0) >= majority ? 'O' : null));
         const dCandidateName = resolveCandidateFullName('D', 'NATIONAL');
         const rCandidateName = resolveCandidateFullName('R', 'NATIONAL');
-        const winnerName = winner === 'D' ? dCandidateName : (winner === 'R' ? rCandidateName : null);
+        const oCandidateName = resolveCandidateFullName('O', 'NATIONAL');
+        const winnerName = winner === 'D' ? dCandidateName : (winner === 'R' ? rCandidateName : (winner === 'O' ? oCandidateName : null));
         const finalTally = { D: dEv, R: rEv, O: oEv || 0 };
         return {
           kind: 'final',
@@ -1546,6 +1549,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
           dEv, rEv, oEv, majority,
           dCandidateName,
           rCandidateName,
+          oCandidateName,
           outcomeLabel: winnerName ? getPresidencyOutcomeLabel(state.year, winner) : null,
           accentColor: winner ? calledAccentColor(winner, CHECKPOINT_DEFAULT_MARGIN[winner] || 0) : '#8a8a8a',
           tallyBefore: spec_tallyBefore,
@@ -1922,6 +1926,9 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
         spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
+        if (spec.kind === 'final' && spec.oCandidateName) {
+          spec.oPortraitUrl = await getPortraitUrlForName(state.year, spec.oCandidateName);
+        }
         return;
       }
       spec.portraitUrl = await getPortraitUrlForName(state.year, spec.candidateName);
@@ -2259,7 +2266,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // fallback: pin it just before simEnd using the real historical
     // national winner (the same finalLeader check maybeEmitNpvMiscall()
     // uses to decide whether a call needs correcting).
-    const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    const finalLeader = nationalLeader(state.nationalFinalDVotes, state.nationalFinalRVotes, state.nationalFinalOVotes);
     return { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: finalLeader };
   }
 
@@ -2336,7 +2343,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
         }
       }
       // Dead-end fallback, same convention as projectUnitRetraction()'s own.
-      const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+      const finalLeader = nationalLeader(state.nationalFinalDVotes, state.nationalFinalRVotes, state.nationalFinalOVotes);
       return { retractionTime: t, recall: { time: state.simEnd - FINAL_CHECKPOINT_GAP_MINUTES, leader: finalLeader } };
     }
     return null;
@@ -2410,7 +2417,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
         }
       }
 
-      const npvFinalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+      const npvFinalLeader = nationalLeader(state.nationalFinalDVotes, state.nationalFinalRVotes, state.nationalFinalOVotes);
       if (effectiveNpvCall.leader !== npvFinalLeader) {
         // Same FINAL_CHECKPOINT_GAP_MINUTES headroom as projectUnitCallEvent's
         // dead-end fallback above, and for the same reason: this used to be
@@ -2526,7 +2533,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       const remainingEv = Math.max(0, totalPool - dRunning - rRunning - oRunning);
       const impossibleD = dRunning + remainingEv < majority;
       const impossibleR = rRunning + remainingEv < majority;
-      const newType = dRunning >= majority ? 'D' : (rRunning >= majority ? 'R' : (impossibleD && impossibleR ? 'T' : null));
+      const newType = dRunning >= majority ? 'D' : (rRunning >= majority ? 'R' : (oRunning >= majority ? 'O' : (impossibleD && impossibleR ? 'T' : null)));
       if (newType !== currentOutcomeType) {
         currentOutcomeType = newType;
         timeline.push({
@@ -2785,7 +2792,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // live recomputation needed here.
     const startingTally = records[0].plannedTallyBefore || { D: 0, R: 0, O: 0 };
     const winProb = (state.nationalWinProb && isFinite(state.nationalWinProb.probD))
-      ? { probD: state.nationalWinProb.probD, probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0 }
+      ? {
+        probD: state.nationalWinProb.probD,
+        probO: isFinite(state.nationalWinProb.probO) ? state.nationalWinProb.probO : 0,
+        probTie: isFinite(state.nationalWinProb.probTie) ? state.nationalWinProb.probTie : 0
+      }
       : null;
     const totalPool = state.totalEvPool || 538;
     const majority = Math.floor(totalPool / 2) + 1;
@@ -2827,6 +2838,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const fc = window._enForecast;
     const stats = (isSim2028Live && fc && isFinite(fc.demWinProb)) ? {
       probD: Math.min(0.999, Math.max(0.001, fc.demWinProb)),
+      probO: hasThirdParty && isFinite(fc.othWinProb) ? Math.min(0.999, Math.max(0, fc.othWinProb)) : 0,
       probTie: isFinite(fc.noMajorityProb) ? Math.min(0.999, Math.max(0, fc.noMajorityProb)) : 0,
       medianDemEv: isFinite(fc.medianDemEv) ? fc.medianDemEv : null,
       evRange90: Array.isArray(fc.evRange90) ? fc.evRange90 : null,
@@ -2897,7 +2909,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const prediction = await (state.lickmanPredictionPromise || Promise.resolve(null));
     if (!prediction || !finalSpec || (finalSpec.winner !== 'D' && finalSpec.winner !== 'R')) return null;
 
-    const actualPvWinner = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    const actualPvWinner = nationalLeader(state.nationalFinalDVotes, state.nationalFinalRVotes, state.nationalFinalOVotes);
     const actualEcWinner = finalSpec.winner;
     const correctPv = prediction.predictedWinnerParty === actualPvWinner;
     const correctEc = prediction.predictedWinnerParty === actualEcWinner;
@@ -3095,7 +3107,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       case 'pollClose': what = `Polls closed in ${Array.isArray(slide.states) ? slide.states.length : 0} states`; break;
       case 'finalResults': what = `Final key race results${slide.pageCount > 1 ? ` (${slide.pageIndex + 1}/${slide.pageCount})` : ''}`; break;
       case 'outcome': what = slide.outcomeLabel || `${slide.candidateName || 'Winner'} wins the presidency`; break;
-      case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : slide.rCandidateName} wins` : 'Final — no majority'); break;
+      case 'final': what = slide.outcomeLabel || (slide.winner ? `${slide.winner === 'D' ? slide.dCandidateName : (slide.winner === 'O' ? slide.oCandidateName : slide.rCandidateName)} wins` : 'Final — no majority'); break;
       case 'uncalled': what = 'No majority yet'; break;
       case 'raceOverview': what = slide.title || 'Race overview'; break;
       case 'lickmanIntro': what = `Aleck Lickman's prediction (${slide.falseBeets} false beets)`; break;
@@ -4435,11 +4447,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const totalPool = state.totalEvPool || 538;
     const needed = Math.floor(totalPool / 2) + 1;
 
-    let fixedDEv = 0, fixedREv = 0;
+    let fixedDEv = 0, fixedREv = 0, fixedOEv = 0;
     const liveUnits = [];
     const liveAl = [];
     state.stateData.forEach(st => {
-      if (st.thirdPartyDominant) return;
+      if (st.thirdPartyDominant) { fixedOEv += st.ev; return; }
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
       if (isCalled) {
         const effectiveLeader = (st.misCallLogged && st.winner) ? st.winner : st.callLeader;
@@ -4451,10 +4463,16 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       else liveUnits.push(st);
     });
 
+    // O's electoral total is fixed the moment every thirdPartyDominant unit
+    // is known (nothing in this model can ever flip a live unit to O), so
+    // unlike probD it's never a sampled quantity - just a closed-form
+    // does-the-fixed-total-already-clear-majority check.
+    const hardLockedO = fixedOEv >= needed;
+
     if (!liveUnits.length && !liveAl.length) {
       const dWins = fixedDEv >= needed;
       const rWins = fixedREv >= needed;
-      return { probD: dWins ? 1 : 0, probTie: (!dWins && !rWins) ? 1 : 0, locked: true, sims: 0, evRange90: null };
+      return { probD: dWins ? 1 : 0, probO: hardLockedO ? 1 : 0, probTie: (!dWins && !rWins && !hardLockedO) ? 1 : 0, locked: true, sims: 0, evRange90: null };
     }
 
     const liveEvTotal = liveUnits.reduce((sum, st) => sum + st.ev, 0) + liveAl.reduce((sum, st) => sum + st.ev, 0);
@@ -4465,10 +4483,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const contestedTotal = fixedDEv + fixedREv + liveEvTotal;
     const tieImpossible = (2 * needed - contestedTotal - 1) <= 0;
 
-    if (hardLockedD || hardLockedR || (impossibleD && impossibleR)) {
+    if (hardLockedD || hardLockedR || hardLockedO || (impossibleD && impossibleR)) {
       return {
         probD: hardLockedD ? 1 : 0,
-        probTie: (impossibleD && impossibleR && !hardLockedD && !hardLockedR) ? 1 : 0,
+        probO: hardLockedO ? 1 : 0,
+        probTie: (impossibleD && impossibleR && !hardLockedD && !hardLockedR && !hardLockedO) ? 1 : 0,
         locked: true, sims: 0, evRange90: null
       };
     }
@@ -4532,6 +4551,10 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const rawProbTie = tieWins / PROB_MC_SIMS;
     return {
       probD: Math.min(0.999, Math.max(0.001, rawProbD)),
+      // hardLockedO is already false to reach this point, and O's fixed
+      // total can never grow for the rest of this MC run - see the
+      // hardLockedO comment above.
+      probO: 0,
       probTie: tieImpossible ? 0 : Math.min(0.999, Math.max(0.001, rawProbTie)),
       locked: false, sims: PROB_MC_SIMS, evRange90, medianDemEv, stateProb
     };
@@ -4554,11 +4577,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const totalPool = state.totalEvPool || 538;
     const needed = Math.floor(totalPool / 2) + 1;
 
-    let fixedDEv = 0, fixedREv = 0;
+    let fixedDEv = 0, fixedREv = 0, fixedOEv = 0;
     const liveUnits = [];
     const liveAl = [];
     state.stateData.forEach(st => {
-      if (st.thirdPartyDominant) return;
+      if (st.thirdPartyDominant) { fixedOEv += st.ev; return; }
       const isCalled = st.calledAt != null && timeMinutes >= st.calledAt - EPS;
       if (isCalled) {
         // A called unit is normally fixed on its (observed) call - but if
@@ -4577,10 +4600,16 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       else liveUnits.push(st);
     });
 
+    // O's electoral total is fixed the moment every thirdPartyDominant unit
+    // is known (nothing in this model can ever flip a live unit to O), so
+    // unlike probD it's never a sampled quantity - just a closed-form
+    // does-the-fixed-total-already-clear-majority check.
+    const hardLockedO = fixedOEv >= needed;
+
     if (!liveUnits.length && !liveAl.length) {
       const dWins = fixedDEv >= needed;
       const rWins = fixedREv >= needed;
-      return { probD: dWins ? 1 : 0, probTie: (!dWins && !rWins) ? 1 : 0, locked: true, sims: 0, evRange90: null };
+      return { probD: dWins ? 1 : 0, probO: hardLockedO ? 1 : 0, probTie: (!dWins && !rWins && !hardLockedO) ? 1 : 0, locked: true, sims: 0, evRange90: null };
     }
 
     const liveEvTotal = liveUnits.reduce((sum, st) => sum + st.ev, 0) + liveAl.reduce((sum, st) => sum + st.ev, 0);
@@ -4607,10 +4636,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // Monte Carlo below needs to keep simulating for (it already handles
     // this correctly on its own: demEv can never reach `needed` once D is
     // mathematically eliminated, so demWins naturally stays 0).
-    if (hardLockedD || hardLockedR || (impossibleD && impossibleR)) {
+    if (hardLockedD || hardLockedR || hardLockedO || (impossibleD && impossibleR)) {
       return {
         probD: hardLockedD ? 1 : 0,
-        probTie: (impossibleD && impossibleR && !hardLockedD && !hardLockedR) ? 1 : 0,
+        probO: hardLockedO ? 1 : 0,
+        probTie: (impossibleD && impossibleR && !hardLockedD && !hardLockedR && !hardLockedO) ? 1 : 0,
         locked: true, sims: 0, evRange90: null
       };
     }
@@ -4706,6 +4736,10 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const rawProbTie = tieWins / PROB_MC_SIMS;
     return {
       probD: Math.min(0.999, Math.max(0.001, rawProbD)),
+      // hardLockedO is already false to reach this point, and O's fixed
+      // total can never grow for the rest of this MC run - see the
+      // hardLockedO comment above.
+      probO: 0,
       // tieImpossible is a real proof, not a sampling artifact - let it
       // report an honest 0% instead of the same never-quite-0 clamp.
       probTie: tieImpossible ? 0 : Math.min(0.999, Math.max(0.001, rawProbTie)),
@@ -4819,10 +4853,12 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     if (!elements.winProb) return;
     if (!result || !isFinite(result.probD)) { elements.winProb.textContent = ''; return; }
     const probTie = isFinite(result.probTie) ? result.probTie : 0;
+    const probO = isFinite(result.probO) ? result.probO : 0;
     const dPct = (result.probD * 100).toFixed(1);
-    const rPct = ((1 - result.probD - probTie) * 100).toFixed(1);
+    const rPct = (Math.max(0, 1 - result.probD - probTie - probO) * 100).toFixed(1);
     const tiePct = (probTie * 100).toFixed(1);
-    elements.winProb.innerHTML = `<span class="en-winprob-d">D ${dPct}%</span> — <span class="en-winprob-r">R ${rPct}%</span> — <span class="en-winprob-tie">Tie ${tiePct}%</span> to win`;
+    const oSpan = computeHasThirdParty() ? ` — <span class="en-winprob-o">O ${(probO * 100).toFixed(1)}%</span>` : '';
+    elements.winProb.innerHTML = `<span class="en-winprob-d">D ${dPct}%</span> — <span class="en-winprob-r">R ${rPct}%</span>${oSpan} — <span class="en-winprob-tie">Tie ${tiePct}%</span> to win`;
   }
 
   // Accent color for an uncalled/still-counting race: blends from neutral
@@ -4928,7 +4964,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     if (!state.npvCallRecord || state.npvMisCallLogged) return;
     if (countedVotes < state.totalEligibleVotes - EPS) return;
     const calledLeader = state.npvCallRecord.leader;
-    const finalLeader = state.nationalFinalDVotes >= state.nationalFinalRVotes ? 'D' : 'R';
+    const finalLeader = nationalLeader(state.nationalFinalDVotes, state.nationalFinalRVotes, state.nationalFinalOVotes);
     if (calledLeader === finalLeader) return;
     state.npvMisCallLogged = true;
     const correctionTime = Math.max(currentTime, state.npvCallRecord.time + 0.01);
@@ -5837,11 +5873,19 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
         ? `${winnerName} ${verbPhrase} the presidency with ${rEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
         : `Republicans ${verbPhrasePlural} the presidency with ${rEv} EV (needed ${majority}).`;
     }
+    if (type === 'O') {
+      const winnerName = resolveCandidateLastName('O', 'NATIONAL');
+      const label = winnerName ? getPresidencyOutcomeLabel(state.year, 'O', isFinal) : null;
+      return winnerName
+        ? `${winnerName} ${verbPhrase} the presidency with ${oEv} EV (needed ${majority})${label ? ` — ${label.toLowerCase()}` : ''}.`
+        : `A third-party candidate ${verbPhrasePlural} the presidency with ${oEv} EV (needed ${majority}).`;
+    }
     return `No candidate reaches the ${majority} electoral votes needed: D ${dEv} | R ${rEv}${oEv ? ` | Other ${oEv}` : ''}. The election will be decided by the House of Representatives.`;
   }
   function outcomeClassFor(type) {
     if (type === 'D') return ' win-dem';
     if (type === 'R') return ' win-rep';
+    if (type === 'O') return ' win-o';
     return ' tie';
   }
 
@@ -5856,20 +5900,28 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const majority = Math.floor(totalPool / 2) + 1;
 
     // Compute final EV totals and determine winner
-    let finalDEv = 0, finalREv = 0;
+    let finalDEv = 0, finalREv = 0, finalOEv = 0;
     data.forEach(st => {
       if (st && st.evAllocations) {
         finalDEv += isFinite(st.evAllocations.D) ? st.evAllocations.D : 0;
         finalREv += isFinite(st.evAllocations.R) ? st.evAllocations.R : 0;
+        finalOEv += isFinite(st.evAllocations.O) ? st.evAllocations.O : 0;
       }
     });
-    const winner = finalDEv >= majority ? 'D' : (finalREv >= majority ? 'R' : null);
+    const winner = finalDEv >= majority ? 'D' : (finalREv >= majority ? 'R' : (finalOEv >= majority ? 'O' : null));
 
     // Tipping-point walk: sort by final margin (most favorable to winner first),
-    // accumulate winner's EV until majority is reached.
+    // accumulate winner's EV until majority is reached. For an O winner,
+    // signed D-vs-R margin is meaningless, so rank by O's own vote share
+    // instead (targetMetrics.oShare, strongest states first).
     let tippingPointUnitKey = null;
     if (winner) {
       const sorted = data.slice().sort((a, b) => {
+        if (winner === 'O') {
+          const aO = (a && a.targetMetrics) ? a.targetMetrics.oShare : 0;
+          const bO = (b && b.targetMetrics) ? b.targetMetrics.oShare : 0;
+          return bO - aO;
+        }
         const aMargin = (a && a.targetMetrics) ? a.targetMetrics.margin : 0;
         const bMargin = (b && b.targetMetrics) ? b.targetMetrics.margin : 0;
         return winner === 'D' ? (bMargin - aMargin) : (aMargin - bMargin); // D: descending, R: ascending
@@ -6217,6 +6269,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
         if (!outcome) {
           if (dRunning >= majority) outcome = { type: 'D', time: record.time, total: dRunning };
           else if (rRunning >= majority) outcome = { type: 'R', time: record.time, total: rRunning };
+          else if (oRunning >= majority) outcome = { type: 'O', time: record.time, total: oRunning };
         }
       }
       const leaderText = record.candidateName || formatLeader(record.leader);
@@ -6283,7 +6336,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     //      total from whichever of #1/#2 already announced it.
     const newOutcomeType = outcome ? outcome.type : null;
     const newOutcomeTotal = outcome
-      ? (outcome.type === 'D' ? finalD : (outcome.type === 'R' ? finalR : finalD))
+      ? (outcome.type === 'D' ? finalD : (outcome.type === 'R' ? finalR : (outcome.type === 'O' ? finalO : finalD)))
       : null;
 
     // Every D/R/null/T transition gets an outcomeSeq now -
@@ -6322,9 +6375,9 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
         let reversalText;
         let reversalBanner = '';
         let reversalClass = '';
-        if (newOutcomeType === 'D' || newOutcomeType === 'R') {
+        if (newOutcomeType === 'D' || newOutcomeType === 'R' || newOutcomeType === 'O') {
           const resolvedWinnerName = resolveCandidateLastName(newOutcomeType, 'NATIONAL');
-          const newWinnerName = resolvedWinnerName || (newOutcomeType === 'D' ? 'Democrats' : 'Republicans');
+          const newWinnerName = resolvedWinnerName || (newOutcomeType === 'D' ? 'Democrats' : (newOutcomeType === 'R' ? 'Republicans' : 'The third-party candidate'));
           const label = resolvedWinnerName ? getPresidencyOutcomeLabel(state.year, newOutcomeType, false) : null;
           const labelSuffix = label ? ` (${label.toLowerCase()})` : '';
           reversalBanner = `${newWinnerName} is now projected to win the presidency instead${labelSuffix}, following a corrected state call.`;

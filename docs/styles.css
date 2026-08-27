@@ -1753,6 +1753,11 @@ body.slider-dragging * {
   font-weight: 700;
 }
 
+.en-winprob-o {
+  color: #e0a53a;
+  font-weight: 700;
+}
+
 .en-log-body {
   flex: 1 1 auto;
   overflow-y: auto;
@@ -1809,6 +1814,12 @@ body.slider-dragging * {
   color: #ffe27a
 }
 
+.en-log-outcome.win-o {
+  border-color: rgba(201, 164, 0, 0.6);
+  background: linear-gradient(145deg, rgba(201, 164, 0, 0.2), rgba(70, 55, 0, 0.3));
+  color: #e8c565
+}
+
 .en-log-notice {
   color: #f0d28c;
   font-style: italic;
@@ -1850,6 +1861,12 @@ body.slider-dragging * {
   border-color: rgba(255, 215, 0, 0.5);
   background: linear-gradient(145deg, rgba(255, 215, 0, 0.18), rgba(80, 80, 10, 0.25));
   color: #ffe27a
+}
+
+.en-log-victory.win-o {
+  border-color: rgba(201, 164, 0, 0.6);
+  background: linear-gradient(145deg, rgba(201, 164, 0, 0.2), rgba(70, 55, 0, 0.3));
+  color: #e8c565
 }
 
 .en-log-uncalled {

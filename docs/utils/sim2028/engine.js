@@ -224,6 +224,12 @@ export function chooseNpv(mode, rng, { npvBase = 0, manualValue = 0, spread = 0.
  *        strengthMultiplier, regionBleedEnabled, params}` to configure it.
  *        `strengthMultiplier` (default 1.0) scales the whole mechanic's
  *        magnitude — see thirdParty.js's THIRD_PARTY_DEFAULTS doc comment.
+ *        `strengthMode` ('random' default, or 'exact') controls whether the
+ *        national baseline is a fresh random draw each run (then scaled by
+ *        strengthMultiplier) or a fixed value set directly via
+ *        `exactNationalShare` (a 0-1 fraction) — strengthMultiplier still
+ *        scales the home-state bump either way. See thirdParty.js's
+ *        THIRD_PARTY_DEFAULTS doc comment.
  *        Only ever affects the hidden truth/election-night reveal — never the
  *        campaign's polling snapshots or forecast.js's Monte Carlo, which
  *        stay strictly two-party. See thirdParty.js.
@@ -343,17 +349,22 @@ export async function createSimulation({
   // shared `rng` stream (see thirdParty.js) — so toggling it never shifts the
   // draw order of anything else, and it's a true no-op when disabled.
   let truthThirdShare = null, thirdPartyCandidate = null, siphonLean = null, thirdPartyStrength = null,
-    majorPartyFloors = null;
+    thirdPartyStrengthMode = null, thirdPartyExactShare = null, majorPartyFloors = null;
   if (thirdParty) {
     const tp = (thirdParty === true) ? {} : thirdParty;
     siphonLean = tp.siphonLean ?? P.thirdParty.siphonLean;
     thirdPartyStrength = tp.strengthMultiplier ?? P.thirdParty.strengthMultiplier;
+    thirdPartyStrengthMode = tp.strengthMode ?? P.thirdParty.strengthMode;
+    thirdPartyExactShare = tp.exactNationalShare ?? P.thirdParty.exactNationalShare;
     thirdPartyCandidate = (tp.candidate && tp.candidate.name) || null;
     truthThirdShare = computeThirdPartyTruth({
       truthRel, truthNpv, beta: base.beta, baseline: base,
       candidate: tp.candidate || null, seed,
       regionBleedEnabled: !!tp.regionBleedEnabled,
-      params: { ...P.thirdParty, strengthMultiplier: thirdPartyStrength, ...(tp.params || {}) },
+      params: {
+        ...P.thirdParty, strengthMultiplier: thirdPartyStrength, strengthMode: thirdPartyStrengthMode,
+        exactNationalShare: thirdPartyExactShare, ...(tp.params || {}),
+      },
     });
     // Computed once here (rather than inline in campaign.js/electionNightBridge.js)
     // so the exact same per-unit floor pair backs both the campaign's polling
@@ -419,6 +430,8 @@ export async function createSimulation({
     thirdPartyCandidate,
     siphonLean,
     thirdPartyStrength,
+    thirdPartyStrengthMode,
+    thirdPartyExactShare,
     majorPartyFloors,
   };
 }

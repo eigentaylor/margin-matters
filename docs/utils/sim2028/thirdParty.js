@@ -58,6 +58,17 @@ export const THIRD_PARTY_DEFAULTS = {
   // so there's no need for THIS cap to also carry that job.
   perUnitCap: 0.97,
   strengthMultiplier: 1.0,
+  // 'random' (default): nationalShare below is a fresh half-normal draw each
+  // run, so a given strengthMultiplier setting still lands anywhere across a
+  // >15x range cycle to cycle. 'exact': skips the draw entirely -- the
+  // national baseline is instead set directly via exactNationalShare (a
+  // literal 0-1 fraction, "type 8% and get 8%"), for deterministic
+  // testing/authoring. In 'exact' mode, strengthMultiplier stops affecting
+  // the national component and only scales the home-state bump. Neither
+  // mode touches regionalOffset (per-state texture) or suppression
+  // (competitiveness dampening) -- those stay random/state-dependent either way.
+  strengthMode: 'random',
+  exactNationalShare: 0.02,
 };
 
 /** Small but nonzero baseline vote share each major party keeps even in a unit
@@ -118,10 +129,14 @@ export function computeThirdPartyTruth({
   // anything else in the simulation (mirrors nailbiter.js's own seed^salt pattern).
   const rng = mulberry32((seed >>> 0) ^ 0x54485244); // 'THRD'
 
-  const nationalShare = Math.min(
-    P.nationalShare.cap,
-    Math.abs(randn(rng) * P.nationalShare.spread) + P.nationalShare.floor,
-  );
+  const isExact = P.strengthMode === 'exact';
+  // 'exact' mode intentionally skips this draw entirely (rather than drawing
+  // and discarding a value) -- shifts what regionalOffset below draws from
+  // `rng` between modes, which is harmless: this is thirdParty.js's own
+  // independent 'THRD'-salted stream, never the shared campaign rng.
+  const nationalShare = isExact
+    ? Math.max(0, Math.min(1, P.exactNationalShare))
+    : Math.min(P.nationalShare.cap, Math.abs(randn(rng) * P.nationalShare.spread) + P.nationalShare.floor);
 
   const regionalModel = createRegionalErrorModel({
     units: baseline.simUnits,
@@ -140,7 +155,12 @@ export function computeThirdPartyTruth({
     const margin = (truthRel.get(unit) || 0) + (beta.get(unit) || 1) * truthNpv;
     const suppression = P.suppressionFloor
       + (1 - P.suppressionFloor) * Math.min(1, Math.abs(margin) / P.suppressionWidth);
-    const rawBase = Math.max(0, nationalShare + (regionalOffset.get(unit) || 0)) * P.strengthMultiplier;
+    const nationalTerm = Math.max(0, nationalShare + (regionalOffset.get(unit) || 0));
+    // 'exact' mode's whole point is a literal, typed national share -- skip
+    // strengthMultiplier here (it would otherwise silently rescale whatever
+    // the user typed). strengthMultiplier keeps its existing job of scaling
+    // the home-state bump in both modes.
+    const rawBase = isExact ? nationalTerm : nationalTerm * P.strengthMultiplier;
     const raw = rawBase * suppression;
     const homeBump = (bleedMap.get(unit) || 0) * strength * P.homeStateCap * P.strengthMultiplier;
     share.set(unit, Math.max(0, Math.min(P.perUnitCap, raw + homeBump)));
