@@ -12,17 +12,27 @@
  */
 
 export const REGIONS = {
-  newEngland: ['ME-AL', 'ME-01', 'ME-02', 'NH', 'VT', 'RI', 'CT', 'MA'],
-  midAtlantic: ['NY', 'NJ', 'DE', 'MD', 'DC', 'VA'],
-  rustBelt: ['PA', 'OH', 'MI', 'WI', 'IA', 'IN', 'MN'],
-  plains: ['ND', 'SD', 'NE-AL', 'NE-01', 'NE-02', 'NE-03', 'KS', 'MO', 'OK'],
-  // Alaska (correlation w/ south bucket) and South Carolina (real early-90s break from VA/GA)
-  south: ['WV', 'KY', 'TN', 'AR', 'MS', 'AL', 'LA', 'AK', 'SC', 'FL'],
-  sunBelt: ['TX', 'AZ', 'GA', 'NC'], 
-  southwest: ['NM', 'NV', 'CO'], 
-  mountain: ['MT', 'ID', 'WY', 'UT'],
-  pacific: ['WA', 'OR', 'CA', 'IL'], // IL is included here due to its fairly high correlation with the Pacific region
-  hawaii: ['HI'] // Hawaii is its own region. It has very low correlation with other regions
+  newEngland: ['VT', 'NH', 'ME-01', 'ME-AL', 'RI', 'DE', 'CT'],
+  midAtlantic: ['NY', 'NJ', 'MD', 'FL', 'MA'],
+  south: ['MS', 'AL', 'SC', 'LA', 'AR', 'OK'],
+  // CO/OR/WA/NV/KS/NE cluster on correlation, not contiguity -- OR/WA/NV form
+  // one real Pacific/Mountain pocket and CO/KS/NE another Great Plains one.
+  northwest: ['CO', 'OR', 'WA', 'KS', 'NE-01', 'NE-AL', 'NE-02', 'NV'],
+  // NE-03 is grouped here on correlation (Nebraska's 2nd district behaves like
+  // border-south turf), not real geography -- it isn't near WV/KY/TN/MO.
+  appalachia: ['WV', 'KY', 'MO', 'NE-03', 'TN'],
+  // ME-02 is grouped here on correlation (it behaves like a Rust Belt seat),
+  // not real geography -- it isn't near OH/IN/MI/etc.
+  rustBelt: ['OH', 'IA', 'MN', 'IN', 'PA', 'MI', 'WI', 'ME-02'],
+  // IL and DC are grouped here on correlation, not real geography -- neither
+  // borders NM/UT/TX/CA/AZ. See REGION_ADJACENCY's note on why their real
+  // borders (IL's to the Midwest, DC's to MD/VA) don't get projected onto
+  // this bucket.
+  southwest: ['NM', 'UT', 'TX', 'CA', 'AZ', 'IL', 'DC'],
+  alaska: ['AK'], // Its own region -- no land border with any other unit here.
+  hawaii: ['HI'], // Its own region -- very low correlation with the mainland.
+  plains: ['MT', 'ID', 'SD', 'ND', 'WY'],
+  southeast: ['VA', 'GA', 'NC'],
 };
 
 export const REGION_KEYS = Object.keys(REGIONS);
@@ -35,39 +45,44 @@ export const REGION_KEYS = Object.keys(REGIONS);
  *
  * Hand-authored from each region's real-world geographic/cultural identity,
  * like REGIONS itself -- NOT mechanically derived from every member state's
- * literal borders. A few members are grouped by voting-correlation rather
- * than geography (IL in `pacific`, AK in `south`; see REGIONS above), and
+ * literal borders. Several members are grouped by voting-correlation rather
+ * than geography (IL and DC in `southwest`, ME-02 in `rustBelt`, the NE
+ * districts split across `northwest`/`appalachia`; see REGIONS above), and
  * letting those outliers project their own real borders onto their bucket
- * would produce nonsense (e.g. IL's real Midwest neighbors would wrongly
- * make `pacific` adjacent to `rustBelt`/`plains`/`south`). Symmetric by
- * construction; edit freely, same as REGIONS.
+ * would produce nonsense -- e.g. IL's real Midwest borders would wrongly
+ * make `southwest` adjacent to `rustBelt`, and DC's real MD/VA borders would
+ * wrongly make `southwest` adjacent to `midAtlantic`/`southeast` (both of
+ * which are already legitimately adjacent to other buckets on their own
+ * merits, without DC's help). Symmetric by construction; edit freely, same
+ * as REGIONS.
  */
 export const REGION_ADJACENCY = {
   newEngland: ['midAtlantic'],
-  midAtlantic: ['newEngland', 'rustBelt', 'south', 'sunBelt'],
-  rustBelt: ['midAtlantic', 'south', 'plains'],
-  plains: ['rustBelt', 'south', 'sunBelt', 'southwest', 'mountain'],
-  south: ['midAtlantic', 'rustBelt', 'plains', 'sunBelt'],
-  sunBelt: ['midAtlantic', 'south', 'plains', 'southwest', 'mountain'],
-  southwest: ['plains', 'sunBelt', 'mountain', 'pacific'],
-  mountain: ['plains', 'sunBelt', 'southwest', 'pacific'],
-  pacific: ['southwest', 'mountain'],
+  midAtlantic: ['newEngland', 'rustBelt', 'appalachia', 'southeast'],
+  south: ['southeast', 'appalachia', 'southwest', 'northwest'],
+  northwest: ['southwest', 'plains', 'south', 'appalachia'],
+  appalachia: ['rustBelt', 'southeast', 'south', 'northwest'],
+  rustBelt: ['midAtlantic', 'appalachia', 'plains'],
+  southwest: ['south', 'northwest', 'plains'],
+  alaska: [],
   hawaii: [],
+  plains: ['rustBelt', 'northwest', 'southwest', 'appalachia'],
+  southeast: ['midAtlantic', 'appalachia', 'south'],
 };
 
 /** Display labels for UI/debug output. */
 export const REGION_LABELS = {
   newEngland: 'New England',
   midAtlantic: 'Mid-Atlantic',
-  rustBelt: 'Rust Belt',
-  plains: 'Plains',
   south: 'South',
-  southeast: 'Southeast',
+  northwest: 'Northwest',
+  appalachia: 'Appalachia',
+  rustBelt: 'Rust Belt',
   southwest: 'Southwest',
-  suburbanRealignment: 'Suburban Realignment',
-  mountain: 'Mountain West',
-  pacific: 'Pacific',
+  alaska: 'Alaska',
   hawaii: 'Hawaii',
+  plains: 'Plains',
+  southeast: 'Southeast',
 };
 
 const UNIT_TO_REGION = new Map();
