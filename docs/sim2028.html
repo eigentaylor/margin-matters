@@ -710,11 +710,13 @@
     <div id="back-to-map-placeholder"></div>
     <div class="header">
       <h1>2028 Campaign Simulator</h1>
-      <span class="legend">A single cycle, simulated properly &mdash; correlated polling error, a campaign that converges, then election night.</span>
+      <span class="legend">A single cycle, simulated properly &mdash; correlated polling error, a campaign that
+        converges, then election night.</span>
     </div>
 
     <div class="s28-proto">
-      <strong>Beta (v0.9).</strong> Still in beta. The model is deliberately tunable and not yet calibrated to anyone's satisfaction &mdash; see <code>docs/utils/sim2028/</code>.
+      <strong>Beta (v0.9.1).</strong> Still in beta. The model is deliberately tunable and not yet calibrated to
+      anyone's satisfaction &mdash; see <code>docs/utils/sim2028/</code>.
     </div>
 
     <!-- ---------- setup ---------- -->
@@ -747,18 +749,26 @@
         <label class="s28-hidden">Campaign steps
           <input id="s28Steps" type="number" min="2" max="12" step="1" value="6" />
         </label>
-        <label title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle turbulence
+        <label
+          title="How volatile this cycle is, as a multiplier on typical single-cycle state movement. 1.0 = typical (like 2020/2024). Roughly 0.3 = as calm as it gets, 2.3 = a 2008/2016-style realignment.">Cycle
+          turbulence
           <input id="s28Turbulence" type="number" min="0.3" max="2.3" step="0.1" value="0.5" />
         </label>
-        <label title="How accurate the polls turn out to be this cycle, as a multiplier on typical polling error. 1.0 = typical. Roughly 0.55 = as clean a call as 2024, 1.9 = as foggy a miss as 2016/2020. This is hidden from the forecast itself — only the final result reveals it.">Polling accuracy this cycle
+        <label
+          title="How accurate the polls turn out to be this cycle, as a multiplier on typical polling error. 1.0 = typical. Roughly 0.55 = as clean a call as 2024, 1.9 = as foggy a miss as 2016/2020. This is hidden from the forecast itself — only the final result reveals it.">Polling
+          accuracy this cycle
           <input id="s28PollTurbulence" type="number" min="0.55" max="1.9" step="0.1" value="1.0" />
         </label>
-        <label title="A second pass, applied after this run's national popular vote is chosen: any state whose margin already landed close to zero gets nudged closer (and can swap order with its neighbors). States that aren't naturally close are left alone, so a landslide NPV still reads as a landslide. May change which candidate wins vs. the same settings with it off.">Nailbiter mode
+        <label
+          title="A second pass, applied after this run's national popular vote is chosen: any state whose margin already landed close to zero gets nudged closer (and can swap order with its neighbors). States that aren't naturally close are left alone, so a landslide NPV still reads as a landslide. May change which candidate wins vs. the same settings with it off.">Nailbiter
+          mode
           <span class="s28-checkbox-row">
             <input id="s28Nailbiter" type="checkbox" />
           </span>
         </label>
-        <label title="How much a candidate's home state (the 7 built-in 2028 candidates, plus any custom candidate with a home state picked below) leans toward their party. Off disables it entirely. Subtle (default) is deliberately close to unnoticeable -- the political science on 'favorite son' effects finds almost nothing, and even real crossover appeal (a governor who outruns their party at home) doesn't reliably survive a fully-nationalized presidential race. Noticeable/Wacky loosen that for fun. Every tier is further scaled per state by its historical elasticity, so a deeply partisan-locked state barely moves even at Wacky. Historical search picks never get this -- only the 7 built-ins and custom candidates.">Home state realism
+        <label
+          title="How much a candidate's home state (the 7 built-in 2028 candidates, plus any custom candidate with a home state picked below) leans toward their party. Off disables it entirely. Subtle (default) is deliberately close to unnoticeable -- the political science on 'favorite son' effects finds almost nothing, and even real crossover appeal (a governor who outruns their party at home) doesn't reliably survive a fully-nationalized presidential race. Noticeable/Wacky loosen that for fun. Every tier is further scaled per state by its historical elasticity, so a deeply partisan-locked state barely moves even at Wacky. Historical search picks never get this -- only the 7 built-ins and custom candidates.">Home
+          state realism
           <select id="s28HomeStateRealism">
             <option value="off">Off</option>
             <option value="subtle" selected>Subtle</option>
@@ -766,41 +776,55 @@
             <option value="wacky">Wacky</option>
           </select>
         </label>
-        <label title="Off (default): a candidate's home-state bump applies only to their exact home state, as always. On: extends that bump, at reduced strength, into the rest of their home region and into neighboring regions -- so e.g. a Georgia home-state candidate also gets a fainter lift in the rest of the Sun Belt bucket, fainter still in the South/Plains/Southwest/Mid-Atlantic buckets it borders. Applies to D, R, and (if enabled) the third-party candidate alike.">Region bleed
+        <label
+          title="Off (default): a candidate's home-state bump applies only to their exact home state, as always. On: extends that bump, at reduced strength, into the rest of their home region and into neighboring regions -- so e.g. a Georgia home-state candidate also gets a fainter lift in the rest of the Sun Belt bucket, fainter still in the South/Plains/Southwest/Mid-Atlantic buckets it borders. Applies to D, R, and (if enabled) the third-party candidate alike.">Region
+          bleed
           <span class="s28-checkbox-row">
             <input id="s28RegionBleed" type="checkbox" />
           </span>
         </label>
-        <label title="On: each state's simulated swing is scaled by its own historically-fitted elasticity (how much of a national wave it actually absorbs) — so e.g. a heavily-elastic swing state moves more than a national wave, an inelastic one moves less. Off: every state moves exactly with the national popular vote (beta=1 everywhere). Toggle to A/B whether the per-state fit is actually adding anything.">Elasticity
+        <label
+          title="On: each state's simulated swing is scaled by its own historically-fitted elasticity (how much of a national wave it actually absorbs) — so e.g. a heavily-elastic swing state moves more than a national wave, an inelastic one moves less. Off: every state moves exactly with the national popular vote (beta=1 everywhere). Toggle to A/B whether the per-state fit is actually adding anything.">Elasticity
           <span class="s28-checkbox-row">
             <input id="s28Elasticity" type="checkbox" checked />
           </span>
         </label>
-        <label title="Off (default): polling error and win-probability bands stay wide, research-calibrated — close races feel genuinely uncertain deep into the campaign, and only a real landslide NPV calls confidently. On: switches to the original, narrower assumptions — smaller polling misses and win probabilities that resolve to decisive calls sooner.">Confident forecasts
+        <label
+          title="Off (default): polling error and win-probability bands stay wide, research-calibrated — close races feel genuinely uncertain deep into the campaign, and only a real landslide NPV calls confidently. On: switches to the original, narrower assumptions — smaller polling misses and win probabilities that resolve to decisive calls sooner.">Confident
+          forecasts
           <span class="s28-checkbox-row">
             <input id="s28ConfidentForecasts" type="checkbox" />
           </span>
         </label>
-        <label title="BETA — known issues: results display is still being refined and some third-party numbers/colors may not fully match the true simulated result yet. Adds an optional independent/third-party candidate, picked below in the Candidates section (custom or historical search only — no presets). Third-party strength is heaviest in states that are already safe for one side (real protest-vote behavior) and suppressed in genuine swing states, so it dampens landslides and can occasionally spoil or win a state without routinely preventing anyone from reaching 270. Only affects the final election-night result — the campaign's polls and forecast stay two-party throughout, exactly as if this were off. Off (default) reproduces today's simulation exactly.">Third party <span style="color:var(--muted);font-weight:normal;font-size:0.85em">(beta)</span>
+        <label
+          title="BETA — known issues: results display is still being refined and some third-party numbers/colors may not fully match the true simulated result yet. Adds an optional independent/third-party candidate, picked below in the Candidates section (custom or historical search only — no presets). Third-party strength is heaviest in states that are already safe for one side (real protest-vote behavior) and suppressed in genuine swing states, so it dampens landslides and can occasionally spoil or win a state without routinely preventing anyone from reaching 270. Only affects the final election-night result — the campaign's polls and forecast stay two-party throughout, exactly as if this were off. Off (default) reproduces today's simulation exactly.">Third
+          party <span style="color:var(--muted);font-weight:normal;font-size:0.85em">(beta)</span>
           <span class="s28-checkbox-row">
             <input id="s28ThirdParty" type="checkbox" />
           </span>
         </label>
-        <label title="Multiplier on the third party's overall strength, applied before swing-state suppression. In &quot;Random&quot; mode (below), scales a randomly-drawn national baseline (varies run to run) and the home-state bump alike — 1.0 = default calibration, genuinely weak almost everywhere, rarely enough to threaten a win even in a maximally favorable home state; push well above 1.0 to make wins and outright landslide-state captures actually achievable. In &quot;Exact&quot; mode, the national baseline is set directly instead, so this multiplier only affects the home-state bump.">Third party strength
+        <label
+          title="Multiplier on the third party's overall strength, applied before swing-state suppression. In &quot;Random&quot; mode (below), scales a randomly-drawn national baseline (varies run to run) and the home-state bump alike — 1.0 = default calibration, genuinely weak almost everywhere, rarely enough to threaten a win even in a maximally favorable home state; push well above 1.0 to make wins and outright landslide-state captures actually achievable. In &quot;Exact&quot; mode, the national baseline is set directly instead, so this multiplier only affects the home-state bump.">Third
+          party strength
           <input id="s28ThirdPartyStrength" type="number" min="0.2" max="6" step="0.1" value="1.0" />
         </label>
-        <label title="Random (default): the national baseline for the third party's overall showing is a fresh random draw each run, scaled by the strength multiplier above — its own natural range can rival or exceed the multiplier's, so the outcome still varies a lot run to run at any fixed setting. Exact: skip the draw and type the national share directly below instead, for a fully reproducible, fully controllable scenario.">Third party strength mode
+        <label
+          title="Random (default): the national baseline for the third party's overall showing is a fresh random draw each run, scaled by the strength multiplier above — its own natural range can rival or exceed the multiplier's, so the outcome still varies a lot run to run at any fixed setting. Exact: skip the draw and type the national share directly below instead, for a fully reproducible, fully controllable scenario.">Third
+          party strength mode
           <select id="s28ThirdPartyStrengthMode">
             <option value="random" selected>Random (varies by seed)</option>
             <option value="exact">Exact (type it below)</option>
           </select>
         </label>
-        <label id="s28ExactThirdPartyShareWrap" class="s28-hidden" title="The third party's national vote share, set directly — no randomness, no formula. Per-state results still vary by seed around this baseline (regional texture and swing-state suppression are unaffected), and the strength multiplier above still scales the home-state bump on top of this.">Exact national third-party share (%)
+        <label id="s28ExactThirdPartyShareWrap" class="s28-hidden"
+          title="The third party's national vote share, set directly — no randomness, no formula. Per-state results still vary by seed around this baseline (regional texture and swing-state suppression are unaffected), and the strength multiplier above still scales the home-state bump on top of this.">Exact
+          national third-party share (%)
           <input id="s28ExactThirdPartyShare" type="number" min="0" max="100" step="0.1" value="2.0" />
         </label>
         <button id="s28Start" class="btn" type="button">Start campaign</button>
         <button id="s28Reroll" class="btn" type="button">New random seed</button>
-        <button id="s28Share" class="btn" type="button" title="Copy a link that reproduces this exact setup">Share URL</button>
+        <button id="s28Share" class="btn" type="button" title="Copy a link that reproduces this exact setup">Share
+          URL</button>
       </div>
       <div class="s28-note" style="margin-top:8px">
         Everything is seeded &mdash; the same seed always produces the same election. The true result is
@@ -816,20 +840,26 @@
           <div class="s28-cand-label">Democratic</div>
           <div class="s28-cand-swatches" id="s28CandSwatchesD"></div>
           <div class="s28-cand-search s28-hidden" id="s28CandSearchD">
-            <input id="s28CandSearchInputD" type="text" placeholder="Search any candidate, e.g. Reagan or 1980" autocomplete="off" />
+            <input id="s28CandSearchInputD" type="text" placeholder="Search any candidate, e.g. Reagan or 1980"
+              autocomplete="off" />
             <div class="s28-cand-search-results" id="s28CandSearchResultsD"></div>
           </div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomD">
             <input id="s28CandNameD" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewD"></span>
             <input id="s28CandImgD" type="file" accept="image/*" title="Optional portrait" />
-            <button type="button" class="s28-cand-paste-img" id="s28CandPasteD" title="Paste image from clipboard">Paste image</button>
-            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgD" title="Remove uploaded portrait">Remove image</button>
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
+            <button type="button" class="s28-cand-paste-img" id="s28CandPasteD" title="Paste image from clipboard">Paste
+              image</button>
+            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgD"
+              title="Remove uploaded portrait">Remove image</button>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V
+              &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here
+              will</div>
           </div>
           <div class="s28-cand-home-row s28-hidden" id="s28CandHomeRowD">
             <label class="s28-hidden" id="s28CandHomeWrapD">Home state
-              <select id="s28CandHomeD" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
+              <select id="s28CandHomeD"
+                title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
             </label>
             <label class="s28-hidden" id="s28CandStrengthWrapD">Hometown strength
               <input id="s28CandStrengthD" type="range" min="0" max="1" step="0.05" value="0.5" />
@@ -840,20 +870,26 @@
           <div class="s28-cand-label">Republican</div>
           <div class="s28-cand-swatches" id="s28CandSwatchesR"></div>
           <div class="s28-cand-search s28-hidden" id="s28CandSearchR">
-            <input id="s28CandSearchInputR" type="text" placeholder="Search any candidate, e.g. Reagan or 1980" autocomplete="off" />
+            <input id="s28CandSearchInputR" type="text" placeholder="Search any candidate, e.g. Reagan or 1980"
+              autocomplete="off" />
             <div class="s28-cand-search-results" id="s28CandSearchResultsR"></div>
           </div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomR">
             <input id="s28CandNameR" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewR"></span>
             <input id="s28CandImgR" type="file" accept="image/*" title="Optional portrait" />
-            <button type="button" class="s28-cand-paste-img" id="s28CandPasteR" title="Paste image from clipboard">Paste image</button>
-            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgR" title="Remove uploaded portrait">Remove image</button>
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
+            <button type="button" class="s28-cand-paste-img" id="s28CandPasteR" title="Paste image from clipboard">Paste
+              image</button>
+            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgR"
+              title="Remove uploaded portrait">Remove image</button>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V
+              &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here
+              will</div>
           </div>
           <div class="s28-cand-home-row s28-hidden" id="s28CandHomeRowR">
             <label class="s28-hidden" id="s28CandHomeWrapR">Home state
-              <select id="s28CandHomeR" title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
+              <select id="s28CandHomeR"
+                title="Nudges this state's lean toward this candidate's party. Scaled by the Home state realism setting above and by how movable that state historically is -- a deep-red or deep-blue state barely budges even at full strength."></select>
             </label>
             <label class="s28-hidden" id="s28CandStrengthWrapR">Hometown strength
               <input id="s28CandStrengthR" type="range" min="0" max="1" step="0.05" value="0.5" />
@@ -864,27 +900,35 @@
           <div class="s28-cand-label">Third party</div>
           <div class="s28-cand-swatches" id="s28CandSwatchesO"></div>
           <div class="s28-cand-search s28-hidden" id="s28CandSearchO">
-            <input id="s28CandSearchInputO" type="text" placeholder="Search any candidate, e.g. Perot or 1992" autocomplete="off" />
+            <input id="s28CandSearchInputO" type="text" placeholder="Search any candidate, e.g. Perot or 1992"
+              autocomplete="off" />
             <div class="s28-cand-search-results" id="s28CandSearchResultsO"></div>
           </div>
           <div class="s28-cand-custom s28-hidden" id="s28CandCustomO">
             <input id="s28CandNameO" type="text" placeholder="Candidate name" maxlength="60" />
             <span class="s28-cand-preview" id="s28CandPreviewO"></span>
             <input id="s28CandImgO" type="file" accept="image/*" title="Optional portrait" />
-            <button type="button" class="s28-cand-paste-img" id="s28CandPasteO" title="Paste image from clipboard">Paste image</button>
-            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgO" title="Remove uploaded portrait">Remove image</button>
-            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here will</div>
+            <button type="button" class="s28-cand-paste-img" id="s28CandPasteO" title="Paste image from clipboard">Paste
+              image</button>
+            <button type="button" class="s28-cand-clear-img s28-hidden" id="s28CandClearImgO"
+              title="Remove uploaded portrait">Remove image</button>
+            <div class="s28-cand-drop-hint">or drag an image anywhere in this box, or click Paste image / press Ctrl+V
+              &mdash; a picked/dropped/pasted image doesn't update the file button's own label, but the preview here
+              will</div>
           </div>
           <div class="s28-cand-home-row s28-hidden" id="s28CandHomeRowO">
             <label class="s28-hidden" id="s28CandHomeWrapO">Home state
-              <select id="s28CandHomeO" title="Boosts this candidate's strength in this state (and, with Region bleed on, the rest of its region). Scaled by Hometown strength below."></select>
+              <select id="s28CandHomeO"
+                title="Boosts this candidate's strength in this state (and, with Region bleed on, the rest of its region). Scaled by Hometown strength below."></select>
             </label>
             <label class="s28-hidden" id="s28CandStrengthWrapO">Hometown strength
               <input id="s28CandStrengthO" type="range" min="0" max="1" step="0.05" value="0.5" />
             </label>
           </div>
           <div class="s28-cand-home-row" id="s28SiphonLeanRow">
-            <label id="s28SiphonLeanWrap" title="Which major party this candidate pulls more votes from. 0.5 (default): symmetric — third-party votes come evenly out of both, margin unaffected. 0: siphons entirely from Republicans (spoils R). 1: siphons entirely from Democrats (spoils D). Applies regardless of whether a home state is set.">Siphon lean (0 = spoils R, 1 = spoils D)
+            <label id="s28SiphonLeanWrap"
+              title="Which major party this candidate pulls more votes from. 0.5 (default): symmetric — third-party votes come evenly out of both, margin unaffected. 0: siphons entirely from Republicans (spoils R). 1: siphons entirely from Democrats (spoils D). Applies regardless of whether a home state is set.">Siphon
+              lean (0 = spoils R, 1 = spoils D)
               <input id="s28SiphonLean" type="range" min="0" max="1" step="0.05" value="0.5" />
               <span id="s28SiphonLeanVal" class="s28-slider-val">0.50</span>
             </label>
@@ -930,21 +974,29 @@
         </div>
         <div id="evBar"
           style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:8px">
-          <div id="evFillD" style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
+          <div id="evFillD"
+            style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%"></div>
           <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
           <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
-          <div id="evFillR" style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%"></div>
-          <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)"></div>
+          <div id="evFillR"
+            style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%">
+          </div>
+          <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)">
+          </div>
           <!-- Positioned below the bar, not over it: election-night.js labels each
                segment individually, and a centred overlay collides with them. -->
           <div id="evText" style="position:absolute;left:50%">D 0 | R 0</div>
         </div>
         <div id="evNeededToWin" style="text-align:center;font-size:0.85em;color:var(--muted);margin-top:4px"></div>
         <div id="pvTotals" class="pv-totals s28-hidden" style="margin-top:10px">
-          <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span id="pvDemPct" class="delta"></span></div>
-          <div class="pv-badge pv-o" id="pvOthBadge" style="display:none"><span class="label">Other</span><span id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
-          <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span id="pvRepPct" class="delta"></span></div>
-          <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span></div>
+          <div class="pv-badge pv-d"><span class="label">Dem</span><span id="pvDem" class="num">0</span><span
+              id="pvDemPct" class="delta"></span></div>
+          <div class="pv-badge pv-o" id="pvOthBadge" style="display:none"><span class="label">Other</span><span
+              id="pvOth" class="num">0</span><span id="pvOthPct" class="delta"></span></div>
+          <div class="pv-badge pv-r"><span class="label">Rep</span><span id="pvRep" class="num">0</span><span
+              id="pvRepPct" class="delta"></span></div>
+          <div class="pv-badge pv-margin"><span class="label">Margin</span><span id="pvMargin" class="num">EVEN</span>
+          </div>
           <div class="pv-badge pv-total"><span class="label">Total</span><span id="pvTot" class="num">0</span></div>
         </div>
       </div>
@@ -976,7 +1028,8 @@
         <div class="s28-prob oth" id="s28OthProb" hidden>&mdash;<small>Third-party win</small></div>
         <div class="s28-prob" id="s28TieProb" style="color:var(--muted)">&mdash;<small>Exact tie</small></div>
         <div class="s28-prob" id="s28NatPoll" style="font-size:1.1rem">&mdash;<small>National poll</small></div>
-        <div class="s28-prob" id="s28MedianEv" style="font-size:1.1rem">&mdash;<small>Median EV / 80% range</small></div>
+        <div class="s28-prob" id="s28MedianEv" style="font-size:1.1rem">&mdash;<small>Median EV / 80% range</small>
+        </div>
         <div class="s28-prob" id="s28Tipping" style="font-size:1.1rem">&mdash;<small>Tipping point</small></div>
       </div>
       <div class="s28-chart" id="s28Histogram"></div>
@@ -1022,7 +1075,9 @@
               <th data-sort="ev">EV</th>
               <th data-sort="relPrior" title="2020 margin relative to the nation">2020 lean</th>
               <th data-sort="rel2024" title="2024 margin relative to the nation">2024 lean</th>
-              <th data-sort="margin" title="Simulated poll of 1,000 respondents (D/R/Undecided, +Third party if enabled); margin below = current simulated poll's lean + elasticity x national popular vote">Poll</th>
+              <th data-sort="margin"
+                title="Simulated poll of 1,000 respondents (D/R/Undecided, +Third party if enabled); margin below = current simulated poll's lean + elasticity x national popular vote">
+                Poll</th>
               <th title="90% interval implied by the remaining polling uncertainty">±90% CI</th>
               <th data-sort="rating" title="Rating from the projected margin">Rating</th>
               <th data-sort="change">Change</th>
@@ -1048,8 +1103,8 @@
           <label for="enSpeed" class="legend" style="font-size:0.9rem">Speed</label>
           <div class="nav-btn-group">
             <button id="enSpeedDown" class="nav-btn" type="button" title="Decrease speed">&minus;</button>
-            <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="1"
-              placeholder="1" aria-label="Simulation speed multiplier"
+            <input id="enSpeed" type="text" inputmode="decimal" class="btn" value="1" placeholder="1"
+              aria-label="Simulation speed multiplier"
               style="min-width:60px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
             <button id="enSpeedUp" class="nav-btn" type="button" title="Increase speed">+</button>
           </div>
@@ -1114,8 +1169,8 @@
       <button id="enResetFooter" class="btn" style="min-width:70px">Reset</button>
       <div class="nav-btn-group">
         <button id="enSpeedDownFooter" class="nav-btn" type="button" title="Decrease speed">−</button>
-        <input id="enSpeedFooter" type="text" inputmode="decimal" class="btn" value="1"
-          placeholder="1" aria-label="Simulation speed multiplier"
+        <input id="enSpeedFooter" type="text" inputmode="decimal" class="btn" value="1" placeholder="1"
+          aria-label="Simulation speed multiplier"
           style="min-width:52px;color:#fff;background:var(--card);border:1px solid var(--border);padding:6px 8px;border-radius:8px;text-align:right" />
         <button id="enSpeedUpFooter" class="nav-btn" type="button" title="Increase speed">+</button>
       </div>
