@@ -17,36 +17,44 @@
 // {party} is filled with that party's candidate's full name.
 // {region} is filled with a display region name (e.g. "the Rust Belt").
 // {state} is filled with a display state/unit name (e.g. "Ohio").
+//
+// NATIONAL_SWING_LINES is, in substance, the national-popular-vote
+// commentary - swing.national.mean/sigma (liveSwing.js) is the bias-
+// corrected estimate of exactly that quantity, more honest than reading the
+// raw counted national tally directly (which is skewed early on by which
+// states happen to have reported so far). An NPV call/correction/lead-flip
+// is one of the events that can trigger Sliver to check in (see
+// findSliverTriggerRecord() in election-night.js), on top of key-race calls.
 
 export const NATIONAL_SWING_LINES = [
   {
     D: [
-      "Early days, but the counted vote is running a bit better for {party} than the polls had it.",
-      "Nothing dramatic yet, but {party} is slightly outperforming their pre-election numbers nationally."
+      "Early days, but the national popular vote is running a bit better for {party} than the polls had it.",
+      "Nothing dramatic yet, but {party} is slightly outperforming their pre-election numbers in the popular vote."
     ],
     R: [
-      "Early days, but the counted vote is running a bit better for {party} than the polls had it.",
-      "Nothing dramatic yet, but {party} is slightly outperforming their pre-election numbers nationally."
+      "Early days, but the national popular vote is running a bit better for {party} than the polls had it.",
+      "Nothing dramatic yet, but {party} is slightly outperforming their pre-election numbers in the popular vote."
     ]
   },
   {
     D: [
-      "There's a real move in the data tonight - {party} is running ahead of where the polls had them nationally.",
-      "This is more than noise at this point: the national count is trending toward {party}, beyond what was expected."
+      "There's a real move in the national popular vote tonight - {party} is running ahead of where the polls had them.",
+      "This is more than noise at this point: the popular vote is trending toward {party}, beyond what was expected."
     ],
     R: [
-      "There's a real move in the data tonight - {party} is running ahead of where the polls had them nationally.",
-      "This is more than noise at this point: the national count is trending toward {party}, beyond what was expected."
+      "There's a real move in the national popular vote tonight - {party} is running ahead of where the polls had them.",
+      "This is more than noise at this point: the popular vote is trending toward {party}, beyond what was expected."
     ]
   },
   {
     D: [
-      "This is a sizable national swing toward {party} - well outside what the pre-election polling would have called a normal miss.",
-      "Whatever's happening in the counted vote right now, it's a genuinely big move toward {party} nationally."
+      "This is a sizable swing in the national popular vote toward {party} - well outside what the pre-election polling would have called a normal miss.",
+      "Whatever's happening in the popular vote right now, it's a genuinely big move toward {party} nationally."
     ],
     R: [
-      "This is a sizable national swing toward {party} - well outside what the pre-election polling would have called a normal miss.",
-      "Whatever's happening in the counted vote right now, it's a genuinely big move toward {party} nationally."
+      "This is a sizable swing in the national popular vote toward {party} - well outside what the pre-election polling would have called a normal miss.",
+      "Whatever's happening in the popular vote right now, it's a genuinely big move toward {party} nationally."
     ]
   }
 ];

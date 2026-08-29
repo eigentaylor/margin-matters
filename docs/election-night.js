@@ -1522,8 +1522,9 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     const unitsByKey = new Map((state.stateData || []).map(st => [st.unitKey, st]));
     // Nathaniel Sliver's live swing narration - sim2028-live-run only (see
     // isSim2028LiveRun()'s comment), and only evaluated at all when this
-    // batch actually contains a key-race call/correction/leadFlip
-    // (findSliverTriggerRecord) - see this file's "Nathaniel Sliver" section.
+    // batch actually contains a key-race call/correction/leadFlip, or an
+    // NPV call/correction/lead-flip (findSliverTriggerRecord) - see this
+    // file's "Nathaniel Sliver" section.
     const sliverTriggerRecord = (state.sliverEnabled && isSim2028LiveRun())
       ? findSliverTriggerRecord(records, unitsByKey)
       : null;
@@ -3171,22 +3172,28 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
   }
 
   /**
-   * Finds the last record in this checkpoint's batch that's an ordinary
-   * per-state call/correction/leadFlip (not NPV, not a retraction/notice)
-   * for a key race - the trigger condition for whether Sliver evaluates
-   * anything at all this checkpoint (see buildCheckpointSlides()'s
-   * "focus on key races, don't pop up constantly" requirement). Returns
-   * null if this batch has no such record, in which case Sliver stays
-   * silent for this checkpoint regardless of what the swing math says.
+   * Finds the last record in this checkpoint's batch that's a valid
+   * "check swing status" occasion for Sliver: an ordinary per-state
+   * call/correction/leadFlip for a key race, OR an NPV call/correction/
+   * lead-flip (national popular vote events don't have a unit/key-race of
+   * their own, so they're checked separately from the per-state branch).
+   * Deliberately excludes retractions (a withdrawal of confidence, not
+   * fresh evidence) for both - same asymmetry the per-state branch already
+   * had. Returns null if this batch has no such record, in which case
+   * Sliver stays silent for this checkpoint regardless of what the swing
+   * math says.
    */
   function findSliverTriggerRecord(records, unitsByKey) {
     let found = null;
     (records || []).forEach(record => {
-      if (!record || !record.unitKey || record.unitKey === 'NPV') return;
+      if (!record) return;
+      const isNpvEvent = record.kind === 'npv_call' || record.noticeType === 'npv_miscall' || record.noticeType === 'npvLeadFlip';
+      if (isNpvEvent) { found = record; return; } // records arrive in time order - keep the last match
+      if (!record.unitKey || record.unitKey === 'NPV') return;
       const isOrdinaryCallShape = record.noticeType == null || record.noticeType === 'miscall' || record.noticeType === 'leadFlip';
       if (!isOrdinaryCallShape) return;
       if (!isKeyRaceUnit(unitsByKey.get(record.unitKey))) return;
-      found = record; // records arrive in time order - keep the last match
+      found = record;
     });
     return found;
   }
@@ -3194,7 +3201,8 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
   /**
    * Nathaniel Sliver's live swing-narration slide. Only ever called (from
    * buildCheckpointSlides()) when state.sliverEnabled && isSim2028LiveRun()
-   * and findSliverTriggerRecord() found a key-race trigger this checkpoint.
+   * and findSliverTriggerRecord() found a key-race or NPV trigger this
+   * checkpoint.
    *
    * Picks AT MOST ONE line, in priority order: the live key-race unit with
    * the highest swing z-score that just crossed a new tier for that unit,
@@ -3213,7 +3221,16 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     let bestUnit = null;
     (state.stateData || []).forEach(st => {
       if (!st || st.thirdPartyDominant || !isKeyRaceUnit(st)) return;
-      if (st.latestMetrics && st.latestMetrics.called) return; // already decided - not a "watch this" moment anymore
+      // Already decided - not a "watch this" moment anymore. st.calledAt is
+      // the authoritative live/called signal (cleared back to null by
+      // registerRetraction() if the call gets walked back), same idiom used
+      // elsewhere in this file (e.g. the isCalled pattern in renderAt()). A
+      // fully-counted called unit's z-score can be enormous (its v shrinks
+      // toward the tiny residual term) - without this exclusion actually
+      // working, a decided race can silently dominate the ranking below
+      // over whatever's genuinely still live.
+      const isCalled = st.calledAt != null && state.currentTime >= st.calledAt - EPS;
+      if (isCalled) return;
       const obs = swing.byUnit && swing.byUnit.get(st.unitKey);
       if (!obs || !(obs.v > 0)) return;
       const z = obs.d / Math.sqrt(obs.v);
