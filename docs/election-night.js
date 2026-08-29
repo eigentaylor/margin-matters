@@ -2993,9 +2993,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // dialogue that wants to name the real officeholder regardless of
     // whether Lickman called it.
     const predictedName = prediction.predictedWinnerParty === 'D' ? finalSpec.dCandidateName : finalSpec.rCandidateName;
+    const predictedLoserName = prediction.predictedWinnerParty === 'D' ? finalSpec.rCandidateName : finalSpec.dCandidateName;
     const actualWinnerName = actualEcWinner === 'D' ? finalSpec.dCandidateName : finalSpec.rCandidateName;
     const dialogueText = fillTemplate(pick(CLOSING_LINES[archetype]), {
       winner: predictedName || 'the winner',
+      loser: predictedLoserName || 'the loser',
       actualWinner: actualWinnerName || 'the winner',
       beets: prediction.decided
     });
