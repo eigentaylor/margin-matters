@@ -10,7 +10,7 @@ import { hexToRgb, rgbToHex, blendColors, safeMarginToColor } from './utils/colo
 import { prepareAtLargeData } from './utils/atLargeAggregator.js';
 import { createRegionalErrorModel } from './utils/sim2028/errorModel.js';
 import { POLL_ERROR_SPEC } from './utils/sim2028/pollCalibration.js';
-import { regionOf } from './utils/sim2028/regions.js';
+import { regionOf, REGION_LABELS } from './utils/sim2028/regions.js';
 import { solveLiveSwing, sampleSwing, unitSwingDelta, makeNormalizedTDraw } from './utils/electionNight/liveSwing.js';
 import { groupEventsIntoCheckpoints, findNextCheckpoint } from './utils/electionNight/checkpointScheduler.js';
 import { getPortraitUrlForName } from './utils/electionNight/candidatePortraits.js';
@@ -18,6 +18,7 @@ import { showCheckpoint, setCheckpointAutoAdvance, forceCloseCheckpoint } from '
 import { renderSlideCard } from './utils/electionNight/albumCardRenderer.js';
 import { estimateFalseBeets } from './utils/electionNight/lickman.js';
 import { PREDICTION_LINES, PREDICTION_LINES_NO_NAMES, CLOSING_LINES, MIDNIGHT_CALL_LINES, pick, fillTemplate } from './utils/electionNight/lickmanDialogue.js';
+import { NATIONAL_SWING_LINES, REGIONAL_SWING_LINES, KEY_RACE_SWING_LINES } from './utils/electionNight/sliverDialogue.js';
 import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
 
 (function () {
@@ -387,6 +388,18 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // happens first this playthrough, so buildCheckpointSlides() can flag
     // that one record by identity instead of re-deriving it per checkpoint.
     lickmanMidnightTrigger: null,
+    // Nathaniel Sliver's live swing-vs-prior narration - sim2028-live-run
+    // only (see isSim2028LiveRun(), buildSliverSwingSpec()). Unlike
+    // punditEnabled above, this is intentionally its own flag rather than
+    // sharing Lickman's, since Sliver's toggle only exists on sim2028.html.
+    sliverEnabled: true,
+    // Highest swing-magnitude tier (index into SLIVER_SWING_TIERS, -1 =
+    // none yet) Sliver has already spoken about, per scope - so a swing
+    // that's stopped moving doesn't get re-announced every key-race
+    // checkpoint. Reset alongside state.swingEstimate.
+    sliverLastNationalTier: -1,
+    sliverLastRegionTier: new Map(),
+    sliverLastUnitTier: new Map(),
     checkpointActive: false,
     plannedCheckpoints: [],
     checkpointCursorTime: 0,
@@ -555,6 +568,19 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       state.punditEnabled = !!elements.punditToggle.checked;
       elements.punditToggle.addEventListener('change', () => {
         state.punditEnabled = !!elements.punditToggle.checked;
+      });
+    }
+
+    // Only present on sim2028.html - Sliver's swing narration is gated to
+    // real sim2028 runs (isSim2028LiveRun()) regardless, so there's no
+    // point offering the toggle on a historical-replay page where it could
+    // never fire. Absent here, elements.sliverToggle simply stays null and
+    // state.sliverEnabled keeps its default (true).
+    elements.sliverToggle = document.getElementById('enSliverToggle');
+    if (elements.sliverToggle) {
+      state.sliverEnabled = !!elements.sliverToggle.checked;
+      elements.sliverToggle.addEventListener('change', () => {
+        state.sliverEnabled = !!elements.sliverToggle.checked;
       });
     }
 
@@ -964,6 +990,9 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     state.atLargeParts = null;
     state.unitPosteriors = null;
     state.swingEstimate = null;
+    state.sliverLastNationalTier = -1;
+    state.sliverLastRegionTier = new Map();
+    state.sliverLastUnitTier = new Map();
     state.priorNpvMargin = 0;
     state.nationalWinProb = null;
     state.lastProbUpdateTime = -Infinity;
@@ -1305,6 +1334,9 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     state.atLargeParts = null;
     state.unitPosteriors = null;
     state.swingEstimate = null;
+    state.sliverLastNationalTier = -1;
+    state.sliverLastRegionTier = new Map();
+    state.sliverLastUnitTier = new Map();
     state.priorNpvMargin = 0;
     state.nationalWinProb = null;
     state.lastProbUpdateTime = -Infinity;
@@ -1488,6 +1520,14 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // planned schedule and live tick timing.
     const zeroTally = { D: 0, R: 0, O: 0 };
     const unitsByKey = new Map((state.stateData || []).map(st => [st.unitKey, st]));
+    // Nathaniel Sliver's live swing narration - sim2028-live-run only (see
+    // isSim2028LiveRun()'s comment), and only evaluated at all when this
+    // batch actually contains a key-race call/correction/leadFlip
+    // (findSliverTriggerRecord) - see this file's "Nathaniel Sliver" section.
+    const sliverTriggerRecord = (state.sliverEnabled && isSim2028LiveRun())
+      ? findSliverTriggerRecord(records, unitsByKey)
+      : null;
+    const sliverSwingSpec = sliverTriggerRecord ? buildSliverSwingSpec(sliverTriggerRecord) : null;
     const specs = records.map((record, idx) => {
       const spec_tallyBefore = record.plannedTallyBefore || zeroTally;
       if (record.noticeType === 'outcome-clinch' || record.noticeType === 'outcome-reversal') {
@@ -1877,6 +1917,9 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     // checkpoint's chronological order, right after the call/outcome slide
     // that triggered it, rather than always leading the batch.
     if (lickmanMidnightSpec) specs.push(lickmanMidnightSpec);
+    // Same non-tier-(-1) placement as lickmanMidnightSpec, for the same
+    // reason - sorts into chronological order via its own `time`.
+    if (sliverSwingSpec) specs.push(sliverSwingSpec);
     // 'outcome'/'uncalled' are excluded from the tier-0 breaking-news front
     // group despite being flagged spec.breaking=true (kept true only for
     // updatePopup.js's flash/ribbon treatment) - same decoupling as 'final'
@@ -1919,10 +1962,11 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
 
     await Promise.all(specs.map(async spec => {
       if (spec.kind === 'raceOverview') return; // already resolved in buildRaceOverviewSpec()
-      // Lickman's portraitUrl is a fixed static asset (img/lickmanbase.png,
-      // not a resolved candidate photo) - resolving it here against his
-      // (nonexistent) candidateName would just null it back out.
-      if (spec.kind === 'lickmanIntro' || spec.kind === 'lickmanClosing' || spec.kind === 'lickmanMidnight') return;
+      // Lickman's and Sliver's portraitUrl are fixed static assets
+      // (img/lickmanbase.png, img/sliverbase.png - not resolved candidate
+      // photos) - resolving against their (nonexistent) candidateName would
+      // just null it back out.
+      if (spec.kind === 'lickmanIntro' || spec.kind === 'lickmanClosing' || spec.kind === 'lickmanMidnight' || spec.kind === 'sliverSwing') return;
       if (spec.kind === 'final' || spec.kind === 'uncalled') {
         spec.dPortraitUrl = await getPortraitUrlForName(state.year, spec.dCandidateName);
         spec.rPortraitUrl = await getPortraitUrlForName(state.year, spec.rCandidateName);
@@ -3055,6 +3099,198 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
     };
   }
 
+  // --- Nathaniel Sliver: live swing-vs-prior narration ---
+  //
+  // Narrates docs/utils/electionNight/liveSwing.js's solveLiveSwing()
+  // hierarchy (state.swingEstimate) - the same live signal that already
+  // drives the (paced/damped, see PACING_MEAN_SCALE_START above) win
+  // percentage, but which is otherwise never spoken aloud. Two hard rules,
+  // settled during design:
+  //   1. Magnitude words only, never a percentage or anything that implies
+  //      one - see SLIVER_SWING_TIERS below.
+  //   2. sim2028-live-run only (gated by isSim2028LiveRun() at the call
+  //      site in buildCheckpointSlides()) - state.priorMargin is a
+  //      fabricated stand-in for a historical replay (see
+  //      buildSyntheticPollPriors()'s comment above), so narrating "the
+  //      polls said X" from it during a real historical year would be
+  //      spreading misinformation about what people actually expected.
+  //
+  // Unlike Lickman's fixed intro/closing/midnight triggers (each tied to a
+  // single precomputed event), Sliver's trigger is "did the live swing
+  // hierarchy just cross a new notability threshold" - evaluated live,
+  // inside buildCheckpointSlides(), against state.swingEstimate. This is
+  // safe/deterministic-under-replay for the same reason registerCall() is
+  // (see tick()'s comment): renderAt() always refreshes state.swingEstimate
+  // for exactly state.currentTime immediately before maybeFireCheckpoint()
+  // checks that same time, so by the time a checkpoint's slides are being
+  // built, state.swingEstimate already reflects precisely that moment.
+
+  const SLIVER_PORTRAIT_URL = 'img/sliverbase.png';
+
+  // Magnitude tiers for a swing z-score (a plain |deviation| / its own
+  // standard deviation, in the same "how many standard deviations of
+  // surprise" units at every scope - national mean/sigma, a region's
+  // already-shrunk mean/sigma, or a single key race's d/sqrt(v)). Below the
+  // lowest tier, Sliver says nothing about that scope at all - that gate IS
+  // the "don't sound more confident than the data supports" rule, no
+  // separate confidence check needed. Placeholder cutoffs - tune by eye,
+  // the same way PACING_MEAN_SCALE_START/POLL_ERROR_SPEC etc. were.
+  const SLIVER_SWING_TIERS = [
+    { minZ: 1.0 },
+    { minZ: 1.75 },
+    { minZ: 2.75 }
+  ];
+
+  /** Highest SLIVER_SWING_TIERS index cleared by |z|, or -1 if none. */
+  function sliverTierForZ(z) {
+    if (!isFinite(z)) return -1;
+    let tier = -1;
+    for (let i = 0; i < SLIVER_SWING_TIERS.length; i++) {
+      if (Math.abs(z) >= SLIVER_SWING_TIERS[i].minZ) tier = i;
+    }
+    return tier;
+  }
+
+  /**
+   * `deltaDPositive` follows the same D-positive convention as
+   * priorMargin/observedMargin (see liveSwing.js: d = priorMargin -
+   * observedMargin) - positive means the count is running MORE Republican
+   * than the prior expected (D underperforming), negative means D
+   * overperforming. Centralized here so this sign isn't re-derived (and
+   * potentially inverted by accident) at each call site.
+   */
+  function swingDirection(deltaDPositive) {
+    return deltaDPositive > 0 ? 'R' : 'D';
+  }
+
+  function resolveSliverPartyName(direction, unitKey) {
+    return resolveCandidateFullName(direction, unitKey)
+      || (direction === 'D' ? 'the Democrat' : 'the Republican');
+  }
+
+  /**
+   * Finds the last record in this checkpoint's batch that's an ordinary
+   * per-state call/correction/leadFlip (not NPV, not a retraction/notice)
+   * for a key race - the trigger condition for whether Sliver evaluates
+   * anything at all this checkpoint (see buildCheckpointSlides()'s
+   * "focus on key races, don't pop up constantly" requirement). Returns
+   * null if this batch has no such record, in which case Sliver stays
+   * silent for this checkpoint regardless of what the swing math says.
+   */
+  function findSliverTriggerRecord(records, unitsByKey) {
+    let found = null;
+    (records || []).forEach(record => {
+      if (!record || !record.unitKey || record.unitKey === 'NPV') return;
+      const isOrdinaryCallShape = record.noticeType == null || record.noticeType === 'miscall' || record.noticeType === 'leadFlip';
+      if (!isOrdinaryCallShape) return;
+      if (!isKeyRaceUnit(unitsByKey.get(record.unitKey))) return;
+      found = record; // records arrive in time order - keep the last match
+    });
+    return found;
+  }
+
+  /**
+   * Nathaniel Sliver's live swing-narration slide. Only ever called (from
+   * buildCheckpointSlides()) when state.sliverEnabled && isSim2028LiveRun()
+   * and findSliverTriggerRecord() found a key-race trigger this checkpoint.
+   *
+   * Picks AT MOST ONE line, in priority order: the live key-race unit with
+   * the highest swing z-score that just crossed a new tier for that unit,
+   * else the region with the highest z-score that just crossed a new tier
+   * for that region, else the national swing if IT just crossed a new
+   * tier. Returns null when nothing crossed a new tier since Sliver last
+   * spoke about that scope (state.sliverLast*Tier) - the mechanism that
+   * keeps him occasional rather than repeating himself every checkpoint.
+   */
+  function buildSliverSwingSpec(triggerRecord) {
+    const swing = state.swingEstimate;
+    if (!swing) return null;
+
+    // 1. Key races: highest live z among currently-uncalled key-race
+    //    units, gated on crossing a new tier for THAT unit.
+    let bestUnit = null;
+    (state.stateData || []).forEach(st => {
+      if (!st || st.thirdPartyDominant || !isKeyRaceUnit(st)) return;
+      if (st.latestMetrics && st.latestMetrics.called) return; // already decided - not a "watch this" moment anymore
+      const obs = swing.byUnit && swing.byUnit.get(st.unitKey);
+      if (!obs || !(obs.v > 0)) return;
+      const z = obs.d / Math.sqrt(obs.v);
+      const tier = sliverTierForZ(z);
+      if (tier < 0) return;
+      const lastTier = state.sliverLastUnitTier.has(st.unitKey) ? state.sliverLastUnitTier.get(st.unitKey) : -1;
+      if (tier <= lastTier) return;
+      if (!bestUnit || Math.abs(z) > Math.abs(bestUnit.z)) bestUnit = { unitKey: st.unitKey, z, tier };
+    });
+    if (bestUnit) {
+      state.sliverLastUnitTier.set(bestUnit.unitKey, bestUnit.tier);
+      const direction = swingDirection(bestUnit.z);
+      const dialogueText = fillTemplate(pick(KEY_RACE_SWING_LINES[bestUnit.tier][direction]), {
+        party: resolveSliverPartyName(direction, bestUnit.unitKey),
+        state: formatUnitLabel(bestUnit.unitKey, state.year, { short: true })
+      });
+      return makeSliverSpec(dialogueText, triggerRecord);
+    }
+
+    // 2. Regions: highest z among regions with any live reporting, gated
+    //    on crossing a new tier for THAT region. region.mean is already
+    //    shrunk toward zero by low nObs/k (see liveSwing.js), so a lone
+    //    noisy reporter can't fake a big regional read here.
+    let bestRegion = null;
+    if (swing.regions) {
+      swing.regions.forEach((region, key) => {
+        if (!region || !(region.nObs > 0) || !(region.sigma > 0)) return;
+        const z = region.mean / region.sigma;
+        const tier = sliverTierForZ(z);
+        if (tier < 0) return;
+        const lastTier = state.sliverLastRegionTier.has(key) ? state.sliverLastRegionTier.get(key) : -1;
+        if (tier <= lastTier) return;
+        if (!bestRegion || Math.abs(z) > Math.abs(bestRegion.z)) bestRegion = { key, z, tier };
+      });
+    }
+    if (bestRegion) {
+      state.sliverLastRegionTier.set(bestRegion.key, bestRegion.tier);
+      const direction = swingDirection(bestRegion.z);
+      const dialogueText = fillTemplate(pick(REGIONAL_SWING_LINES[bestRegion.tier][direction]), {
+        party: resolveSliverPartyName(direction, 'NATIONAL'),
+        region: REGION_LABELS[bestRegion.key] || bestRegion.key
+      });
+      return makeSliverSpec(dialogueText, triggerRecord);
+    }
+
+    // 3. National.
+    if (swing.national && swing.national.sigma > 0) {
+      const z = swing.national.mean / swing.national.sigma;
+      const tier = sliverTierForZ(z);
+      if (tier >= 0 && tier > state.sliverLastNationalTier) {
+        state.sliverLastNationalTier = tier;
+        const direction = swingDirection(z);
+        const dialogueText = fillTemplate(pick(NATIONAL_SWING_LINES[tier][direction]), {
+          party: resolveSliverPartyName(direction, 'NATIONAL')
+        });
+        return makeSliverSpec(dialogueText, triggerRecord);
+      }
+    }
+
+    return null;
+  }
+
+  function makeSliverSpec(dialogueText, triggerRecord) {
+    return {
+      kind: 'sliverSwing',
+      breaking: false,
+      label: 'NATHANIEL SLIVER',
+      portraitUrl: SLIVER_PORTRAIT_URL,
+      dialogueText,
+      accentColor: '#1f6f8b',
+      // Not tier -1 like Lickman's intro/closing - carries its own time so
+      // the sort in buildCheckpointSlides() places it in chronological
+      // order, right after the key-race call that triggered evaluating it
+      // - same pattern as buildLickmanMidnightSpec() above.
+      time: triggerRecord.time + EPS,
+      timeLabel: formatTimeLabel(triggerRecord.time)
+    };
+  }
+
   /**
    * Check whether real forward playback has just ticked past the next
    * planned checkpoint, and if so, pause and show it. Only called from the
@@ -3138,6 +3374,7 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
       case 'lickmanIntro': what = `Aleck Lickman's prediction (${slide.falseBeets} false beets)`; break;
       case 'lickmanClosing': what = "Aleck Lickman's final word"; break;
       case 'lickmanMidnight': what = `Aleck Lickman reacts (${slide.source === 'npvFirst' ? 'NPV called' : 'EC called'})`; break;
+      case 'sliverSwing': what = "Nathaniel Sliver's swing check"; break;
       default: what = slide.kind || 'Update';
     }
     // Mirrors the card's own "Breaking news" ribbon (renderCallOrCorrection()
@@ -3197,6 +3434,16 @@ import { ratingForShares, TOSSUP_BAND } from './utils/electionRatings.js';
 
     try {
       seekToProgress(0);
+      // buildCheckpointSlides() (shared with the live path) mutates
+      // state.sliverLast*Tier to avoid repeating a swing tier Sliver's
+      // already spoken about - seekToProgress(0) rewinds the clock but
+      // doesn't clear that bookkeeping, so generating an album after
+      // already live-watching the same run (where he may have spoken
+      // already) would wrongly suppress those same lines here. Reset fresh,
+      // same as prepareSimulation()/resetSimulation() do.
+      state.sliverLastNationalTier = -1;
+      state.sliverLastRegionTier = new Map();
+      state.sliverLastUnitTier = new Map();
       const checkpoints = computeAlbumCheckpoints().filter(cp => cp && cp.events && cp.events.length);
       const total = checkpoints.length;
       const mapCaptureEl = document.getElementById('s28MapCapture');

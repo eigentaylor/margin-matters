@@ -533,15 +533,18 @@ async function drawRaceOverview(ctx, slide, w) {
 }
 
 const LICKMAN_ACCENT = '#9b2f6b';
+const SLIVER_ACCENT = '#1f6f8b';
 
-// Album analogue of updatePopup.js's renderLickman() - portrait + speech
-// bubble, used for both 'lickmanIntro' and 'lickmanClosing'. No ribbon/header
+// Album analogue of updatePopup.js's renderPunditBubble() - portrait + speech
+// bubble shell shared by Aleck Lickman ('lickmanIntro'/'lickmanClosing'/
+// 'lickmanMidnight') and Nathaniel Sliver ('sliverSwing'). No ribbon/header
 // (mirrors the live popup, which is also chrome-free apart from the small
-// label above the photo).
-async function drawLickman(ctx, slide, w) {
+// label above the photo). `footerText`, when given, is a small line under
+// the dialogue (Lickman's false-beets count; Sliver has none).
+async function drawPunditBubble(ctx, slide, w, { accentColor, footerText } = {}) {
   const img = await loadImage(slide.portraitUrl);
   let y = 30;
-  text(ctx, (slide.label || 'ALECK LICKMAN').toUpperCase(), w / 2, y + 14, { font: `900 15px ${FONT}`, color: 'rgba(255,255,255,0.65)', align: 'center' });
+  text(ctx, (slide.label || 'PUNDIT').toUpperCase(), w / 2, y + 14, { font: `900 15px ${FONT}`, color: 'rgba(255,255,255,0.65)', align: 'center' });
   y += 40;
 
   const photoSize = 130;
@@ -563,7 +566,7 @@ async function drawLickman(ctx, slide, w) {
   ctx.restore();
   ctx.beginPath();
   ctx.arc(photoX + photoSize / 2, y + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
-  ctx.strokeStyle = LICKMAN_ACCENT;
+  ctx.strokeStyle = accentColor || '#2f2f2f';
   ctx.lineWidth = 3;
   ctx.stroke();
 
@@ -580,9 +583,23 @@ async function drawLickman(ctx, slide, w) {
     text(ctx, line, bubbleX + 16, ty, { font, color: '#fff' });
     ty += lineH;
   });
-  text(ctx, `${slide.falseBeets} / 13 BEETS FALSE`, bubbleX + 16, y + bubbleH - 16, { font: `800 12px ${FONT}`, color: 'rgba(255,255,255,0.55)' });
+  if (footerText) {
+    text(ctx, footerText, bubbleX + 16, y + bubbleH - 16, { font: `800 12px ${FONT}`, color: 'rgba(255,255,255,0.55)' });
+  }
 
   return y + Math.max(photoSize, bubbleH) + BOTTOM_PAD;
+}
+
+async function drawLickman(ctx, slide, w) {
+  return drawPunditBubble(ctx, slide, w, {
+    accentColor: LICKMAN_ACCENT,
+    footerText: `${slide.falseBeets} / 13 BEETS FALSE`
+  });
+}
+
+// Album analogue of updatePopup.js's renderSliver() - no footer pill.
+async function drawSliver(ctx, slide, w) {
+  return drawPunditBubble(ctx, slide, w, { accentColor: slide.accentColor || SLIVER_ACCENT });
 }
 
 async function drawOutcome(ctx, slide, w, ribbonBottom) {
@@ -879,6 +896,7 @@ async function drawBody(ctx, slide, w) {
   }
   if (slide.kind === 'raceOverview') return drawRaceOverview(ctx, slide, w);
   if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight') return drawLickman(ctx, slide, w);
+  if (slide.kind === 'sliverSwing') return drawSliver(ctx, slide, w);
   const ribbonLabel = slide.kind === 'final' ? `Final${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}` : `Breaking news${slide.timeLabel ? ` — ${slide.timeLabel} ET` : ''}`;
   const ribbonBottom = drawBreakingRibbon(ctx, w, ribbonLabel);
   if (slide.kind === 'outcome') return drawOutcome(ctx, slide, w, ribbonBottom);

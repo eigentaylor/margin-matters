@@ -6,17 +6,10 @@
 // and CLOSING_LINES are wired up to any UI yet (the opening and closing
 // slides);
 
-/** Picks a pseudo-random entry from `arr` using an already-seeded rng() -> [0,1) function. */
-export function pick(arr, rng) {
-  if (!arr || !arr.length) return '';
-  const i = Math.min(arr.length - 1, Math.floor((rng ? rng() : Math.random()) * arr.length));
-  return arr[i];
-}
-
-/** Fills {winner}/{loser}/{beets}/{falseBeets} placeholders in a template string. */
-export function fillTemplate(template, vars) {
-  return String(template || '').replace(/\{(\w+)\}/g, (m, key) => (key in vars ? vars[key] : m));
-}
+// pick()/fillTemplate() now live in dialogueUtils.js, shared with
+// sliverDialogue.js - re-exported here so nothing importing them from this
+// file needs to change.
+export { pick, fillTemplate } from './dialogueUtils.js';
 
 // Opening prediction, shown right after the race-overview title card, before
 // any polls have closed. {winner}/{loser} are the predicted winner/loser's

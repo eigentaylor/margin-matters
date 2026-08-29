@@ -140,9 +140,10 @@ let activeDeltaChips = { D: null, R: null, O: null };
 // this flag entirely - it only gates the setTimeout in renderSlide().
 let autoAdvancePaused = false;
 
-// A beat longer than a plain call slide (LICKMAN_SLIDE_MS) - there's a full
-// sentence of dialogue to read, not just a name and a margin.
-const LICKMAN_SLIDE_MS = 6000;
+// A beat longer than a plain call slide (PUNDIT_SLIDE_MS) - there's a full
+// sentence of dialogue to read, not just a name and a margin. Shared by
+// both pundit characters (Lickman, Sliver).
+const PUNDIT_SLIDE_MS = 6000;
 
 function durationFor(slide) {
   if (slide.kind === 'raceOverview') return RACE_OVERVIEW_SLIDE_MS;
@@ -150,7 +151,7 @@ function durationFor(slide) {
   if (slide.kind === 'final' || slide.kind === 'uncalled') return FINAL_SLIDE_MS;
   if (slide.kind === 'races' || slide.kind === 'pollClose' || slide.kind === 'finalResults') return RACES_SLIDE_MS;
   if (slide.kind === 'correction' || slide.kind === 'retraction' || slide.kind === 'leadFlip') return CORRECTION_SLIDE_MS;
-  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight') return LICKMAN_SLIDE_MS;
+  if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight' || slide.kind === 'sliverSwing') return PUNDIT_SLIDE_MS;
   return CALL_SLIDE_MS;
 }
 
@@ -752,22 +753,43 @@ function renderRaceOverview(slide) {
 }
 
 /**
- * Aleck Lickman's opening prediction ('lickmanIntro') and closing reaction
- * ('lickmanClosing') slides - same layout for both (portrait + speech
- * bubble), distinguished only by slide.label. See election-night.js's
- * buildLickmanIntroSpec()/buildLickmanClosingSpec() for how slide.dialogueText
- * gets picked/filled.
+ * Shared "portrait + speech bubble" shell for a pundit-commentary slide -
+ * used by both Aleck Lickman (renderLickman) and Nathaniel Sliver
+ * (renderSliver). `footerHtml` is optional extra markup inside the bubble,
+ * below the dialogue text (Lickman's false-beets pill; Sliver has none).
  */
-function renderLickman(slide) {
+function renderPunditBubble(labelText, photoUrl, photoAlt, dialogueText, footerHtml) {
   cardEl.innerHTML = `
-    <div class="en-cp-lickman-label">${slide.label || 'Aleck Lickman'}</div>
-    <div class="en-cp-lickman-body">
-      <img class="en-cp-lickman-photo" src="${slide.portraitUrl}" alt="Aleck Lickman" />
-      <div class="en-cp-lickman-bubble">
-        <div class="en-cp-lickman-text">${slide.dialogueText || ''}</div>
-        <div class="en-cp-lickman-beets">${slide.falseBeets} / 13 beets false</div>
+    <div class="en-cp-pundit-label">${labelText}</div>
+    <div class="en-cp-pundit-body">
+      <img class="en-cp-pundit-photo" src="${photoUrl}" alt="${photoAlt}" />
+      <div class="en-cp-pundit-bubble">
+        <div class="en-cp-pundit-text">${dialogueText || ''}</div>
+        ${footerHtml || ''}
       </div>
     </div>`;
+}
+
+/**
+ * Aleck Lickman's opening prediction ('lickmanIntro'), closing reaction
+ * ('lickmanClosing'), and midnight reaction ('lickmanMidnight') slides -
+ * same layout for all three, distinguished only by slide.label. See
+ * election-night.js's buildLickmanIntroSpec()/buildLickmanClosingSpec()/
+ * buildLickmanMidnightSpec() for how slide.dialogueText gets picked/filled.
+ */
+function renderLickman(slide) {
+  const footerHtml = `<div class="en-cp-lickman-beets">${slide.falseBeets} / 13 beets false</div>`;
+  renderPunditBubble(slide.label || 'Aleck Lickman', slide.portraitUrl, 'Aleck Lickman', slide.dialogueText, footerHtml);
+}
+
+/**
+ * Nathaniel Sliver's live swing-narration slide ('sliverSwing') - same
+ * portrait/bubble shell as Lickman's, no footer pill. See
+ * election-night.js's buildSliverSwingSpec() for how slide.dialogueText
+ * gets picked/filled.
+ */
+function renderSliver(slide) {
+  renderPunditBubble(slide.label || 'Nathaniel Sliver', slide.portraitUrl, 'Nathaniel Sliver', slide.dialogueText, '');
 }
 
 /**
@@ -932,6 +954,7 @@ function renderSlide(index) {
   else if (slide.kind === 'retraction') renderRetraction(slide);
   else if (slide.kind === 'leadFlip') renderLeadFlip(slide);
   else if (slide.kind === 'lickmanIntro' || slide.kind === 'lickmanClosing' || slide.kind === 'lickmanMidnight') renderLickman(slide);
+  else if (slide.kind === 'sliverSwing') renderSliver(slide);
   else renderCallOrCorrection(slide);
   renderProgress(activeSlides.length, index);
 

@@ -4118,10 +4118,13 @@ body.shift-vectors-page {
   color: #fff;
 }
 
-/* Aleck Lickman's opening prediction / closing reaction slides
-   ('lickmanIntro'/'lickmanClosing') - his portrait beside a comic-style
-   speech bubble, plus a small false-beets counter under the dialogue. */
-.en-cp-lickman-label {
+/* Shared "portrait + comic-style speech bubble" shell for a pundit
+   commentary slide - Aleck Lickman's opening/closing/midnight reactions
+   ('lickmanIntro'/'lickmanClosing'/'lickmanMidnight') and Nathaniel
+   Sliver's live swing narration ('sliverSwing'). Per-slide accent color
+   (border, speech-bubble tail) comes from --en-cp-accent, set per slide
+   from slide.accentColor in renderSlide(). */
+.en-cp-pundit-label {
   padding: 14px 24px 0;
   text-align: center;
   font-size: 0.78rem;
@@ -4131,24 +4134,24 @@ body.shift-vectors-page {
   color: rgba(255, 255, 255, 0.65);
 }
 
-.en-cp-lickman-body {
+.en-cp-pundit-body {
   display: flex;
   align-items: flex-start;
   gap: 18px;
   padding: 18px 24px 30px;
 }
 
-.en-cp-lickman-photo {
+.en-cp-pundit-photo {
   flex: 0 0 auto;
   width: clamp(80px, 22vw, 110px);
   height: clamp(80px, 22vw, 110px);
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--en-cp-accent, #9b2f6b);
+  border: 3px solid var(--en-cp-accent, #2f2f2f);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 
-.en-cp-lickman-bubble {
+.en-cp-pundit-bubble {
   position: relative;
   flex: 1 1 auto;
   background: rgba(255, 255, 255, 0.1);
@@ -4156,7 +4159,7 @@ body.shift-vectors-page {
   padding: 14px 16px;
 }
 
-.en-cp-lickman-bubble::before {
+.en-cp-pundit-bubble::before {
   content: '';
   position: absolute;
   left: -8px;
@@ -4167,13 +4170,14 @@ body.shift-vectors-page {
   clip-path: polygon(100% 0, 100% 100%, 0 50%);
 }
 
-.en-cp-lickman-text {
+.en-cp-pundit-text {
   font-size: clamp(0.95rem, 3vw, 1.1rem);
   font-weight: 700;
   line-height: 1.4;
   color: #fff;
 }
 
+/* Lickman-only: the small false-beets counter under his dialogue. */
 .en-cp-lickman-beets {
   margin-top: 10px;
   font-size: 0.72rem;
@@ -4183,11 +4187,11 @@ body.shift-vectors-page {
   color: rgba(255, 255, 255, 0.55);
 }
 
-.en-cp-reveal .en-cp-lickman-label {
+.en-cp-reveal .en-cp-pundit-label {
   animation: en-cp-slide-down 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.en-cp-reveal .en-cp-lickman-body {
+.en-cp-reveal .en-cp-pundit-body {
   animation: en-cp-fade-up 0.4s 0.15s ease-out both;
 }
 
