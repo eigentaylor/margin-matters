@@ -602,7 +602,24 @@ export function createUpdateAll(deps) {
     }
   }
 
-  function applyStateFills(abbrColors) {
+  // Glows the units the active flip scenario actually moved, mirroring
+  // sim2028.js's applyGlow() (docs/sim2028.js:539-561) minus its "dim
+  // everything else" mode, which isn't wanted here — only the flipped
+  // units themselves should stand out.
+  function applyFlipGlow(el, on, fill) {
+    if (!el) return;
+    if (on) {
+      el.style.stroke = '#ffffff';
+      el.style.strokeWidth = '2.4px';
+      el.style.filter = `drop-shadow(0 0 6px ${fill})`;
+    } else {
+      el.style.stroke = '';
+      el.style.strokeWidth = '';
+      el.style.filter = '';
+    }
+  }
+
+  function applyStateFills(abbrColors, year) {
     if (!d3) return;
     if (window._electionNightActive) {
       window._electionNightLastAbbrColors = abbrColors;
@@ -625,6 +642,7 @@ export function createUpdateAll(deps) {
         console.warn(e);
         d3.select(this).attr('fill', fill);
       }
+      applyFlipGlow(this, isUnitFlipped(year, abbr), fill);
     });
   }
 
@@ -654,6 +672,7 @@ export function createUpdateAll(deps) {
         pSel.attr('display', visible ? null : 'none');
         const halo = pSel.node && pSel.node().previousSibling;
         if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
+        applyFlipGlow(pSel.node(), isUnitFlipped(year, unit), ucolor);
       });
     } catch (e) { /* ignore */ }
   }
@@ -1347,7 +1366,7 @@ export function createUpdateAll(deps) {
 
     const mapState = computeMapState(year, pvState);
 
-    applyStateFills(mapState.abbrColors);
+    applyStateFills(mapState.abbrColors, year);
     applyDistrictFills(year, mapState.unitColors);
 
     window._lastAbbrColors = mapState.abbrColors;
