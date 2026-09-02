@@ -23,6 +23,7 @@
  *   node tools/generate_flip_gif.mjs --year 2020 --mode no_majority --hold-ms 2500
  *   node tools/generate_flip_gif.mjs --year 2016 --mode no_majority --transition-ms 2000
  *   node tools/generate_flip_gif.mjs --year 2020 --mode no_majority --dim
+ *   node tools/generate_flip_gif.mjs --year 2016 --mode classic --dim --rendervotes
  *
  * flip_scenarios.ipynb's Step 6 cell prints ready-to-run invocations of this
  * script for its top-10 "most fragile" elections.
@@ -39,6 +40,13 @@ const MODE_BUTTON_ID = { classic: 'flipClassic', no_majority: 'flipNoMaj', tie: 
 
 const DEFAULT_CROP_SELECTORS = ['#map-wrap', '#evBar', '#evNeededToWin'];
 
+// Copied from docs/utils/constants.js's ID_TO_ABBR - kept as a local copy
+// (rather than importing the site module or exposing a new window global)
+// so --rendervotes stays entirely contained to this script. Only used as a
+// bbox-center fallback for the tiny states electionMap.js's own label layer
+// skips (see renderVoteLabels below).
+const FIPS_TO_ABBR = { "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL", "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME", "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH", "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI", "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI", "56": "WY" };
+
 function parseArgs(argv) {
   const args = {
     year: null, mode: null, metric: 'votes',
@@ -47,7 +55,7 @@ function parseArgs(argv) {
     gifWidth: 960, fps: 20,
     preRollMs: 500, holdMs: 1800, transitionMs: 1200,
     viewportWidth: 1100, viewportHeight: 1000,
-    crop: true, include: [], dim: true
+    crop: true, include: [], dim: true, renderVotes: false
   };
 
   for (let i = 0; i < argv.length; i++) {
@@ -70,6 +78,7 @@ function parseArgs(argv) {
       case '--no-crop': args.crop = false; break;
       case '--include': args.include.push(next()); break;
       case '--dim': args.dim = true; break;
+      case '--rendervotes': args.renderVotes = true; break;
       default:
         throw new Error(`Unknown argument: ${a}`);
     }
@@ -79,7 +88,12 @@ function parseArgs(argv) {
   if (!MODE_TOKENS.includes(args.mode)) throw new Error(`--mode must be one of ${MODE_TOKENS.join('|')}`);
   if (args.metric !== 'votes' && args.metric !== 'margin') throw new Error('--metric must be votes or margin');
   if (!args.out) args.out = `${args.year}_${args.mode}_${args.metric}.gif`;
-  if (!args.include.length) args.include = DEFAULT_CROP_SELECTORS;
+  if (!args.include.length) {
+    // #flipVoteHeadline (renderVoteLabels' headline total) sits outside the
+    // map/EV-bar crop box by design, so it needs to be pulled into the
+    // default crop region explicitly when --rendervotes is on.
+    args.include = args.renderVotes ? [...DEFAULT_CROP_SELECTORS, '#flipVoteHeadline'] : DEFAULT_CROP_SELECTORS;
+  }
 
   return args;
 }
@@ -219,6 +233,127 @@ async function slowTransitions(page, transitionMs) {
     .state, .district { transition-duration: ${transitionMs}ms !important; }
     #evFillD, #evFillU, #evFillO, #evFillR { transition-duration: ${transitionMs}ms !important; }
   ` });
+}
+
+/**
+ * Experimental --rendervotes overlay: drops a small dark readable box on
+ * each flipped state/district showing its raw vote delta (window._activeFlip.units[i]
+ * .votes_to_flip / .pct_of_state_votes, already computed by flipScenarios.js's
+ * applyFlip() - see docs/utils/flipScenarios.js:234-238), plus a headline
+ * total (activeFlip.votesSum) above the EV bar. Entirely self-contained to
+ * this script (no docs/ files touched) so it's a one-line removal if it
+ * doesn't read well in practice.
+ *
+ * Positioning reuses docs/utils/electionMap.js's existing per-state label
+ * placement cache (window.ElectionMap._visualCenterCache, populated as a
+ * side effect of the normal render pipeline) rather than recomputing
+ * "good interior point" geometry here. That cache has no entry for the tiny
+ * states electionMap.js's own label layer skips (SMALL_STATES in
+ * docs/utils/constants.js) or for ME/NE congressional districts (which have
+ * no visual-center mechanism at all) - both fall back to a plain bbox
+ * center of the relevant path element, via window._districtPaths for
+ * districts and FIPS_TO_ABBR + a path.state scan for the tiny states.
+ */
+async function renderVoteLabels(page) {
+  await page.evaluate((fipsToAbbr) => {
+    document.querySelectorAll('g.flip-vote-labels, #flipVoteHeadline').forEach(el => el.remove());
+
+    const flip = window._activeFlip;
+    if (!flip || !Array.isArray(flip.units)) return;
+
+    const svg = document.querySelector('#map-wrap svg');
+    if (!svg) return;
+
+    function anchorFor(unit) {
+      if (unit.includes('-')) {
+        const sel = window._districtPaths && window._districtPaths.get(unit);
+        const node = sel && sel.node && sel.node();
+        if (node) { const bb = node.getBBox(); return { x: bb.x + bb.width / 2, y: bb.y + bb.height / 2 }; }
+        return null;
+      }
+      const cached = window.ElectionMap && window.ElectionMap._visualCenterCache && window.ElectionMap._visualCenterCache.get(unit);
+      if (cached) return cached;
+      let found = null;
+      document.querySelectorAll('path.state').forEach(node => {
+        if (found || !node.__data__) return;
+        const id = String(node.__data__.id).padStart(2, '0');
+        if (fipsToAbbr[id] === unit) found = node;
+      });
+      if (found) { const bb = found.getBBox(); return { x: bb.x + bb.width / 2, y: bb.y + bb.height / 2 }; }
+      return null;
+    }
+
+    const layer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    layer.setAttribute('class', 'flip-vote-labels');
+    svg.appendChild(layer);
+
+    flip.units.forEach(u => {
+      const anchor = anchorFor(u.unit);
+      if (!anchor) { console.warn('[rendervotes] no anchor for unit', u.unit); return; }
+
+      const lines = [];
+      if (u.unit.includes('-')) lines.push(u.unit);
+      lines.push(`Δ${(+u.votes_to_flip || 0).toLocaleString('en-US')}`);
+      lines.push(`(${+u.pct_of_state_votes || 0}%)`);
+
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-family', "'Helvetica Neue', Arial, sans-serif");
+      text.setAttribute('font-weight', '700');
+      text.setAttribute('font-size', '11');
+      text.setAttribute('fill', '#fff');
+      // Each tspan gets an explicit absolute y (rather than a dy chain off
+      // the <text> element's own y) so the whole block is centered on the
+      // anchor point up front - lineHeight/fontSize*0.35 approximates the
+      // baseline-to-visual-center offset for a single line.
+      const fontSize = 11;
+      const lineHeight = fontSize * 1.2;
+      const startY = anchor.y - (lines.length - 1) * lineHeight / 2 + fontSize * 0.35;
+      lines.forEach((line, i) => {
+        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        tspan.setAttribute('x', String(anchor.x));
+        tspan.setAttribute('y', String(startY + i * lineHeight));
+        tspan.textContent = line;
+        text.appendChild(tspan);
+      });
+      g.appendChild(text);
+      layer.appendChild(g);
+
+      const bb = text.getBBox();
+      const pad = 5;
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', String(bb.x - pad));
+      rect.setAttribute('y', String(bb.y - pad));
+      rect.setAttribute('width', String(bb.width + pad * 2));
+      rect.setAttribute('height', String(bb.height + pad * 2));
+      rect.setAttribute('rx', '4');
+      rect.setAttribute('fill', '#1a1a1a');
+      rect.setAttribute('fill-opacity', '0.85');
+      rect.setAttribute('stroke', 'rgba(255,255,255,0.25)');
+      g.insertBefore(rect, text);
+    });
+
+    const evBar = document.getElementById('evBar');
+    if (evBar && flip.votesSum != null) {
+      const r = evBar.getBoundingClientRect();
+      const box = document.createElement('div');
+      box.id = 'flipVoteHeadline';
+      box.textContent = `Δ${(+flip.votesSum || 0).toLocaleString('en-US')} votes`;
+      box.style.position = 'fixed';
+      box.style.left = `${r.left + r.width / 2}px`;
+      box.style.top = `${Math.max(0, r.top - 30)}px`;
+      box.style.transform = 'translateX(-50%)';
+      box.style.background = 'rgba(26,26,26,0.85)';
+      box.style.color = '#fff';
+      box.style.border = '1px solid rgba(255,255,255,0.25)';
+      box.style.borderRadius = '4px';
+      box.style.padding = '4px 8px';
+      box.style.font = "700 12px 'Helvetica Neue', Arial, sans-serif";
+      box.style.zIndex = '9999';
+      document.body.appendChild(box);
+    }
+  }, FIPS_TO_ABBR);
 }
 
 // docs/index.html has a lot of UI both above the map (the site header/nav,
@@ -409,7 +544,12 @@ async function main() {
   const baseTransitionMs = args.transitionMs > 0 ? args.transitionMs : 360;
   const dimStageMs = args.dim ? baseTransitionMs + 30 : 0; // matches applyFlip's own "+30" buffer
   const clickSettleMs = baseTransitionMs + dimStageMs + 200; // 200ms buffer past the transition's own duration
-  await page.waitForTimeout(clickSettleMs + args.holdMs);
+  await page.waitForTimeout(clickSettleMs);
+  // Injected only once the flip has visually settled, so the labels appear
+  // as a "reveal" rather than popping in mid-transition; total wait time
+  // below is unchanged from before this existed.
+  if (args.renderVotes) await renderVoteLabels(page);
+  await page.waitForTimeout(args.holdMs);
 
   const cropRect = args.crop ? await computeCropRect(page, args.include) : null;
   const captureEnd = Date.now();
