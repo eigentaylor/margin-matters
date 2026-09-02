@@ -17,6 +17,7 @@ export function createUpdateAll(deps) {
     clampMargin,
     getNatMargin,
     isUnitFlipped,
+    getActiveFlip,
     allocateProportionalEVs,
     isProportionalEvMode,
     updateFlipButtons,
@@ -602,17 +603,39 @@ export function createUpdateAll(deps) {
     }
   }
 
-  // Glows the units the active flip scenario actually moved, mirroring
-  // sim2028.js's applyGlow() (docs/sim2028.js:539-561) minus its "dim
-  // everything else" mode, which isn't wanted here — only the flipped
-  // units themselves should stand out.
-  function applyFlipGlow(el, on, fill) {
+  // Opt-in "Dim non-flipped states" checkbox (docs/index.html, next to the
+  // flip buttons) - unchecked by default, so the default map behavior is
+  // unchanged from before this toggle existed. Flip it on to get sim2028's
+  // full glow+dim treatment (docs/sim2028.js:539-561); off, and only the
+  // flipped units themselves glow, with everything else left alone.
+  function isFlipDimEnabled() {
+    if (typeof document === 'undefined') return false;
+    const el = document.getElementById('flipDimToggle');
+    return !!(el && el.checked);
+  }
+
+  function isFlipActiveForYear(year) {
+    const f = typeof getActiveFlip === 'function' ? getActiveFlip() : null;
+    return !!(f && f.year === year);
+  }
+
+  // mode: true = glow (this unit was flipped), false = dim (a flip is
+  // active, this unit wasn't part of it, and the dim toggle is on),
+  // null = neither (default look). Mirrors sim2028.js's applyGlow().
+  function applyFlipGlow(el, mode, fill) {
     if (!el) return;
-    if (on) {
+    if (mode === true) {
+      el.style.opacity = '';
       el.style.stroke = '#ffffff';
       el.style.strokeWidth = '2.4px';
       el.style.filter = `drop-shadow(0 0 6px ${fill})`;
+    } else if (mode === false) {
+      el.style.opacity = '0.25';
+      el.style.stroke = '';
+      el.style.strokeWidth = '';
+      el.style.filter = '';
     } else {
+      el.style.opacity = '';
       el.style.stroke = '';
       el.style.strokeWidth = '';
       el.style.filter = '';
@@ -625,6 +648,7 @@ export function createUpdateAll(deps) {
       window._electionNightLastAbbrColors = abbrColors;
       return;
     }
+    const dimOthers = isFlipDimEnabled() && isFlipActiveForYear(year);
     d3.selectAll('path.state').each(function (d) {
       const id = String(d.id).padStart(2, '0');
       const abbr = idToAbbr[id];
@@ -642,7 +666,8 @@ export function createUpdateAll(deps) {
         console.warn(e);
         d3.select(this).attr('fill', fill);
       }
-      applyFlipGlow(this, isUnitFlipped(year, abbr), fill);
+      const flipped = isUnitFlipped(year, abbr);
+      applyFlipGlow(this, flipped ? true : (dimOthers ? false : null), fill);
     });
   }
 
@@ -655,6 +680,7 @@ export function createUpdateAll(deps) {
     try {
       const showME = year >= 1972;
       const showNE = year >= 1992;
+      const dimOthers = isFlipDimEnabled() && isFlipActiveForYear(year);
       window._districtPaths.forEach((pSel, unit) => {
         const stateAbbr = unit.slice(0, 2);
         const atLargeEntry = unitColors.get(stateAbbr + '-AL') || unitColors.get(stateAbbr);
@@ -672,7 +698,8 @@ export function createUpdateAll(deps) {
         pSel.attr('display', visible ? null : 'none');
         const halo = pSel.node && pSel.node().previousSibling;
         if (halo && halo.setAttribute) halo.setAttribute('display', visible ? null : 'none');
-        applyFlipGlow(pSel.node(), isUnitFlipped(year, unit), ucolor);
+        const flipped = isUnitFlipped(year, unit);
+        applyFlipGlow(pSel.node(), flipped ? true : (dimOthers ? false : null), ucolor);
       });
     } catch (e) { /* ignore */ }
   }

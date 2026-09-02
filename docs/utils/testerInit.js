@@ -225,6 +225,9 @@ export function createTesterInitializer(deps) {
     if (btnReset) btnReset.addEventListener('click', () => { clearFlips(); updateAll(); });
     updateFlipButtons();
 
+    const flipDimToggle = document.getElementById('flipDimToggle');
+    if (flipDimToggle) flipDimToggle.addEventListener('change', () => updateAll());
+
     if (pvResetBtn) {
       pvResetBtn.addEventListener('click', () => {
         const year = parseInt(yearSlider.value, 10);

@@ -30,6 +30,7 @@ import {
   updateFlipMetricOptionsForYear,
   updateFlipButtons,
   isUnitFlipped,
+  getActiveFlip,
   clearFlips,
   applyFlip
 } from './utils/flipScenarios.js';
@@ -688,6 +689,7 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
     clampMargin,
     getNatMargin,
     isUnitFlipped,
+    getActiveFlip,
     allocateProportionalEVs,
     isProportionalEvMode,
     updateFlipButtons,
