@@ -642,6 +642,57 @@ export function createUpdateAll(deps) {
     }
   }
 
+  // Dims non-flip-target states/districts BEFORE the color-flip render runs, so
+  // (when "Dim non-flipped states" is on) clicking a flip button reveals which
+  // units are about to change via a preliminary contrast fade rather than
+  // dimming and recoloring in the same instant. Returns the opacity
+  // transition's duration in ms (read from computed style, so it automatically
+  // matches whatever's currently in effect - the live site's 250ms, or
+  // generate_flip_gif.mjs's --transition-ms override) so the caller knows how
+  // long to wait before triggering the actual flip render; returns 0 when
+  // there's nothing to wait for (dim is off, election night is active, or no
+  // eligible elements were found). Requires isUnitFlipped(year, ...) to
+  // already reflect the flip about to be applied - i.e. the caller must set
+  // the active flip before calling this.
+  function applyFlipPreDim(year) {
+    if (!d3) return 0;
+    if (typeof window !== 'undefined' && window._electionNightActive) return 0;
+    if (!isFlipDimEnabled()) return 0;
+
+    let sampleEl = null;
+    d3.selectAll('path.state').each(function (d) {
+      const id = String(d.id).padStart(2, '0');
+      const abbr = idToAbbr[id];
+      if (isUnitFlipped(year, abbr)) return;
+      this.style.opacity = '0.25';
+      if (!sampleEl) sampleEl = this;
+    });
+    if (window._districtPaths) {
+      window._districtPaths.forEach((pSel, unit) => {
+        if (isUnitFlipped(year, unit)) return;
+        const el = pSel.node();
+        if (!el) return;
+        el.style.opacity = '0.25';
+        if (!sampleEl) sampleEl = el;
+      });
+    }
+    if (!sampleEl) return 0;
+
+    const cs = getComputedStyle(sampleEl);
+    const props = cs.transitionProperty.split(',').map(s => s.trim());
+    const durs = cs.transitionDuration.split(',').map(s => s.trim());
+    // Per the CSS transitions spec, when transition-duration has fewer values
+    // than transition-property it's cycled to match (e.g. a single-value
+    // override like generate_flip_gif.mjs's slowTransitions() collapses to a
+    // 1-item computed list even though transitionProperty still lists all 5
+    // properties) - so index into it modulo its own length, not positionally.
+    const idx = props.indexOf('opacity');
+    const chosenIdx = idx >= 0 ? idx : 0;
+    const durStr = (durs.length ? durs[chosenIdx % durs.length] : null) || '0s';
+    const val = parseFloat(durStr) || 0;
+    return durStr.endsWith('ms') ? val : val * 1000;
+  }
+
   function applyStateFills(abbrColors, year) {
     if (!d3) return;
     if (window._electionNightActive) {
@@ -1255,7 +1306,7 @@ export function createUpdateAll(deps) {
     } catch (e) { console.warn(e); }
   }
 
-  return function updateAll() {
+  const updateAll = function updateAll() {
     dbg('updateAll: starting...');
     const refs = getDomRefs();
     if (!refs) return;
@@ -1410,4 +1461,6 @@ export function createUpdateAll(deps) {
     try { updateCandidateInfo(year); } catch (e) { console.warn(e); }
     try { updateStateLabels(year); } catch (e) { console.warn(e); }
   };
+
+  return { updateAll, applyFlipPreDim };
 }

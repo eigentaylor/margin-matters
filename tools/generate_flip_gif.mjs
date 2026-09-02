@@ -403,7 +403,12 @@ async function main() {
   await page.waitForTimeout(args.preRollMs);
   console.log(`Clicking #${btnId} ...`);
   await page.click(`#${btnId}`);
-  const clickSettleMs = (args.transitionMs > 0 ? args.transitionMs : 360) + 200; // 200ms buffer past the transition's own duration
+  // With --dim, applyFlip() now stages the dim fade BEFORE the flip's own
+  // color/glow transition (docs/utils/flipScenarios.js) instead of running
+  // them simultaneously, so the recording needs to hold through both phases.
+  const baseTransitionMs = args.transitionMs > 0 ? args.transitionMs : 360;
+  const dimStageMs = args.dim ? baseTransitionMs + 30 : 0; // matches applyFlip's own "+30" buffer
+  const clickSettleMs = baseTransitionMs + dimStageMs + 200; // 200ms buffer past the transition's own duration
   await page.waitForTimeout(clickSettleMs + args.holdMs);
 
   const cropRect = args.crop ? await computeCropRect(page, args.include) : null;

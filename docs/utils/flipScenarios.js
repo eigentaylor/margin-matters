@@ -7,6 +7,7 @@ let activeFlip = null;
 let applyingFlip = false;
 let updateAllFn = () => {};
 let updateUrlFn = () => {};
+let applyFlipPreDimFn = () => 0;
 
 function syncWindowState() {
     if (typeof window === 'undefined') return;
@@ -34,6 +35,7 @@ function setApplyingFlip(flag) {
 export function setFlipDependencies(deps = {}) {
     if (typeof deps.updateAll === 'function') updateAllFn = deps.updateAll;
     if (typeof deps.updateUrl === 'function') updateUrlFn = deps.updateUrl;
+    if (typeof deps.applyFlipPreDim === 'function') applyFlipPreDimFn = deps.applyFlipPreDim;
 }
 
 export function buildFlipScenarioMaps(flipDetails, flipResults) {
@@ -193,7 +195,7 @@ export function clearFlips() {
     updateFlipButtons();
 }
 
-export function applyFlip(mode) {
+export async function applyFlip(mode) {
     console.log('applyFlip', mode);
     try {
         setApplyingFlip(true);
@@ -234,6 +236,12 @@ export function applyFlip(mode) {
         setActiveFlip(next);
         console.log('applyFlip set state', { units: rows.map(r => r.unit).slice(0, 8), votesSum });
         renderFlipDetails();
+
+        const dimMs = applyFlipPreDimFn(year);
+        if (dimMs > 0) {
+            await new Promise(resolve => setTimeout(resolve, dimMs + 30));
+        }
+
         updateAllFn();
         const pvEl = document.getElementById('pvSlider');
         if (pvEl && typeof updateUrlFn === 'function') {

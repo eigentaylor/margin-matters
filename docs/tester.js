@@ -673,7 +673,7 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
     }).catch(() => {/* no district overlay available */ });
   });
 
-  const updateAll = createUpdateAll({
+  const { updateAll, applyFlipPreDim } = createUpdateAll({
     byYear,
     evByUnit,
     stopToEff,
@@ -722,7 +722,7 @@ import { prepareAtLargeData, shouldAggregateAtLarge, getAtLargeAdjustedTotals } 
     applyPvOverride
   });
 
-  setFlipDependencies({ updateAll, updateUrl });
+  setFlipDependencies({ updateAll, updateUrl, applyFlipPreDim });
 
   // Expose updateAll to global scope for applyFlip
   window.updateAll = updateAll;

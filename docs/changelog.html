@@ -29,6 +29,8 @@
 <br/>
 <ul>
 <li>The "Dim non-flipped states" effect now fades in smoothly instead of snapping instantly, matching the existing fill/glow transitions. This also fixed districts (ME/NE) never having any transition at all.</li>
+<li>When dim is on, clicking a flip button now dims the non-flipped states <em>first</em>, then changes the flipped states' color and glow a beat later, instead of both happening at once.</li>
+<li>Fixed a bug where that staged dim-then-flip sequencing silently collapsed back to simultaneous specifically when generating GIFs with <code>--transition-ms</code> (the default for <code>tools/generate_flip_gif.mjs --dim</code>), due to a CSS computed-style quirk when a single transition-duration override applies to multiple transitioned properties.</li>
 </ul>
                     </div>
                 </div>
