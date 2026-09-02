@@ -254,8 +254,8 @@ async function slowTransitions(page, transitionMs) {
  * center of the relevant path element, via window._districtPaths for
  * districts and FIPS_TO_ABBR + a path.state scan for the tiny states.
  */
-async function renderVoteLabels(page) {
-  await page.evaluate((fipsToAbbr) => {
+async function renderVoteLabels(page, fadeMs) {
+  await page.evaluate(({ fipsToAbbr, fadeMs }) => {
     document.querySelectorAll('g.flip-vote-labels, #flipVoteHeadline').forEach(el => el.remove());
 
     const flip = window._activeFlip;
@@ -264,12 +264,58 @@ async function renderVoteLabels(page) {
     const svg = document.querySelector('#map-wrap svg');
     if (!svg) return;
 
+    const SVGNS = 'http://www.w3.org/2000/svg';
+
+    // District geometries (loaded by docs/tester.js's own district loader,
+    // which is what index.html actually uses - separate from
+    // docs/utils/electionMap.js's more defensive _loadDistricts()) carry
+    // spurious extra rectangle subpaths left over from source data, in
+    // addition to the real boundary. getBBox() on the raw path picks those
+    // up too and produces a wildly wrong center (confirmed directly:
+    // NE-02's real 22-point boundary sits at x~482-500/y~242-252, correctly
+    // inside Nebraska, but its `d` also carries two small axis-aligned
+    // rectangle subpaths sitting near the map's bottom-left, which drag its
+    // bbox center down into Arizona/New Mexico). A size-based filter (e.g.
+    // electionMap.js:27-42's "strip anything covering >15% of the viewBox
+    // in both dimensions") isn't reliable here - one of NE-02's two stray
+    // rectangles is only ~13%x14% of the viewBox and slips under that
+    // threshold. Real boundary detail is never a perfect axis-aligned box,
+    // so detecting the shape directly (a subpath whose points collapse to
+    // only 2 distinct x-values and 2 distinct y-values) catches both stray
+    // rectangles regardless of size, with no size threshold to tune.
+    function stripSpuriousBoxSubpaths(dStr) {
+      if (!dStr) return dStr;
+      const subpaths = dStr.match(/M[^M]*/g);
+      if (!subpaths || subpaths.length < 2) return dStr;
+      return subpaths.filter(sp => {
+        const nums = sp.match(/-?\d+\.?\d*/g);
+        if (!nums || nums.length < 8) return true;
+        const xs = [], ys = [];
+        for (let i = 0; i + 1 < nums.length; i += 2) { xs.push(parseFloat(nums[i])); ys.push(parseFloat(nums[i + 1])); }
+        const uniqX = new Set(xs.map(v => v.toFixed(1))).size;
+        const uniqY = new Set(ys.map(v => v.toFixed(1))).size;
+        return !(uniqX <= 2 && uniqY <= 2);
+      }).join('');
+    }
+
+    function bboxCenterFromD(dStr) {
+      if (!dStr) return null;
+      const temp = document.createElementNS(SVGNS, 'path');
+      temp.setAttribute('d', dStr);
+      temp.style.visibility = 'hidden';
+      svg.appendChild(temp);
+      const bb = temp.getBBox();
+      svg.removeChild(temp);
+      if (!bb || !(bb.width > 0) || !(bb.height > 0)) return null;
+      return { x: bb.x + bb.width / 2, y: bb.y + bb.height / 2 };
+    }
+
     function anchorFor(unit) {
       if (unit.includes('-')) {
         const sel = window._districtPaths && window._districtPaths.get(unit);
         const node = sel && sel.node && sel.node();
-        if (node) { const bb = node.getBBox(); return { x: bb.x + bb.width / 2, y: bb.y + bb.height / 2 }; }
-        return null;
+        if (!node) return null;
+        return bboxCenterFromD(stripSpuriousBoxSubpaths(node.getAttribute('d')));
       }
       const cached = window.ElectionMap && window.ElectionMap._visualCenterCache && window.ElectionMap._visualCenterCache.get(unit);
       if (cached) return cached;
@@ -283,9 +329,11 @@ async function renderVoteLabels(page) {
       return null;
     }
 
-    const layer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const layer = document.createElementNS(SVGNS, 'g');
     layer.setAttribute('class', 'flip-vote-labels');
     svg.appendChild(layer);
+
+    const fadeTargets = [];
 
     flip.units.forEach(u => {
       const anchor = anchorFor(u.unit);
@@ -296,8 +344,9 @@ async function renderVoteLabels(page) {
       lines.push(`Δ${(+u.votes_to_flip || 0).toLocaleString('en-US')}`);
       lines.push(`(${+u.pct_of_state_votes || 0}%)`);
 
-      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      const g = document.createElementNS(SVGNS, 'g');
+      g.style.opacity = '0';
+      const text = document.createElementNS(SVGNS, 'text');
       text.setAttribute('text-anchor', 'middle');
       text.setAttribute('font-family', "'Helvetica Neue', Arial, sans-serif");
       text.setAttribute('font-weight', '700');
@@ -311,7 +360,7 @@ async function renderVoteLabels(page) {
       const lineHeight = fontSize * 1.2;
       const startY = anchor.y - (lines.length - 1) * lineHeight / 2 + fontSize * 0.35;
       lines.forEach((line, i) => {
-        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        const tspan = document.createElementNS(SVGNS, 'tspan');
         tspan.setAttribute('x', String(anchor.x));
         tspan.setAttribute('y', String(startY + i * lineHeight));
         tspan.textContent = line;
@@ -322,16 +371,20 @@ async function renderVoteLabels(page) {
 
       const bb = text.getBBox();
       const pad = 5;
-      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const rect = document.createElementNS(SVGNS, 'rect');
       rect.setAttribute('x', String(bb.x - pad));
       rect.setAttribute('y', String(bb.y - pad));
       rect.setAttribute('width', String(bb.width + pad * 2));
       rect.setAttribute('height', String(bb.height + pad * 2));
       rect.setAttribute('rx', '4');
       rect.setAttribute('fill', '#1a1a1a');
-      rect.setAttribute('fill-opacity', '0.85');
+      // Translucent (rather than the previous 0.85) so the state's own
+      // abbr/EV label - already drawn underneath by updateStateLabels -
+      // shows through faintly instead of being fully hidden.
+      rect.setAttribute('fill-opacity', '0.7');
       rect.setAttribute('stroke', 'rgba(255,255,255,0.25)');
       g.insertBefore(rect, text);
+      fadeTargets.push(g);
     });
 
     const evBar = document.getElementById('evBar');
@@ -344,16 +397,29 @@ async function renderVoteLabels(page) {
       box.style.left = `${r.left + r.width / 2}px`;
       box.style.top = `${Math.max(0, r.top - 30)}px`;
       box.style.transform = 'translateX(-50%)';
-      box.style.background = 'rgba(26,26,26,0.85)';
+      box.style.background = 'rgba(26,26,26,0.6)';
       box.style.color = '#fff';
       box.style.border = '1px solid rgba(255,255,255,0.25)';
       box.style.borderRadius = '4px';
       box.style.padding = '4px 8px';
       box.style.font = "700 12px 'Helvetica Neue', Arial, sans-serif";
       box.style.zIndex = '9999';
+      box.style.opacity = '0';
       document.body.appendChild(box);
+      fadeTargets.push(box);
     }
-  }, FIPS_TO_ABBR);
+
+    // Double rAF: let the browser paint the opacity:0 initial state before
+    // switching on the transition and setting the final opacity - a single
+    // rAF (or none) risks the two style writes landing in the same frame,
+    // in which case the "fade" never visibly animates.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      fadeTargets.forEach(el => {
+        el.style.transition = `opacity ${fadeMs}ms ease`;
+        el.style.opacity = '1';
+      });
+    }));
+  }, { fipsToAbbr: FIPS_TO_ABBR, fadeMs });
 }
 
 // docs/index.html has a lot of UI both above the map (the site header/nav,
@@ -544,11 +610,18 @@ async function main() {
   const baseTransitionMs = args.transitionMs > 0 ? args.transitionMs : 360;
   const dimStageMs = args.dim ? baseTransitionMs + 30 : 0; // matches applyFlip's own "+30" buffer
   const clickSettleMs = baseTransitionMs + dimStageMs + 200; // 200ms buffer past the transition's own duration
-  await page.waitForTimeout(clickSettleMs);
-  // Injected only once the flip has visually settled, so the labels appear
-  // as a "reveal" rather than popping in mid-transition; total wait time
-  // below is unchanged from before this existed.
-  if (args.renderVotes) await renderVoteLabels(page);
+  if (args.renderVotes) {
+    // Inject right as the color transition begins (after any dim stage),
+    // with a fade-in matched to that same transition's duration, so the
+    // labels arrive at the same pace as the flip itself instead of
+    // popping in afterward. Total wait below is unchanged from before
+    // this branch existed (dimStageMs + baseTransitionMs + 200 === clickSettleMs).
+    await page.waitForTimeout(dimStageMs);
+    await renderVoteLabels(page, baseTransitionMs);
+    await page.waitForTimeout(baseTransitionMs + 200);
+  } else {
+    await page.waitForTimeout(clickSettleMs);
+  }
   await page.waitForTimeout(args.holdMs);
 
   const cropRect = args.crop ? await computeCropRect(page, args.include) : null;
