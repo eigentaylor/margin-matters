@@ -22,6 +22,7 @@
  *   node tools/generate_flip_gif.mjs --year 1876 --mode classic --metric votes
  *   node tools/generate_flip_gif.mjs --year 2020 --mode no_majority --hold-ms 2500
  *   node tools/generate_flip_gif.mjs --year 2016 --mode no_majority --transition-ms 2000
+ *   node tools/generate_flip_gif.mjs --year 2020 --mode no_majority --dim
  *
  * flip_scenarios.ipynb's Step 6 cell prints ready-to-run invocations of this
  * script for its top-10 "most fragile" elections.
@@ -43,10 +44,10 @@ function parseArgs(argv) {
     year: null, mode: null, metric: 'votes',
     baseUrl: 'http://127.0.0.1:8080',
     outDir: 'flip-gifs', out: null,
-    gifWidth: 720, fps: 20,
+    gifWidth: 960, fps: 20,
     preRollMs: 500, holdMs: 1800, transitionMs: 1200,
     viewportWidth: 1100, viewportHeight: 1000,
-    crop: true, include: []
+    crop: true, include: [], dim: true
   };
 
   for (let i = 0; i < argv.length; i++) {
@@ -68,6 +69,7 @@ function parseArgs(argv) {
       case '--viewport-height': args.viewportHeight = parseInt(next(), 10); break;
       case '--no-crop': args.crop = false; break;
       case '--include': args.include.push(next()); break;
+      case '--dim': args.dim = true; break;
       default:
         throw new Error(`Unknown argument: ${a}`);
     }
@@ -212,8 +214,9 @@ async function waitUntilReady(page, { year, mode, metric }) {
  * doesn't need to touch testerUpdate.js's JS at all.
  */
 async function slowTransitions(page, transitionMs) {
-  await page.addStyleTag({ content: `
-    .state { transition-duration: ${transitionMs}ms !important; }
+  await page.addStyleTag({
+    content: `
+    .state, .district { transition-duration: ${transitionMs}ms !important; }
     #evFillD, #evFillU, #evFillO, #evFillR { transition-duration: ${transitionMs}ms !important; }
   ` });
 }
@@ -381,6 +384,16 @@ async function main() {
     await verifyCaptureRegionFits(page, args.include, btnId, args.viewportHeight);
   }
   await page.waitForTimeout(300); // let the page's own initial-draw transitions / reflow / scroll above finish (native speed - see below)
+
+  // Checked before the flip click (not after) so it's already on by the
+  // time applyFlip's own re-render runs — matches how a real user would
+  // use it, and avoids an extra render pass. The checkbox's own 'change'
+  // listener (docs/utils/testerInit.js) calls updateAll(), which is a
+  // no-op visually right now since no flip is active yet.
+  if (args.dim) {
+    await page.check('#flipDimToggle');
+    await page.waitForTimeout(50);
+  }
 
   // Stretched only now, after the initial draw above has already settled at
   // native speed, so it applies to just the recorded flip transition.
