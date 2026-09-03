@@ -645,15 +645,22 @@ export function createUpdateAll(deps) {
   // Dims non-flip-target states/districts BEFORE the color-flip render runs, so
   // (when "Dim non-flipped states" is on) clicking a flip button reveals which
   // units are about to change via a preliminary contrast fade rather than
-  // dimming and recoloring in the same instant. Returns the opacity
-  // transition's duration in ms (read from computed style, so it automatically
-  // matches whatever's currently in effect - the live site's 250ms, or
-  // generate_flip_gif.mjs's --transition-ms override) so the caller knows how
-  // long to wait before triggering the actual flip render; returns 0 when
-  // there's nothing to wait for (dim is off, election night is active, or no
-  // eligible elements were found). Requires isUnitFlipped(year, ...) to
-  // already reflect the flip about to be applied - i.e. the caller must set
-  // the active flip before calling this.
+  // dimming and recoloring in the same instant. Also glows the flip-target
+  // units at this same early point (using their current, pre-flip fill as
+  // the glow color) rather than waiting for the color-flip render to glow
+  // them - a small/spatially-isolated state like HI is otherwise easy to
+  // miss, since its color change alone can be subtle even while the glow
+  // that would normally draw the eye to it doesn't appear until that same
+  // instant. applyStateFills/applyDistrictFills still re-apply the glow
+  // once the real render runs, updating its color to match the new fill.
+  // Returns the opacity transition's duration in ms (read from computed
+  // style, so it automatically matches whatever's currently in effect - the
+  // live site's 250ms, or generate_flip_gif.mjs's --transition-ms override)
+  // so the caller knows how long to wait before triggering the actual flip
+  // render; returns 0 when there's nothing to wait for (dim is off,
+  // election night is active, or no eligible elements were found). Requires
+  // isUnitFlipped(year, ...) to already reflect the flip about to be
+  // applied - i.e. the caller must set the active flip before calling this.
   function applyFlipPreDim(year) {
     if (!d3) return 0;
     if (typeof window !== 'undefined' && window._electionNightActive) return 0;
@@ -663,15 +670,21 @@ export function createUpdateAll(deps) {
     d3.selectAll('path.state').each(function (d) {
       const id = String(d.id).padStart(2, '0');
       const abbr = idToAbbr[id];
-      if (isUnitFlipped(year, abbr)) return;
+      if (isUnitFlipped(year, abbr)) {
+        applyFlipGlow(this, true, this.getAttribute('fill') || '#2f2f2f');
+        return;
+      }
       this.style.opacity = '0.25';
       if (!sampleEl) sampleEl = this;
     });
     if (window._districtPaths) {
       window._districtPaths.forEach((pSel, unit) => {
-        if (isUnitFlipped(year, unit)) return;
         const el = pSel.node();
         if (!el) return;
+        if (isUnitFlipped(year, unit)) {
+          applyFlipGlow(el, true, el.getAttribute('fill') || 'transparent');
+          return;
+        }
         el.style.opacity = '0.25';
         if (!sampleEl) sampleEl = el;
       });
