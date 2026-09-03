@@ -52,8 +52,8 @@ function parseArgs(argv) {
     year: null, mode: null, metric: 'votes',
     baseUrl: 'http://127.0.0.1:8080',
     outDir: 'flip-gifs', out: null,
-    gifWidth: 960, fps: 20,
-    preRollMs: 500, holdMs: 1800, transitionMs: 1200,
+    gifWidth: 1080, fps: 20,
+    preRollMs: 500, holdMs: 1800, transitionMs: 1400,
     viewportWidth: 1100, viewportHeight: 1000,
     crop: true, include: [], dim: true, renderVotes: false
   };
@@ -381,7 +381,7 @@ async function renderVoteLabels(page, fadeMs) {
       // Translucent (rather than the previous 0.85) so the state's own
       // abbr/EV label - already drawn underneath by updateStateLabels -
       // shows through faintly instead of being fully hidden.
-      rect.setAttribute('fill-opacity', '0.7');
+      rect.setAttribute('fill-opacity', '0.75');
       rect.setAttribute('stroke', 'rgba(255,255,255,0.25)');
       g.insertBefore(rect, text);
       fadeTargets.push(g);
@@ -392,7 +392,21 @@ async function renderVoteLabels(page, fadeMs) {
       const r = evBar.getBoundingClientRect();
       const box = document.createElement('div');
       box.id = 'flipVoteHeadline';
-      box.textContent = `Δ${(+flip.votesSum || 0).toLocaleString('en-US')} votes`;
+      // Same national-total/percent calc docs/utils/flipScenarios.js's
+      // renderFlipDetails() already uses for the on-page #flipVotesPct
+      // badge (flipScenarios.js:296-306), via the same window.getRowsForYear
+      // accessor tester.js exposes globally.
+      let pctText = '';
+      if (typeof window.getRowsForYear === 'function') {
+        const rowsForYear = window.getRowsForYear(flip.year) || [];
+        const natRow = rowsForYear.find(rr => rr && (rr.unit === 'NATIONAL' || rr.unit === 'NAT'));
+        const total = natRow ? (+natRow.total || (+natRow.dVotes + +natRow.rVotes + +natRow.tVotes) || 0) : 0;
+        if (total > 0) {
+          const pct = (+flip.votesSum || 0) / total * 100;
+          pctText = ` (${Math.abs(pct) < 0.01 ? pct.toExponential(2) : pct.toFixed(4)}%)`;
+        }
+      }
+      box.textContent = `Δ${(+flip.votesSum || 0).toLocaleString('en-US')} votes${pctText}`;
       box.style.position = 'fixed';
       box.style.left = `${r.left + r.width / 2}px`;
       box.style.top = `${Math.max(0, r.top - 30)}px`;
