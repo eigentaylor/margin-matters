@@ -39,6 +39,18 @@ function totalSplitStateEv(rows, abbr) {
   return ev;
 }
 
+// The district overlay's boundary lines (and their halo) are drawn once at
+// build time for every year, since the geometry itself doesn't change —
+// clearing a district's fill back to transparent isn't enough to hide that
+// it's split for a year it wasn't, the outline cutting through the state is
+// still visible on its own. Toggle each district's (and its halo's) display
+// directly so a non-split year shows a single unbroken state shape, exactly
+// like index.html only draws the ME/NE split for the years it actually happened.
+function setDistrictVisible(unit, visible) {
+  d3.select(`#district-${unit}`).style('display', visible ? null : 'none');
+  d3.select(`#halo-${unit}`).style('display', visible ? null : 'none');
+}
+
 const state = {
   byYear: new Map(),
   years: [],
@@ -83,18 +95,23 @@ function renderMap(year) {
       window.ElectionMap.setStateFill(abbr, rowColor(atLarge));
       present.add(abbr);
     }
-    for (const d of districts) {
-      window.ElectionMap.setDistrictFill(d.abbr, rowColor(d));
-      districtsShown.add(d.abbr);
+    const isSplitYear = districts.length > 0;
+    for (const districtAbbr of SPLIT_STATE_DISTRICTS[abbr]) {
+      setDistrictVisible(districtAbbr, isSplitYear);
+    }
+    if (isSplitYear) {
+      for (const d of districts) {
+        window.ElectionMap.setDistrictFill(d.abbr, rowColor(d));
+        districtsShown.add(d.abbr);
+      }
     }
   }
 
   for (const abbr of window.ElectionMap.statePaths.keys()) {
     if (!present.has(abbr)) window.ElectionMap.setStateFill(abbr, '#2f2f2f');
   }
-  // Clear any district fill left over from a previous round that was split
-  // (the overlay always covers the whole state once built, so a stale color
-  // here would otherwise hide this round's state-level fill underneath it).
+  // Belt-and-suspenders: also clear fill on any district left un-shown this
+  // round (harmless once hidden, but keeps state consistent either way).
   for (const districtAbbrs of Object.values(SPLIT_STATE_DISTRICTS)) {
     for (const unit of districtAbbrs) {
       if (!districtsShown.has(unit)) window.ElectionMap.setDistrictFill(unit, 'transparent');
