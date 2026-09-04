@@ -179,7 +179,8 @@ function renderEvBar(year) {
   $('evFillR').style.width = `${rPct}%`;
   $('evFillU').style.width = '0%';
   const oPart = oEV ? ` | O ${oEV}` : '';
-  $('evText').textContent = `D ${dEV} | R ${rEV}${oPart}  (total ${totalEV} EV)`;
+  const toWin = Math.floor(totalEV / 2) + 1;
+  $('evText').textContent = `D ${dEV} | R ${rEV}${oPart}  (total ${totalEV} EV, ${toWin} to win)`;
 }
 
 // Rebuilt from scratch each call rather than diffed — at most 41 bars, and
