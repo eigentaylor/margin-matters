@@ -7,6 +7,40 @@ const FLAT_COLORS = { deepskyblue: '#4169E1', red: '#B22222', yellow: '#C9A400' 
 const PARTY_OF = { deepskyblue: 'D', red: 'R', yellow: 'O' };
 const STEP = 4;
 
+// The CSV never has a plain ME/NE row, in any year: before each state's
+// congressional-district electoral-vote split (Maine from 1972, Nebraska from
+// 1992) it's recorded at-large as ME-AL/NE-AL, and from those years on it's
+// split into per-district rows (ME-01/02, NE-01/02/03) instead. We don't
+// build the district overlay for this page (no split-shape rendering, just
+// one fill per state), so without this normalization ME/NE would have
+// nothing to fill in *every* year, and the EV bar's total would always come
+// up short by their electoral votes. The -AL row already covers the whole
+// state, so it's just renamed; the split-district case is aggregated by raw
+// votes, with winner/color logic mirroring build_presidential_margins.py
+// (build_presidential_margins.py:391-422): largest of D/R/third-party votes wins.
+const SPLIT_STATE_DISTRICTS = { ME: ['ME-01', 'ME-02'], NE: ['NE-01', 'NE-02', 'NE-03'] };
+
+function normalizeSplitState(rows, abbr) {
+  if (rows.some(r => r.abbr === abbr)) return;
+  const atLarge = rows.find(r => r.abbr === `${abbr}-AL`);
+  if (atLarge) {
+    rows.push({ abbr, color: atLarge.color, pres_margin: atLarge.pres_margin, electoral_votes: atLarge.electoral_votes });
+    return;
+  }
+  const districts = SPLIT_STATE_DISTRICTS[abbr].map(d => rows.find(r => r.abbr === d));
+  if (districts.some(r => !r)) return;
+  let dv = 0, rv = 0, tv = 0, ev = 0;
+  for (const r of districts) {
+    dv += +r.D_votes || 0;
+    rv += +r.R_votes || 0;
+    tv += +r.third_party_votes || 0;
+    ev += +r.electoral_votes || 0;
+  }
+  const color = (tv > dv && tv > rv) ? 'yellow' : (dv >= rv ? 'deepskyblue' : 'red');
+  const pres_margin = (dv + rv) > 0 ? (dv - rv) / (dv + rv) : 0;
+  rows.push({ abbr, color, pres_margin, electoral_votes: ev });
+}
+
 const state = {
   byYear: new Map(),
   years: [],
@@ -238,6 +272,11 @@ async function init() {
     const year = +row.year;
     if (!state.byYear.has(year)) state.byYear.set(year, []);
     state.byYear.get(year).push(row);
+  }
+  for (const rows of state.byYear.values()) {
+    for (const abbr of Object.keys(SPLIT_STATE_DISTRICTS)) {
+      normalizeSplitState(rows, abbr);
+    }
   }
   state.years = Array.from(state.byYear.keys()).sort((a, b) => a - b);
   state.minYear = state.years[0];
