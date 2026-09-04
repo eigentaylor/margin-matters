@@ -7,37 +7,54 @@ const FLAT_COLORS = { deepskyblue: '#4169E1', red: '#B22222', yellow: '#C9A400' 
 const PARTY_OF = { deepskyblue: 'D', red: 'R', yellow: 'O' };
 const STEP = 4;
 
-// The CSV never has a plain ME/NE row, in any year: before each state's
-// congressional-district electoral-vote split (Maine from 1972, Nebraska from
-// 1992) it's recorded at-large as ME-AL/NE-AL, and from those years on it's
-// split into per-district rows (ME-01/02, NE-01/02/03) instead. We don't
-// build the district overlay for this page (no split-shape rendering, just
-// one fill per state), so without this normalization ME/NE would have
-// nothing to fill in *every* year, and the EV bar's total would always come
-// up short by their electoral votes. The -AL row already covers the whole
-// state, so it's just renamed; the split-district case is aggregated by raw
-// votes, with winner/color logic mirroring build_presidential_margins.py
-// (build_presidential_margins.py:391-422): largest of D/R/third-party votes wins.
+// The CSV never has a plain ME/NE row, in any year: it's always recorded as
+// an "-AL" (at-large) row, plus — from each state's congressional-district
+// electoral-vote split onward (Maine 1972+, Nebraska 1992+) — per-district
+// rows (ME-01/02, NE-01/02/03) alongside it. The -AL row's D/R vote totals
+// always equal the sum of the district rows (verified against the CSV), so
+// it always carries the correct statewide two-party margin/color for the
+// whole state, split or not — but its own electoral_votes only covers the
+// full state pre-split; once split, it drops to just the at-large
+// (Senate-equivalent) share, with the district rows carrying the rest. So
+// the state's true total EV count is always AL.electoral_votes plus the
+// district rows' electoral_votes, whichever of the two exist that year. We
+// don't build the district overlay for this page (no split-shape rendering,
+// just one fill per state), so this collapses AL + any district rows into a
+// single synthetic state-level row and removes the originals, since leaving
+// them in place would double-count their electoral votes in the EV bar.
 const SPLIT_STATE_DISTRICTS = { ME: ['ME-01', 'ME-02'], NE: ['NE-01', 'NE-02', 'NE-03'] };
 
 function normalizeSplitState(rows, abbr) {
   if (rows.some(r => r.abbr === abbr)) return;
-  const atLarge = rows.find(r => r.abbr === `${abbr}-AL`);
-  if (atLarge) {
-    rows.push({ abbr, color: atLarge.color, pres_margin: atLarge.pres_margin, electoral_votes: atLarge.electoral_votes });
-    return;
-  }
+  const relatedAbbrs = [`${abbr}-AL`, ...SPLIT_STATE_DISTRICTS[abbr]];
+  const atLarge = rows.find(r => r.abbr === relatedAbbrs[0]);
   const districts = SPLIT_STATE_DISTRICTS[abbr].map(d => rows.find(r => r.abbr === d));
-  if (districts.some(r => !r)) return;
-  let dv = 0, rv = 0, tv = 0, ev = 0;
-  for (const r of districts) {
-    dv += +r.D_votes || 0;
-    rv += +r.R_votes || 0;
-    tv += +r.third_party_votes || 0;
-    ev += +r.electoral_votes || 0;
+  const haveDistricts = districts.every(Boolean);
+  if (!atLarge && !haveDistricts) return; // no usable data at all (e.g. 1864 NE, not yet a state)
+
+  let color, pres_margin, ev = 0;
+  if (atLarge) {
+    color = atLarge.color;
+    pres_margin = atLarge.pres_margin;
+    ev += +atLarge.electoral_votes || 0;
+  } else {
+    let dv = 0, rv = 0, tv = 0;
+    for (const r of districts) {
+      dv += +r.D_votes || 0;
+      rv += +r.R_votes || 0;
+      tv += +r.third_party_votes || 0;
+    }
+    color = (tv > dv && tv > rv) ? 'yellow' : (dv >= rv ? 'deepskyblue' : 'red');
+    pres_margin = (dv + rv) > 0 ? (dv - rv) / (dv + rv) : 0;
   }
-  const color = (tv > dv && tv > rv) ? 'yellow' : (dv >= rv ? 'deepskyblue' : 'red');
-  const pres_margin = (dv + rv) > 0 ? (dv - rv) / (dv + rv) : 0;
+  if (haveDistricts) {
+    for (const r of districts) ev += +r.electoral_votes || 0;
+  }
+
+  for (const a of relatedAbbrs) {
+    const idx = rows.findIndex(r => r.abbr === a);
+    if (idx !== -1) rows.splice(idx, 1);
+  }
   rows.push({ abbr, color, pres_margin, electoral_votes: ev });
 }
 
@@ -188,6 +205,13 @@ function grade(guess) {
   result.textContent = correct
     ? `Correct! It was ${state.currentYear}.`
     : `Not quite — it was ${state.currentYear}. You were ${cycles} election${cycles === 1 ? '' : 's'} (${diff} years) off.`;
+  const infoRow = (state.byYear.get(state.currentYear) || []).find(r => r.D_candidate);
+  if (infoRow) {
+    const detail = document.createElement('div');
+    detail.className = 'yq-result-detail';
+    detail.textContent = `${infoRow.D_candidate} (D) vs. ${infoRow.R_candidate} (R) — national popular vote: ${infoRow.national_margin_str}`;
+    result.appendChild(detail);
+  }
   $('yqScore').textContent = `Score: ${state.score.correct}/${state.score.total}`;
   document.querySelectorAll('.yq-mc-btn').forEach(b => { b.disabled = true; });
 }
@@ -261,9 +285,21 @@ function wireControls() {
   $('yqYearInput').addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') { e.preventDefault(); stepInput(STEP); }
     else if (e.key === 'ArrowDown') { e.preventDefault(); stepInput(-STEP); }
-    else if (e.key === 'Enter') { e.preventDefault(); submitFreeGuess(); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (state.guessed) newRound(); else submitFreeGuess(); }
   });
   $('yqNewMap').addEventListener('click', newRound);
+
+  // "N" jumps to a new map from anywhere on the page, so a round can be
+  // skipped or restarted without reaching for the mouse. Guarded to text
+  // inputs only (the year field is type=number, so "n" can't be typed into
+  // it anyway) so it doesn't fire while actually typing something else.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'n' && e.key !== 'N') return;
+    const t = e.target;
+    if (t && t.tagName === 'INPUT' && t.type !== 'number' && t.type !== 'checkbox') return;
+    e.preventDefault();
+    newRound();
+  });
 }
 
 async function init() {
