@@ -114,6 +114,36 @@
       color: var(--muted);
       margin-top: 10px;
     }
+
+    #yqHistChart .yq-hist-bar-pos {
+      fill: #4169E1;
+    }
+
+    #yqHistChart .yq-hist-bar-neg {
+      fill: #B22222;
+    }
+
+    #yqHistChart .yq-hist-bar-none {
+      fill: #3a3a3a;
+    }
+
+    #yqHistChart .yq-hist-whisker {
+      stroke: var(--fg);
+      stroke-width: 1px;
+    }
+
+    #yqHistChart .yq-hist-axis .domain,
+    #yqHistChart .yq-hist-axis .tick line {
+      stroke: var(--border);
+    }
+
+    #yqHistChart .yq-hist-axis text {
+      fill: var(--muted);
+    }
+
+    #yqHistChart .yq-hist-tick-label {
+      font-size: 0.65rem;
+    }
   </style>
 </head>
 
@@ -135,9 +165,13 @@
         <label class="yq-toggle"><input id="yqToggleEv" type="checkbox" /> Show state electoral votes</label>
         <label class="yq-toggle"><input id="yqToggleEvBar" type="checkbox" /> Show electoral vote bar</label>
         <label class="yq-toggle"><input id="yqToggleMc" type="checkbox" /> Multiple choice</label>
+        <label class="yq-toggle"><input id="yqToggleLearning" type="checkbox" /> Learning mode (favor years you've
+          missed)</label>
       </div>
       <div class="yq-note">All off is the hardest mode: flat red/blue/gold fills with no labels, no EV bar, and a
         free-text guess. Valid years: <span id="yqYearRange">&hellip;</span>, every 4 years.</div>
+      <div class="yq-note">Your guesses are remembered in this browser. New Map always leans slightly toward years
+        you haven't practiced much; turning on learning mode also leans toward years you tend to get wrong.</div>
       <div class="yq-note">Note: for 1912, red = Theodore Roosevelt (Progressive/"Bull Moose", treated here as the
         de facto Republican) and gold = Taft (the actual Republican nominee, treated as the third party); blue is
         still Wilson (D).</div>
@@ -163,6 +197,20 @@
           </div>
         </div>
         <div id="evText" style="text-align:center;margin-top:4px;color:var(--muted);font-size:0.9rem"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Your accuracy by year</div>
+      <div id="yqHistWrap" class="center">
+        <svg id="yqHistChart" width="100%" viewBox="0 0 900 220" aria-label="Accuracy by election year"></svg>
+      </div>
+      <div class="yq-guess-row" style="justify-content:space-between">
+        <div class="yq-note" style="margin-top:0">Bar height is a confidence-adjusted accuracy estimate (a Wilson
+          interval, not just correct/total); the whisker shows how uncertain that estimate still is. Faded bars and
+          wide whiskers mean you haven't guessed that year enough times to be sure. Gray bars: not attempted yet.
+        </div>
+        <button id="yqResetStats" class="btn" type="button">Reset stats</button>
       </div>
     </div>
 

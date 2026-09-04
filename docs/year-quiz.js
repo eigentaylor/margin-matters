@@ -1,6 +1,7 @@
 'use strict';
 import { loadPresidentialMargins } from './utils/dataLoader.js';
 import { safeMarginToColor } from './utils/colorUtils.js';
+import { loadStats, recordAttempt, resetStats, pickWeightedYear, wilsonInterval } from './utils/yearQuizStats.js';
 
 // CSV's precomputed 'color' column uses these three exact values.
 const FLAT_COLORS = { deepskyblue: '#4169E1', red: '#B22222', yellow: '#C9A400' };
@@ -60,7 +61,8 @@ const state = {
   lastYear: null,
   guessed: false,
   score: { correct: 0, total: 0 },
-  toggles: { shade: false, abbr: false, ev: false, evbar: false, mc: false },
+  toggles: { shade: false, abbr: false, ev: false, evbar: false, mc: false, learning: false },
+  stats: {},
 };
 
 function $(id) { return document.getElementById(id); }
@@ -72,11 +74,10 @@ function rowColor(row) {
 }
 
 function pickRandomYear() {
-  if (state.years.length <= 1) return state.years[0];
-  let y;
-  do { y = state.years[Math.floor(Math.random() * state.years.length)]; }
-  while (y === state.lastYear);
-  return y;
+  return pickWeightedYear(state.years, state.stats, {
+    learning: state.toggles.learning,
+    lastYear: state.lastYear,
+  });
 }
 
 function renderMap(year) {
@@ -181,6 +182,97 @@ function renderEvBar(year) {
   $('evText').textContent = `D ${dEV} | R ${rEV}${oPart}  (total ${totalEV} EV)`;
 }
 
+// Rebuilt from scratch each call rather than diffed — at most 41 bars, and
+// this only runs after a guess or on load, so there's no perf reason to do
+// an enter/update/exit dance. Bar height is the Wilson-adjusted accuracy
+// estimate (not the raw correct/total ratio), so a single lucky/unlucky
+// guess doesn't render as a confident 0%/100%; the whisker is the interval
+// itself, and bar opacity fades as that interval widens, so a year you've
+// only guessed once or twice visibly reads as "not sure yet" rather than
+// looking as trustworthy as a year you've guessed twenty times.
+function renderStatsHistogram() {
+  const svg = d3.select('#yqHistChart');
+  svg.selectAll('*').remove();
+  if (!state.years.length) return;
+
+  const viewBox = svg.node().viewBox.baseVal;
+  const width = viewBox.width || 900;
+  const height = viewBox.height || 220;
+  const margin = { top: 10, right: 10, bottom: 28, left: 30 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+
+  const x = d3.scaleBand().domain(state.years).range([0, innerW]).padding(0.15);
+  const y = d3.scaleLinear().domain([0, 100]).range([innerH, 0]);
+
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  const axisG = g.append('g')
+    .attr('class', 'yq-hist-axis')
+    .attr('transform', `translate(0,${innerH})`)
+    .call(d3.axisBottom(x).tickValues(state.years.filter((_, i) => i % 2 === 0)));
+  axisG.selectAll('text').attr('class', 'yq-hist-tick-label');
+
+  g.append('g')
+    .attr('class', 'yq-hist-axis')
+    .call(d3.axisLeft(y).ticks(4).tickFormat(d => `${d}%`));
+
+  for (const yr of state.years) {
+    const entry = state.stats[yr];
+    const n = entry ? entry.total : 0;
+    const cx = x(yr) + x.bandwidth() / 2;
+
+    if (!n) {
+      g.append('rect')
+        .attr('class', 'yq-hist-bar-none')
+        .attr('x', x(yr))
+        .attr('width', x.bandwidth())
+        .attr('y', y(4))
+        .attr('height', innerH - y(4))
+        .append('title')
+        .text(`${yr}: not attempted yet`);
+      continue;
+    }
+
+    const { center, low, high } = wilsonInterval(entry.correct, entry.total);
+    const barCls = center >= 0.5 ? 'yq-hist-bar-pos' : 'yq-hist-bar-neg';
+    const opacity = Math.max(0.35, 1 - Math.min(1, high - low));
+    const barY = y(center * 100);
+
+    const bar = g.append('rect')
+      .attr('class', barCls)
+      .attr('x', x(yr))
+      .attr('width', x.bandwidth())
+      .attr('y', barY)
+      .attr('height', Math.max(0, innerH - barY))
+      .style('opacity', opacity);
+    bar.append('title')
+      .text(`${yr}: ${entry.correct}/${entry.total} correct (${Math.round(center * 100)}% est., ${Math.round(low * 100)}–${Math.round(high * 100)}%)`);
+
+    g.append('line')
+      .attr('class', 'yq-hist-whisker')
+      .attr('x1', cx).attr('x2', cx)
+      .attr('y1', y(low * 100)).attr('y2', y(high * 100))
+      .style('opacity', opacity);
+    g.append('line')
+      .attr('class', 'yq-hist-whisker')
+      .attr('x1', cx - 3).attr('x2', cx + 3)
+      .attr('y1', y(low * 100)).attr('y2', y(low * 100))
+      .style('opacity', opacity);
+    g.append('line')
+      .attr('class', 'yq-hist-whisker')
+      .attr('x1', cx - 3).attr('x2', cx + 3)
+      .attr('y1', y(high * 100)).attr('y2', y(high * 100))
+      .style('opacity', opacity);
+  }
+}
+
+function resetStatsHandler() {
+  if (!window.confirm('Reset all year quiz stats?')) return;
+  state.stats = resetStats();
+  renderStatsHistogram();
+}
+
 function snapYear(raw) {
   if (String(raw).trim() === '') return null;
   const n = Number(raw);
@@ -236,6 +328,8 @@ function grade(guess) {
   state.score.total++;
   const correct = guess === state.currentYear;
   if (correct) state.score.correct++;
+  state.stats = recordAttempt(state.currentYear, correct);
+  renderStatsHistogram();
   const diff = Math.abs(guess - state.currentYear);
   const cycles = Math.round(diff / STEP);
   const result = $('yqResult');
@@ -317,6 +411,10 @@ function wireControls() {
       if (state.guessed) document.querySelectorAll('.yq-mc-btn').forEach(b => { b.disabled = true; });
     }
   });
+  // Learning mode only changes the weighting used by the *next* pickRandomYear()
+  // call, so there's nothing to re-render immediately when it's toggled.
+  wireToggle('yqToggleLearning', 'learning', () => {});
+  $('yqResetStats').addEventListener('click', resetStatsHandler);
 
   $('yqStepDown').addEventListener('click', () => stepInput(-STEP));
   $('yqStepUp').addEventListener('click', () => stepInput(STEP));
@@ -356,6 +454,9 @@ async function init() {
   input.min = state.minYear;
   input.max = state.maxYear;
   $('yqYearRange').textContent = `${state.minYear}–${state.maxYear}`;
+
+  state.stats = loadStats();
+  renderStatsHistogram();
 
   await window.ElectionMap.build({
     svgSelector: '#map',
