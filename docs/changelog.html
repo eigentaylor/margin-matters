@@ -22,6 +22,32 @@
             
                 <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
                     <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
+                        September 04, 2026
+                    </div>
+                    <div class='changelog-content'>
+                        <h2>New: Year Quiz</h2>
+<br/>
+<ul>
+<li>Added a new <a href="year-quiz.html" target="_blank" rel="noopener noreferrer">Year Quiz</a> page: you're shown a US election map with the year hidden and have to guess which presidential election it's from.</li>
+<li>Four difficulty toggles, each independent:</li>
+<li><strong>Color by margin strength</strong> - off shows a flat red/blue/gold by winning party only, so a state's shading can't be used as a tell; on switches to the site's usual gradient-by-margin coloring.</li>
+<li><strong>Show state abbreviations</strong> and <strong>show state electoral votes</strong> - reveal state labels (and optionally each state's EV count) on the map.</li>
+<li><strong>Show electoral vote bar</strong> - reveals the national D/R/O electoral vote total for that election.</li>
+<li>A <strong>multiple choice</strong> mode swaps the year entry for a handful of year options to pick from, for when you want a nudge instead of a blank guess.</li>
+<li>Typing a year that isn't an actual election year (like 2021) gently rounds to the nearest valid election year rather than rejecting it, and +/- buttons (or the up/down arrow keys) step by a full 4-year cycle at a time.</li>
+<li>Includes a note on 1912's coloring: since Theodore Roosevelt's Progressive ("Bull Moose") run is treated as the de facto Republican for margin purposes elsewhere on the site, with Taft's actual Republican run counted as the third party, that election's map colors don't match the candidates' real party lines.</li>
+<li>Maine and Nebraska now render correctly, including their congressional-district vote splits (Maine from 1972, Nebraska from 1992) — each district shows its own color, and the electoral vote bar counts each piece separately.</li>
+<li>After you guess, the reveal now also shows the national popular vote margin and both major-party candidates for that election.</li>
+<li>Press "N" (or the New Map button) to jump to a fresh map at any time, including right after a guess.</li>
+<li>The quiz now remembers your progress on each election year, right in your browser (nothing is sent anywhere, and it won't follow you to another device). New Map already leans toward years you haven't practiced much; a new <strong>learning mode</strong> toggle also leans toward years you tend to get wrong, so weak spots come up more often.</li>
+<li>A new "Your accuracy by year" chart shows one bar per election, always visible regardless of mode. Bar height is a confidence-adjusted estimate rather than a raw percentage, and each bar has a whisker showing how sure that estimate is — a year you've only guessed once or twice will look appropriately shaky (short, faded bar, wide whisker) instead of claiming 100% or 0% with false confidence. Years you haven't tried yet show up gray. A "Reset stats" button clears everything and starts fresh.</li>
+</ul>
+                    </div>
+                </div>
+            
+
+                <div class='changelog-entry' style='margin-bottom: 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: #111;'>
+                    <div class='changelog-date' style='font-weight: bold; color: var(--accent); margin-bottom: 12px; font-size: 1.1em;'>
                         September 02, 2026
                     </div>
                     <div class='changelog-content'>
