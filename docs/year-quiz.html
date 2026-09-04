@@ -201,20 +201,6 @@
     </div>
 
     <div class="card">
-      <div class="legend" style="text-align:left;margin-bottom:8px">Your accuracy by year</div>
-      <div id="yqHistWrap" class="center">
-        <svg id="yqHistChart" width="100%" viewBox="0 0 900 220" aria-label="Accuracy by election year"></svg>
-      </div>
-      <div class="yq-guess-row" style="justify-content:space-between">
-        <div class="yq-note" style="margin-top:0">Bar height is a confidence-adjusted accuracy estimate (a Wilson
-          interval, not just correct/total); the whisker shows how uncertain that estimate still is. Faded bars and
-          wide whiskers mean you haven't guessed that year enough times to be sure. Gray bars: not attempted yet.
-        </div>
-        <button id="yqResetStats" class="btn" type="button">Reset stats</button>
-      </div>
-    </div>
-
-    <div class="card">
       <div class="legend" style="text-align:left;margin-bottom:8px">Your guess</div>
 
       <div id="yqFreeGuess" class="yq-guess-row">
@@ -232,6 +218,20 @@
         <span id="yqScore" class="yq-score">Score: 0/0</span>
       </div>
       <div id="yqResult" class="yq-result" hidden></div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Your accuracy by year</div>
+      <div id="yqHistWrap" class="center">
+        <svg id="yqHistChart" width="100%" viewBox="0 0 900 220" aria-label="Accuracy by election year"></svg>
+      </div>
+      <div class="yq-guess-row" style="justify-content:space-between">
+        <div class="yq-note" style="margin-top:0">Bar height is a confidence-adjusted accuracy estimate (a Wilson
+          interval, not just correct/total); the whisker shows how uncertain that estimate still is. Faded bars and
+          wide whiskers mean you haven't guessed that year enough times to be sure. Gray bars: not attempted yet.
+        </div>
+        <button id="yqResetStats" class="btn" type="button">Reset stats</button>
+      </div>
     </div>
 
     <div id="footer-placeholder"></div>
