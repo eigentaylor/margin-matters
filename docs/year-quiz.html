@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Year Quiz • Margin Matters</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.svg" />
+  <script src="maintenance-check.js"></script>
+  <script src="./last-updated.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <script type="module" src="./utils/dataLoader.js"></script>
+  <script type="module" src="./utils/electionMap.js"></script>
+  <style>
+    .yq-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .yq-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .yq-toggle input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    #map .state:hover {
+      filter: brightness(1.18);
+      cursor: pointer;
+    }
+
+    .yq-guess-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .yq-guess-row input[type="number"] {
+      width: 110px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #1b1b1b;
+      color: var(--fg);
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .yq-mc-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .yq-mc-btn {
+      min-width: 90px;
+      font-size: 1.05rem;
+    }
+
+    .yq-mc-btn:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .yq-snap-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .yq-result {
+      margin-top: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .yq-result.yq-correct {
+      color: #6ee7a8;
+    }
+
+    .yq-result.yq-wrong {
+      color: #e08a8a;
+    }
+
+    .yq-score {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .yq-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="header-placeholder"></div>
+    <div id="back-to-map-placeholder"></div>
+    <div class="header">
+      <h1>Year Quiz</h1>
+      <span class="legend">A colored map, no year attached &mdash; guess the presidential election it's
+        from.</span>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Difficulty</div>
+      <div class="yq-grid">
+        <label class="yq-toggle"><input id="yqToggleShade" type="checkbox" /> Color by margin strength</label>
+        <label class="yq-toggle"><input id="yqToggleAbbr" type="checkbox" /> Show state abbreviations</label>
+        <label class="yq-toggle"><input id="yqToggleEv" type="checkbox" /> Show state electoral votes</label>
+        <label class="yq-toggle"><input id="yqToggleEvBar" type="checkbox" /> Show electoral vote bar</label>
+        <label class="yq-toggle"><input id="yqToggleMc" type="checkbox" /> Multiple choice</label>
+      </div>
+      <div class="yq-note">All off is the hardest mode: flat red/blue/gold fills with no labels, no EV bar, and a
+        free-text guess. Valid years: <span id="yqYearRange">&hellip;</span>, every 4 years.</div>
+      <div class="yq-note">Note: for 1912, red = Theodore Roosevelt (Progressive/"Bull Moose", treated here as the
+        de facto Republican) and gold = Taft (the actual Republican nominee, treated as the third party); blue is
+        still Wilson (D).</div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Map</div>
+      <div id="map-wrap" class="center" style="position:relative">
+        <svg id="map" width="100%" viewBox="0 0 975 610" aria-label="Election map to guess the year of"></svg>
+      </div>
+      <div id="yqEvBarWrap" style="display:none">
+        <div id="evBar"
+          style="height:18px;border:1px solid var(--border);border-radius:9px;position:relative;background:#111;margin-top:8px">
+          <div id="evFillD"
+            style="position:absolute;left:0;top:0;bottom:0;background:#4169E1;border-radius:9px 0 0 9px;width:0%">
+          </div>
+          <div id="evFillU" style="position:absolute;top:0;bottom:0;background:#111;width:0%"></div>
+          <div id="evFillO" style="position:absolute;top:0;bottom:0;background:#C9A400;width:0%"></div>
+          <div id="evFillR"
+            style="position:absolute;right:0;top:0;bottom:0;background:#B22222;border-radius:0 9px 9px 0;width:0%">
+          </div>
+          <div id="evMid" style="position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--border)">
+          </div>
+        </div>
+        <div id="evText" style="text-align:center;margin-top:4px;color:var(--muted);font-size:0.9rem"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="legend" style="text-align:left;margin-bottom:8px">Your guess</div>
+
+      <div id="yqFreeGuess" class="yq-guess-row">
+        <button id="yqStepDown" class="btn" type="button" title="-4 years">&#9664; -4</button>
+        <input id="yqYearInput" type="number" step="4" placeholder="Year" autocomplete="off" />
+        <button id="yqStepUp" class="btn" type="button" title="+4 years">+4 &#9654;</button>
+        <button id="yqGuessBtn" class="btn" type="button">Guess</button>
+      </div>
+      <div id="yqSnapNote" class="yq-snap-note" hidden></div>
+
+      <div id="yqMcWrap" class="yq-mc-row" style="display:none"></div>
+
+      <div id="yqResult" class="yq-result" hidden></div>
+      <div class="yq-guess-row">
+        <button id="yqNewMap" class="btn" type="button">New Map</button>
+        <span id="yqScore" class="yq-score">Score: 0/0</span>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+  </div>
+
+  <script type="module" src="./year-quiz.js"></script>
+  <script src="./header.js"></script>
+  <script src="./back-to-map.js"></script>
+  <script src="./footer.js"></script>
+</body>
+
+</html>
