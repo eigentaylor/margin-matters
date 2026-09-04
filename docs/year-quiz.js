@@ -7,55 +7,36 @@ const FLAT_COLORS = { deepskyblue: '#4169E1', red: '#B22222', yellow: '#C9A400' 
 const PARTY_OF = { deepskyblue: 'D', red: 'R', yellow: 'O' };
 const STEP = 4;
 
-// The CSV never has a plain ME/NE row, in any year: it's always recorded as
-// an "-AL" (at-large) row, plus — from each state's congressional-district
-// electoral-vote split onward (Maine 1972+, Nebraska 1992+) — per-district
-// rows (ME-01/02, NE-01/02/03) alongside it. The -AL row's D/R vote totals
-// always equal the sum of the district rows (verified against the CSV), so
-// it always carries the correct statewide two-party margin/color for the
-// whole state, split or not — but its own electoral_votes only covers the
-// full state pre-split; once split, it drops to just the at-large
-// (Senate-equivalent) share, with the district rows carrying the rest. So
-// the state's true total EV count is always AL.electoral_votes plus the
-// district rows' electoral_votes, whichever of the two exist that year. We
-// don't build the district overlay for this page (no split-shape rendering,
-// just one fill per state), so this collapses AL + any district rows into a
-// single synthetic state-level row and removes the originals, since leaving
-// them in place would double-count their electoral votes in the EV bar.
+// The CSV never has a plain ME/NE row: it's always recorded as an "-AL"
+// (at-large) row, plus — from each state's congressional-district electoral-
+// vote split onward (Maine 1972+, Nebraska 1992+ in practice, though this
+// goes by the rows actually present for a year rather than hardcoding those
+// thresholds) — per-district rows (ME-01/02, NE-01/02/03) alongside it. Once
+// split, each piece keeps its own electoral votes and can go to a different
+// party (a split state's map is genuinely part red, part blue), so rather
+// than blending them into one color we render each piece separately: the
+// state shape gets the at-large row's color as a base fill, and the district
+// overlay is painted on top with each district's own color for whichever
+// years it's actually split — matching how the rest of the site (e.g.
+// docs/sim2028.js) renders ME/NE.
 const SPLIT_STATE_DISTRICTS = { ME: ['ME-01', 'ME-02'], NE: ['NE-01', 'NE-02', 'NE-03'] };
+const SPLIT_STATE_RELATED_RE = /^(ME|NE)(-AL|-0\d)$/;
 
-function normalizeSplitState(rows, abbr) {
-  if (rows.some(r => r.abbr === abbr)) return;
-  const relatedAbbrs = [`${abbr}-AL`, ...SPLIT_STATE_DISTRICTS[abbr]];
-  const atLarge = rows.find(r => r.abbr === relatedAbbrs[0]);
-  const districts = SPLIT_STATE_DISTRICTS[abbr].map(d => rows.find(r => r.abbr === d));
-  const haveDistricts = districts.every(Boolean);
-  if (!atLarge && !haveDistricts) return; // no usable data at all (e.g. 1864 NE, not yet a state)
+// Looks up this year's at-large row and (if this state split its electors by
+// district that year) its district rows, for one of ME/NE. Never mutates rows.
+function getSplitStateUnits(rows, abbr) {
+  const atLarge = rows.find(r => r.abbr === `${abbr}-AL`) || null;
+  const districtAbbrs = SPLIT_STATE_DISTRICTS[abbr];
+  const districts = districtAbbrs.map(d => rows.find(r => r.abbr === d)).filter(Boolean);
+  const isSplit = districts.length === districtAbbrs.length;
+  return { atLarge, districts: isSplit ? districts : [] };
+}
 
-  let color, pres_margin, ev = 0;
-  if (atLarge) {
-    color = atLarge.color;
-    pres_margin = atLarge.pres_margin;
-    ev += +atLarge.electoral_votes || 0;
-  } else {
-    let dv = 0, rv = 0, tv = 0;
-    for (const r of districts) {
-      dv += +r.D_votes || 0;
-      rv += +r.R_votes || 0;
-      tv += +r.third_party_votes || 0;
-    }
-    color = (tv > dv && tv > rv) ? 'yellow' : (dv >= rv ? 'deepskyblue' : 'red');
-    pres_margin = (dv + rv) > 0 ? (dv - rv) / (dv + rv) : 0;
-  }
-  if (haveDistricts) {
-    for (const r of districts) ev += +r.electoral_votes || 0;
-  }
-
-  for (const a of relatedAbbrs) {
-    const idx = rows.findIndex(r => r.abbr === a);
-    if (idx !== -1) rows.splice(idx, 1);
-  }
-  rows.push({ abbr, color, pres_margin, electoral_votes: ev });
+function totalSplitStateEv(rows, abbr) {
+  const { atLarge, districts } = getSplitStateUnits(rows, abbr);
+  let ev = atLarge ? (+atLarge.electoral_votes || 0) : 0;
+  for (const d of districts) ev += +d.electoral_votes || 0;
+  return ev;
 }
 
 const state = {
@@ -89,13 +70,37 @@ function pickRandomYear() {
 function renderMap(year) {
   const rows = state.byYear.get(year) || [];
   const present = new Set();
+  const districtsShown = new Set();
+
   for (const row of rows) {
+    if (SPLIT_STATE_RELATED_RE.test(row.abbr)) continue; // ME/NE handled below
     window.ElectionMap.setStateFill(row.abbr, rowColor(row));
     present.add(row.abbr);
   }
+  for (const abbr of Object.keys(SPLIT_STATE_DISTRICTS)) {
+    const { atLarge, districts } = getSplitStateUnits(rows, abbr);
+    if (atLarge) {
+      window.ElectionMap.setStateFill(abbr, rowColor(atLarge));
+      present.add(abbr);
+    }
+    for (const d of districts) {
+      window.ElectionMap.setDistrictFill(d.abbr, rowColor(d));
+      districtsShown.add(d.abbr);
+    }
+  }
+
   for (const abbr of window.ElectionMap.statePaths.keys()) {
     if (!present.has(abbr)) window.ElectionMap.setStateFill(abbr, '#2f2f2f');
   }
+  // Clear any district fill left over from a previous round that was split
+  // (the overlay always covers the whole state once built, so a stale color
+  // here would otherwise hide this round's state-level fill underneath it).
+  for (const districtAbbrs of Object.values(SPLIT_STATE_DISTRICTS)) {
+    for (const unit of districtAbbrs) {
+      if (!districtsShown.has(unit)) window.ElectionMap.setDistrictFill(unit, 'transparent');
+    }
+  }
+
   renderLabels(year);
   renderEvBar(year);
 }
@@ -109,7 +114,11 @@ function renderLabels(year) {
   const rows = state.byYear.get(year) || [];
   const byAbbr = new Map(rows.map(r => [r.abbr, r]));
   const evLookup = state.toggles.ev
-    ? (abbr) => { const r = byAbbr.get(abbr); return r ? +r.electoral_votes : null; }
+    ? (abbr) => {
+      if (SPLIT_STATE_DISTRICTS[abbr]) return totalSplitStateEv(rows, abbr) || null;
+      const r = byAbbr.get(abbr);
+      return r ? +r.electoral_votes : null;
+    }
     : () => null;
   window.ElectionMap.updateStateLabels(year, evLookup);
   d3.select('svg#map g.state-labels').style('display', null);
@@ -122,13 +131,26 @@ function renderEvBar(year) {
 
   const rows = state.byYear.get(year) || [];
   let dEV = 0, rEV = 0, oEV = 0, totalEV = 0;
-  for (const row of rows) {
+  const tally = (row) => {
     const ev = +row.electoral_votes || 0;
     totalEV += ev;
     const party = PARTY_OF[row.color];
     if (party === 'D') dEV += ev;
     else if (party === 'R') rEV += ev;
     else oEV += ev;
+  };
+  for (const row of rows) {
+    if (SPLIT_STATE_RELATED_RE.test(row.abbr)) continue; // ME/NE tallied below, piece by piece
+    tally(row);
+  }
+  for (const abbr of Object.keys(SPLIT_STATE_DISTRICTS)) {
+    // Each district can go a different party than the state's at-large
+    // result, so each piece is tallied separately rather than as one lump
+    // sum under a single winner — e.g. a split Maine's 4 EVs might really be
+    // 3D+1R, not all 4 going to whichever party led the statewide vote.
+    const { atLarge, districts } = getSplitStateUnits(rows, abbr);
+    if (atLarge) tally(atLarge);
+    for (const d of districts) tally(d);
   }
   const dPct = totalEV ? (dEV / totalEV) * 100 : 0;
   const rPct = totalEV ? (rEV / totalEV) * 100 : 0;
@@ -309,11 +331,6 @@ async function init() {
     if (!state.byYear.has(year)) state.byYear.set(year, []);
     state.byYear.get(year).push(row);
   }
-  for (const rows of state.byYear.values()) {
-    for (const abbr of Object.keys(SPLIT_STATE_DISTRICTS)) {
-      normalizeSplitState(rows, abbr);
-    }
-  }
   state.years = Array.from(state.byYear.keys()).sort((a, b) => a - b);
   state.minYear = state.years[0];
   state.maxYear = state.years[state.years.length - 1];
@@ -323,8 +340,11 @@ async function init() {
   input.max = state.maxYear;
   $('yqYearRange').textContent = `${state.minYear}–${state.maxYear}`;
 
-  await window.ElectionMap.build({ svgSelector: '#map', topoUrl: 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json' });
-  window.ElectionMap.setDistrictsVisible(false);
+  await window.ElectionMap.build({
+    svgSelector: '#map',
+    topoUrl: 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json',
+    districtGeoUrl: 'me_ne_districts.geojson',
+  });
 
   wireControls();
   newRound();
